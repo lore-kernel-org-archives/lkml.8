@@ -3,116 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95448C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0266C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6044A246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8672A246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="j9vAS3FE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IO4EyAPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgB1PmV (ORCPT
+        id S1727426AbgB1Pm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:42:21 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:3964 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726940AbgB1PmS (ORCPT
+        Fri, 28 Feb 2020 10:42:28 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35638 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgB1PmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:42:18 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFcchc002611;
-        Fri, 28 Feb 2020 09:42:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=ufh6/9f7UQjn+9arPRj1c/9Z3GCp2z/Am5Y76SrZ/FY=;
- b=j9vAS3FE6Q5wGWY6Lixa19TgB/e3FKKlbumsGDPEfO4RSgtVdDOC75378CLN7bUFXQgG
- JJUe+JjZOWp+2wYv5TiWV7C/vwl3QC265Fueu8oOUb0E9iRi7LKwE0r6bE5LSXcxCRwW
- QDi2UMOKvXZzVC3j8fLTKyV5FkYxYYiJ+ceR1aLnc10n4kFMjhrdAJnrJmd1fRkOap16
- eE9bweH1zVQUoAUR7sS74qL1Sd7KWlOQpH16S56UhsTIvKGjTlxbNlg7MC9D76VFLVvI
- slf1o8V3smcnO3dbAZeQ0f0t90KJZAQzBK1cKyjxILiWLML22383o4PjK7sL6maY2B3H PA== 
-Authentication-Results: ppops.net;
-        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2yepwmse6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 28 Feb 2020 09:42:17 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 28 Feb
- 2020 15:42:15 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 28 Feb 2020 15:42:15 +0000
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id F02A645A;
-        Fri, 28 Feb 2020 15:42:14 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH] pinctrl: madera: Add missing call to pinctrl_unregister_mappings
-Date:   Fri, 28 Feb 2020 15:42:14 +0000
-Message-ID: <20200228154214.13916-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 28 Feb 2020 10:42:19 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m3so3704022wmi.0;
+        Fri, 28 Feb 2020 07:42:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hRkPExrL63331yWhoKi03csinXjXhPNQwWmMbM7w46o=;
+        b=IO4EyAPn+xS3k3kXsj2p6D3mp+B71UwPYcFn/VwB6gUPmQz5tn+Ona5+GFFE9jVd7S
+         xKejK+x/6KNw5awfV/txpxw3kSW3XBtsgsS/2A31Dc12V+TF1/YuCf0Umw6OEFqKjxI8
+         NR/aDm3Zqpq6apW7gQogXtlpog1JiGHt/oGFGaakGNyX3Ermu87el+W5j2YCn/3tzmd/
+         /QiFMyPPStLovPhlf6nx+IKdZ80eRSvoQzdoBJnwwN4s9vOwJH6AwBnzKBraPvYSFyWk
+         cm1W4YjVDDzs1yaTQ3EFkx2Cp5nViqGmTOLfn8PbXZWyRAXSyxEu0Ch7MWJx0Zh6lKqu
+         szvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hRkPExrL63331yWhoKi03csinXjXhPNQwWmMbM7w46o=;
+        b=BowzVQerq5WGe2aRZzH1EJgjJsZawIVoqkLDXU1JcjaqkcHzgfjmI9GbtPxx2UkQ1s
+         nzGpuqsD0hTP2cxBlC3UuP3lZHwUbXl4sXnrAa0AwOrF6ryoCIbO/9GADyQBEIWddYhx
+         BtpqFDwpW/GNtxdbE+ba9aZNXiAOJMwSDkR61B4nkPVdcwlPGMd7HkbU0MzS+gODKXxF
+         eLEL+kg+taiN1Rxge6xfWCh5uq6dgDOcdHvjp2yma2/NybG1zV5Nva7MIhz64eknB1tG
+         EsVIUiGcALE0N/mB+NeK3Yf2GU4oq1jAw45JzpQstmjDD3wrYnzkx68B5y2CkbLS584u
+         mH0g==
+X-Gm-Message-State: APjAAAWHol5uiXrhJMMcBOyrcME5QZKDgwLYN082hqVMRNwaFPlE+wo3
+        DTPQ+liPI+Iw/y5t687qtDI=
+X-Google-Smtp-Source: APXvYqz/GzpMKjVbgeuIuiw7IadIFtmQ7Zb1hX5sTOTpT/zhw3XLGEkcEEHXB56OCUnevlwbKvibng==
+X-Received: by 2002:a05:600c:218d:: with SMTP id e13mr5545446wme.102.1582904538161;
+        Fri, 28 Feb 2020 07:42:18 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
+        by smtp.gmail.com with ESMTPSA id k16sm13355349wrd.17.2020.02.28.07.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:42:17 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+Date:   Fri, 28 Feb 2020 15:41:22 +0000
+Message-Id: <20200228154122.14164-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=745 clxscore=1015
- adultscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0
- suspectscore=1 impostorscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280124
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pinctrl_register_mappings is called in the pdata case, however a call to
-pinctrl_unregister_mappings is missing causing the mappings to be leaked
-on driver unbind. Add the missing call to correct this issue.
+Add RZ/G2E in pci_device_id table so that pci-epf-test can be used for
+testing PCIe EP in RZ/G2E.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/pinctrl/cirrus/pinctrl-madera-core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/cirrus/pinctrl-madera-core.c b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-index 7b6409ef553c9..dce2626384a90 100644
---- a/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-@@ -1073,13 +1073,26 @@ static int madera_pin_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index a5e3170..3c84e9a 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -66,6 +66,8 @@
  
-+	platform_set_drvdata(pdev, priv);
-+
- 	dev_dbg(priv->dev, "pinctrl probed ok\n");
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
  
- 	return 0;
- }
++#define PCI_DEVICE_ID_RENESAS_RZG2E		0x002d
++
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
  
-+static int madera_pin_remove(struct platform_device *pdev)
-+{
-+	struct madera_pin_private *priv = platform_get_drvdata(pdev);
-+
-+	if (priv->madera->pdata.gpio_configs)
-+		pinctrl_unregister_mappings(priv->madera->pdata.gpio_configs);
-+
-+	return 0;
-+}
-+
- static struct platform_driver madera_pin_driver = {
- 	.probe = madera_pin_probe,
-+	.remove = madera_pin_remove,
- 	.driver = {
- 		.name = "madera-pinctrl",
+@@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
  	},
++	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2E) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 -- 
-2.11.0
+2.7.4
 
