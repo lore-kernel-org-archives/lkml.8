@@ -2,89 +2,221 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AB2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27980C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170412467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582906862;
-	bh=n1275XsDQKYhS7LmjOu+E8pP5RdHGFNfW11MWKAQ9u8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l3CJ7/XcyfrWPJqCFIcTj6UktzCiab1WmdY1efNZvyLJB3hJ/ZCkPZjZvG6QVAwAS
-	 4MPgcDanaETNPfSvpLQ1P+WHC0gLvpgAOfB2oT3CeyJLu1CIjkPew4rYueJVoWjKQc
-	 De5Sph4qgJX688rqfym4QRAdhljR42hcShwJmgD0=
+	by mail.kernel.org (Postfix) with ESMTP id DB41A2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Cov8OYp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgB1QVA (ORCPT
+        id S1726720AbgB1QVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:21:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:40920 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1QVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:21:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED7B431B;
-        Fri, 28 Feb 2020 08:20:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FBA73F73B;
-        Fri, 28 Feb 2020 08:20:59 -0800 (PST)
-Date:   Fri, 28 Feb 2020 16:20:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, andriy.shevchenko@linux.intel.com,
-        linuxarm@huawei.com
-Subject: Re: [PATCH RFC 3/3] spi: HiSilicon v3xx: Use DMI quirk to set
- controller buswidth override bits
-Message-ID: <20200228162057.GC4956@sirena.org.uk>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
- <1582903131-160033-4-git-send-email-john.garry@huawei.com>
+        Fri, 28 Feb 2020 11:21:11 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38556 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1QVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:21:11 -0500
+Received: by mail-qk1-f195.google.com with SMTP id z19so3477207qkj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:21:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UkznnMO75zRejh3lSQN1L+vy300yacIDnI3WrUK/1uw=;
+        b=Cov8OYp65FX2yNvATDaf7m7e20ZmwQIqDLeVgweQDlUeJYiCfpicCDYbwQhWxfGLb+
+         T832RAZi9HQPOP+NwEslplxMgRpnI+F55eKJJkR5dpQBAFYJSaTYKN9qz8V5pT8Hf/1L
+         jY9ftioSmMYIE8FRQJ2RHVk5cEFRpZugmy15dnrMZhHbbqGbr2jP5nYlZrZpYpugXitI
+         NeUHI/kdyWYUAH16bp6jU2nnRh5/aGnNW1qHhQKYzKyFcjJ7AsMWwXSN5ZoTe9rzbNoS
+         dOvJBi8TAUuCTjSfWzA/z77By++YKHUBNsl5UPSDKnHpRKK/GpQePF3cU3SIRvibNbtn
+         zU3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UkznnMO75zRejh3lSQN1L+vy300yacIDnI3WrUK/1uw=;
+        b=tTRI4MIzEJWjYSNU/i2fue8mvPYLqDbsCCKIzjqUg8UI0zKS3jigUFI56fkDGCQLIQ
+         sFlzPLlS6wm2ISQyVbGoJ+QIrv5WeQyZiyHAFUBiE0xthY3RT3TlToeyce7PuyyYh+JU
+         ilYnZqee40I55XShNn/si1xewhwlSH9waRN3iGyrAnb3Q6AqmFyAvFNzkrEpzIciRby5
+         hOCICqDknYIWgoGqSFNXTHEVDq4Nq8SMzxoFCTZzM2ZMMhmoiG8VyZArm48Q8WUwFgDk
+         MZACR/Heu9S6fusUBISIe+JWyqekzRE76yswMEGB0SRKIiut1pqp0IcUK7rkK4ZItBzI
+         ao0Q==
+X-Gm-Message-State: APjAAAUCv26kLjC8NS4GmSu7mX1B9a+qRsRh85jymEqziMf7LCGCiVzb
+        v2VIY1nRT8dHCmCp3wnPDn3Wow==
+X-Google-Smtp-Source: APXvYqyu+eeF5tKNLM5HFfjayODDprsV20lOU9GMxMMNQJWu4HN0fRAhIoLfmUnTHpzZq9G2trxNGQ==
+X-Received: by 2002:a05:620a:698:: with SMTP id f24mr5182493qkh.476.1582906869713;
+        Fri, 28 Feb 2020 08:21:09 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id l25sm5157259qkk.115.2020.02.28.08.21.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 08:21:08 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7iNw-000737-5C; Fri, 28 Feb 2020 12:21:08 -0400
+Date:   Fri, 28 Feb 2020 12:21:08 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     syzbot <syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com>
+Cc:     bmt@zurich.ibm.com, dledford@redhat.com, kamalheib1@gmail.com,
+        krishna2@chelsio.com, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in iwcm_deref_id
+Message-ID: <20200228162108.GU31668@ziepe.ca>
+References: <000000000000e908c5059f752767@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582903131-160033-4-git-send-email-john.garry@huawei.com>
-X-Cookie: There Is No Cabal.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <000000000000e908c5059f752767@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 11:00:13PM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    f8788d86 Linux 5.6-rc3
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=164503d9e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cb0c054eabfba4342146
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
 
---DSayHWYpDlRfCAAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+#syz dup KASAN: use-after-free Read in rdma_listen (2)
 
-On Fri, Feb 28, 2020 at 11:18:51PM +0800, John Garry wrote:
-> The Huawei D06 board (and variants) can support Quad mode of operation.
->=20
-> Since we have no current method in ACPI SPI bus device resource descripti=
-on
-> to describe this information, use DMI to detect the board, and set the
-> controller buswidth override bits.
-
-Hopefully this is something that the ACPI people will be looking to
-address going forwards :/
-
---DSayHWYpDlRfCAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5ZPekACgkQJNaLcl1U
-h9BxUwf/TDuNgCXr7WDgjO72Sd8M518jpCW63B2SJ/nhlOul+uSQtPp38AvFbOKG
-xdPHKVoh82UV1cn6w79H71fMVmDy3y9uPlIB+GTxvnGze9F03HHo0ybJuAD6pvmb
-gW4TsG3xZ9TatTMfM5n3sc0APvcfxXe3DjqWOhsdw9zlGddgfpObtyTApRiScQWK
-UBZQnih2B8Fkgfbb5QSCjMEuxd4Hwp6lz/EkxKbBvgG3m8H41ONev6XKRkPCNagd
-8tS65tJb0nhEuP6X8F0NpkkyQaDwsWSybWp06Zo8X1f5E2yxdhgc0qCbPThGFnil
-f30KtWcvkDjZRu0eymnJ+Zab1jvEHQ==
-=T+F5
------END PGP SIGNATURE-----
-
---DSayHWYpDlRfCAAQ--
+> ==================================================================
+> BUG: KASAN: use-after-free in dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
+> BUG: KASAN: use-after-free in free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
+> BUG: KASAN: use-after-free in iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
+> Read of size 8 at addr ffff8880a0d05978 by task syz-executor.2/15428
+> 
+> CPU: 1 PID: 15428 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+>  print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+>  __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+>  kasan_report+0x26/0x50 mm/kasan/common.c:641
+>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+>  dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
+>  free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
+>  iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
+>  destroy_cm_id+0x4b2/0x5b0 drivers/infiniband/core/iwcm.c:442
+>  iw_destroy_cm_id+0x15/0x20 drivers/infiniband/core/iwcm.c:453
+>  cma_iw_listen drivers/infiniband/core/cma.c:2453 [inline]
+>  rdma_listen+0x6dc/0x9a0 drivers/infiniband/core/cma.c:3614
+>  cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+>  cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+>  rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+>  ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+>  ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+>  __vfs_write+0xb8/0x740 fs/read_write.c:494
+>  vfs_write+0x270/0x580 fs/read_write.c:558
+>  ksys_write+0x117/0x220 fs/read_write.c:611
+>  __do_sys_write fs/read_write.c:623 [inline]
+>  __se_sys_write fs/read_write.c:620 [inline]
+>  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+>  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45c449
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fe499194c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 00007fe4991956d4 RCX: 000000000045c449
+> RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000003
+> RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+> R13: 0000000000000cbe R14: 00000000004cea14 R15: 0000000000000007
+> 
+> Allocated by task 15428:
+>  save_stack mm/kasan/common.c:72 [inline]
+>  set_track mm/kasan/common.c:80 [inline]
+>  __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+>  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+>  kmalloc include/linux/slab.h:555 [inline]
+>  alloc_work_entries drivers/infiniband/core/iwcm.c:172 [inline]
+>  iw_cm_listen+0xdd/0x4a0 drivers/infiniband/core/iwcm.c:571
+>  cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+>  rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
+>  cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+>  cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+>  rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+>  ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+>  ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+>  __vfs_write+0xb8/0x740 fs/read_write.c:494
+>  vfs_write+0x270/0x580 fs/read_write.c:558
+>  ksys_write+0x117/0x220 fs/read_write.c:611
+>  __do_sys_write fs/read_write.c:623 [inline]
+>  __se_sys_write fs/read_write.c:620 [inline]
+>  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+>  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 15428:
+>  save_stack mm/kasan/common.c:72 [inline]
+>  set_track mm/kasan/common.c:80 [inline]
+>  kasan_set_free_info mm/kasan/common.c:337 [inline]
+>  __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x10d/0x220 mm/slab.c:3757
+>  dealloc_work_entries drivers/infiniband/core/iwcm.c:163 [inline]
+>  alloc_work_entries drivers/infiniband/core/iwcm.c:174 [inline]
+>  iw_cm_listen+0x288/0x4a0 drivers/infiniband/core/iwcm.c:571
+>  cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+>  rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
+>  cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+>  cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+>  rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+>  ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+>  ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+>  __vfs_write+0xb8/0x740 fs/read_write.c:494
+>  vfs_write+0x270/0x580 fs/read_write.c:558
+>  ksys_write+0x117/0x220 fs/read_write.c:611
+>  __do_sys_write fs/read_write.c:623 [inline]
+>  __se_sys_write fs/read_write.c:620 [inline]
+>  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+>  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff8880a0d05800
+>  which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 376 bytes inside of
+>  512-byte region [ffff8880a0d05800, ffff8880a0d05a00)
+> The buggy address belongs to the page:
+> page:ffffea0002834140 refcount:1 mapcount:0 mapping:ffff8880aa400a80 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea0001019988 ffffea000280e088 ffff8880aa400a80
+> raw: 0000000000000000 ffff8880a0d05000 0000000100000004 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff8880a0d05800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff8880a0d05880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >ffff8880a0d05900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                                                 ^
+>  ffff8880a0d05980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff8880a0d05a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ==================================================================
+> 
+> 
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
