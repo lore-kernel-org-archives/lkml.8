@@ -2,195 +2,211 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15259C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC88C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D290924695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D853E246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jE67j5cc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvkjVPI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgB1Jbc (ORCPT
+        id S1726778AbgB1Jbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:31:32 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54763 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgB1Jbb (ORCPT
+        Fri, 28 Feb 2020 04:31:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26077 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726738AbgB1Jbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:31:31 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z12so2426412wmi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:31:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
-        b=jE67j5ccRqZv9eK3iRUZLVykttz9c5sI8MK/YsOKN3jPVJFZJhmO4HrvBYpDo76iM7
-         B5NhRsZHEeYebBhF7xDDNPfgZHWdQJFJeZyZlL+CrAtLT35iy5E0m46pahcfydTs03Tc
-         fsyLquzsE28rqLEUzgEECrvaySmdEb04RpbPt3DeB3FtQCzTdBS1Ve09Ja7U+XTXmDEl
-         3p0THzcCVczmCnPGDFHeqYSQXxkgcYKIDaFJpef3jx9PlM3jZIwXL3fR/uZ3MWisT0pk
-         cR9t/lYOussthGdnFjc9OnagjXXsLew9M6zM5HO15RX2Jknpkma5/9RJYyqFSScmftRi
-         ty0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
-        b=CQhD7pBTTtXzxdQKirbvBB33bGcs95ptPisqkRt6F0uVIHVNsH9GP/URcUfNMRVlpT
-         m7+CdUvTGOdkdP7uL80MPb40+oOp+sEYMZ3WPZT6rfLA9qKiajwoobe16m6h0pKMwQna
-         BLY6loIgKkVf99/ji9bsDcsLf5w0+LhsNH+NfFv7lVZt3vZVx+vRtfryEkUk6Ouj+E2W
-         LFgOaNl2QCgwBjjx1iE+poyRfZiKEpRP/vHc/t/MPZb/2oB1ayuizOE6jNfNltWVvZ3Z
-         6my8ZZTjX76qqPSDMzob6qDiX7QTcBziS+zV+ttmpSRD95gMl1dtaYslpoMS8Fk22giB
-         TRJQ==
-X-Gm-Message-State: APjAAAU9seT9HFc5nCO0tRGsfptDoaSaFud1PVllCUw0k/2ss8PYqGvt
-        SJYdlx/lSFwsYcihVC3I4WpogQ==
-X-Google-Smtp-Source: APXvYqyF4k/gTiOodnjjGmlgUAFqePXdEZSWAR3mecnKr9zQIIfkcdyGRMU46SrUVXmpQYryG154Sw==
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr3921747wmc.18.1582882288774;
-        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9002:9a61:c019:3c99? ([2a01:e34:ed2f:f020:9002:9a61:c019:3c99])
-        by smtp.googlemail.com with ESMTPSA id q125sm1409867wme.19.2020.02.28.01.31.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
-Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
- thermal monitoring unit
-To:     Anson Huang <anson.huang@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
- <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
- <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
- <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
-Date:   Fri, 28 Feb 2020 10:31:26 +0100
+        Fri, 28 Feb 2020 04:31:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582882304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=pyyi2jMoTboEhmaXagzaHBnWexW62ljXBFzIAxgSo3w=;
+        b=AvkjVPI5n+iIZGMCcIWxTBha4WfAnN4iaFjKcdtprrwFfufGBWYrN979RaErcKK2jIzyms
+        7wNJsGDoI6oaW/HIa8Sbw22RafGy/D16iwrCU62MKb64WO4sqKndTzQVj/N3Xp3dp03gmh
+        u/AVekxOsFUtjmJ7HThz0avIEsT9ysQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-h1EFlB3LNSaFLdHgNioUYw-1; Fri, 28 Feb 2020 04:31:42 -0500
+X-MC-Unique: h1EFlB3LNSaFLdHgNioUYw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B851801E5C;
+        Fri, 28 Feb 2020 09:31:40 +0000 (UTC)
+Received: from [10.36.117.180] (ovpn-117-180.ams2.redhat.com [10.36.117.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6D98C09E;
+        Fri, 28 Feb 2020 09:31:33 +0000 (UTC)
+Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
+ certs if EFI vars are found
+From:   David Hildenbrand <david@redhat.com>
+To:     Javier Martinez Canillas <javierm@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-efi@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-security-module@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>
+References: <20200217113947.2070436-1-javierm@redhat.com>
+ <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com>
+Date:   Fri, 28 Feb 2020 10:31:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2020 02:12, Anson Huang wrote:
-> Hi, Daniel
-
-[ ... ]
-
->>> +static int tmu_get_temp(void *data, int *temp) {
->>> +	struct imx8mm_tmu *tmu = data;
->>> +	u32 val;
->>> +
->>> +	/* the temp sensor need about 1ms to finish the measurement */
->>> +	usleep_range(1000, 2000);
+On 28.02.20 10:19, David Hildenbrand wrote:
+> On 17.02.20 12:39, Javier Martinez Canillas wrote:
+>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
+>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
 >>
->> Why do yo need to force a delay here? If the sensor can not be read more
->> than one time every 1ms, then specify that in the DT switching the polling to
->> the right value, no?
+>> But it just assumes that the variables will be present and prints an error
+>> if the certs can't be loaded, even when is possible that the variables may
+>> not exist. For example the MokListRT variable will only be present if shim
+>> is used.
+>>
+>> So only print an error message about failing to get the certs list from an
+>> EFI variable if this is found. Otherwise these printed errors just pollute
+>> the kernel log ring buffer with confusing messages like the following:
+>>
+>> [    5.427251] Couldn't get size: 0x800000000000000e
+>> [    5.427261] MODSIGN: Couldn't get UEFI db list
+>> [    5.428012] Couldn't get size: 0x800000000000000e
+>> [    5.428023] Couldn't get UEFI MokListRT
+>>
+>> Reported-by: Hans de Goede <hdegoede@redhat.com>
+>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+>> Tested-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> The polling time(2 seconds) is OK for this case, adding this sleep is to prevent user from reading
-> temperature from sysfs interface very frequently like less than 1ms, does it make sense? 
+> This patch seems to break a very basic x86-64 QEMU setup (booting
+> upstream kernel with a F31 initrd - are you running basic boot tests?).
+> Luckily, it only took me 5 minutes to identify this patch. Reverting
+> this patch from linux-next fixes it for me.
+> 
+> 
+> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
+> [    1.044314] zswap: loaded using pool lzo/zbud
+> [    1.045663] Key type ._fscrypt registered
+> [    1.046154] Key type .fscrypt registered
+> [    1.046524] Key type fscrypt-provisioning registered
+> [    1.051178] Key type big_key registered
+> [    1.055108] Key type encrypted registered
+> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [    1.056172] #PF: supervisor instruction fetch in kernel mode
+> [    1.056706] #PF: error_code(0x0010) - not-present page
+> [    1.057367] PGD 0 P4D 0 
+> [    1.057729] Oops: 0010 [#1] SMP NOPTI
+> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
+> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
+> [    1.060230] RIP: 0010:0x0
+> [    1.060478] Code: Bad RIP value.
+> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
+> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
+> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
+> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
+> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
+> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
+> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
+> [    1.066562] Call Trace:
+> [    1.066803]  load_uefi_certs+0xc8/0x2bb
+> [    1.067171]  ? get_cert_list+0xfb/0xfb
+> [    1.067523]  do_one_initcall+0x5d/0x2f0
+> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
+> [    1.068337]  kernel_init_freeable+0x243/0x2c2
+> [    1.068751]  ? rest_init+0x23a/0x23a
+> [    1.069095]  kernel_init+0xa/0x106
+> [    1.069416]  ret_from_fork+0x27/0x50
+> [    1.069759] Modules linked in:
+> [    1.070050] CR2: 0000000000000000
+> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
+> 
+> 
 
-Not really, well except if the user is able to press the keys in less
-than 1ms :)
+Sorry, wrong mail identified, the patch is actually
 
-If the userspace writes a polling script reading the temperature in a
-busy loop, there is nothing we can do against silly programming :/
+commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
+Author: Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun Feb 16 19:46:25 2020 +0100
 
-However, it could interesting to add a <min polling interval> in the
-thermal structure and handle that from the core framework by caching the
-last value and return it in case get_temp is called too fast.
+    integrity: Check properly whether EFI GetVariable() is available
+
+    Testing the value of the efi.get_variable function pointer is not
+
+which made it work. (not even able to find that patch on lkml ...)
+
+
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Thanks,
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+David / dhildenb
 
