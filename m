@@ -2,121 +2,154 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB87C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D07C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8759A246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582865231;
-	bh=o9SImtHE09RBaeiSg/akjbnZtC8kIVnBm6fIALqjHEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OJSGlu6eIY4KrN+XmX7I3UQWN3+TnNBnLaohEw9r+g4aSP2V3IIfQBa2I8AFqROGg
-	 AYwq8fHiujmFgxpJbj1yBbWNc5KRI2qqYPveiHucbZpgdP4EUZSPZHt0vQMsSqmHR2
-	 r+pbbjmH4TWePIGvseHipxkmrRSdhyXPyswq2iq4=
+	by mail.kernel.org (Postfix) with ESMTP id 2BA832469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aJ5yBLp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgB1ErK (ORCPT
+        id S1725871AbgB1EuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:47:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1ErK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:47:10 -0500
-Received: from localhost (unknown [122.182.215.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8682469D;
-        Fri, 28 Feb 2020 04:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582865229;
-        bh=o9SImtHE09RBaeiSg/akjbnZtC8kIVnBm6fIALqjHEc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=chNQvRu+nGQVEvNZP9fKMItT1iL3YxeCcK/Ir4p+vH8SYCHpIUzfIf+JVVf118D69
-         sSJt6awBXYH918n0btJcNrQluaZMHGECWEZS+GuHINNcvL+fbu5FVzEkoUnpLsnZ5L
-         /CRmJdQrumBIAnac1ukK/g/YIKl+gitYICNVCasg=
-Date:   Fri, 28 Feb 2020 10:17:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, geert@linux-m68k.org
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-Message-ID: <20200228044704.GC2618@vkoul-mobl>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
- <20200224163707.GA2618@vkoul-mobl>
- <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
+        Thu, 27 Feb 2020 23:50:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37270 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1EuU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 23:50:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=s+QeEHYSNi44+hIO/8Apj4mw7x3KWr0g5BcyFCnqi+s=; b=aJ5yBLp8XFs2+ptHMnR8pdSRrR
+        D9z0gqDLHni+NJct/om5lD6wRQzjxCNtIoXut7UDYgtIUDIBpllTDUzXlMcLBrNB05af4mS/q4HSD
+        cIvsgLOu2yNKeJmW2xe1UWdHzgyXUQzYMlEj3DTtOCGVpU40Ik2B7FVUFfRa1S4HC2Q1BJUrIi+4S
+        rIxADQT5/NEVz8HQZZ2kNP/QzikKuWSaGM2rsMLRw2Uxx7lNw/FkiBvs8R+eF5DE768hB8hzzBH/H
+        tj6xB4BLACEK2NFHiohlqmyhhmAuxDr/1VgYkr1j/ryX3dKf/CTt4DHYINv3CP31X/x3i/zaQNu+Z
+        qhy/jcMA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7XbQ-0007eT-EV; Fri, 28 Feb 2020 04:50:20 +0000
+Subject: Re: [PATCH 1/2] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+References: <158278834245.14966.6179457011671073018.stgit@devnote2>
+ <158278835238.14966.16157216423901327777.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c8494bca-a5f7-0bc6-63f5-b9ec056eb894@infradead.org>
+Date:   Thu, 27 Feb 2020 20:50:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
+In-Reply-To: <158278835238.14966.16157216423901327777.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Hi,
+A few more comments for you:
 
-On 26-02-20, 14:10, Peter Ujfalusi wrote:
+On 2/26/20 11:25 PM, Masami Hiramatsu wrote:
+> Update boot configuration documentation.
+> 
+>  - Not using "config" abbreviation but configuration or description.
+>  - Rewrite descriptions of node and its maxinum number.
+>  - Add a section of use cases of boot configuration.
+>  - Move how to use bootconfig to earlier section.
+>  - Fix some typos, indents and format mistakes.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  Documentation/admin-guide/bootconfig.rst |  172 +++++++++++++++++++-----------
+>  Documentation/trace/boottime-trace.rst   |    2 
+>  2 files changed, 112 insertions(+), 62 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+> index cf2edcd09183..4bac98250bc0 100644
+> --- a/Documentation/admin-guide/bootconfig.rst
+> +++ b/Documentation/admin-guide/bootconfig.rst
+> @@ -11,19 +11,98 @@ Boot Configuration
+>  Overview
+>  ========
+>  
+> -The boot configuration expands the current kernel command line to support
+> +Boot configuration expands the current kernel command line to support
+>  additional key-value data when booting the kernel in an efficient way.
 
-> >  do we really want a custom dbg_show()..? Drivers can add their own
-> > files...
-> 
-> They could do that already ;)
-> 
-> With the custom dbg_show() DMA drivers can save on the surrounding
-> code and just fill in the information regarding to their HW.
-> Again, on am654 the default information is:
-> # cat /sys/kernel/debug/dmaengine 
-> dma0 (285c0000.dma-controller): number of channels: 96
-> 
-> dma1 (31150000.dma-controller): number of channels: 267
->  dma1chan0    | 2b00000.mcasp:tx
->  dma1chan1    | 2b00000.mcasp:rx
->  dma1chan2    | in-use
->  dma1chan3    | in-use
->  dma1chan4    | in-use
->  dma1chan5    | in-use
-> 
-> With my current .dbg_show implementation for k3-udma:
-> # cat /sys/kernel/debug/dmaengine 
-> dma0 (285c0000.dma-controller): number of channels: 96
-> 
-> dma1 (31150000.dma-controller): number of channels: 267
->  dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
->  dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
->  dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
->  dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
->  dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
->  dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
-> 
-> For me this makes a huge difference.
+                maybe      s/when/while/
 
-Ok
+> -This allows administrators to pass a structured-Key config file.
+> +This allows administrators to pass a structured-Key configuration file
+> +as a way to supplement the kernel command line to pass system boot parameters.
+>  
+> -Config File Syntax
+> -==================
+> +Compared with the kernel command line, the boot configuration can provide
+> +scalability (up to 32 KiB configurations), readability (structured
 
-> >> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
-> >> +
-> >> +static int __init dmaengine_debugfs_init(void)
-> >> +{
-> >> +	/* /sys/kernel/debug/dmaengine */
-> >> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
-> >> +			    &dmaengine_debugfs_fops);
-> > 
-> > Should we add a directory? That way we can keep adding stuff into that
-> > one
-> 
-> and have this file as 'summary' underneath?
+This makes it sound like bootconfig supports 32 thousand configurations, but
+(I think) it allows up to 32 KiB of configuration data.
 
-Correct
+> +configuration with comments) and compact expression of option groups.
+> +
+> +When to Use the Boot Configuration?
+> +-----------------------------------
+> +
+> +The boot configuration supports kernel command line options and init daemon
+> +boot options. All sub-keys under "kernel" root key are passed as a part of
+> +kernel command line [1]_, and one under "init" root key are passed as a part
 
-> I like the fact hat I can get all the information via one file.
-> Saves a lot of time (and explaining to users) on finding the correct
-> one to cat...
+                                 ones  {or those}
 
-But am sure we can come with more data to show, so having a directory
-helps :)
+> +of init command line. For example, ::
+> +
+> +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
+> +
+> +This can be written as following boot configuration file.::
+> +
+> +   kernel {
+> +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
+> +      ro       # mount rootfs as read only
+> +      quiet    # No console log
+> +      splash   # show splash image on boot screen
+> +      console = "ttyS0,115200n8" # 1st console to serial device
+> +      console += tty0            # add 2nd console
+> +   }
+> +
+> +If you think that kernel/init options becomes too long to write in boot-loader
+> +configuration file or want to comment on each options, you can use this
+
+                                         on each option,
+
+> +boot configuration. If unsure, you can still continue to use the legacy
+> +kernel command line.
+> +
+> +Also, some subsystem may depend on the boot configuration, and it has own
+> +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
+> +describe their options [2]_. In this case, you need to use the boot
+
+            its
+
+> +configuration.
+> +
+> +.. [1] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
+> +.. [2] See :ref:`Documentation/trace/boottime-trace.rst <boottimetrace>`
+
 
 -- 
-~Vinod
+~Randy
+
