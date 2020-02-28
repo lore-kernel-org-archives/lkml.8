@@ -2,128 +2,93 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96819C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6ABC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6461C246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582917407;
-	bh=BXqh6cgD9aYcDmgFUDG8alw4aMlNGdIq216e0sMu2gM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=A5torGMve+IU6Nxg57y80fgc0vo692JOl93n2RrYkh3XwpxfggRiX1z0ZmhdRsmRl
-	 w+jUV6vffyoRVP5EVlKqkoHaoZ0t7KfybHUa1Z6MGKQ7UC39/wf9ACsQISP7lnCY2J
-	 o2AC1md2Ql4GrUbP4HVdCHrvR/DH9k9s8tKqboos=
+	by mail.kernel.org (Postfix) with ESMTP id 028DD222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgB1TQp (ORCPT
+        id S1726811AbgB1TQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:16:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 14:16:59 -0500
+Received: from mga14.intel.com ([192.55.52.115]:49692 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1TQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:16:45 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C70A222C2;
-        Fri, 28 Feb 2020 19:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582917404;
-        bh=BXqh6cgD9aYcDmgFUDG8alw4aMlNGdIq216e0sMu2gM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=azovb8xMoPOm9v0m36JKUAew5EbZKIOZskp+O30F2ob5dQBTXCBqaC5WreLropVNE
-         GoAajw3AT0SgCfMFadO6XqzXVgsMYURzBXNc+O3uc1HgMkdK1zBUWAkFZh4lONfI8g
-         /wHZmAzy0v2oOUnxfCBGczDdZQULv5EcILGuyIZk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j7l7q-008pqH-Kw; Fri, 28 Feb 2020 19:16:42 +0000
+        id S1725827AbgB1TQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:16:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 11:16:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
+   d="scan'208";a="385584427"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.14.243]) ([10.252.14.243])
+  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2020 11:16:55 -0800
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Question about enabling trave_events on module load
+Message-ID: <8107a684-3ade-2457-28e4-c7e29ab1b1f5@intel.com>
+Date:   Fri, 28 Feb 2020 20:16:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 28 Feb 2020 19:16:42 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v4 16/20] KVM: arm64: GICv4.1: Allow SGIs to switch
- between HW and SW interrupts
-In-Reply-To: <6798eb13-a7e9-2a92-91b2-9b657962ea79@huawei.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-17-maz@kernel.org>
- <6798eb13-a7e9-2a92-91b2-9b657962ea79@huawei.com>
-Message-ID: <7aa668a5920b8deb8c2ee2fec3ef69b3@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+Hello Steven,
 
-On 2020-02-20 03:55, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2020/2/14 22:57, Marc Zyngier wrote:
->> In order to let a guest buy in the new, active-less SGIs, we
->> need to be able to switch between the two modes.
->> 
->> Handle this by stopping all guest activity, transfer the state
->> from one mode to the other, and resume the guest.
->> 
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> 
-> [...]
-> 
->> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
->> index 1bc09b523486..2c9fc13e2c59 100644
->> --- a/virt/kvm/arm/vgic/vgic-v3.c
->> +++ b/virt/kvm/arm/vgic/vgic-v3.c
->> @@ -540,6 +540,8 @@ int vgic_v3_map_resources(struct kvm *kvm)
->>   		goto out;
->>   	}
->>   +	if (kvm_vgic_global_state.has_gicv4_1)
->> +		vgic_v4_configure_vsgis(kvm);
->>   	dist->ready = true;
->>     out:
-> 
-> Is there any reason to invoke vgic_v4_configure_vsgis() here?
-> This is called on the first VCPU run, through kvm_vgic_map_resources().
-> Shouldn't the vSGI configuration only driven by a GICD_CTLR.nASSGIreq
-> writing (from guest, or from userspace maybe)?
+I bet that is not the first time said question is asked - that's for 
+sure - but I failed to find a method for solving the issue, that is: not 
+missing a single trace from the moment given module is loaded. Maybe I'm 
+missing something or documentation wasn't clear enough and that's why 
+I'm here.
 
-What I'm trying to catch here is the guest that has been restored with
-nASSGIreq set. At the moment, we don't do anything on the userspace
-side, because the vmm could decide to write that particular bit
-multiple times, and switching between the two modes is expensive (not
-to mention that all the vcpus may not have been created yet).
+If I am, please point to towards the right direction. Then you can slap 
+me for not reading the documentation carefully.
 
-Moving it to the first run makes all these pitfalls go away (we have the
-final nASSSGIreq value, and all the vcpus are accounted for).
+"trace_event=" cmdline option seems to target built-in tracepoints 
+_only_ so ain't much of a help to me. After digging the past for some 
+time, I've found a very promising thread:
+	tracing: Enable tracepoints via module parameters
+	https://lore.kernel.org/patchwork/patch/240185/
 
-Does this make sense to you?
+Sadly, I wasn't able to find _that_ solution (or anything similar for 
+that matter) implemented into the kernel.
 
-Thanks,
+So far, the only option I came with was separating traces into a 
+built-in piece that declares all events upfront so "trace_event=" option 
+has something to hook into. Said piece is of course made of a standard 
+trace header file filled with macro usage and a .c file with handful of 
+EXPORT_TRACEPOINT_SYMBOL(s).
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+While that solution could suffice, localization is the problem here - if 
+a tree my module is built in is configured via -m, the built-in piece 
+won't expose symbols at all and 'make' will leave me with bunch of 
+"ERROR: <symbol> undefined" for every module my traces were used in. To 
+fix the problem, I've relocated my trace .c file to /kernel/trace/. 
+Finally it compiles and works as intended..
+
+Not really satisfying, though. While there are some examples of 
+subsystems keeping their trace .c in /kernel/trace (e.g.: 
+power-traces.c), I don't believe that place is open for _every single 
+driver_ to dump their trace sources into.
+
+If indeed traces cannot be enabled on module load, then this is a gap.
+While not everyone looked satisfied in the 9year old thread, I believe 
+having the gap closed is important - and userspace can always be 
+improved upon as time passes.
+
+
+Thank you in advance for your input and time.
+
+Czarek
