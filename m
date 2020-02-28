@@ -2,178 +2,100 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB86C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26DCC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2F92468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADE82468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="he9+4O9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgB1QmP convert rfc822-to-8bit (ORCPT
+        id S1726884AbgB1Qmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:42:15 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38718 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgB1QmO (ORCPT
+        Fri, 28 Feb 2020 11:42:39 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725886AbgB1Qmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:42:14 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SGTWWs061963
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 11:42:13 -0500
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.112])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepy2nft4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 11:42:13 -0500
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 28 Feb 2020 16:42:12 -0000
-Received: from us1b3-smtp08.a3dr.sjc01.isc4sb.com (10.122.203.190)
-        by smtp.notes.na.collabserv.com (10.122.47.54) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 28 Feb 2020 16:42:03 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp08.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2020022816420346-560799 ;
-          Fri, 28 Feb 2020 16:42:03 +0000 
-In-Reply-To: <20200228133500.GN31668@ziepe.ca>
-Subject: Re: Re: Re: possible deadlock in cma_netdev_callback
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Date:   Fri, 28 Feb 2020 16:42:02 +0000
+        Fri, 28 Feb 2020 11:42:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582908157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SDgKBpn0a2kyKpdeNQbhT4JKfw2dNRrDMjGLH2Nskjk=;
+        b=he9+4O9GrrPHqIm7VjErNjAP+tuFFENxc8/CBbYa2/Nc6YebvsT3gUpp2xcfmUh14l6IgB
+        AYRRfUQGcq0FsWDoGuWATruT8iS812TySSFKDWJskJuBW+ThBka9z/BVwo336f1pJGCPpB
+        bAmb4+T8lHhgaMSEut/ptFTTkGcwPow=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-FMOomAvRO-WI5jDj2BH7ZQ-1; Fri, 28 Feb 2020 11:42:35 -0500
+X-MC-Unique: FMOomAvRO-WI5jDj2BH7ZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC74418FF687;
+        Fri, 28 Feb 2020 16:42:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8278526368;
+        Fri, 28 Feb 2020 16:42:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
+References: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com> <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com> <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net> <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com> <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net> <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com> <20200227151421.3u74ijhqt6ekbiss@ws.net.home> <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net> <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com> <20200228122712.GA3013026@kroah.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
+        util-linux@vger.kernel.org
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20200228133500.GN31668@ziepe.ca>,<20200227164622.GJ31668@ziepe.ca>
- <20200227155335.GI31668@ziepe.ca> <20200226204238.GC31668@ziepe.ca>
- <000000000000153fac059f740693@google.com>
- <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
- <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
- <OFF9E6CFC6.7E79459D-ON0025851C.00472582-0025851C.0047F357@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
- SCN1812108_20180501T0841_FP62 November 04, 2019 at 09:47
-X-KeepSent: E6F5FD43:5CAFDF8A-0025851C:005AC3E0;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 48399
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 20022816-4615-0000-0000-0000019A70F7
-X-IBM-SpamModules-Scores: BY=0.020206; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.411265; ST=0; TS=0; UL=0; ISC=; MB=0.005295
-X-IBM-SpamModules-Versions: BY=3.00012657; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000293; SDB=6.01340539; UDB=6.00714412; IPR=6.01122900;
- MB=3.00031011; MTD=3.00000008; XFM=3.00000015; UTC=2020-02-28 16:42:10
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2020-02-28 12:22:27 - 6.00011059
-x-cbparentid: 20022816-4616-0000-0000-0000B8BA7A08
-Message-Id: <OFE6F5FD43.5CAFDF8A-ON0025851C.005AC3E0-0025851C.005BBD83@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_05:2020-02-28,2020-02-28 signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <108164.1582908148.1@warthog.procyon.org.uk>
+Date:   Fri, 28 Feb 2020 16:42:28 +0000
+Message-ID: <108165.1582908148@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 02/28/2020 02:35PM
->Cc: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
->chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
->linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
->netdev@vger.kernel.org, parav@mellanox.com,
->syzkaller-bugs@googlegroups.com, willy@infradead.org
->Subject: [EXTERNAL] Re: Re: possible deadlock in cma_netdev_callback
->
->On Fri, Feb 28, 2020 at 01:05:53PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 02/27/2020 05:46PM
->> >Cc: "syzbot"
-><syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
->> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
->> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
->> >netdev@vger.kernel.org, parav@mellanox.com,
->> >syzkaller-bugs@googlegroups.com, willy@infradead.org
->> >Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
->> >
->> >On Thu, Feb 27, 2020 at 04:21:21PM +0000, Bernard Metzler wrote:
->> >> 
->> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >> >Date: 02/27/2020 04:53PM
->> >> >Cc: "syzbot"
->> ><syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
->> >> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
->> >> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
->> >> >netdev@vger.kernel.org, parav@mellanox.com,
->> >> >syzkaller-bugs@googlegroups.com, willy@infradead.org
->> >> >Subject: [EXTERNAL] Re: possible deadlock in
->cma_netdev_callback
->> >> >
->> >> >On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler
->wrote:
->> >> >
->> >> >> Thanks for letting me know! Hmm, we cannot use RCU locks
->since
->> >> >> we potentially sleep. One solution would be to create a list
->> >> >> of matching interfaces while under lock, unlock and use that
->> >> >> list for calling siw_listen_address() (which may sleep),
->> >> >> right...?
->> >> >
->> >> >Why do you need to iterate over addresses anyhow? Shouldn't the
->> >> >listen
->> >> >just be done with the address the user gave and a BIND DEVICE
->to
->> >the
->> >> >device siw is connected to?
->> >> 
->> >> The user may give a wildcard local address, so we'd have
->> >> to bind to all addresses of that device...
->> >
->> >AFAIK a wild card bind using BIND DEVICE works just fine?
->> >
->> >Jason
->> >
->> Thanks Jason, absolutely! And it makes things so easy...
->
->Probably check to confirm, it just my memory..
->
->Jason
->
-Well, right, marking a socket via setsockopt SO_BINDTODEVICE
-does not work - I get -EPERM. Maybe works only from user land
-since the ifname gets copied in from there.
+>   children/$CHILD_ID -> ../../$CHILD_ID
 
-What I tested as working is nailing the scope of wildcard
-listen via:
-s->sk->sk_bound_dev_if = netdev->ifindex;
+This would really suck.  This bit would particularly affect rescanning time.
 
-Without doing it, wildcard listen would end up covering all
-interfaces, even if siw is not attached to some. Also, if siw is
-attached to more than one interface, only the first bind call
-works of course (for wildcard, the rdma_cm calls me for all
-interfaces siw is attached to). So without binding to a
-device it is not working.
+You also really want to read the entire child set atomically and, ideally,
+include notification counters.
 
-I am not sure what is the right way of limiting the scope
-of a socket to one interface in kernel mode. Is above line
-the way to go, or do I miss an interface to do such things?
-Anybody could help?
+>  supers/$SUPER_ID/
+>    type: fstype
+>    source: mount source (devname)
+>    options: csv of mount options
 
-Thanks very much!
-Bernard.
+There's a lot more to fsinfo() than just this lot - and there's the
+possibility that some of the values may change depending on exactly which file
+you're looking at.
+
+David
 
