@@ -2,197 +2,133 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707BDC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A16CC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAF4246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfTtz8qo"
+	by mail.kernel.org (Postfix) with ESMTP id 051BF246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgB1GMm (ORCPT
+        id S1726700AbgB1GNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:12:42 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40287 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1GMl (ORCPT
+        Fri, 28 Feb 2020 01:13:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20158 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbgB1GNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:12:41 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m2so1962387qka.7;
-        Thu, 27 Feb 2020 22:12:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wyty40W/Qu8GnwhYqxyjqRT5oV/6aZoaZV9g8IYFv9c=;
-        b=DfTtz8qok49FosFplrh33Y+hSE7m7IFREBcDa+rJ4zLj4+VeOtCsBkIFXcNYtxef9Q
-         S7JbDBWkvaFQKb3mdWIJ/cG8ZHYyVUUVvNEEYt/0ChtAsLIM9jPz/T6ZN6T5D29TY7/J
-         Y+iYrGfeDeKpbgkjx+/P+sjdyauQ3p5dH4mp/ClLnOTzOvy4aT8xdnT+vPQali2uKCDf
-         7eJXnOiqP+JNRcbASlmRqG0sKiB7DoXXxzRLZ75C25GmlUn3yGv/fVYY+CyCsJ1u+RPJ
-         /b1yWW81IIxTDabnFSHbA2wluSDV4B7QCYCa22P5BvRwB3ZTIF8r29N7qAL7n0UNhSgO
-         kkoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wyty40W/Qu8GnwhYqxyjqRT5oV/6aZoaZV9g8IYFv9c=;
-        b=HlMJ4DSwsiGkBKeDQNsnHQyDFfBgn9czHvisOJKqIwE3248xe+3BnejB3U1eDLgz2N
-         V9o/I+tWjFqBoDMhmRt1jT3+FRJA52DZUZfaSqD04AKcL+jRWwG9NQtf8CPF8X537WCF
-         utn83OUYW2GsIafp3V9/d3S9f5fqcUrUoCpYjuphvhHXREDupCrjfM+UtpRs77AQ6D5d
-         drbLgb+u5rocC0jBz0yUytQeG2ip5GU4JwPbkxNbXtIYKYQJWbeIbqvSgrR5jk658ZND
-         lxSLkGOUbWW8s6C6kiGcLdOd+uL0zP6z00CWGd78IzUEzV4jUBMtCn1jY3Ce3BEe7W4u
-         5I2Q==
-X-Gm-Message-State: APjAAAVDoK2QBkhcD+sArM6l/ghNc3rJ8HUoiu+/GQOrjJyyGP3VJ2eR
-        i5G6Ij0EdQR528PsK/q47Xc=
-X-Google-Smtp-Source: APXvYqyQ/W/wSgr89mAFJI+Vkpgacn91PVqegXumByTWinq73Oahtc3x5zuqEslYTpx5bV+7JFY3UQ==
-X-Received: by 2002:ae9:e413:: with SMTP id q19mr3129318qkc.248.1582870360131;
-        Thu, 27 Feb 2020 22:12:40 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id n12sm4482218qkg.89.2020.02.27.22.12.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 22:12:39 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 00FB321FE5;
-        Fri, 28 Feb 2020 01:12:38 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 28 Feb 2020 01:12:38 -0500
-X-ME-Sender: <xms:VK9YXjtuyRD1ML6U8iahQ1YTxvwTYpCHHjZVeoJm3AB8stlaIybH5g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdelgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgpdhinhhrihgrrdhfrhenucfkphephedvrdduheehrdduuddu
-    rdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:VK9YXnpBDuVCU3KlMZF2U1uDLkdDTh_z5L00xk6z4YKjlwDIzbE7Yg>
-    <xmx:VK9YXi6Zt_kD7rVL1UBlywYHL3pxLLfNp7bKZ3-0GZr0ONyufUYsiQ>
-    <xmx:VK9YXsqQ--OyU2onyUZewe7cqOCSz22mIR_LBFT7tRW1Dfu8gZeB4w>
-    <xmx:Va9YXsn-tlpdEVVg-wauh9yuLigtr5EV17UQxcPtQnLxqOpxntrNnqj-UBY>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 70FB03060BD1;
-        Fri, 28 Feb 2020 01:12:36 -0500 (EST)
-Date:   Fri, 28 Feb 2020 14:12:34 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Fri, 28 Feb 2020 01:13:09 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S6BsMX016687
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:13:08 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepy69kqf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:13:08 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Fri, 28 Feb 2020 06:13:05 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Feb 2020 06:12:56 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01S6CteC40304740
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 06:12:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E084DAE053;
+        Fri, 28 Feb 2020 06:12:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89E4BAE051;
+        Fri, 28 Feb 2020 06:12:55 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 06:12:55 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 025AAA01F5;
+        Fri, 28 Feb 2020 17:12:50 +1100 (AEDT)
+Subject: Re: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request
+ controller health & perf data
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] Documentation/locking/atomic: Add litmus tests
- for atomic APIs
-Message-ID: <20200228061234.GS69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200227004049.6853-1-boqun.feng@gmail.com>
- <20200227175441.GB12046@andrea>
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-22-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Fri, 28 Feb 2020 17:12:53 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227175441.GB12046@andrea>
+In-Reply-To: <20200221032720.33893-22-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022806-4275-0000-0000-000003A63B3C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022806-4276-0000-0000-000038BAB55A
+Message-Id: <fdc5faec-d03d-3cba-4a9c-add7e522ad13@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_01:2020-02-26,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ spamscore=0 clxscore=1015 phishscore=0 priorityscore=1501 mlxlogscore=680
+ adultscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:54:41PM +0100, Andrea Parri wrote:
-> On Thu, Feb 27, 2020 at 08:40:44AM +0800, Boqun Feng wrote:
-> > A recent discussion raises up the requirement for having test cases for
-> > atomic APIs:
-> > 
-> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
-> > 
-> > , and since we already have a way to generate a test module from a
-> > litmus test with klitmus[1]. It makes sense that we add more litmus
-> > tests for atomic APIs. And based on the previous discussion, I create a
-> > new directory Documentation/atomic-tests and put these litmus tests
-> > here.
-> > 
-> > This patchset starts the work by adding the litmus tests which are
-> > already used in atomic_t.txt, and also improve the atomic_t.txt to make
-> > it consistent with the litmus tests.
-> > 
-> > Previous version:
-> > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
-> > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
-> > 
-> > Changes since v2:
-> > 
-> > *	Change from "RFC" to "PATCH".
-> > 
-> > *	Wording improvement in atomic_t.txt as per Alan's suggestion.
-> > 
-> > *	Add a new patch describing the usage of atomic_add_unless() is
-> > 	not limited anymore for LKMM litmus tests.
-> > 
-> > My PR on supporting "(void) expr;" statement has been merged by Luc
-> > (Thank you, Luc). So all the litmus tests in this patchset can be
-> > handled by the herdtools compiled from latest master branch of the
-> > source code.
-> > 
-> > Comments and suggestions are welcome!
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> A few nits (see inline), but otherwise the series looks good to me;
-> with those fixed, please feel free to add:
+> When health & performance data is requested from the controller,
+> it responds with an error log containing the requested information.
 > 
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
-> 
+> This patch allows the request to me issued via an IOCTL.
 
-Thank you and Alan! I will fix those in the next version.
+A better explanation would be good - this IOCTL triggers a request to 
+the controller to collect controller health/perf data, and the 
+controller will later respond with an error log that can be picked up 
+via the error log IOCTL that you've defined earlier.
 
-Regards,
-Boqun
 
-> to the entire series.
-> 
-> Thanks,
->   Andrea
-> 
-> 
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > [1]: http://diy.inria.fr/doc/litmus.html#klitmus
-> > 
-> > Boqun Feng (5):
-> >   tools/memory-model: Add an exception for limitations on _unless()
-> >     family
-> >   Documentation/locking/atomic: Fix atomic-set litmus test
-> >   Documentation/locking/atomic: Introduce atomic-tests directory
-> >   Documentation/locking/atomic: Add a litmus test for atomic_set()
-> >   Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
-> > 
-> >  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
-> >  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
-> >  Documentation/atomic-tests/README             | 16 ++++++++++
-> >  Documentation/atomic_t.txt                    | 24 +++++++-------
-> >  MAINTAINERS                                   |  1 +
-> >  tools/memory-model/README                     | 10 ++++--
-> >  6 files changed, 92 insertions(+), 15 deletions(-)
-> >  create mode 100644 Documentation/atomic-tests/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
-> >  create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> >  create mode 100644 Documentation/atomic-tests/README
-> > 
-> > -- 
-> > 2.25.0
-> > 
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
