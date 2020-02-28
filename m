@@ -2,151 +2,112 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65ADC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06C9C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9832A24691
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8283C2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgB1Kou (ORCPT
+        id S1726907AbgB1KpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:44:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgB1Kou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:44:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 156444B2;
-        Fri, 28 Feb 2020 02:44:49 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3044F3F73B;
-        Fri, 28 Feb 2020 02:44:48 -0800 (PST)
-Date:   Fri, 28 Feb 2020 10:44:42 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharatku@xilinx.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>, maz@kernel.org
-Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
- <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+        Fri, 28 Feb 2020 05:45:18 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55090 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726063AbgB1KpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:45:17 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SAjGF2012430;
+        Fri, 28 Feb 2020 05:45:16 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yepv0srw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Feb 2020 05:45:16 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01SAjFVm045684
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 28 Feb 2020 05:45:15 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 28 Feb
+ 2020 05:45:14 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 28 Feb 2020 05:45:14 -0500
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01SAjB7x020958;
+        Fri, 28 Feb 2020 05:45:11 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <dmitry.torokhov@gmail.com>, <michael.hennerich@analog.com>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH v2] input: touchscreen: ad7877: Use new structure for SPI transfer delays
+Date:   Fri, 28 Feb 2020 12:45:08 +0200
+Message-ID: <20200228104508.15564-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200227130619.28142-1-sergiu.cuciurean@analog.com>
+References: <20200227130619.28142-1-sergiu.cuciurean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_03:2020-02-26,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+MarcZ, FHI]
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-[...]
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-> > > +/* ECAM definitions */
-> > > +#define ECAM_BUS_NUM_SHIFT		20
-> > > +#define ECAM_DEV_NUM_SHIFT		12
-> > 
-> > You don't need these ECAM_* defines, you can use pci_generic_ecam_ops.
-> Does this need separate ranges region for ECAM space ? 
-> We have ECAM and controller space in same region.
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
 
-You can create an ECAM window with pci_ecam_create where *cfgres
-represent the ECAM area, I don't get what you mean by "same region".
+Changelog v1->v2:
+*Restore initial name of wrongfully modfied struct member
 
-Do you mean "contiguous" ? Or something else ?
+ drivers/input/touchscreen/ad7877.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> > > +
-> > > +/**
-> > > + * struct xilinx_cpm_pcie_port - PCIe port information
-> > > + * @reg_base: Bridge Register Base
-> > > + * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-> > > + * @irq: Interrupt number
-> > > + * @root_busno: Root Bus number
-> > > + * @dev: Device pointer
-> > > + * @leg_domain: Legacy IRQ domain pointer
-> > > + * @irq_misc: Legacy and error interrupt number  */ struct
-> > > +xilinx_cpm_pcie_port {
-> > > +	void __iomem *reg_base;
-> > > +	void __iomem *cpm_base;
-> > > +	u32 irq;
-> > > +	u8 root_busno;
-> > > +	struct device *dev;
-> > > +	struct irq_domain *leg_domain;
-> > > +	int irq_misc;
-> > > +};
-> > > +
-> > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port, u32
-> > > +reg) {
-> > > +	return readl(port->reg_base + reg);
-> > > +}
-> > > +
-> > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-> > > +			      u32 val, u32 reg)
-> > > +{
-> > > +	writel(val, port->reg_base + reg);
-> > > +}
-> > > +
-> > > +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port
-> > > +*port) {
-> > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-> > 
-> > 	u32 val = pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
-> > 
-> > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
-> > 
-> > And this function call is not that informative anyway - it is used just to print a log
-> > whose usefulness is questionable.
-> We need this logging information customers are using this info in case
-> of link down failure.
+diff --git a/drivers/input/touchscreen/ad7877.c b/drivers/input/touchscreen/ad7877.c
+index 9b652f61837f..08f5372f0bfd 100644
+--- a/drivers/input/touchscreen/ad7877.c
++++ b/drivers/input/touchscreen/ad7877.c
+@@ -281,12 +281,14 @@ static int ad7877_read_adc(struct spi_device *spi, unsigned command)
+ 
+ 	req->xfer[1].tx_buf = &req->ref_on;
+ 	req->xfer[1].len = 2;
+-	req->xfer[1].delay_usecs = ts->vref_delay_usecs;
++	req->xfer[1].delay.value = ts->vref_delay_usecs;
++	req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
+ 	req->xfer[1].cs_change = 1;
+ 
+ 	req->xfer[2].tx_buf = &req->command;
+ 	req->xfer[2].len = 2;
+-	req->xfer[2].delay_usecs = ts->vref_delay_usecs;
++	req->xfer[2].delay.value = ts->vref_delay_usecs;
++	req->xfer[2].delay.unit = SPI_DELAY_UNIT_USECS;
+ 	req->xfer[2].cs_change = 1;
+ 
+ 	req->xfer[3].rx_buf = &req->sample;
+-- 
+2.17.1
 
-Out of curiosity, to do what ?
-
-[...]
-
-> > > +/**
-> > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and mark
-> > > +IRQ as valid
-> > > + * @domain: IRQ domain
-> > > + * @irq: Virtual IRQ number
-> > > + * @hwirq: HW interrupt number
-> > > + *
-> > > + * Return: Always returns 0.
-> > > + */
-> > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-> > > +				    unsigned int irq, irq_hw_number_t hwirq) {
-> > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> > 
-> > INTX are level IRQs, the flow handler must be handle_level_irq.
-> Accepted will change.
-> > 
-> > > +	irq_set_chip_data(irq, domain->host_data);
-> > > +	irq_set_status_flags(irq, IRQ_LEVEL);
-> > 
-> > The way INTX are handled in this patch is wrong. You must set-up a chained IRQ
-> > with the appropriate flow handler, current code uses an IRQ action and that's an
-> > IRQ layer violation and it goes without saying that it is almost certainly broken.
-> In our controller we use same irq line for controller errors and
-> legacy errors.  we have two cases here where error interrupts are
-> self-consumed by controller, and legacy interrupts are flow handled.
-> Its not INTX handling alone for this IRQ line .  So chained IRQ can be
-> used for self consumed interrupts too ?
-
-No. In this specific case both solutions are not satisfying, we need to
-give it some thought, I will talk to Marc (CC'ed) to find the best
-option here going forward.
-
-Thanks,
-Lorenzo
