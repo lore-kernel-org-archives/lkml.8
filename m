@@ -2,196 +2,218 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59634C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E978C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2780F246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582883064;
-	bh=EY3N5ARkuQ2Fmd9dLsdkczWCpYQSSmA2gTdVVcCS6/A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VimMQ90mVI5wEyW8dLHERpG87WOZ01d4UEpmRHFsuwthHXqxrl8M4k1721S6Qf8Dz
-	 0qSITaITlsALpAD8AE/ofcev23SHOhCifStsODgixBIyJzcRu8wNa4WVXsC+rmZCuF
-	 /mbWPS+P2fyfks1qBARyQqZmKYslaNGBHAsw95Yw=
+	by mail.kernel.org (Postfix) with ESMTP id C6C80246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:45:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="WIcI4Rxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgB1JoX (ORCPT
+        id S1726857AbgB1Jo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:44:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgB1JoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:44:22 -0500
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BC12246B7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582883061;
-        bh=EY3N5ARkuQ2Fmd9dLsdkczWCpYQSSmA2gTdVVcCS6/A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DDFiZ942ndAh4/uGo+flTje203xmGj7xn0NowQTvbLbY7+SQw33rROqAa5nibZGrJ
-         XSfWGSTyfiKZL0a/vmlhmTKqCMrKbN0PCcuo98GLBVV3e1/LvTfdH9HmiR3rLlzYTC
-         VtsGWYbncN4LRy5rVHDyA/PhCjVwK2G2KjwRXL1A=
-Received: by mail-wm1-f51.google.com with SMTP id z12so2468487wmi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:44:20 -0800 (PST)
-X-Gm-Message-State: APjAAAXElwFVwpV+TLe1bU2kpoardPvQ/mCEbjuelR3kgaOGbykSdnZC
-        zmYPgEvHnJdPAQM/LXXT91ye10rIqfZgYzdKYj67fg==
-X-Google-Smtp-Source: APXvYqzQDeiE9uETc0v0SlldVjq0AbI0gGMk7x0p0dQwOWlkIdt6C1NHOKlKwQufolI6IQPaR0rg9t9cVXd31TKDLwI=
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4334566wmk.68.1582883059353;
- Fri, 28 Feb 2020 01:44:19 -0800 (PST)
+        Fri, 28 Feb 2020 04:44:59 -0500
+Received: from mail-eopbgr80131.outbound.protection.outlook.com ([40.107.8.131]:34216
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726400AbgB1Jo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:44:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kgD1R+9z7Wgj84I7c5j4yuna9lEJvlX1HDvT5uGveadEZvjRdyEwcVxcaUlfEwh1gi9rfEHavYLp0GdFIYcJDvmZcZneeEwiuvfm8BqfYkotBvTjTeqfW8+QmCK3f9m61wXd2t48rG99+5ZP82srPOKOurumzgPRFSRigwH1Jvk2+ccuEy/uQtwEvzJk9qYK08p7rm8q/l2XF+KS50xlPS65akU0CE7dn/Ug2UiFVZxB2VHO9G+vTPf6sqiqr5foBLeJEbIkffHPw2X6Y7qm8Nh2E9QZyfZtifg00oEqklUTDWjI3Bqr0MPUye8HUAD6if2PcLCgqTx0F7KbJiM8Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yd28kipyr9zkr26PW5bXAAluK4+BionNN2m6Akvd8IQ=;
+ b=WvRVKv9Ha1ABl/II6skf9FRuLQfWYtzXWpXmFEzHxFJCjkZ36zdfKx2a9n10ZkaRvcwWQru5RtUNuyaMGk0ATFUiJKbZZ4gvGaQHbM2ocGYI5mlQmhAz8uSVZvC8A3UZgcBlOvWI2hUGjunt7x1EN7EbTsUTklerm+85fXHaRp8UMM3XOfnXx467XiSXPtmhg3f1fBvMZh+1r0Gqb5bX9PFqIN2VQyWBruJn+WUXzfWN1CHXY6hr8U01AqnzxFwADsADHl6zZ5sH0w6Q7eJ7lJ8Olx379OxLVFvCHqPzlz9itBskC4H76+7RcefSZkEgDWC4FMTfKVlKy6oBtAecgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yd28kipyr9zkr26PW5bXAAluK4+BionNN2m6Akvd8IQ=;
+ b=WIcI4Rxh3hdEla6z9/PgE2nKIHiwJH1flCA1Oe8WQTOWBBJLXrDcJ1RSTn2mpDMPpaQ2sOUnjDfKldBENTicI7ri1whNVM9/mJ7n0YSa9bz1uANmXTE3kKt0SwARBdMzqgiGw43dNPbin8mnnMWa5Gmpzbw/28Cy53OlQTOTNG8=
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0111.EURP190.PROD.OUTLOOK.COM (10.172.82.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Fri, 28 Feb 2020 09:44:54 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
+ 09:44:53 +0000
+Received: from plvision.eu (217.20.186.93) by AM6P195CA0015.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:81::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Fri, 28 Feb 2020 09:44:52 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jiri Pirko <jiri@resnulli.us>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX325x (AC3x)
+Thread-Topic: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX325x (AC3x)
+Thread-Index: AQHV6/jzY7yqWky1LUqTk1e6REHYB6gtohWAgAHwnQCAAJe3gIAANRAA
+Date:   Fri, 28 Feb 2020 09:44:53 +0000
+Message-ID: <20200228094446.GA2663@plvision.eu>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-2-vadym.kochan@plvision.eu>
+ <20200226155423.GC26061@nanopsycho> <20200227213150.GA9372@plvision.eu>
+ <20200228063451.GH26061@nanopsycho>
+In-Reply-To: <20200228063451.GH26061@nanopsycho>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P195CA0015.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:209:81::28) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.20.186.93]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3266884d-6963-4fbd-501c-08d7bc32dccb
+x-ms-traffictypediagnostic: VI1P190MB0111:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1P190MB0111E90653061BB50CD9104695E80@VI1P190MB0111.EURP190.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0327618309
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(346002)(39830400003)(376002)(189003)(199004)(8676002)(33656002)(36756003)(26005)(66946007)(86362001)(186003)(66476007)(1076003)(64756008)(6916009)(16526019)(66446008)(2906002)(66556008)(81156014)(956004)(4326008)(54906003)(508600001)(8936002)(55016002)(8886007)(2616005)(7696005)(71200400001)(44832011)(81166006)(107886003)(52116002)(316002)(5660300002)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0111;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: plvision.eu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vt0CE8RGn5biDilvM2dkyyX72B5+S/T4o9FOt99QxysXHkglqfl5tj+LtC4Ud8STbQhtRkLB2gEKUyh4z8Z11h71fTlVRE1VnDD0sgEcm8KluOCtnRlFJri6cNuyYGUD1EazuOciavFjyA5YC6WV1f4G6Obf0J3FDapI/m3DwJ6optrZL7Kp6FgLluaJtpqOEfg/SfaAg9UJEbMrkTILX4KRf3959SwTRVOQjhB3dkVmSh+th0kx85BNmfvEXdjTSrEQfb7kr8j7hgtmRSch5MbJlMQBJPRMsKyJc0mE3w+W5HPliLmJ9PL8K5keOzg59CgV95R4EM2K/FKlmARB1qC+K8co16ynhldNbxzd2Z/jeOEErNx6I8TUM8Mz4yWGyp5NMBM2Ae/70PqCruBqvIpZQw66rNklWiO6IG99IzRCyrDXTc7fg3Nn7fbEW4CTnzNhIsnBu/8xZr3SQGcQOVeAEA2pJkbpwJag8Pze57YzG+QZXO8/qMdrmU0uvvQV
+x-ms-exchange-antispam-messagedata: 53+VHv66rHIyR6JLiwKRr95sEXMEYwd71eeNch58O0wt+YB3nd3+pm/C3XKx5sC7+eVSM3s9ih20GOL4Q2Qk9VEfIdfpOnKNLeZBUnQddodWVpQWjj6iyjFQUGMMWyh6DOAy9jaZF6JARItjrtJU/g==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2C1627D7860D254DB5F53F06C3BF3A89@EURP190.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200217113947.2070436-1-javierm@redhat.com> <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
- <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com> <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
- <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com> <0d8e7525-545d-23d5-dace-6804833447d2@redhat.com>
-In-Reply-To: <0d8e7525-545d-23d5-dace-6804833447d2@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 28 Feb 2020 10:44:08 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu-OO_YiDWbF2pRBQTGe3FxC5CmjuxCnCwxJmnzRHhEz_g@mail.gmail.com>
-Message-ID: <CAKv+Gu-OO_YiDWbF2pRBQTGe3FxC5CmjuxCnCwxJmnzRHhEz_g@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
- certs if EFI vars are found
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3266884d-6963-4fbd-501c-08d7bc32dccb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 09:44:53.8410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: shLTZYXy2VyWxuKD+Fe0THnSzXE4ErdLYmGRGjP9/NPYw+CFdh0XOrYWuwia0S0yM64PgvzDb9KYsihdJwZ8FqUYaQ6NKlhtzFPCO7NGWZA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 at 10:43, David Hildenbrand <david@redhat.com> wrote:
->
-> On 28.02.20 10:39, Ard Biesheuvel wrote:
-> > On Fri, 28 Feb 2020 at 10:35, David Hildenbrand <david@redhat.com> wrote:
-> >>
-> >> On 28.02.20 10:31, David Hildenbrand wrote:
-> >>> On 28.02.20 10:19, David Hildenbrand wrote:
-> >>>> On 17.02.20 12:39, Javier Martinez Canillas wrote:
-> >>>>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
-> >>>>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
-> >>>>>
-> >>>>> But it just assumes that the variables will be present and prints an error
-> >>>>> if the certs can't be loaded, even when is possible that the variables may
-> >>>>> not exist. For example the MokListRT variable will only be present if shim
-> >>>>> is used.
-> >>>>>
-> >>>>> So only print an error message about failing to get the certs list from an
-> >>>>> EFI variable if this is found. Otherwise these printed errors just pollute
-> >>>>> the kernel log ring buffer with confusing messages like the following:
-> >>>>>
-> >>>>> [    5.427251] Couldn't get size: 0x800000000000000e
-> >>>>> [    5.427261] MODSIGN: Couldn't get UEFI db list
-> >>>>> [    5.428012] Couldn't get size: 0x800000000000000e
-> >>>>> [    5.428023] Couldn't get UEFI MokListRT
-> >>>>>
-> >>>>> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> >>>>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> >>>>> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> >>>>
-> >>>> This patch seems to break a very basic x86-64 QEMU setup (booting
-> >>>> upstream kernel with a F31 initrd - are you running basic boot tests?).
-> >>>> Luckily, it only took me 5 minutes to identify this patch. Reverting
-> >>>> this patch from linux-next fixes it for me.
-> >>>>
-> >>>>
-> >>>> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
-> >>>> [    1.044314] zswap: loaded using pool lzo/zbud
-> >>>> [    1.045663] Key type ._fscrypt registered
-> >>>> [    1.046154] Key type .fscrypt registered
-> >>>> [    1.046524] Key type fscrypt-provisioning registered
-> >>>> [    1.051178] Key type big_key registered
-> >>>> [    1.055108] Key type encrypted registered
-> >>>> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> >>>> [    1.056172] #PF: supervisor instruction fetch in kernel mode
-> >>>> [    1.056706] #PF: error_code(0x0010) - not-present page
-> >>>> [    1.057367] PGD 0 P4D 0
-> >>>> [    1.057729] Oops: 0010 [#1] SMP NOPTI
-> >>>> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
-> >>>> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
-> >>>> [    1.060230] RIP: 0010:0x0
-> >>>> [    1.060478] Code: Bad RIP value.
-> >>>> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
-> >>>> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
-> >>>> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
-> >>>> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
-> >>>> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-> >>>> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
-> >>>> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
-> >>>> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>>> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
-> >>>> [    1.066562] Call Trace:
-> >>>> [    1.066803]  load_uefi_certs+0xc8/0x2bb
-> >>>> [    1.067171]  ? get_cert_list+0xfb/0xfb
-> >>>> [    1.067523]  do_one_initcall+0x5d/0x2f0
-> >>>> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
-> >>>> [    1.068337]  kernel_init_freeable+0x243/0x2c2
-> >>>> [    1.068751]  ? rest_init+0x23a/0x23a
-> >>>> [    1.069095]  kernel_init+0xa/0x106
-> >>>> [    1.069416]  ret_from_fork+0x27/0x50
-> >>>> [    1.069759] Modules linked in:
-> >>>> [    1.070050] CR2: 0000000000000000
-> >>>> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
-> >>>>
-> >>>>
-> >>>
-> >>> Sorry, wrong mail identified, the patch is actually
-> >>>
-> >>> commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
-> >>> Author: Ard Biesheuvel <ardb@kernel.org>
-> >>> Date:   Sun Feb 16 19:46:25 2020 +0100
-> >>>
-> >>>     integrity: Check properly whether EFI GetVariable() is available
-> >>>
-> >>>     Testing the value of the efi.get_variable function pointer is not
-> >>>
-> >>> which made it work. (not even able to find that patch on lkml ...)
-> >>
-> >> To clarify for Ard, your patch breaks a basic QEMU setup (see above,
-> >> NULL pointer dereference). Reverting your patch from linux-next makes it
-> >> work again.
-> >>
-> >
-> > Does this fix it?
-> >
-> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > index 41269a95ff85..d1746a579c99 100644
-> > --- a/drivers/firmware/efi/efi.c
-> > +++ b/drivers/firmware/efi/efi.c
-> > @@ -300,12 +300,12 @@ static int __init efisubsys_init(void)
-> >  {
-> >         int error;
-> >
-> > -       if (!efi_enabled(EFI_BOOT))
-> > -               return 0;
-> > -
-> >         if (!efi_enabled(EFI_RUNTIME_SERVICES))
-> >                 efi.runtime_supported_mask = 0;
-> >
-> > +       if (!efi_enabled(EFI_BOOT))
-> > +               return 0;
-> > +
-> >         if (efi.runtime_supported_mask) {
-> >                 /*
-> >                  * Since we process only one efi_runtime_service() at a time, an
-> >
->
-> Yes, does the trick!
->
+Hi Jiri,
 
-Thanks, David. I'll get this out and into -next asap.
+On Fri, Feb 28, 2020 at 07:34:51AM +0100, Jiri Pirko wrote:
+> Thu, Feb 27, 2020 at 10:32:00PM CET, vadym.kochan@plvision.eu wrote:
+> >Hi Jiri,
+> >
+> >On Wed, Feb 26, 2020 at 04:54:23PM +0100, Jiri Pirko wrote:
+> >> Tue, Feb 25, 2020 at 05:30:54PM CET, vadym.kochan@plvision.eu wrote:
+> >> >Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> >> >ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> >> >wireless SMB deployment.
+> >> >
+> >> >This driver implementation includes only L1 & basic L2 support.
+> >> >
+> >> >The core Prestera switching logic is implemented in prestera.c, there=
+ is
+> >> >an intermediate hw layer between core logic and firmware. It is
+> >> >implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+> >> >related logic, in future there is a plan to support more devices with
+> >> >different HW related configurations.
+> >> >
+> >> >The following Switchdev features are supported:
+> >> >
+> >> >    - VLAN-aware bridge offloading
+> >> >    - VLAN-unaware bridge offloading
+> >> >    - FDB offloading (learning, ageing)
+> >> >    - Switchport configuration
+> >> >
+> >> >Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> >> >Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+> >> >Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> >> >Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> >> >Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> >> >Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> >> >Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> >> >---
+
+[SNIP]
+
+> >> >+#include <linux/kernel.h>
+> >> >+#include <linux/module.h>
+> >> >+#include <linux/list.h>
+> >> >+#include <linux/netdevice.h>
+> >> >+#include <linux/netdev_features.h>
+> >> >+#include <linux/etherdevice.h>
+> >> >+#include <linux/ethtool.h>
+> >> >+#include <linux/jiffies.h>
+> >> >+#include <net/switchdev.h>
+> >> >+
+> >> >+#include "prestera.h"
+> >> >+#include "prestera_hw.h"
+> >> >+#include "prestera_drv_ver.h"
+> >> >+
+> >> >+#define MVSW_PR_MTU_DEFAULT 1536
+> >> >+
+> >> >+#define PORT_STATS_CACHE_TIMEOUT_MS	(msecs_to_jiffies(1000))
+> >> >+#define PORT_STATS_CNT	(sizeof(struct mvsw_pr_port_stats) / sizeof(u=
+64))
+> >>=20
+> >> Keep the prefix for all defines withing the file. "PORT_STATS_CNT"
+> >> looks way to generic on the first look.
+> >>=20
+> >>=20
+> >> >+#define PORT_STATS_IDX(name) \
+> >> >+	(offsetof(struct mvsw_pr_port_stats, name) / sizeof(u64))
+> >> >+#define PORT_STATS_FIELD(name)	\
+> >> >+	[PORT_STATS_IDX(name)] =3D __stringify(name)
+> >> >+
+> >> >+static struct list_head switches_registered;
+> >> >+
+> >> >+static const char mvsw_driver_kind[] =3D "prestera_sw";
+> >>=20
+> >> Please be consistent. Make your prefixes, name, filenames the same.
+> >> For example:
+> >> prestera_driver_kind[] =3D "prestera";
+> >>=20
+> >> Applied to the whole code.
+> >>=20
+> >So you suggested to use prestera_ as a prefix, I dont see a problem
+> >with that, but why not mvsw_pr_ ? So it has the vendor, device name part=
+s
+>=20
+> Because of "sw" in the name. You have the directory named "prestera",
+> the modules are named "prestera_*", for the consistency sake the
+> prefixes should be "prestera_". "mvsw_" looks totally unrelated.
+>=20
+>=20
+
+I understand. If possible I'd like to get rid of long prefix which is if
+to use prestera_xxx. I looked at mlxsw prefix format, and it looks for
+me that mvpr_ may be OK in this case ? Also it will make funcs/types
+name shorter which makes code read easier.
+
+[SNIP]
+
+> >
+> >Regards,
+> >Vadym Kochan
+
+I am sorry that this naming issue took more discussion than should, I
+just want to define it once an never change it, (it is a bit pain to
+rename the whole code with new naming convention :) ).
+
+Regards,
+Vadym Kochan
