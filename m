@@ -2,124 +2,147 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D2C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74B3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C7E2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E7E2469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wnesvm0w"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XIQThUk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgB1Lgi (ORCPT
+        id S1726151AbgB1Liv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:36:38 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59022 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgB1Lgi (ORCPT
+        Fri, 28 Feb 2020 06:38:51 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:45052 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbgB1Liv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:36:38 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SBa53j013584;
-        Fri, 28 Feb 2020 05:36:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582889765;
-        bh=rLm5NTE1CYjmZGMxs2YV7x1c9JuFq3mregL37grduCo=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=wnesvm0wVu+YeZ8jTJAO9WrXhn894VT4/u5rRrMX9BPzZcnr7a/OQLigUuunWkn6/
-         5SU0DVsrO9RSc5SbJ+ipZ87f8rf5C30jGJLV5pdzOIQCK+mAs+Yx0hEmyshMPxoBOa
-         JSea5U5NQC9FApxu7lO7DJ/c8Kl1jILUwbFpQ714=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SBa5i1115846;
-        Fri, 28 Feb 2020 05:36:05 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 05:36:05 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 05:36:05 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SBa0vP019981;
-        Fri, 28 Feb 2020 05:36:00 -0600
-Subject: Re: [PATCH v4 08/11] PCI: layerscape: Modify the MSIX to the doorbell
- mode
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
-        <leoyang.li@nxp.com>, <lorenzo.pieralisi@arm.com>,
-        <minghuan.Lian@nxp.com>, <mingkai.hu@nxp.com>, <roy.zang@nxp.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <andrew.murray@arm.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-9-xiaowei.bao@nxp.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <55752e77-1094-4cbf-2822-e10b875b4dd9@ti.com>
-Date:   Fri, 28 Feb 2020 17:10:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20190924021849.3185-9-xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 28 Feb 2020 06:38:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582889930; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=/qDziAvwxrvevTfMjOLedkBpY9mIiwDSbWhlXYUU/Uc=; b=XIQThUk6ZHAR+7JPr8dBPA05UChi7284h5Ri/+lAY4e1S3AqlaTR587whzXTq5JGfJm6N0wP
+ hGQu86I8x+PSwb6vxuBSxQqOY5CKn3ac0Yd35WOcRdZ0e3MNqNZYqGFm4NPiHx6+RIbZODht
+ GHATg0RPr+/HuVOTM9k0mdWA744=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e58fbc4.7f29e4767c38-smtp-out-n03;
+ Fri, 28 Feb 2020 11:38:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1129BC4479D; Fri, 28 Feb 2020 11:38:43 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA291C433A2;
+        Fri, 28 Feb 2020 11:38:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA291C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v9 2/3] soc: qcom: rpmh: Update dirty flag only when data changes
+Date:   Fri, 28 Feb 2020 17:08:22 +0530
+Message-Id: <1582889903-12890-3-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org>
+References: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiaowei,
+Currently rpmh ctrlr dirty flag is set for all cases regardless of data
+is really changed or not. Add changes to update dirty flag when data is
+changed to newer values.
 
-On 24/09/19 7:48 am, Xiaowei Bao wrote:
-> dw_pcie_ep_raise_msix_irq was never called in the exisitng driver
-> before, because the ls1046a platform don't support the MSIX feature
-> and msix_capable was always set to false.
-> Now that add the ls1088a platform with MSIX support, but the existing
-> dw_pcie_ep_raise_msix_irq doesn't work, so use the doorbell method to
-> support the MSIX feature.
+Also move dirty flag updates to happen from within cache_lock and remove
+unnecessary INIT_LIST_HEAD() call and a default case from switch.
 
+Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+---
+ drivers/soc/qcom/rpmh.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-It does work after [1]. So the commit message might not be exactly true.
-
-[1] -> https://lore.kernel.org/r/20200225081703.8857-1-kishon@ti.com
-
-Thanks
-Kishon
-
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
-> v2: 
->  - No change
-> v3:
->  - Modify the commit message make it clearly.
-> v4: 
->  - No change
-> 
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index 1e07287..5f0cb99 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -79,7 +79,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	case PCI_EPC_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->  	case PCI_EPC_IRQ_MSIX:
-> -		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-> +		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-> +							  interrupt_num);
->  	default:
->  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
->  		return -EINVAL;
-> 
+diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+index eb0ded0..f28afe4 100644
+--- a/drivers/soc/qcom/rpmh.c
++++ b/drivers/soc/qcom/rpmh.c
+@@ -133,26 +133,30 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+ 
+ 	req->addr = cmd->addr;
+ 	req->sleep_val = req->wake_val = UINT_MAX;
+-	INIT_LIST_HEAD(&req->list);
+ 	list_add_tail(&req->list, &ctrlr->cache);
+ 
+ existing:
+ 	switch (state) {
+ 	case RPMH_ACTIVE_ONLY_STATE:
+-		if (req->sleep_val != UINT_MAX)
++		if (req->sleep_val != UINT_MAX) {
+ 			req->wake_val = cmd->data;
++			ctrlr->dirty = true;
++		}
+ 		break;
+ 	case RPMH_WAKE_ONLY_STATE:
+-		req->wake_val = cmd->data;
++		if (req->wake_val != cmd->data) {
++			req->wake_val = cmd->data;
++			ctrlr->dirty = true;
++		}
+ 		break;
+ 	case RPMH_SLEEP_STATE:
+-		req->sleep_val = cmd->data;
+-		break;
+-	default:
++		if (req->sleep_val != cmd->data) {
++			req->sleep_val = cmd->data;
++			ctrlr->dirty = true;
++		}
+ 		break;
+ 	}
+ 
+-	ctrlr->dirty = true;
+ unlock:
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 
+@@ -287,6 +291,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
+ 
+ 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
+ 	list_add_tail(&req->list, &ctrlr->batch_cache);
++	ctrlr->dirty = true;
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ }
+ 
+@@ -323,6 +328,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+ 	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+ 		kfree(req);
+ 	INIT_LIST_HEAD(&ctrlr->batch_cache);
++	ctrlr->dirty = true;
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ }
+ 
+@@ -507,7 +513,6 @@ int rpmh_invalidate(const struct device *dev)
+ 	int ret;
+ 
+ 	invalidate_batch(ctrlr);
+-	ctrlr->dirty = true;
+ 
+ 	do {
+ 		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
