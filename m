@@ -2,126 +2,94 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CB6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58FEC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00800246BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50BB246B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="M893la1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgB1Qcw (ORCPT
+        id S1726118AbgB1QfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:32:52 -0500
-Received: from mga14.intel.com ([192.55.52.115]:35576 "EHLO mga14.intel.com"
+        Fri, 28 Feb 2020 11:35:10 -0500
+Received: from mout.gmx.net ([212.227.17.22]:48917 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgB1QcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:32:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="227593050"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:18 -0800
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 03/12] perf header: Add check for event attr
-Date:   Fri, 28 Feb 2020 08:30:02 -0800
-Message-Id: <20200228163011.19358-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200228163011.19358-1-kan.liang@linux.intel.com>
-References: <20200228163011.19358-1-kan.liang@linux.intel.com>
+        id S1725877AbgB1QfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:35:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582907688;
+        bh=YcG6r7F3VVt7DQsFNhV4JbQ/Bh6aKNh0DkfRxFndYAA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=M893la1WZgDW7/xWaBckbU4Odje3StaE2YcrGjt7TLxyK3pbX/Ea23pa9tN/cHEH7
+         joHd8VOqO6RSYD0a0SS6Ty3j2XCMW2ucMF+AzxWLxQmzVPStkZStnqrxLMH4lEZRAD
+         CzydVU3Wqs7ndlgvC4LH1dlsW2OpHQHQinHzZuGU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.40.15] ([185.53.40.15]) by web-mail.gmx.net
+ (3c-app-gmx-bap21.server.lan [172.19.172.91]) (via HTTP); Fri, 28 Feb 2020
+ 17:34:47 +0100
+MIME-Version: 1.0
+Message-ID: <trinity-1aeda07b-567b-4a31-a709-36199975894b-1582907687950@3c-app-gmx-bap21>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Bibby Hsieh" <bibby.hsieh@mediatek.com>
+Cc:     "David Airlie" <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, drinkcat@chromium.org,
+        "Bibby Hsieh" <bibby.hsieh@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, "CK Hu" <ck.hu@mediatek.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [BUG] [PATCH v5 3/7] drm/mediatek: update cursors by using async
+ atomic update
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 28 Feb 2020 17:34:47 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20191210050526.4437-4-bibby.hsieh@mediatek.com>
+References: <20191210050526.4437-1-bibby.hsieh@mediatek.com>
+ <20191210050526.4437-4-bibby.hsieh@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:2wHSXETBujv7ubTGIwZ5VrMFtJmoX/njL13MkH8s5eovSX+Y+sTe0+BByPkiM5mY2rzQm
+ gKpnl5HTR1TX8ZwimXy747VbCYUysGQw+GdtehRIGT5il+WUm2aG81V2Bu0Dpft2U3SY51brmqYE
+ H0JgZOtLaL0+tXa8kZMGxWwyoVLkjFO5i3HFnIccGF/d2ihL7iTlHuSy3H9axD1B76whc67PrgRz
+ VBlEsXrblvHd0UmCQ6WWGJeRXN83aG2f7ScyhV9hAm1fz/xBSUnehkXcTmbnfvD6ndAjICp0ek9M
+ Rc=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K7AD3qghSCg=:KDuvUtyqh0IxQhZ8dH9kvu
+ UkMiaACx+8TarnVTvKLAKYfLysNr+9tfMvPZLRxVtUh1T0O1DBm4Rko4sdLxfCcUGMflBCrDF
+ ciX4YIyA6kuUTwucfzx22ITRFECEbD2yoh1WgJbxUXd9NJYwXopioXyMMrwaM6xnYz/nLIr7o
+ mUGZMog7Dou+NeR5Em4TB8BEgRtUTLT6+nfdjLNz4ShGizgdYRFKt+/vHZk/V1IW+aFci1vsg
+ LHvupXQWPTqlYNA3JS0Km5lF3zWjBdUJIGrdIGympZEuHb5mAtd4vGX9XsCeZH3p1WjQ/MpQY
+ 4acYwTHnCUAyGf7pGu2tzR8WsBvTvBOIW4Q8I03JkR+4har3qSWjIcdqgk2ff+6RSbEXVjquZ
+ C7mZBt3pEMeZjKM+Z1HkvLnv2XrRM8CB/s3gUG3quARYuumwpA7BH7F7fOTjduxgqWlhv3YVO
+ mhEDvNNyn9mge3Vz9N5MalwRkGJ5FJFlPEG9tEBlGoHxehlLMAMYcXVl4oE5ffpiFOpSG15y4
+ rm2LvOfG+tHze6Pl5a18bTr459tAbHXJYVUGnvmhov147zK1eBq3bFk9JHKV0fMl5up+E2is1
+ +YOSmDnrCG2i9TqD76kwDIFdZnprjEY1f1rR8oEq2QgrAsYW0byi74bJRq34xclYgmkooSZsk
+ eGfDPVeomp5G0jsWbOdU4oBMCEo7ol8LkDiWjXMdSbjZUOrU62FolI9j7z62bk/OQrp0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hi,
 
-The perf.data may be generated by a newer version of perf tool,
-which support new input bits in attr, e.g. new bit for
-branch_sample_type.
-The perf.data may be parsed by an older version of perf tool later.
-The old perf tool may parse the perf.data incorrectly. There is no
-warning message for this case.
+as talked to Bibby directly, this Patch seems to create a bug with touchscreens. Cursor is displayed on old position if changing its position. e.g. Cursor was on X1,Y1 and i touch to new position X2,Y2 the "click" is recognized on right position (i try to ), but cursor is displayed on X1,Y1
 
-Current perf header never check for unknown input bits in attr.
+have made a small video and uploaded to my gdrive [1]...
 
-When read the event desc from header, check the stored event attr.
-The reserved bits, sample type, read format and branch sample type
-will be checked.
+here i use lightdm login manager and selecting the username/password-fields alternately. Focus follows, but cursor is always displayed on prior position
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/util/header.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+tried to revert this commit [2], but there are many depencies failing the revert, have not yet got all depending commits reverted
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4246e7447e54..acbd046bf95c 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1590,6 +1590,40 @@ static void free_event_desc(struct evsel *events)
- 	free(events);
- }
- 
-+static bool perf_attr_check(struct perf_event_attr *attr)
-+{
-+	if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_3) {
-+		pr_warning("Reserved bits are set unexpectedly. "
-+			   "Please update perf tool.\n");
-+		return false;
-+	}
-+
-+	if (attr->sample_type & ~(PERF_SAMPLE_MAX-1)) {
-+		pr_warning("Unknown sample type (0x%llx) is detected. "
-+			   "Please update perf tool.\n",
-+			   attr->sample_type);
-+		return false;
-+	}
-+
-+	if (attr->read_format & ~(PERF_FORMAT_MAX-1)) {
-+		pr_warning("Unknown read format (0x%llx) is detected. "
-+			   "Please update perf tool.\n",
-+			   attr->read_format);
-+		return false;
-+	}
-+
-+	if ((attr->sample_type & PERF_SAMPLE_BRANCH_STACK) &&
-+	    (attr->branch_sample_type & ~(PERF_SAMPLE_BRANCH_MAX-1))) {
-+		pr_warning("Unknown branch sample type (0x%llx) is detected. "
-+			   "Please update perf tool.\n",
-+			   attr->branch_sample_type);
-+
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static struct evsel *read_event_desc(struct feat_fd *ff)
- {
- 	struct evsel *evsel, *events = NULL;
-@@ -1634,6 +1668,9 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
- 
- 		memcpy(&evsel->core.attr, buf, msz);
- 
-+		if (!perf_attr_check(&evsel->core.attr))
-+			goto error;
-+
- 		if (do_read_u32(ff, &nr))
- 			goto error;
- 
--- 
-2.17.1
+regards Frank
 
+[1] https://drive.google.com/open?id=1Qy0tYnbO9zNGdjCWY18O-dMYbFuPrq_i
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=920fffcc891276a855cb3ce1e7361d2e9cb72581
