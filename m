@@ -2,117 +2,115 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A36C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00D6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE182469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582915631;
-	bh=kskxhZvQ39ItP8wb+LeaJo3d5PU60DJHeaW+XT0a0Vw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G7XnYjlit9MlwVnsbr3v/r1auMNgXpQDMUaDkK7+4jmqC4oeeMWk1XuxwcLwE4vde
-	 EopOVZkW4YWbstr/RgmbJqOHLiPenMANCVF9JzwtLuEw1LKBXEhctSj6Br6I68xPXK
-	 g6Nhk56L95pdh7TGOMw/+4oASKwFAFFxs1a7HJXA=
+	by mail.kernel.org (Postfix) with ESMTP id 83E34246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr0W+nZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgB1SrJ (ORCPT
+        id S1726077AbgB1Svv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:47:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1SrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:47:09 -0500
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC882469F
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582915629;
-        bh=kskxhZvQ39ItP8wb+LeaJo3d5PU60DJHeaW+XT0a0Vw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b57hkR+y2RHTVdMrS19zE2t13g1EmPGZ+DoDcprpL26Hvg5tGy/Y00tCGUkc+gWZ/
-         7IZKUIzl7r9VWDN2qRazoXozaLFXLG5Ehu6D1IEzs3tuTOvit5VJdcMZEjNsxiuGwo
-         PgOPgp2zQ/3/hONG0BiO6qa3wMH6SavNMbzWdjKo=
-Received: by mail-wr1-f45.google.com with SMTP id l5so4167150wrx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:47:08 -0800 (PST)
-X-Gm-Message-State: APjAAAX3qPsDHuibVlrR7ZKgBltKVd2CezJXmJQU9KTVISWanwMbKELt
-        LGv8ydtQV/H1/6gFJnSgjw3h8b6szg5DJv1edqL1lA==
-X-Google-Smtp-Source: APXvYqwgfrlpKF7mQR7lpP15+7uYz1zSgrSceDJy2L2D9fY9Mgg+cjOixSCbQ8YPWL+uxrC6lh1AWU3fT1BJAnNZunc=
-X-Received: by 2002:adf:ea85:: with SMTP id s5mr5927227wrm.75.1582915627219;
- Fri, 28 Feb 2020 10:47:07 -0800 (PST)
+        Fri, 28 Feb 2020 13:51:51 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44640 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Svv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:51:51 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j23so2767183qtr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:51:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FwDeIP3CdKitemqVTHkgE7RTKquwmO027xl/hGvLAk8=;
+        b=Vr0W+nZMTKhqrIx+qMz0Lpx1d69wtt3RW1bb5sXapd+kKYJ66pba10KDzd05VGeufs
+         SDiju8QuACF059WoxJqr5+98CBAfU4CrAjr263xmKGyliYY/Z0dZQgzjziPkzXS8HE2P
+         6TDx7U1d1TuDHQCUjiM8EGLXJYG1ihV0dLiuq+sGph9od+sxO+rtmBpSg9znoLlSI6zB
+         sWb64Dx+05W1LanSVHdbKypfVVML4eaF+pqnss5wgQZgpb7hGOen8twd2nVEsOhUjMrV
+         A27sMN6MniQRwjvMdpR0+Dbkr+E/+jE66r/QOFwSXQGYcVfn9o7ozooYHGKZgodZYSk2
+         ZPmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FwDeIP3CdKitemqVTHkgE7RTKquwmO027xl/hGvLAk8=;
+        b=XAUl8DAdVDeqR9UurH/Ynv3Obqv/FejVmuhxhPEz1/qZoiJ/U/UiRnt8DrkBZtSvg9
+         X6TowxnBE2IvD4PjmqHjotwtW6r/jiI0NyOQx9FzqYTAD0ujrJXQKhzh7ahIPHTqHYu6
+         lo7NxVoFYq6ptt5jVItqIaGonJQFnmcW+R8tnR1iy4JIZvfSKlfGyUWc04xD0EX1CpyC
+         UQlRhn1CqoHmeR1r6/Y8bwO0/DxAj7ABDhGZcqRBZBbko2e+0XeVDiQs0pPkzKps12jZ
+         qTIfI7PBowUj6/ksEPNzWu2GirCWp1xPlJPqFqsZqusKk9NckVYLtk73I2bEb+4raWXT
+         98+g==
+X-Gm-Message-State: APjAAAUTQaYXS+u0z9uP4cAT5H3G0CrbU3zELUU0AWsW0HiCa/ApQnbv
+        li/dqTpA6Gx2QGamJuz0whk=
+X-Google-Smtp-Source: APXvYqyht9utYMcFvICAKVYiMBPsR0aYF1+7O2pv8YMt5vgA1iEFX/U2avTicTYLCPame26/Y8zOmw==
+X-Received: by 2002:ac8:4cc9:: with SMTP id l9mr5297658qtv.207.1582915907093;
+        Fri, 28 Feb 2020 10:51:47 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id q125sm5554167qke.116.2020.02.28.10.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 10:51:45 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7F3A8403AD; Fri, 28 Feb 2020 15:51:43 -0300 (-03)
+Date:   Fri, 28 Feb 2020 15:51:43 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 03/13] kprobes: Add symbols for kprobe insn pages
+Message-ID: <20200228185143.GA2904@kernel.org>
+References: <20200228135125.567-1-adrian.hunter@intel.com>
+ <20200228135125.567-4-adrian.hunter@intel.com>
+ <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
+ <20200228172004.GI5451@krava>
 MIME-Version: 1.0
-References: <20200227132826.195669-1-brgerst@gmail.com> <20200227132826.195669-6-brgerst@gmail.com>
-In-Reply-To: <20200227132826.195669-6-brgerst@gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 28 Feb 2020 10:46:55 -0800
-X-Gmail-Original-Message-ID: <CALCETrXyYd=pqThrXQgbz5cqQTr8SKHZey4FGq5aV2_=CS4p9Q@mail.gmail.com>
-Message-ID: <CALCETrXyYd=pqThrXQgbz5cqQTr8SKHZey4FGq5aV2_=CS4p9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] x86: Move 32-bit compat syscalls to common location
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228172004.GI5451@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 5:28 AM Brian Gerst <brgerst@gmail.com> wrote:
->
-> Move the 32-bit wrappers for syscalls that take 64-bit arguments (loff_t)
-> to a common location so that native 32-bit can use them in preparation for
-> enabling pt_regs-based syscalls.
+Em Fri, Feb 28, 2020 at 06:20:04PM +0100, Jiri Olsa escreveu:
+> On Fri, Feb 28, 2020 at 11:36:00PM +0900, Masami Hiramatsu wrote:
+> > On Fri, 28 Feb 2020 15:51:15 +0200
+> > Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > > 	# perf probe __schedule
+> > > 	Added new event:
+> > > 	  probe:__schedule     (on __schedule)
+> > > 	# cat /proc/kallsyms | grep '\[kprobe\]'
+> > > 	ffffffffc0035000 t kprobe_insn_page     [kprobe]
+> > > 	ffffffffc0054000 t kprobe_optinsn_page  [kprobe]
 
-Can you clarify the purpose?  Even having read the series up to this
-point, I have no idea what this has to do with pt_regs.
+> > Could you make the module name as [kprobes] ?
+> > BTW, it seems to pretend to be a module, but is there no concern of
+> > confusing users? Shouldn't it be [*kprobes] so that it is non-exist
+> > module name?
+ 
+> note we already have bpf symbols as [bpf] module
 
-I think some renaming is in order.  Consider:
+That bracket-wrapped convention by now is not module related, but
+instead non-main-kernel :-) If one wants to enumerate the modules in the
+system, then use /proc/modules, then, to get the symbols for it, look at
+symbols in /proc/kallsyms in that [ start, start + module size ] range
+and strip whatever comes after '[' :-)
 
->
-> -COMPAT_SYSCALL_DEFINE3(x86_ftruncate64, unsigned int, fd,
-> -                      unsigned long, offset_low, unsigned long, offset_high)
-
-It used to be at least a little bit clear what was going on.  There's
-this compat-only mess that changes arguments for ftruncate64.  But
-now:
-
-> +SYSCALL_DEFINE3(x86_ftruncate64, unsigned int, fd,
-> +               unsigned long, offset_low, unsigned long, offset_high)
->  {
->         return ksys_ftruncate(fd, ((loff_t) offset_high << 32) | offset_low);
->  }
-
-What is this "x86" ftruncate64 thing?
-
-Maybe call it ia32_ftructate?  Or at least do something to indicate
-that this is for a specific ABI.
-
-> diff --git a/arch/x86/um/sys_call_table_32.c b/arch/x86/um/sys_call_table_32.c
-> index 9649b5ad2ca2..d5520e92f89d 100644
-> --- a/arch/x86/um/sys_call_table_32.c
-> +++ b/arch/x86/um/sys_call_table_32.c
-> @@ -26,6 +26,16 @@
->
->  #define old_mmap sys_old_mmap
->
-> +#define sys_x86_pread sys_pread64
-> +#define sys_x86_pwrite sys_pwrite64
-> +#define sys_x86_truncate64 sys_truncate64
-> +#define sys_x86_ftruncate64 sys_ftruncate64
-> +#define sys_x86_readahead sys_readahead
-> +#define sys_x86_fadvise64 sys_fadvise64
-> +#define sys_x86_fadvise64_64 sys_fadvise64_64
-> +#define sys_x86_sync_file_range sys_sync_file_range
-> +#define sys_x86_fallocate sys_fallocate
-
-Can this not be killed by changing the table itself instead of adding
-a bunch of defines?
+- Arnaldo
