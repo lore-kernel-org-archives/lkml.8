@@ -2,122 +2,113 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B2BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D574FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38828246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582892838;
-	bh=m93yM93vQbcHMkGCkK/OGG8kf11IbeXU6ORroxAAGzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jOcmDrx2II+0FSxD0uVXjh72tzQzAjHgLatWzwG3YWK84c1qjnuClLSveYxbEKRCJ
-	 95f4085FlI6zki3qGCEVPohXBITzJcSBUvhVRUz+5nDaugo0b71q4R2q4SQXLxrAKR
-	 Dyy/GEqRyAAu5mv+Kr9gMxiOrYZgBgYZSdzTZYWI=
+	by mail.kernel.org (Postfix) with ESMTP id 86423246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:29:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="lhePlhD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgB1M1R (ORCPT
+        id S1725906AbgB1M3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:27:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgB1M1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:27:17 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1632D246A3;
-        Fri, 28 Feb 2020 12:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582892834;
-        bh=m93yM93vQbcHMkGCkK/OGG8kf11IbeXU6ORroxAAGzo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1qkwABoJTSe5SmM+7+hNubXHM41yKugx1YRFHDmMnoOK5YYsRXnCmI+7Quf+GWlwi
-         Bsu0HcZJviHZoYaZPpZHFb/vRkds/rPDV/VIY8AovPBUoT3uvbuxw3yFlFhMyyAs6G
-         ZzL4KOs+fv5qzsr28SX0dPrQDm2L4JnAnSNwmRAM=
-Date:   Fri, 28 Feb 2020 13:27:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200228122712.GA3013026@kroah.com>
-References: <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com>
- <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
- <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
- <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
- <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
+        Fri, 28 Feb 2020 07:29:07 -0500
+Received: from smtp.domeneshop.no ([194.63.252.55]:44559 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1M3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:29:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PqSQKcoq859PmNsBN7wYEqganIU4/zW+nvRfanijCh8=; b=lhePlhD+NMzVw6YHN9VFoz7n6h
+        p+YBCd1EqoTyB43T+hFRiT0Qo9TmsmkACFxUfzQqNjaM6S/aKKH9q2HQSzuej7YoVYyfErmHwFlwm
+        7i5fCuasfOxwO4FA0Svdn5dRTcBOO8eiY5bb1puuxnFbuydwaWT/zG0U2VbObuu3rkIjg227gOV80
+        BR4zMFta5FsVjviNJO/iZsUEYQzu2g/6W6hnYkgnwlx2DrtqYdhgrqP//v3qC3Gxbj0dFwwr0l1v4
+        ERpWIAJJUBc0a82Db7ek/LsKu2oBFn6Z55dKOnvyV1AjFbAmZHxKWFNRtmCTsMUdmoyziCsRgdh05
+        /b4xXFdA==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:49401 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1j7elM-0005it-7Q; Fri, 28 Feb 2020 13:29:04 +0100
+Subject: Re: [PATCH v2 1/2] drm/client: Dual licence the file in GPL-2 and MIT
+To:     Emmanuel Vadot <manu@bidouilliste.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Emmanuel Vadot <manu@FreeBSD.org>,
+        Jani Nikula <jani.nikula@intel.com>, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, efremov@linux.com,
+        kraxel@redhat.com, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sam@ravnborg.org, tzimmermann@suse.de
+References: <20200215180911.18299-1-manu@FreeBSD.org>
+ <20200215180911.18299-2-manu@FreeBSD.org> <877e0n66qi.fsf@intel.com>
+ <158254443806.15220.5582277260130009235@skylake-alporthouse-com>
+ <20200225091810.1de39ea4e0d578d363420412@bidouilliste.com>
+ <20200225170313.GM2363188@phenom.ffwll.local>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <2a735cb0-5a78-8dcf-dcaa-30f5a5f77e2d@tronnes.org>
+Date:   Fri, 28 Feb 2020 13:28:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
+In-Reply-To: <20200225170313.GM2363188@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 09:35:17AM +0100, Miklos Szeredi wrote:
-> On Fri, Feb 28, 2020 at 1:43 AM Ian Kent <raven@themaw.net> wrote:
+
+
+Den 25.02.2020 18.03, skrev Daniel Vetter:
+> On Tue, Feb 25, 2020 at 09:18:10AM +0100, Emmanuel Vadot wrote:
+>> On Mon, 24 Feb 2020 11:40:38 +0000
+>> Chris Wilson <chris@chris-wilson.co.uk> wrote:
+>>
+>>> Quoting Jani Nikula (2020-02-15 18:33:09)
+>>>> On Sat, 15 Feb 2020, Emmanuel Vadot <manu@FreeBSD.org> wrote:
+>>>>> From: Emmanuel Vadot <manu@FreeBSD.Org>
+>>>>>
+>>>>> Contributors for this file are :
+>>>>> Chris Wilson <chris@chris-wilson.co.uk>
+>>>>> Denis Efremov <efremov@linux.com>
+>>>>> Jani Nikula <jani.nikula@intel.com>
+>>>>> Maxime Ripard <mripard@kernel.org>
+>>>>> Noralf Trønnes <noralf@tronnes.org>
+>>>>> Sam Ravnborg <sam@ravnborg.org>
+>>>>> Thomas Zimmermann <tzimmermann@suse.de>
+>>>>>
+>>>>> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+>>>>
+>>>> I've only converted some logging.
+>>>>
+>>>> Acked-by: Jani Nikula <jani.nikula@intel.com>
+>>>
+>>> Bonus ack from another Intel employee to cover all Intel copyright in
+>>> this file,
+>>> Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+>>> -Chris
+>>
+>>  Thanks Chris,
+>>
+>>  Daniel, if I'm counting right this was the last ack needed.
 > 
-> > > I'm not sure about sysfs/, you need somehow resolve namespaces, order
-> > > of the mount entries (which one is the last one), etc. IMHO translate
-> > > mountpoint path to sysfs/ path will be complicated.
-> >
-> > I wonder about that too, after all sysfs contains a tree of nodes
-> > from which the view is created unlike proc which translates kernel
-> > information directly based on what the process should see.
-> >
-> > We'll need to wait a bit and see what Miklos has in mind for mount
-> > table enumeration and nothing has been said about name spaces yet.
+> I'm counting the same, patch applied and thanks for taking care of the
+> paperwork pushing here.
 > 
-> Adding Greg for sysfs knowledge.
+
+Looks like it got lost somehow, I can't find it in drm-tip at least.
+
+Noralf.
+
+> Thanks, Daniel
 > 
-> As far as I understand the sysfs model is, basically:
-> 
->   - list of devices sorted by class and address
->   - with each class having a given set of attributes
-
-Close enough :)
-
-> Superblocks and mounts could get enumerated by a unique identifier.
-> mnt_id seems to be good for mounts, s_dev may or may not be good for
-> superblock, but  s_id (as introduced in this patchset) could be used
-> instead.
-
-So what would the sysfs tree look like with this?
-
-> As for namespaces, that's "just" an access control issue, AFAICS.
-> For example a task with a non-initial mount namespace should not have
-> access to attributes of mounts outside of its namespace.  Checking
-> access to superblock attributes would be similar: scan the list of
-> mounts and only allow access if at least one mount would get access.
-
-sysfs does handle namespaces, look at how networking does this.  But,
-it's not exactly the simplest thing to do so, so be careful with that as
-this is going to be essential for this type of work.
-
-thanks,
-
-greg k-h
