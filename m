@@ -2,86 +2,109 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBA4C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2B124672
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:53:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSBOEP1I"
+	by mail.kernel.org (Postfix) with ESMTP id 5E540246B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582919648;
+	bh=yFa9GTusWGP9MI5rVwDvWIvMEuL11F9VB9eTfxoriBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ewqdMin8FO6o2N9a1/6mMI4/5tsnkjlnw+Baz31sZjh41ykvVaq60lNIxETAnlQau
+	 NcQ4teVK4rsvPnqjQ8MmCULHXP3Gbdy2HU7pkMqewGs2c+HMnKJlhys4vMwZz1I8k1
+	 /6fYJdEapm6gxHfAn/U6ERUpkLMAKhTLtbKyRDaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgB1Txb (ORCPT
+        id S1726925AbgB1TyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:53:31 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36851 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgB1Txb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:53:31 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so3799416iln.3;
-        Fri, 28 Feb 2020 11:53:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JnlDWErKF8mDRNyNgdnTvgmZkvu7Blf7Wpl9qNzdgKE=;
-        b=fSBOEP1IAhrdav6hcqPPq6DsovnldH8jwg12SD/B8C6OOHJz2/tIMVB25bjlbjrCqm
-         kY5za1kNR4E27ndHju64DGymndfnKxmsNfP1Ks1RfuKQraLKMRsZhm6pKatILJ5pY99h
-         qGCsKYc6j4ViyP9VHzpHizkFQGModsCPXJ4AeLzesSqpdg76oXmrObKISA2BqQt5SahX
-         rNGKqlHSZh87S059uHUFeBs8mFDBU+TE09Xku624wTmSYsFMciAfxSCcssPJGQ9i1LSX
-         1mm08Ghj+WuhUf5kV0aevMw4X+1IPLcGvfgSE7hIc97SWKQDjb6V7VA015sI4CF4g8WL
-         h0VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JnlDWErKF8mDRNyNgdnTvgmZkvu7Blf7Wpl9qNzdgKE=;
-        b=ElUI56lsOnjwpQXeEWGMjjYhQJdP7HDEbBLy6+2KgjDMlYtMMeLuJWBr3l+9N9wLaQ
-         xQXOF83mIHfyaJSsZjw1d/ZjZK2UMN2tGaTCCwtm5kjmPYzIzqLd3n7Y7geJZnFWACJj
-         iP+ZA/GmuQuLqDkgoEZ4nUUkOv2we5G6/Sm5i1WKIt+LfvayHYmk7YK4wqfUHH45XXpm
-         ESxPp0UUGujPbLCjArS+m00HVhrmU/PKCnhALv4NqEv3//4arul2+bL5ZWJEbY0y5su0
-         rGy8iOURfBSDOn3IJy88sgiit8tYbiY+6MoSUIgbxZwiJCBLrcwTOtx3kEFAmushKASr
-         n4zQ==
-X-Gm-Message-State: APjAAAUWTe/eSfkqs/A35rEiX1KsZnA0L6meKrbiUHk+hWnO2Lwo15Fw
-        vdqHkN4SDiL/PBuhvexlQ/crY1/vnOyNvUxp1NM=
-X-Google-Smtp-Source: APXvYqxXZ0r2eo6M1S+emYmrQwIWztg8xMvfzYm/JgHMlZSn4ba0L7GEsp02PDYFz4ehlz+b/mjNPY/05Tab1srb1iE=
-X-Received: by 2002:a92:8c4b:: with SMTP id o72mr6223898ild.81.1582919610579;
- Fri, 28 Feb 2020 11:53:30 -0800 (PST)
+        Fri, 28 Feb 2020 14:54:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726838AbgB1TyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:54:06 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57062246A3;
+        Fri, 28 Feb 2020 19:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582919646;
+        bh=yFa9GTusWGP9MI5rVwDvWIvMEuL11F9VB9eTfxoriBM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B7Z/yodHUB8jE1bVpRXAyJta0eKioEPjfCw0GF3NCMjGhDN1gn5BpcyeV84YQmLg2
+         PswXKPBgjSBEMksGGcEuSgtvpKJQgXX5ALZt+ywZjnvujiZTKUxDG8tYkw3UkRQYXx
+         kzjfo8K+yVPrQsMIwDCyCNsChFGVJ1In0k2PcIrg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j7li0-008qC3-Io; Fri, 28 Feb 2020 19:54:04 +0000
 MIME-Version: 1.0
-References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
- <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
-In-Reply-To: <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Fri, 28 Feb 2020 11:53:19 -0800
-Message-ID: <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>, Randy Wright <rwright@hpe.com>,
-        Dave Young <dyoung@redhat.com>,
-        Myron Stowe <myron.stowe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Feb 2020 19:54:04 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Joe Jin <joe.jin@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] genirq/debugfs: add new config option for trigger
+ interrupt from userspace
+In-Reply-To: <a4b3b41b-b0b9-03cd-c394-05d8f0bfc5f4@oracle.com>
+References: <44a7007d-9624-8ac7-e0ab-fab8bdd39848@oracle.com>
+ <006a08b8bfb991853ede8c9d1e29d6a7@kernel.org>
+ <a4b3b41b-b0b9-03cd-c394-05d8f0bfc5f4@oracle.com>
+Message-ID: <bd3f06814b4319ddaaee2bf142aaf465@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: joe.jin@oracle.com, tglx@linutronix.de, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think the quirk clearing BME might not solve all the problems, since
-endpoint devices can sometimes not honor BME settings.
+On 2020-02-28 19:13, Joe Jin wrote:
+> Hi Marc,
+> 
+> Thanks for your reply.
+> 
+> On 2/28/20 8:37 AM, Marc Zyngier wrote:
+>> On 2020-02-28 05:42, Joe Jin wrote:
+>>> commit 536e2e34bd00 ("genirq/debugfs: Triggering of interrupts from
+>>> userspace") is allowed developer inject interrupts via irq debugfs, 
+>>> which
+>>> is very useful during development phase, but on a production system, 
+>>> this
+>>> is very dangerous, add new config option, developers can enable it as
+>>> needed instead of enabling it by default when irq debugfs is enabled.
+>> 
+>> I don't really mind the patch (although it could be more elegant), but 
+>> in
+>> general I object to most debugfs options being set on a production 
+>> kernel.
+>> There is way too much information in most debugfs backends to be 
+>> comfortable
+>> with it, and you can find things like page table dumps, for example...
+> 
+> We should not enable any debug option on production system, actual 
+> customer
+> want to resize their BM or VM, cpu offline may lead system not works 
+> properly,
+> and if we knew more details of IRQ info it will be very help to 
+> identify
+> if it caused by IRQ/vectors, this is the motivation of we want to 
+> enable it
+> on production kernel.
 
-Better solution to me seems like not letting devices that we cannot
-identify send us interrupts. I was working on a patch for this. I'm on
-vacation for a couple of weeks and can post an update after I test out
-my patch internally.
+If something doesn't work properly, then you are still debugging, 
+AFAICT.
 
--Deepa
+         M.
+-- 
+Jazz is not dead. It just smells funny...
