@@ -2,119 +2,146 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47181C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8A4246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8662824692
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouyX+glb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTpcztdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgB1DYF (ORCPT
+        id S1730805AbgB1DYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:24:05 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50713 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730593AbgB1DYF (ORCPT
+        Thu, 27 Feb 2020 22:24:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44492 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730772AbgB1DYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:24:05 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so680337pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:24:04 -0800 (PST)
+        Thu, 27 Feb 2020 22:24:52 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y5so941656pfb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:24:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=a9nEUllzxHgQivoEnVes++ZQ5+L/PmGLNBg3PycDmbs=;
-        b=ouyX+glbrllw53UHl2jQIX1XPWV61crrmaMjGaEQg/n6nR4f0NrTWodvis3DglmxtH
-         5lz6Pyh7FA7jHwSSyazBf9ycVDSkX/nGDPZA+Pv4G+LoJ2ocDwPXHZ2Z3vE1a9osdHqI
-         +41KD41QrsR8MZEOe1qOs9Bjsks0lgMlgs8D1nexF9gF0/iwaIKCJ1ZVlk4Z2uD8cnBy
-         AYZcwz7wpveCvAwNC1RHJl6HdvLZlmXE8FpOo9Rn0C5rvRkOgO+ESOoPabI1mLxBqkRZ
-         qYdgS6zVRjDYwfxEbyh74RwD84eskBHp7D7Z92sE2qdOIFlCgYJ99QaxvxVu2vmclZvz
-         ACtA==
+        bh=H/v7KsyZaSnIQHt4LUxp0DK1a2Lu38EDYZabaVLVetk=;
+        b=eTpcztdHQTm5/rDIVIQIhxvItqZKHbqp4cI9mZTTdONiVx8F9HtFEuVvn1jG1sN9n/
+         4SrvRPjkf814oGpFtngkhLRb9OmPMwakJjkTERr22C9HsAbrrD4FkhOuL+GrYHrP8nBs
+         z7KhCttgvL/kQKAwVpE5ZgWyF2grXLwev9S00BA9I/UuqmzkutEzH0bess2NzdVxCarZ
+         42o3bA6puBJJVbN1Q5nS/y6caMe/Vnmd+dALa1VEMt1AfqmotHqc0pMv9a3SKIAUAzmQ
+         bnOkoHLEMMkeQYo2WRuSM11EggSJyEJQInx0OVpgjN49XXFCDoheLw3GT5M6pYkadBwW
+         Masg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=a9nEUllzxHgQivoEnVes++ZQ5+L/PmGLNBg3PycDmbs=;
-        b=ljnXlylBXjuQZS2CAZ0W05AoEcU9vg824MLLI9p7TAQgu87RYtr+tgj0ufuAR5BALl
-         kCZ8fUHLJI3dScYub7VWpoU44z3mGt31rmPcK+SRjzwPpzYOc5DgdTHVGr7KwzODkV+G
-         +dqaGZgoYDiNKRmVz9GdMzRSQQvg25UW7Ata3OjPqrBr8/G6/nYy0lQ9lKKjzjPQdg9A
-         je4Gev+yPB2Bc9QCDrH8cmFXTi9lhgvzCys2c6J2p2HeiGAcUC3XKQurCZaTcng6wXor
-         4vMUREA3Etswl21o+oa1O4EGzwdbe1dtaNsSQ6G4IM61mzt6z9Y4Y7z0hLmr7wXHZIpg
-         N+JQ==
-X-Gm-Message-State: APjAAAVnQg673f9nUWsgkCQesuwS66Nn4eifUC9Od1oAgSuh5mi+QTJ7
-        AJ9wUn+tORczKIfLRGgceNA=
-X-Google-Smtp-Source: APXvYqzWe0u/8sWu+JpDmVlwry1OCubKLm5mj/oiTguGpNWrgCRXvx/h4xfwBg/RgsA5MqRTznd6cQ==
-X-Received: by 2002:a17:90a:a88d:: with SMTP id h13mr2376100pjq.48.1582860244168;
-        Thu, 27 Feb 2020 19:24:04 -0800 (PST)
-Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
-        by smtp.gmail.com with ESMTPSA id k63sm123797pjb.10.2020.02.27.19.24.00
+        bh=H/v7KsyZaSnIQHt4LUxp0DK1a2Lu38EDYZabaVLVetk=;
+        b=YDuUYQr8sGwKFXZ9uWnRneKp9iFvM5AEevaASwy0Ri43J05Iedw+x8plQua0mwEYjS
+         KB+6fH9FU+5EQPcbUP9cz2kDQcCFqapfamDKFSFLqO4ADrM6flTbmMpxBuQr/JBMcfS9
+         XI8a8pdIIHPgyp+cqMY+R6bImukL9hKWwz1NNsot20/L18uFvNfvCSlQPBaU6ftfDkiq
+         Om8sbmRyZdzi0F9sWw0zztLXdEPhqDb2KtWRBwDz9pe9JLTd4bgrOIpOwexViV/9w/2n
+         QX6BCT2KmFlXAIudS2Fpvoc9VD/o2NEjv8LjMBBWRxvsp3cNSpLBU4+bPLuD7g3bY3wv
+         O9Fg==
+X-Gm-Message-State: APjAAAWH56N/b3qL1xELs0J6hS9u46MtNgeax4deKCu+s1ZC8yr0wncz
+        JpqrGtKb45RmtUnPVlosQLa1Kw==
+X-Google-Smtp-Source: APXvYqxcXORPyb7DbvPZYryfw+X2PjFVWDfnTU6OxjUhkfzPetW6eG/5nxsAIrTsbdOAHZeW0urarw==
+X-Received: by 2002:a63:df02:: with SMTP id u2mr2341345pgg.403.1582860291347;
+        Thu, 27 Feb 2020 19:24:51 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y9sm112165pjj.17.2020.02.27.19.24.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 19:24:03 -0800 (PST)
-Date:   Fri, 28 Feb 2020 11:23:58 +0800
-From:   Aaron Lu <aaron.lwe@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, js1304@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
- LRU list
-Message-ID: <20200228032358.GB634650@ziqianlu-desktop.localdomain>
-References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
- <20200227134806.GC39625@cmpxchg.org>
+        Thu, 27 Feb 2020 19:24:50 -0800 (PST)
+Date:   Thu, 27 Feb 2020 19:24:48 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vkoul@kernel.org, daniel.lezcano@linaro.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: tsens: Add qcom,tsens-v2 to
+ msm8996.dtsi compatible
+Message-ID: <20200228032448.GB210720@yoga>
+References: <cover.1582705101.git.amit.kucheria@linaro.org>
+ <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227134806.GC39625@cmpxchg.org>
+In-Reply-To: <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 08:48:06AM -0500, Johannes Weiner wrote:
-> On Wed, Feb 26, 2020 at 07:39:42PM -0800, Andrew Morton wrote:
-> > It sounds like the above simple aging changes provide most of the
-> > improvement, and that the workingset changes are less beneficial and a
-> > bit more risky/speculative?
-> > 
-> > If so, would it be best for us to concentrate on the aging changes
-> > first, let that settle in and spread out and then turn attention to the
-> > workingset changes?
+On Wed 26 Feb 01:31 PST 2020, Amit Kucheria wrote:
+
+As with patch 2, $subject should have an appropriate prefix. Please
+update this.
+
+Regards,
+Bjorn
+
+> The qcom-tsens binding requires a SoC-specific and a TSENS
+> family-specific binding to be specified in the compatible string.
 > 
-> Those two patches work well for some workloads (like the benchmark),
-> but not for others. The full patchset makes sure both types work well.
+> Since them family-specific binding is not listed in the .dtsi file, we
+> see the following warnings in 'make dtbs_check'. Fix them.
 > 
-> Specifically, the existing aging strategy for anon assumes that most
-> anon pages allocated are hot. That's why they all start active and we
-> then do second-chance with the small inactive LRU to filter out the
-> few cold ones to swap out. This is true for many common workloads.
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is not valid
+> under any of the given schemas (Possible causes of the failure):
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is too short
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
 > 
-> The benchmark creates a larger-than-memory set of anon pages with a
-> flat access profile - to the VM a flood of one-off pages. Joonsoo's
-
-test: swap-w-rand-mt, which is a multi thread swap write intensive
-workload so there will be swap out and swap ins.
-
-> first two patches allow the VM to usher those pages in and out of
-
-Weird part is, the robot says the performance gain comes from the 1st
-patch only, which adjust the ratio, not including the 2nd patch which
-makes anon page starting from inactive list.
-
-I find the performance gain hard to explain...
-
-> memory very quickly, which explains the throughput boost. But it comes
-> at the cost of reducing space available to hot anon pages, which will
-> regress others.
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is not valid
+> under any of the given schemas (Possible causes of the failure):
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is too short
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
+> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 7ae082ea14ea..f157cd4f53b4 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -446,7 +446,7 @@
+>  		};
+>  
+>  		tsens0: thermal-sensor@4a9000 {
+> -			compatible = "qcom,msm8996-tsens";
+> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
+>  			reg = <0x004a9000 0x1000>, /* TM */
+>  			      <0x004a8000 0x1000>; /* SROT */
+>  			#qcom,sensors = <13>;
+> @@ -457,7 +457,7 @@
+>  		};
+>  
+>  		tsens1: thermal-sensor@4ad000 {
+> -			compatible = "qcom,msm8996-tsens";
+> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
+>  			reg = <0x004ad000 0x1000>, /* TM */
+>  			      <0x004ac000 0x1000>; /* SROT */
+>  			#qcom,sensors = <8>;
+> -- 
+> 2.20.1
 > 
