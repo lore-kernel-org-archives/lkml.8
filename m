@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5ADC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1CE246B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D242246B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgB1QcZ (ORCPT
+        id S1727011AbgB1Qc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:32:25 -0500
+        Fri, 28 Feb 2020 11:32:28 -0500
 Received: from mga14.intel.com ([192.55.52.115]:35576 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgB1QcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:32:22 -0500
+        id S1726990AbgB1Qc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:32:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:21 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="227593073"
+   d="scan'208";a="227593108"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:21 -0800
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:27 -0800
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 06/12] perf machine: Refine the function for LBR call stack reconstruction
-Date:   Fri, 28 Feb 2020 08:30:05 -0800
-Message-Id: <20200228163011.19358-7-kan.liang@linux.intel.com>
+Subject: [PATCH 11/12] perf c2c: Add option to enable the LBR stitching approach
+Date:   Fri, 28 Feb 2020 08:30:10 -0800
+Message-Id: <20200228163011.19358-12-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228163011.19358-1-kan.liang@linux.intel.com>
 References: <20200228163011.19358-1-kan.liang@linux.intel.com>
@@ -49,238 +49,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-LBR only collect the user call stack. To reconstruct a call stack, both
-kernel call stack and user call stack are required. The function
-resolve_lbr_callchain_sample() mix the kernel call stack and user
-call stack. Now, with the help of HW idx, perf tool can reconstruct a
-more complete call stack by adding some user call stack from previous
-sample. However, current implementation is hard to be extended to
-support it.
+With the LBR stitching approach, the reconstructed LBR call stack
+can break the HW limitation. However, it may reconstruct invalid call
+stacks in some cases, e.g. exception handing such as setjmp/longjmp.
+Also, it may impact the processing time especially when the number of
+samples with stitched LBRs are huge.
 
-Abstract two new functions to resolve user call stack and kernel
-call stack respectively.
-
-No functional changes.
+Add an option to enable the approach.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/machine.c | 186 ++++++++++++++++++++++++--------------
- 1 file changed, 120 insertions(+), 66 deletions(-)
+ tools/perf/Documentation/perf-c2c.txt | 11 +++++++++++
+ tools/perf/builtin-c2c.c              |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 62522b76a924..5a88230600f0 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2161,6 +2161,97 @@ static int remove_loops(struct branch_entry *l, int nr,
- 	return nr;
- }
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index e6150f21267d..2133eb320cb0 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -111,6 +111,17 @@ REPORT OPTIONS
+ --display::
+ 	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
  
++--stitch-lbr::
++	Show callgraph with stitched LBRs, which may have more complete
++	callgraph. The perf.data file must have been obtained using
++	perf c2c record --call-graph lbr.
++	Disabled by default. In common cases with call stack overflows,
++	it can recreate better call stacks than the default lbr call stack
++	output. But this approach is not full proof. There can be cases
++	where it creates incorrect call stacks from incorrect matches.
++	The known limitations include exception handing such as
++	setjmp/longjmp will have calls/returns not match.
 +
-+static int lbr_callchain_add_kernel_ip(struct thread *thread,
-+				       struct callchain_cursor *cursor,
-+				       struct perf_sample *sample,
-+				       struct symbol **parent,
-+				       struct addr_location *root_al,
-+				       bool callee, int end)
-+{
-+	struct ip_callchain *chain = sample->callchain;
-+	u8 cpumode = PERF_RECORD_MISC_USER;
-+	int err, i;
-+
-+	if (callee) {
-+		for (i = 0; i < end + 1; i++) {
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, chain->ips[i],
-+					       false, NULL, NULL, 0);
-+			if (err)
-+				return err;
-+		}
-+	} else {
-+		for (i = end; i >= 0; i--) {
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, chain->ips[i],
-+					       false, NULL, NULL, 0);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int lbr_callchain_add_lbr_ip(struct thread *thread,
-+				    struct callchain_cursor *cursor,
-+				    struct perf_sample *sample,
-+				    struct symbol **parent,
-+				    struct addr_location *root_al,
-+				    bool callee)
-+{
-+	struct branch_stack *lbr_stack = sample->branch_stack;
-+	struct branch_entry *entries = get_branch_entry(sample);
-+	u8 cpumode = PERF_RECORD_MISC_USER;
-+	int lbr_nr = lbr_stack->nr;
-+	struct branch_flags *flags;
-+	u64 ip, branch_from = 0;
-+	int err, i;
-+
-+	if (callee) {
-+		ip = entries[0].to;
-+		flags = &entries[0].flags;
-+		branch_from = entries[0].from;
-+		err = add_callchain_ip(thread, cursor, parent,
-+				       root_al, &cpumode, ip,
-+				       true, flags, NULL, branch_from);
-+		if (err)
-+			return err;
-+
-+		for (i = 0; i < lbr_nr; i++) {
-+			ip = entries[i].from;
-+			flags = &entries[i].flags;
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       true, flags, NULL, branch_from);
-+			if (err)
-+				return err;
-+		}
-+	} else {
-+		for (i = lbr_nr - 1; i >= 0; i--) {
-+			ip = entries[i].from;
-+			flags = &entries[i].flags;
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       true, flags, NULL, branch_from);
-+			if (err)
-+				return err;
-+		}
-+
-+		ip = entries[0].to;
-+		flags = &entries[0].flags;
-+		branch_from = entries[0].from;
-+		err = add_callchain_ip(thread, cursor, parent,
-+				       root_al, &cpumode, ip,
-+				       true, flags, NULL, branch_from);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Recolve LBR callstack chain sample
-  * Return:
-@@ -2176,81 +2267,44 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 					int max_stack)
- {
- 	struct ip_callchain *chain = sample->callchain;
--	int chain_nr = min(max_stack, (int)chain->nr), i;
--	u8 cpumode = PERF_RECORD_MISC_USER;
--	u64 ip, branch_from = 0;
-+	int chain_nr = min(max_stack, (int)chain->nr);
-+	int i, err;
+ C2C RECORD
+ ----------
+ The perf c2c record command setup options related to HITM cacheline analysis
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 246ac0b4d54f..c798763f62db 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -95,6 +95,7 @@ struct perf_c2c {
+ 	bool			 use_stdio;
+ 	bool			 stats_only;
+ 	bool			 symbol_full;
++	bool			 stitch_lbr;
  
- 	for (i = 0; i < chain_nr; i++) {
- 		if (chain->ips[i] == PERF_CONTEXT_USER)
- 			break;
+ 	/* HITM shared clines stats */
+ 	struct c2c_stats	hitm_stats;
+@@ -273,6 +274,9 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
+ 		return -1;
  	}
  
--	/* LBR only affects the user callchain */
--	if (i != chain_nr) {
--		struct branch_stack *lbr_stack = sample->branch_stack;
--		struct branch_entry *entries = get_branch_entry(sample);
--		int lbr_nr = lbr_stack->nr, j, k;
--		bool branch;
--		struct branch_flags *flags;
--		/*
--		 * LBR callstack can only get user call chain.
--		 * The mix_chain_nr is kernel call chain
--		 * number plus LBR user call chain number.
--		 * i is kernel call chain number,
--		 * 1 is PERF_CONTEXT_USER,
--		 * lbr_nr + 1 is the user call chain number.
--		 * For details, please refer to the comments
--		 * in callchain__printf
--		 */
--		int mix_chain_nr = i + 1 + lbr_nr + 1;
--
--		for (j = 0; j < mix_chain_nr; j++) {
--			int err;
--			branch = false;
--			flags = NULL;
--
--			if (callchain_param.order == ORDER_CALLEE) {
--				if (j < i + 1)
--					ip = chain->ips[j];
--				else if (j > i + 1) {
--					k = j - i - 2;
--					ip = entries[k].from;
--					branch = true;
--					flags = &entries[k].flags;
--				} else {
--					ip = entries[0].to;
--					branch = true;
--					flags = &entries[0].flags;
--					branch_from = entries[0].from;
--				}
--			} else {
--				if (j < lbr_nr) {
--					k = lbr_nr - j - 1;
--					ip = entries[k].from;
--					branch = true;
--					flags = &entries[k].flags;
--				}
--				else if (j > lbr_nr)
--					ip = chain->ips[i + 1 - (j - lbr_nr)];
--				else {
--					ip = entries[0].to;
--					branch = true;
--					flags = &entries[0].flags;
--					branch_from = entries[0].from;
--				}
--			}
-+	/*
-+	 * LBR only affects the user callchain.
-+	 * Fall back if there is no user callchain.
-+	 */
-+	if (i == chain_nr)
-+		return 0;
- 
--			err = add_callchain_ip(thread, cursor, parent,
--					       root_al, &cpumode, ip,
--					       branch, flags, NULL,
--					       branch_from);
--			if (err)
--				return (err < 0) ? err : 0;
--		}
--		return 1;
-+	if (callchain_param.order == ORDER_CALLEE) {
-+		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
-+						  parent, root_al, true, i);
-+		if (err)
-+			goto error;
-+		err = lbr_callchain_add_lbr_ip(thread, cursor, sample,
-+					       parent, root_al, true);
-+		if (err)
-+			goto error;
-+	} else {
-+		err = lbr_callchain_add_lbr_ip(thread, cursor, sample,
-+					       parent, root_al, false);
-+		if (err)
-+			goto error;
-+		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
-+						  parent, root_al, false, i);
-+		if (err)
-+			goto error;
- 	}
- 
--	return 0;
-+	return 1;
-+error:
-+	return (err < 0) ? err : 0;
- }
- 
- static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
++	if (c2c.stitch_lbr)
++		al.thread->lbr_stitch_enable = true;
++
+ 	ret = sample__resolve_callchain(sample, &callchain_cursor, NULL,
+ 					evsel, &al, sysctl_perf_event_max_stack);
+ 	if (ret)
+@@ -2752,6 +2756,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	OPT_STRING('c', "coalesce", &coalesce, "coalesce fields",
+ 		   "coalesce fields: pid,tid,iaddr,dso"),
+ 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
++	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
++		    "Enable LBR callgraph stitching approach"),
+ 	OPT_PARENT(c2c_options),
+ 	OPT_END()
+ 	};
 -- 
 2.17.1
 
