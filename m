@@ -2,332 +2,273 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979B6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D317C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DF321927
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3559A246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgB1Vfj (ORCPT
+        id S1726621AbgB1Vmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:35:39 -0500
-Received: from mga01.intel.com ([192.55.52.88]:58936 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgB1Vfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:35:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 13:35:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="272796009"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2020 13:35:35 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j7nIE-0003xj-Lj; Sat, 29 Feb 2020 05:35:34 +0800
-Date:   Sat, 29 Feb 2020 05:35:14 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 289de35984815576793f579ec27248609e75976e
-Message-ID: <5e598792.pm9xzRRGwfE+LVWJ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 28 Feb 2020 16:42:33 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:52476 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgB1Vmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 16:42:32 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j7nOw-0006Od-0k; Fri, 28 Feb 2020 14:42:30 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j7nOv-0007er-2R; Fri, 28 Feb 2020 14:42:29 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+References: <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        <87lfp7h422.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+        <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+        <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
+        <878skmsbyy.fsf_-_@x220.int.ebiederm.org>
+        <87r1yeqxbp.fsf_-_@x220.int.ebiederm.org>
+        <20200228203915.jelui3l5xue5utpx@wittgenstein>
+Date:   Fri, 28 Feb 2020 15:40:22 -0600
+In-Reply-To: <20200228203915.jelui3l5xue5utpx@wittgenstein> (Christian
+        Brauner's message of "Fri, 28 Feb 2020 21:39:15 +0100")
+Message-ID: <87eeuepf09.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1j7nOv-0007er-2R;;;mid=<87eeuepf09.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX184U6bpgZxu3cpckFBHsoBN66MbMH8BfSI=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/3] proc: Remove the now unnecessary internal mount of proc
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/urgent
-branch HEAD: 289de35984815576793f579ec27248609e75976e  sched/fair: Fix statistics for find_idlest_group()
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-elapsed time: 2164m
+> On Fri, Feb 28, 2020 at 02:19:22PM -0600, Eric W. Biederman wrote:
+>> 
+>> There remains no more code in the kernel using pids_ns->proc_mnt,
+>> therefore remove it from the kernel.
+>> 
+>> The big benefit of this change is that one of the most error prone and
+>> tricky parts of the pid namespace implementation, maintaining kernel
+>> mounts of proc is removed.
+>> 
+>> In addition removing the unnecessary complexity of the kernel mount
+>> fixes a regression that caused the proc mount options to be ignored.
+>> Now that the initial mount of proc comes from userspace, those mount
+>> options are again honored.  This fixes Android's usage of the proc
+>> hidepid option.
+>> 
+>> Reported-by: Alistair Strachan <astrachan@google.com>
+>> Fixes: e94591d0d90c ("proc: Convert proc_mount to use mount_ns.")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/proc/root.c                | 36 -----------------------------------
+>
+> What about proc_flush_task()? Or is this on top of your other series?
 
-configs tested: 269
-configs skipped: 0
+On top of the other series.  Which is why it is a reply to it.
+That I have pushed into linux-next earlier today.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No one seems worried enough about that patchset to comment on v2 so I am
+just going with it.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-riscv                          rv32_defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                             allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-mips                      fuloong2e_defconfig
-h8300                    h8300h-sim_defconfig
-s390                       zfcpdump_defconfig
-c6x                        evmc6678_defconfig
-mips                             allmodconfig
-ia64                             allyesconfig
-h8300                     edosk2674_defconfig
-parisc                generic-32bit_defconfig
-powerpc                       ppc64_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                                defconfig
-s390                              allnoconfig
-sparc                               defconfig
-um                                  defconfig
-nios2                         10m50_defconfig
-sh                            titan_defconfig
-s390                          debug_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-sparc64                           allnoconfig
-arc                                 defconfig
-sparc64                          allyesconfig
-parisc                            allnoconfig
-powerpc                           allnoconfig
-m68k                             allmodconfig
-parisc                generic-64bit_defconfig
-sh                                allnoconfig
-i386                             alldefconfig
-riscv                    nommu_virt_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-c6x                              allyesconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200227
-x86_64               randconfig-a002-20200227
-x86_64               randconfig-a003-20200227
-i386                 randconfig-a001-20200227
-i386                 randconfig-a002-20200227
-i386                 randconfig-a003-20200227
-x86_64               randconfig-a001-20200228
-x86_64               randconfig-a002-20200228
-x86_64               randconfig-a003-20200228
-i386                 randconfig-a001-20200228
-i386                 randconfig-a002-20200228
-i386                 randconfig-a003-20200228
-nds32                randconfig-a001-20200227
-mips                 randconfig-a001-20200227
-parisc               randconfig-a001-20200227
-riscv                randconfig-a001-20200227
-alpha                randconfig-a001-20200227
-m68k                 randconfig-a001-20200227
-alpha                randconfig-a001-20200228
-m68k                 randconfig-a001-20200228
-mips                 randconfig-a001-20200228
-nds32                randconfig-a001-20200228
-parisc               randconfig-a001-20200228
-riscv                randconfig-a001-20200228
-c6x                  randconfig-a001-20200228
-h8300                randconfig-a001-20200228
-microblaze           randconfig-a001-20200228
-nios2                randconfig-a001-20200228
-sparc64              randconfig-a001-20200228
-nios2                randconfig-a001-20200227
-c6x                  randconfig-a001-20200227
-h8300                randconfig-a001-20200227
-microblaze           randconfig-a001-20200227
-sparc64              randconfig-a001-20200227
-c6x                  randconfig-a001-20200229
-h8300                randconfig-a001-20200229
-microblaze           randconfig-a001-20200229
-nios2                randconfig-a001-20200229
-sparc64              randconfig-a001-20200229
-csky                 randconfig-a001-20200228
-openrisc             randconfig-a001-20200228
-s390                 randconfig-a001-20200228
-sh                   randconfig-a001-20200228
-xtensa               randconfig-a001-20200228
-csky                 randconfig-a001-20200227
-openrisc             randconfig-a001-20200227
-s390                 randconfig-a001-20200227
-sh                   randconfig-a001-20200227
-xtensa               randconfig-a001-20200227
-x86_64               randconfig-b001-20200227
-x86_64               randconfig-b002-20200227
-x86_64               randconfig-b003-20200227
-i386                 randconfig-b001-20200227
-i386                 randconfig-b002-20200227
-i386                 randconfig-b003-20200227
-x86_64               randconfig-b001-20200228
-x86_64               randconfig-b002-20200228
-x86_64               randconfig-b003-20200228
-i386                 randconfig-b001-20200228
-i386                 randconfig-b002-20200228
-i386                 randconfig-b003-20200228
-x86_64               randconfig-c001-20200228
-x86_64               randconfig-c002-20200228
-x86_64               randconfig-c003-20200228
-i386                 randconfig-c001-20200228
-i386                 randconfig-c002-20200228
-i386                 randconfig-c003-20200228
-i386                 randconfig-c003-20200227
-i386                 randconfig-c001-20200227
-x86_64               randconfig-c001-20200227
-x86_64               randconfig-c003-20200227
-x86_64               randconfig-c002-20200227
-i386                 randconfig-c002-20200227
-x86_64               randconfig-c001-20200229
-x86_64               randconfig-c002-20200229
-x86_64               randconfig-c003-20200229
-i386                 randconfig-c001-20200229
-i386                 randconfig-c002-20200229
-i386                 randconfig-c003-20200229
-x86_64               randconfig-d001-20200228
-x86_64               randconfig-d002-20200228
-x86_64               randconfig-d003-20200228
-i386                 randconfig-d001-20200228
-i386                 randconfig-d002-20200228
-i386                 randconfig-d003-20200228
-x86_64               randconfig-d001-20200229
-x86_64               randconfig-d002-20200229
-x86_64               randconfig-d003-20200229
-i386                 randconfig-d001-20200229
-i386                 randconfig-d002-20200229
-i386                 randconfig-d003-20200229
-x86_64               randconfig-d001-20200227
-x86_64               randconfig-d002-20200227
-x86_64               randconfig-d003-20200227
-i386                 randconfig-d001-20200227
-i386                 randconfig-d002-20200227
-i386                 randconfig-d003-20200227
-x86_64               randconfig-e001-20200228
-x86_64               randconfig-e002-20200228
-x86_64               randconfig-e003-20200228
-i386                 randconfig-e001-20200228
-i386                 randconfig-e002-20200228
-i386                 randconfig-e003-20200228
-x86_64               randconfig-e001-20200227
-x86_64               randconfig-e002-20200227
-x86_64               randconfig-e003-20200227
-i386                 randconfig-e001-20200227
-i386                 randconfig-e002-20200227
-i386                 randconfig-e003-20200227
-x86_64               randconfig-e001-20200229
-x86_64               randconfig-e002-20200229
-x86_64               randconfig-e003-20200229
-i386                 randconfig-e001-20200229
-i386                 randconfig-e002-20200229
-i386                 randconfig-e003-20200229
-x86_64               randconfig-f001-20200227
-x86_64               randconfig-f002-20200227
-x86_64               randconfig-f003-20200227
-i386                 randconfig-f001-20200227
-i386                 randconfig-f002-20200227
-i386                 randconfig-f003-20200227
-x86_64               randconfig-f001-20200228
-x86_64               randconfig-f002-20200228
-x86_64               randconfig-f003-20200228
-i386                 randconfig-f001-20200228
-i386                 randconfig-f002-20200228
-i386                 randconfig-f003-20200228
-x86_64               randconfig-g001-20200228
-x86_64               randconfig-g002-20200228
-x86_64               randconfig-g003-20200228
-i386                 randconfig-g001-20200228
-i386                 randconfig-g002-20200228
-i386                 randconfig-g003-20200228
-x86_64               randconfig-g001-20200227
-x86_64               randconfig-g002-20200227
-x86_64               randconfig-g003-20200227
-i386                 randconfig-g001-20200227
-i386                 randconfig-g002-20200227
-i386                 randconfig-g003-20200227
-x86_64               randconfig-h001-20200228
-x86_64               randconfig-h002-20200228
-x86_64               randconfig-h003-20200228
-i386                 randconfig-h001-20200228
-i386                 randconfig-h002-20200228
-i386                 randconfig-h003-20200228
-x86_64               randconfig-h001-20200227
-x86_64               randconfig-h002-20200227
-x86_64               randconfig-h003-20200227
-i386                 randconfig-h001-20200227
-i386                 randconfig-h002-20200227
-i386                 randconfig-h003-20200227
-x86_64               randconfig-h001-20200229
-x86_64               randconfig-h002-20200229
-x86_64               randconfig-h003-20200229
-i386                 randconfig-h001-20200229
-i386                 randconfig-h002-20200229
-i386                 randconfig-h003-20200229
-arm                  randconfig-a001-20200227
-arm64                randconfig-a001-20200227
-ia64                 randconfig-a001-20200227
-powerpc              randconfig-a001-20200227
-arc                  randconfig-a001-20200228
-arm                  randconfig-a001-20200228
-arm64                randconfig-a001-20200228
-ia64                 randconfig-a001-20200228
-powerpc              randconfig-a001-20200228
-sparc                randconfig-a001-20200228
-arc                  randconfig-a001-20200229
-arm                  randconfig-a001-20200229
-arm64                randconfig-a001-20200229
-ia64                 randconfig-a001-20200229
-powerpc              randconfig-a001-20200229
-sparc                randconfig-a001-20200229
-arc                  randconfig-a001-20200227
-sparc                randconfig-a001-20200227
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sparc64                          allmodconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+>>  include/linux/pid_namespace.h |  2 --
+>>  include/linux/proc_ns.h       |  5 -----
+>>  kernel/pid.c                  |  8 --------
+>>  kernel/pid_namespace.c        |  7 -------
+>>  5 files changed, 58 deletions(-)
+>> 
+>> diff --git a/fs/proc/root.c b/fs/proc/root.c
+>> index 608233dfd29c..2633f10446c3 100644
+>> --- a/fs/proc/root.c
+>> +++ b/fs/proc/root.c
+>> @@ -292,39 +292,3 @@ struct proc_dir_entry proc_root = {
+>>  	.subdir		= RB_ROOT,
+>>  	.name		= "/proc",
+>>  };
+>> -
+>> -int pid_ns_prepare_proc(struct pid_namespace *ns)
+>> -{
+>> -	struct proc_fs_context *ctx;
+>> -	struct fs_context *fc;
+>> -	struct vfsmount *mnt;
+>> -
+>> -	fc = fs_context_for_mount(&proc_fs_type, SB_KERNMOUNT);
+>> -	if (IS_ERR(fc))
+>> -		return PTR_ERR(fc);
+>> -
+>> -	if (fc->user_ns != ns->user_ns) {
+>> -		put_user_ns(fc->user_ns);
+>> -		fc->user_ns = get_user_ns(ns->user_ns);
+>> -	}
+>> -
+>> -	ctx = fc->fs_private;
+>> -	if (ctx->pid_ns != ns) {
+>> -		put_pid_ns(ctx->pid_ns);
+>> -		get_pid_ns(ns);
+>> -		ctx->pid_ns = ns;
+>> -	}
+>> -
+>> -	mnt = fc_mount(fc);
+>> -	put_fs_context(fc);
+>> -	if (IS_ERR(mnt))
+>> -		return PTR_ERR(mnt);
+>> -
+>> -	ns->proc_mnt = mnt;
+>> -	return 0;
+>> -}
+>> -
+>> -void pid_ns_release_proc(struct pid_namespace *ns)
+>> -{
+>> -	kern_unmount(ns->proc_mnt);
+>> -}
+>> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+>> index 2ed6af88794b..4956e362e55e 100644
+>> --- a/include/linux/pid_namespace.h
+>> +++ b/include/linux/pid_namespace.h
+>> @@ -33,7 +33,6 @@ struct pid_namespace {
+>>  	unsigned int level;
+>>  	struct pid_namespace *parent;
+>>  #ifdef CONFIG_PROC_FS
+>> -	struct vfsmount *proc_mnt;
+>>  	struct dentry *proc_self;
+>>  	struct dentry *proc_thread_self;
+>>  #endif
+>> @@ -42,7 +41,6 @@ struct pid_namespace {
+>>  #endif
+>>  	struct user_namespace *user_ns;
+>>  	struct ucounts *ucounts;
+>> -	struct work_struct proc_work;
+>>  	kgid_t pid_gid;
+>>  	int hide_pid;
+>>  	int reboot;	/* group exit code if this pidns was rebooted */
+>> diff --git a/include/linux/proc_ns.h b/include/linux/proc_ns.h
+>> index 4626b1ac3b6c..e1106a077c1a 100644
+>> --- a/include/linux/proc_ns.h
+>> +++ b/include/linux/proc_ns.h
+>> @@ -50,16 +50,11 @@ enum {
+>>  
+>>  #ifdef CONFIG_PROC_FS
+>>  
+>> -extern int pid_ns_prepare_proc(struct pid_namespace *ns);
+>> -extern void pid_ns_release_proc(struct pid_namespace *ns);
+>>  extern int proc_alloc_inum(unsigned int *pino);
+>>  extern void proc_free_inum(unsigned int inum);
+>>  
+>>  #else /* CONFIG_PROC_FS */
+>>  
+>> -static inline int pid_ns_prepare_proc(struct pid_namespace *ns) { return 0; }
+>> -static inline void pid_ns_release_proc(struct pid_namespace *ns) {}
+>> -
+>>  static inline int proc_alloc_inum(unsigned int *inum)
+>>  {
+>>  	*inum = 1;
+>> diff --git a/kernel/pid.c b/kernel/pid.c
+>> index ca08d6a3aa77..60820e72634c 100644
+>> --- a/kernel/pid.c
+>> +++ b/kernel/pid.c
+>> @@ -144,9 +144,6 @@ void free_pid(struct pid *pid)
+>>  			/* Handle a fork failure of the first process */
+>>  			WARN_ON(ns->child_reaper);
+>>  			ns->pid_allocated = 0;
+>> -			/* fall through */
+>> -		case 0:
+>> -			schedule_work(&ns->proc_work);
+>>  			break;
+>>  		}
+>>  
+>> @@ -247,11 +244,6 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>>  		tmp = tmp->parent;
+>>  	}
+>>  
+>> -	if (unlikely(is_child_reaper(pid))) {
+>> -		if (pid_ns_prepare_proc(ns))
+>> -			goto out_free;
+>> -	}
+>> -
+>>  	get_pid_ns(ns);
+>>  	refcount_set(&pid->count, 1);
+>>  	for (type = 0; type < PIDTYPE_MAX; ++type)
+>> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+>> index d40017e79ebe..318fcc6ba301 100644
+>> --- a/kernel/pid_namespace.c
+>> +++ b/kernel/pid_namespace.c
+>> @@ -57,12 +57,6 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
+>>  	return READ_ONCE(*pkc);
+>>  }
+>>  
+>> -static void proc_cleanup_work(struct work_struct *work)
+>
+> There's a comment in kernel/pid_namespace.c that references
+> proc_cleanup_work(). Can you please remove that as well?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Good catch.  It isn't immediately obvious to me how that sentence
+needs to be updated but it should be done.
+
+Eric
+
+
+>> -{
+>> -	struct pid_namespace *ns = container_of(work, struct pid_namespace, proc_work);
+>> -	pid_ns_release_proc(ns);
+>> -}
+>> -
+>>  static struct ucounts *inc_pid_namespaces(struct user_namespace *ns)
+>>  {
+>>  	return inc_ucount(ns, current_euid(), UCOUNT_PID_NAMESPACES);
+>> @@ -114,7 +108,6 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+>>  	ns->user_ns = get_user_ns(user_ns);
+>>  	ns->ucounts = ucounts;
+>>  	ns->pid_allocated = PIDNS_ADDING;
+>> -	INIT_WORK(&ns->proc_work, proc_cleanup_work);
+>>  
+>>  	return ns;
+>>  
+>> -- 
+>> 2.25.0
+>> 
