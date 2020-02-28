@@ -2,129 +2,193 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79939C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6ABC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559A324677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IACH2A5r"
+	by mail.kernel.org (Postfix) with ESMTP id 394DE246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgB1Sms (ORCPT
+        id S1726791AbgB1Smz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:42:48 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39715 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Smr (ORCPT
+        Fri, 28 Feb 2020 13:42:55 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:44760 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Smz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:42:47 -0500
-Received: by mail-il1-f195.google.com with SMTP id w69so3591733ilk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:42:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=VCbaNY4wBYVaCiMegreK3IyuJnq8p/jIOFknVGfbhLc=;
-        b=IACH2A5rT5y+8kIpFNw5as0ou+ITV+tKeAc3h+7qwsaKmpUfpjdpVI+4wPdHBiN20q
-         kqMSDa7CJ2dUesZlZOUo9uFYz6+v73GCWYrh90Rqd0whM+V85npOFdTYySvyTtGjeiRm
-         +1YjJGfnNK3jK0jRBpYbxwCXQScmOM46/P9lZcjgQpYvTjzdKMcBh0FSpL4CnTwFsCXk
-         6WdlrtXDG0NzREDUppHL9nxPYJNM4brMbKF59oYz8B5vxDnuhjh8mtF5QkWguJK8x15k
-         /r4uBRIb/eD3us7ddsswEugJyfu0MDPW4ZBY0ishIh3G8Nf0J80Ea2eGneaqOa63x2ow
-         DB3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=VCbaNY4wBYVaCiMegreK3IyuJnq8p/jIOFknVGfbhLc=;
-        b=TZa645A+q2Kq/NRNgy/znd4Rf4bdAX+Y3Yv5k/CwQ+52/6im3j+EPTlbi/0sCY8und
-         4rqNwxSDESj1pXsxfV+OeO5urAiprPQ1RWYb9x3DAomkNcYU9gC+sNw7Rtfw1tUVsmCS
-         41bszfTVwvozHZSskuNzt1RJD39p7ri40iY8MhFV0ZAm/imk7xiRkpgr0ZGpfbzvIwWD
-         VjpxyEnd3T/j8ViqWQi6UKAqs1uC7qZO+Pg1Eqh6siKa5mDGWT8Si2Lniso1Zmb5gacc
-         FCiADE4natdAjlodx7QLMGo7ZwEV3hphCmt5J5wSpYDDTrR1WP4+jMmqlEj1ltQoJwNm
-         PGbw==
-X-Gm-Message-State: APjAAAUuqnOw4sesoCvhZwGCZX5JxUl+deRJICCaQhayzgH2qxsX++o4
-        qIrNlgKXwDlNCqLIXKZK34bo2j0iRMU=
-X-Google-Smtp-Source: APXvYqxd+kzpCQ9k7q5es4g3sHk7SVLKRk6gOXzbRYOn5D3lcn7MCel9o98wkFhvi9+VnOTPE5dJxw==
-X-Received: by 2002:a92:50a:: with SMTP id q10mr5913018ile.294.1582915366218;
-        Fri, 28 Feb 2020 10:42:46 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t15sm3314670ili.50.2020.02.28.10.42.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 10:42:45 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.6-rc
-Message-ID: <d91f851a-97e6-cb5f-23f6-3de0ce93e4dc@kernel.dk>
-Date:   Fri, 28 Feb 2020 11:42:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 13:42:55 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 2EED82004C;
+        Fri, 28 Feb 2020 19:42:44 +0100 (CET)
+Date:   Fri, 28 Feb 2020 19:42:42 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
+ Schema
+Message-ID: <20200228184242.GA20089@ravnborg.org>
+References: <cover.1582913973.git.hns@goldelico.com>
+ <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=r_1tXGB3AAAA:8 a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8
+        a=pSfg_kgG_YkFMEKRir4A:9 a=qn4TxXM_sh0ilUaX:21 a=kcv_VjDv9XC6Jkun:21
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=t8nPyN_e6usw4ciXM-Pk:22
+        a=nCm3ceeH17rKjHWsMeRo:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Nikolaus.
 
-Set of fixes for io_uring that should go into this release. This pull
-request contains:
+On Fri, Feb 28, 2020 at 07:19:26PM +0100, H. Nikolaus Schaller wrote:
+> From: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Add DT bindings for the LCD controller on the jz4780 SoC
+> Based on .txt binding from Zubair Lutfullah Kakakhel
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-- Fix for a race with IOPOLL used with SQPOLL (Xiaoguang)
+As this patch was sent to you and you forward it you need to
+testify that this is OK.
+To do so follow the rules of the Developemnt Certificate of Origin
+as can be found in SubmittingPatches.rst.
 
-- Only show ->fdinfo if procfs is enabled (Tobias)
+In other words - you need to add your Signed-off-by: xxx <mail>
+to the patch.
+In the end we want to be able to see the patch the patch has taken
+reading the Signed-off-by: lines from top to bottom.
 
-- Fix for a chain with multiple personalities in the SQEs
+Please check other patches in this series for the same issue.
 
-- Fix for a missing free of personality idr on exit
+	Sam
 
-- Removal of the spin-for-work optimization
-
-- Fix for next work lookup on request completion
-
-- Fix for non-vec read/write result progation in case of links
-
-- Fix for a fileset references on switch
-
-- Fix for a recvmsg/sendmsg 32-bit compatability mode
-
-Please pull!
-
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-02-28
-
-
-----------------------------------------------------------------
-Jens Axboe (8):
-      io_uring: handle multiple personalities in link chains
-      io_uring: fix personality idr leak
-      io-wq: remove spin-for-work optimization
-      io-wq: ensure work->task_pid is cleared on init
-      io_uring: pick up link work on submit reference drop
-      io_uring: import_single_range() returns 0/-ERROR
-      io_uring: drop file set ref put/get on switch
-      io_uring: fix 32-bit compatability with sendmsg/recvmsg
-
-Tobias Klauser (1):
-      io_uring: define and set show_fdinfo only if procfs is enabled
-
-Xiaoguang Wang (1):
-      io_uring: fix poll_list race for SETUP_IOPOLL|SETUP_SQPOLL
-
- fs/io-wq.c    |  19 ---------
- fs/io-wq.h    |  14 ++-----
- fs/io_uring.c | 132 +++++++++++++++++++++++++++++++---------------------------
- 3 files changed, 74 insertions(+), 91 deletions(-)
-
--- 
-Jens Axboe
-
+> ---
+>  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> new file mode 100644
+> index 000000000000..c71415a3a342
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic JZ4780 LCD Controller
+> +
+> +maintainers:
+> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |
+> +  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ingenic,jz4780-lcd
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: the address & size of the LCD controller registers
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Specifies the interrupt provided by parent
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
+> +
+> +  clock-names:
+> +    items:
+> +      - const: lcd_clk
+> +      - const: lcd_pixclk
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      A port node with endpoint definitions as defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +required:
+> +    - compatible
+> +    - reg
+> +    - interrupts
+> +    - clocks
+> +    - clock-names
+> +    - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +    lcd: jz4780-lcdk@0x13050000 {
+> +        compatible = "ingenic,jz4780-lcd";
+> +        reg = <0x13050000 0x1800>;
+> +
+> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
+> +        clock-names = "lcd_clk", "lcd_pixclk";
+> +
+> +        interrupt-parent = <&intc>;
+> +        interrupts = <31>;
+> +
+> +        jz4780_lcd_out: port {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            jz4780_out_hdmi: endpoint@0 {
+> +                reg = <0>;
+> +                remote-endpoint = <&hdmi_in_lcd>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.23.0
