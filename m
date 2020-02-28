@@ -2,154 +2,135 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D07C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1B3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA832469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9B9246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aJ5yBLp8"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="GZOcs8xD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qbgmEM9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725871AbgB1EuV (ORCPT
+        id S1725911AbgB1ExC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:50:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37270 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1EuU (ORCPT
+        Thu, 27 Feb 2020 23:53:02 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:41605 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725730AbgB1ExC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:50:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=s+QeEHYSNi44+hIO/8Apj4mw7x3KWr0g5BcyFCnqi+s=; b=aJ5yBLp8XFs2+ptHMnR8pdSRrR
-        D9z0gqDLHni+NJct/om5lD6wRQzjxCNtIoXut7UDYgtIUDIBpllTDUzXlMcLBrNB05af4mS/q4HSD
-        cIvsgLOu2yNKeJmW2xe1UWdHzgyXUQzYMlEj3DTtOCGVpU40Ik2B7FVUFfRa1S4HC2Q1BJUrIi+4S
-        rIxADQT5/NEVz8HQZZ2kNP/QzikKuWSaGM2rsMLRw2Uxx7lNw/FkiBvs8R+eF5DE768hB8hzzBH/H
-        tj6xB4BLACEK2NFHiohlqmyhhmAuxDr/1VgYkr1j/ryX3dKf/CTt4DHYINv3CP31X/x3i/zaQNu+Z
-        qhy/jcMA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7XbQ-0007eT-EV; Fri, 28 Feb 2020 04:50:20 +0000
-Subject: Re: [PATCH 1/2] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-References: <158278834245.14966.6179457011671073018.stgit@devnote2>
- <158278835238.14966.16157216423901327777.stgit@devnote2>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c8494bca-a5f7-0bc6-63f5-b9ec056eb894@infradead.org>
-Date:   Thu, 27 Feb 2020 20:50:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 23:53:02 -0500
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9186E5E3E;
+        Thu, 27 Feb 2020 23:53:01 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 27 Feb 2020 23:53:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        QaGDiOWBjcbn4rDNlKqOONKkTcLMMhgcigudu4fkTbM=; b=GZOcs8xDttkrjAVH
+        NW9UlrkQHXPo/yp+iwzXrgXI2kwoirhgmPKFo2IiP93xmQIntQbvsTBtJfRWbUk6
+        hS2XBceoGb1Lf0EWHXoc1SALBi0oDKpu46k4ZWx5hWeXuEAt3KonSJHOFgHPwX6U
+        t9qHrh42MNfipoF/IjTo9N4zoHql4Nz11N2kcyFih9JkEOJuuuVrPdzffd8JwDyb
+        mow3W9mqXvX57e/4DbRq3j7gnKySA92lowvBWNGa8lAeWvDgb1UJQEn+3o7DiOd9
+        n7MOlLGe0q1ZIqnKowyLEe6RDoe1iRqED+P4jXHGiAM6PTxYPHY7XHulnBsu6Tpy
+        mTMlWw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=QaGDiOWBjcbn4rDNlKqOONKkTcLMMhgcigudu4fkT
+        bM=; b=qbgmEM9mb8vbUI3ZVYzTO8aH27yRXZWIPIyOebMpXlXWzQDXqEwEIIiRI
+        3HuNvlmmLpNhM2h8ab/H4PvyxdIRPojyG40qxhJVmxruoQ8eUXvbr73nFSzFJ/ZS
+        3E3cVQ7e33DvkJkyIDKoQAhx60sTmw2S53kHQ+6Uh0p5To9c8FxU3GkrPUi3L0fc
+        98+segKQUKNehg+9skkC53roy7m4vN46zx6baUGxXSAkvio4vKp58l2iYpbe3QZs
+        iLb++WKJX5Ffb8aQqYjLvIa0DtD/w61BQTL3p0PoOIwYbZ/3QYngqMzcNqYr57yC
+        n69weE2/LZUy6ZS5jMv57C//FG3gw==
+X-ME-Sender: <xms:rZxYXm9ggD5oS5z_Ndh6eLsqOkWgKNfSno9Y1Mol3ukkJz0E1gxWsA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdejkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:rZxYXuMgmNOqBG1ZOYM6qjSwgHzbLQLAuViLq0qqjCNBCUTqEW9Qog>
+    <xmx:rZxYXiEJOnr6HAOZUpNyy8aQZz8Q9PHBsx3RZaLzVSjWeDTFaEqdyg>
+    <xmx:rZxYXsiSBodZN5FXl-QYKfwWUpoyfgTRzvqUcRNXi5bA2ncVAiLR1w>
+    <xmx:rZxYXiOe1qWGFvcAnxqH4bkmJyZOD5G4ykKl0SEz90qyJ-l0Zj7KdA>
+Received: from mickey.themaw.net (unknown [118.209.182.91])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ED8323060D1A;
+        Thu, 27 Feb 2020 23:52:55 -0500 (EST)
+Message-ID: <2b03788f9d71d9d972cbe908e0f0fb0e37672719.camel@themaw.net>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Date:   Fri, 28 Feb 2020 12:52:52 +0800
+In-Reply-To: <20200228042208.GI23230@ZenIV.linux.org.uk>
+References: <20200226161404.14136-1-longman@redhat.com>
+         <20200226162954.GC24185@bombadil.infradead.org>
+         <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+         <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+         <20200228033412.GD29971@bombadil.infradead.org>
+         <20200228042208.GI23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <158278835238.14966.16157216423901327777.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-A few more comments for you:
-
-On 2/26/20 11:25 PM, Masami Hiramatsu wrote:
-> Update boot configuration documentation.
+On Fri, 2020-02-28 at 04:22 +0000, Al Viro wrote:
+> On Thu, Feb 27, 2020 at 07:34:12PM -0800, Matthew Wilcox wrote:
+> > On Thu, Feb 27, 2020 at 05:55:43PM +0800, Ian Kent wrote:
+> > > Not all file systems even produce negative hashed dentries.
+> > > 
+> > > The most beneficial use of them is to improve performance of
+> > > rapid
+> > > fire lookups for non-existent names. Longer lived negative hashed
+> > > dentries don't give much benefit at all unless they suddenly have
+> > > lots of hits and that would cost a single allocation on the first
+> > > lookup if the dentry ttl expired and the dentry discarded.
+> > > 
+> > > A ttl (say jiffies) set at appropriate times could be a better
+> > > choice all round, no sysctl values at all.
+> > 
+> > The canonical argument in favour of negative dentries is to improve
+> > application startup time as every application searches the library
+> > path
+> > for the same libraries.  Only they don't do that any more:
 > 
->  - Not using "config" abbreviation but configuration or description.
->  - Rewrite descriptions of node and its maxinum number.
->  - Add a section of use cases of boot configuration.
->  - Move how to use bootconfig to earlier section.
->  - Fix some typos, indents and format mistakes.
+> 	Tell that to scripts that keep looking through $PATH for
+> binaries each time they are run.  Tell that to cc(1) looking through
+> include path, etc.
 > 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  Documentation/admin-guide/bootconfig.rst |  172 +++++++++++++++++++-----------
->  Documentation/trace/boottime-trace.rst   |    2 
->  2 files changed, 112 insertions(+), 62 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-> index cf2edcd09183..4bac98250bc0 100644
-> --- a/Documentation/admin-guide/bootconfig.rst
-> +++ b/Documentation/admin-guide/bootconfig.rst
-> @@ -11,19 +11,98 @@ Boot Configuration
->  Overview
->  ========
->  
-> -The boot configuration expands the current kernel command line to support
-> +Boot configuration expands the current kernel command line to support
->  additional key-value data when booting the kernel in an efficient way.
+> 	Ian, autofs is deeply pathological in that respect; that's OK,
+> since it has very unusual needs, but please don't use it as a model
+> for anything else - its needs *are* unusual.
 
-                maybe      s/when/while/
+Ok, but my thoughts aren't based on autofs behaviours.
 
-> -This allows administrators to pass a structured-Key config file.
-> +This allows administrators to pass a structured-Key configuration file
-> +as a way to supplement the kernel command line to pass system boot parameters.
->  
-> -Config File Syntax
-> -==================
-> +Compared with the kernel command line, the boot configuration can provide
-> +scalability (up to 32 KiB configurations), readability (structured
+But it sounds like you don't believe this is a sensible suggestion
+and you would know best so ...
 
-This makes it sound like bootconfig supports 32 thousand configurations, but
-(I think) it allows up to 32 KiB of configuration data.
-
-> +configuration with comments) and compact expression of option groups.
-> +
-> +When to Use the Boot Configuration?
-> +-----------------------------------
-> +
-> +The boot configuration supports kernel command line options and init daemon
-> +boot options. All sub-keys under "kernel" root key are passed as a part of
-> +kernel command line [1]_, and one under "init" root key are passed as a part
-
-                                 ones  {or those}
-
-> +of init command line. For example, ::
-> +
-> +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
-> +
-> +This can be written as following boot configuration file.::
-> +
-> +   kernel {
-> +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
-> +      ro       # mount rootfs as read only
-> +      quiet    # No console log
-> +      splash   # show splash image on boot screen
-> +      console = "ttyS0,115200n8" # 1st console to serial device
-> +      console += tty0            # add 2nd console
-> +   }
-> +
-> +If you think that kernel/init options becomes too long to write in boot-loader
-> +configuration file or want to comment on each options, you can use this
-
-                                         on each option,
-
-> +boot configuration. If unsure, you can still continue to use the legacy
-> +kernel command line.
-> +
-> +Also, some subsystem may depend on the boot configuration, and it has own
-> +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
-> +describe their options [2]_. In this case, you need to use the boot
-
-            its
-
-> +configuration.
-> +
-> +.. [1] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
-> +.. [2] See :ref:`Documentation/trace/boottime-trace.rst <boottimetrace>`
-
-
--- 
-~Randy
+Ian
 
