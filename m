@@ -2,138 +2,91 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298D2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D4DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CEB2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="xMaZkTVc"
+	by mail.kernel.org (Postfix) with ESMTP id A5EFD2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgB1Qyf (ORCPT
+        id S1726946AbgB1QzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:54:35 -0500
-Received: from mail-vi1eur05on2135.outbound.protection.outlook.com ([40.107.21.135]:2209
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725876AbgB1Qyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:54:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UZ7lWOdIzoBGSgWfCep+Pyz9zfgaEtIgYCg0LQuvpAkrdcMIuQxD7NVO4Oh35ZC+SQrgNJ4Veu8p575MoK0uSgcnr4FoIWk+y+MdMGydy8M9w+7HZ6As2iwzAvPZoJvAWHCUHEACfCFVWp4rMhwvdArnnIqM10RPEIqMj55mNx9OQDy0n9VUR5GxzHYqQcTuUrdZLTxTpCsuki0BElkvlmOl2yAuIjBfj9fqlZeZPsb9ptcoOwXFo3s+oGsAgwLstVX4VH0B9HM9X6zAhjfidajTQQtJ4UObb2bqZ0hdv7uzTNXKAmBdF7ZfFYiak/6Rgn9gIkE5ln6Qe/1AbFvSOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9mWbtpjrUBbL3PJKRNrOsqzQFjMuwjWJ1ZAs1tI8pCo=;
- b=Ci1WN7FfQJtutpJNOqppZo6k0980akp6bLwG7Rt/S3iwdO8pt6R5J64IB143sumn0+lenCvUk+9pnJnltzLjedW01Q10ZvRs9G4E7V8v6L8/dv8W7P9hj3v0QqOewi2exO2ucr6vJ/64tCaRtJfg1xXcf3C1YHYWZoh38yCGYZC+zLk0BKeRyQMn8ux4irXC68wMQA7Wf7jrWuyeJWS/IhvZk7hyb++nAuVNxsYC9ufEPxcDekKdj4Vl5Z8C8+xfJjaEAyKu/iuJeUo2HZ5+GqbIPJ+TYp5bdEqLGoXvA2RUPC14FJm2tPfon17DqB4iGPJCLv9ZZ6x0+Y6Wzj7Djg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9mWbtpjrUBbL3PJKRNrOsqzQFjMuwjWJ1ZAs1tI8pCo=;
- b=xMaZkTVcvUpMCA7tLaolVHBEu+agCKwPJfbsxkkfqcZO8RGSsZIKRtCIXuqgkVBJclvqXGjKnroUJe+f57Cd1QElEoIaGXHmw2aI6HQfM4bXm5Y91HbIAEqcceaPmKyOkLma1JA5QUzMgGSKXUiMPwzUhuNiC8R/geGW5FQ772w=
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
- VI1P190MB0016.EURP190.PROD.OUTLOOK.COM (10.172.13.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Fri, 28 Feb 2020 16:54:32 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
- 16:54:32 +0000
-Received: from plvision.eu (94.179.130.92) by AM5P194CA0016.EURP194.PROD.OUTLOOK.COM (2603:10a6:203:8f::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 16:54:31 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-Subject: Re: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
- support
-Thread-Topic: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
- support
-Thread-Index: AQHV6/jzb8NjbprnTkmsDy10O4uRHKgu45iAgAHz8YA=
-Date:   Fri, 28 Feb 2020 16:54:32 +0000
-Message-ID: <20200228165429.GB8409@plvision.eu>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-3-vadym.kochan@plvision.eu>
- <20200227110507.GE26061@nanopsycho>
-In-Reply-To: <20200227110507.GE26061@nanopsycho>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5P194CA0016.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:203:8f::26) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadym.kochan@plvision.eu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.179.130.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f849a274-d66f-411b-b71c-08d7bc6ee246
-x-ms-traffictypediagnostic: VI1P190MB0016:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1P190MB0016E81263E98C13F763925195E80@VI1P190MB0016.EURP190.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0327618309
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39830400003)(376002)(346002)(396003)(199004)(189003)(16526019)(7696005)(5660300002)(186003)(71200400001)(44832011)(107886003)(4744005)(66946007)(66446008)(36756003)(66476007)(956004)(508600001)(316002)(64756008)(66556008)(33656002)(8886007)(2616005)(26005)(8676002)(81166006)(1076003)(86362001)(52116002)(4326008)(55016002)(54906003)(8936002)(6916009)(81156014)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0016;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: plvision.eu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aId2MRPjQRq085BYhUwTlxmQ1F/bWka9gzaj20gwUFdCzCtuGtmP1pubajODDjJXHFCMRY4O3ULHdmwB98vUyzYNqzDqX6M8p16m3VWSctPP3Qf6gav9rzLK7IkrRcctFi64kSGXGc0TaDdZSrZTOKzo4ynvuEHt4vhSimOmtjJKFwA8z4dA3fUqMa8yBoLRJnYmQTE+I0w0ziTg9X8cYpmLxWPdxRIqym62l/aTOJ8AY7PXXaMiwHpNd/UqEvOtEmZ9vHLTSpmaMEUu0jgXIITbNEjJ1KHQMMs50I5oO2koaktFaD6lJYwvGY39SUxaH4WWlimiZLF+EY/1cqDOgw5W0EpaOf9HXoJHpMeNCg0SEoaCfVHdxdT5/1QNc7zMRjruptboFLEtJNN1tUDZyzd4H9H49v5GYODeEOOLpL2iyrnutFvENzmvypxz2uce
-x-ms-exchange-antispam-messagedata: TQBvF2YPrsv9BVMEmBRmNx6aFBHIHooLATPMB+0b4vZgHCCHna/oRlHDfmq+yQTjjosXpwXHkpePthGE2nnL7aC0oiWlGo5exdErLdpqkHdK1Y26msH1eAhjJ9PkWi2HgTVLlHApy7NVMRXCtTpB2Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <155B807745CBF74DA758337C2107D515@EURP190.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Feb 2020 11:55:03 -0500
+Received: from mga03.intel.com ([134.134.136.65]:11161 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgB1QzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:55:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:55:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
+   d="scan'208";a="272703638"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2020 08:55:01 -0800
+Message-ID: <333f90f8ded76bf11c6b90f1db174c841ec89ed9.camel@intel.com>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Fri, 28 Feb 2020 08:54:14 -0800
+In-Reply-To: <20200228165021.76pec2cdudmtpxeu@linutronix.de>
+References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+         <20200121201843.12047-9-yu-cheng.yu@intel.com>
+         <20200221175859.GL25747@zn.tnic>
+         <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+         <20200228121724.GA25261@zn.tnic>
+         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+         <20200228162359.GC25261@zn.tnic>
+         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+         <20200228165021.76pec2cdudmtpxeu@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: f849a274-d66f-411b-b71c-08d7bc6ee246
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 16:54:32.7022
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2WDJ3aKA+be5H6wkL1lDQR8g7QXaz/WGDa7nmrG+jT2E0uHoRcneZ13FDrudf5EVvmyWTGsNfO2q68EphcI2QWqcN9k2JS2HBiWxa8VrIO8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0016
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On Fri, 2020-02-28 at 17:50 +0100, Sebastian Andrzej Siewior wrote:
+> On 2020-02-28 08:20:27 [-0800], Yu-cheng Yu wrote:
+> > On Fri, 2020-02-28 at 17:23 +0100, Borislav Petkov wrote:
+> > > On Fri, Feb 28, 2020 at 07:53:38AM -0800, Yu-cheng Yu wrote:
+> > > > Yes, saving only supervisor states is optimal, but doing XSAVES with a
+> > > > partial RFBM changes xcomp_bv.
+> > > 
+> > > ... and that means what exactly in plain english?
+> > 
+> > When XSAVES writes to an xsave buffer, xsave->header.xcomp_bv is set to
+> > include only saved components, effectively changing the buffer's format.
+> 
+> How large is this supervisor state at most? I guess saving the AVX512
+> state just to get the 2 bytes of the supervisor state at the right spot
+> is not really optimal.
+> But this is the performance division…
+> 
+> > I will include this in the comments.
+> 
+> If you do so, please state that the first hunk is only interested in the
+> supervisor-state bits and everything else is ignored.
 
-On Thu, Feb 27, 2020 at 12:05:07PM +0100, Jiri Pirko wrote:
-> Tue, Feb 25, 2020 at 05:30:55PM CET, vadym.kochan@plvision.eu wrote:
-> >Add PCI interface driver for Prestera Switch ASICs family devices, which
-> >provides:
-> >
+Yes, I will include that.
 
-[SNIP]
+Yu-cheng
 
-> >+
-> >+module_init(mvsw_pr_pci_init);
-> >+module_exit(mvsw_pr_pci_exit);
-> >+
-> >+MODULE_AUTHOR("Marvell Semi.");
->=20
-> Again, wrong author.
->=20
-
-PLVision developing the driver for Marvell and upstreaming it on behalf
-of Marvell. This is a long term cooperation that aim to expose Marvell
-devices to the Linux community.
-
-[SNIP]
-
-Regards,
-Vadym Kochan
