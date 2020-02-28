@@ -3,79 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10766C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE86C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C626E2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C39246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NySOPS0w"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NElH0YTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgB1Ej3 (ORCPT
+        id S1730923AbgB1Eko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:39:29 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46309 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730793AbgB1Ej3 (ORCPT
+        Thu, 27 Feb 2020 23:40:44 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39666 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730793AbgB1Ekn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:39:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y8so716851pll.13;
-        Thu, 27 Feb 2020 20:39:28 -0800 (PST)
+        Thu, 27 Feb 2020 23:40:43 -0500
+Received: by mail-qk1-f194.google.com with SMTP id e16so1836831qkl.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 20:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ma09tkFkj27OqfLt4R7Gcmofb1OCRjcq0sv9nLBPV90=;
-        b=NySOPS0wW2x+VSCIJ6uLe42x7Ik8OwVUzB9ve7oER4pw1hGBR5uhvOSbiPm7LiHCb8
-         biIdWIOp3e4cwgQrHEFQm5YK2Ihvvo2YSvlAwwd8QqEijC1JQW8+GYK80aLh8oYVoRUI
-         gCm4QkA0ngoIiTG0XBRePnXhZUXna1O9sEi4VKPttfLyPV44sADoDXcxrZdlQpasLYly
-         f2hzj/6w9ia2B1DU8OEZPYOi2xuioizi3dR6HqZwfW/OcyaqPJriXr3Ng2liqaikun7W
-         rltg0AlqweXQEZYo1fND82bdY7MgIDgG0BiUN/ovEpaZgt5yKJezLKuK1b7oCqogxJES
-         PFqg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cj4hvzbBWIfOD8PxlloU5ZTDppd4yjMAQkBeIQCm4QA=;
+        b=NElH0YTvluZZtk+XFuCxtrtsKlZEGWjjaBcH67X3dDIfYDTjjFM+8gemK/MMXkGi/z
+         5KviLvUdf+dxfyzif3R96xiPegvQEHBtqnCEqAwtPVR7qHN/TYqg67D5Yo+3m+OA1dND
+         7DKoQT07c7BvpHABjdDdK7EzbBhhn8u0ZKgm8O7jLFp3Wae8xbihqeFH/7S5iqDpF+d6
+         +XgNts3Nm2dX7LAH1V/mqPcmDFc5jP6lFR8shPiWQmZRVwJQzhax0N7UHSuMvmuzloex
+         dnhSwTGtW0wvtn0Q60JCGy11cRX6nsbBDxwYZlvieMquiKdBYyEN5uBuodaMSrtANhDp
+         QBxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ma09tkFkj27OqfLt4R7Gcmofb1OCRjcq0sv9nLBPV90=;
-        b=ABtLUXICKeGo+79SaDB9TBVflGrOBLZBKY6c+3Ht7KokSyVxs+NwAjAPMMKeTy7YKI
-         5FFtOtUa6Yux7Ap8PnPE04xrUXVxQKMvpc6lnzoL5pX89NuwdOb+Hxq1g4GMVbHw3c8B
-         8eTEjxDIZG/+VIf/42V/XvdXUavyo03LLFjKIZti/X/4lr7n2m2KmV7VdFeztssreHED
-         47WR5ejipL94Ht7wV/SEQA59g2IYJ9YGvP+0J+XSUncHhtLfeM4f/0/anRkXMFWDVnh3
-         xb9LuTZYbpaQgpQAprY4+RQkFLbF+asQuW1IiVzvRIvkLscTAp6nmvdMo08C3PvvhNaX
-         hm9w==
-X-Gm-Message-State: APjAAAXv19h5z5aYDaFA2Fv1gfOm+QRxuh2FXImsJHRvuVTWU9ywPH6u
-        9Zf0DtAawZjmdwk5MmkV4w0=
-X-Google-Smtp-Source: APXvYqxvB7pyQ7MhmIQU8wWyHHpVU0M4HIJLNgyg0vbMeSWwANTU7b1sk20hnkyOgYyAybdsfAIrDw==
-X-Received: by 2002:a17:90a:7187:: with SMTP id i7mr2548081pjk.6.1582864767422;
-        Thu, 27 Feb 2020 20:39:27 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:962:6595:7b84:9990:1a82:371c])
-        by smtp.gmail.com with ESMTPSA id 196sm9069047pfy.86.2020.02.27.20.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 20:39:26 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/4] mtd: spi-nor: remove mtk-quadspi driver
-Date:   Fri, 28 Feb 2020 12:36:36 +0800
-Message-Id: <20200228043636.559915-5-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200228043636.559915-1-gch981213@gmail.com>
-References: <20200228043636.559915-1-gch981213@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cj4hvzbBWIfOD8PxlloU5ZTDppd4yjMAQkBeIQCm4QA=;
+        b=l3vlyCBRG/RJf3IMEVCiPenXaEwlXCq/P8Hknb9RhLNDPBaOgzzPny4FHUHHjGz93W
+         Vu6g/NNCSh5R9X5urvH12GVvyr/DHFutTu6ArNBk4+zQfe5qdlN3zVNHPowTdhK4cWNl
+         2M7jJL8VBtzYbIMWSRsT4/TFlJVhAIF562K+RMMvs56nV+01CifSLhvrR0bmLLPL/ZVo
+         5GaXrcM8Q8h/HvbwmZDWdHbOJ3RYFCxUwxOnTY6aSY3q7tz4at6dt0scg3wZcZgvSXgg
+         kFW/s66PMt4Z3rPWC31p5GVNDNqp+LIQLfv+EVfZSjuhwcOjJ5robJ5RW4xJxyn5eg/o
+         CXlw==
+X-Gm-Message-State: APjAAAVs4PDJlo6iJs/4ApS+F4kcdW11muiVQZQ4AZ+jOlEaFxi6v2wh
+        aeBLWYeLf3jnB0wW7CbCbuUtaVV3pmKchw==
+X-Google-Smtp-Source: APXvYqwZ/QJEx93wsnPRUp6ZcOY3tgnSoTSq6wF0iPltVIJRSnN3QYVmzfHtLKWY/fw7pWgPsxEtBg==
+X-Received: by 2002:a05:620a:13e1:: with SMTP id h1mr2795764qkl.462.1582864842415;
+        Thu, 27 Feb 2020 20:40:42 -0800 (PST)
+Received: from ovpn-121-145.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u49sm4557239qtb.37.2020.02.27.20.40.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 20:40:41 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/swap: annotate data races for lru_rotate_pvecs
+Date:   Thu, 27 Feb 2020 23:40:18 -0500
+Message-Id: <20200228044018.1263-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,621 +71,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is superseded by the new spi-mtk-nor driver.
+Read to lru_add_pvec->nr could be interrupted and then write to the same
+variable. The write has local interrupt disabled, but the plain reads
+result in data races. However, it is unlikely the compilers could
+do much damage here given that lru_add_pvec->nr is a "unsigned char" and
+there is an existing compiler barrier. Thus, annotate the reads using the
+data_race() macro. The data races were reported by KCSAN,
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+ BUG: KCSAN: data-race in lru_add_drain_cpu / rotate_reclaimable_page
+
+ write to 0xffff9291ebcb8a40 of 1 bytes by interrupt on cpu 23:
+  rotate_reclaimable_page+0x2df/0x490
+  pagevec_add at include/linux/pagevec.h:81
+  (inlined by) rotate_reclaimable_page at mm/swap.c:259
+  end_page_writeback+0x1b5/0x2b0
+  end_swap_bio_write+0x1d0/0x280
+  bio_endio+0x297/0x560
+  dec_pending+0x218/0x430 [dm_mod]
+  clone_endio+0xe4/0x2c0 [dm_mod]
+  bio_endio+0x297/0x560
+  blk_update_request+0x201/0x920
+  scsi_end_request+0x6b/0x4a0
+  scsi_io_completion+0xb7/0x7e0
+  scsi_finish_command+0x1ed/0x2a0
+  scsi_softirq_done+0x1c9/0x1d0
+  blk_done_softirq+0x181/0x1d0
+  __do_softirq+0xd9/0x57c
+  irq_exit+0xa2/0xc0
+  do_IRQ+0x8b/0x190
+  ret_from_intr+0x0/0x42
+  delay_tsc+0x46/0x80
+  __const_udelay+0x3c/0x40
+  __udelay+0x10/0x20
+  kcsan_setup_watchpoint+0x202/0x3a0
+  __tsan_read1+0xc2/0x100
+  lru_add_drain_cpu+0xb8/0x3f0
+  lru_add_drain+0x25/0x40
+  shrink_active_list+0xe1/0xc80
+  shrink_lruvec+0x766/0xb70
+  shrink_node+0x2d6/0xca0
+  do_try_to_free_pages+0x1f7/0x9a0
+  try_to_free_pages+0x252/0x5b0
+  __alloc_pages_slowpath+0x458/0x1290
+  __alloc_pages_nodemask+0x3bb/0x450
+  alloc_pages_vma+0x8a/0x2c0
+  do_anonymous_page+0x16e/0x6f0
+  __handle_mm_fault+0xcd5/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
+
+ read to 0xffff9291ebcb8a40 of 1 bytes by task 37761 on cpu 23:
+  lru_add_drain_cpu+0xb8/0x3f0
+  lru_add_drain_cpu at mm/swap.c:602
+  lru_add_drain+0x25/0x40
+  shrink_active_list+0xe1/0xc80
+  shrink_lruvec+0x766/0xb70
+  shrink_node+0x2d6/0xca0
+  do_try_to_free_pages+0x1f7/0x9a0
+  try_to_free_pages+0x252/0x5b0
+  __alloc_pages_slowpath+0x458/0x1290
+  __alloc_pages_nodemask+0x3bb/0x450
+  alloc_pages_vma+0x8a/0x2c0
+  do_anonymous_page+0x16e/0x6f0
+  __handle_mm_fault+0xcd5/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
+
+ 2 locks held by oom02/37761:
+  #0: ffff9281e5928808 (&mm->mmap_sem#2){++++}, at: do_page_fault
+  #1: ffffffffb3ade380 (fs_reclaim){+.+.}, at: fs_reclaim_acquire.part
+ irq event stamp: 1949217
+ trace_hardirqs_on_thunk+0x1a/0x1c
+ __do_softirq+0x2e7/0x57c
+ __do_softirq+0x34c/0x57c
+ irq_exit+0xa2/0xc0
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 23 PID: 37761 Comm: oom02 Not tainted 5.6.0-rc3-next-20200226+ #6
+ Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
-Change since v1:
- new commit
 
- drivers/mtd/spi-nor/Kconfig       |   8 -
- drivers/mtd/spi-nor/Makefile      |   1 -
- drivers/mtd/spi-nor/mtk-quadspi.c | 565 ------------------------------
- 3 files changed, 574 deletions(-)
- delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+BTW, while at it, I had also looked at other pagevec there, but could
+not tell for  sure if they could be interrupted resulting in data races,
+so I leave them out for now.
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index c1eda67d1ad2..267b9000782e 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -52,14 +52,6 @@ config SPI_HISI_SFC
- 	help
- 	  This enables support for HiSilicon FMC SPI-NOR flash controller.
+ mm/swap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/mm/swap.c b/mm/swap.c
+index cf39d24ada2a..c922f99dab85 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -599,7 +599,8 @@ void lru_add_drain_cpu(int cpu)
+ 		__pagevec_lru_add(pvec);
  
--config SPI_MTK_QUADSPI
--	tristate "MediaTek Quad SPI controller"
--	depends on HAS_IOMEM
--	help
--	  This enables support for the Quad SPI controller in master mode.
--	  This controller does not support generic SPI. It only supports
--	  SPI NOR.
--
- config SPI_NXP_SPIFI
- 	tristate "NXP SPI Flash Interface (SPIFI)"
- 	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 9c5ed03cdc19..738dfd74cf76 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -3,7 +3,6 @@ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
- obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
- obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
- obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
--obj-$(CONFIG_SPI_MTK_QUADSPI)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
- obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
-diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-deleted file mode 100644
-index b1691680d174..000000000000
---- a/drivers/mtd/spi-nor/mtk-quadspi.c
-+++ /dev/null
-@@ -1,565 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (c) 2015 MediaTek Inc.
-- * Author: Bayi Cheng <bayi.cheng@mediatek.com>
-- */
--
--#include <linux/clk.h>
--#include <linux/delay.h>
--#include <linux/device.h>
--#include <linux/init.h>
--#include <linux/io.h>
--#include <linux/iopoll.h>
--#include <linux/ioport.h>
--#include <linux/math64.h>
--#include <linux/module.h>
--#include <linux/mutex.h>
--#include <linux/of.h>
--#include <linux/of_device.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/mtd/mtd.h>
--#include <linux/mtd/partitions.h>
--#include <linux/mtd/spi-nor.h>
--
--#define MTK_NOR_CMD_REG			0x00
--#define MTK_NOR_CNT_REG			0x04
--#define MTK_NOR_RDSR_REG		0x08
--#define MTK_NOR_RDATA_REG		0x0c
--#define MTK_NOR_RADR0_REG		0x10
--#define MTK_NOR_RADR1_REG		0x14
--#define MTK_NOR_RADR2_REG		0x18
--#define MTK_NOR_WDATA_REG		0x1c
--#define MTK_NOR_PRGDATA0_REG		0x20
--#define MTK_NOR_PRGDATA1_REG		0x24
--#define MTK_NOR_PRGDATA2_REG		0x28
--#define MTK_NOR_PRGDATA3_REG		0x2c
--#define MTK_NOR_PRGDATA4_REG		0x30
--#define MTK_NOR_PRGDATA5_REG		0x34
--#define MTK_NOR_SHREG0_REG		0x38
--#define MTK_NOR_SHREG1_REG		0x3c
--#define MTK_NOR_SHREG2_REG		0x40
--#define MTK_NOR_SHREG3_REG		0x44
--#define MTK_NOR_SHREG4_REG		0x48
--#define MTK_NOR_SHREG5_REG		0x4c
--#define MTK_NOR_SHREG6_REG		0x50
--#define MTK_NOR_SHREG7_REG		0x54
--#define MTK_NOR_SHREG8_REG		0x58
--#define MTK_NOR_SHREG9_REG		0x5c
--#define MTK_NOR_CFG1_REG		0x60
--#define MTK_NOR_CFG2_REG		0x64
--#define MTK_NOR_CFG3_REG		0x68
--#define MTK_NOR_STATUS0_REG		0x70
--#define MTK_NOR_STATUS1_REG		0x74
--#define MTK_NOR_STATUS2_REG		0x78
--#define MTK_NOR_STATUS3_REG		0x7c
--#define MTK_NOR_FLHCFG_REG		0x84
--#define MTK_NOR_TIME_REG		0x94
--#define MTK_NOR_PP_DATA_REG		0x98
--#define MTK_NOR_PREBUF_STUS_REG		0x9c
--#define MTK_NOR_DELSEL0_REG		0xa0
--#define MTK_NOR_DELSEL1_REG		0xa4
--#define MTK_NOR_INTRSTUS_REG		0xa8
--#define MTK_NOR_INTREN_REG		0xac
--#define MTK_NOR_CHKSUM_CTL_REG		0xb8
--#define MTK_NOR_CHKSUM_REG		0xbc
--#define MTK_NOR_CMD2_REG		0xc0
--#define MTK_NOR_WRPROT_REG		0xc4
--#define MTK_NOR_RADR3_REG		0xc8
--#define MTK_NOR_DUAL_REG		0xcc
--#define MTK_NOR_DELSEL2_REG		0xd0
--#define MTK_NOR_DELSEL3_REG		0xd4
--#define MTK_NOR_DELSEL4_REG		0xd8
--
--/* commands for mtk nor controller */
--#define MTK_NOR_READ_CMD		0x0
--#define MTK_NOR_RDSR_CMD		0x2
--#define MTK_NOR_PRG_CMD			0x4
--#define MTK_NOR_WR_CMD			0x10
--#define MTK_NOR_PIO_WR_CMD		0x90
--#define MTK_NOR_WRSR_CMD		0x20
--#define MTK_NOR_PIO_READ_CMD		0x81
--#define MTK_NOR_WR_BUF_ENABLE		0x1
--#define MTK_NOR_WR_BUF_DISABLE		0x0
--#define MTK_NOR_ENABLE_SF_CMD		0x30
--#define MTK_NOR_DUAD_ADDR_EN		0x8
--#define MTK_NOR_QUAD_READ_EN		0x4
--#define MTK_NOR_DUAL_ADDR_EN		0x2
--#define MTK_NOR_DUAL_READ_EN		0x1
--#define MTK_NOR_DUAL_DISABLE		0x0
--#define MTK_NOR_FAST_READ		0x1
--
--#define SFLASH_WRBUF_SIZE		128
--
--/* Can shift up to 48 bits (6 bytes) of TX/RX */
--#define MTK_NOR_MAX_RX_TX_SHIFT		6
--/* can shift up to 56 bits (7 bytes) transfer by MTK_NOR_PRG_CMD */
--#define MTK_NOR_MAX_SHIFT		7
--/* nor controller 4-byte address mode enable bit */
--#define MTK_NOR_4B_ADDR_EN		BIT(4)
--
--/* Helpers for accessing the program data / shift data registers */
--#define MTK_NOR_PRG_REG(n)		(MTK_NOR_PRGDATA0_REG + 4 * (n))
--#define MTK_NOR_SHREG(n)		(MTK_NOR_SHREG0_REG + 4 * (n))
--
--struct mtk_nor {
--	struct spi_nor nor;
--	struct device *dev;
--	void __iomem *base;	/* nor flash base address */
--	struct clk *spi_clk;
--	struct clk *nor_clk;
--};
--
--static void mtk_nor_set_read_mode(struct mtk_nor *mtk_nor)
--{
--	struct spi_nor *nor = &mtk_nor->nor;
--
--	switch (nor->read_proto) {
--	case SNOR_PROTO_1_1_1:
--		writeb(nor->read_opcode, mtk_nor->base +
--		       MTK_NOR_PRGDATA3_REG);
--		writeb(MTK_NOR_FAST_READ, mtk_nor->base +
--		       MTK_NOR_CFG1_REG);
--		break;
--	case SNOR_PROTO_1_1_2:
--		writeb(nor->read_opcode, mtk_nor->base +
--		       MTK_NOR_PRGDATA3_REG);
--		writeb(MTK_NOR_DUAL_READ_EN, mtk_nor->base +
--		       MTK_NOR_DUAL_REG);
--		break;
--	case SNOR_PROTO_1_1_4:
--		writeb(nor->read_opcode, mtk_nor->base +
--		       MTK_NOR_PRGDATA4_REG);
--		writeb(MTK_NOR_QUAD_READ_EN, mtk_nor->base +
--		       MTK_NOR_DUAL_REG);
--		break;
--	default:
--		writeb(MTK_NOR_DUAL_DISABLE, mtk_nor->base +
--		       MTK_NOR_DUAL_REG);
--		break;
--	}
--}
--
--static int mtk_nor_execute_cmd(struct mtk_nor *mtk_nor, u8 cmdval)
--{
--	int reg;
--	u8 val = cmdval & 0x1f;
--
--	writeb(cmdval, mtk_nor->base + MTK_NOR_CMD_REG);
--	return readl_poll_timeout(mtk_nor->base + MTK_NOR_CMD_REG, reg,
--				  !(reg & val), 100, 10000);
--}
--
--static int mtk_nor_do_tx_rx(struct mtk_nor *mtk_nor, u8 op,
--			    const u8 *tx, size_t txlen, u8 *rx, size_t rxlen)
--{
--	size_t len = 1 + txlen + rxlen;
--	int i, ret, idx;
--
--	if (len > MTK_NOR_MAX_SHIFT)
--		return -EINVAL;
--
--	writeb(len * 8, mtk_nor->base + MTK_NOR_CNT_REG);
--
--	/* start at PRGDATA5, go down to PRGDATA0 */
--	idx = MTK_NOR_MAX_RX_TX_SHIFT - 1;
--
--	/* opcode */
--	writeb(op, mtk_nor->base + MTK_NOR_PRG_REG(idx));
--	idx--;
--
--	/* program TX data */
--	for (i = 0; i < txlen; i++, idx--)
--		writeb(tx[i], mtk_nor->base + MTK_NOR_PRG_REG(idx));
--
--	/* clear out rest of TX registers */
--	while (idx >= 0) {
--		writeb(0, mtk_nor->base + MTK_NOR_PRG_REG(idx));
--		idx--;
--	}
--
--	ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PRG_CMD);
--	if (ret)
--		return ret;
--
--	/* restart at first RX byte */
--	idx = rxlen - 1;
--
--	/* read out RX data */
--	for (i = 0; i < rxlen; i++, idx--)
--		rx[i] = readb(mtk_nor->base + MTK_NOR_SHREG(idx));
--
--	return 0;
--}
--
--/* Do a WRSR (Write Status Register) command */
--static int mtk_nor_wr_sr(struct mtk_nor *mtk_nor, const u8 sr)
--{
--	writeb(sr, mtk_nor->base + MTK_NOR_PRGDATA5_REG);
--	writeb(8, mtk_nor->base + MTK_NOR_CNT_REG);
--	return mtk_nor_execute_cmd(mtk_nor, MTK_NOR_WRSR_CMD);
--}
--
--static int mtk_nor_write_buffer_enable(struct mtk_nor *mtk_nor)
--{
--	u8 reg;
--
--	/* the bit0 of MTK_NOR_CFG2_REG is pre-fetch buffer
--	 * 0: pre-fetch buffer use for read
--	 * 1: pre-fetch buffer use for page program
--	 */
--	writel(MTK_NOR_WR_BUF_ENABLE, mtk_nor->base + MTK_NOR_CFG2_REG);
--	return readb_poll_timeout(mtk_nor->base + MTK_NOR_CFG2_REG, reg,
--				  0x01 == (reg & 0x01), 100, 10000);
--}
--
--static int mtk_nor_write_buffer_disable(struct mtk_nor *mtk_nor)
--{
--	u8 reg;
--
--	writel(MTK_NOR_WR_BUF_DISABLE, mtk_nor->base + MTK_NOR_CFG2_REG);
--	return readb_poll_timeout(mtk_nor->base + MTK_NOR_CFG2_REG, reg,
--				  MTK_NOR_WR_BUF_DISABLE == (reg & 0x1), 100,
--				  10000);
--}
--
--static void mtk_nor_set_addr_width(struct mtk_nor *mtk_nor)
--{
--	u8 val;
--	struct spi_nor *nor = &mtk_nor->nor;
--
--	val = readb(mtk_nor->base + MTK_NOR_DUAL_REG);
--
--	switch (nor->addr_width) {
--	case 3:
--		val &= ~MTK_NOR_4B_ADDR_EN;
--		break;
--	case 4:
--		val |= MTK_NOR_4B_ADDR_EN;
--		break;
--	default:
--		dev_warn(mtk_nor->dev, "Unexpected address width %u.\n",
--			 nor->addr_width);
--		break;
--	}
--
--	writeb(val, mtk_nor->base + MTK_NOR_DUAL_REG);
--}
--
--static void mtk_nor_set_addr(struct mtk_nor *mtk_nor, u32 addr)
--{
--	int i;
--
--	mtk_nor_set_addr_width(mtk_nor);
--
--	for (i = 0; i < 3; i++) {
--		writeb(addr & 0xff, mtk_nor->base + MTK_NOR_RADR0_REG + i * 4);
--		addr >>= 8;
--	}
--	/* Last register is non-contiguous */
--	writeb(addr & 0xff, mtk_nor->base + MTK_NOR_RADR3_REG);
--}
--
--static ssize_t mtk_nor_read(struct spi_nor *nor, loff_t from, size_t length,
--			    u_char *buffer)
--{
--	int i, ret;
--	int addr = (int)from;
--	u8 *buf = (u8 *)buffer;
--	struct mtk_nor *mtk_nor = nor->priv;
--
--	/* set mode for fast read mode ,dual mode or quad mode */
--	mtk_nor_set_read_mode(mtk_nor);
--	mtk_nor_set_addr(mtk_nor, addr);
--
--	for (i = 0; i < length; i++) {
--		ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PIO_READ_CMD);
--		if (ret < 0)
--			return ret;
--		buf[i] = readb(mtk_nor->base + MTK_NOR_RDATA_REG);
--	}
--	return length;
--}
--
--static int mtk_nor_write_single_byte(struct mtk_nor *mtk_nor,
--				     int addr, int length, u8 *data)
--{
--	int i, ret;
--
--	mtk_nor_set_addr(mtk_nor, addr);
--
--	for (i = 0; i < length; i++) {
--		writeb(*data++, mtk_nor->base + MTK_NOR_WDATA_REG);
--		ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PIO_WR_CMD);
--		if (ret < 0)
--			return ret;
--	}
--	return 0;
--}
--
--static int mtk_nor_write_buffer(struct mtk_nor *mtk_nor, int addr,
--				const u8 *buf)
--{
--	int i, bufidx, data;
--
--	mtk_nor_set_addr(mtk_nor, addr);
--
--	bufidx = 0;
--	for (i = 0; i < SFLASH_WRBUF_SIZE; i += 4) {
--		data = buf[bufidx + 3]<<24 | buf[bufidx + 2]<<16 |
--		       buf[bufidx + 1]<<8 | buf[bufidx];
--		bufidx += 4;
--		writel(data, mtk_nor->base + MTK_NOR_PP_DATA_REG);
--	}
--	return mtk_nor_execute_cmd(mtk_nor, MTK_NOR_WR_CMD);
--}
--
--static ssize_t mtk_nor_write(struct spi_nor *nor, loff_t to, size_t len,
--			     const u_char *buf)
--{
--	int ret;
--	struct mtk_nor *mtk_nor = nor->priv;
--	size_t i;
--
--	ret = mtk_nor_write_buffer_enable(mtk_nor);
--	if (ret < 0) {
--		dev_warn(mtk_nor->dev, "write buffer enable failed!\n");
--		return ret;
--	}
--
--	for (i = 0; i + SFLASH_WRBUF_SIZE <= len; i += SFLASH_WRBUF_SIZE) {
--		ret = mtk_nor_write_buffer(mtk_nor, to, buf);
--		if (ret < 0) {
--			dev_err(mtk_nor->dev, "write buffer failed!\n");
--			return ret;
--		}
--		to += SFLASH_WRBUF_SIZE;
--		buf += SFLASH_WRBUF_SIZE;
--	}
--	ret = mtk_nor_write_buffer_disable(mtk_nor);
--	if (ret < 0) {
--		dev_warn(mtk_nor->dev, "write buffer disable failed!\n");
--		return ret;
--	}
--
--	if (i < len) {
--		ret = mtk_nor_write_single_byte(mtk_nor, to,
--						(int)(len - i), (u8 *)buf);
--		if (ret < 0) {
--			dev_err(mtk_nor->dev, "write single byte failed!\n");
--			return ret;
--		}
--	}
--
--	return len;
--}
--
--static int mtk_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, size_t len)
--{
--	int ret;
--	struct mtk_nor *mtk_nor = nor->priv;
--
--	switch (opcode) {
--	case SPINOR_OP_RDSR:
--		ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_RDSR_CMD);
--		if (ret < 0)
--			return ret;
--		if (len == 1)
--			*buf = readb(mtk_nor->base + MTK_NOR_RDSR_REG);
--		else
--			dev_err(mtk_nor->dev, "len should be 1 for read status!\n");
--		break;
--	default:
--		ret = mtk_nor_do_tx_rx(mtk_nor, opcode, NULL, 0, buf, len);
--		break;
--	}
--	return ret;
--}
--
--static int mtk_nor_write_reg(struct spi_nor *nor, u8 opcode, const u8 *buf,
--			     size_t len)
--{
--	int ret;
--	struct mtk_nor *mtk_nor = nor->priv;
--
--	switch (opcode) {
--	case SPINOR_OP_WRSR:
--		/* We only handle 1 byte */
--		ret = mtk_nor_wr_sr(mtk_nor, *buf);
--		break;
--	default:
--		ret = mtk_nor_do_tx_rx(mtk_nor, opcode, buf, len, NULL, 0);
--		if (ret)
--			dev_warn(mtk_nor->dev, "write reg failure!\n");
--		break;
--	}
--	return ret;
--}
--
--static void mtk_nor_disable_clk(struct mtk_nor *mtk_nor)
--{
--	clk_disable_unprepare(mtk_nor->spi_clk);
--	clk_disable_unprepare(mtk_nor->nor_clk);
--}
--
--static int mtk_nor_enable_clk(struct mtk_nor *mtk_nor)
--{
--	int ret;
--
--	ret = clk_prepare_enable(mtk_nor->spi_clk);
--	if (ret)
--		return ret;
--
--	ret = clk_prepare_enable(mtk_nor->nor_clk);
--	if (ret) {
--		clk_disable_unprepare(mtk_nor->spi_clk);
--		return ret;
--	}
--
--	return 0;
--}
--
--static const struct spi_nor_controller_ops mtk_controller_ops = {
--	.read_reg = mtk_nor_read_reg,
--	.write_reg = mtk_nor_write_reg,
--	.read = mtk_nor_read,
--	.write = mtk_nor_write,
--};
--
--static int mtk_nor_init(struct mtk_nor *mtk_nor,
--			struct device_node *flash_node)
--{
--	const struct spi_nor_hwcaps hwcaps = {
--		.mask = SNOR_HWCAPS_READ |
--			SNOR_HWCAPS_READ_FAST |
--			SNOR_HWCAPS_READ_1_1_2 |
--			SNOR_HWCAPS_PP,
--	};
--	int ret;
--	struct spi_nor *nor;
--
--	/* initialize controller to accept commands */
--	writel(MTK_NOR_ENABLE_SF_CMD, mtk_nor->base + MTK_NOR_WRPROT_REG);
--
--	nor = &mtk_nor->nor;
--	nor->dev = mtk_nor->dev;
--	nor->priv = mtk_nor;
--	spi_nor_set_flash_node(nor, flash_node);
--	nor->controller_ops = &mtk_controller_ops;
--
--	nor->mtd.name = "mtk_nor";
--	/* initialized with NULL */
--	ret = spi_nor_scan(nor, NULL, &hwcaps);
--	if (ret)
--		return ret;
--
--	return mtd_device_register(&nor->mtd, NULL, 0);
--}
--
--static int mtk_nor_drv_probe(struct platform_device *pdev)
--{
--	struct device_node *flash_np;
--	struct resource *res;
--	int ret;
--	struct mtk_nor *mtk_nor;
--
--	if (!pdev->dev.of_node) {
--		dev_err(&pdev->dev, "No DT found\n");
--		return -EINVAL;
--	}
--
--	mtk_nor = devm_kzalloc(&pdev->dev, sizeof(*mtk_nor), GFP_KERNEL);
--	if (!mtk_nor)
--		return -ENOMEM;
--	platform_set_drvdata(pdev, mtk_nor);
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mtk_nor->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(mtk_nor->base))
--		return PTR_ERR(mtk_nor->base);
--
--	mtk_nor->spi_clk = devm_clk_get(&pdev->dev, "spi");
--	if (IS_ERR(mtk_nor->spi_clk))
--		return PTR_ERR(mtk_nor->spi_clk);
--
--	mtk_nor->nor_clk = devm_clk_get(&pdev->dev, "sf");
--	if (IS_ERR(mtk_nor->nor_clk))
--		return PTR_ERR(mtk_nor->nor_clk);
--
--	mtk_nor->dev = &pdev->dev;
--
--	ret = mtk_nor_enable_clk(mtk_nor);
--	if (ret)
--		return ret;
--
--	/* only support one attached flash */
--	flash_np = of_get_next_available_child(pdev->dev.of_node, NULL);
--	if (!flash_np) {
--		dev_err(&pdev->dev, "no SPI flash device to configure\n");
--		ret = -ENODEV;
--		goto nor_free;
--	}
--	ret = mtk_nor_init(mtk_nor, flash_np);
--
--nor_free:
--	if (ret)
--		mtk_nor_disable_clk(mtk_nor);
--
--	return ret;
--}
--
--static int mtk_nor_drv_remove(struct platform_device *pdev)
--{
--	struct mtk_nor *mtk_nor = platform_get_drvdata(pdev);
--
--	mtk_nor_disable_clk(mtk_nor);
--
--	return 0;
--}
--
--#ifdef CONFIG_PM_SLEEP
--static int mtk_nor_suspend(struct device *dev)
--{
--	struct mtk_nor *mtk_nor = dev_get_drvdata(dev);
--
--	mtk_nor_disable_clk(mtk_nor);
--
--	return 0;
--}
--
--static int mtk_nor_resume(struct device *dev)
--{
--	struct mtk_nor *mtk_nor = dev_get_drvdata(dev);
--
--	return mtk_nor_enable_clk(mtk_nor);
--}
--
--static const struct dev_pm_ops mtk_nor_dev_pm_ops = {
--	.suspend = mtk_nor_suspend,
--	.resume = mtk_nor_resume,
--};
--
--#define MTK_NOR_DEV_PM_OPS	(&mtk_nor_dev_pm_ops)
--#else
--#define MTK_NOR_DEV_PM_OPS	NULL
--#endif
--
--static const struct of_device_id mtk_nor_of_ids[] = {
--	{ .compatible = "mediatek,mt8173-nor"},
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, mtk_nor_of_ids);
--
--static struct platform_driver mtk_nor_driver = {
--	.probe = mtk_nor_drv_probe,
--	.remove = mtk_nor_drv_remove,
--	.driver = {
--		.name = "mtk-nor",
--		.pm = MTK_NOR_DEV_PM_OPS,
--		.of_match_table = mtk_nor_of_ids,
--	},
--};
--
--module_platform_driver(mtk_nor_driver);
--MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("MediaTek SPI NOR Flash Driver");
+ 	pvec = &per_cpu(lru_rotate_pvecs, cpu);
+-	if (pagevec_count(pvec)) {
++	/* Disabling interrupts below acts as a compiler barrier. */
++	if (data_race(pagevec_count(pvec))) {
+ 		unsigned long flags;
+ 
+ 		/* No harm done if a racing interrupt already did this */
+@@ -744,7 +745,7 @@ void lru_add_drain_all(void)
+ 		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
+ 
+ 		if (pagevec_count(&per_cpu(lru_add_pvec, cpu)) ||
+-		    pagevec_count(&per_cpu(lru_rotate_pvecs, cpu)) ||
++		    data_race(pagevec_count(&per_cpu(lru_rotate_pvecs, cpu))) ||
+ 		    pagevec_count(&per_cpu(lru_deactivate_file_pvecs, cpu)) ||
+ 		    pagevec_count(&per_cpu(lru_deactivate_pvecs, cpu)) ||
+ 		    pagevec_count(&per_cpu(lru_lazyfree_pvecs, cpu)) ||
 -- 
-2.24.1
+2.21.0 (Apple Git-122.2)
 
