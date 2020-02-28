@@ -2,119 +2,92 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FA0C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C864C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A195924697
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5A524697
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgB1Qsn (ORCPT
+        id S1726884AbgB1Qsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:48:43 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48717 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgB1Qsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:48:43 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B75C8FF802;
-        Fri, 28 Feb 2020 16:48:40 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 17:48:39 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, foss@0leil.net
-Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: RGMII skew delay
- configuration
-Message-ID: <20200228164839.GH1686232@kwain>
-References: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
- <20200228155702.2062570-4-antoine.tenart@bootlin.com>
- <20200228162942.GF29979@lunn.ch>
+        Fri, 28 Feb 2020 11:48:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:41314 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgB1Qsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:48:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6113031B;
+        Fri, 28 Feb 2020 08:48:53 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5E293F73B;
+        Fri, 28 Feb 2020 08:48:50 -0800 (PST)
+Date:   Fri, 28 Feb 2020 16:48:48 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+        andreyknvl@google.com, Peter Chen <peter.chen@nxp.com>,
+        Miles Chen <miles.chen@mediatek.com>, eugenis@google.com
+Subject: Re: [PATCH v4] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+Message-ID: <20200228164848.GH4019108@arrakis.emea.arm.com>
+References: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+ <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200228162942.GF29979@lunn.ch>
+In-Reply-To: <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Wed, Feb 26, 2020 at 08:01:52PM +0800, Macpaul Lin wrote:
+> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+> index ce1d023..192935f 100644
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -715,7 +715,20 @@ static void ffs_epfile_io_complete(struct usb_ep *_ep, struct usb_request *req)
+>  
+>  static ssize_t ffs_copy_to_iter(void *data, int data_len, struct iov_iter *iter)
+>  {
+> -	ssize_t ret = copy_to_iter(data, data_len, iter);
+> +	ssize_t ret;
+> +
+> +#if defined(CONFIG_ARM64)
+> +	/*
+> +	 * Replace tagged address passed by user space application before
+> +	 * copying.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI) &&
+> +		(iter->type == ITER_IOVEC)) {
+> +		*(unsigned long *)&iter->iov->iov_base =
+> +			(unsigned long)untagged_addr(iter->iov->iov_base);
+> +	}
+> +#endif
+> +	ret = copy_to_iter(data, data_len, iter);
+>  	if (likely(ret == data_len))
+>  		return ret;
 
-On Fri, Feb 28, 2020 at 05:29:42PM +0100, Andrew Lunn wrote:
-> > +static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
-> > +{
-> > +	u32 skew_rx, skew_tx;
-> > +	struct device *dev = &phydev->mdio.dev;
-> > +
-> > +	/* We first set the Rx and Tx skews to their default value in h/w
-> > +	 * (0.2 ns).
-> > +	 */
-> > +	skew_rx = VSC8584_RGMII_SKEW_0_2;
-> > +	skew_tx = VSC8584_RGMII_SKEW_0_2;
-> > +
-> > +	/* Based on the interface mode, we then retrieve (if available) Rx
-> > +	 * and/or Tx skews from the device tree. We do not fail if the
-> > +	 * properties do not exist, the default skew configuration is a valid
-> > +	 * one.
-> > +	 */
-> > +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-> > +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-> > +		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-rx",
-> > +				     &skew_rx);
-> > +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-> > +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-> > +		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-tx",
-> > +				     &skew_tx);
-> 
-> That is not the correct meaning of PHY_INTERFACE_MODE_RGMII_ID etc.
-> PHY_INTERFACE_MODE_RGMII_ID means add a 2ns delay on both RX and TX.
-> PHY_INTERFACE_MODE_RGMII_RXID means add a 2ns delay on the RX.
-> PHY_INTERFACE_MODE_RGMII means 0 delay, with the assumption that
-> either the MAC is adding the delay, or the PCB is designed with extra
-> copper tracks to add the delay.
-> 
-> You only need "vsc8584,rgmii-skew-rx" when 2ns is not correct for you
-> board, and you need more fine grain control.
-
-I did not know that, thanks for the explanation! So if ID/TXID/RXID is
-used, I should configure the Rx and/or Tx skew with
-VSC8584_RGMII_SKEW_2_0, except if the dt says otherwise.
-
-> What is not clearly defined, is how you combine
-> PHY_INTERFACE_MODE_RGMII* with DT properties. I guess i would enforce
-> that phydev->interface is PHY_INTERFACE_MODE_RGMII and then the delays
-> in DT are absolute values.
-
-So, if there's a value in the device tree, and the mode corresponds
-(RXID for Rx skew), we do use the dt value. That should look like what's
-in the patch (except for the default value used when no configuration is
-provided in the dt).
-
-> There is also some discussion about what should go in DT. #defines
-> like you have, or time in pS, and the driver converts to register
-> values. I generally push towards pS.
-
-That would allow a more generic dt binding, and could be used by other
-PHY drivers. The difficulty would be to map the pS to allowed values in
-the h/w. Should we round them to the upper or lower bound?
-
-I also saw the micrel-ksz90x1 dt documentation describes many skews, not
-only one for Rx and one for Tx. How would the generic dt binding would
-look like then?
-
-Thanks!
-Antoine
+I had forgotten that we discussed a similar case already a few months
+ago (thanks to Evgenii for pointing out). Do you have this commit
+applied to your tree: df325e05a682 ("arm64: Validate tagged addresses in
+access_ok() called from kernel threads")?
 
 -- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Catalin
