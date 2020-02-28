@@ -2,156 +2,202 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5E3C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C04C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996AD24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B0E24697
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="QwkD2Tu0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaQwtQAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgB1Krn (ORCPT
+        id S1726872AbgB1KtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:47:43 -0500
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:34425
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgB1Krn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:47:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DC1aTnqQhzrZQRa8FsTLrx0gTqGi4EzGWCmqOCQJPTLrrTAMtl5aUoCFo2YMQbeV9/0ljNmlAOxQ8SWPCyithZnH8tDqM+O4HO6NvFABG5jJPLZLd7oR6EKu+32SKvQqhvipn8lsvTGquun/FA6/s8KlLVCsvHo4acvNHcMTACmJgRosiEARKnZgnxSPXr936RydPIfZN4TaweomfaH73DVHfFUc7xK33cmCxxt8eAIIx09V7hXuXoNCWfhDN6GWT7UcveOprtX7O8B5L/zSY8YUZqmune4gX7WA/RpFNIkEbWwU+6FUwtDijp8o9Hn3MbnhnhptxXs0qzbuGKktXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G6vje7PZ2XqQgQ3nZX6HHfMpv7S8S/3Rpl3oZ8TtoNQ=;
- b=Ng1D6q8FkvsTXh/aZ/jEM9Qsu/6AKxPcbObCjn1BgJ4IMSP8QVrsZHEVkkiFzu4xcB1TSSAxJAZBZHUeEkoBxhSguvIE9/3V5o3UeuH26Ufsb449AiOc4prGHco3+UZNKfopZeJr3DtpRe6Q/9mHfb744oQOzjC+ax8DDVF2ckaaUYIagktERfhscXjnqlW73IZ82kddf2SyrCaioIdSbBqxjbvipLu1tDvIEM0b0XU2svsGHbltHk0/B6ckKgMMOJZ2ElhPmzbqTeoe0+jPhMuwX9MudVjjj7lK8CTFRe8lU6QANOf9LuooXJb0NbGVRANE2hAssUBRtcWrCv7s8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G6vje7PZ2XqQgQ3nZX6HHfMpv7S8S/3Rpl3oZ8TtoNQ=;
- b=QwkD2Tu0vrJbtRxWKBebvyPCfNosWIAeAcff+qD/KdfWOLVjTHea9bZ0cvrL/4R7+VHyY/b3IJmUxCZQL11JnBx7FPJ48raShb2vVGvzGDibj/qSWWeHEz2vBw/+yf+wliwn/aahy/WiIwTfvupBY8t8AGacue5Jo0qLgqaRCvM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=andrei.botila@oss.nxp.com; 
-Received: from AM6PR04MB5430.eurprd04.prod.outlook.com (20.178.92.210) by
- AM6PR04MB6309.eurprd04.prod.outlook.com (20.179.5.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Fri, 28 Feb 2020 10:47:38 +0000
-Received: from AM6PR04MB5430.eurprd04.prod.outlook.com
- ([fe80::79f3:d09c:ee2d:396e]) by AM6PR04MB5430.eurprd04.prod.outlook.com
- ([fe80::79f3:d09c:ee2d:396e%3]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
- 10:47:37 +0000
-From:   Andrei Botila <andrei.botila@oss.nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrei Botila <andrei.botila@nxp.com>, stable@vger.kernel.org
-Subject: [PATCH] crypto: caam - update xts sector size for large input length
-Date:   Fri, 28 Feb 2020 12:46:48 +0200
-Message-Id: <20200228104648.18898-1-andrei.botila@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0074.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::15) To AM6PR04MB5430.eurprd04.prod.outlook.com
- (2603:10a6:20b:94::18)
+        Fri, 28 Feb 2020 05:49:19 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36966 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbgB1KtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:49:19 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q84so2442380oic.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:49:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aqdR1FawIDcIjcDWnx2zMMW5yAMtp4uyQmYJLmHNyd8=;
+        b=iaQwtQAwDokvpkvWtIBMKO18MBEUopLMOwY9kq5JljpHlqghSzpzTp05zUOBKX2UEB
+         Hki8du07pvSvsc2LTNwO3MwSZwjMC/0tN2RTSIR/VslJnKL0e8tocfEjzO92MwzYqQF2
+         bgIDhZUCF4QVFg8pm48+sSE89EuR3eTPVtXIR8lQv3AK0H7RwH9fYPXdVvhVYaWq9IWO
+         ueLfIzlutMBh/lGXQH59NzcJvK5dR12h6t1jPhkXlBg0Ep0dQcy++eJluetM321O694/
+         1F3Tl2bl05QUq1rXWwIPNeuxfEQ7xmih5ZOorVWIr/tS99pYhJGvIvPOri0DL+geVl/1
+         poUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aqdR1FawIDcIjcDWnx2zMMW5yAMtp4uyQmYJLmHNyd8=;
+        b=crrFoIYLexM3zqrEQVNVW+jm6qh3QFmwhW0JSfPhks4bIc7gvosglttdSN92rashd3
+         mhwPJTe/FsOetWo7nqYqwHjWdjwjL624zKLQasnwvxvDu84vJJAEMDEscaGQsCDej5z4
+         7tK16YcwRDSQWTPz/M6qdzTMv+WukrFkcysM4kBgiJbGMnX3s+HmEyPuQ9tdHnLtXPEZ
+         1tISMaT53oNkW0J9YfotOaBZXd/97uMUjjYAhYevgDYoyLZdcnK1ya76HwFO9ar5C5cR
+         Yz/0PboheBxk53MTM4mY3qbwG5X1/7ety4obIQU1wILNEsHjaIy5lQB8pLOFBP582jgX
+         ZEfw==
+X-Gm-Message-State: APjAAAW0UNhieSGdnqs7SvJRGbhSOE2SUAt3RT3HA0lBGiqgdQEGkGnk
+        c5fhjM+z6CzNP4jsL6lyGMQvO/lhOOQ33kfEdnQwUtQX
+X-Google-Smtp-Source: APXvYqxQL6CLzR9Ev8U0HMJC6wiM0zIinQqhyFi62qJn3GpWoGc6pgY/YDb7QjypTAohz7rkgxsaQGw1WqcqZT4LehU=
+X-Received: by 2002:a05:6808:8d5:: with SMTP id k21mr2640215oij.121.1582886957457;
+ Fri, 28 Feb 2020 02:49:17 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv15007.swis.ro-buh01.nxp.com (212.146.100.6) by AM0PR06CA0074.eurprd06.prod.outlook.com (2603:10a6:208:fa::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 10:47:37 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [212.146.100.6]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 66f1e256-fabb-4522-7467-08d7bc3ba044
-X-MS-TrafficTypeDiagnostic: AM6PR04MB6309:|AM6PR04MB6309:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB63090E087CC22387585E46BFB4E80@AM6PR04MB6309.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
-X-Forefront-PRVS: 0327618309
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(366004)(396003)(346002)(189003)(199004)(8676002)(2906002)(6486002)(44832011)(4326008)(8936002)(81166006)(81156014)(6506007)(16526019)(52116002)(316002)(66946007)(2616005)(86362001)(478600001)(6512007)(956004)(6666004)(1076003)(66556008)(5660300002)(66476007)(26005)(110136005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6309;H:AM6PR04MB5430.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lJkEleYzIh5kvsjZQXzsDfWR/uU9NlabtKsUbyIWQ1dxfyrPPYkpCF5osjcvOG7fEPycz216zZDeBfMBZAnMdA3CxhzAJaUd1LXV81BgtH83gnlLLgkKXNVrIdYJqL4qbTGjOddgz/+PLyefGH2VWsx5Lri+5u89YtQm3m/19AGCMharKBz7JyYUGhYyvkl5wocMa0A0h0UKh24m3tSw07COFNIhlxu3H+xydukv6VaKpb5y4cua2TNOf1/bv/Xg9SrmlY1mCqRe3AghuorgVs4vZ2tNEK0y7+0uGIeo1saIqzT0dGWX6NsK6+hP5uhNFrMWo1mbpJAkJNWFimgHsVBlYmr/OJ/bk7ZZvsUxKKQKBX9w6suoe6CCi+UVx7H+eLH+eSzoD2UqzOQIr73XjOtDQeyWhSjiJncCYCEJClCsV8UTxVLqZzWIrdYshSD4
-X-MS-Exchange-AntiSpam-MessageData: m7eOy9LJXoa4wOXWTO2VrH1ZCfhq1KntV69UhQSxIe3nrr5h7bIYIQEe9jmNGHWu58CHLE6HQoF+pI+APWGZJ+yHaGFvK3tXCOI0yx4L0+rsjwkuiAPfJ/kMT1O46LNs9K0DVIBPdXactpD77abodg==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66f1e256-fabb-4522-7467-08d7bc3ba044
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 10:47:37.5586
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qa7XrBdhWYd3tkXL0RWsKPFIaFHSE6huWy8wz6yg5o34xmxq8fGstjYSLTj0DGwaEo8a+bOEGbr9bqnCRSkfew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6309
+References: <20200228044018.1263-1-cai@lca.pw>
+In-Reply-To: <20200228044018.1263-1-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 28 Feb 2020 11:49:06 +0100
+Message-ID: <CANpmjNNe4OebUdTR5Z=23FK55gXOJmzdnEfXt8_3xjQ0P+foFA@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: annotate data races for lru_rotate_pvecs
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
+On Fri, 28 Feb 2020 at 05:40, Qian Cai <cai@lca.pw> wrote:
+>
+> Read to lru_add_pvec->nr could be interrupted and then write to the same
+> variable. The write has local interrupt disabled, but the plain reads
+> result in data races. However, it is unlikely the compilers could
+> do much damage here given that lru_add_pvec->nr is a "unsigned char" and
+> there is an existing compiler barrier. Thus, annotate the reads using the
+> data_race() macro. The data races were reported by KCSAN,
 
-Since in the software implementation of XTS-AES there is
-no notion of sector every input length is processed the same way.
-CAAM implementation has the notion of sector which causes different
-results between the software implementation and the one in CAAM
-for input lengths bigger than 512 bytes.
-Increase sector size to maximum value on 16 bits.
+Note that, the fact that the writer has local interrupts disabled for
+the write is irrelevant because it's the interrupt that triggered
+while the read was happening that led to the concurrent write.
 
-Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")
-Cc: <stable@vger.kernel.org> # v4.12+
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
----
-This patch needs to be applied from v4.12+ because dm-crypt has added support
-for 4K sector size at that version. The commit was
-8f0009a225171 ("dm-crypt: optionally support larger encryption sector size").
+I assume you ran this with CONFIG_KCSAN_INTERRUPT_WATCHER=y?  The
+option is disabled by default (see its help-text). I don't know if we
+want to deal with data races due to interrupts right now, especially
+those that just result in 'data_race' annotations. Thoughts?
 
- drivers/crypto/caam/caamalg_desc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Thanks,
+-- Marco
 
-diff --git a/drivers/crypto/caam/caamalg_desc.c b/drivers/crypto/caam/caamalg_desc.c
-index aa9ccca67045..8ebbbd28b1f7 100644
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -1518,7 +1518,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap);
-  */
- void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cdata)
- {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
- 
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
-@@ -1571,7 +1577,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_encap);
-  */
- void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cdata)
- {
--	__be64 sector_size = cpu_to_be64(512);
-+	/*
-+	 * Set sector size to a big value, practically disabling
-+	 * sector size segmentation in xts implementation. We cannot
-+	 * take full advantage of this HW feature with existing
-+	 * crypto API / dm-crypt SW architecture.
-+	 */
-+	__be64 sector_size = cpu_to_be64(BIT(15));
- 	u32 *key_jump_cmd;
- 
- 	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);
--- 
-2.17.1
-
+>  BUG: KCSAN: data-race in lru_add_drain_cpu / rotate_reclaimable_page
+>
+>  write to 0xffff9291ebcb8a40 of 1 bytes by interrupt on cpu 23:
+>   rotate_reclaimable_page+0x2df/0x490
+>   pagevec_add at include/linux/pagevec.h:81
+>   (inlined by) rotate_reclaimable_page at mm/swap.c:259
+>   end_page_writeback+0x1b5/0x2b0
+>   end_swap_bio_write+0x1d0/0x280
+>   bio_endio+0x297/0x560
+>   dec_pending+0x218/0x430 [dm_mod]
+>   clone_endio+0xe4/0x2c0 [dm_mod]
+>   bio_endio+0x297/0x560
+>   blk_update_request+0x201/0x920
+>   scsi_end_request+0x6b/0x4a0
+>   scsi_io_completion+0xb7/0x7e0
+>   scsi_finish_command+0x1ed/0x2a0
+>   scsi_softirq_done+0x1c9/0x1d0
+>   blk_done_softirq+0x181/0x1d0
+>   __do_softirq+0xd9/0x57c
+>   irq_exit+0xa2/0xc0
+>   do_IRQ+0x8b/0x190
+>   ret_from_intr+0x0/0x42
+>   delay_tsc+0x46/0x80
+>   __const_udelay+0x3c/0x40
+>   __udelay+0x10/0x20
+>   kcsan_setup_watchpoint+0x202/0x3a0
+>   __tsan_read1+0xc2/0x100
+>   lru_add_drain_cpu+0xb8/0x3f0
+>   lru_add_drain+0x25/0x40
+>   shrink_active_list+0xe1/0xc80
+>   shrink_lruvec+0x766/0xb70
+>   shrink_node+0x2d6/0xca0
+>   do_try_to_free_pages+0x1f7/0x9a0
+>   try_to_free_pages+0x252/0x5b0
+>   __alloc_pages_slowpath+0x458/0x1290
+>   __alloc_pages_nodemask+0x3bb/0x450
+>   alloc_pages_vma+0x8a/0x2c0
+>   do_anonymous_page+0x16e/0x6f0
+>   __handle_mm_fault+0xcd5/0xd40
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+>
+>  read to 0xffff9291ebcb8a40 of 1 bytes by task 37761 on cpu 23:
+>   lru_add_drain_cpu+0xb8/0x3f0
+>   lru_add_drain_cpu at mm/swap.c:602
+>   lru_add_drain+0x25/0x40
+>   shrink_active_list+0xe1/0xc80
+>   shrink_lruvec+0x766/0xb70
+>   shrink_node+0x2d6/0xca0
+>   do_try_to_free_pages+0x1f7/0x9a0
+>   try_to_free_pages+0x252/0x5b0
+>   __alloc_pages_slowpath+0x458/0x1290
+>   __alloc_pages_nodemask+0x3bb/0x450
+>   alloc_pages_vma+0x8a/0x2c0
+>   do_anonymous_page+0x16e/0x6f0
+>   __handle_mm_fault+0xcd5/0xd40
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+>
+>  2 locks held by oom02/37761:
+>   #0: ffff9281e5928808 (&mm->mmap_sem#2){++++}, at: do_page_fault
+>   #1: ffffffffb3ade380 (fs_reclaim){+.+.}, at: fs_reclaim_acquire.part
+>  irq event stamp: 1949217
+>  trace_hardirqs_on_thunk+0x1a/0x1c
+>  __do_softirq+0x2e7/0x57c
+>  __do_softirq+0x34c/0x57c
+>  irq_exit+0xa2/0xc0
+>
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 23 PID: 37761 Comm: oom02 Not tainted 5.6.0-rc3-next-20200226+ #6
+>  Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>
+> BTW, while at it, I had also looked at other pagevec there, but could
+> not tell for  sure if they could be interrupted resulting in data races,
+> so I leave them out for now.
+>
+>  mm/swap.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/swap.c b/mm/swap.c
+> index cf39d24ada2a..c922f99dab85 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -599,7 +599,8 @@ void lru_add_drain_cpu(int cpu)
+>                 __pagevec_lru_add(pvec);
+>
+>         pvec = &per_cpu(lru_rotate_pvecs, cpu);
+> -       if (pagevec_count(pvec)) {
+> +       /* Disabling interrupts below acts as a compiler barrier. */
+> +       if (data_race(pagevec_count(pvec))) {
+>                 unsigned long flags;
+>
+>                 /* No harm done if a racing interrupt already did this */
+> @@ -744,7 +745,7 @@ void lru_add_drain_all(void)
+>                 struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
+>
+>                 if (pagevec_count(&per_cpu(lru_add_pvec, cpu)) ||
+> -                   pagevec_count(&per_cpu(lru_rotate_pvecs, cpu)) ||
+> +                   data_race(pagevec_count(&per_cpu(lru_rotate_pvecs, cpu))) ||
+>                     pagevec_count(&per_cpu(lru_deactivate_file_pvecs, cpu)) ||
+>                     pagevec_count(&per_cpu(lru_deactivate_pvecs, cpu)) ||
+>                     pagevec_count(&per_cpu(lru_lazyfree_pvecs, cpu)) ||
+> --
+> 2.21.0 (Apple Git-122.2)
+>
