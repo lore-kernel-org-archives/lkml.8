@@ -2,84 +2,114 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56691C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B044EC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2430F246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AA1246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IfcRCBLI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGuISWEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgB1EgW (ORCPT
+        id S1730943AbgB1EiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:36:22 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47786 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbgB1EgV (ORCPT
+        Thu, 27 Feb 2020 23:38:25 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46253 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730800AbgB1EiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:36:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=lTW94UBCUPJRu/vgnaOKmsgRovgXjQnsj+f3JMzvz1c=; b=IfcRCBLIneNu+5UXCSEUAv3LJW
-        pVzVIiYsNQ9tvEhVY/XWyzm7EUzAJuy5FUvfEDbE1yY1tBcwrfSerN80p82gTFBLm5yv5FoIHveVU
-        mdUXVyMOiVIavG0A/r2XN+BeRwY3POU2KmLP4niUcDhkGap1WrPpT8TUwoigO/zb2BYkgajKeLX+n
-        Em9Lm6k9r5mySOlgTu64n2fbH4iyzgf8YlHOXhRET/OTHecmQnByFgtWe0+TJxwCeFTVv0LLdmrBt
-        bmkgbeVh/nrvgJq80kf7eguuvTzwsSoD1AH2O3Y0bVP2Y+0aVQRyfBLN01feScl52e0LqGeyuc9Vc
-        2KSGrHlQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7XNr-0008GL-6V; Fri, 28 Feb 2020 04:36:20 +0000
-Subject: Re: [PATCH 1/2] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <158278834245.14966.6179457011671073018.stgit@devnote2>
- <158278835238.14966.16157216423901327777.stgit@devnote2>
- <8514c830-319b-33e9-025a-79d399674fb3@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <130b7415-28b9-b95f-b0a4-3991b530571d@infradead.org>
-Date:   Thu, 27 Feb 2020 20:36:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 23:38:25 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so715891pll.13;
+        Thu, 27 Feb 2020 20:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
+        b=OGuISWEli9eLWMchX3FyKGExfAxWPgMbRqfnKQ71+WgTo0dAEu2wLJuIhrKoGocX7C
+         NgR5sxtUyB2qc+ar05E0dailbAMsC/Kwdrk8MOBfQ4vYqgtPKQVDCZtupwPoBDBSJaHY
+         5N3TV62amf+JgPDxaRZ8kRVzgFexamdDBZnLMUd4UHpeSeFtwRVdcFnfvP7jDC5JxKXB
+         GprPn9waSFKdqTuaDbE50CEKUjlPN4vQKSkRzh1HrfX0oIkzMyIVOEFMVnYflBo8FWGe
+         ldlX01IUa/AEq4++DIRco4fmEed+VmzvnXwDP4sNJG4uEuNpeZa3AdkdoTFZjyMu7OSo
+         lYNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
+        b=Pvqt70CAE30X5SEstTqe/AoHXrntr5wiFDRDQWsFO/s/n/UGPMuvzvBU558YBSAJoa
+         Nw5+hiU0mLazPgN8Y5/yBYI+haBkBmWL26g4AyO/tgHQq9tpmSksdTb4os28j1A3o4cY
+         xxp3jTo9F9zuK1QOwaY6BJ609BhJvXXinQ1IQz/oCmM7RBpR7IU+qIvaD9PjWZV2Wbia
+         88tpx4Ivy3RHq0mFpj51yCzk3mjI/1v7kqByvtNXD7B1LBYOn11RZT6U2ES6eVubuABL
+         j0zWAg48d9LLLCyX2izeKXTn2/KbWspRRhe+PSeRKbIiB6Y/SuIoOcAgChpfRZ4Z2rK/
+         a1YQ==
+X-Gm-Message-State: APjAAAXMsVnTooazmTR59kQ1n9uno1WxP78I40PfxhcUfnd/rgFwFTQk
+        uVu3UvGHmG1GomfXTSOtrlM=
+X-Google-Smtp-Source: APXvYqyvibBkO+TV6UPsBt0A3f9XT3QV3cG3heDfSZwLqQ1gjV5l3PPpcjCz6rPkJXCg+y5fzWLizA==
+X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr2715072pjq.5.1582864703657;
+        Thu, 27 Feb 2020 20:38:23 -0800 (PST)
+Received: from localhost.localdomain ([240e:379:962:6595:7b84:9990:1a82:371c])
+        by smtp.gmail.com with ESMTPSA id 196sm9069047pfy.86.2020.02.27.20.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 20:38:22 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Chuanhong Guo <gch981213@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/4] rewrite mtk-quadspi spi-nor driver with spi-mem
+Date:   Fri, 28 Feb 2020 12:36:32 +0800
+Message-Id: <20200228043636.559915-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <8514c830-319b-33e9-025a-79d399674fb3@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 11:12 AM, Markus Elfring wrote:
-> 
->> +The boot configuration syntax allows user to merge partially same word keys
->>  by brace. For example::
-> 
-> “by braces.
-> For example::”?
+This patchset adds a spi-mem driver for Mediatek SPI-NOR controller,
+which already has limited support by mtk-quadspi. This new driver can
+make use of full quadspi capability of this controller.
 
-It is fine as Masami has it IMO.
+1st new commit makes spi-max-frequency optional to match current
+binding doc and make this new driver compatible with old driver dt
+bindings.
 
-> 
-> 
->> +The file /proc/bootconfig is a user-space interface to the configuration
-> 
-> “… is an user-…”?
+Changes since v1:
+ two new commits.
 
-No, "is a user-space" or "is a userspace" is good.
+Chuanhong Guo (4):
+  spi: make spi-max-frequency optional
+  spi: add support for mediatek spi-nor controller
+  dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+  mtd: spi-nor: remove mtk-quadspi driver
 
+ .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   |  34 +-
+ drivers/mtd/spi-nor/Kconfig                   |   8 -
+ drivers/mtd/spi-nor/Makefile                  |   1 -
+ drivers/mtd/spi-nor/mtk-quadspi.c             | 565 --------------
+ drivers/spi/Kconfig                           |  10 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-mtk-nor.c                     | 689 ++++++++++++++++++
+ drivers/spi/spi.c                             |   9 +-
+ 8 files changed, 717 insertions(+), 600 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
+ delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+ create mode 100644 drivers/spi/spi-mtk-nor.c
 
 -- 
-~Randy
+2.24.1
 
