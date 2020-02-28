@@ -5,57 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB2C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E863DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F992469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C003F2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HFYB1ZFK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S2k5UO0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgB1OYH (ORCPT
+        id S1727112AbgB1OYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:24:07 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55412 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgB1OYF (ORCPT
+        Fri, 28 Feb 2020 09:24:12 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47624 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgB1OYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:24:05 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SENj87077118;
-        Fri, 28 Feb 2020 08:23:45 -0600
+        Fri, 28 Feb 2020 09:24:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SENnWI053547;
+        Fri, 28 Feb 2020 08:23:49 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582899825;
-        bh=QpJEH4WZMRrWIDHS2nhaRKdfdtwL/3UibZ6zrK3AhVc=;
+        s=ti-com-17Q1; t=1582899829;
+        bh=MnQUCS2p5FfCgMGaa35GROR+KFXSAuN1485gewbObmg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HFYB1ZFKge2lEMzV3raMca4gQ/SfxnAhrm5Ikyvd7k7huYTJ+jCLmohkibbbvMB5t
-         JdBnYDyerM6shHCRi2oxaxUZhE6aqiwg7p1ci8ZMpKK6NjE4ol2slpwSks2vI1N73d
-         gR7/a6VasnO/kvNh0QfTfsf8fhXK5qD2dKavtPR0=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SENj9T031710
+        b=S2k5UO0PjP4hCklDMpNfnYf0g3EJiEr4DmhWQzOWJzK5NCqdm4mlT8b1ecnDEME7S
+         ODjv5By2nL9jb2buhHcvCcugY/+4ZzLof/Uff7LaZlnoxWw8vJe+8OE4+ZFTgNOcha
+         XXIGUxHvOHgJuxzGV2uJ3AmUQdiJU9QiXANACfzc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SENn9K007138
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 08:23:45 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 28 Feb 2020 08:23:49 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 08:23:44 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 08:23:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 08:23:44 -0600
+ Frontend Transport; Fri, 28 Feb 2020 08:23:49 -0600
 Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SENf3x049600;
-        Fri, 28 Feb 2020 08:23:43 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SENf42049600;
+        Fri, 28 Feb 2020 08:23:47 -0600
 From:   Tero Kristo <t-kristo@ti.com>
 To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
         <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH 1/4] dt-bindings: watchdog: Add support for TI K3 RTI watchdog
-Date:   Fri, 28 Feb 2020 16:23:28 +0200
-Message-ID: <20200228142331.13716-2-t-kristo@ti.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH 4/4] arm64: dts: ti: k3-j721e-main: Add MAIN domain watchdog entries
+Date:   Fri, 28 Feb 2020 16:23:31 +0200
+Message-ID: <20200228142331.13716-5-t-kristo@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228142331.13716-1-t-kristo@ti.com>
 References: <20200228142331.13716-1-t-kristo@ti.com>
@@ -67,77 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
-used to implement a windowed watchdog functionality. Windowed watchdog
-will generate an error if it is petted outside the time window, either
-too early or too late.
+Add DT entries for main domain watchdog0 and 1 instances.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-new file mode 100644
-index 000000000000..3813f59fb6c3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 0b9d14b838a1..7ab989496c2c 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -963,4 +963,22 @@
+ 
+ 		status = "disabled";
+ 	};
 +
-+title: Texas Instruments K3 SoC Watchdog Timer
++	main_rti0: rti@2200000 {
++		compatible = "ti,rti-wdt";
++		reg = <0x0 0x2200000 0x0 0x100>;
++		clocks = <&k3_clks 252 1>;
++		power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
++		assigned-clocks = <&k3_clks 252 1>;
++		assigned-clock-parents = <&k3_clks 252 5>;
++	};
 +
-+maintainers:
-+  - Tero Kristo <t-kristo@ti.com>
-+
-+description: |+
-+  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
-+  Interrupt) IP module. This timer adds a support for windowed watchdog
-+  mode, which will signal an error if it is pinged outside the watchdog
-+  time window, meaning either too early or too late. The error signal
-+  generated can be routed to either interrupt a safety controller or
-+  to directly reset the SoC.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,rti-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+examples:
-+  - |
-+    /*
-+     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
-+     * select the source clock for the watchdog, forcing it to tick with
-+     * a 32kHz clock in this case.
-+     */
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    main_rti0: rti@2200000 {
-+        compatible = "ti,rti-wdt";
-+        reg = <0x0 0x2200000 0x0 0x100>;
-+        clocks = <&k3_clks 252 1>;
-+        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-+        assigned-clocks = <&k3_clks 252 1>;
-+        assigned-clock-parents = <&k3_clks 252 5>;
-+    };
++	main_rti1: rti@2210000 {
++		compatible = "ti,rti-wdt";
++		reg = <0x0 0x2210000 0x0 0x100>;
++		clocks = <&k3_clks 253 1>;
++		power-domains = <&k3_pds 253 TI_SCI_PD_EXCLUSIVE>;
++		assigned-clocks = <&k3_clks 253 1>;
++		assigned-clock-parents = <&k3_clks 253 5>;
++	};
+ };
 -- 
 2.17.1
 
