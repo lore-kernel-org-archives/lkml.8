@@ -2,94 +2,86 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06C6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D0424690
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ac7tlk8C"
+	by mail.kernel.org (Postfix) with ESMTP id 7DE4F24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgB1RFj (ORCPT
+        id S1726094AbgB1RKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:05:39 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37485 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1RFj (ORCPT
+        Fri, 28 Feb 2020 12:10:08 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:53766 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1RKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:05:39 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q23so4132156ljm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:05:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UBP7QsMdsRzii497sQdvXMivqxHUi8KnMTi6DqPb4vI=;
-        b=ac7tlk8Cze2jl3gZVHvkWEQ+IDeanfETwQry/6b+4HJyNtzQI4p6CcR3GQlgXi4t6x
-         Rg9mhL4QPsYU2oVXZNwbLx51ZQjNza8AK3S/wS3bOTdoOjoXhdA+ou5H5ld+BAaa/g5h
-         pK39NtvbrvXOQ9faTLoFO6V73vTxG7t4cRK1LuBmRNeOvROWzeg3piJtXOyRLqpsIjP5
-         CSXHYLC82a3qe81vsAFGjbPYLLtXr18QliXwVCVW8dqOtXn7sRfek8UXC3zt/1vHN8dw
-         XslVappftofRLHztKIhpGGLIUU6spBf00Hcv/oyZMBykifmTfd3rkCd9izBGI5TpwJFX
-         0qlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UBP7QsMdsRzii497sQdvXMivqxHUi8KnMTi6DqPb4vI=;
-        b=JoUzoHYKuvfYnlzjf+790niGUO4alDX5ZWfJFMoZbsAhceyU2LsblMKmXEboEZNRoA
-         7I8ODRxfH0ISZ51aMg+834OjzWlhlEVbDNaO9kco/Tiz6vc3aPslBJ0ijoewA/EKwm2Q
-         kV67PbWmXPP6GevWjMBl7AA0z5LTpkPrmcKlqI2LSrJoyUI0reQv1z44PNy+ceHRvNTL
-         pfwhgsylVHwYkbq09ZYOjL1wEZivNRiIhtRLDdMq46cX/5ANVNfoka/x8XiMreeC28uQ
-         SIFzgpqTAJi7oHQS6X2rP7uMoByeCKr/59uLpZaujahYWQts2ysc0SwjFduv897Vnhk5
-         CyIg==
-X-Gm-Message-State: ANhLgQ3uyQj2Mg8unkdxVjGFHT4cZQvBOYXVws6QVUb9C0mjp+MwD675
-        CIfWL2C8g390mhanyY47VbSCiBb9TV5P7QYTJmCCCw==
-X-Google-Smtp-Source: ADFU+vtSr6VQwF7m2+8Lo3WnbSGTzU2AUlIfQZYijuxBt0BqYCrk6rzyB34udEirfvaR+UlGIovaqzwfjvJEyyD0Mtg=
-X-Received: by 2002:a2e:8754:: with SMTP id q20mr3417402ljj.258.1582909537024;
- Fri, 28 Feb 2020 09:05:37 -0800 (PST)
+        Fri, 28 Feb 2020 12:10:08 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j7j9K-0000yP-Ju; Fri, 28 Feb 2020 10:10:06 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j7j9J-0008Tb-VJ; Fri, 28 Feb 2020 10:10:06 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Fri, 28 Feb 2020 11:07:56 -0600
+Message-ID: <87k146vdw3.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200228063338.4099-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200228063338.4099-1-lukas.bulwahn@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 18:05:25 +0100
-Message-ID: <CACRpkdabUZYhr7S8fcOX-dOgUEfDTnhUZjqsadyghpuTDCoqpw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust to renaming physmap_of_versatile.c
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Boris Brezillon <boris.brezillon@bootlin.com>,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1j7j9J-0008Tb-VJ;;;mid=<87k146vdw3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/Qc3ezt+ctVoDu7uln0ac4YwphkGWSGmk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 0/5] posix-cpu-timers: Graceful handling of reaped processes
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 7:33 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
-> Commit 6ca15cfa0788 ("mtd: maps: Rename physmap_of_{versatile, gemini}
-> into physmap-{versatile, gemini}") renamed physmap_of_versatile.c to
-> physmap-versatile.c, but did not adjust the MAINTAINERS entry.
->
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
->
->   warning: no file matches F: drivers/mtd/maps/physmap_of_versatile.c
->
-> Rectify the ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT entry and now
-> also cover drivers/mtd/maps/physmap-versatile.h while at it.
->
-> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Oleg, Thomas,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+The posic cpu timer code does not handle processes that is is using as a
+clock source exiting and being reaped at all well.  In most cases the
+code pins the entire task struct for no good reason.  In the
+multi-threaded exec case where the thread group leader exits but the
+thread group remains the posix cpu timers just stop working when it
+should not.
 
-Yours,
-Linus Walleij
+To solve that problems requires checking if the target processes is
+still alive before proceeding.  Replacing cpu.task with a struct pid
+pointer is the easiest way I can see to add that extra checking and
+extra indirection needed.
+
+So here is my fix.  Oleg, Thomas and if you guys could take a look and
+see I made any mistakes I would appreciate it.
+
+Thomas if you want these changes you can have them otherwise I will take
+them through my tree.  
+
+Eric W. Biederman (5):
+      posix-cpu-timers: cpu_clock_sample_group no longer needs siglock
+      posix-cpu-timers: Remove unnecessary locking around cpu_clock_sample_group
+      posix-cpu-timers: Pass the task into arm_timer
+      posix-cpu-timers: Store a reference to a pid not a task
+      posix-cpu-timers: Stop disabling timers on mt-exec
+
+ include/linux/posix-timers.h   |   2 +-
+ kernel/exit.c                  |  11 +---
+ kernel/time/posix-cpu-timers.c | 137 +++++++++++++++++++----------------------
+ 3 files changed, 67 insertions(+), 83 deletions(-)
+
+Eric
