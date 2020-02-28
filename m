@@ -2,164 +2,201 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEE1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C537C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EBE246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431D0246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uyA+4Lzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgB1KyA (ORCPT
+        id S1726860AbgB1Kyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:54:00 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50020 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgB1KyA (ORCPT
+        Fri, 28 Feb 2020 05:54:43 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:57952 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgB1Kym (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:54:00 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 15DF9293656;
-        Fri, 28 Feb 2020 10:53:58 +0000 (GMT)
-Date:   Fri, 28 Feb 2020 11:53:55 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
-Message-ID: <20200228115355.5033798f@collabora.com>
-In-Reply-To: <20200228093658.zc3uifqg4zruokq3@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
-        <20200226093703.19765-7-p.yadav@ti.com>
-        <20200227175841.51435e3f@collabora.com>
-        <20200228093658.zc3uifqg4zruokq3@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Feb 2020 05:54:42 -0500
+Received: by mail-pj1-f74.google.com with SMTP id ca1so1539194pjb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:54:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=tdQUdS7x2rCx1v8FEB8YDbTZb5Bh+jYuKbWwAYyw4WQ=;
+        b=uyA+4LzoUf+htbphfAJGGjZNowcHtlIYcCb1h9czIGbE2qb6Tz6eXbY73v3BbogaXY
+         iYeidB88Z06KBrgMfWUaYHfQZOTcPtBf+ZeZHjum0w5n4QjCr3Kx17RgYuXuCOTVu77O
+         swmEPuElqezEngAnVpoi7/Z0oMH7/3lDie0G6dhpH49HSmqXKfBkcD1ao5Y8VJlAp20C
+         QTbtwrgO1479T4zWxhC7T1MBPBihwcdRZhRbhD4s2wogdH/LFfH8oTeeVQicecE5zPtF
+         VeoqiJvwhOPB4H3M2m0RR2MNL09Zorvbfc6lXvJkh2/tuZ7aouOwUCSTJST7qMPsbjl+
+         y/4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=tdQUdS7x2rCx1v8FEB8YDbTZb5Bh+jYuKbWwAYyw4WQ=;
+        b=j5mQUnhab6xB66+VCT2Iftr27azD8EVwsqQbo1FWt7iXNmD8EYuaxZLcHDJS6NYaFn
+         7x3mI0wkxXMaaYF/d/jQ0B6guNgRp8jdvwh0NDVSTqUOXXH9ngBAyvKfE9SG8lkehZRj
+         cuuZ9kSWqRs9WdxFJw6Xk9H/13ypbb0lVgP+2DVF8Oli9vEjAaKDZ0j7hdnpUAQqo7Rx
+         PrBFkBYWiiRWwOKqYrlRh95LkH5XKDpw6e211aGZpVd9yF/jYX+eoZeHLLs2yoKSx9vo
+         Ua7hKvN7QLtGTjAdu+FqpIyd1FPxWyZY8Xwg3DyipzAhMTSq6qot+YfOb+uGiIgdlMbK
+         KaLw==
+X-Gm-Message-State: APjAAAWeWFI7wDcairQQcn3gMzktwijkFGgzSMUlDevrRDE8WMusf7BG
+        01X0D2BIIJH5PyJbU05PoYPkBF5nagY=
+X-Google-Smtp-Source: APXvYqzs8rTfDq1Hk2frUPLv63r3Iw8gfTmPaVF3Ujj8M5jCR5uXO3iJ19AA/oWn3Vtc3WzMjALLZfnb3Rg=
+X-Received: by 2002:a63:fb04:: with SMTP id o4mr4081186pgh.423.1582887279503;
+ Fri, 28 Feb 2020 02:54:39 -0800 (PST)
+Date:   Fri, 28 Feb 2020 02:54:35 -0800
+Message-Id: <20200228105435.75298-1-lrizzo@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v4] netdev attribute to control xdpgeneric skb linearization
+From:   Luigi Rizzo <lrizzo@google.com>
+To:     netdev@vger.kernel.org, toke@redhat.com, davem@davemloft.net,
+        hawk@kernel.org, sameehj@amazon.com
+Cc:     linux-kernel@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 15:06:58 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
+Add a netdevice flag to control skb linearization in generic xdp mode.
 
-> Hi Boris,
-> 
-> On 27/02/20 05:58PM, Boris Brezillon wrote:
-> > On Wed, 26 Feb 2020 15:06:58 +0530
-> > Pratyush Yadav <p.yadav@ti.com> wrote:
-> >   
-> > > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
-> > > on each clock edge as opposed to on each clock cycle. Make
-> > > framework-level changes to allow supporting flashes in DTR mode.
-> > > 
-> > > Right now, mixed DTR modes are not supported. So, for example a mode
-> > > like 4S-4D-4D will not work. All phases need to be either DTR or STR.  
-> > 
-> > Didn't go deep into the patch but at first glance you don't seem to
-> > extend the framework to support stateful modes as I tried to do here
-> > [1]. That's really something we should address before considering
-> > supporting xD-xD-xD modes, unless the SPI-NOR only supports one
-> > stateful mode. If we don't do that first, we might face all sort of
-> > unpleasant issues:
-> > 
-> > * kexec not working correctly because the previous kernel left the NOR
-> >   in an unknown state
-> > * suspend/resume not working properly
-> > * linux not booting properly because the bootloader left the device in
-> >   its non-default mode
-> > * ...  
-> 
-> Correct. I am working on a follow-up series that takes care of these 
-> problems. The series will allow spi-nor to detect what mode the flash is 
-> in and then run the SFPD procedure in that mode (or maybe switch to 
-> single SPI mode and then go about its business as usual? I haven't 
-> figured out all the details yet).
-> 
-> So for the context of this series, assume we are handed the flash in 
-> single SPI mode.
->  
-> > [1]https://patchwork.kernel.org/cover/10638055/  
-> 
-> BTW, I took a quick look at this series but I don't see any code that 
-> tries to detect which mode the flash is in (which is the troublesome 
-> part [0]). So, for example, if the bootloader leaves the flash in 
-> 8D-8D-8D mode, how would your series handle that situation?
+The attribute can be modified through
+	/sys/class/net/<DEVICE>/xdpgeneric_linearize
+The default is 1 (on)
 
-Oh, it's definitely not taking care of that, it was just paving the
-road for spi-nor state tracking. You'd need to extend it to support
-8D-8D-8D to 1-1-1 transitions at boot time (if that's even possible).
+Motivation: xdp expects linear skbs with some minimum headroom, and
+generic xdp calls skb_linearize() if needed. The linearization is
+expensive, and may be unnecessary e.g. when the xdp program does
+not need access to the whole payload.
+This sysfs entry allows users to opt out of linearization on a
+per-device basis (linearization is still performed on cloned skbs).
 
-> 
-> [0] There are multiple problems to take care of when trying to detect 
->     which mode a flash is in. We can try reading SFDP in each mode and 
->     whichever mode gives us the correct "SFDP" signature is the mode the 
->     flash is in. But the problem is that even in xSPI standard Read SFDP 
->     command is optional in 8D-8D-8D mode, let alone non-xSPI flashes.
->     Another problem is that the address bytes and dummy cycles for Read 
->     SFDP are not the same for every flash. The xSPI standard says 
->     address bytes can be 3/4 and dummy cycles can be 8/20. So, for 
->     example, Cypress s28hs/s28ht family and Micron Xccela (mt35x) family 
->     use 4 address bytes, but the Adesto ATXP032/ATXP032R flashes use 3 
->     address bytes.
+On a kernel instrumented to grab timestamps around the linearization
+code in netif_receive_generic_xdp, and heavy netperf traffic with 1500b
+mtu, I see the following times (nanoseconds/pkt)
 
-I'd rather go with something simpler and more widely supported than SFDP
-reads. Don't we have a simple command that's supported by all flashes
-and returns well known data. Isn't there an EXIT sequence that allows
-NORs to return to a single SPI state?
+The receiver generally sees larger packets so the difference is more
+significant.
 
-> 
->     Say that a flash supports Read SFDP in 8D-8D-8D mode and we try all 
->     the combinations to find out which mode the flash is in, we now have 
->     the problem of actually identifying the flash. Unfortunately, the 
->     Read ID command is not uniform across flash vendors. The Micron 
->     Xccela flashes use 8 dummy cycles and no address bytes for Read ID. 
->     The Cypress s28hs/t family uses configurable dummy cycles 
->     (defaulting to 3) and needs 4 dummy address bytes all of which are 
->     0.
+ns/pkt                   RECEIVER                 SENDER
 
-Yep, that's what I complained about when I tried to support the
-Macronix flash. They didn't plan for a reliable RETURN-TO-SINGLE-SPI
-sequence which would not conflict with any other existing SPI commands,
-and that's a real problem.
+                    p50     p90     p99       p50   p90    p99
 
-> 
->     If we can't find out which flash it is, we can't run its fixup 
->     hooks, and might end up running it with incorrect settings. And all 
->     this is assuming a flash even has SFDP and has it available in all 
->     modes.
+LINEARIZATION:    600ns  1090ns  4900ns     149ns 249ns  460ns
+NO LINEARIZATION:  40ns    59ns    90ns      40ns  50ns  100ns
 
-Absolutely.
+v1 --> v2 : added Documentation
+v2 --> v3 : adjusted for skb_cloned
+v3 --> v4 : renamed to xdpgeneric_linearize, documentation
 
-> 
->     So, the only solution I can now think of is having the flash name in 
->     its compatible string in the device tree. This way we can skip all 
->     the Read ID ugliness and can have flash-specific hooks to make it 
->     easier to detect the mode it is in (though I wonder if it is even 
->     possible to detect the mode in a flash that doesn't have SFDP in 
->     8D-8D-8D).
+Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+---
+ Documentation/ABI/testing/sysfs-class-net | 10 ++++++++++
+ include/linux/netdevice.h                 |  3 ++-
+ net/core/dev.c                            |  8 ++++++--
+ net/core/net-sysfs.c                      | 16 ++++++++++++++++
+ 4 files changed, 34 insertions(+), 3 deletions(-)
 
-Hm, I'd really like to avoid that if possible.
+diff --git a/Documentation/ABI/testing/sysfs-class-net b/Documentation/ABI/testing/sysfs-class-net
+index 664a8f6a634f..d5531bf223d7 100644
+--- a/Documentation/ABI/testing/sysfs-class-net
++++ b/Documentation/ABI/testing/sysfs-class-net
+@@ -301,3 +301,13 @@ Contact:	netdev@vger.kernel.org
+ Description:
+ 		32-bit unsigned integer counting the number of times the link has
+ 		been down
++
++What:		/sys/class/net/<iface>/xdpgeneric_linearize
++Date:		Feb 2020
++KernelVersion:	5.6
++Contact:	netdev@vger.kernel.org
++Description:
++		boolean controlling whether skbs should be linearized in
++		generic XDP. Defaults to true. Turning this off can increase
++		the performance of generic XDP at the cost of making the XDP
++		program unable to access packet fragments after the first one.
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 6c3f7032e8d9..f06294b2e8bb 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -1985,7 +1985,8 @@ struct net_device {
+ 
+ 	struct netdev_rx_queue	*_rx;
+ 	unsigned int		num_rx_queues;
+-	unsigned int		real_num_rx_queues;
++	unsigned int		real_num_rx_queues:31;
++	unsigned int		xdpgeneric_linearize : 1;
+ 
+ 	struct bpf_prog __rcu	*xdp_prog;
+ 	unsigned long		gro_flush_timeout;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index dbbfff123196..c539489d3166 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4520,9 +4520,12 @@ static u32 netif_receive_generic_xdp(struct sk_buff *skb,
+ 	/* XDP packets must be linear and must have sufficient headroom
+ 	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
+ 	 * native XDP provides, thus we need to do it here as well.
++	 * For non shared skbs, xdpgeneric_linearize controls linearization.
+ 	 */
+-	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
+-	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
++	if (skb_cloned(skb) ||
++	    (skb->dev->xdpgeneric_linearize &&
++	     (skb_is_nonlinear(skb) ||
++	      skb_headroom(skb) < XDP_PACKET_HEADROOM))) {
+ 		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
+ 		int troom = skb->tail + skb->data_len - skb->end;
+ 
+@@ -9806,6 +9809,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 	dev->gso_max_segs = GSO_MAX_SEGS;
+ 	dev->upper_level = 1;
+ 	dev->lower_level = 1;
++	dev->xdpgeneric_linearize = 1;
+ 
+ 	INIT_LIST_HEAD(&dev->napi_list);
+ 	INIT_LIST_HEAD(&dev->unreg_list);
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index cf0215734ceb..eab06a427d90 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -442,6 +442,21 @@ static ssize_t proto_down_store(struct device *dev,
+ }
+ NETDEVICE_SHOW_RW(proto_down, fmt_dec);
+ 
++static int change_xdpgeneric_linearize(struct net_device *dev,
++				       unsigned long val)
++{
++	dev->xdpgeneric_linearize = !!val;
++	return 0;
++}
++
++static ssize_t xdpgeneric_linearize_store(struct device *dev,
++					  struct device_attribute *attr,
++					  const char *buf, size_t len)
++{
++	return netdev_store(dev, attr, buf, len, change_xdpgeneric_linearize);
++}
++NETDEVICE_SHOW_RW(xdpgeneric_linearize, fmt_dec);
++
+ static ssize_t phys_port_id_show(struct device *dev,
+ 				 struct device_attribute *attr, char *buf)
+ {
+@@ -536,6 +551,7 @@ static struct attribute *net_class_attrs[] __ro_after_init = {
+ 	&dev_attr_phys_port_name.attr,
+ 	&dev_attr_phys_switch_id.attr,
+ 	&dev_attr_proto_down.attr,
++	&dev_attr_xdpgeneric_linearize.attr,
+ 	&dev_attr_carrier_up_count.attr,
+ 	&dev_attr_carrier_down_count.attr,
+ 	NULL,
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-> 
->     Thoughts? Is there a better way to solve this problem that I didn't 
->     think of?
-> 
-
-Nope, except maybe mandate that the bootloader always put the NOR in
-single SPI mode before booting Linux (and Linux should do the same,
-which is what my series was trying to address IIRC).
