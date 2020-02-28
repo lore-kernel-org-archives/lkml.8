@@ -2,84 +2,119 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6EEC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E53C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB1F20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476AB20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbgB1DD1 (ORCPT
+        id S1730769AbgB1DEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:03:27 -0500
-Received: from kernel.crashing.org ([76.164.61.194]:37276 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730520AbgB1DD1 (ORCPT
+        Thu, 27 Feb 2020 22:04:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22270 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730520AbgB1DEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:03:27 -0500
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01S32TN4031937
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 27 Feb 2020 21:02:32 -0600
-Message-ID: <2676013663fc8c53e02a5fdaafb1b27e18249b80.camel@kernel.crashing.org>
-Subject: Re: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed
- usb-vhub
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Tao Ren <rentao.bupt@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 28 Feb 2020 14:02:28 +1100
-In-Reply-To: <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
-References: <20200227230507.8682-1-rentao.bupt@gmail.com>
-         <20200227230507.8682-8-rentao.bupt@gmail.com>
-         <3150424b9e9f5856c747a0fbf44647919f49209d.camel@kernel.crashing.org>
-         <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Feb 2020 22:04:55 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S33k2c141895;
+        Thu, 27 Feb 2020 22:04:49 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepxantqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 22:04:49 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01S32RkC032687;
+        Fri, 28 Feb 2020 03:04:48 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2yepv2sn2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Feb 2020 03:04:48 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01S34ml053084438
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 03:04:48 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9230328094;
+        Fri, 28 Feb 2020 03:04:45 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECD4C280BD;
+        Fri, 28 Feb 2020 03:03:33 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 03:03:33 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v5 1/3] tpm: of: Handle IBM,vtpm20 case when getting log parameters
+Date:   Thu, 27 Feb 2020 22:03:28 -0500
+Message-Id: <20200228030330.18081-2-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200228030330.18081-1-stefanb@linux.vnet.ibm.com>
+References: <20200228030330.18081-1-stefanb@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_08:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-27 at 17:05 -0800, Tao Ren wrote:
-> > Also long run I think best is going to have a child node per downstream
-> > port, so we create a matching linux struct device. This will make it
-> > easier to deal with the other device-controller in the ast2600 which is
-> > basically one of these without a vhub above it.
-> 
-> Maybe a dumb question: what would be the proper place to parse the child
-> node/properties when they are added? For example, in some usb_gadget_ops
-> callback?
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-No. What the vhub would do is when it probes, it creates a platform
-device for each "port" child node that's linked to the DT node.
+A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
+the device tree. Handle it in the same way as 'IBM,vtpm'.
 
-The driver for the device then attaches to it via standard DT matching
-and checks if it has a vhub parent or not, and based on that, operates
-as a vhub child device or a standalone one.
+The vTPM 2.0's log is written in little endian format so that for this
+aspect we can rely on existing code.
 
-(For example, it might have different functions for EP selection since
-standalone devices have private EPs rather than a shared pool)
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ drivers/char/tpm/eventlog/of.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-They can both be in the same module or they can be separate modules
-with cross dependencies.
-
-Cheers,
-Ben.
-
+diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+index af347c190819..a31a625ad44e 100644
+--- a/drivers/char/tpm/eventlog/of.c
++++ b/drivers/char/tpm/eventlog/of.c
+@@ -17,6 +17,12 @@
+ #include "../tpm.h"
+ #include "common.h"
+ 
++static const char * const compatibles[] = {
++	"IBM,vtpm",
++	"IBM,vtpm20",
++	NULL
++};
++
+ int tpm_read_log_of(struct tpm_chip *chip)
+ {
+ 	struct device_node *np;
+@@ -51,7 +57,7 @@ int tpm_read_log_of(struct tpm_chip *chip)
+ 	 * endian format. For this reason, vtpm doesn't need conversion
+ 	 * but physical tpm needs the conversion.
+ 	 */
+-	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
++	if (!of_device_compatible_match(np, compatibles)) {
+ 		size = be32_to_cpup((__force __be32 *)sizep);
+ 		base = be64_to_cpup((__force __be64 *)basep);
+ 	} else {
+-- 
+2.23.0
 
