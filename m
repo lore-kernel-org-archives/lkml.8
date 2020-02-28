@@ -4,45 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FAAC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE91C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76020246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506F6246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582914302;
-	bh=/gNPUTSjBQMQK++qwr9w2viNHrCODNu4EVf3Ks9ZWcs=;
+	s=default; t=1582914328;
+	bh=zLY86YluTt+Bs1v8YFqKWMr4WLG0nZkWWxFTwih97rk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2CdSc3YpIY8syU8RUMmLQg3opNdnAWbqnamRxWBfo68BTyX3myYS2hlbLGU1FDdnU
-	 /EaNhInVd95V2WurqN/+vsz3CqberMM9pbMUboS5XU2rQSeYRqhJ7yQmUKSMPG/1C7
-	 rwsn50nHF1JtAIB7TO3yLKyjrFrXEGKj5z3w85vk=
+	b=XnS9C5SQOLPZ0t82tX6ORwEMo0XlOwUth03fFqnoQOLCiZR+wU6qNL5KIqLh2FZ4i
+	 WqhOLUin1UBhdfqa1azhBW8JvBkYwMhprCGaVz6+LH0A/t+Z/qDfL9k1Lwmv1eY1Kr
+	 742H49CnjtfQtzcUDNHFehRGfTF3cuLF0wef/krM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1SZB (ORCPT
+        id S1726733AbgB1SZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:25:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:42560 "EHLO foss.arm.com"
+        Fri, 28 Feb 2020 13:25:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:42616 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgB1SZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:25:00 -0500
+        id S1725730AbgB1SZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:25:27 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4159731B;
-        Fri, 28 Feb 2020 10:25:00 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50DB8FEC;
+        Fri, 28 Feb 2020 10:25:26 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B78703F7B4;
-        Fri, 28 Feb 2020 10:24:59 -0800 (PST)
-Date:   Fri, 28 Feb 2020 18:24:58 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C74853F7B4;
+        Fri, 28 Feb 2020 10:25:25 -0800 (PST)
+Date:   Fri, 28 Feb 2020 18:25:24 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: rt5682: Make rt5682_clock_config static" to the asoc tree
-In-Reply-To:  <20200228075609.38236-1-yuehaibing@huawei.com>
-Message-Id:  <applied-20200228075609.38236-1-yuehaibing@huawei.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Tudor.Ambarus@microchip.com
+Subject: Applied "spi: spi-mem: Compute length only when needed" to the spi tree
+In-Reply-To:  <20200228160735.1565047-1-tudor.ambarus@microchip.com>
+Message-Id:  <applied-20200228160735.1565047-1-tudor.ambarus@microchip.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,11 +50,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rt5682: Make rt5682_clock_config static
+   spi: spi-mem: Compute length only when needed
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -76,37 +75,41 @@ to this mail.
 Thanks,
 Mark
 
-From a3c2e894cdafbfa376a28a89a60df415b6ab6ee6 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 28 Feb 2020 15:56:09 +0800
-Subject: [PATCH] ASoC: rt5682: Make rt5682_clock_config static
+From c0e035ac56680e74b27fc218c07e70f4b9b8b7a5 Mon Sep 17 00:00:00 2001
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Date: Fri, 28 Feb 2020 16:07:44 +0000
+Subject: [PATCH] spi: spi-mem: Compute length only when needed
 
-Fix sparse warning:
+When adjust_op_size is defined, len is never used. Move the len
+computation where it's actually used.
 
-sound/soc/codecs/rt5682-sdw.c:163:5: warning:
- symbol 'rt5682_clock_config' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20200228075609.38236-1-yuehaibing@huawei.com
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Link: https://lore.kernel.org/r/20200228160735.1565047-1-tudor.ambarus@microchip.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/rt5682-sdw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-mem.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5682-sdw.c b/sound/soc/codecs/rt5682-sdw.c
-index fc31d04b5203..1d6963dd6403 100644
---- a/sound/soc/codecs/rt5682-sdw.c
-+++ b/sound/soc/codecs/rt5682-sdw.c
-@@ -160,7 +160,7 @@ static int rt5682_read_prop(struct sdw_slave *slave)
- #define RT5682_CLK_FREQ_2400000HZ 2400000
- #define RT5682_CLK_FREQ_12288000HZ 12288000
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 3c46747bacb1..adaa0c49f966 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -418,12 +418,13 @@ int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
+ 	struct spi_controller *ctlr = mem->spi->controller;
+ 	size_t len;
  
--int rt5682_clock_config(struct device *dev)
-+static int rt5682_clock_config(struct device *dev)
- {
- 	struct rt5682_priv *rt5682 = dev_get_drvdata(dev);
- 	unsigned int clk_freq, value;
+-	len = sizeof(op->cmd.opcode) + op->addr.nbytes + op->dummy.nbytes;
+-
+ 	if (ctlr->mem_ops && ctlr->mem_ops->adjust_op_size)
+ 		return ctlr->mem_ops->adjust_op_size(mem, op);
+ 
+ 	if (!ctlr->mem_ops || !ctlr->mem_ops->exec_op) {
++		len = sizeof(op->cmd.opcode) + op->addr.nbytes +
++		      op->dummy.nbytes;
++
+ 		if (len > spi_max_transfer_size(mem->spi))
+ 			return -EINVAL;
+ 
 -- 
 2.20.1
 
