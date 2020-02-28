@@ -2,123 +2,135 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9103C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55B2C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDBE246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782BF24695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:49:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iFV3rVkv"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="pPc8R2kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgB1Is7 (ORCPT
+        id S1726810AbgB1Itx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:48:59 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42937 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgB1Is7 (ORCPT
+        Fri, 28 Feb 2020 03:49:53 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:43335 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726005AbgB1Itw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:48:59 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 15so1367790pfo.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 00:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5EPoAhuZuphwlWtSWKyhSY+h7h3iivsxV4hMWTAxKUE=;
-        b=iFV3rVkvPQnO5aV+1FwyzJXv2sSSkRysESfqak/OMWbI3jNcxqgDZw9qAddYnR6hyQ
-         zGRH+b4yzk7kO1CpZLLrwj/s50pOnkCp52v6eYBdmRqm4Z1vPwuqPFwVhaE7ELQyRXrn
-         08ZzgWcJHLmfD1BJH0hg3bS062kvW/N4nMi20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5EPoAhuZuphwlWtSWKyhSY+h7h3iivsxV4hMWTAxKUE=;
-        b=pmwaCbIf8hG/z/hauhy2QNISjvdPwRhlHGRwITKd6turcoA1n6mEH5xIPMtEU31d6e
-         8T02v1CWsitZUJbvxlqh7kOnratNfk8Phb+2xojS8lL6gLg4H4xrEyU4meLD7DImveGR
-         AWxEWuxQe6Obz8RJ7Zbv5Vpu8aGuMK14m4SVVfAKcCepNhtyf+YxELzHY15tlPcVrVJT
-         AzqDP/vq/gkEp2f7gr4RkRCmbiDnGWcllMG1sSa34bulRBirP8Mld2Ni/NxpOtHkgKlc
-         x8pakKHVGP86GBkGaZrRrHm86FdXjrzVsWpO3ISzRLO5YJXSuRbr2XwrLk75XJGaSrnu
-         6udg==
-X-Gm-Message-State: APjAAAWvaBoBn6iYygL2JjMXrgEALbsebPlXkqfKSkn5eo2FwqsO4oA8
-        rqSlRf2pZCC8xbD8JjguhdVmUA==
-X-Google-Smtp-Source: APXvYqwQNFMpLHGueqR6+qvmtUW/XKem1Ve1Ni7aNqltZQ2HkbpOaMYtmYLwubk5R7ASlRPHUoNW3A==
-X-Received: by 2002:a63:d441:: with SMTP id i1mr3685712pgj.426.1582879737942;
-        Fri, 28 Feb 2020 00:48:57 -0800 (PST)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id r72sm1496939pjb.18.2020.02.28.00.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 00:48:56 -0800 (PST)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-Date:   Fri, 28 Feb 2020 14:18:42 +0530
-Message-Id: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 28 Feb 2020 03:49:52 -0500
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 7bL8jJldSjmHT7bLBjmctW; Fri, 28 Feb 2020 09:49:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582879790; bh=9VdJHJ2ICbOm+M0S9iPhNX39KW0EHOq1MnmGYhIypSw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=pPc8R2kB2Vgi+7IjFLbQcjWgRUxvB7/ENKGOBDmoLycLZl2MfzkYaXNhFHzWIKV1g
+         eYImsfVz+0Ii7C3nrxZjKMMNeDCEjQxJGm11Wp1rwi99HkNM7aWvhO4AtkYEhGs5xB
+         H2oOiM9gFl9jkILqrguq2H3zJ2hllzfyiNgPFpk21Vx9pvDTx27j+gj30xa90lkAC8
+         hfwt56wViv6IOjcmNdMLsCX8YIuG67Em4MTJb9WeJjvdmX4bzDd3eioQs8rBARULtl
+         bvN4mFX8eWZd1560GbiARiVgQdY9y0nVlsxQkGNDAdY0I0tafEiPvbOgLDG9rF0Ikz
+         OGIHV6hFJxFgA==
+Subject: Re: [PATCHv3 05/11] videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+ <20200226111529.180197-6-senozhatsky@chromium.org>
+ <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
+ <20200228013820.GM122464@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5c397f03-ffcf-6686-aa43-393771533cae@xs4all.nl>
+Date:   Fri, 28 Feb 2020 09:49:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200228013820.GM122464@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCZ8fdqRORihu3OlQ+xwgbnYHeKPsvVDiLHQq4CndIffoZpwHJ0TKhFJC/jwAxNXlFw2u6+0jcqJueM/SDquwg5BRE63Q1Wi3hjO7wt5u7kNBrRbz0Gj
+ OitMr8D9ICHLPjUM8z9bTXWc1j5Qv/YKyIiX+o+Kg8/C0wXKczOutsUrPaWlA65F+cYzWz2aJX0VXgSPpKhJdKo/Sko+yyQjGPLAHQ7YBCoJYHPEjYRjFtbx
+ qacTQm/EkuglMOXlB0pEqNC0Q/53qftgzlWm8nhOR3bzBlZ9Vd8UkhmeN0hUcCydW04xOqgMi/7K/lbXSkgyCCBU6BgWsiB2S3GzeZ3O3j0qmqTMJMU+uz/l
+ 9YOTeSASxfjWNu1P+sVh+KNO5Cr7sVdcyqjXLOKpGd/H9LnZc7qcw794uuCoNO3aZPpdds7+049cRfPfkRLU8Ok33MysftB+u/ItA3pf+Jgw3RwPbmhu6ToE
+ aSNrl0R/H2FznS3JlJFVIRDZsTUaeQS82bVfvUFAbW+F3xskpfQth5ggENxD9f3oViUQhLMEmeQaznf0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-these flags if check slave addr valid.
+On 2/28/20 2:38 AM, Sergey Senozhatsky wrote:
+> On (20/02/27 13:36), Hans Verkuil wrote:
+>>> diff --git a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+>>> index bd08e4f77ae4..6a8a4d5de2f1 100644
+>>> --- a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+>>> +++ b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+>>> @@ -121,7 +121,13 @@ than the number requested.
+>>>  	other changes, then set ``count`` to 0, ``memory`` to
+>>>  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
+>>>      * - __u32
+>>> -      - ``reserved``\ [7]
+>>> +      - ``flags``
+>>> +      - Specifies additional buffer management attributes.
+>>> +	See :ref:`memory-flags`. Old drivers and applications must set it to
+>>> +	zero.
+>>
+>> Drop the last sentence, it's not relevant.
+> 
+> OK.
+> 
+>>> +
+>>> +    * - __u32
+>>> +      - ``reserved``\ [6]
+>>>        - A place holder for future extensions. Drivers and applications
+>>>  	must set the array to zero.
+>>
+>> Old drivers and applications still think reserved is [7] and will zero this.
+> 
+> OK.
+> 
+> Hmm... If those apps use hard-coded size then we might have a problem.
+> If they use sizeof(reserved) then everything is OK. Shall we also have
+> a union here?
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- scripts/dtc/Makefile | 2 +-
- scripts/dtc/checks.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+No, apps will use sizeof(reserved).
 
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 3acbb410904c..c5e8d6a9e73c 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -9,7 +9,7 @@ dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
- dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- 
- # Source files need to get at the userspace version of libfdt_env.h to compile
--HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-+HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
- 
- ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
- ifneq ($(CHECK_DTBS),)
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 756f0fa9203f..17c9ed4137b5 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -3,6 +3,7 @@
-  * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-  */
- 
-+#include <linux/bits.h>
- #include "dtc.h"
- #include "srcpos.h"
- 
-@@ -17,6 +18,9 @@
- #define TRACE(c, fmt, ...)	do { } while (0)
- #endif
- 
-+#define I2C_TEN_BIT_ADDRESS    BIT(31)
-+#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-+
- enum checkstatus {
- 	UNCHECKED = 0,
- 	PREREQ,
-@@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 
- 	for (len = prop->val.len; len > 0; len -= 4) {
- 		reg = fdt32_to_cpu(*(cells++));
-+		reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
- 		if (reg > 0x3ff)
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
- 				  reg);
--- 
-2.17.1
+Regards,
+
+	Hans
+
+> 
+>>> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+>>> index 917df6fb6486..e52cc4401fba 100644
+>>> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+>>> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+>>> @@ -112,10 +112,19 @@ aborting or finishing any DMA in progress, an implicit
+>>>  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
+>>>  	free any previously allocated buffers, so this is typically something
+>>>  	that will be done at the start of the application.
+>>> -    * - __u32
+>>> +    * - union
+>>> +      - (anonymous)
+>>
+>> Anonymous unions are formatted a bit differently (I made a very recent patch
+>> that unified the union formatting in the v4l docs). See e.g.
+>> Documentation/media/uapi/v4l/vidioc-g-ext-ctrls.rst.
+> 
+> OK, will take a look.
+> 
+> 	-ss
+> 
 
