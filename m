@@ -2,258 +2,95 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E09C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08C9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F09124677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51A324677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7UIGnMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgB1T5V (ORCPT
+        id S1726845AbgB1UG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:57:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37544 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1T5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:57:21 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7F7DBAC58;
-        Fri, 28 Feb 2020 19:57:17 +0000 (UTC)
-Message-ID: <d19470274ef0dc8198fab35b039edb68a02f0358.camel@suse.de>
-Subject: Re: [PATCH 07/89] clk: bcm: rpi: Allow the driver to be probed by DT
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Fri, 28 Feb 2020 20:57:13 +0100
-In-Reply-To: <20200226150113.oqymkr6h2cxs2uia@gilmour.lan>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <c358081207dcf4f320a6b7e2932f0d5365bf3242.1582533919.git-series.maxime@cerno.tech>
-         <71cd7b35af81ee91c3b4dc5e7c05760ecd590c5d.camel@suse.de>
-         <20200226150113.oqymkr6h2cxs2uia@gilmour.lan>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1Cpbyod9TIcXBG/YDz/T"
-User-Agent: Evolution 3.34.4 
+        Fri, 28 Feb 2020 15:06:26 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34068 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1UG0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 15:06:26 -0500
+Received: by mail-io1-f68.google.com with SMTP id z190so4842494iof.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 12:06:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9FcW1voX9EhPE46eVtQa2VVMkG6mrKANb8mimT+XRFA=;
+        b=f7UIGnMnit6jiZvWsov3w1KlTgsnfz63NDgQI+fBGQRQ5fuwghmhkTmDEmIQdvLUXG
+         e8ygGcmMkmb2Bfrk59utmqNvEdnZelvqhsihhDyzuvltcE7LftelH7b5lDdlwQRkPMXj
+         +m3qaegMoJdsKjQb6qFEkUPGpjKDyqG+w2eTcurgzcCWzQZ88nMMatJZwS7jfDd4sGJ8
+         82tn2AETDo3hXf+xmBQMFFfkKxisxsvaOSPrXJngHyMceO6oRJbROCcQAGW8X0s9a1t+
+         LfEdMEElGow6knzeGS3Vss0BlA6tsy8IjBurKbL7D0z2qJxu8TXX8JGb9Nz7E9sJ/7yO
+         dOxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9FcW1voX9EhPE46eVtQa2VVMkG6mrKANb8mimT+XRFA=;
+        b=G46BQsSazEudvBLp6Ny15TsRCwc8ndz+SVya/4bZ/+dmIFTbz6otqmcDedOdyfHyI8
+         DYIQGFnLLlaeX2W8H4dn4fiX58S7zACac0U9O+R2Hu/XHGfdNb7F8t5/gfpFyDhmOCad
+         yCyBS7kam1VQDy0vI45r8IxvskR/QXwhGpBAzeXnsv0aO+p1ANkijf2xLQfwAfMTAuOy
+         6RwNga8UtPSqTZUILrAHrsw//+wmCNQA8g7J9KYmhrxFd9PGRi8QjRb+UuDNs5kxoATN
+         dXOGH3MuJ1Xnh51TZQtP9I+LQDmh5+R/Takexz+EQyr+OIOJdM4+g8YWidW9I5qX4b1U
+         hy2g==
+X-Gm-Message-State: APjAAAVtc/22x00Bif3sSu1Vk//UMs2FYzH37OuC65Myd/+YflsxHx+Y
+        42b5eRNvSrzv4Q4macqeMq2FHA7QPJBG78rEu1cg
+X-Google-Smtp-Source: APXvYqwPZa0d71u30Kf1SA/yD/STyc7D3zImEq2Tyj/aO0q4r6nhjFwiLmSEAOiKRPDWHvm2WqUr2GOtIhj8JETimNo=
+X-Received: by 2002:a02:7fd0:: with SMTP id r199mr4842341jac.126.1582920385484;
+ Fri, 28 Feb 2020 12:06:25 -0800 (PST)
 MIME-Version: 1.0
+References: <20200227132826.195669-1-brgerst@gmail.com> <20200227132826.195669-7-brgerst@gmail.com>
+ <CALCETrW=R-tanwBwX9vCsnUiRdHooPq59uDVRBfwiOpC0MzRYQ@mail.gmail.com>
+In-Reply-To: <CALCETrW=R-tanwBwX9vCsnUiRdHooPq59uDVRBfwiOpC0MzRYQ@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Fri, 28 Feb 2020 15:06:14 -0500
+Message-ID: <CAMzpN2j7hO6vpopjc8po+v-9u3mmQ5Z_ZefVai3pJeV823_7Uw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] x86-32: Enable syscall wrappers
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 28, 2020 at 2:01 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Thu, Feb 27, 2020 at 5:28 AM Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > Enable pt_regs based syscalls for 32-bit.  This makes the 32-bit native
+> > kernel consistent with the 64-bit kernel, and improves the syscall
+> > interface by not needing to push all 6 potential arguments onto the stack.
+>
+> Was the change to the table mechanically generated or mechanically
+> verified?  If so, how?
 
---=-1Cpbyod9TIcXBG/YDz/T
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It was done by hand, but I can look into writing a script to verify it.
 
-Hi Maxime,
+> After this goes in, I should dust off my code to get rid of all the
+> __abi crud in the tables.  I never quite got it working well enough,
+> but your series should help.
 
-On Wed, 2020-02-26 at 16:01 +0100, Maxime Ripard wrote:
+That would be nice.  After my patches, everything has the ABI prefix
+to the functions.
 
-[...]
-
-> This was actually a shameless bait to start that discussion, so I'm
-> glad it worked ;)
-
-:)
-
-[...]
-
-> > - Some of those fw managed clocks you're creating have their mmio
-> > counterpart
-> >   being registered by clk-bcm238. IMO either register one or the other,
-> > giving
-> >   precedence to the mmio counterpart. Note that for pllb, we deleted th=
-e
-> >   relevant code from clk-bcm2385.
->=20
-> Indeed, and it's really that part of the discussion I wanted to
-> start. For some reason, it looks like a good chunk of those clocks are
-> non-functional at the moment (they all report 0).
-
-Yes, although they should be alright. I think it's just a matter of passing=
- the
-right flags to the clk framework (disable caching and so on), but never fou=
-nd
-the time to investigate further.
-
-> If we're going to
-> use the firmware clocks as I did here, we'd have to modify most of the
-> device clocks used so far (UART, especially) to derive from the core
-> clock. I wasn't really sure of the implications though, since it's my fir=
-st
-> experience with the RPi clock tree.
-
-That's something I'm confused about. I played around with your code and the=
- HSM
-clock changes seem to be completely unrelated to the VPU clock. Actually it
-seems it's derived from 'plld_per' (here Florian can maybe contradict me). =
-I
-found out by feeding the mmio HSM clock to your driver, which actually seem=
-ed
-to work (albeit maybe just out of luck since the FW already set up everythi=
-ng).
-
-Bare in mind, we disable turbo mode upstream so as for the firmware not to
-change the VPU frequencies on par with CPU changes (controlled by a special=
- bit
-in the CPU clock mailbox property). So, if I'm not wrong, this simplifies
-things. As we don't have to worry about re-clocking all peripherals with ev=
-ery
-resolution change.
-
-This even opens up another question. Which clocks is the firmware interface
-monitoring for DVFS? If it's just the VPU and CPU we could be over-complica=
-ting
-things here, and MMIO clks could be an option, isn't it?
-
-On the subject of re-clocking, I had a word with the clk maintainers on how=
- to
-properly implement it, see the two last paragraphs here if curious:
-https://www.spinics.net/lists/linux-clk/msg36937.html
-
-> > - The same way we were able to map the fw CPU clock into the clk tree
-> >   (pllb/pllb_arm) there are no reasons we shouldn't be able to do the s=
-ame
-> > for
-> >   the VPU clocks. It's way nicer and less opaque to users (this being a
-> >   learning platform adds to the argument).
->=20
-> This would make the Linux clock tree match the one in hardware, which
-> would indeed be more readable to a beginner, but I see three main
-> drawbacks with this:
->=20
->   - The parent / child relationship is already encoded in the firmware
->     discovery mechanism. It's not used yet by the driver, because the
->     firmware reports all of them as root clocks, but that's pretty
->     easy to fix.
-
-Had a look at this, they all return root as their parent. Which is somewhat
-true from the fw interface perspective (only leaves are represented), but n=
-ot
-too endearing.
-
->   - It would make the code far more complicated and confusing than it
->     could, especially to beginners. And as far as I know, only the RPi
->     is doing that, while pretty much all the other platforms either
->     have the clock tree entirely defined, or rely on the firmware, but
->     don't have an hybrid. So they would learn something that cannot
->     really be applied to anywhere else.
-
-Fair enough. Still, for now, I think I prefer a hybrid clk tree approach.
-
->   - I have no idea what the clock tree is supposed to look like :)
-
-I don't have access to the official clock tree either. The closest we have =
-is
-whatever the mmio clk driver exposes.
-
-> > - On top of that, having a special case for the CPU clock registration =
-is
-> >   nasty. Lets settle for one solution and make everyone follow it.
->=20
-> It seemed to me that the CPU clock had a factor between the actual CPU
-> frequency and its clock? If not, then yeah we should definitely get
-> rid of it.
-
-Yes, IIRC, there is a factor because the CPU clock firmware interface actua=
-lly
-controls the underlying PLL frequency which is then divided by 2 before
-reaching the CPU. Which kind of breaks the FW interface design if you ask
-me (alongside this turbo mode thing).
-
-> > - I don't see what's so bad about creating clock lookups. IIUC there ar=
-e
-> > only
-> >   two clocks that need this special handling CPU & HDMI, It's manageabl=
-e.
-> > You
-> >   don't even have to mess with the consumer driver, if there was ever t=
-o be
-> > a
-> >   dt provided mmio option to this clock.
->=20
-> V3D needs one too, and I might have missed a bunch of them in that
-> series given how the current debugging of the remaining issues turn
-> out to be.
-
-Would be nice to see if V3D is also affected by DVFS, and the rest of clock=
-s
-for that matter.
-
-> And clk_lookups are local to devices, so you need to factor that by the
-> number of devices you have. Sure, it works, but it feels to me like that'=
-s
-> going to be an issue pretty fast, especially with the lookups on the way =
-out?
-
-I see your point, TBH I don't mind moving it into the device-tree if things=
- are
-going to get nasty.
-
-
-> > >  drivers/clk/bcm/clk-raspberrypi.c | 11 ++++++++---
-> > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
-> > > raspberrypi.c
-> > > index 1654fd0eedc9..94870234824c 100644
-> > > --- a/drivers/clk/bcm/clk-raspberrypi.c
-> > > +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> > > @@ -255,15 +255,13 @@ static int raspberrypi_clk_probe(struct
-> > > platform_device
-> > > *pdev)
-> > >  	struct raspberrypi_clk *rpi;
-> > >  	int ret;
-> > >=20
-> > > -	firmware_node =3D of_find_compatible_node(NULL, NULL,
-> > > -					"raspberrypi,bcm2835-firmware");
-> > > +	firmware_node =3D of_parse_phandle(dev->of_node, "raspberrypi,firmw=
-are",
-> > > 0);
-> >=20
-> > There is no such phandle in the upstream device tree. Maybe this was ai=
-med
-> > at
-> > the downstream dt?
->=20
-> raspberrypi,firmware is the property, it points to the /soc/firmware
-> node that is defined in bcm2835-rpi.dtsi
-
-Yes, my bad. On that topic, I kind of like Robh's suggestion of making this
-driver a child of the firmware node (see an example in
-input/touchscreen/raspberrypi-ts.c).
-
-Regards,
-Nicolas
-
-
---=-1Cpbyod9TIcXBG/YDz/T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5ZcJkACgkQlfZmHno8
-x/7qkAgAnKf47HcMZjcr44eDMhGGEgNotW7Ypk7We9YIl6H3luwT8iFCQWn08AOs
-cZAxa9p+UGEF4FOmETJxQNIkykv3W4wvIyjPk5jEe2SwvAX+kv9S8JpQkB9ynSdu
-aLIBA8DwLwsr5BilidRIXNzm8sozE4jvpTtQU6wgqLkvShw5qvp4K2Gjon0TwPT3
-mToCPqtHyto6DHT/Dc8TpsMxELqPNkl19E5812GOIIs9FAo0yx6hT2ukFMuMx37p
-uHQBolswmSqnknHBzfjs+gin1FQXUKxgmc7rNkc1ctoYP2hHR+Lz2vV5bHVx7FQE
-VVi2TUJ1wO4IpudaNWJbsfgKP/Su2g==
-=dI+Q
------END PGP SIGNATURE-----
-
---=-1Cpbyod9TIcXBG/YDz/T--
-
+--
+Brian Gerst
