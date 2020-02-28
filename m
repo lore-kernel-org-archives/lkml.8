@@ -2,107 +2,117 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA3AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D513C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B944246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12944246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x57eq40q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjGi9oKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgB1JzS (ORCPT
+        id S1726838AbgB1J4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:55:18 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46234 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgB1JzG (ORCPT
+        Fri, 28 Feb 2020 04:56:09 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50758 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgB1J4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:55:06 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sqIx094304;
-        Fri, 28 Feb 2020 03:54:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582883692;
-        bh=FGTSQLyt4Rs2yRXyN5TRTiV34kGpB4c6H54YyVHcPuk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=x57eq40qjAekJ6El4rdjfJeVUmDtQv0w0c3pspfNGd+bu64ps3CvEcSlM7WDiU/33
-         OnAokfC7EFfmOAiCOdWclClLgunaNOf0yRNPKQ86jF9Gxtsgb3KeaOegVmkKCOOKIc
-         fhHKxtBxl5zHOYv9mxuEQ6+HOIaaPTiiEtzAvq9Q=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9sqd1026108
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 03:54:52 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 03:54:52 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 03:54:52 -0600
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sbB6125348;
-        Fri, 28 Feb 2020 03:54:49 -0600
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH v2 3/5] clocksource: timer-ti-dm: Do not update counter on updating the period
-Date:   Fri, 28 Feb 2020 15:23:44 +0530
-Message-ID: <20200228095346.32177-4-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200228095346.32177-1-lokeshvutla@ti.com>
-References: <20200228095346.32177-1-lokeshvutla@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 28 Feb 2020 04:56:08 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so2543118wmb.0;
+        Fri, 28 Feb 2020 01:56:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=zKGXK9SAs0Ecacz7HFCrkRE8+zApqJ5J3A2oMtz1fqU=;
+        b=AjGi9oKXYefDfw5yebzDzw4qIkTe3S/U2jkj5sanwnGoPZKDcclQeuZ+7tC2KDV73Z
+         x2M0soNYFSdHwsQNzRbtFt+ukkVKkkqKGo/wxqaze688veIAJLqslmFLLwZ6nxm7IjVZ
+         w34vMJLgBC5R9ESLI35r8CT2b7X5PfnJyq1L7G1VZvgN7tXI6sLOaK5aayN/mfKZyVoy
+         XHCNIHcBfMHqbqUISLmm0aBO/e80qaEKZvyuOuezzy2KmdVhcKPkj/IRVRP2t+5ClFV6
+         PX7vqfHU2pI6SWmbrbAXQRp6fYmcTtQb0USv32sArRPGt/S9BVPyve4GpULxers20YS/
+         P1cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=zKGXK9SAs0Ecacz7HFCrkRE8+zApqJ5J3A2oMtz1fqU=;
+        b=s+GGq6qVcSCY/Q55VxrRWarLJ+ZvzQWcDENL1x0tJvgaK5SfAZc+OfzFqy0yNG9RYm
+         ACqejSY3jO0+2a2LijvUyxpwaMQP3mI/ggZVUxmp4s8eM6yIlsFcXqMwwXgJG2/i16TF
+         lZzwCGdzZupp/yBvKE21WK3mimde1CTFXAzrwhWPbd7BHXsNFA0MLeXJ5N7A4HjiQgbL
+         4sDMGZcLPGTeyDTj+zo3Yw9iJPPVbkaAzsACpFi/X6CelDyq5M9E5XxdbKr1vpaHv8YX
+         ZlzzX8bLNUz3rYIMCtDm1jkGaGZISc6eiKZk4vSKh4tyVW/3sznD6h6eeeOO/kG56Aee
+         aW+w==
+X-Gm-Message-State: APjAAAV4lJZ+tRAeQzj/4ZFZsBPLN4pCmY8OpGras2N1AkW7NEX9pR30
+        nAfXDwq2+KtGOHmwxrCsWH/XnE/A
+X-Google-Smtp-Source: APXvYqxwIh2KTYZXXyArYgBQzV4t5qeE+7xhHbRZR6CI30Br31D4xn9E18Gc7TX0/GIk1PDqBEnUIQ==
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr4150009wmi.116.1582883766312;
+        Fri, 28 Feb 2020 01:56:06 -0800 (PST)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id t3sm11664565wrx.38.2020.02.28.01.56.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 01:56:05 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     hch@lst.de
+Subject: [PATCH] KVM: allow disabling -Werror
+Date:   Fri, 28 Feb 2020 10:56:03 +0100
+Message-Id: <1582883764-26125-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write to trigger register(OMAP_TIMER_TRIGGER_REG) will load the value
-in Load register(OMAP_TIMER_LOAD_REG) into Counter register
-(OMAP_TIMER_COUNTER_REG).
+Restrict -Werror to well-tested configurations and allow disabling it
+via Kconfig.
 
-omap_dm_timer_set_load() writes into trigger register every time load
-register is updated. When timer is configured in pwm mode, this causes
-disruption in current pwm cycle, which is not expected especially when
-pwm is used as PPS signal for synchronized PTP clocks. So do not write
-into trigger register on updating the period.
-
-Tested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Reported-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/clocksource/timer-ti-dm.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/kvm/Kconfig  | 13 +++++++++++++
+ arch/x86/kvm/Makefile |  2 +-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 9606103b92e0..4c32ee41339a 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -544,7 +544,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 991019d5eee1..1bb4927030af 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -59,6 +59,19 @@ config KVM
  
--	omap_dm_timer_write_reg(timer, OMAP_TIMER_TRIGGER_REG, 0);
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
+ 	  If unsure, say N.
+ 
++config KVM_WERROR
++	bool "Compile KVM with -Werror"
++	# KASAN may cause the build to fail due to larger frames
++	default y if X86_64 && !KASAN
++	# We use the dependency on !COMPILE_TEST to not be enabled
++	# blindly in allmodconfig or allyesconfig configurations
++	depends on (X86_64 && !KASAN) || !COMPILE_TEST
++	depends on EXPERT
++	help
++	  Add -Werror to the build flags for (and only for) i915.ko.
++
++	  If in doubt, say "N".
++
+ config KVM_INTEL
+ 	tristate "KVM for Intel (and compatible) processors support"
+ 	depends on KVM && IA32_FEAT_CTL
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index 4654e97a05cc..e553f0fdd87d 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ ccflags-y += -Iarch/x86/kvm
+-ccflags-y += -Werror
++ccflags-$(CONFIG_KVM_WERROR) += -Werror
+ 
+ KVM := ../../../virt/kvm
+ 
 -- 
-2.23.0
+1.8.3.1
 
