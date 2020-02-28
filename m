@@ -2,145 +2,106 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2988C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D557C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DAA246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240E0246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwo5krf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgB1Pw6 (ORCPT
+        id S1727144AbgB1PyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:52:58 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:54444 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgB1Pw6 (ORCPT
+        Fri, 28 Feb 2020 10:54:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56020 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgB1PyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:52:58 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j7hwT-0008I1-Db; Fri, 28 Feb 2020 15:52:45 +0000
-Date:   Fri, 28 Feb 2020 16:52:44 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com>
- <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com>
- <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1582644535.3361.8.camel@HansenPartnership.com>
+        Fri, 28 Feb 2020 10:54:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so3665195wmj.5;
+        Fri, 28 Feb 2020 07:54:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UnHHbDAdvtO8h9pXqYzVSvwO5cpEfaizem81sO0+IbY=;
+        b=mwo5krf+TP5YBV5kCqHdALropR3rGAaQPQsSeAaFDvT2KfJzzpDpld41PsWOUPu9yR
+         SfSsCCsqYezsVUy3MiyzNU/Bnv94YNEc7xPAbPYPs/ltISG4s48rOBM8Scuv7C0/X7Sl
+         301ht93Ts+gu42aRFMDDqMLy5R6CcATxiv5ZM45/A3OunnWT1z0oajeks3rZWD758uJx
+         4P0u/yGI/UKCdGERRsTcz0nA8T6lDz17A5YvFtVUqPbnxG2yVske1fPD0MHSvsuD+ph7
+         MqFPm1AYZ7RAvPVoCGbVfkc6UWR61hqWTALElFQW9P+adRA/er6teHLTFkpo6EzFJrPX
+         oPpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UnHHbDAdvtO8h9pXqYzVSvwO5cpEfaizem81sO0+IbY=;
+        b=WHlO+ocCCdTTP/upibjZe3hEgTvv5wU96bOL4OPTPFAqFjSizUDnyoPXmZLwuW6sdT
+         YYqM3N6zrEhtK+yy3eqKcC88+wHAGgrTKdkzZivd3P2gz+Cn5VOAb3dwY7w9nt0Xssah
+         GfMPLe0U7gx5D9A7+IkqgbroRt0l/gauLRu5hJfkihAROePUrn2hxL5OhfFQ+gj7VqvF
+         xia7wxBMM95W6IJQNvY98VCa4Opgdfch5CdIGX/N7Ht03D2KzSKdBwxzdDmd4Wgtcph/
+         G6nmBwLgAuX54uU4PPoj6AsNA4kqeSbIgzdUG5qPCCH/2fweXsrnjGa/NdCASnaTXOfA
+         zy/Q==
+X-Gm-Message-State: APjAAAUe16pR6Xt0YtyU0WfAVCMX9XEzmilr2atEYx7pimQ+cXxxZq/j
+        RX3603YVDc2sa96C70Q2r8A=
+X-Google-Smtp-Source: APXvYqy6MHSQi7PXS4Pw8FIuZnkKbkV4byY5sYhJHmJnRPExf678SmIF2GPxvBOpO9OP9PzhBQTIKg==
+X-Received: by 2002:a05:600c:414e:: with SMTP id h14mr5324321wmm.179.1582905242754;
+        Fri, 28 Feb 2020 07:54:02 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id m125sm2706605wmf.8.2020.02.28.07.54.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 07:54:02 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ARM: dts: rockchip: add sram to bus_intmem nodename for rv1108
+Date:   Fri, 28 Feb 2020 16:53:52 +0100
+Message-Id: <20200228155354.27206-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 07:28:55AM -0800, James Bottomley wrote:
-> On Tue, 2020-02-25 at 12:13 +0000, Steven Whitehouse wrote:
-> > Hi,
-> > 
-> > On 24/02/2020 15:28, Miklos Szeredi wrote:
-> > > On Mon, Feb 24, 2020 at 3:55 PM James Bottomley
-> > > <James.Bottomley@hansenpartnership.com> wrote:
-> > > 
-> > > > Once it's table driven, certainly a sysfs directory becomes
-> > > > possible. The problem with ST_DEV is filesystems like btrfs and
-> > > > xfs that may have multiple devices.
-> > > 
-> > > For XFS there's always  a single sb->s_dev though, that's what
-> > > st_dev will be set to on all files.
-> > > 
-> > > Btrfs subvolume is sort of a lightweight superblock, so basically
-> > > all such st_dev's are aliases of the same master superblock.  So
-> > > lookup of all subvolume st_dev's could result in referencing the
-> > > same underlying struct super_block (just like /proc/$PID will
-> > > reference the same underlying task group regardless of which of the
-> > > task group member's PID is used).
-> > > 
-> > > Having this info in sysfs would spare us a number of issues that a
-> > > set of new syscalls would bring.  The question is, would that be
-> > > enough, or is there a reason that sysfs can't be used to present
-> > > the various filesystem related information that fsinfo is supposed
-> > > to present?
-> > > 
-> > > Thanks,
-> > > Miklos
-> > > 
-> > 
-> > We need a unique id for superblocks anyway. I had wondered about
-> > using s_dev some time back, but for the reasons mentioned earlier in
-> > this thread I think it might just land up being confusing and
-> > difficult to manage. While fake s_devs are created for sbs that don't
-> > have a device, I can't help thinking that something closer to
-> > ifindex, but for superblocks, is needed here. That would avoid the
-> > issue of which device number to use.
-> > 
-> > In fact we need that anyway for the notifications, since without
-> > that  there is a race that can lead to missing remounts of the same
-> > device, in  case a umount/mount pair is missed due to an overrun, and
-> > then fsinfo returns the same device as before, with potentially the
-> > same mount options too. So I think a unique id for a superblock is a
-> > generically useful feature, which would also allow for sensible sysfs
-> > directory naming, if required,
-> 
-> But would this be informative and useful for the user?  I'm sure we can
-> find a persistent id for a persistent superblock, but what about tmpfs
-> ... that's going to have to change with every reboot.  It's going to be
-> remarkably inconvenient if I want to get fsinfo on /run to have to keep
-> finding what the id is.
-> 
-> The other thing a file descriptor does that sysfs doesn't is that it
-> solves the information leak: if I'm in a mount namespace that has no
-> access to certain mounts, I can't fspick them and thus I can't see the
-> information.  By default, with sysfs I can.
+A test with the command below gives these errors:
 
-Difficult to figure out which part of the thread to reply too. :)
+arch/arm/boot/dts/rv1108-elgin-r1.dt.yaml:
+bus_intmem@10080000: $nodename:0: 'bus_intmem@10080000'
+does not match '^sram(@.*)?'
+arch/arm/boot/dts/rv1108-evb.dt.yaml:
+bus_intmem@10080000: $nodename:0: 'bus_intmem@10080000'
+does not match '^sram(@.*)?'
 
-sysfs strikes me as fundamentally misguided for this task.
+Fix this error by adding sram to the bus_intmem nodename
+in rv1108.dtsi.
 
-Init systems or any large-scale daemon will hate parsing things, there's
-that and parts of the reason why mountinfo sucks is because of parsing a
-possibly a potentially enormous file. Exposing information in sysfs will
-require parsing again one way or the other. I've been discussing these
-bottlenecks with Lennart quite a bit and reliable and performant mount
-notifications without needing to parse stuff is very high on the issue
-list. But even if that isn't an issue for some reason the namespace
-aspect is definitely something I'd consider a no-go.
-James has been poking at this a little already and I agree. More
-specifically, sysfs and proc already are a security nightmare for
-namespace-aware workloads and require special care. Not leaking
-information in any way is a difficult task. I mean, over the last two
-years I sent quite a lot of patches to the networking-namespace aware
-part of sysfs alone either fixing information leaks, or making other
-parts namespace aware that weren't and were causing issues (There's
-another large-ish series sitting in Dave's tree right now.). And tbh,
-network namespacing in sysfs is imho trivial compared to what we would
-need to do to handle mount namespacing and especially mount propagation.
-fsinfo() is way cleaner and ultimately simpler approach. We very much
-want it file-descriptor based. The mount api opens up the road to secure
-and _delegatable_ querying of filesystem information.
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
 
-Christian
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rv1108.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 9bb109d66..c3621b3e6 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -102,7 +102,7 @@
+ 		};
+ 	};
+ 
+-	bus_intmem@10080000 {
++	bus_intmem: sram@10080000 {
+ 		compatible = "mmio-sram";
+ 		reg = <0x10080000 0x2000>;
+ 		#address-cells = <1>;
+-- 
+2.11.0
+
