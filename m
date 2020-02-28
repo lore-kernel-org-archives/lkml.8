@@ -2,94 +2,116 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D95C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90076C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9CB2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66398246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgB1Lxp (ORCPT
+        id S1726602AbgB1LyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:53:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:37022 "EHLO foss.arm.com"
+        Fri, 28 Feb 2020 06:54:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34700 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgB1Lxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:53:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF1934B2;
-        Fri, 28 Feb 2020 03:53:44 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36A473F7B4;
-        Fri, 28 Feb 2020 03:53:43 -0800 (PST)
-Date:   Fri, 28 Feb 2020 11:53:40 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Olof Johansson <olof@lixom.net>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, SoC Team <soc@kernel.org>,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 13/13] MAINTAINERS: Update Calxeda Highbank
- maintainership
-Message-ID: <20200228115340.26495693@donnerap.cambridge.arm.com>
-In-Reply-To: <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
-        <20200227182210.89512-14-andre.przywara@arm.com>
-        <20200227223523.GH26010@bogus>
-        <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S1725877AbgB1LyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:54:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 247C8AFF0;
+        Fri, 28 Feb 2020 11:54:07 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 1/2] vt: selection, push console lock down
+Date:   Fri, 28 Feb 2020 12:54:05 +0100
+Message-Id: <20200228115406.5735-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 16:39:44 -0800
-Olof Johansson <olof@lixom.net> wrote:
+We need to nest the console lock in sel_lock, so we have to push it down
+a bit. Fortunately, the callers of set_selection_* just lock the console
+lock around the function call. So moving it down is easy.
 
-> On Thu, Feb 27, 2020 at 2:35 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Feb 27, 2020 at 06:22:10PM +0000, Andre Przywara wrote:  
-> > > Rob sees little point in maintaining the Calxeda architecture (early ARM
-> > > 32-bit server) anymore.
-> > > Since I have a machine sitting under my desk, change the maintainership
-> > > to not lose support for that platform.
-> > >
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > ---
-> > >  MAINTAINERS | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)  
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > Send a PR to arm-soc folks for this and the dts changes. I'll pickup the
-> > bindings.  
-> 
-> Given that it's likely to be a low volume of code, we can also just
-> apply patches directly in this case (if it's easier than setting up a
-> kernel.org account, etc). Andre, just let us know your preference.
+In the next patch, we switch the order.
 
-I am happy (and more familiar) with just sending a final series via email. Especially if you insist on pulling from kernel.org git trees only, that is probably the only way for now.
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/staging/speakup/selection.c |  2 --
+ drivers/tty/vt/selection.c          | 13 ++++++++++++-
+ drivers/tty/vt/vt.c                 |  2 --
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-To gain more independence from "corporate email" I am looking forward to setting up a kernel.org account and sending proper PRs in the future, but indeed this is probably overkill given the expected volume of patches.
-
-Let me just run some test with the final version of the DT, then I will send a v3.
-
-Cheers,
-Andre
-
+diff --git a/drivers/staging/speakup/selection.c b/drivers/staging/speakup/selection.c
+index a8b4d0c5ab7e..032f3264fba1 100644
+--- a/drivers/staging/speakup/selection.c
++++ b/drivers/staging/speakup/selection.c
+@@ -51,9 +51,7 @@ static void __speakup_set_selection(struct work_struct *work)
+ 		goto unref;
+ 	}
+ 
+-	console_lock();
+ 	set_selection_kernel(&sel, tty);
+-	console_unlock();
+ 
+ unref:
+ 	tty_kref_put(tty);
+diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+index 714992693974..5b0b897396eb 100644
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -186,7 +186,7 @@ int set_selection_user(const struct tiocl_selection __user *sel,
+ 	return set_selection_kernel(&v, tty);
+ }
+ 
+-int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
++static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+ {
+ 	struct vc_data *vc = vc_cons[fg_console].d;
+ 	int new_sel_start, new_sel_end, spc;
+@@ -348,6 +348,17 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+ 	mutex_unlock(&sel_lock);
+ 	return ret;
+ }
++
++int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
++{
++	int ret;
++
++	console_lock();
++	ret = __set_selection_kernel(v, tty);
++	console_unlock();
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(set_selection_kernel);
+ 
+ /* Insert the contents of the selection buffer into the
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 8fa059ec6cc8..c4d75edde923 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3047,10 +3047,8 @@ int tioclinux(struct tty_struct *tty, unsigned long arg)
+ 	switch (type)
+ 	{
+ 		case TIOCL_SETSEL:
+-			console_lock();
+ 			ret = set_selection_user((struct tiocl_selection
+ 						 __user *)(p+1), tty);
+-			console_unlock();
+ 			break;
+ 		case TIOCL_PASTESEL:
+ 			ret = paste_selection(tty);
+-- 
+2.25.1
 
