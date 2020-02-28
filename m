@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67494C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25516C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5B22064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F134B2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aP2Yl7o9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Nguqw9Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbgB1QBS (ORCPT
+        id S1727407AbgB1QBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:01:18 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:27198 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgB1QBD (ORCPT
+        Fri, 28 Feb 2020 11:01:22 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:31398 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgB1QBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 11:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905660;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905661;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Lg2vjJyPeK3SdOkL22G/V755a2Cx89sCodyhANXZ7FE=;
-        b=aP2Yl7o9i8jYXO4vql6HpjmZAO9iOUuwttOuSkFp6OZxHk3DTa1Hnb57M4Ut7AFayS
-        jCKmhdUbGuLrLO1jSNUrGBfTsHnK2KYYdtxkcUysPWhqzUYFfC0L95A9T0HAIIjuodA9
-        DgxRR34Yd+uZRBuHV0Gpygk14hKljyy7Fs7CGww46STL1+Q4Fe33WRR/tgMT5d+HDwRp
-        R7vxZ3LPPcKOtrBV0m8lFqo1TzNV9xUzVFyN0iYSaKigatqAqX8URRyO2mjJ0zVDW2Y3
-        dmjUHBzx9WBhBYVq9RWdKkc4sJBLJYoAET14jVdnHmMVOwo3LUZ5kJ937aPMRcGCiKBE
-        GyYg==
+        bh=ex+tP/S3jJM/1n8mzovxtL99ooZIHpji+z8Ck9o3ixM=;
+        b=Nguqw9TaMW/CZKCIE7/9KPe3sb3L0LODHrgZBYqQod2YID6ItUF9FhlCk3VnI7U0Qj
+        DTBfmn/q3Syyw0UMpQRLJ0fJ3wROn477GX5I8aFGdyw8bPyHFl5p11XQqiywIJsKlHmA
+        /8MVT59GtrwiIzrniBnf0nxUlAni5wCk6w+fstM81YAFEKDT/u2kYkOYAxx1aJTeTWDz
+        0tLMMv0aD+YiPA69wBpCJtrDo+mPWpcyaqgwi57BgFZsE8SalULgTeyK/vw3T8BF2Wxj
+        pGfzeUr7PN3Ufm4oxAaPHSmk797UEbPn4BBMfDd8HOn7zA4P9UUGw55Qd5heBElhiZAH
+        ZGlA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SG0t1l5
+        with ESMTPSA id y0a02cw1SG0x1lH
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 17:00:55 +0100 (CET)
+        Fri, 28 Feb 2020 17:00:59 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
         Andreas Kemnade <andreas@kemnade.info>,
@@ -64,9 +64,9 @@ To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [PATCH v8 1/7] memory: jz4780_nemc: Only request IO memory the driver will use
-Date:   Fri, 28 Feb 2020 17:00:47 +0100
-Message-Id: <551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582905653.git.hns@goldelico.com>
+Subject: [PATCH v8 7/7] MIPS: DTS: CI20: make DM9000 Ethernet controller use NVMEM to find the default MAC address
+Date:   Fri, 28 Feb 2020 17:00:53 +0100
+Message-Id: <1250f496a1f0bd51e89e5a1ba7a3e92a5570b27a.1582905653.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1582905653.git.hns@goldelico.com>
 References: <cover.1582905653.git.hns@goldelico.com>
@@ -77,52 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+There is a unique MAC address programmed into the eFuses
+of the JZ4780 chip in the CI20 factory. By using this
+for initializing the DM9000 Ethernet controller, every
+CI20 board has an individual - but stable - MAC address
+and DHCP can assign stable IP addresses.
 
-The driver only uses the registers up to offset 0x54. Since the EFUSE
-registers are in the middle of the NEMC registers, we only request
-the registers we will use for now - that way the EFUSE driver can
-probe too.
-
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/memory/jz4780-nemc.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index b232ed279fc3..647267ea8c63 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -8,6 +8,7 @@
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..6dc1f9eeff00 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -355,6 +355,9 @@
  
- #include <linux/clk.h>
- #include <linux/init.h>
-+#include <linux/io.h>
- #include <linux/math64.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -288,7 +289,19 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	nemc->dev = dev;
+ 		interrupt-parent = <&gpe>;
+ 		interrupts = <19 4>;
++
++		nvmem-cells = <&eth0_addr>;
++		nvmem-cell-names = "mac-address";
+ 	};
+ };
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	nemc->base = devm_ioremap_resource(dev, res);
-+
-+	/*
-+	 * The driver only uses the registers up to offset 0x54. Since the EFUSE
-+	 * registers are in the middle of the NEMC registers, we only request
-+	 * the registers we will use for now - that way the EFUSE driver can
-+	 * probe too.
-+	 */
-+	if (!devm_request_mem_region(dev, res->start, 0x54, dev_name(dev))) {
-+		dev_err(dev, "unable to request I/O memory region\n");
-+		return -EBUSY;
-+	}
-+
-+	nemc->base = devm_ioremap(dev, res->start, resource_size(res));
- 	if (IS_ERR(nemc->base)) {
- 		dev_err(dev, "failed to get I/O memory\n");
- 		return PTR_ERR(nemc->base);
 -- 
 2.23.0
 
