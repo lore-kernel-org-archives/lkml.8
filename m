@@ -2,120 +2,138 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF42C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298D2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1ED2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CEB2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="foDq4EQ6"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="xMaZkTVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1QyI (ORCPT
+        id S1726940AbgB1Qyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:54:08 -0500
-Received: from mail-am6eur05on2119.outbound.protection.outlook.com ([40.107.22.119]:45504
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Fri, 28 Feb 2020 11:54:35 -0500
+Received: from mail-vi1eur05on2135.outbound.protection.outlook.com ([40.107.21.135]:2209
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725876AbgB1QyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:54:08 -0500
+        id S1725876AbgB1Qyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:54:35 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q3YjzOR5Q4INYx6cPpUt2hYc653bHzWJy6SERWNov/5M4HAa34zMZs2+u8MDk2Gdt+oIqV2Ne8WNVCIowg8OQLtb4nxkV8Q/7kLbvRiuVmK04yuKy4PTVv6porkV4Ot3m9/mrKmidKShPneqpXSEZFKuTA72WECpoTzrt3F6LsfJ1/Uq7wolc3qr7stlWjiz6kENepaw3cuP0RPKvP/NWaG/RFwaJ5oXGiOgXsrrXbii2CnbjYpAr8BQYO62FbXIaSbDsgtj3CKmD6S3/UGbwdE61bvIP+wh9Ooy7kgn4Bo+5Vo/Yn/QUC4Pvlhqd25RXULsflPiADMjOU9RpGvXPQ==
+ b=UZ7lWOdIzoBGSgWfCep+Pyz9zfgaEtIgYCg0LQuvpAkrdcMIuQxD7NVO4Oh35ZC+SQrgNJ4Veu8p575MoK0uSgcnr4FoIWk+y+MdMGydy8M9w+7HZ6As2iwzAvPZoJvAWHCUHEACfCFVWp4rMhwvdArnnIqM10RPEIqMj55mNx9OQDy0n9VUR5GxzHYqQcTuUrdZLTxTpCsuki0BElkvlmOl2yAuIjBfj9fqlZeZPsb9ptcoOwXFo3s+oGsAgwLstVX4VH0B9HM9X6zAhjfidajTQQtJ4UObb2bqZ0hdv7uzTNXKAmBdF7ZfFYiak/6Rgn9gIkE5ln6Qe/1AbFvSOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zm2Bt4HY0tGEGNq2Zl4Eg8vnRPkwX8HI7/6pzyn070I=;
- b=IfvMBNFkiTVOpi0TAuXQo6peXO24F7TDtV8mPudk04M4ycoWr86dS8v7uDPCjpNftMMjbx+70z9dbMD9MZW+2OL6HZWMVjjVr/NhnLCrpVvbnWm8Y9SGfWn/vglTk2rX8p5TM3WhXttK6L6jmkB8PJFciZnp4YDESf+t8PTVObzEyrWFJxAlwAZ6k8zlGBAhBqj4hNLHCdicj2IQ4bmUJCc/aUO+QJ9NclwEW4X0IBP1QFkDXY2Itw5dy39gX2jZZ2ZZkgunq3XdxNjwG9lmIh27wf1+npDZ5aIa903MHKtRDMsR/9fPh0RzUvc6Bua3GqlN8HgGFnNhMTdg4wB8xg==
+ bh=9mWbtpjrUBbL3PJKRNrOsqzQFjMuwjWJ1ZAs1tI8pCo=;
+ b=Ci1WN7FfQJtutpJNOqppZo6k0980akp6bLwG7Rt/S3iwdO8pt6R5J64IB143sumn0+lenCvUk+9pnJnltzLjedW01Q10ZvRs9G4E7V8v6L8/dv8W7P9hj3v0QqOewi2exO2ucr6vJ/64tCaRtJfg1xXcf3C1YHYWZoh38yCGYZC+zLk0BKeRyQMn8ux4irXC68wMQA7Wf7jrWuyeJWS/IhvZk7hyb++nAuVNxsYC9ufEPxcDekKdj4Vl5Z8C8+xfJjaEAyKu/iuJeUo2HZ5+GqbIPJ+TYp5bdEqLGoXvA2RUPC14FJm2tPfon17DqB4iGPJCLv9ZZ6x0+Y6Wzj7Djg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zm2Bt4HY0tGEGNq2Zl4Eg8vnRPkwX8HI7/6pzyn070I=;
- b=foDq4EQ6kRCp0+aKVKw+T16O4u8U/3uJyK9QSd47ODMekZWgHAmduiS11VJYsPz21bbXKodcpzOQF1vF6QahjgAnTY2qHfsE9ORs+k77zTh/fJC8Xz8PM2Q9tjDSzQp4poIviY1NI5jXLf+qxxom8BlRKlIg0GnQmZuJvzHFKqU=
-Received: from VI1PR05MB6845.eurprd05.prod.outlook.com (10.186.163.80) by
- VI1PR05MB6654.eurprd05.prod.outlook.com (10.141.128.20) with Microsoft SMTP
+ bh=9mWbtpjrUBbL3PJKRNrOsqzQFjMuwjWJ1ZAs1tI8pCo=;
+ b=xMaZkTVcvUpMCA7tLaolVHBEu+agCKwPJfbsxkkfqcZO8RGSsZIKRtCIXuqgkVBJclvqXGjKnroUJe+f57Cd1QElEoIaGXHmw2aI6HQfM4bXm5Y91HbIAEqcceaPmKyOkLma1JA5QUzMgGSKXUiMPwzUhuNiC8R/geGW5FQ772w=
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0016.EURP190.PROD.OUTLOOK.COM (10.172.13.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Fri, 28 Feb 2020 16:54:04 +0000
-Received: from VI1PR05MB6845.eurprd05.prod.outlook.com
- ([fe80::c13:1d07:fa02:6eeb]) by VI1PR05MB6845.eurprd05.prod.outlook.com
- ([fe80::c13:1d07:fa02:6eeb%7]) with mapi id 15.20.2772.018; Fri, 28 Feb 2020
- 16:54:04 +0000
-From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "igor.opaniuk@gmail.com" <igor.opaniuk@gmail.com>
-CC:     Max Krummenacher <max.krummenacher@toradex.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
- GPL-2.0
-Thread-Topic: [PATCH v1 4/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
- GPL-2.0
-Thread-Index: AQHV6zhuycY8bEapckKLdhHNGMkfl6gw2OwA
-Date:   Fri, 28 Feb 2020 16:54:04 +0000
-Message-ID: <5f38ae95378debf708924392c88a7723c1e702c4.camel@toradex.com>
-References: <1582565548-20627-1-git-send-email-igor.opaniuk@gmail.com>
-         <1582565548-20627-4-git-send-email-igor.opaniuk@gmail.com>
-In-Reply-To: <1582565548-20627-4-git-send-email-igor.opaniuk@gmail.com>
-Accept-Language: en-GB, en-US
+ 15.20.2750.21; Fri, 28 Feb 2020 16:54:32 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
+ 16:54:32 +0000
+Received: from plvision.eu (94.179.130.92) by AM5P194CA0016.EURP194.PROD.OUTLOOK.COM (2603:10a6:203:8f::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 16:54:31 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jiri Pirko <jiri@resnulli.us>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+Subject: Re: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
+ support
+Thread-Topic: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
+ support
+Thread-Index: AQHV6/jzb8NjbprnTkmsDy10O4uRHKgu45iAgAHz8YA=
+Date:   Fri, 28 Feb 2020 16:54:32 +0000
+Message-ID: <20200228165429.GB8409@plvision.eu>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-3-vadym.kochan@plvision.eu>
+ <20200227110507.GE26061@nanopsycho>
+In-Reply-To: <20200227110507.GE26061@nanopsycho>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5P194CA0016.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:203:8f::26) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=marcel.ziswiler@toradex.com; 
-x-originating-ip: [81.221.74.212]
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.179.130.92]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c4098016-0e53-4704-afb2-08d7bc6ed1b9
-x-ms-traffictypediagnostic: VI1PR05MB6654:
+x-ms-office365-filtering-correlation-id: f849a274-d66f-411b-b71c-08d7bc6ee246
+x-ms-traffictypediagnostic: VI1P190MB0016:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB6654D8C4ECE039A2C0533A42FBE80@VI1PR05MB6654.eurprd05.prod.outlook.com>
+x-microsoft-antispam-prvs: <VI1P190MB0016E81263E98C13F763925195E80@VI1P190MB0016.EURP190.PROD.OUTLOOK.COM>
 x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 0327618309
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39850400004)(396003)(346002)(376002)(136003)(199004)(189003)(91956017)(6512007)(26005)(8936002)(81156014)(186003)(4326008)(81166006)(6486002)(4744005)(86362001)(8676002)(66556008)(64756008)(44832011)(66946007)(54906003)(36756003)(6506007)(71200400001)(76116006)(316002)(66446008)(7416002)(2906002)(478600001)(5660300002)(110136005)(2616005)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB6654;H:VI1PR05MB6845.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39830400003)(376002)(346002)(396003)(199004)(189003)(16526019)(7696005)(5660300002)(186003)(71200400001)(44832011)(107886003)(4744005)(66946007)(66446008)(36756003)(66476007)(956004)(508600001)(316002)(64756008)(66556008)(33656002)(8886007)(2616005)(26005)(8676002)(81166006)(1076003)(86362001)(52116002)(4326008)(55016002)(54906003)(8936002)(6916009)(81156014)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0016;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: plvision.eu does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: e3cOF+XQ4wv7tnNlotAWX+Iug8xQQc/B4vvqALdgtmouaDC5kTwhXUyD037vG7M/oi8n3cZ6KfdMhinRrs2f/825aDroNawkZAgUWMoZj8KsXl2wC6tNaAoQ/1hW5b8M0PecQqcFTM9fqQ/qhx6enc/q6EsLDiNrXTAgAgc5/Q/QpDnrzRwmsLm8RMHIGA0CwcRHjpUaraPr+lh0D8S+krrD8E9e36eghn6M1y+QGEAXJqYYiaB3Z249e5GKYGb4Le2U8MbMHq5Z+/jE+d4uF2Jx0VlspnqICYDm2C6pjSvdGctXJzp76FzmOsO0jH7cFeDULFxWUC35G08FLAf+/iApJkxHh/jY4OG44x+OmcNkqatC88zz5zoEvnLD9t/wU77oAmNO295oelEu38ces9wQYmySqbzAqdUrOEH6t+ULp3r3lwKnsKAilbhpZJk4
-x-ms-exchange-antispam-messagedata: DIL6gTBQPwsuym67LPqjSCmmaeRiH0QEFTvS9zgrAG94gDeyPQyggyErgyu4rupcDXkflwTnD3G4lXJl4yV6XEjb00EYPs25IUyADIaTRZj1W57ttxAdvNZzd+9z1k2uQddP1490zsVkjqBIcMR5vg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D0B09B358ECF314782B19FAEAF1037AD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: aId2MRPjQRq085BYhUwTlxmQ1F/bWka9gzaj20gwUFdCzCtuGtmP1pubajODDjJXHFCMRY4O3ULHdmwB98vUyzYNqzDqX6M8p16m3VWSctPP3Qf6gav9rzLK7IkrRcctFi64kSGXGc0TaDdZSrZTOKzo4ynvuEHt4vhSimOmtjJKFwA8z4dA3fUqMa8yBoLRJnYmQTE+I0w0ziTg9X8cYpmLxWPdxRIqym62l/aTOJ8AY7PXXaMiwHpNd/UqEvOtEmZ9vHLTSpmaMEUu0jgXIITbNEjJ1KHQMMs50I5oO2koaktFaD6lJYwvGY39SUxaH4WWlimiZLF+EY/1cqDOgw5W0EpaOf9HXoJHpMeNCg0SEoaCfVHdxdT5/1QNc7zMRjruptboFLEtJNN1tUDZyzd4H9H49v5GYODeEOOLpL2iyrnutFvENzmvypxz2uce
+x-ms-exchange-antispam-messagedata: TQBvF2YPrsv9BVMEmBRmNx6aFBHIHooLATPMB+0b4vZgHCCHna/oRlHDfmq+yQTjjosXpwXHkpePthGE2nnL7aC0oiWlGo5exdErLdpqkHdK1Y26msH1eAhjJ9PkWi2HgTVLlHApy7NVMRXCtTpB2Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <155B807745CBF74DA758337C2107D515@EURP190.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4098016-0e53-4704-afb2-08d7bc6ed1b9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 16:54:04.5981
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f849a274-d66f-411b-b71c-08d7bc6ee246
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 16:54:32.7022
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Vs+v5shEPHo4K3FqyA0o1OcNYpGQg/RtkZRTu5JEMoqEeE3DH6EgS/mdYp/WWEclNDUPrrXWusKT1cMtibzdadGCTm9DcTDxCplb/4K6da8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6654
+X-MS-Exchange-CrossTenant-userprincipalname: 2WDJ3aKA+be5H6wkL1lDQR8g7QXaz/WGDa7nmrG+jT2E0uHoRcneZ13FDrudf5EVvmyWTGsNfO2q68EphcI2QWqcN9k2JS2HBiWxa8VrIO8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSWdvcg0KDQpPbiBNb24sIDIwMjAtMDItMjQgYXQgMTk6MzIgKzAyMDAsIElnb3IgT3Bhbml1
-ayB3cm90ZToNCj4gRnJvbTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+
-DQo+IA0KPiBTcGVjaWZ5IGV4cGxpY2l0bHkgdGhhdCBHUEwtMi4wIGxpY2Vuc2UgY2FuIGJlIHVz
-ZWQgYW5kIG5vdA0KPiBHUEwtMi4wKyAod2hpY2ggYWxzbyBpbmNsdWRlcyBuZXh0IGxlc3MgcGVy
-bWlzc2l2ZSB2ZXJzaW9ucyBvZiBHUEwpDQo+IGluIFRvcmFkZXggaS5NWDctYmFzZWQgU29NIGRl
-dmljZSB0cmVlcy4NCg0KTkFLLCBwbGVhc2UgZHJvcCB0aGlzIG9uZS4gRHVlIHRvIGR1YWwgbGlj
-ZW5zaW5nIHBlcm1pc3NpdmVuZXNzIG9mIEdQTA0KcmVhbGx5IHNob3VsZCBub3QgbWF0dGVyLg0K
-DQpUaGFua3MhDQoNCkNoZWVycw0KDQpNYXJjZWwNCg==
+Hi Jiri,
+
+On Thu, Feb 27, 2020 at 12:05:07PM +0100, Jiri Pirko wrote:
+> Tue, Feb 25, 2020 at 05:30:55PM CET, vadym.kochan@plvision.eu wrote:
+> >Add PCI interface driver for Prestera Switch ASICs family devices, which
+> >provides:
+> >
+
+[SNIP]
+
+> >+
+> >+module_init(mvsw_pr_pci_init);
+> >+module_exit(mvsw_pr_pci_exit);
+> >+
+> >+MODULE_AUTHOR("Marvell Semi.");
+>=20
+> Again, wrong author.
+>=20
+
+PLVision developing the driver for Marvell and upstreaming it on behalf
+of Marvell. This is a long term cooperation that aim to expose Marvell
+devices to the Linux community.
+
+[SNIP]
+
+Regards,
+Vadym Kochan
