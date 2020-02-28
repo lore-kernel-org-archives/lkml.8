@@ -6,50 +6,55 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D420C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C16C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF5D246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E90D24695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582919094;
-	bh=GtzUOUZfYfso0z7LZO8ZMsfUiy9ROA5jckCwXM3IFRs=;
-	h=Date:From:To:To:To:CC:Cc:Subject:In-Reply-To:References:List-ID:
-	 From;
-	b=KaW/rtoXYu4R3YkZfIc0gUZ0rsEOlxapkxdq61Ocd1ZcugMaEM1oKZ/elclRJ3eKv
-	 xfXMmrsdc52BqSaJTE3lb+S0eg4NTGwuiGqwZRUokn+Ler5Xqmnvw8muAH4jS6VQoq
-	 etE5/tYchAlyYyd+A1hrHQM3d1KAkww1YLZXj3uM=
+	s=default; t=1582919099;
+	bh=QGVjRtSvQfqJWUvi3mpt+fAVQFXPjfcS6Z8kvcvqNnY=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=AFDH23LvzCfn9GhItQ7kbhgAl0EvY7hhgx+dl1yY1O5dyL4poV0V3O0lgefxpxbC1
+	 yTUdAUtSAclMrZKBe/kAV4T8nDUwg3id3jR4SuBKkEBWC2ZweNXbSCbIUhFuMk8ho7
+	 Pl4Ygxn7DGbxg9MS2P5fo8IJmb/0al3VZjT6Ba/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgB1Tox (ORCPT
+        id S1727008AbgB1To6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:44:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 14:44:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB1Tox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:44:53 -0500
+        id S1726046AbgB1To5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:44:57 -0500
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C3F2469D;
-        Fri, 28 Feb 2020 19:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C147246B7;
+        Fri, 28 Feb 2020 19:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582919092;
-        bh=GtzUOUZfYfso0z7LZO8ZMsfUiy9ROA5jckCwXM3IFRs=;
-        h=Date:From:To:To:To:CC:Cc:Subject:In-Reply-To:References:From;
-        b=Ac2eCzsjkx3Wj7GkxZ5+28BD5xZsH1d1rE9ULBItjaig54oNFYJdhCBwZ8K42EyP1
-         EFYPg22RI0tyqFKA2cXYPnCBkUxBqCqevqPUXscuOwykiHepKNlV2TYrZ3MAp/hY9t
-         iVBoDPsfkijYMY/PoNPSa1hJeSotWDdEt4/uliTk=
-Date:   Fri, 28 Feb 2020 19:44:50 +0000
+        s=default; t=1582919096;
+        bh=QGVjRtSvQfqJWUvi3mpt+fAVQFXPjfcS6Z8kvcvqNnY=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=FZST07ci0AfaSyoJ4bvOQT69mGMSjeuKI48DzIZB2Ho7Y0MWs5o50ZdAJjMvGUHeK
+         YO5FSpnSwGk3zeE/mce77nm5/awWwG9ro49Fqtd2xZyGJCxG8qSJYgCpa2DB769tW4
+         3U3eYRvebQCS9NWrCpuuVzApF29f/1JnNYQ+6qDg=
+Date:   Fri, 28 Feb 2020 19:44:55 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, stable@vger.kernel.org
+Cc:     <stable@vger.kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] erofs: correct the remaining shrink objects
-In-Reply-To: <20200226081008.86348-1-gaoxiang25@huawei.com>
-References: <20200226081008.86348-1-gaoxiang25@huawei.com>
-Message-Id: <20200228194452.17C3F2469D@mail.kernel.org>
+Subject: Re: [PATCH] loop: avoid EAGAIN, if offset or block_size are changed
+In-Reply-To: <20200228043820.169288-1-jaegeuk@kernel.org>
+References: <20200228043820.169288-1-jaegeuk@kernel.org>
+Message-Id: <20200228194456.8C147246B7@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,32 +65,20 @@ Hi
 [This is an automated email]
 
 This commit has been processed because it contains a "Fixes:" tag
-fixing commit: e7e9a307be9d ("staging: erofs: introduce workstation for decompression").
+fixing commit: 5db470e229e2 ("loop: drop caches if offset or block_size are changed").
 
-The bot has tested the following trees: v5.5.6, v5.4.22, v4.19.106.
+The bot has tested the following trees: v5.5.6, v5.4.22, v4.19.106, v4.14.171.
 
 v5.5.6: Build OK!
-v5.4.22: Failed to apply! Possible dependencies:
-    bda17a4577da ("erofs: remove dead code since managed cache is now built-in")
-
-v4.19.106: Failed to apply! Possible dependencies:
-    05f9d4a0c8c4 ("staging: erofs: use the new LZ4_decompress_safe_partial()")
-    0a64d62d5399 ("staging: erofs: fixed -Wmissing-prototype warnings by making functions static.")
-    14f362b4f405 ("staging: erofs: clean up internal.h")
-    152a333a5895 ("staging: erofs: add compacted compression indexes support")
-    22fe04a77d10 ("staging: erofs: clean up shrinker stuffs")
-    3b423417d0d1 ("staging: erofs: clean up erofs_map_blocks_iter")
-    5fb76bb04216 ("staging: erofs: cleanup `z_erofs_vle_normalaccess_readpages'")
-    6e78901a9f23 ("staging: erofs: separate erofs_get_meta_page")
-    7dd68b147d60 ("staging: erofs: use explicit unsigned int type")
-    7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
-    89fcd8360e7b ("staging: erofs: change 'unsigned' to 'unsigned int'")
-    8be31270362b ("staging: erofs: introduce erofs_grab_bio")
-    ab47dd2b0819 ("staging: erofs: cleanup z_erofs_vle_work_{lookup, register}")
-    bda17a4577da ("erofs: remove dead code since managed cache is now built-in")
-    d1ab82443bed ("staging: erofs: Modify conditional checks")
-    e7dfb1cff65b ("staging: erofs: fixed -Wmissing-prototype warnings by moving prototypes to header file.")
-    f0950b02a74c ("staging: erofs: Modify coding style alignments")
+v5.4.22: Build OK!
+v4.19.106: Build OK!
+v4.14.171: Failed to apply! Possible dependencies:
+    3148ffbdb916 ("loop: use killable lock in ioctls")
+    550df5fdacff ("loop: Push loop_ctl_mutex down to loop_set_status()")
+    757ecf40b7e0 ("loop: Push loop_ctl_mutex down to loop_set_fd()")
+    85b0a54a82e4 ("loop: Move loop_reread_partitions() out of loop_ctl_mutex")
+    a13165441d58 ("loop: Push lo_ctl_mutex down into individual ioctls")
+    c371077000f4 ("loop: Push loop_ctl_mutex down to loop_change_fd()")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
