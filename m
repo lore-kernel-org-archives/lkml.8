@@ -2,177 +2,92 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1ADC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB699C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6614B2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVcNIfvB"
+	by mail.kernel.org (Postfix) with ESMTP id 8858D246C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgB1PnT (ORCPT
+        id S1727220AbgB1Pnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:43:19 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39918 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgB1PnT (ORCPT
+        Fri, 28 Feb 2020 10:43:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62694 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726974AbgB1Pnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:43:19 -0500
-Received: by mail-io1-f68.google.com with SMTP id h3so3852261ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:43:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cXF8Vb//sc6W5vJpDUv/CbZRJN8HpMWXFvWuqmU/8RE=;
-        b=IVcNIfvBpO3ChRCHiAc3d2I0nlb50wKHRgo2PEkWqHATopM2gmG4aMLuKIWNO2HvXB
-         aY1LJM6EhfQBLVEREcYu+CuBOUeffPGRlt36O5MA7HKjeMRNAyepCj4fHIA4HzD7D9i7
-         90WGU530ck2Uqy4Q07AIw4RpSKmEYwvRNRmF2fo0Av9ye04884tHGIdkj9BcXn5uPcLn
-         ww7gT/FhjX0erAfI4UuAWwFM1UWrIBy9p/q5FYUNrc92QMMMJGY2bDNs+jbpyCQBaYQt
-         KHNT3sy6OiDcoGtvL+ltE4qfSbjj4yR2ZMIjkafJdGq/P9s4Aaxbr1qJIBQz9zwCLbKH
-         9Dwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cXF8Vb//sc6W5vJpDUv/CbZRJN8HpMWXFvWuqmU/8RE=;
-        b=MWYBERnmlb7aHNNOd3W+Rh1na1KcHYJB4pxpDRu0qPCWvaAaZ16r5+iAIYwHMcrLfd
-         xEy2K2KjPPyMobX4Z31H3Nhjn4vK63uFgniKbXLq12m6v2BDeA+QF4MVyOWBuRJOIzob
-         JI9g92YCzrER6rfbFNciepUAEayMDbiqrzjXfp/260Gra60ueO8xcSkbIDMjkfeUkqSc
-         Ikbd5S4/axs0Lc7eUVxP5WOz6NNp1HvJ8o29BaToasKTJb2VewEHmyrL6Mui1w8JQP5N
-         mRf0H2dOkRI/KPC/Jxs69gvKEUlA6Jl8KytzZpyGw0mexW7DqJO3VbtaQ4fOwKJtOhle
-         TMBA==
-X-Gm-Message-State: APjAAAVgNGak2XOdzq4NZS0k2KfuST/PQdkbu+g2UinsxuhQd2tQCg00
-        VO1zUZa7tUZKbcMw2k9Qhw5PF5CCwjeAjpbe2GRjB3hF
-X-Google-Smtp-Source: APXvYqx8YznOl6pR/Ut42ktNXJzPyH06WHAwvYUK0DHdVC/laITOVbrALziw1z3UvxGC1EH2CRolVs3ohsH3f75rCp8=
-X-Received: by 2002:a6b:6205:: with SMTP id f5mr4265135iog.42.1582904597758;
- Fri, 28 Feb 2020 07:43:17 -0800 (PST)
+        Fri, 28 Feb 2020 10:43:32 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFYaci044575
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:43:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxpju7j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:43:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Fri, 28 Feb 2020 15:43:29 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Feb 2020 15:43:25 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFgQ3b48365950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 15:42:26 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A054AE045;
+        Fri, 28 Feb 2020 15:43:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CD88AE04D;
+        Fri, 28 Feb 2020 15:43:23 +0000 (GMT)
+Received: from p-imbrenda.emea.ibm.com (unknown [9.145.11.131])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 15:43:23 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     linux-next@vger.kernel.org, akpm@linux-foundation.org
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [RFC v1 0/2] add callbacks for inaccessible pages
+Date:   Fri, 28 Feb 2020 16:43:19 +0100
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com> <1582889550-9101-4-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1582889550-9101-4-git-send-email-kernelfans@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 28 Feb 2020 07:43:06 -0800
-Message-ID: <CAKgT0Uc5cqJ5yhdi7HkyFTuiYQiPt9rGFPd42qAGSa7+d9ZQgQ@mail.gmail.com>
-Subject: Re: [PATCHv5 3/3] mm/gup_benchemark: add LONGTERM_BENCHMARK test in
- gup fast path
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022815-0012-0000-0000-0000038B3506
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022815-0013-0000-0000-000021C7E259
+Message-Id: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 clxscore=1011
+ bulkscore=0 mlxlogscore=424 priorityscore=1501 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 3:35 AM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> Introduce a GUP_LONGTERM_BENCHMARK ioctl to test longterm pin in gup fast
-> path.
+This patchset has a fixup for gup/mm, and provides the necessary arch
+hooks to enable protected virtualization.
 
-The title of the patch has a typo in it. There is only one 'e' in "benchmark".
+Claudio Imbrenda (2):
+  mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN pages"
+  mm/gup/writeback: add callbacks for inaccessible pages
 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Shuah Khan <shuah@kernel.org>
-> To: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/gup_benchmark.c                         | 7 +++++++
->  tools/testing/selftests/vm/gup_benchmark.c | 6 +++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> index 8dba38e..bf61e7a 100644
-> --- a/mm/gup_benchmark.c
-> +++ b/mm/gup_benchmark.c
-> @@ -8,6 +8,7 @@
->  #define GUP_FAST_BENCHMARK     _IOWR('g', 1, struct gup_benchmark)
->  #define GUP_LONGTERM_BENCHMARK _IOWR('g', 2, struct gup_benchmark)
->  #define GUP_BENCHMARK          _IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_FAST_LONGTERM_BENCHMARK    _IOWR('g', 4, struct gup_benchmark)
->
->  struct gup_benchmark {
->         __u64 get_delta_usec;
-> @@ -57,6 +58,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->                         nr = get_user_pages_fast(addr, nr, gup->flags,
->                                                  pages + i);
->                         break;
-> +               case GUP_FAST_LONGTERM_BENCHMARK:
-> +                       nr = get_user_pages_fast(addr, nr,
-> +                                       (gup->flags & 1) | FOLL_LONGTERM,
-> +                                        pages + i);
-> +                       break;
+ include/linux/gfp.h |  6 ++++++
+ mm/gup.c            | 24 ++++++++++++++++++++----
+ mm/page-writeback.c |  5 +++++
+ 3 files changed, 31 insertions(+), 4 deletions(-)
 
-If I am not mistaken the mask of gup->flags is redundant. It is
-already masked by FOLL_WRITE several lines before this switch
-statement.
+-- 
+2.24.1
 
->                 case GUP_LONGTERM_BENCHMARK:
->                         nr = get_user_pages(addr, nr,
->                                             gup->flags | FOLL_LONGTERM,
-> @@ -103,6 +109,7 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
->
->         switch (cmd) {
->         case GUP_FAST_BENCHMARK:
-> +       case GUP_FAST_LONGTERM_BENCHMARK:
->         case GUP_LONGTERM_BENCHMARK:
->         case GUP_BENCHMARK:
->                 break;
-> diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-> index 389327e..5a01c538 100644
-> --- a/tools/testing/selftests/vm/gup_benchmark.c
-> +++ b/tools/testing/selftests/vm/gup_benchmark.c
-> @@ -17,6 +17,7 @@
->  #define GUP_FAST_BENCHMARK     _IOWR('g', 1, struct gup_benchmark)
->  #define GUP_LONGTERM_BENCHMARK _IOWR('g', 2, struct gup_benchmark)
->  #define GUP_BENCHMARK          _IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_FAST_LONGTERM_BENCHMARK    _IOWR('g', 4, struct gup_benchmark)
->
->  /* Just the flags we need, copied from mm.h: */
->  #define FOLL_WRITE     0x01    /* check pte is writable */
-> @@ -40,7 +41,7 @@ int main(int argc, char **argv)
->         char *file = "/dev/zero";
->         char *p;
->
-> -       while ((opt = getopt(argc, argv, "m:r:n:f:tTLUwSH")) != -1) {
-> +       while ((opt = getopt(argc, argv, "m:r:n:f:tTlLUwSH")) != -1) {
->                 switch (opt) {
->                 case 'm':
->                         size = atoi(optarg) * MB;
-> @@ -57,6 +58,9 @@ int main(int argc, char **argv)
->                 case 'T':
->                         thp = 0;
->                         break;
-> +               case 'l':
-> +                       cmd = GUP_FAST_LONGTERM_BENCHMARK;
-> +                       break;
->                 case 'L':
->                         cmd = GUP_LONGTERM_BENCHMARK;
->                         break;
-> --
-> 2.7.5
->
->
