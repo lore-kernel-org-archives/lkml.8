@@ -2,106 +2,114 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3261BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B9BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A44424699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582902802;
-	bh=F3zdByQIKN7XMYu5LbyWm7srbXTTmLdOEB4M/SS8g8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tR9Bd4r6LXbR9N6cPXYvF9dUZ0yT62te52qKH+H7Qmo+Q32iMujkGzzNoc/tCPZi5
-	 07Al7mDxzEc+IVMDkWWL0WT+3p4yHOoPfWVWqe/NyqC6vN2FNyUQlomqsgaxe4Ecb7
-	 SYkkNZY5vo7H319Y86EufeFokfYTYw9+dodBlmsg=
+	by mail.kernel.org (Postfix) with ESMTP id E6CA924699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgB1PNU (ORCPT
+        id S1727176AbgB1PNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:13:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42042 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgB1PNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:13:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so2840277otd.9;
-        Fri, 28 Feb 2020 07:13:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zWo4qKuY/7ed4cYkYmCoOxOnA9Dj1w1J7SKejk3R5Z8=;
-        b=f8a2ptHfbp7rG9/fdH0kYvy1uAUYE9EKzsVx6gsNhiHbbU5Wrtr6ZJrEFQsN3RFzKw
-         8XCEPUdA9TGH0g2aDc0HusgYSuvfZt3kfUbrteFlxn2GwXf6MkNlo3K34cPlHV3CrOVn
-         Vnjm+SsXs743JLPk/3N4WDP9Q2K+XzP1cyZ0s+Rvna4RYHmaLPUBHgn/CFJ+27PPuCne
-         6P/UqdNFrlK0dH4rsZZ2J43mKaTf900ve/qeGPJVOx97NsbqqyU84DyJAvC5SLMxjgNm
-         rlBZXQkGWzMCgopsfr+fjZg4jD2aXCSefCTHY0ZJo0J5mgSEPyfZGfDM4dvLNmUZkLGo
-         qfMQ==
-X-Gm-Message-State: APjAAAV8vn7RCWZfh4L/Tt6f2HvB/QHhXuFRBvba/wsEXK47L5gI027O
-        nRqDoRWC+rZv8hO5H0EXkA==
-X-Google-Smtp-Source: APXvYqyIDBoCrTlnHsHo2ZWFLHbyIgEN0Y3a+LU5KpD+GDt608oltIOTk0QNBmppbKHbi9r4/mPT0A==
-X-Received: by 2002:a9d:6e02:: with SMTP id e2mr3884732otr.194.1582902799599;
-        Fri, 28 Feb 2020 07:13:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l207sm3264961oih.25.2020.02.28.07.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:13:18 -0800 (PST)
-Received: (nullmailer pid 4200 invoked by uid 1000);
-        Fri, 28 Feb 2020 15:13:17 -0000
-Date:   Fri, 28 Feb 2020 09:13:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
-        o.rempel@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, m.felsch@pengutronix.de, hongxing.zhu@nxp.com,
-        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: mailbox: imx-mu: add fsl,scu property
-Message-ID: <20200228151317.GA404@bogus>
-References: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
- <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
+        Fri, 28 Feb 2020 10:13:32 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29073 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbgB1PNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:13:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 07:13:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
+   d="scan'208";a="385520271"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2020 07:13:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 3719D24D; Fri, 28 Feb 2020 17:13:28 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mei: Don't encourage to use kernel internal types in user code
+Date:   Fri, 28 Feb 2020 17:13:28 +0200
+Message-Id: <20200228151328.45062-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 08:14:32PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Add fsl,scu property, this needs to be enabled for SCU channel type.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> index 9c43357c5924..5b502bcf7122 100644
-> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> @@ -45,6 +45,7 @@ Optional properties:
->  -------------------
->  - clocks :	phandle to the input clock.
->  - fsl,mu-side-b : Should be set for side B MU.
-> +- fsl,scu: Support i.MX8/8X SCU channel type
+uuid_le is internal kernel type which shall not be exposed to the user
+in the first place. In order to mitigate the (wrong) distribution of
+the use of that type, switch MEI AMT sample to plain unsigned char array.
 
-What's the type for this?
+Note, there is no ABI change involved.
 
-Perhaps update the example.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ samples/mei/mei-amt-version.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
->  
->  Examples:
->  --------
-> -- 
-> 2.16.4
-> 
+diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
+index 32234481ad7d..458cb6db57c6 100644
+--- a/samples/mei/mei-amt-version.c
++++ b/samples/mei/mei-amt-version.c
+@@ -90,7 +90,7 @@
+ } while (0)
+ 
+ struct mei {
+-	uuid_le guid;
++	unsigned char guid[16];
+ 	bool initialized;
+ 	bool verbose;
+ 	unsigned int buf_size;
+@@ -108,7 +108,7 @@ static void mei_deinit(struct mei *cl)
+ 	cl->initialized = false;
+ }
+ 
+-static bool mei_init(struct mei *me, const uuid_le *guid,
++static bool mei_init(struct mei *me, const unsigned char *guid,
+ 		unsigned char req_protocol_version, bool verbose)
+ {
+ 	int result;
+@@ -126,7 +126,7 @@ static bool mei_init(struct mei *me, const uuid_le *guid,
+ 	memset(&data, 0, sizeof(data));
+ 	me->initialized = true;
+ 
+-	memcpy(&data.in_client_uuid, &me->guid, sizeof(me->guid));
++	memcpy(&data.in_client_uuid, me->guid, sizeof(me->guid));
+ 	result = ioctl(me->fd, IOCTL_MEI_CONNECT_CLIENT, &data);
+ 	if (result) {
+ 		mei_err(me, "IOCTL_MEI_CONNECT_CLIENT receive message. err=%d\n", result);
+@@ -270,8 +270,11 @@ struct amt_host_if_resp_header {
+ 	unsigned char data[0];
+ } __attribute__((packed));
+ 
+-const uuid_le MEI_IAMTHIF = UUID_LE(0x12f80028, 0xb4b7, 0x4b2d,  \
+-				0xac, 0xa8, 0x46, 0xe0, 0xff, 0x65, 0x81, 0x4c);
++/* MEI AMT Interface GUID: 12f80028-b4b7-4b2d-aca8-46e0ff65814c */
++const unsigned char mei_iamthif[16] = {
++	0x28, 0x00, 0xf8, 0x12, 0xb7, 0xb4, 0x2d, 0x4b,
++	0xac, 0xa8, 0x46, 0xe0, 0xff, 0x65, 0x81, 0x4c,
++};
+ 
+ #define AMT_HOST_IF_CODE_VERSIONS_REQUEST  0x0400001A
+ #define AMT_HOST_IF_CODE_VERSIONS_RESPONSE 0x0480001A
+@@ -295,7 +298,7 @@ static bool amt_host_if_init(struct amt_host_if *acmd,
+ 		      unsigned long send_timeout, bool verbose)
+ {
+ 	acmd->send_timeout = (send_timeout) ? send_timeout : 20000;
+-	acmd->initialized = mei_init(&acmd->mei_cl, &MEI_IAMTHIF, 0, verbose);
++	acmd->initialized = mei_init(&acmd->mei_cl, mei_iamthif, 0, verbose);
+ 	return acmd->initialized;
+ }
+ 
+-- 
+2.25.0
+
