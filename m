@@ -2,107 +2,196 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE30C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A621C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CB0246A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81C3246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="aTYpnGkw"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uqOhSPAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgB1ATc (ORCPT
+        id S1730304AbgB1AUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:19:32 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:51112 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730028AbgB1ATc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:19:32 -0500
-Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id DA5AB5C0103;
-        Fri, 28 Feb 2020 01:19:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1582849170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=TIjae1yYHkhLUHlgAhQROPT7jyNpin+f5lZbY7zzkps=;
-        b=aTYpnGkw3RWTSB31SifTZL0yjsMbDJz69Z0gy8uGkXyuSWk6m/KKz7XX5WmjZXgckfOZ3M
-        qIfbPbE+1/RTZLIaVEfUpJjmSnl73LlsKSG/up6bKoNJ6bIsy76oDV/pLXp/hZbQhPn/QZ
-        OPQzYoE5HuJItobQd5M3WVtI/aC/aIA=
-From:   Stefan Agner <stefan@agner.ch>
-To:     linux@armlinux.org.uk
-Cc:     arnd@arndb.de, yamada.masahiro@socionext.com,
-        manojgupta@google.com, jiancai@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: warn if pre-UAL assembler syntax is used
-Date:   Fri, 28 Feb 2020 01:19:22 +0100
-Message-Id: <cd74f11eaee5d8fe3599280eb1e3812ce577c835.1582849064.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 19:20:55 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:55715 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730028AbgB1AUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:20:54 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48T9Dh4Wvbz9tyJv;
+        Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uqOhSPAg; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id oJjSBb8-cw6T; Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48T9Dh3K9hz9tyJs;
+        Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582849252; bh=+qjclCTypUSk8rUN8fryWx8rZBtGiqAJ4Vg5qmlZkUQ=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=uqOhSPAgRDAgxYvKU7t/1CwvgC9z5Hg348fUXfIOOGfbFCBTGWO0JPdgOje+FSB1g
+         Iws0KrwOcV8txVcAxcbyZkh6L3VveScEJfimqPDh6L0XcZ+te2ofel6bD9wQ5BVLc+
+         iXUpPztNLPlGKtkL6ywK5vw0/qjAy824LNC8lwn8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE1C18B882;
+        Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gpMJtqkSz9dN; Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0B6618B881;
+        Fri, 28 Feb 2020 01:20:52 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id E8F78653EC; Fri, 28 Feb 2020 00:14:48 +0000 (UTC)
+Message-Id: <82fefcc1ec75b96cece792878217a5d85ecda0c2.1582848567.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1582848567.git.christophe.leroy@c-s.fr>
+References: <cover.1582848567.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v5 12/13] powerpc/ptrace: create ppc_gethwdinfo()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 28 Feb 2020 00:14:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the -mno-warn-deprecated assembler flag for GCC versions newer
-than 5.1 to make sure the GNU assembler warns in case non-unified
-syntax is used.
+Create ippc_gethwdinfo() to handle PPC_PTRACE_GETHWDBGINFO and
+reduce ifdef mess
 
-This also prevents a warning when building with Clang and enabling
-its integrated assembler:
-clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
-
-This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
-divided syntax assembler is used").
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/arm/Makefile | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/ptrace/ptrace-adv.c   | 15 +++++++++++
+ arch/powerpc/kernel/ptrace/ptrace-decl.h  |  1 +
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c | 20 ++++++++++++++
+ arch/powerpc/kernel/ptrace/ptrace.c       | 32 +----------------------
+ 4 files changed, 37 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index db857d07114f..a6c8c9f39185 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
- CFLAGS_ABI	+= -meabi gnu
- endif
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-adv.c b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+index c71bedd54a8b..3990c01ef8cf 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-adv.c
++++ b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+@@ -56,6 +56,21 @@ void user_disable_single_step(struct task_struct *task)
+ 	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+ }
  
--# Accept old syntax despite ".syntax unified"
--AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
--
- ifeq ($(CONFIG_THUMB2_KERNEL),y)
--CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
-+CFLAGS_ISA	:=-mthumb -Wa,-mimplicit-it=always
- AFLAGS_ISA	:=$(CFLAGS_ISA) -Wa$(comma)-mthumb
- # Work around buggy relocation from gas if requested:
- ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
- KBUILD_CFLAGS_MODULE	+=-fno-optimize-sibling-calls
- endif
- else
--CFLAGS_ISA	:=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
-+CFLAGS_ISA	:=$(call cc-option,-marm,)
- AFLAGS_ISA	:=$(CFLAGS_ISA)
- endif
- 
-+ifeq ($(CONFIG_CC_IS_GCC),y)
-+ifeq ($(call cc-ifversion, -lt, 0501, y), y)
-+# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
-+CFLAGS_ISA	+=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
-+endif
-+endif
++void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
++{
++	dbginfo->version = 1;
++	dbginfo->num_instruction_bps = CONFIG_PPC_ADV_DEBUG_IACS;
++	dbginfo->num_data_bps = CONFIG_PPC_ADV_DEBUG_DACS;
++	dbginfo->num_condition_regs = CONFIG_PPC_ADV_DEBUG_DVCS;
++	dbginfo->data_bp_alignment = 4;
++	dbginfo->sizeof_condition = 4;
++	dbginfo->features = PPC_DEBUG_FEATURE_INSN_BP_RANGE |
++			    PPC_DEBUG_FEATURE_INSN_BP_MASK;
++	if (IS_ENABLED(CONFIG_PPC_ADV_DEBUG_DAC_RANGE))
++		dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_RANGE |
++				     PPC_DEBUG_FEATURE_DATA_BP_MASK;
++}
 +
- # Need -Uarm for gcc < 3.x
- KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
- KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+ 			unsigned long __user *datalp)
+ {
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+index 4b4b6a1d508a..3c8a81999292 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
++++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+@@ -176,6 +176,7 @@ int tm_cgpr32_set(struct task_struct *target, const struct user_regset *regset,
+ extern const struct user_regset_view user_ppc_native_view;
+ 
+ /* ptrace-(no)adv */
++void ppc_gethwdinfo(struct ppc_debug_info *dbginfo);
+ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+ 			unsigned long __user *datalp);
+ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data);
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+index 9c1ef9c2ffd4..8a616d87fffb 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
++++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+@@ -39,6 +39,26 @@ void user_disable_single_step(struct task_struct *task)
+ 	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+ }
+ 
++void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
++{
++	dbginfo->version = 1;
++	dbginfo->num_instruction_bps = 0;
++	if (ppc_breakpoint_available())
++		dbginfo->num_data_bps = 1;
++	else
++		dbginfo->num_data_bps = 0;
++	dbginfo->num_condition_regs = 0;
++	dbginfo->data_bp_alignment = sizeof(long);
++	dbginfo->sizeof_condition = 0;
++	if (IS_ENABLED(CONFIG_HAVE_HW_BREAKPOINT)) {
++		dbginfo->features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
++		if (dawr_enabled())
++			dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
++	} else {
++		dbginfo->features = 0;
++	}
++}
++
+ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+ 			unsigned long __user *datalp)
+ {
+diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+index d6e1a301d20e..a44f6e5e05ff 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace.c
++++ b/arch/powerpc/kernel/ptrace/ptrace.c
+@@ -139,37 +139,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 	case PPC_PTRACE_GETHWDBGINFO: {
+ 		struct ppc_debug_info dbginfo;
+ 
+-		dbginfo.version = 1;
+-#ifdef CONFIG_PPC_ADV_DEBUG_REGS
+-		dbginfo.num_instruction_bps = CONFIG_PPC_ADV_DEBUG_IACS;
+-		dbginfo.num_data_bps = CONFIG_PPC_ADV_DEBUG_DACS;
+-		dbginfo.num_condition_regs = CONFIG_PPC_ADV_DEBUG_DVCS;
+-		dbginfo.data_bp_alignment = 4;
+-		dbginfo.sizeof_condition = 4;
+-		dbginfo.features = PPC_DEBUG_FEATURE_INSN_BP_RANGE |
+-				   PPC_DEBUG_FEATURE_INSN_BP_MASK;
+-#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+-		dbginfo.features |=
+-				   PPC_DEBUG_FEATURE_DATA_BP_RANGE |
+-				   PPC_DEBUG_FEATURE_DATA_BP_MASK;
+-#endif
+-#else /* !CONFIG_PPC_ADV_DEBUG_REGS */
+-		dbginfo.num_instruction_bps = 0;
+-		if (ppc_breakpoint_available())
+-			dbginfo.num_data_bps = 1;
+-		else
+-			dbginfo.num_data_bps = 0;
+-		dbginfo.num_condition_regs = 0;
+-		dbginfo.data_bp_alignment = sizeof(long);
+-		dbginfo.sizeof_condition = 0;
+-#ifdef CONFIG_HAVE_HW_BREAKPOINT
+-		dbginfo.features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
+-		if (dawr_enabled())
+-			dbginfo.features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
+-#else
+-		dbginfo.features = 0;
+-#endif /* CONFIG_HAVE_HW_BREAKPOINT */
+-#endif /* CONFIG_PPC_ADV_DEBUG_REGS */
++		ppc_gethwdinfo(&dbginfo);
+ 
+ 		if (copy_to_user(datavp, &dbginfo,
+ 				 sizeof(struct ppc_debug_info)))
 -- 
-2.25.1
+2.25.0
 
