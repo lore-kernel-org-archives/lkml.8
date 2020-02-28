@@ -2,175 +2,224 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E7FC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACE824688
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987A6246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rwh+g20Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgB1MEc (ORCPT
+        id S1725906AbgB1MIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:04:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgB1MEc (ORCPT
+        Fri, 28 Feb 2020 07:08:11 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41046 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1MIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:04:32 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SBxbWh015007
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:04:31 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepx5cjn2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:04:31 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 28 Feb 2020 12:04:28 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Feb 2020 12:04:26 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SC3Rbo48103706
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 12:03:27 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4533FAE051;
-        Fri, 28 Feb 2020 12:04:25 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F3ABAE045;
-        Fri, 28 Feb 2020 12:04:25 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.219])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Feb 2020 12:04:25 +0000 (GMT)
-Subject: Re: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
- enqueue_task_fair+0x328/0x440
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 28 Feb 2020 13:04:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 07:08:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SC7q2Q043838;
+        Fri, 28 Feb 2020 06:07:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582891672;
+        bh=RVaHyNziJFILc4NB6NRDkwB5/daSs+z4c/gyOlgD+ek=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=rwh+g20QW552RFvkuCgcRs2jkBFBcKp1jWgUlrjkZP2STi0TluWsZ7xTV9LCC4+Bx
+         pzbeyaYAFOcFeznfcNEala2/LgYUWxU5ZTZVmIOHPW7cG3mQv525pyt/auXufiOsp1
+         7LJHiZQZkHrKpmoctpQac93cH35T/gv4Jd+3atx8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SC7qOn075668
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 06:07:52 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 06:07:51 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 06:07:51 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SC7o7x085695;
+        Fri, 28 Feb 2020 06:07:51 -0600
+Date:   Fri, 28 Feb 2020 17:37:50 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200228120750.hstohetdnqja2g2p@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+ <20200226093703.19765-7-p.yadav@ti.com>
+ <20200227175841.51435e3f@collabora.com>
+ <20200228093658.zc3uifqg4zruokq3@ti.com>
+ <20200228115355.5033798f@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022812-0012-0000-0000-0000038B2319
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022812-0013-0000-0000-000021C7CFB0
-Message-Id: <afacbbd1-3d6b-c537-34e2-5b455e1c2267@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_03:2020-02-26,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
- priorityscore=1501 spamscore=0 clxscore=1015 impostorscore=0
- mlxlogscore=626 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280102
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200228115355.5033798f@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was able to reproduce this with 5.5.0
+On 28/02/20 11:53AM, Boris Brezillon wrote:
+> On Fri, 28 Feb 2020 15:06:58 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
+> 
+> > Hi Boris,
+> > 
+> > On 27/02/20 05:58PM, Boris Brezillon wrote:
+> > > On Wed, 26 Feb 2020 15:06:58 +0530
+> > > Pratyush Yadav <p.yadav@ti.com> wrote:
+> > >   
+> > > > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
+> > > > on each clock edge as opposed to on each clock cycle. Make
+> > > > framework-level changes to allow supporting flashes in DTR mode.
+> > > > 
+> > > > Right now, mixed DTR modes are not supported. So, for example a mode
+> > > > like 4S-4D-4D will not work. All phases need to be either DTR or STR.  
+> > > 
+> > > Didn't go deep into the patch but at first glance you don't seem to
+> > > extend the framework to support stateful modes as I tried to do here
+> > > [1]. That's really something we should address before considering
+> > > supporting xD-xD-xD modes, unless the SPI-NOR only supports one
+> > > stateful mode. If we don't do that first, we might face all sort of
+> > > unpleasant issues:
+> > > 
+> > > * kexec not working correctly because the previous kernel left the NOR
+> > >   in an unknown state
+> > > * suspend/resume not working properly
+> > > * linux not booting properly because the bootloader left the device in
+> > >   its non-default mode
+> > > * ...  
+> > 
+> > Correct. I am working on a follow-up series that takes care of these 
+> > problems. The series will allow spi-nor to detect what mode the flash is 
+> > in and then run the SFPD procedure in that mode (or maybe switch to 
+> > single SPI mode and then go about its business as usual? I haven't 
+> > figured out all the details yet).
+> > 
+> > So for the context of this series, assume we are handed the flash in 
+> > single SPI mode.
+> >  
+> > > [1]https://patchwork.kernel.org/cover/10638055/  
+> > 
+> > BTW, I took a quick look at this series but I don't see any code that 
+> > tries to detect which mode the flash is in (which is the troublesome 
+> > part [0]). So, for example, if the bootloader leaves the flash in 
+> > 8D-8D-8D mode, how would your series handle that situation?
+> 
+> Oh, it's definitely not taking care of that, it was just paving the
+> road for spi-nor state tracking. You'd need to extend it to support
+> 8D-8D-8D to 1-1-1 transitions at boot time (if that's even possible).
+> 
+> > 
+> > [0] There are multiple problems to take care of when trying to detect 
+> >     which mode a flash is in. We can try reading SFDP in each mode and 
+> >     whichever mode gives us the correct "SFDP" signature is the mode the 
+> >     flash is in. But the problem is that even in xSPI standard Read SFDP 
+> >     command is optional in 8D-8D-8D mode, let alone non-xSPI flashes.
+> >     Another problem is that the address bytes and dummy cycles for Read 
+> >     SFDP are not the same for every flash. The xSPI standard says 
+> >     address bytes can be 3/4 and dummy cycles can be 8/20. So, for 
+> >     example, Cypress s28hs/s28ht family and Micron Xccela (mt35x) family 
+> >     use 4 address bytes, but the Adesto ATXP032/ATXP032R flashes use 3 
+> >     address bytes.
+> 
+> I'd rather go with something simpler and more widely supported than SFDP
+> reads. Don't we have a simple command that's supported by all flashes
+> and returns well known data.
 
+I'm not aware of any other command that would return well-known data.
 
-On 28.02.20 08:54, Christian Borntraeger wrote:
-> Peter,
-> 
-> it seems that your new assert did trigger for me:
-> 
-> The system was running fine for 4 hours and then this happened.
-> Unfortunately I have no idea if this reproduces and if so how.
-> 
-> [15260.753944] ------------[ cut here ]------------
-> [15260.753949] rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
-> [15260.753959] WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380 enqueue_task_fair+0x328/0x440
-> [15260.753961] Modules linked in: kvm xt_CHECKSUM xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp xt_CT tun bridge stp llc xt_tcpudp ip6t_REJECT nf_reject_ipv6 ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nfnetlink ip6table_filter ip6_tables iptable_filter rpcrdma sunrpc rdma_ucm rdma_cm iw_cm ib_cm configfs s390_trng mlx5_ib ghash_s390 prng ib_uverbs aes_s390 ib_core des_s390 libdes sha3_512_s390 genwqe_card vfio_ccw vfio_mdev sha3_256_s390 mdev crc_itu_t sha512_s390 vfio_iommu_type1 sha1_s390 vfio eadm_sch zcrypt_cex4 sch_fq_codel ip_tables x_tables mlx5_core sha256_s390 sha_common pkey zcrypt rng_core autofs4
-> [15260.754002] CPU: 48 PID: 17435 Comm: cc1 Not tainted 5.6.0-rc3+ #24
-> [15260.754004] Hardware name: IBM 3906 M04 704 (LPAR)
-> [15260.754005] Krnl PSW : 0404c00180000000 0000000942282e3c (enqueue_task_fair+0x32c/0x440)
-> [15260.754008]            R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-> [15260.754010] Krnl GPRS: 00000000000003e0 0000001fbd60ee00 000000000000002d 00000009435347c2
-> [15260.754012]            000000000000002c 00000009428ec950 0000000900000000 0000000000000001
-> [15260.754013]            0000001fbd60ed00 0000001fbd60ed00 0000001fbd60ee00 0000000000000000
-> [15260.754014]            0000001c633ea000 0000000942c34670 0000000942282e38 000003e00140baf8
-> [15260.754066] Krnl Code: 0000000942282e2c: c020005d39d8	larl	%r2,0000000942e2a1dc
->                           0000000942282e32: c0e5fffdcc3f	brasl	%r14,000000094223c6b0
->                          #0000000942282e38: af000000		mc	0,0
->                          >0000000942282e3c: a7f4ff22		brc	15,0000000942282c80
->                           0000000942282e40: 41b06340		la	%r11,832(%r6)
->                           0000000942282e44: e3d063480004	lg	%r13,840(%r6)
->                           0000000942282e4a: b904004b		lgr	%r4,%r11
->                           0000000942282e4e: b904003d		lgr	%r3,%r13
-> [15260.754080] Call Trace:
-> [15260.754083]  [<0000000942282e3c>] enqueue_task_fair+0x32c/0x440 
-> [15260.754085] ([<0000000942282e38>] enqueue_task_fair+0x328/0x440)
-> [15260.754087]  [<0000000942272d78>] activate_task+0x88/0xf0 
-> [15260.754088]  [<00000009422732e8>] ttwu_do_activate+0x58/0x78 
-> [15260.754090]  [<00000009422742ce>] try_to_wake_up+0x256/0x650 
-> [15260.754093]  [<000000094229248e>] swake_up_locked.part.0+0x2e/0x70 
-> [15260.754095]  [<00000009422927ac>] swake_up_one+0x54/0x88 
-> [15260.754151]  [<000003ff8044c15a>] kvm_vcpu_wake_up+0x52/0x78 [kvm] 
-> [15260.754161]  [<000003ff8046af02>] kvm_s390_vcpu_wakeup+0x2a/0x40 [kvm] 
-> [15260.754171]  [<000003ff8046b68e>] kvm_s390_idle_wakeup+0x6e/0xa0 [kvm] 
-> [15260.754175]  [<00000009422dd05c>] __hrtimer_run_queues+0x114/0x2f0 
-> [15260.754178]  [<00000009422dddb4>] hrtimer_interrupt+0x12c/0x2a8 
-> [15260.754181]  [<0000000942200d3c>] do_IRQ+0xac/0xb0 
-> [15260.754185]  [<0000000942c25684>] ext_int_handler+0x130/0x134 
-> [15260.754186] Last Breaking-Event-Address:
-> [15260.754189]  [<000000094223c710>] __warn_printk+0x60/0x68
-> [15260.754190] ---[ end trace e84a48be72a8b514 ]---
-> 
+> Isn't there an EXIT sequence that allows NORs to return to a single 
+> SPI state?
 
+Yes there is, but it comes with a lot of strings attached. There is a 
+hardware reset pin on some flashes that puts the flash in Power-on-Reset 
+(POR) mode. But that pin is not mandatory. It also might not be 
+connected on a given board.
+
+The other option is a "Soft Reset" (also optional), which puts the flash 
+in POR mode after it is given the soft reset command. But to send the 
+command you need to know the mode the device is in. On top of that, the 
+Soft Reset opcode differs between flashes. According to the xSPI spec, 
+some flashes can have the opcode as 0xF0 and some others can have it as 
+a two command sequence of 0x66 and 0x99.
+
+And the cherry on top is the fact that these reset operations return to 
+a state based on the value of the non-volatile bits. So, if the 
+non-volatile configuration is 8D-8D-8D mode, then all these resets 
+achieve nothing.
+ 
+> > 
+> >     Say that a flash supports Read SFDP in 8D-8D-8D mode and we try all 
+> >     the combinations to find out which mode the flash is in, we now have 
+> >     the problem of actually identifying the flash. Unfortunately, the 
+> >     Read ID command is not uniform across flash vendors. The Micron 
+> >     Xccela flashes use 8 dummy cycles and no address bytes for Read ID. 
+> >     The Cypress s28hs/t family uses configurable dummy cycles 
+> >     (defaulting to 3) and needs 4 dummy address bytes all of which are 
+> >     0.
+> 
+> Yep, that's what I complained about when I tried to support the
+> Macronix flash. They didn't plan for a reliable RETURN-TO-SINGLE-SPI
+> sequence which would not conflict with any other existing SPI commands,
+> and that's a real problem.
+> 
+> > 
+> >     If we can't find out which flash it is, we can't run its fixup 
+> >     hooks, and might end up running it with incorrect settings. And all 
+> >     this is assuming a flash even has SFDP and has it available in all 
+> >     modes.
+> 
+> Absolutely.
+> 
+> > 
+> >     So, the only solution I can now think of is having the flash name in 
+> >     its compatible string in the device tree. This way we can skip all 
+> >     the Read ID ugliness and can have flash-specific hooks to make it 
+> >     easier to detect the mode it is in (though I wonder if it is even 
+> >     possible to detect the mode in a flash that doesn't have SFDP in 
+> >     8D-8D-8D).
+> 
+> Hm, I'd really like to avoid that if possible.
+
+Unfortunately, I don't really see a better alternative. Just so I 
+understand this better, why do you think it is something worth avoiding?
+ 
+> > 
+> >     Thoughts? Is there a better way to solve this problem that I didn't 
+> >     think of?
+> > 
+> 
+> Nope, except maybe mandate that the bootloader always put the NOR in
+> single SPI mode before booting Linux (and Linux should do the same,
+> which is what my series was trying to address IIRC).
+
+A simple bootloader might not even have a SPI driver. So, if the flash 
+PORs to 8D-8D-8D, Linux would be unable to use the flash.
+
+Or, if the ROM puts the flash in 8D-8D-8D mode for better boot speed, we 
+would have the same problem.
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
