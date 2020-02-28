@@ -2,69 +2,100 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC75C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75475C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3440B246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582910111;
-	bh=xDAZZtFV1EibALfcVTCMV5kttkdTN7Lzoa/vbHh9BS8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pCpT93+EQnwOU/WCfxQkxcocHPEG7NTVc1FZ/QrOSZbxEJcQS4x3wdiNW3RfZ5wIS
-	 D2MzXB/QF09r+2g6LPgAXY+CI6n/aaJNd/IAQViRdyYneA4DezZM+Z+IY15DG0Vx9R
-	 yJuaFJ9eDZ9La3T92y1tMXqF11Xjb1QRTqvtebD8=
+	by mail.kernel.org (Postfix) with ESMTP id 49E07246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1RPK (ORCPT
+        id S1726917AbgB1RPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:15:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1RPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:15:09 -0500
-Subject: Re: [GIT PULL] ACPI fixes for v5.6-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582910109;
-        bh=xDAZZtFV1EibALfcVTCMV5kttkdTN7Lzoa/vbHh9BS8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WBxSQgOR3tUgzLO6pOAaFUAymfNuPH0R/czh2ZTTyXu9GQ52iplz9hBpH2+AGFHeb
-         zzYWKaE+BKOk4P8x4NFRE1z6q6aWNr0HHca9y2hdGIRPiaeau8gnzPHOVGRNvIbnqA
-         BFvA+aT8dO5pC9Aw71eLki1VDjaXGKhaogKhOTjw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0h6eQ72p8uNnxRkAYJjSZ7yTC5yyZitoZ96KA+05Dq7Dg@mail.gmail.com>
-References: <CAJZ5v0h6eQ72p8uNnxRkAYJjSZ7yTC5yyZitoZ96KA+05Dq7Dg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0h6eQ72p8uNnxRkAYJjSZ7yTC5yyZitoZ96KA+05Dq7Dg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- acpi-5.6-rc4
-X-PR-Tracked-Commit-Id: cabe17d0173ab04bd3f87b8199ae75f43f1ea473
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c60c04021353c55b133519804734415f647f08bd
-Message-Id: <158291010942.6279.13509633892252691233.pr-tracker-bot@kernel.org>
-Date:   Fri, 28 Feb 2020 17:15:09 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 28 Feb 2020 12:15:20 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34502 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgB1RPT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:15:19 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7jE8-002VQ3-Fz; Fri, 28 Feb 2020 17:15:04 +0000
+Date:   Fri, 28 Feb 2020 17:15:04 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        util-linux@vger.kernel.org
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200228171504.GK23230@ZenIV.linux.org.uk>
+References: <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+ <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+ <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
+ <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+ <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+ <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
+ <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
+ <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
+ <20200228122712.GA3013026@kroah.com>
+ <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 28 Feb 2020 11:27:30 +0100:
+On Fri, Feb 28, 2020 at 05:24:23PM +0100, Miklos Szeredi wrote:
+> On Fri, Feb 28, 2020 at 1:27 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> 
+> > > Superblocks and mounts could get enumerated by a unique identifier.
+> > > mnt_id seems to be good for mounts, s_dev may or may not be good for
+> > > superblock, but  s_id (as introduced in this patchset) could be used
+> > > instead.
+> >
+> > So what would the sysfs tree look like with this?
+> 
+> For a start something like this:
+> 
+> mounts/$MOUNT_ID/
+>   parent -> ../$PARENT_ID
+>   super -> ../../supers/$SUPER_ID
+>   root: path from mount root to fs root (could be optional as usually
+> they are the same)
+>   mountpoint -> $MOUNTPOINT
+>   flags: mount flags
+>   propagation: mount propagation
+>   children/$CHILD_ID -> ../../$CHILD_ID
+> 
+>  supers/$SUPER_ID/
+>    type: fstype
+>    source: mount source (devname)
+>    options: csv of mount options
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.6-rc4
+Oh, wonderful.  So let me see if I got it right - any namespace operation
+can create/destroy/move around an arbitrary amount of sysfs objects.
+Better yet, we suddenly have to express the lifetime rules for struct mount
+and struct superblock in terms of struct device garbage.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c60c04021353c55b133519804734415f647f08bd
+I'm less than thrilled by the entire fsinfo circus, but this really takes
+the cake.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+In case it needs to be spelled out: NAK.
