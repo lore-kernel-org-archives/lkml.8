@@ -2,39 +2,72 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595FCC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C88C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA12246B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7F92084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Kfq1WCVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgB1LyK (ORCPT
+        id S1726748AbgB1Lyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:54:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34714 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgB1LyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:54:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9A9B3B3A2;
-        Fri, 28 Feb 2020 11:54:07 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>,
-        syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
-Subject: [PATCH 2/2] vt: selection, push sel_lock up
-Date:   Fri, 28 Feb 2020 12:54:06 +0100
-Message-Id: <20200228115406.5735-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200228115406.5735-1-jslaby@suse.cz>
-References: <20200228115406.5735-1-jslaby@suse.cz>
+        Fri, 28 Feb 2020 06:54:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46595 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgB1Lyf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:54:35 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j7so2562258wrp.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:54:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=p/IkxmE2XQKvvaJ3+jizWlUITUqYZdNJGm8v0gfliUM=;
+        b=Kfq1WCVgU73x9jff4qBeqW5es8Zs2Cx+sMSyqlg4qPOtbVipTmPiKTENK9xj11Xd23
+         OXVKrbNWfAEsnY3A7a8kmphKkf7x8P5vWBvnuL4MFRoDxPAH7vAhVJjcJ0aZu9BjNqZ1
+         ncnQLhC4Rj/MPzM8sCsHPUx1r1OR8ogIzo5I4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p/IkxmE2XQKvvaJ3+jizWlUITUqYZdNJGm8v0gfliUM=;
+        b=InJCnXc7ucrGRHLwavCWfrY4TuhfcF1or0fbtg/rK/obxI2oE/tTfV0DWTSIQlh/I+
+         vgyyWUGJQotb+OFuiqIBvgBNSQsWUPtqs3xI2g56Ck0050TZldOfLNrRNxoKzgOoKK8h
+         g5sZyeHmQ+cRoBR3ZPY3AUXRMfzKMWjPWli610+YKWs7iYc1nJDbm2yJzoX9t1/8XqSU
+         4gNgiWcp33fS2bqMdQ3ja+9AOOP1K0FHc9rvupEgEASKvCgCZ/sWMHbr0C9pZ4K1nVwQ
+         q77wKv53Q03LQUyVJ3+qDDGyG6jOxyYAXZy2MLyPbfl7uD8xYsKl+UyiD+5QnD1nkmvh
+         yEKw==
+X-Gm-Message-State: APjAAAU+HUr17MAbn33lDcCidEmBqMJExbqfiEXOOfnaq0rTPIpQrCpC
+        00iTy+OxEjddO0joqDMIejpZgg==
+X-Google-Smtp-Source: APXvYqwUxSfb9lzvkCHJt6DbgjNm7J7iIaMQ3dHV1KlH7ju+YZAsfdnsRU0PSfwwU+3oQeDG6J0qgw==
+X-Received: by 2002:a5d:674c:: with SMTP id l12mr4752283wrw.351.1582890872961;
+        Fri, 28 Feb 2020 03:54:32 -0800 (PST)
+Received: from antares.lan (b.2.d.a.1.b.1.b.2.c.5.e.0.3.d.4.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:4d30:e5c2:b1b1:ad2b])
+        by smtp.gmail.com with ESMTPSA id q125sm2044284wme.19.2020.02.28.03.54.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 03:54:32 -0800 (PST)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2 1/9] bpf: sockmap: only check ULP for TCP sockets
+Date:   Fri, 28 Feb 2020 11:53:36 +0000
+Message-Id: <20200228115344.17742-2-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200228115344.17742-1-lmb@cloudflare.com>
+References: <20200228115344.17742-1-lmb@cloudflare.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,140 +75,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sel_lock cannot nest in the console lock. Thanks to syzkaller, the
-kernel states firmly:
+The sock map code checks that a socket does not have an active upper
+layer protocol before inserting it into the map. This requires casting
+via inet_csk, which isn't valid for UDP sockets.
 
-> WARNING: possible circular locking dependency detected
-> 5.6.0-rc3-syzkaller #0 Not tainted
-> ------------------------------------------------------
-> syz-executor.4/20336 is trying to acquire lock:
-> ffff8880a2e952a0 (&tty->termios_rwsem){++++}, at: tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
->
-> but task is already holding lock:
-> ffffffff89462e70 (sel_lock){+.+.}, at: paste_selection+0x118/0x470 drivers/tty/vt/selection.c:374
->
-> which lock already depends on the new lock.
->
-> the existing dependency chain (in reverse order) is:
->
-> -> #2 (sel_lock){+.+.}:
->        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
->        set_selection_kernel+0x3b8/0x18a0 drivers/tty/vt/selection.c:217
->        set_selection_user+0x63/0x80 drivers/tty/vt/selection.c:181
->        tioclinux+0x103/0x530 drivers/tty/vt/vt.c:3050
->        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
+Guard checks for ULP by checking inet_sk(sk)->is_icsk first.
 
-This is ioctl(TIOCL_SETSEL).
-Locks held on the path: console_lock -> sel_lock
-
-> -> #1 (console_lock){+.+.}:
->        console_lock+0x46/0x70 kernel/printk/printk.c:2289
->        con_flush_chars+0x50/0x650 drivers/tty/vt/vt.c:3223
->        n_tty_write+0xeae/0x1200 drivers/tty/n_tty.c:2350
->        do_tty_write drivers/tty/tty_io.c:962 [inline]
->        tty_write+0x5a1/0x950 drivers/tty/tty_io.c:1046
-
-This is write().
-Locks held on the path: termios_rwsem -> console_lock
-
-> -> #0 (&tty->termios_rwsem){++++}:
->        down_write+0x57/0x140 kernel/locking/rwsem.c:1534
->        tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
->        mkiss_receive_buf+0x12aa/0x1340 drivers/net/hamradio/mkiss.c:902
->        tty_ldisc_receive_buf+0x12f/0x170 drivers/tty/tty_buffer.c:465
->        paste_selection+0x346/0x470 drivers/tty/vt/selection.c:389
->        tioclinux+0x121/0x530 drivers/tty/vt/vt.c:3055
->        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
-
-This is ioctl(TIOCL_PASTESEL).
-Locks held on the path: sel_lock -> termios_rwsem
-
-> other info that might help us debug this:
->
-> Chain exists of:
->   &tty->termios_rwsem --> console_lock --> sel_lock
-
-Clearly. From the above, we have:
- console_lock -> sel_lock
- sel_lock -> termios_rwsem
- termios_rwsem -> console_lock
-
-Fix this by reversing the console_lock -> sel_lock dependency in
-ioctl(TIOCL_SETSEL). First, lock sel_lock, then console_lock.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-by: syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
-Fixes: 07e6124a1a46 ("vt: selection, close sel_buffer race")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 ---
- drivers/tty/vt/selection.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ include/linux/skmsg.h |  8 +++++++-
+ net/core/sock_map.c   | 11 +++++++----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 5b0b897396eb..7556139cd0da 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -219,7 +219,6 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
- 	if (ps > pe)	/* make sel_start <= sel_end */
- 		swap(ps, pe);
- 
--	mutex_lock(&sel_lock);
- 	if (sel_cons != vc_cons[fg_console].d) {
- 		clear_selection();
- 		sel_cons = vc_cons[fg_console].d;
-@@ -265,10 +264,9 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
- 			break;
- 		case TIOCL_SELPOINTER:
- 			highlight_pointer(pe);
--			goto unlock;
-+			return 0;
- 		default:
--			ret = -EINVAL;
--			goto unlock;
-+			return -EINVAL;
- 	}
- 
- 	/* remove the pointer */
-@@ -290,7 +288,7 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
- 	else if (new_sel_start == sel_start)
- 	{
- 		if (new_sel_end == sel_end)	/* no action required */
--			goto unlock;
-+			return 0;
- 		else if (new_sel_end > sel_end)	/* extend to right */
- 			highlight(sel_end + 2, new_sel_end);
- 		else				/* contract from right */
-@@ -318,8 +316,7 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
- 	if (!bp) {
- 		printk(KERN_WARNING "selection: kmalloc() failed\n");
- 		clear_selection();
--		ret = -ENOMEM;
--		goto unlock;
-+		return -ENOMEM;
- 	}
- 	kfree(sel_buffer);
- 	sel_buffer = bp;
-@@ -344,8 +341,7 @@ static int __set_selection_kernel(struct tiocl_selection *v, struct tty_struct *
- 		}
- 	}
- 	sel_buffer_lth = bp - sel_buffer;
--unlock:
--	mutex_unlock(&sel_lock);
-+
- 	return ret;
- }
- 
-@@ -353,9 +349,11 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 112765bd146d..54a9a3e36b29 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -360,7 +360,13 @@ static inline void sk_psock_restore_proto(struct sock *sk,
+ 					  struct sk_psock *psock)
  {
- 	int ret;
- 
-+	mutex_lock(&sel_lock);
- 	console_lock();
- 	ret = __set_selection_kernel(v, tty);
- 	console_unlock();
-+	mutex_unlock(&sel_lock);
- 
- 	return ret;
+ 	sk->sk_prot->unhash = psock->saved_unhash;
+-	tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
++	if (inet_sk(sk)->is_icsk) {
++		tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
++	} else {
++		sk->sk_write_space = psock->saved_write_space;
++		/* Pairs with lockless read in sk_clone_lock() */
++		WRITE_ONCE(sk->sk_prot, psock->sk_proto);
++	}
  }
+ 
+ static inline void sk_psock_set_state(struct sk_psock *psock,
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 2e0f465295c3..695ecacc7afa 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -94,6 +94,11 @@ static void sock_map_sk_release(struct sock *sk)
+ 	release_sock(sk);
+ }
+ 
++static bool sock_map_sk_has_ulp(struct sock *sk)
++{
++	return inet_sk(sk)->is_icsk && !!inet_csk(sk)->icsk_ulp_ops;
++}
++
+ static void sock_map_add_link(struct sk_psock *psock,
+ 			      struct sk_psock_link *link,
+ 			      struct bpf_map *map, void *link_raw)
+@@ -384,7 +389,6 @@ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+ 				  struct sock *sk, u64 flags)
+ {
+ 	struct bpf_stab *stab = container_of(map, struct bpf_stab, map);
+-	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct sk_psock_link *link;
+ 	struct sk_psock *psock;
+ 	struct sock *osk;
+@@ -395,7 +399,7 @@ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+ 		return -EINVAL;
+ 	if (unlikely(idx >= map->max_entries))
+ 		return -E2BIG;
+-	if (unlikely(rcu_access_pointer(icsk->icsk_ulp_data)))
++	if (sock_map_sk_has_ulp(sk))
+ 		return -EINVAL;
+ 
+ 	link = sk_psock_init_link();
+@@ -738,7 +742,6 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+ 				   struct sock *sk, u64 flags)
+ {
+ 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+-	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	u32 key_size = map->key_size, hash;
+ 	struct bpf_htab_elem *elem, *elem_new;
+ 	struct bpf_htab_bucket *bucket;
+@@ -749,7 +752,7 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+ 	WARN_ON_ONCE(!rcu_read_lock_held());
+ 	if (unlikely(flags > BPF_EXIST))
+ 		return -EINVAL;
+-	if (unlikely(icsk->icsk_ulp_data))
++	if (sock_map_sk_has_ulp(sk))
+ 		return -EINVAL;
+ 
+ 	link = sk_psock_init_link();
 -- 
-2.25.1
+2.20.1
 
