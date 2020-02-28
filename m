@@ -2,68 +2,86 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C7AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B2C246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B287724691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgB1A2e (ORCPT
+        id S1730270AbgB1AbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:28:34 -0500
-Received: from mga17.intel.com ([192.55.52.151]:15680 "EHLO mga17.intel.com"
+        Thu, 27 Feb 2020 19:31:01 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:55586 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgB1A2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:28:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:28:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="227359484"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 27 Feb 2020 16:28:33 -0800
-Date:   Thu, 27 Feb 2020 16:28:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        id S1730117AbgB1AbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:31:01 -0500
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1j7TYK-0008Qp-Q2; Fri, 28 Feb 2020 11:30:54 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Feb 2020 11:30:52 +1100
+Date:   Fri, 28 Feb 2020 11:30:52 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 39/61] KVM: SVM: Convert feature updates from CPUID to
- KVM cpu caps
-Message-ID: <20200228002833.GB30452@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-40-sean.j.christopherson@intel.com>
- <0f21b023-000d-9d78-b9b4-b9d377840385@redhat.com>
+Subject: Re: [PATCH 2/2] crypto: drbg: DRBG_CTR should select CTR
+Message-ID: <20200228003052.GA9060@gondor.apana.org.au>
+References: <1582127495-5871-1-git-send-email-clabbe@baylibre.com>
+ <1582127495-5871-2-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f21b023-000d-9d78-b9b4-b9d377840385@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1582127495-5871-2-git-send-email-clabbe@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:10:18PM +0100, Paolo Bonzini wrote:
-> On 01/02/20 19:51, Sean Christopherson wrote:
-> > +	/* CPUID 0x8000000A */
-> > +	/* Support next_rip if host supports it */
-> > +	if (boot_cpu_has(X86_FEATURE_NRIPS))
-> > +		kvm_cpu_cap_set(X86_FEATURE_NRIPS);
+On Wed, Feb 19, 2020 at 03:51:35PM +0000, Corentin Labbe wrote:
+> if CRYPTO_DRBG_CTR is builtin and CTR is module, allocating such algo
+> will fail.
+> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
+> alg: drbg: Failed to reset rng
+> alg: drbg: Test 0 failed for drbg_pr_ctr_aes128
+> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
+> alg: drbg: Failed to reset rng
+> alg: drbg: Test 0 failed for drbg_nopr_ctr_aes128
+> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
+> alg: drbg: Failed to reset rng
+> alg: drbg: Test 0 failed for drbg_nopr_ctr_aes192
+> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
+> alg: drbg: Failed to reset rng
+> ialg: drbg: Test 0 failed for drbg_nopr_ctr_aes256
 > 
-> Should this also be conditional on "nested"?
+> Since setting DRBG_CTR=CTR lead to a recursive dependency, let's depends
+> on CTR=y
+> 
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  crypto/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index 6d27fc6a7bf5..eddeb43fc01c 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -1822,7 +1822,7 @@ config CRYPTO_DRBG_HASH
+>  config CRYPTO_DRBG_CTR
+>  	bool "Enable CTR DRBG"
+>  	select CRYPTO_AES
+> -	depends on CRYPTO_CTR
+> +	depends on CRYPTO_CTR=y
 
-I think that makes sense?  AFAICT it should probably be conditional on
-"nrips" as well.  X86_FEATURE_NPT should also be conditional on "nested".
-I'll tack on a patch to make those changes, the cleanup is easier without
-the things spread across different case statements, e.g. wrap the entire
-SVM feature leaf in "if (nested)".
+This should be turned into a select.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
