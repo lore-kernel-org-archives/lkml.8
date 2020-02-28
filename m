@@ -2,122 +2,166 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7920C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3E2C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01024690
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B1C21556
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvYiDSKW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cc0JuZTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbgB1BUr (ORCPT
+        id S1730520AbgB1BU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:20:47 -0500
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:35808 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729984AbgB1BUr (ORCPT
+        Thu, 27 Feb 2020 20:20:58 -0500
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:34338 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730389AbgB1BU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:20:47 -0500
-Received: by mail-pl1-f170.google.com with SMTP id g6so548795plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:20:46 -0800 (PST)
+        Thu, 27 Feb 2020 20:20:58 -0500
+Received: by mail-qt1-f201.google.com with SMTP id l21so1537585qtq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:20:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P/Dq6FU7+4ucFlGTVKctoP7T0CYqXsAPYM+oMCvP2zg=;
-        b=mvYiDSKWHF1Bt1SXDcgoLDC4we078lXxF1XJgOv5EyB8iSgVpV1pxozNq1Wz6yRoIX
-         uxRqLLia+Ol/zUccoeVbMav/JsmPmcT3wDjNqw+zTTqOWYVeVcOl/xmQ/dJ0x4SXDDDL
-         /Q/wEejWl2xRGS3ETWipMCWbtoLOYw2izvlt0=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UxlFvDl+mYUOihiySIoFvbuwiyqTD12ewe+CWWzU0ro=;
+        b=Cc0JuZTfhaIDHKNZM37wEYgZzqrbvgr4Kpn3pNKsq4dpXHFoVOP/Iy5EaG8MPe0qHM
+         fqaKBpOtGroaVggoO0eF0KR+YehCClaj/Fe6Id9L8BwOyhmJPWqN9SqFrmwV1nMGBhYG
+         3By6Lr+I1WyhWZyW9wmCgDsFO7Rxty9/jcF6ClbLWK9kpirrBKtj1cNL9AN8bXAhQtTl
+         iBWN4ey/UqpntnkjYAfHHiMifGNshfQBWvKDt1AlkCaOsbEk/qxvpEVWm3gdz8Z47PdR
+         CVNrCbYHxZXcU6vawXUsmqm9jUqvKhaV6R3SAMk2XWXdWBznnf4nrx5vUJyFAgtSyPzD
+         0lLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P/Dq6FU7+4ucFlGTVKctoP7T0CYqXsAPYM+oMCvP2zg=;
-        b=tBZI1TQIHOFrelQVxQBFEjuplMvueAjFxRXXcB5vy7KA3WnscQPWHdbdc6FawwUk/w
-         EXYwla65A+hwClvj71IQOoJsJf84qMGGdDky9XJgw9vAQ94g+ZW107cxnL5aMgcb8yA1
-         Xk6F/jVEvLjlvwTjgPUwbOVdN7F30t5NXn7/A/EAjf+28s8NMFFXDzb45HdpHqLEun4W
-         N08gaJLuKTdGILK29zejOy/iTzm1gwouE3hBrBvLYz6n5xwjmH/RRJniTtzrXv7gByuY
-         GczN4PRpRlWsfXdHy7l/sxMNHekBPgmNSdMUbbpA/Hs78Cka1S37KX2GoXnjrKDS5k0S
-         u5kA==
-X-Gm-Message-State: APjAAAXaEVX8vAYL3u+zWDBXinbVp2EbMEmNGCy8KUIXB3LAJGLoHWfo
-        XH1FmCRSe4rZV1hP4nLkd68fvQ==
-X-Google-Smtp-Source: APXvYqw1ZDRAUCBUAn3M31x3ckHZ3Bx3FvatakAHQH5RAPr79cOjqm5yMPJiIf549ZE4i/BWMCXPYw==
-X-Received: by 2002:a17:90a:37e7:: with SMTP id v94mr1801881pjb.37.1582852845913;
-        Thu, 27 Feb 2020 17:20:45 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id e189sm3255096pfa.139.2020.02.27.17.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 17:20:44 -0800 (PST)
-Date:   Fri, 28 Feb 2020 10:20:42 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 02/11] videobuf2: handle V4L2 buffer cache flags
-Message-ID: <20200228012042.GK122464@google.com>
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
- <20200226111529.180197-3-senozhatsky@chromium.org>
- <8f48a4ab-8b8f-576d-9493-bfce7d01224d@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f48a4ab-8b8f-576d-9493-bfce7d01224d@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UxlFvDl+mYUOihiySIoFvbuwiyqTD12ewe+CWWzU0ro=;
+        b=i+Wr6FwuaNZI0lDZAlRAo9rNVj7E29rKQu+hU5do1+dCy65gb3d7io/FIV73DlaEyN
+         vD8h2C1T0mfSWxS9Dej3SPcCYar/sMCCRz1K1XRy7dto6mr7idGOsi0kmSeL6PBMQKI/
+         NC2isjAWqCWZTC2+2BSvHxI2HoKKIWrlSih151GD+yU+V85PH5L92S1thl7Yi3RMRxGf
+         O2B2f+Jmea8WN36zP9SNeWRdYG8y59ojH6Qc8uqahTJ1mVS/46MjBZDfeq2eWf9ur52I
+         FHyrl/rTOIGhx3IcmBMU3fu/1udKloUNrCeowcuLyoA8wvBVIeulhmPchqckI618S1vc
+         WXZA==
+X-Gm-Message-State: APjAAAUkRmDTMeyvPVO2tknVixpS2FnBC+SIRgNsp95A+2/AxRQ64dbq
+        lS5+qUJao1THUsjEmEWmZj+yoms7I9USGDI33IbtqQ==
+X-Google-Smtp-Source: APXvYqxBgrAvVVUr+eI3w9pSyj8Z2/ifloxhO80OhuCfxDoH9J4UCvD3tbTVrS4n5PAVeq88ixanzwm/QJ1cJqGp96pfXQ==
+X-Received: by 2002:a05:620a:2288:: with SMTP id o8mr2477361qkh.368.1582852855324;
+ Thu, 27 Feb 2020 17:20:55 -0800 (PST)
+Date:   Thu, 27 Feb 2020 17:20:29 -0800
+Message-Id: <20200228012036.15682-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v3 0/7] kunit: create a centralized executor to dispatch all
+ KUnit tests
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com,
+        frowand.list@gmail.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/27 12:58), Hans Verkuil wrote:
-[..]
-> > There are two possible alternative approaches:
-> > - The first one is to move cache sync from ->finish() to dqbuf().
-> >   But this breaks some drivers, that need to fix-up buffers before
-> >   dequeueing them.
-> > 
-> > - The second one is to move ->finish() call from ->done() to dqbuf.
-> 
-> It's not clear what the purpose is of describing these alternative approaches.
-> I'd just drop that. It's a bit confusing.
+## TL;DR
 
-OK.
+This patchset adds a centralized executor to dispatch tests rather than
+relying on late_initcall to schedule each test suite separately along
+with a couple of new features that depend on it.
 
-> > +/**
-> > + * vb2_queue_allows_cache_hints() - Return true if the queue allows cache
-> > + * and memory consistency hints.
-> > + *
-> > + * @q:		pointer to &struct vb2_queue with videobuf2 queue
-> > + */
-> > +static inline bool vb2_queue_allows_cache_hints(struct vb2_queue *q)
-> > +{
-> > +	return (q->allow_cache_hints != 0) && (q->memory == VB2_MEMORY_MMAP);
-> 
-> Simply to:
-> 
-> 	return q->allow_cache_hints && q->memory == VB2_MEMORY_MMAP;
-> 
+Also, sorry for the delay in getting this new revision out. I have been
+really busy for the past couple weeks.
 
-OK. I saw vb2_is_busy()
+## What am I trying to do?
 
-static inline bool vb2_is_busy(struct vb2_queue *q)
-{
-	return (q->num_buffers > 0);
-}
+Conceptually, I am trying to provide a mechanism by which test suites
+can be grouped together so that they can be reasoned about collectively.
+The last two of three patches in this series add features which depend
+on this:
 
-in the very same header file and concluded that maybe this is the
-preferred style.
+PATCH 5/7 Prints out a test plan[1] right before KUnit tests are run;
+          this is valuable because it makes it possible for a test
+          harness to detect whether the number of tests run matches the
+          number of tests expected to be run, ensuring that no tests
+          silently failed. The test plan includes a count of tests that
+          will run. With the centralized executor, the tests are located
+          in a single data structure and thus can be counted.
 
-	-ss
+PATCH 6/7 Add a new kernel command-line option which allows the user to
+          specify that the kernel poweroff, halt, or reboot after
+          completing all KUnit tests; this is very handy for running
+          KUnit tests on UML or a VM so that the UML/VM process exits
+          cleanly immediately after running all tests without needing a
+          special initramfs. The centralized executor provides a
+          definitive point when all tests have completed and the
+          poweroff, halt, or reboot could occur.
+
+In addition, by dispatching tests from a single location, we can
+guarantee that all KUnit tests run after late_init is complete, which
+was a concern during the initial KUnit patchset review (this has not
+been a problem in practice, but resolving with certainty is nevertheless
+desirable).
+
+Other use cases for this exist, but the above features should provide an
+idea of the value that this could provide.
+
+## Changes since last revision:
+- On patch 7/7, I added some additional wording around the
+  kunit_shutdown command line option explaining that it runs after
+  built-in tests as suggested by Frank.
+- On the coverletter, I improved some wording and added a missing link.
+  I also specified the base-commit for the series.
+- Frank asked for some changes to the documentation; however, David is
+  taking care of that in a separate patch[2], so I did not make those
+  changes here. There will be some additional changes necessary
+  after David's patch is applied.
+
+Alan Maguire (1):
+  kunit: test: create a single centralized executor for all tests
+
+Brendan Higgins (5):
+  vmlinux.lds.h: add linker section for KUnit test suites
+  arch: um: add linker section for KUnit test suites
+  init: main: add KUnit to kernel init
+  kunit: test: add test plan to KUnit TAP format
+  Documentation: Add kunit_shutdown to kernel-parameters.txt
+
+David Gow (1):
+  kunit: Add 'kunit_shutdown' option
+
+ .../admin-guide/kernel-parameters.txt         |  8 ++
+ arch/um/include/asm/common.lds.S              |  4 +
+ include/asm-generic/vmlinux.lds.h             |  8 ++
+ include/kunit/test.h                          | 82 ++++++++++++-------
+ init/main.c                                   |  4 +
+ lib/kunit/Makefile                            |  3 +-
+ lib/kunit/executor.c                          | 71 ++++++++++++++++
+ lib/kunit/test.c                              | 11 ---
+ tools/testing/kunit/kunit_kernel.py           |  2 +-
+ tools/testing/kunit/kunit_parser.py           | 76 ++++++++++++++---
+ .../test_is_test_passed-all_passed.log        |  1 +
+ .../test_data/test_is_test_passed-crash.log   |  1 +
+ .../test_data/test_is_test_passed-failure.log |  1 +
+ 13 files changed, 218 insertions(+), 54 deletions(-)
+ create mode 100644 lib/kunit/executor.c
+
+
+base-commit: a2f0b878c3ca531a1706cb2a8b079cea3b17bafc
+
+[1] https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
+[2] https://patchwork.kernel.org/patch/11383635/
+
+-- 
+2.25.1.481.gfbce0eb801-goog
+
