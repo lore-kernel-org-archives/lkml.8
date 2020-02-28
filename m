@@ -2,63 +2,119 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FEBC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB7C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995642467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DDF2469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:19:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QI2MdFg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgB1QSb (ORCPT
+        id S1726682AbgB1QTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:18:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:40880 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1QSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:18:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F4BA31B;
-        Fri, 28 Feb 2020 08:18:30 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B08E3F73B;
-        Fri, 28 Feb 2020 08:18:28 -0800 (PST)
-Date:   Fri, 28 Feb 2020 16:18:20 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, robh@kernel.org,
-        viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andre.przywara@arm.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V3 2/2] firmware: arm_scmi: add smc/hvc transport
-Message-ID: <20200228161820.GA17229@bogus>
-References: <1582701171-26842-1-git-send-email-peng.fan@nxp.com>
- <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
+        Fri, 28 Feb 2020 11:19:11 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41394 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1QTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:19:11 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b5so3450710qkh.8;
+        Fri, 28 Feb 2020 08:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcHTuvAOaz4tYd8jn3eVp37XThhB3BUEsbS4Oq9/Ti0=;
+        b=QI2MdFg70JdoM+0mtQmYlNhBY/R8I9De/XO55Qw2Aao6kcTVTMq66d9TtSgvYAY4XB
+         BaHg+Ai8Xprd5PReqzMNqv8qJ0TxbdScIwdt/+I8pg0Li+9l+3XxcJzQ0DPS5DE3Kyyv
+         3NkiviaIPMf8s5ck94+/g2GdvDwk6ZhhldsS81Op1D/3iDZTfiYk6wZUr/e6Qk6V771j
+         kBTr+gJQF1SZ66Q1Z1V/mrSWNwXYRSa6wCbKlc9ljGGAOFF6O38H/sVNa0aWsRc+Gk8w
+         2PV2u5+0uDmXyxZSxHd1trnKBXMRt8rWJ8j2WHIIr8wXshZtDrG51SU50ckNeoxddIo0
+         d7aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcHTuvAOaz4tYd8jn3eVp37XThhB3BUEsbS4Oq9/Ti0=;
+        b=BSrCZ77dCwqi+SfY2fv/DauiRnx/J3pv8ggN33J1E1KMS8LlU54+sN3mQP9lla+NXz
+         PIyMDFtK8dlsJhnMzxdQOyzBl33ro5l32FRiY951U6MSjQcPX4gUVSG7kiDc6r/T4mTw
+         SUN/uHJnxqVANJvnjErTW7pvwIW3TbulEEK7rpwmSjh6ICEusLenM541X9hAc12ur3Kk
+         Ey6D5IJGQ+lBfRSgvubh0WdCPgPCngw38X6tonGGlmZl634FPH34My3LTmA0GFbAS8Of
+         IIcXKgIfgszV/4YJTX6h7yAmYba+wXBQ30srY1qYs9orB3vNIAZ7Ps4iN3uUgmTv2xFZ
+         s10A==
+X-Gm-Message-State: APjAAAWD6kD+A4ho1o70bWGXOgF+gn1jGLTl03vTiAt59gq8VBpuBFY4
+        q2TKj2o3iVuKwM2VqccaFf4=
+X-Google-Smtp-Source: APXvYqx9HquH0V8YJNmUsDuBlRTdbBRa4Lu0KOkH0veOcWdu40Metz2v89QhDe8kIJa7O4HO1oxbUA==
+X-Received: by 2002:a37:61c3:: with SMTP id v186mr5114393qkb.96.1582906750449;
+        Fri, 28 Feb 2020 08:19:10 -0800 (PST)
+Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:500::3:7b95])
+        by smtp.gmail.com with ESMTPSA id 133sm5368724qkh.109.2020.02.28.08.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 08:19:09 -0800 (PST)
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, Qian Cai <cai@lca.pw>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
+        CONTROLLER (MEMCG)), linux-kernel@vger.kernel.org (open list),
+        Dan Schatzberg <schatzberg.dan@gmail.com>
+Subject: [PATCH] loop: Fix irq lock ordering bug
+Date:   Fri, 28 Feb 2020 11:18:47 -0500
+Message-Id: <20200228161847.28107-1-schatzberg.dan@gmail.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582701171-26842-3-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 03:12:51PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Take arm,smc-id as the 1st arg, and protocol id as the 2nd arg when
-> issuing SMC/HVC. Since we need protocol id, so add this parameter
+"loop: Use worker per cgroup instead of kworker" in patch series
+"Charge loop device i/o to issuing cgroup", v3.  introduced a lock
+ordering bug. The previously existing lo->lo_lock was always acquired
+as spin_lock_irq but never actually used in irq context. The above
+patch started to use this lock in irq context which triggered a
+lockdep warning on sysfs reading.
 
-And why do we need protocol id here ? I couldn't find it out myself.
-I would like to know why/what/how is it used in the firmware(smc/hvc
-handler). I hope you are not mixing the need for multiple channel with
-protocol id ? One can find out id from the command itself, no need to
-pass it and hence asking here for more details.
+Fix this by executing file_path outside of the lock.
 
+Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+---
+ drivers/block/loop.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index eb766db48685..366658e60064 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -768,12 +768,18 @@ static ssize_t loop_attr_backing_file_show(struct loop_device *lo, char *buf)
+ {
+ 	ssize_t ret;
+ 	char *p = NULL;
++	struct file *filp = NULL;
+ 
+ 	spin_lock_irq(&lo->lo_lock);
+ 	if (lo->lo_backing_file)
+-		p = file_path(lo->lo_backing_file, buf, PAGE_SIZE - 1);
++		filp = get_file(lo->lo_backing_file);
+ 	spin_unlock_irq(&lo->lo_lock);
+ 
++	if (filp) {
++		p = file_path(filp, buf, PAGE_SIZE - 1);
++		fput(filp);
++	}
++
+ 	if (IS_ERR_OR_NULL(p))
+ 		ret = PTR_ERR(p);
+ 	else {
 -- 
-Regards,
-Sudeep
+2.17.1
+
