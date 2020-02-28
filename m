@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461D7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D8BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFAB246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4C5246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="bWRPPAc8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oPY/s70w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgB1STp (ORCPT
+        id S1726974AbgB1SUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:19:45 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:8170 "EHLO
+        Fri, 28 Feb 2020 13:20:01 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.176]:14495 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgB1STm (ORCPT
+        with ESMTP id S1726561AbgB1STq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:19:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913980;
+        Fri, 28 Feb 2020 13:19:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913983;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2EvwvmMzOKZtUZJLHlIF1SJL85vzPp9aE2EFoN3J+us=;
-        b=bWRPPAc8lrl+Y4PJCD5eK24uVuvQWBkgi1D4MYJ0sK5/l0XrF9SIP05MzL56Qyp8XJ
-        97YsLU00JuxJy9YwEbJYvHn4OSz5ysym1BEZlVfMxK+MNYhqPshWM1FqWIoh7PiTJxR0
-        Jh7V9BbEoSPstQKzjX5LUcv0kyHUOn9jj3icqwvO+oTjO9i/C72AZOmd8tnqPtHvOj6e
-        G3j9bCfSxHmIXCrTLpbuL56cGxsiX4dK0sG+Obd6j8iHzMhXIAdpR1zms8MO0bGtuBcK
-        6dYjxcZxkZrOaoYhj/1jqTGcCwFCGHOYuys2uaM3AVKCGJZePi9TizwIPwf4h1Hlf8MA
-        7skg==
+        bh=bgUxtYrAQyfsu/+aUxe4Kg+AFmHN0vko/GWYnNRlGOc=;
+        b=oPY/s70wysgoWPmb8QEk6XxBGb/YoI/se1wxE3lyUGfcswkrm+HShf0hDBG6LUiCJB
+        exC8yS5NZGaY1pOXn41h8BZs63KXQIGLWSRQTiRvwvRX+GHoh7rcFuaDgWCLAQ4WrKQa
+        k7pd2JD5eFGHT+HcyhIBfIkkUb9v40yocmE4e9fHGLZjEd7gPRWvntGlKt3cxw81IZ6p
+        VJ4/ECv07Tj1m+esV/27BxS3GHdnkzd/5H1XSX5lK+0e029WvZQktpWLRW/dcCST0Jpi
+        v6sKIhcmgb/dbzsFiU6/f4odRkMUmb7YkYwa/K4h/UD96F1O7fDd0fJ/S7WuoLJnO1m2
+        7Jfg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SIJc2Ls
+        with ESMTPSA id y0a02cw1SIJa2Lo
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 19:19:38 +0100 (CET)
+        Fri, 28 Feb 2020 19:19:36 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -61,10 +61,12 @@ To:     Paul Cercueil <paul@crapouillou.net>,
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-Date:   Fri, 28 Feb 2020 19:19:31 +0100
-Message-Id: <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+        kernel@pyra-handheld.com, Sam Ravnborg <sam@ravnborg.org>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [RFC v2 2/8] dt-bindings: display: add ingenic-jz4780-hdmi DT Schema
+Date:   Fri, 28 Feb 2020 19:19:27 +0100
+Message-Id: <0fb2f39437ea04fb4de889aac001b44f4b0a77e8.1582913973.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1582913973.git.hns@goldelico.com>
 References: <cover.1582913973.git.hns@goldelico.com>
@@ -75,59 +77,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Boddie <paul@boddie.org.uk>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-A specialisation of the generic Synopsys HDMI driver is employed for JZ4780
-HDMI support. This requires a new driver, plus device tree and configuration
-modifications.
+Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+Based on .txt binding from Zubair Lutfullah Kakakhel
 
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
 ---
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../bindings/display/ingenic-jz4780-hdmi.yaml | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..391d4e1efd35 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -433,4 +433,36 @@
- 
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+new file mode 100644
+index 000000000000..9b71c427bd69
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/ingenic-jz4780-hdmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	hdmi: hdmi@10180000 {
-+		compatible = "ingenic,jz4780-dw-hdmi";
-+		reg = <0x10180000 0x8000>;
-+		reg-io-width = <4>;
++title: Bindings for Ingenic JZ4780 HDMI Transmitter
 +
-+		clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-+		clock-names = "isfr" , "iahb";
++maintainers:
++  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
++  - H. Nikolaus Schaller <hns@goldelico.com>
 +
-+		assigned-clocks = <&cgu JZ4780_CLK_HDMI>;
-+		assigned-clock-rates = <27000000>;
++description: |
++  The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
++  TX controller IP with accompanying PHY IP.
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <3>;
++allOf:
++  - $ref: panel/panel-common.yaml#
 +
-+		/* ddc-i2c-bus = <&i2c4>; */
++properties:
++  compatible:
++    items:
++      - const: ingenic,jz4780-hdmi
 +
-+		status = "disabled";
-+	};
++  reg:
++    maxItems: 1
++    description: the address & size of the LCD controller registers
 +
-+	lcd: lcd@13050000 {
-+		compatible = "ingenic,jz4740-lcd";
-+		reg = <0x13050000 0x1800>;
++  reg-io-width:
++    const: 4
 +
-+		clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-+		clock-names = "lcd", "lcd_pclk";
++  interrupts:
++    maxItems: 1
++    description: Specifies the interrupt provided by parent
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <31>;
++  clocks:
++    maxItems: 2
++    description: Clock specifiers for isrf and iahb clocks
 +
-+		status = "disabled";
-+	};
- };
++  clock-names:
++    items:
++      - const: isfr
++      - const: iahb
++
++  ddc-i2c-bus: true
++  ports: true
++
++required:
++    - compatible
++    - clocks
++    - clock-names
++    - ports
++    - reg-io-width
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4780-cgu.h>
++
++    hdmi: hdmi@10180000 {
++        compatible = "ingenic,jz4780-hdmi";
++        reg = <0x10180000 0x8000>;
++        reg-io-width = <4>;
++        ddc-i2c-bus = <&i2c4>;
++        interrupt-parent = <&intc>;
++        interrupts = <3>;
++        clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
++        clock-names = "isfr", "iahb";
++
++        ports {
++            hdmi_in: port {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                hdmi_in_lcd: endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&jz4780_out_hdmi>;
++                };
++            };
++        };
++    };
++
++...
 -- 
 2.23.0
 
