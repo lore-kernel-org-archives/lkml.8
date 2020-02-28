@@ -2,100 +2,147 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A518FC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2738C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7287A246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582896640;
-	bh=53oCsur/c2ZxKBhkRNnzQEppXhuuy+9+hAg0PfAHndc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GlhL4lfhDaeb9e0GvI1OKTB/01STBYhJ/12o9hSdnQWphahai4KPIQWpGa62g8U0t
-	 hlg6yTtc2kXwVuLWQG1h32GT5ueWNzNSX2AJzxVtg7nJuB2PRqvlaoh8cFAek4ohkS
-	 ZHPo16gkb1Sy035efavPNcF585XWHF+rqVQeuLas=
+	by mail.kernel.org (Postfix) with ESMTP id C8A3E2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZSBryY7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgB1Naj (ORCPT
+        id S1726791AbgB1Nap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:30:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgB1Naj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:30:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13F3D2469D;
-        Fri, 28 Feb 2020 13:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582896638;
-        bh=53oCsur/c2ZxKBhkRNnzQEppXhuuy+9+hAg0PfAHndc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FkJYHhdeolWLtiYAGUPfgv89vtSOHwEeK5vwuh2v3+G7gXm3RLhrmsCE1oFQtDWwq
-         A8XFh7mw2AOW6rXaGPBY7r5tjbhffNUlDuzDyrGuxNWzf1x8JFd7ZwBAsNsgovMfBQ
-         cLnWz9guSmC5cJeRdSFGTIsDYjGPOKaz7p+7SzHc=
-Date:   Fri, 28 Feb 2020 14:30:36 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miles Chen <miles.chen@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 60/97] lib/stackdepot: Fix outdated comments
-Message-ID: <20200228133036.GB3021902@kroah.com>
-References: <20200227132214.553656188@linuxfoundation.org>
- <20200227132224.337663006@linuxfoundation.org>
- <20200228130532.GA2979@duo.ucw.cz>
- <20200228132455.GA3021902@kroah.com>
+        Fri, 28 Feb 2020 08:30:45 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:46631 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726688AbgB1Nap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:30:45 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 024593F51
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:30:44 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7fj1jJ8NuvBMd7fj1jEYlg; Fri, 28 Feb 2020 07:30:43 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Lu2UNNDEeNiF01lLdVnT5hMzc2S6yAIGWedaWMTmuQY=; b=ZSBryY7s+UYvF2h7EmzUfUGGpi
+        kkz4X1ZLl+3mp2mk9lDTwGX65cXpHnsQhZ2EcB3P8Z/D54g7jJG2nr3QHB7tA4jXWJbBQ0QBxeDwf
+        td+c/BkT3XeCR0T1djdkEW4i9iUL4dcK4Fw0/pNnf4SS14Q7/6kBp666BJh400eWmZP7TO5O6uT3/
+        VxFZ2ug1JFD+u6KhwirQsDfLIrsI4vG+Df9EF6hswflK0CORs8wY5F2krITiFRgy3yrM+sxeBDsrS
+        EkZmGzxB8hEaktOoZPEF1invSKxbjrb5cHfpiu85L/4xq2hCY9MSpicokh1bbapMwETkH99A+mSVI
+        gFPCmWGA==;
+Received: from [201.162.240.44] (port=16592 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7fiz-001MVV-WD; Fri, 28 Feb 2020 07:30:42 -0600
+Date:   Fri, 28 Feb 2020 07:33:37 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Gerrit Renker <gerrit@erg.abdn.ac.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     dccp@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: dccp: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200228133337.GA23619@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228132455.GA3021902@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.44
+X-Source-L: No
+X-Exim-ID: 1j7fiz-001MVV-WD
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.44]:16592
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 31
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 02:24:55PM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Feb 28, 2020 at 02:05:33PM +0100, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > [ Upstream commit ee050dc83bc326ad5ef8ee93bca344819371e7a5 ]
-> > > 
-> > > Replace "depot_save_stack" with "stack_depot_save" in code comments because
-> > > depot_save_stack() was replaced in commit c0cfc337264c ("lib/stackdepot:
-> > > Provide functions which operate on plain storage arrays") and removed in
-> > > commit 56d8f079c51a ("lib/stackdepot: Remove obsolete functions")
-> > 
-> > This is wrong.
-> > 
-> > > +++ b/lib/stackdepot.c
-> > > @@ -96,7 +96,7 @@ static bool init_stack_slab(void **prealloc)
-> > >  		stack_slabs[depot_index + 1] = *prealloc;
-> > >  		/*
-> > >  		 * This smp_store_release pairs with smp_load_acquire() from
-> > > -		 * |next_slab_inited| above and in depot_save_stack().
-> > > +		 * |next_slab_inited| above and in stack_depot_save().
-> > >  		 */
-> > >  		smp_store_release(&next_slab_inited, 1);
-> > >  	}
-> > 
-> > May have been outdated for mainline, but they are actually okay for
-> > 4.19.
-> 
-> Good catch, I'll go drop this from the stable queues (4.14, 4.9, and 4.19).
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Ah, nope, this patch is needed for the "real" patch here, 305e519ce48e
-("lib/stackdepot.c: fix global out-of-bounds in stack_slabs")
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Hm, it's not that big of a deal, I'll go fix that up by hand...
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-But that explains why it is included here.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-thanks,
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-greg k-h
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/linux/dccp.h | 2 +-
+ net/dccp/ccid.h      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/dccp.h b/include/linux/dccp.h
+index 6b64b6cc2175..07e547c02fd8 100644
+--- a/include/linux/dccp.h
++++ b/include/linux/dccp.h
+@@ -198,7 +198,7 @@ enum dccp_role {
+ 
+ struct dccp_service_list {
+ 	__u32	dccpsl_nr;
+-	__be32	dccpsl_list[0];
++	__be32	dccpsl_list[];
+ };
+ 
+ #define DCCP_SERVICE_INVALID_VALUE htonl((__u32)-1)
+diff --git a/net/dccp/ccid.h b/net/dccp/ccid.h
+index 70f88f2b4456..105f3734dadb 100644
+--- a/net/dccp/ccid.h
++++ b/net/dccp/ccid.h
+@@ -95,7 +95,7 @@ void ccid_cleanup_builtins(void);
+ 
+ struct ccid {
+ 	struct ccid_operations *ccid_ops;
+-	char		       ccid_priv[0];
++	char		       ccid_priv[];
+ };
+ 
+ static inline void *ccid_priv(const struct ccid *ccid)
+-- 
+2.25.0
+
