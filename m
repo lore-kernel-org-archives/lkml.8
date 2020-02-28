@@ -2,114 +2,140 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C46C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5332C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780AB246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582874125;
-	bh=bzqcvY1+w7p+H0tBmGUux2b6d1gIUiq/keZNLNBznKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HZBAJqzR2mQiYyDeut+vpT4T0UVwP1rtLcugLVyi3uMbmernDufKJxAgtAkSpPoj2
-	 Bz/M3lMhwX46lGx+LPefbIwm6DU+NSMErLZjgEFAl3jd8bO8FQU4BCMIWKZ5T2RM8E
-	 iLzo2JTl6xQJfHJv77N0dazQ8XW3Kf5Ck/ZkNq4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7CDD22469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DqCPFLqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgB1HPY (ORCPT
+        id S1726917AbgB1HWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgB1HPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:15:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6D562469D;
-        Fri, 28 Feb 2020 07:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582874123;
-        bh=bzqcvY1+w7p+H0tBmGUux2b6d1gIUiq/keZNLNBznKc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XxdwK4hX9SZG6cAVJ0xxZYzqkemDxOmWY+1cEmTnG4oE4Is+PBG7kHaRUPLcqZa6I
-         d6IGDzBLr4do0Wg1pJ5rCWIJV/BjZIkr2D3Cl0iJkW8GoyZG6jjyNX/oSPJsGpkcGC
-         3xXHY8ZcCXVl//QBuWTZ6yQC5BG057R15eUhlo4Q=
-Date:   Fri, 28 Feb 2020 08:15:20 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 25/27] powerpc/powernv/pmem: Expose the serial number
- in sysfs
-Message-ID: <20200228071520.GA2897773@kroah.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-26-alastair@au1.ibm.com>
- <96687fbf-38ab-13ff-ca19-ccb67bbc4405@linux.ibm.com>
+        Fri, 28 Feb 2020 02:22:45 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45900 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgB1HWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:22:45 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so882909pls.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 23:22:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s3S+hpLp5sIHa629tQ1zsw+Nl29dkCf3S5rCd+p6od0=;
+        b=DqCPFLqaEV3M2s53qW4elKNy8mZ/LySa/GTkoXsaZ38GB0BNEZFMAuIuyfxvFtj/fV
+         1g3uI/JWkqGyNoLF4Jt3NsTHuDB+RMx/j7XseHQMBe/Fo4TDmtC3fAXKshQbQFlO4I6m
+         cfAb+BHfSIpKCiRExZ/REITPXUg8Ahf6KlY7hUZxYCbDUAGHkv2zb27FSz1461MYHIde
+         Wq8p2AhQjWWTUZiXgUSLT2DwWlAOjA4gGIOkWQmdNpR/flJG4LDdvW+y9oOf02bqCy7e
+         u7AnfPxh6Lw4KW1xH4BwHLfqkTQUps9lJ6oIgi+BkaAHfCRgVIu3ZC9L0DtHvm+sZdef
+         AsMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s3S+hpLp5sIHa629tQ1zsw+Nl29dkCf3S5rCd+p6od0=;
+        b=A0uFDIeWI+iL9KBnEOq/b+FknlTlYzk2jzeHJcIetznzJJ05Zjx9ctCoGX/d1jFFSJ
+         ZzqeKYZhgHMTe2nkiQTmH+0W4Af6tzQxfcM4N76t0HrDwlVDJbUOv3p9sG1/yQl4AAqg
+         RpGQm117FFGfKU3axgfqX8MDybc4vpOUZ7ifqk/yoxtozo+UUkaiDmpH8NFxcNdEQgTf
+         EqsqQeBW1PW+TuqzIj20l2LX+7MqZ+/zDR+zGyCEsi2Gn+e70mXUpMtqkfoS9zGMQhoJ
+         qPk65P1dMTLBAoViZrkKUXbTWvFy9WQdPqM0lJY+rOj6Z2XXOvGt7DEP+8yoIC+BCNRi
+         GyLw==
+X-Gm-Message-State: APjAAAWQdG1xdusV73aBo01skST/5JDCWEEXlErd19Eyw5xWRepUJyGL
+        t4J/ww6GQeOq4eXqwutVF/8/Li5Nt8qzv/EnKD/XHQ==
+X-Google-Smtp-Source: APXvYqzfHO2LjscgalGnPNvJuZJRHFvR5JKj+K4ArJrMoTSjQKwCXbbVKSMib1WlxPMb5cTcx8UR195T8BgeHwMobFY=
+X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr2808157plo.325.1582874562327;
+ Thu, 27 Feb 2020 23:22:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96687fbf-38ab-13ff-ca19-ccb67bbc4405@linux.ibm.com>
+References: <20200228012036.15682-1-brendanhiggins@google.com> <20200228012036.15682-2-brendanhiggins@google.com>
+In-Reply-To: <20200228012036.15682-2-brendanhiggins@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 27 Feb 2020 23:22:31 -0800
+Message-ID: <CAFd5g46dVaV18=5mPLTHh06KQ6nDh4Xw4r8PAZDfSXASi=Qpmg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/7] vmlinux.lds.h: add linker section for KUnit test suites
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 05:25:31PM +1100, Andrew Donnellan wrote:
-> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > +int ocxlpmem_sysfs_add(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	int i, rc;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(attrs); i++) {
-> > +		rc = device_create_file(&ocxlpmem->dev, &attrs[i]);
-> > +		if (rc) {
-> > +			for (; --i >= 0;)
-> > +				device_remove_file(&ocxlpmem->dev, &attrs[i]);
-> 
-> I'd rather avoid weird for loop constructs if possible.
-> 
-> Is it actually dangerous to call device_remove_file() on an attr that hasn't
-> been added? If not then I'd rather define an err: label and loop over the
-> whole array there.
+On Thu, Feb 27, 2020 at 5:20 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> Add a linker section where KUnit can put references to its test suites.
+> This patch is the first step in transitioning to dispatching all KUnit
+> tests from a centralized executor rather than having each as its own
+> separate late_initcall.
+>
+> Co-developed-by: Iurii Zaikin <yzaikin@google.com>
+> Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  include/asm-generic/vmlinux.lds.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index e00f41aa8ec4f..99a866f49cb3d 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -856,6 +856,13 @@
+>                 KEEP(*(.con_initcall.init))                             \
+>                 __con_initcall_end = .;
+>
+> +/* Alignment must be consistent with (kunit_suite *) in include/kunit/test.h */
+> +#define KUNIT_TEST_SUITES                                              \
+> +               . = ALIGN(8);                                           \
 
-None of this should be used at all, just use attribute groups properly
-and the driver core will handle this all for you.
+After posting this, I saw I had gotten an email from 0day[1]. After
+some investigation, I discovered that this 8 byte alignment works for
+x86 64 bit fine, but only *sometimes* for 32 bit. 4 byte alignment
+seems to work in all cases (so far). I am not sure why we went with
+such a large alignment in hindsight. In any case, I should have a
+fixed revision out pretty soon.
 
-device_create/remove_file should never be called by anyone anymore if at all
-possible.
+> +               __kunit_suites_start = .;                               \
+> +               KEEP(*(.kunit_test_suites))                             \
+> +               __kunit_suites_end = .;
+> +
+>  #ifdef CONFIG_BLK_DEV_INITRD
+>  #define INIT_RAM_FS                                                    \
+>         . = ALIGN(4);                                                   \
+> @@ -1024,6 +1031,7 @@
+>                 INIT_CALLS                                              \
+>                 CON_INITCALL                                            \
+>                 INIT_RAM_FS                                             \
+> +               KUNIT_TEST_SUITES                                       \
+>         }
+>
+>  #define BSS_SECTION(sbss_align, bss_align, stop_align)                 \
+> --
 
-thanks,
-
-greg k-h
+[1] https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4I4UW4OAT63ETMIEUJQTOF3BFTMO6ROD/
