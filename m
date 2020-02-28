@@ -2,149 +2,152 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0132C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5F1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8936D246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863D1222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgB1M7l (ORCPT
+        id S1726118AbgB1NCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:59:41 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34196 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgB1M7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:59:41 -0500
-Received: by mail-wm1-f68.google.com with SMTP id i10so8195718wmd.1;
-        Fri, 28 Feb 2020 04:59:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=gl/K3quWUljoEPQV4VV0LS4SMY0aYpsAWuBXNu17G6I=;
-        b=bBIwJbT5HDLHJCeEdKyIP0C0EdsoZYHYvLpFKtEWsCMgxcho0m75JQDAzwN5alUIGr
-         rvRPG5viFhaXg1rcHtHUHmMuMLpFjRNw1rPP0BhM1wLQPrVQ7aKVkc+MhjRtpb+f0Lfr
-         FZMdgxBbpSps3K8TrN7dZxb4EeVedYSGNvFKD33xV4nCr7Vg7Ml+tlhqF7fFWJyLFVWO
-         szauk75Qb5AGEYvROwHCDRdtDCAWj48KpaSrM6wjPCoCv35vBjwF65swwq1rub3dRWGi
-         RjySh25rVMN0cDDOkNFqd4mINuajNNmqbyQvo/22Nwxn9NzPUXXKrQwSgLvFxCfhu+Ma
-         WrBg==
-X-Gm-Message-State: APjAAAWmI9PAV0u64T4IdcubvM/mblqlWWZWZLNkzV9TqVDNVeD3ILpS
-        2gMTnjjGOI0vq8csLFToeq5zgMqiZ5s=
-X-Google-Smtp-Source: APXvYqw9NSen7cQY5ihM6dPNjNQ+VKIrM+hDXiW7r0BWchfXJV1ew4T3l/YNj5JLz0Hcg78VH/Pc0g==
-X-Received: by 2002:a05:600c:290:: with SMTP id 16mr2343285wmk.64.1582894778471;
-        Fri, 28 Feb 2020 04:59:38 -0800 (PST)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id c9sm12581204wrq.44.2020.02.28.04.59.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 04:59:37 -0800 (PST)
-Subject: Re: [PATCH 2/2] vt: selection, push sel_lock up
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
-References: <20200228115406.5735-1-jslaby@suse.cz>
- <20200228115406.5735-2-jslaby@suse.cz> <20200228120332.GA3011426@kroah.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <71582fee-257c-3ef4-7c03-3d43651898ff@suse.cz>
-Date:   Fri, 28 Feb 2020 13:59:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 28 Feb 2020 08:02:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57322 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgB1NCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:02:22 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9A336AE62;
+        Fri, 28 Feb 2020 13:02:18 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 14:02:17 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
+        <k.drobinski@camlintechnologies.com>,
+        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Regression in v4.19.106 breaking waking up of readers of
+ /proc/kmsg and /dev/kmsg
+Message-ID: <20200228130217.rj6qge2en26bdp7b@pathway.suse.cz>
+References: <aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com>
+ <20200227123633.GB962932@kroah.com>
+ <42d3ce5c-5ffe-8e17-32a3-5127a6c7c7d8@camlintechnologies.com>
+ <e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com>
+ <20200228031306.GO122464@google.com>
+ <20200228100416.6bwathdtopwat5wy@pathway.suse.cz>
+ <20200228105836.GA2913504@kroah.com>
+ <20200228113214.kew4xi5tkbo7bpou@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200228120332.GA3011426@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200228113214.kew4xi5tkbo7bpou@pathway.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28. 02. 20, 13:03, Greg KH wrote:
-> On Fri, Feb 28, 2020 at 12:54:06PM +0100, Jiri Slaby wrote:
->> sel_lock cannot nest in the console lock. Thanks to syzkaller, the
->> kernel states firmly:
->>
->>> WARNING: possible circular locking dependency detected
->>> 5.6.0-rc3-syzkaller #0 Not tainted
->>> ------------------------------------------------------
->>> syz-executor.4/20336 is trying to acquire lock:
->>> ffff8880a2e952a0 (&tty->termios_rwsem){++++}, at: tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
-...
->>> other info that might help us debug this:
->>>
->>> Chain exists of:
->>>   &tty->termios_rwsem --> console_lock --> sel_lock
->>
->> Clearly. From the above, we have:
->>  console_lock -> sel_lock
->>  sel_lock -> termios_rwsem
->>  termios_rwsem -> console_lock
->>
->> Fix this by reversing the console_lock -> sel_lock dependency in
->> ioctl(TIOCL_SETSEL). First, lock sel_lock, then console_lock.
->>
->> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
->> Reported-by: syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
->> Fixes: 07e6124a1a46 ("vt: selection, close sel_buffer race")
+On Fri 2020-02-28 12:32:14, Petr Mladek wrote:
+> On Fri 2020-02-28 11:58:36, Greg Kroah-Hartman wrote:
+> > On Fri, Feb 28, 2020 at 11:04:16AM +0100, Petr Mladek wrote:
+> > > On Fri 2020-02-28 12:13:06, Sergey Senozhatsky wrote:
+> > > > Cc-ing Petr, Steven, John
+> > > > 
+> > > > https://lore.kernel.org/lkml/e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com
+> > > > 
+> > > > On (20/02/27 14:08), Lech Perczak wrote:
+> > > > > W dniu 27.02.2020 o 13:39, Lech Perczak pisze:
+> > > > > > W dniu 27.02.2020 o 13:36, Greg Kroah-Hartman pisze:
+> > > > > >> On Thu, Feb 27, 2020 at 11:09:49AM +0000, Lech Perczak wrote:
+> > > > > >>> Hello,
+> > > > > >>>
+> > > > > >>> After upgrading kernel on our boards from v4.19.105 to v4.19.106 we found out that syslog fails to read the messages after ones read initially after opening /proc/kmsg just after booting.
+> > > > > >>> I also found out, that output of 'dmesg --follow' also doesn't react on new printks appearing for whatever reason - to read new messages, reopening /proc/kmsg or /dev/kmsg was needed.
+> > > > > >>> I bisected this down to commit 15341b1dd409749fa5625e4b632013b6ba81609b ("char/random: silence a lockdep splat with printk()"), and reverting it on top of v4.19.106 restored correct behaviour.
+> > > > > >> That is really really odd.
+> > > > > > Very odd it is indeed.
+> > > > > >>> My test scenario for bisecting was:
+> > > > > >>> 1. run 'dmesg --follow' as root
+> > > > > >>> 2. run 'echo t > /proc/sysrq-trigger'
+> > > > > >>> 3. If trace appears in dmesg output -> good, otherwise, bad. If trace doesn't appear in output of 'dmesg --follow', re-running it will show the trace.
+> > > > > >>>
+> > > 
+> > > I have reproduced the problem with a kernel based on v4.19.106
+> > > and I see the following in the log:
+> > > 
+> > > [    0.028250] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+> > > [    0.028263] random: get_random_bytes called from start_kernel+0x9e/0x4f6 with crng_init=0
+> > > [    0.028268] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:4 nr_cpu_ids:4 nr_node_ids:1
+> > > [    0.028407] percpu: Embedded 44 pages/cpu s142216 r8192 d29816 u524288
+> > > [    0.028411] pcpu-alloc: s142216 r8192 d29816 u524288 alloc=1*2097152
+> > > [    0.028412] pcpu-alloc: [0] 0 1 2 3 
+> > > 
+> > > Note that percpu stuff is initialized after printk_deferred(). And the
+> > > deferred console is scheduled by:
+> > > 
+> > > void defer_console_output(void)
+> > > {
+> > > 	preempt_disable();
+> > > 	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
+> > > 	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
+> > > 	preempt_enable();
+> > > }
+> > > 
+> > > I am afraid that the patch creates some mess via the non-initialized
+> > > per-cpu variable.
+> > > 
+> > > I see that x86 has some support for EARLY_PER_CPU stuff but it seems
+> > > to be arch-specific.
+> > > 
+> > > I do not see a reliable way to detect when per-cpu variables are
+> > > initialized. Adding Tejun and PeterZ into CC if they have any
+> > > idea.
+> > > 
+> > > I suggest to revert the patch until we have some easy and safe solution.
+> > 
+> > Ok, I'll do so, but why is this not an issue in 5.4.y and newer kernels?
 > 
-> As 07e6124a1a46 was marked for stable, both of these should be as well,
-> right?
+> Good question. Well, there have been many changes in the random number
+> subsystem initialization recently. My bet is that it is much harder to
+> hit the warning there.
 
-Ah, yes. My bad again, sorry.
+OK, the problem has gone after I cherry-picked the commit
+d55535232c3dbde9a523 ("random: move rand_initialize() earlier").
+I still see the warning but it is printed much later:
 
-> And did you happen to test these two with the syzbot tool to see if it
-> really did fix the report?
+[    0.051846] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.054070] NR_IRQS: 524544, nr_irqs: 456, preallocated irqs: 16
+[    0.054281] random: get_random_bytes called from start_kernel+0x308/0x4fe with crng_init=0
+[    0.054430] Console: colour dummy device 80x25
 
-Nope, this syz* stuff is a black magic for me. How can I do that?
+But I am not sure if it is safe to backport this patch into the old
+stable kernel.
 
-thanks,
--- 
-js
-suse labs
+Anyway, this fix would not be enough. The commit message mentions:
+
+    Note that this warning may still remain for machines that do not have
+    UEFI RNG support (which initializes the RNG pools during setup_arch()),
+    or for x86 machines without RDRAND (or booting without "random.trust=on"
+    or CONFIG_RANDOM_TRUST_CPU=y).
+
+
+So, I would still prefer to _revert_ the commit 15341b1dd409749f
+("char/random: silence a lockdep splat with printk()"). It calmed
+down lockdep report. The real life danger is dubious. The warning
+is printed early when the system is running on single CPU where
+it could not race.
+
+Best Regards,
+Petr
