@@ -6,110 +6,185 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6BEC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE20C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E1A2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C4A2468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="inr1/qyO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="L+RAqN9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgB1QYh (ORCPT
+        id S1726561AbgB1Q0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:24:37 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42685 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgB1QYg (ORCPT
+        Fri, 28 Feb 2020 11:26:49 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:40010 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Q0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:24:36 -0500
-Received: by mail-io1-f67.google.com with SMTP id z1so3990283iom.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:24:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bB98tLoF0u0YAiQkQFd8a6MwFlRbdwFA2a9rJyqMwcU=;
-        b=inr1/qyOInYmFN6D425GzWVmy0IT7QRJk3SjPLoFYSH/pO1voh/EdW+SfD8OofD6Bn
-         wvNaWCaLKbDpnb6pOCFOt0X9wayPiilDqg7EASARHhnxnaUyVoJrs35dzHFojcJnpWDF
-         dEnNQkAT4yoK8tzeRd9BPUclNV9H8sVGfsSfM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bB98tLoF0u0YAiQkQFd8a6MwFlRbdwFA2a9rJyqMwcU=;
-        b=g1qVT+xqT64s36n1pJUYliVxqKzVxUsFWBfpyXbyZx5huHnzMhyLjihldUEn/TYw3f
-         ffawQuF5/7Myq4kBMpjkwEMm+lzqr6oKPTemhsOWgfhe0/GTK9IvFOeUPhht9kEiQUnL
-         yoSQnAGw8XeiF6K6GvoxUz5ks/e+u+8TDdoydkI8z0RSf5/LZ/RqC2I4ss/L6E7ZYjwC
-         bwr8uCnQTJmbAH68RX7BdU1SSMieutU72i8NPJBoX1neMIOUboEJ8ld8CxYZkFwkZJP1
-         KIp1SY2pN5GnTVYw+WdOFE9rc1Lg0DJi2c8eN01nZSjZz7d3gBGl1NlBVslbsteCL0iK
-         cLQg==
-X-Gm-Message-State: APjAAAXdw9OTClf8Why3MpVaIktj+KKDjTgkeHJVteg1NaJpx043KMeq
-        6GpZvVMNRxbYky7MDshC536InITo09uPHP1JFr9veA==
-X-Google-Smtp-Source: APXvYqzW4AhONnArihOqANfWi8suDYP+nTtZwmEhAQutobth5sBaSR8sSuEmoVmIoU8B7DsyWsdjOGmol0a5XteeUNc=
-X-Received: by 2002:a02:9988:: with SMTP id a8mr4117936jal.33.1582907074679;
- Fri, 28 Feb 2020 08:24:34 -0800 (PST)
+        Fri, 28 Feb 2020 11:26:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582907205; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xOb0AVoiiFlckuvxHpEhBL9Wrp4HKGY5UhYo5YdakL0=;
+        b=L+RAqN9ACsoeWx1jzHdHE2acUYpgMnq8YMOrZaHk4eeqRdlvNqW9Ns96f0NkFiP6lG/Qu0
+        5GZTb5K6gIvKRr1+aq4pAawcE+gxgqZxtb/6G5OCl9f7YhANfLqbVe297FNUmrzFJ48Byo
+        0W9OlUBhOUDdxmv8hJ33Sv1BaXngaCc=
+Date:   Fri, 28 Feb 2020 13:26:20 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 0/7] MIPS: CI20: Add efuse driver for Ingenic JZ4780
+ and attach to DM9000 for stable MAC addresses
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1582907181.3.7@crapouillou.net>
+In-Reply-To: <cover.1582905653.git.hns@goldelico.com>
+References: <cover.1582905653.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com> <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
- <20200227151421.3u74ijhqt6ekbiss@ws.net.home> <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
- <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com> <20200228122712.GA3013026@kroah.com>
-In-Reply-To: <20200228122712.GA3013026@kroah.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 28 Feb 2020 17:24:23 +0100
-Message-ID: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 1:27 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Nikolaus,
 
-> > Superblocks and mounts could get enumerated by a unique identifier.
-> > mnt_id seems to be good for mounts, s_dev may or may not be good for
-> > superblock, but  s_id (as introduced in this patchset) could be used
-> > instead.
->
-> So what would the sysfs tree look like with this?
+For the whole series:
 
-For a start something like this:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-mounts/$MOUNT_ID/
-  parent -> ../$PARENT_ID
-  super -> ../../supers/$SUPER_ID
-  root: path from mount root to fs root (could be optional as usually
-they are the same)
-  mountpoint -> $MOUNTPOINT
-  flags: mount flags
-  propagation: mount propagation
-  children/$CHILD_ID -> ../../$CHILD_ID
+Cheers,
+-Paul
 
- supers/$SUPER_ID/
-   type: fstype
-   source: mount source (devname)
-   options: csv of mount options
 
-Thanks,
-Miklos
+Le ven., f=E9vr. 28, 2020 at 17:00, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> * fix a compiler warning/error (reported by Paul Cercueil=20
+> <paul@crapouillou.net>)
+> * remove clock-names from properties (suggested by Paul Cercueil=20
+> <paul@crapouillou.net>)
+>=20
+> PATCH V7 2020-02-28 14:58:30:
+> * use devm_add_action_or_reset to unprepare clock in case of error=20
+> (suggested by Paul Cercueil <paul@crapouillou.net>)
+> * use already existing constants to check for overflow of rd_adj and=20
+> rd_strobe
+> * remove clock-names from bindings example and DTS (suggested by Paul=20
+> Cercueil <paul@crapouillou.net>)
+> * addition for nemc driver to handle this correctly (contributed by=20
+> Paul Cercueil <paul@crapouillou.net>)
+> * make efuse a child node of nemc to avoid problems with overlapping
+>   reg address ranges (suggested by Paul Cercueil=20
+> <paul@crapouillou.net>)
+>=20
+> PATCH V6 2020-02-26 12:16:07:
+> * add dependency on CONFIG_OF and select REGMAP_MMIO (suggested by=20
+> Paul Cercueil <paul@crapouillou.net>)
+> * add clk_prepare_enable() (suggested by Paul Cercueil=20
+> <paul@crapouillou.net>)
+> * inline jz4780_efuse_read_32bytes() since it is only used once
+> * remove read optimization for full block (suggested by Paul Cercueil=20
+> <paul@crapouillou.net>)
+> * simplify calculations for rd_adj and rd_strobe (suggested by Paul=20
+> Cercueil <paul@crapouillou.net>)
+> * do calculations for rd_adj and rd_strobe in local variables
+> * fix overflow check (did allow for 5 bit values although register is=20
+> 4 bit wide)
+> * fixes for yaml (sugested by Andreas Kemnade <andreas@kemnade.info>)
+>=20
+> PATCH V5 2020-02-22 11:25:35:
+> * no longer RFC but PATCH
+> * add yaml bindings (by Andreas Kemnade <andreas@kemnade.info>)
+> * fixes to yaml (suggested by Rob Herring <robh@kernel.org>)
+>=20
+> RFC V4 2020-02-17 17:55:35:
+> * removed read_only for nvmem config because there is no write method
+> * Kconfig: replaced depends MACH_JZ4780 with MACH_INGENIC
+> * run through checkpatch and fixed issues
+> * made use of devm_nvram_register() and get rid of=20
+> jz4780_efuse_remove()
+>   (suggested by Srinivas Kandagatla <srinivas.kandagatla@linaro.org>)
+> * squashed previous patch 1/9 and 2/9 into single (regmap based)=20
+> driver
+>=20
+> RFC V3 2020-02-16 20:20:59:
+>=20
+> This series is based on and a follow up for
+>=20
+> https://lore.kernel.org/patchwork/cover/868157/
+>=20
+> ("[v2,0/2] Add efuse driver for Ingenic JZ4780 SoC")
+>=20
+> Original authors were
+> PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Mathieu Malaterre <malat@debian.org>
+>=20
+> and there are additions / code improvements by
+> H. Nikolaus Schaller <hns@goldelico.com>
+> Paul Cercueil <paul@crapouillou.net>
+>=20
+> This setup works, if the dm9000 driver is compiled
+> as a module.
+>=20
+> Therefore it is all RFC level. It is also not completely
+> checkpatched.
+>=20
+>=20
+> H. Nikolaus Schaller (1):
+>   MIPS: DTS: CI20: make DM9000 Ethernet controller use NVMEM to find=20
+> the
+>     default MAC address
+>=20
+> Paul Cercueil (1):
+>   memory: jz4780_nemc: Only request IO memory the driver will use
+>=20
+> PrasannaKumar Muralidharan (5):
+>   nvmem: add driver for JZ4780 efuse
+>   Bindings: nvmem: add bindings for JZ4780 efuse
+>   Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
+>   nvmem: MAINTAINERS: add maintainer for JZ4780 efuse driver
+>   MIPS: DTS: JZ4780: define node for JZ4780 efuse
+>=20
+>  .../ABI/testing/sysfs-driver-jz4780-efuse     |  16 ++
+>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  |  45 ++++
+>  MAINTAINERS                                   |   5 +
+>  arch/mips/boot/dts/ingenic/ci20.dts           |   3 +
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi        |  19 +-
+>  drivers/memory/jz4780-nemc.c                  |  15 +-
+>  drivers/nvmem/Kconfig                         |  12 +
+>  drivers/nvmem/Makefile                        |   2 +
+>  drivers/nvmem/jz4780-efuse.c                  | 239=20
+> ++++++++++++++++++
+>  9 files changed, 353 insertions(+), 3 deletions(-)
+>  create mode 100644=20
+> Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+>  create mode 100644=20
+> Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>  create mode 100644 drivers/nvmem/jz4780-efuse.c
+>=20
+> --
+> 2.23.0
+>=20
+
+=
+
