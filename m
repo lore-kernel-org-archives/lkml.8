@@ -2,149 +2,211 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF65C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94941C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613C2246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6724C246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2A2q3es"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDYpL4uN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgB1Khl (ORCPT
+        id S1726906AbgB1KiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:37:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37943 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726413AbgB1Khk (ORCPT
+        Fri, 28 Feb 2020 05:38:01 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37272 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgB1KiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:37:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582886259;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mt6Lbh5dkQYRs/xWyErDmgV7Bs1CQ+l7mA9OrMtPMT8=;
-        b=F2A2q3esQcNxQw3dDX9SeYex9dj1IW3fVPP07J7raSv4HpAWPBcrWgLESr2xBigYg6cTqC
-        n2ax8SttoV0QTmCdExjuXefeXkYQl/Dfseq6r/vXLj2xAoH0Gy33OSfaRJ5W7wkFT1acT5
-        n27jZVwyhmAaU6cTk/3UVtxgDZrpKlw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-NhvBJ72dOF2_2JbmuSjDQQ-1; Fri, 28 Feb 2020 05:37:37 -0500
-X-MC-Unique: NhvBJ72dOF2_2JbmuSjDQQ-1
-Received: by mail-wr1-f71.google.com with SMTP id s13so1149935wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:37:37 -0800 (PST)
+        Fri, 28 Feb 2020 05:38:01 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l5so2384863wrx.4;
+        Fri, 28 Feb 2020 02:37:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zgj7mTEBOZhnEp92w6YeduSWhL7aAxaZ23Ij9QT6Fcc=;
+        b=lDYpL4uNGZO9BvGkElG1ZZKiB6RvJvwsUSqj3oDNMloKBWG8fm7f5xfah7pgRVx/vS
+         kn5yawm8At4+BwAIzsioR8eNmllav5mPIJrwkxN8fYzQjZf8jde8TB58ZOVKy+yNAgPY
+         uE3vxyFFBYPDLTeVnW7vMgSQgjDrYY4ER+c5zpQpLNU/gricql9sKfFJCoYs84gABaaR
+         q9I9rCG4g/8Gsz6GZ8qSKg1KVa6tFvu2z+ig0BNcIPgGXN/ThiqIdgkTJASL1l36VDFh
+         Y5a0zld+pZ/94BdNivbeLXSr8KTnJ0RZOl3pTxSwUA8/18nWLYTM2mc8LgVo15Igbj1V
+         iQ/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mt6Lbh5dkQYRs/xWyErDmgV7Bs1CQ+l7mA9OrMtPMT8=;
-        b=s0kREj/uiDJBJjI2YepGx5yv3tXueBL33BMNwEsOW+tIc/SR1yNnJ+dZ4dpRjyx318
-         8LWfogbDaormuhAfF4o8oKLhrNY5tIQ26jdYfjELPJIv69bkB5LfzrFZthKcPeD7FORM
-         fVdA5H/ngnPdch2xA73O3XizpXvddBnljt2OS9gOiZeVOC8w/ebcO6SnzUxhDe8bYaqV
-         A2FLtwMDGTp/+xC+tpl8uyAVBzT2EbTpjJwK2LYWAWQDlO8ceA6Jeqwm9v9q+yoZ/p64
-         HScFVQOg7XygsXBLPmlAFWsR1srXqgRfD6l0eucwXewhgav5rIfdxeXIQEW1vq1H7FJB
-         ExqA==
-X-Gm-Message-State: APjAAAX8PuHHoDOim4jSR06vMC74X6TFk0iljKws733avQIi4zcnmMXi
-        nybvpaJ8MRpkW921pLwycxPwjv+HdnBcFPUQ1X/VWiJ8x20JOx1je0P15tj+tYilx/P7jRf9clE
-        FrKJR20ZvzkxwVmCOGGHsLr/f
-X-Received: by 2002:a7b:c119:: with SMTP id w25mr4365882wmi.112.1582886256423;
-        Fri, 28 Feb 2020 02:37:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxO68+fSfsLzIp2GguTwy+MpiSH4P0lBmHz7MUOl2WGlMyLbizhSUbzh/reh6bCAI4UPdib8A==
-X-Received: by 2002:a7b:c119:: with SMTP id w25mr4365851wmi.112.1582886256129;
-        Fri, 28 Feb 2020 02:37:36 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
-        by smtp.gmail.com with ESMTPSA id y7sm15045583wmd.1.2020.02.28.02.37.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 02:37:35 -0800 (PST)
-Subject: Re: [PATCH v2] kvm: x86: Limit the number of "kvm: disabled by bios"
- messages
-To:     Erwan Velu <erwanaliasr1@gmail.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "open list:KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)" 
-        <kvm@vger.kernel.org>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>
-References: <20200214143035.607115-1-e.velu@criteo.com>
- <20200227180047.53888-1-e.velu@criteo.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <dbcda2fb-2062-acdc-af03-fad5d667a742@redhat.com>
-Date:   Fri, 28 Feb 2020 11:37:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=zgj7mTEBOZhnEp92w6YeduSWhL7aAxaZ23Ij9QT6Fcc=;
+        b=oYQXtFtQz7dnGIWntnu9/6WObzlD0QMRNU+V0ePDIqeY3mN3lR8sioAifLWD64jd0h
+         tIs0+NewydkDLScBOlSw5T8ANhSG1l9XvDYlrtlqqEggyNQMvSzwmix8VEJ/joOWBQ/N
+         Euoesdifx8z72JhxvovQY1xduRw0C5H+jmEeQxBNH5yHF8IlL1OepQYt5QbvxRJIcmCU
+         1GXq18NdVTrBKOtopyVKAou8YxXHJm1fjkF4zyOblWbJSA8k8C1bNPUImHdESof9rxRv
+         +EaulnzbVOANbdg9kATkdeuB6Qn9PFWgi7DG2m/zHxvOq6zRGgpKhGqWRoQQoap047Lq
+         HyWw==
+X-Gm-Message-State: APjAAAUSsZKmn330pKywf9BYOns0lgqgrZ95VJZ4vKypcaLkH8vPS7JO
+        0QymI2fMD/9Y6GRxExGs3uIz0rTkvpBdNQ==
+X-Google-Smtp-Source: APXvYqw8f1DiLcW2DIjcpjJZpBiix4Ms4NoYtBEt2H6KG1bsFEVAD1D2iH6I52vH6vZYjWw1XxMhjQ==
+X-Received: by 2002:a5d:4f89:: with SMTP id d9mr4216926wru.391.1582886278351;
+        Fri, 28 Feb 2020 02:37:58 -0800 (PST)
+Received: from localhost.localdomain (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id s22sm1550679wmc.16.2020.02.28.02.37.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 02:37:57 -0800 (PST)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2] drm/etnaviv: rework perfmon query infrastructure
+Date:   Fri, 28 Feb 2020 11:37:49 +0100
+Message-Id: <20200228103752.1944629-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200227180047.53888-1-e.velu@criteo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 19:00, Erwan Velu wrote:
-> In older version of systemd(219), at boot time, udevadm is called with :
-> 	/usr/bin/udevadm trigger --type=devices --action=add"
-> 
-> This program generates an echo "add" in /sys/devices/system/cpu/cpu<x>/uevent,
-> leading to the "kvm: disabled by bios" message in case of your Bios disabled
-> the virtualization extensions.
-> 
-> On a modern system running up to 256 CPU threads, this pollutes the Kernel logs.
-> 
-> This patch offers to ratelimit this message to avoid any userspace program triggering
-> this uevent printing this message too often.
-> 
-> This patch is only a workaround but greatly reduce the pollution without
-> breaking the current behavior of printing a message if some try to instantiate
-> KVM on a system that doesn't support it.
-> 
-> Note that recent versions of systemd (>239) do not have trigger this behavior.
-> 
-> This patch will be useful at least for some using older systemd with recent Kernels.
-> 
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
-> ---
->  arch/x86/kvm/x86.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 359fcd395132..c8a90231befe 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7308,12 +7308,12 @@ int kvm_arch_init(void *opaque)
->  	}
->  
->  	if (!ops->cpu_has_kvm_support()) {
-> -		printk(KERN_ERR "kvm: no hardware support\n");
-> +		pr_err_ratelimited("kvm: no hardware support\n");
->  		r = -EOPNOTSUPP;
->  		goto out;
->  	}
->  	if (ops->disabled_by_bios()) {
-> -		printk(KERN_ERR "kvm: disabled by bios\n");
-> +		pr_err_ratelimited("kvm: disabled by bios\n");
->  		r = -EOPNOTSUPP;
->  		goto out;
->  	}
-> 
+Report the correct perfmon domains and signals depending
+on the supported feature flags.
 
-Queued, thanks.
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-Paolo
+---
+Changes V1 -> V2:
+  - Handle domain == NULL case better to get rid of BUG_ON(..) usage.
+---
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 59 ++++++++++++++++++++---
+ 1 file changed, 52 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index 8adbf2861bff..e6795bafcbb9 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
+ };
+ 
+ struct etnaviv_pm_domain_meta {
++	unsigned int feature;
+ 	const struct etnaviv_pm_domain *domains;
+ 	u32 nr_domains;
+ };
+@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain doms_vg[] = {
+ 
+ static const struct etnaviv_pm_domain_meta doms_meta[] = {
+ 	{
++		.feature = chipFeatures_PIPE_3D,
+ 		.nr_domains = ARRAY_SIZE(doms_3d),
+ 		.domains = &doms_3d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_2D,
+ 		.nr_domains = ARRAY_SIZE(doms_2d),
+ 		.domains = &doms_2d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_VG,
+ 		.nr_domains = ARRAY_SIZE(doms_vg),
+ 		.domains = &doms_vg[0]
+ 	}
+ };
+ 
++static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
++{
++	unsigned int num = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (gpu->identity.features & meta->feature)
++			num += meta->nr_domains;
++	}
++
++	return num;
++}
++
++static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
++	unsigned int index)
++{
++	const struct etnaviv_pm_domain *domain = NULL;
++	unsigned int offset = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (!(gpu->identity.features & meta->feature))
++			continue;
++
++		if (meta->nr_domains < (index - offset)) {
++			offset += meta->nr_domains;
++			continue;
++		}
++
++		domain = meta->domains + (index - offset);
++	}
++
++	return domain;
++}
++
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_domain *domain)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 
+-	if (domain->iter >= meta->nr_domains)
++	if (domain->iter >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + domain->iter;
++	dom = pm_domain(gpu, domain->iter);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+ 	strncpy(domain->name, dom->name, sizeof(domain->name));
+ 
+ 	domain->iter++;
+-	if (domain->iter == meta->nr_domains)
++	if (domain->iter == nr_domains)
+ 		domain->iter = 0xff;
+ 
+ 	return 0;
+@@ -448,14 +491,16 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_signal *signal)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 	const struct etnaviv_pm_signal *sig;
+ 
+-	if (signal->domain >= meta->nr_domains)
++	if (signal->domain >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + signal->domain;
++	dom = pm_domain(gpu, signal->domain);
++	if (!dom)
++		return -EINVAL;
+ 
+ 	if (signal->iter >= dom->nr_signals)
+ 		return -EINVAL;
+-- 
+2.24.1
 
