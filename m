@@ -2,345 +2,131 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53B9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D3CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94A624677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA1E24677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="B+V7j6Me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgB1NxR (ORCPT
+        id S1727408AbgB1Nxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:53:17 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12927 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgB1NxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:53:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 05:53:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="242383376"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.167])
-  by orsmga006.jf.intel.com with ESMTP; 28 Feb 2020 05:53:08 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 13/13] perf intel-pt: Add support for text poke events
-Date:   Fri, 28 Feb 2020 15:51:25 +0200
-Message-Id: <20200228135125.567-14-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200228135125.567-1-adrian.hunter@intel.com>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Fri, 28 Feb 2020 08:53:37 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:15529 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726890AbgB1Nxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:53:36 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 5EC80A4FE
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:53:35 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7g59jpROYEfyq7g59julL8; Fri, 28 Feb 2020 07:53:35 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9MXNMsFMVcQPW05en/+q2B+/a2FtM4H6ysZ3B1RIBDk=; b=B+V7j6MeZu508oeK16Ehu6kE4l
+        B4N9bGNmNfz2MQeZTw3MOkptYpEx+6YM4C4y1GoskBI+88i/zz7eqS+6k3QmMy4CVRsw4JiqFDuUH
+        eTyxYHzsIxZZLnzlExQgbxRYeEF+bCpFqx5OBWkTFhHXnt/HTIQzzKjZqCy37JuWEN6lDl6gM/YGP
+        /GCQCz4O7R/cxW4B4odibyMNvXHuqyzwKZJ42c7lVaZkNTlyyEBKk6/moesUH0UKHaWSNf9gzMmoT
+        mISuU4Urz7Tjk+byhp8FhXKDD/2Fs9cgnNWPpir8I8InGkxqXY7ixxd15SXA0gzwiokJiY1YiDh4r
+        i/7CRnyw==;
+Received: from [201.162.240.44] (port=6756 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7g57-001Yph-42; Fri, 28 Feb 2020 07:53:33 -0600
+Date:   Fri, 28 Feb 2020 07:56:29 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] bonding: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200228135629.GA30289@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.44
+X-Source-L: No
+X-Exim-ID: 1j7g57-001Yph-42
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.44]:6756
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 65
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select text poke events when available and the kernel is being traced.
-Process text poke events to invalidate entries in Intel PT's instruction
-cache.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Example:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-  The example requires kernel config:
-    CONFIG_PROC_SYSCTL=y
-    CONFIG_SCHED_DEBUG=y
-    CONFIG_SCHEDSTATS=y
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-  Before:
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-    # perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # echo 1 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    1
-    # echo 0 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 3.341 MB perf.data.before ]
-    [1]+  Terminated                 perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M
-    # perf script -i perf.data.before --itrace=e >/dev/null
-    Warning:
-    474 instruction trace errors
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-  After:
+This issue was found with the help of Coccinelle.
 
-    # perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # echo 1 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    1
-    # echo 0 > /proc/sys/kernel/sched_schedstats
-    # cat /proc/sys/kernel/sched_schedstats
-    0
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 2.646 MB perf.data.after ]
-    [1]+  Terminated                 perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
-    # perf script -i perf.data.after --itrace=e >/dev/null
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-Example:
-
-  The example requires kernel config:
-    # CONFIG_FUNCTION_TRACER is not set
-
-  Before:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __schedule
-    Added new event:
-      probe:__schedule     (on __schedule)
-
-    You can now use it in all perf tools, such as:
-
-            perf record -e probe:__schedule -aR sleep 1
-
-    # perf record -e probe:__schedule -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.026 MB perf.data (68 samples) ]
-    # perf probe -d probe:__schedule
-    Removed event: probe:__schedule
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 41.268 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    Warning:
-    207 instruction trace errors
-
-  After:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __schedule
-    Added new event:
-      probe:__schedule     (on __schedule)
-
-    You can now use it in all perf tools, such as:
-
-        perf record -e probe:__schedule -aR sleep 1
-
-    # perf record -e probe:__schedule -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.028 MB perf.data (107 samples) ]
-    # perf probe -d probe:__schedule
-    Removed event: probe:__schedule
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 39.978 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    # perf script -i t1 --no-itrace -D | grep 'POKE\|KSYMBOL'
-    6 565303693547 0x291f18 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc027a000 len 4096 type 2 flags 0x0 name kprobe_insn_page
-    6 565303697010 0x291f68 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027a000 old len 0 new len 6
-    6 565303838278 0x291fa8 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc027c000 len 4096 type 2 flags 0x0 name kprobe_optinsn_page
-    6 565303848286 0x291ff8 [0xa0]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027c000 old len 0 new len 106
-    6 565369336743 0x292af8 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffff88ab8890 old len 5 new len 5
-    7 566434327704 0x217c208 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffff88ab8890 old len 5 new len 5
-    6 566456313475 0x293198 [0xa0]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027c000 old len 106 new len 0
-    6 566456314935 0x293238 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffc027a000 old len 6 new len 0
-
-Example:
-
-  The example requires kernel config:
-    CONFIG_FUNCTION_TRACER=y
-
-  Before:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __kmalloc
-    Added new event:
-      probe:__kmalloc      (on __kmalloc)
-
-    You can now use it in all perf tools, such as:
-
-        perf record -e probe:__kmalloc -aR sleep 1
-
-    # perf record -e probe:__kmalloc -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.022 MB perf.data (6 samples) ]
-    # perf probe -d probe:__kmalloc
-    Removed event: probe:__kmalloc
-    # kill %1
-    [ perf record: Woken up 2 times to write data ]
-    [ perf record: Captured and wrote 43.850 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    Warning:
-    8 instruction trace errors
-
-  After:
-    # perf record --kcore -m,64M -o t1 -a -e intel_pt//k &
-    # perf probe __kmalloc
-    Added new event:
-      probe:__kmalloc      (on __kmalloc)
-
-    You can now use it in all perf tools, such as:
-
-            perf record -e probe:__kmalloc -aR sleep 1
-
-    # perf record -e probe:__kmalloc -aR sleep 1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.037 MB perf.data (206 samples) ]
-    # perf probe -d probe:__kmalloc
-    Removed event: probe:__kmalloc
-    # kill %1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 41.442 MB t1 ]
-    [1]+  Terminated                 perf record --kcore -m,64M -o t1 -a -e intel_pt//k
-    # perf script -i t1 --itrace=e >/dev/null
-    # perf script -i t1 --no-itrace -D | grep 'POKE\|KSYMBOL'
-    5 312216133258 0x8bafe0 [0x50]: PERF_RECORD_KSYMBOL addr ffffffffc0360000 len 415 type 2 flags 0x0 name ftrace_trampoline
-    5 312216133494 0x8bb030 [0x1d8]: PERF_RECORD_TEXT_POKE addr 0xffffffffc0360000 old len 0 new len 415
-    5 312216229563 0x8bb208 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    5 312216239063 0x8bb248 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    5 312216727230 0x8bb288 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffabbea190 old len 5 new len 5
-    5 312216739322 0x8bb2c8 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    5 312216748321 0x8bb308 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    7 313287163462 0x2817430 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    7 313287174890 0x2817470 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-    7 313287818979 0x28174b0 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffabbea190 old len 5 new len 5
-    7 313287829357 0x28174f0 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac6016f5 old len 5 new len 5
-    7 313287841246 0x2817530 [0x40]: PERF_RECORD_TEXT_POKE addr 0xffffffffac601803 old len 5 new len 5
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- tools/perf/arch/x86/util/intel-pt.c |  4 ++
- tools/perf/util/intel-pt.c          | 75 +++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+ include/net/bonding.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 20df442fdf36..ec75445ef7cf 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -827,6 +827,10 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 		}
- 	}
+diff --git a/include/net/bonding.h b/include/net/bonding.h
+index 3d56b026bb9e..dc2ce31a1f52 100644
+--- a/include/net/bonding.h
++++ b/include/net/bonding.h
+@@ -183,7 +183,7 @@ struct slave {
+ struct bond_up_slave {
+ 	unsigned int	count;
+ 	struct rcu_head rcu;
+-	struct slave	*arr[0];
++	struct slave	*arr[];
+ };
  
-+	if (have_timing_info && !intel_pt_evsel->core.attr.exclude_kernel &&
-+	    perf_can_record_text_poke_events() && perf_can_record_cpu_wide())
-+		opts->text_poke = true;
-+
- 	if (intel_pt_evsel) {
- 		/*
- 		 * To obtain the auxtrace buffer file descriptor, the auxtrace
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 33cf8928cf05..64768312c994 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -514,6 +514,17 @@ intel_pt_cache_lookup(struct dso *dso, struct machine *machine, u64 offset)
- 	return auxtrace_cache__lookup(dso->auxtrace_cache, offset);
- }
- 
-+static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
-+				      u64 offset)
-+{
-+	struct auxtrace_cache *c = intel_pt_cache(dso, machine);
-+
-+	if (!c)
-+		return;
-+
-+	auxtrace_cache__remove(dso->auxtrace_cache, offset);
-+}
-+
- static inline u8 intel_pt_cpumode(struct intel_pt *pt, uint64_t ip)
- {
- 	return ip >= pt->kernel_start ?
-@@ -2592,6 +2603,67 @@ static int intel_pt_process_itrace_start(struct intel_pt *pt,
- 					event->itrace_start.tid);
- }
- 
-+static int intel_pt_find_map(struct thread *thread, u8 cpumode, u64 addr,
-+			     struct addr_location *al)
-+{
-+	if (!al->map || addr < al->map->start || addr >= al->map->end) {
-+		if (!thread__find_map(thread, cpumode, addr, al))
-+			return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Invalidate all instruction cache entries that overlap the text poke */
-+static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
-+{
-+	u8 cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
-+	u64 addr = event->text_poke.addr + event->text_poke.new_len - 1;
-+	/* Assume text poke begins in a basic block no more than 4096 bytes */
-+	int cnt = 4096 + event->text_poke.new_len;
-+	struct thread *thread = pt->unknown_thread;
-+	struct addr_location al = { .map = NULL };
-+	struct machine *machine = pt->machine;
-+	struct intel_pt_cache_entry *e;
-+	u64 offset;
-+
-+	if (!event->text_poke.new_len)
-+		return 0;
-+
-+	for (; cnt; cnt--, addr--) {
-+		if (intel_pt_find_map(thread, cpumode, addr, &al)) {
-+			if (addr < event->text_poke.addr)
-+				return 0;
-+			continue;
-+		}
-+
-+		if (!al.map->dso || !al.map->dso->auxtrace_cache)
-+			continue;
-+
-+		offset = al.map->map_ip(al.map, addr);
-+
-+		e = intel_pt_cache_lookup(al.map->dso, machine, offset);
-+		if (!e)
-+			continue;
-+
-+		if (addr + e->byte_cnt + e->length <= event->text_poke.addr) {
-+			/*
-+			 * No overlap. Working backwards there cannot be another
-+			 * basic block that overlaps the text poke if there is a
-+			 * branch instruction before the text poke address.
-+			 */
-+			if (e->branch != INTEL_PT_BR_NO_BRANCH)
-+				return 0;
-+		} else {
-+			intel_pt_cache_invalidate(al.map->dso, machine, offset);
-+			intel_pt_log("Invalidated instruction cache for %s at %#"PRIx64"\n",
-+				     al.map->dso->long_name, addr);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int intel_pt_process_event(struct perf_session *session,
- 				  union perf_event *event,
- 				  struct perf_sample *sample,
-@@ -2653,6 +2725,9 @@ static int intel_pt_process_event(struct perf_session *session,
- 		 event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
- 		err = intel_pt_context_switch(pt, event, sample);
- 
-+	if (!err && event->header.type == PERF_RECORD_TEXT_POKE)
-+		err = intel_pt_text_poke(pt, event);
-+
- 	intel_pt_log("event %u: cpu %d time %"PRIu64" tsc %#"PRIx64" ",
- 		     event->header.type, sample->cpu, sample->time, timestamp);
- 	intel_pt_log_event(event);
+ /*
 -- 
-2.17.1
+2.25.0
 
