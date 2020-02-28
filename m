@@ -2,128 +2,160 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB42EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B21C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A982067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:36:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XZSoDepb"
+	by mail.kernel.org (Postfix) with ESMTP id 9C329246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgB1MgC (ORCPT
+        id S1726046AbgB1Mm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:36:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35900 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1MgC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:36:02 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SCZvLX026580;
-        Fri, 28 Feb 2020 06:35:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582893357;
-        bh=hKyf8yrhdHOfHtUZrZr4yEtUWwcoQWtFRXXJCceaIA4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XZSoDepbtvkRU10B/SBGZTLiFSKkofs3goC2fUq60etnQJmkI8RecjV8wm+phShl0
-         BJ29qm/X3i/aqRtR7+pHwqQxsJIszJin0DcKSU5zd7lnyscoS6iZ50Gz45kSnLO3eG
-         r66C/L+D61qF31+M7wo5J3wkBA7DiNTRfBBioCl4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SCZvgl111677
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 06:35:57 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 06:35:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 06:35:57 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SCZv1P014045;
-        Fri, 28 Feb 2020 06:35:57 -0600
-Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-CC:     Pavel Machek <pavel@denx.de>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200127150032.31350-1-dmurphy@ti.com>
- <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
- <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
- <20200226125903.GA2800@duo.ucw.cz>
- <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
- <20200227105808.GA27003@duo.ucw.cz> <20200227124329.GA994747@kroah.com>
- <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
- <96a31ff6-5ecf-05a7-d61f-2804f2488d1b@gmail.com>
- <20200228074235.GA2900429@kroah.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <10206eff-ecbd-c625-1900-1a6d8ec8f633@ti.com>
-Date:   Fri, 28 Feb 2020 06:30:42 -0600
+        Fri, 28 Feb 2020 07:42:27 -0500
+Received: from relay.sw.ru ([185.231.240.75]:51102 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1Mm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:42:26 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j7exk-0004yl-CC; Fri, 28 Feb 2020 15:41:52 +0300
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, tytso@mit.edu,
+        viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
+        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+ <20200227073336.GJ10737@dread.disaster.area>
+ <2e2ae13e-0757-0831-216d-b363b1727a0d@virtuozzo.com>
+ <20200227215634.GM10737@dread.disaster.area>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <e4835807-52d2-cce4-ed11-cc58448d3140@virtuozzo.com>
+Date:   Fri, 28 Feb 2020 15:41:51 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200228074235.GA2900429@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227215634.GM10737@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg
-
-On 2/28/20 1:42 AM, Greg KH wrote:
-> On Thu, Feb 27, 2020 at 10:22:43PM +0100, Jacek Anaszewski wrote:
->> On 2/27/20 2:07 PM, Dan Murphy wrote:
->>> <snip>
->>> This is not an accurate statement.  Right now a user can have up to 8
->>> channels to cover all the LEDs defined in the LED core
+On 28.02.2020 00:56, Dave Chinner wrote:
+> On Thu, Feb 27, 2020 at 02:12:53PM +0300, Kirill Tkhai wrote:
+>> On 27.02.2020 10:33, Dave Chinner wrote:
+>>> On Wed, Feb 26, 2020 at 11:05:23PM +0300, Kirill Tkhai wrote:
+>>>> On 26.02.2020 18:55, Christoph Hellwig wrote:
+>>>>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+>>>>>> This adds a support of physical hint for fallocate2() syscall.
+>>>>>> In case of @physical argument is set for ext4_fallocate(),
+>>>>>> we try to allocate blocks only from [@phisical, @physical + len]
+>>>>>> range, while other blocks are not used.
+>>>>>
+>>>>> Sorry, but this is a complete bullshit interface.  Userspace has
+>>>>> absolutely no business even thinking of physical placement.  If you
+>>>>> want to align allocations to physical block granularity boundaries
+>>>>> that is the file systems job, not the applications job.
+>>>>
+>>>> Why? There are two contradictory actions that filesystem can't do at the same time:
+>>>>
+>>>> 1)place files on a distance from each other to minimize number of extents
+>>>>   on possible future growth;
 >>>
->>> And if the led_colors array expands then this array can expand.
+>>> Speculative EOF preallocation at delayed allocation reservation time
+>>> provides this.
 >>>
->>> We have no control on how many entries the user will put in their DT so
->>> again this number is completely arbitrary.
->> I believe that some of mechanisms that were devised for the most
->> recent implementation proposal of LED mc class will need
->> to be reused for the array approach. E.g. available_colors bitmask
->> will make the parsing resistant to duplicates.
+>>>> 2)place small files in the same big block of block device.
+>>>
+>>> Delayed allocation during writeback packs files smaller than the
+>>> stripe unit of the filesystem tightly.
+>>>
+>>> So, yes, we do both of these things at the same time in XFS, and
+>>> have for the past 10 years.
+>>>
+>>>> At initial allocation time you never know, which file will stop grow in some future,
+>>>> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
+>>>> Say, if a file has not been changed for a month, it is suitable for compaction with
+>>>> another files like it.
+>>>>
+>>>> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
+>>>> and just share your algorithm here.
+>>>>
+>>>> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+>>>>
+>>>> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+>>>>
+>>>> But it does not work well in many situations, and the main problem is blocks allocation
+>>>> in desired place is not possible. Block allocator can't behave excellent for everything.
+>>>>
+>>>> If this interface bad, can you suggest another interface to make block allocator to know
+>>>> the behavior expected from him in this specific case?
+>>>
+>>> Write once, long term data:
+>>>
+>>> 	fcntl(fd, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
+>>>
+>>> That will allow the the storage stack to group all data with the
+>>> same hint together, both in software and in hardware.
 >>
->> Of course LED multicolor DT node design should be applicable as well
->> to the array approach.
->>
->>>> Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
->>>> represent a single output should be fine.
->>>> thanks,
->> Thank you for making this clear.
->>
->> Effectively, the way to go as I see it now is just moving from
->> colors directory to channel_intensity and channel_names files.
-> Wait, we already have an interface for this and you want to create a
-> competing one?  Why?  What's wrong with what you have now?
+>> This is interesting option, but it only applicable before write is made. And it's only
+>> applicable on your own applications. My usecase is defragmentation of containers, where
+>> any applications may run. Most of applications never care whether long or short-term
+>> data they write.
+> 
+> Why is that a problem? They'll be using the default write hint (i.e.
+> NONE) and so a hint aware allocation policy will be separating that
+> data from all the other data written with specific hints...
+> 
+> And you've mentioned that your application has specific *never write
+> again* selection criteria for data it is repacking. And that
+> involves rewriting that data.  IOWs, you know exactly what policy
+> you want to apply before you rewrite the data, and so what other
+> applications do is completely irrelevant for your repacker...
+
+It is not a rewriting data, there is moving data to new place with EXT4_IOC_MOVE_EXT.
+This time extent is already allocated and its place is known. But if
+
+>> Maybe, we can make fallocate() care about F_SET_RW_HINT? Say, if RWH_WRITE_LIFE_EXTREME
+>> is set, fallocate() tries to allocate space around another inodes with the same hint.
+> 
+> That's exactly what I said:
 >
-> Do you have a pointer to the Documentation/ABI/ entries that you have
-> now that you feel do not work well?
+>>> That will allow the the storage stack to group all data with the
+>>> same hint together, both in software and in hardware.
 
-Here is the proposal we have been working on for some time.
+... and fallocate() cares about the hint, this should work.
+ 
+> What the filesystem does with the hint is up to the filesystem
+> and the policies that it's developers decide are appropriate. If
+> your filesystem doesn't do what you need, talk to the filesystem
+> developers about implementing the policy you require.
 
-Series:
+Do XFS kernel defrag interfaces allow to pack some randomly chosen
+small files in 1Mb blocks? Do they allow to pack small 4Kb file into
+free space after a big file like in example:
 
-https://lore.kernel.org/patchwork/project/lkml/list/?series=427513
+before:
+       BIG file                         Small file
+[single 16 Mb extent - 4Kb][unused 4Kb][4Kb extent]
 
-ABI Documentation and support code:
+after:
+       BIG file             Small file     
+[single 16 Mb extent - 4Kb][4Kb extent][unused 4Kb]
 
-https://lore.kernel.org/patchwork/patch/1186194/
+?
 
-Dan
-
-> thanks,
->
-> greg k-h
+Kirill
