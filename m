@@ -2,310 +2,115 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072FCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19748C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71552467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8BsHJ2L"
+	by mail.kernel.org (Postfix) with ESMTP id EF3162467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgB1RCQ (ORCPT
+        id S1726752AbgB1RDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:02:16 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37781 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgB1RCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:02:16 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a141so3992499wme.2;
-        Fri, 28 Feb 2020 09:02:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YLiECJgyhguRX/IYrN5eINjBjUqtt9KK7ww1Qi9YDtY=;
-        b=b8BsHJ2LJgJY1WGYJHBogfnTDtsu+0aEahsFyTNox1D9246LN6g7BvnnfJXJoJaIxs
-         ojFct0Njohqj/snlt/wMHZvmhyY1TPnFlf2S9eGHnWai+G4fJC6zvQrKZ3dVN66zUPDr
-         ufUn3p4Is/NtxJs2w4DSJf8vXbjEVO8PefT935o5rG6UfFls4/bl6gOyjoUN72dnGJtR
-         okj6/piDhVTTlAEP+a3mf2a55gS7w+rGyRZZ3hfitkbfMM7AH4pU+t+xfVrQtkXO621O
-         mXNuqdBvV3KI6zR2SEGlPGM9Zv5hpbbxXFC6tD2wvJPljejVugrOg1NJiZl7IY+qS0cr
-         E7Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YLiECJgyhguRX/IYrN5eINjBjUqtt9KK7ww1Qi9YDtY=;
-        b=m41vn9hns7sMJwaZejMOiPbT07qzgWpmZScTN1iRKXgUnIuz/NuqUumaye4n5n8rHL
-         Qs92EFScT8GHNgwDuNxtUBgpNplCgEj1Vxp5ZQZUIB6XaSIsO9u/YZQB4PGTJglovOXj
-         D6lnRTgD9ZWKnW0kgyieb9pyDeC12X9GPMxtQ0Wcc7RcaoCvcHKOCzp1bmtaKMWFEIYA
-         zigeqtYu8qgp+tCa24U1J2drod0UjUE1lcstJSgBSicOW5/jVB+smpyau1fVZsJKOe5c
-         OxJ+EKoeyAfUlHvhc+pu1qPjMTdR/gGZS2jpcPr/+nXMSCAXAQHZdk6QbTlhomLLjMiC
-         m+KA==
-X-Gm-Message-State: APjAAAWv/2wQo0JnN/yDv2wNxK/ESFwoYdU8Sz/NK32qLICahen/Xcdb
-        AbrnajQugxRoGPYGQLb7F4U=
-X-Google-Smtp-Source: APXvYqxp4IX5vvh8ILpZYbiv5KH01y9nScXcItz9tyaqFFcB/6VhWwqOYkco6NCmdMJlv5LKZNCJFA==
-X-Received: by 2002:a1c:f60e:: with SMTP id w14mr5648797wmc.188.1582909333378;
-        Fri, 28 Feb 2020 09:02:13 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
-        by smtp.gmail.com with ESMTPSA id q9sm5673058wrn.8.2020.02.28.09.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 09:02:12 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
-Date:   Fri, 28 Feb 2020 17:02:10 +0000
-Message-Id: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Feb 2020 12:03:45 -0500
+Received: from sauhun.de ([88.99.104.3]:59882 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgB1RDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:03:45 -0500
+Received: from localhost (p54B3301B.dip0.t-ipconnect.de [84.179.48.27])
+        by pokefinder.org (Postfix) with ESMTPSA id D2A142C1E8B;
+        Fri, 28 Feb 2020 18:03:42 +0100 (CET)
+Date:   Fri, 28 Feb 2020 18:03:42 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Martin Volf <martin.volf.42@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] i2c: i801: Fix iTCO_wdt resource creation if PMC
+ is not present
+Message-ID: <20200228170342.GC1130@ninjato>
+References: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+Content-Disposition: inline
+In-Reply-To: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support AISTARVISION MIPI Adapter V2.1 board connected
-to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-which have the camera endpoint nodes with disabled status and in
-r8a774c0-ek874-mipi-2.1.dts file VIN/CSI nodes are enabled. By default
-imx219 endpoint is tied with CSI2.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Geert/Rob since the imx219 driver is yet to make into mainline
-but has been merged into media-subsystem I would like to take
-this patch via media-tree.
+--da4uJneut+ArUgXk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm64/boot/dts/renesas/Makefile          |  3 +-
- .../aistarvision-mipi-adapter-2.1.dtsi        | 98 +++++++++++++++++++
- .../dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 86 ++++++++++++++++
- 3 files changed, 186 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+On Wed, Feb 26, 2020 at 04:21:19PM +0300, Mika Westerberg wrote:
+> Hi all,
+>=20
+> This series aims to fix the issue reported by Martin Volf [1] that preven=
+ts
+> the nct6775 driver from loading.
+>=20
+> I added Fixes tag to the last patch but not stable tag because the other
+> two patches it depends are not really stable material IMO. Please let me
+> know if there is a better way to organize these :)
+>=20
+> I tested this on Intel Whiskey Lake based system (CNL derived) and on Com=
+et
+> Lake-V based system (SPT derived and the iTCO_wdt still works and I can s=
+ee
+> the expected resources in /proc/ioports and /proc/iomem.
+>=20
+> The previous version of the patch series can be found here:
+>=20
+>   https://lore.kernel.org/linux-hwmon/20200225123802.88984-1-mika.westerb=
+erg@linux.intel.com/
+>=20
+> Changes from the previous version:
+>=20
+>   * Call request_region() also for iTCO_vendorsupport
+>   * Drop the core populating ICH_RES_IO_SMI completely from i2c-i801.c
+>=20
+> [1] https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=3DHhBu-2donSsuoga=
+bkfP03v1YF26Q7_BgvgA@mail.gmail.com/
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 2153842321ce..9f5c53d62f5e 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -4,7 +4,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
--			       r8a774c0-ek874-idk-2121wr.dtb
-+			       r8a774c0-ek874-idk-2121wr.dtb \
-+			       r8a774c0-ek874-mipi-2.1.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-new file mode 100644
-index 000000000000..e098a13e6345
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/ {
-+	ov5645_vdddo_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vdda_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	ov5645_vddd_1v5: 1p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vana_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vana";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vdig_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdig";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_vddl_1v2: 1p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddl";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+	};
-+
-+	imx219_clk: imx219_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+	};
-+};
-+
-+&MIPI_PARENT_I2C {
-+	ov5645: ov5645@3c {
-+		compatible = "ovti,ov5645";
-+		reg = <0x3c>;
-+		status = "disabled";
-+
-+		clock-names = "xclk";
-+
-+		vdddo-supply = <&ov5645_vdddo_1v8>;
-+		vdda-supply = <&ov5645_vdda_2v8>;
-+		vddd-supply = <&ov5645_vddd_1v5>;
-+
-+		port@0 {
-+			ov5645_ep: endpoint {
-+			};
-+		};
-+	};
-+
-+	rpi_v2_camera: imx219@10 {
-+		compatible = "sony,imx219";
-+		reg = <0x10>;
-+		status = "disabled";
-+
-+		VANA-supply = <&imx219_vana_2v8>;
-+		VDIG-supply = <&imx219_vdig_1v8>;
-+		VDDL-supply = <&imx219_vddl_1v2>;
-+		clocks = <&imx219_clk>;
-+
-+		port@0 {
-+			reg = <0>;
-+			imx219_ep0: endpoint {
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-new file mode 100644
-index 000000000000..435b7f62d88d
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-+ * connected with aistarvision-mipi-v2-adapter board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a774c0-ek874.dts"
-+#define MIPI_PARENT_I2C i2c3
-+#include "aistarvision-mipi-adapter-2.1.dtsi"
-+
-+/ {
-+	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-+	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&vin4 {
-+	status = "okay";
-+};
-+
-+&vin5 {
-+	status = "okay";
-+};
-+
-+&csi40 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			reg = <0>;
-+
-+			csi40_in: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&imx219_ep0>;
-+			};
-+		};
-+	};
-+};
-+
-+&ov5645 {
-+	/* uncomment status and remote-endpoint properties to tie ov5645
-+	 * to CSI2 also make sure remote-endpoint for imx219 camera is
-+	 * commented and remote endpoint in csi40_in is ov5645_ep
-+	 */
-+	/* status = "okay"; */
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+
-+	clocks = <&cpg CPG_MOD 716>;
-+	clock-frequency = <24000000>;
-+
-+	port@0 {
-+		ov5645_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			/* remote-endpoint = <&csi40_in>; */
-+		};
-+	};
-+};
-+
-+&rpi_v2_camera {
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+		imx219_ep0: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			remote-endpoint = <&csi40_in>;
-+			link-frequencies = /bits/ 64 <456000000>;
-+		};
-+	};
-+};
--- 
-2.20.1
+I can take this series via I2C. Just wanted to let you know that I am
+aiming for rc5, because I'd like to have this in linux-next for a week
+to make sure we don't regress again (despite all precautions) somewhere
+else.
 
+Thanks to everyone to get this regression handled in such a concentrated
+manner!
+
+
+--da4uJneut+ArUgXk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5ZR+4ACgkQFA3kzBSg
+Kbb29A//YUY3JKyYa6plCWxNQj6H12cc6EdXrS4lOnESwx89pq9ITm98Juu/VPqe
+41Y0idzm2RNeq9ez7J6lxzGfYul5TkAxex+FGirUlp5GwrtrpRq2WFptcCR66Vx3
+Tx4hw4bnValX5pWvQegGpvCX0kvFvMu4/Lv47C8nCWEljm0L0j144MTgXfgzCRKb
+1iElopnX9Y7c0p5SaJUmM13WjHi9Y4TloOjmeIcGjOpEcQ0YzdsPeFfuGpn17FhX
+Ninbdux+DM94gWEuK6e3Xc3HAyz3zQDN9b1MR0A/0UqjoeEUspa2yvSOEOcNcDDH
+KyD7No8DbVNc6n8dLmncQqf+jZ4yN2hPMy/6YaJGhjk40hJI8M1cYC3jVqj8bnYA
+ItjrjV7QANSUwP+Kne2qCf5rQ10P18SJXaDd8s8cWXBmOh1Y6U9XsaDRrbfuXBO1
+t0Lr6ssJZ3/RCu+X8wVMAIqgBQkhV57T0HItN8xeNhS8HpSopXank5tKVhQaUx7N
+vy4E8AoTO/T/mkNdjiUFfhDCxRqUElM5V5gtYJEl+B5Bx//2f1doGMBa0A+UIOk4
+oMsevqtEXyPacx7U7gaXbverDoLwppf2zNclJ9aSopCDoyHUBTjbvIw2aHQA3oyz
+uvhVF1Re0owL3aqfAuXbPQtUdLMdJRELXEIa0dcwOi89leiCdmc=
+=71Zy
+-----END PGP SIGNATURE-----
+
+--da4uJneut+ArUgXk--
