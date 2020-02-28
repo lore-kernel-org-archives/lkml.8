@@ -2,114 +2,137 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF586C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCD5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C89A24699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8580E246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:03:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PARcesVs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4ryQdcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgB1PBR (ORCPT
+        id S1727027AbgB1PDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:01:17 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39235 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgB1PBR (ORCPT
+        Fri, 28 Feb 2020 10:03:23 -0500
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:36963 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgB1PDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:01:17 -0500
-Received: by mail-qt1-f195.google.com with SMTP id p34so2202462qtb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:01:16 -0800 (PST)
+        Fri, 28 Feb 2020 10:03:23 -0500
+Received: by mail-wr1-f43.google.com with SMTP id l5so3313552wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:03:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=Clp+dXMAk/3s118zZhvs9Tjw+57UrzDN6Ah8uK4j4jM=;
-        b=PARcesVsNYLJHoptI1jCN79pKBB6CjZlK5c8zEZMGfBCRE4JfvKXlXwc7kijpY67oy
-         JGMzQDPhp2QAkJcaimTwV9y7rryPaBet8J43itCaySuNreCAiUp1GzddUnNYMKLQh5Vn
-         0tn+q9qmyssvSMWnx8RtwLMTxw3AAn4uibZPOM7AQjGLNLwqU9FS326aKjPZIN8j4gc7
-         VVLrBHgalqP83r+GgwsnW1w1+gxFGlGwmeQkohqN44EMiVMsLkk7OnzNvmf/Pj998QUJ
-         8pjGK1+HNaBqwoMCYFRZoMEsZStoMsJ5Mr6mP1mu4cH4xakOt2WVuAIzRKPN4rOdz7ok
-         pd+A==
+        h=from:to:cc:subject:date:message-id;
+        bh=rqRsY3IWGJs9c2oqjoPbTBhi2h3Tjt34hwIqWxHRNh4=;
+        b=Z4ryQdcckQ0xnuIbqH6ezo1dgI+d92xbhITxcZlGRdkNhMq7T/VjW0ymLUJd6QCm8u
+         pXPIg/qm1YoaRQtzwGIYLQotkCsN9jqqsNWcZcNboUgZ409ZT/f5FHcPoTqGC83GJb4Y
+         dUQA6I8HJyFInC/w2j/XSZ8oxEG9ilIPAAEEkW+gYbQZp7lJLpZ8yD88FqiCQsrA6vLv
+         3sUGGxhRAb2gz8sWsZATKrZIjRnHyAIkuLvIaYdmKhRncGNCfPoStzF/DCR7I/iPKJs8
+         aReL0KjdbYTN/nU0+Tl7twe7mWeXtWMdy+70kqzXdA+GZRgVdKJVN1TI8TURHnDpPgfK
+         CN3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=Clp+dXMAk/3s118zZhvs9Tjw+57UrzDN6Ah8uK4j4jM=;
-        b=hhJWNCCLJaZ+Ik1sXjMgyJhF784Yuu+moIZSU8E2kQeGVSqtH9CeY6zazbW7ydFMlT
-         /AjG985KrvLzbmRdhXFJPj2yNcl5zQpHyZI2ko7CNVi0iN4o9gAzgiPF1gIhcqF6jAdx
-         0QnuTVDUf74qne9xqGsYvB5CFST+A5Ijc4y5GUNau3FlN4eafNIOhvv/kOjGxGqfl/Co
-         JWN03S3UQ3asNr62gY6FZzCTzXOdWvuBTb7SKcs53rmi5B4u6gBI6UEOhFvdvaWhF+8i
-         DGtzvS1VjIeqKWAhRd4Gl+3UI7LLR0jPqpy8MM5IlO1otyAGWWi3jntrAmEOQPJ3KeeD
-         pyjA==
-X-Gm-Message-State: APjAAAWW8sRlukg+qTuIYzcu+mdnXWY+rDGaEhwzNFdpwBmkZAKeNnWb
-        BOpqUAyTMoXJjrGn1OGe3Jo=
-X-Google-Smtp-Source: APXvYqw2r1YAkvtvtyajk+MuAfNUdr6EC19Jc/s0UV27xTDPWHe4WQ+NQ6PuRF/dMd2LpJs8DoguBQ==
-X-Received: by 2002:ac8:1ae5:: with SMTP id h34mr4588421qtk.323.1582902075966;
-        Fri, 28 Feb 2020 07:01:15 -0800 (PST)
-Received: from [192.168.0.76] (177.206.220.193.dynamic.adsl.gvt.net.br. [177.206.220.193])
-        by smtp.gmail.com with ESMTPSA id p19sm5247526qte.81.2020.02.28.07.01.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Feb 2020 07:01:15 -0800 (PST)
-Date:   Fri, 28 Feb 2020 12:01:04 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <3fa6d985-1401-d767-a4bc-ce0efc420429@linux.ibm.com>
-References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com> <20200206190412.GD1669706@krava> <20200227141110.GF10761@kernel.org> <3fa6d985-1401-d767-a4bc-ce0efc420429@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-CC:     Jiri Olsa <jolsa@redhat.com>, namhyung@kernel.org,
-        irogers@google.com, songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <6C84FDFE-B636-4D13-8D6E-EE0BDEB9F891@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rqRsY3IWGJs9c2oqjoPbTBhi2h3Tjt34hwIqWxHRNh4=;
+        b=t7ID1l9F3UgoNm/L/T0rSZyKUwcZSldycdN2MMjTy89GpyqFwfD86pvJcR7A1DfmfD
+         /sAE/1gdUeAETup32Rp+4mIjqaA5sqZms2QRvGlC9lX/SZW1KI+Ht6hbE7eTD2ka9rJh
+         29aafxRvZOGzi/YT+zke7qZck1Mk7LDfxb7hAS14P45T9EKqaSFUivBFYZDkU4zSjp/k
+         2bu9JPobF/AJ1IA/HxVe9Eg1V0dIfqUtc5chRA/gBWgv/4M665jM3UWlUzkodhUZFAeH
+         4czV2h1N2a33HD2M2OnKwBFToQM5fIyl6XHf5DEeDis0eBq+M61neiwgAbybo/Lb6ser
+         MHjw==
+X-Gm-Message-State: APjAAAX66D/InnR9DRldJDcdv2q5ZZPlxR1UmjgnR9V3QRkiMQc4Y3Mp
+        d703RZ7W31PJhRRJyAIW70kfOgnfTcw=
+X-Google-Smtp-Source: APXvYqwJ3fwO0JpCT6Gv71plFAALDnHST5fzOxWtUvbW9WOWp6lAXxvCBYf8VT/XP6IZgVqupcdjhQ==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr5040421wru.382.1582902200928;
+        Fri, 28 Feb 2020 07:03:20 -0800 (PST)
+Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
+        by smtp.gmail.com with ESMTPSA id m125sm2540235wmf.8.2020.02.28.07.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:03:19 -0800 (PST)
+From:   shiva.linuxworks@gmail.com
+X-Google-Original-From: sshivamurthy@micron.com
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Shivamurthy Shastri <sshivamurthy@micron.com>
+Subject: [PATCH v5 0/6] Add new series Micron SPI NAND devices
+Date:   Fri, 28 Feb 2020 16:03:05 +0100
+Message-Id: <20200228150311.12184-1-sshivamurthy@micron.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Shivamurthy Shastri <sshivamurthy@micron.com>
 
+This patchset is for the new series of Micron SPI NAND devices, and the
+following links are their datasheets.
 
-On February 28, 2020 11:42:27 AM GMT-03:00, Ravi Bangoria <ravi=2Ebangoria=
-@linux=2Eibm=2Ecom> wrote:
->
->
->On 2/27/20 7:41 PM, Arnaldo Carvalho de Melo wrote:
->> Em Thu, Feb 06, 2020 at 08:04:12PM +0100, Jiri Olsa escreveu:
->>> On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
->>>> Few fixes / improvements related to perf annotate=2E
->>>>
->>>> v2:
->https://lore=2Ekernel=2Eorg/r/20200124080432=2E8065-1-ravi=2Ebangoria@lin=
-ux=2Eibm=2Ecom
->>>>
->>>> v2->v3:
->>>>   - [PATCH v3 2/6] New function annotation_line__exit() to clear
->>>>     annotation_line objects=2E
->>>
->>> Acked-by: Jiri Olsa <jolsa@redhat=2Ecom>
->>=20
->> Thanks applied the series to perf/urgent as it contains a fix=2E
->
->Thanks Arnaldo=2E I don't see patch #5 and #6 in perf/urgent=2E You misse=
-d
->them?
->Or didn't consider for perf/urgent :) ?
+M78A:
+[1] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m78a_1gb_3v_nand_spi.pdf
+[2] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m78a_1gb_1_8v_nand_spi.pdf
 
-Yeah, I have those in my perf/core branch=2E
+M79A:
+[3] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m79a_2gb_1_8v_nand_spi.pdf
+[4] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m79a_ddp_4gb_3v_nand_spi.pdf
 
-- Arnaldo
->
->Ravi
+M70A:
+[5] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m70a_4gb_3v_nand_spi.pdf
+[6] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m70a_4gb_1_8v_nand_spi.pdf
+[7] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m70a_ddp_8gb_3v_nand_spi.pdf
+[8] https://www.micron.com/~/media/documents/products/data-sheet/nand-flash/70-series/m70a_ddp_8gb_1_8v_nand_spi.pdf
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Changes since v4:
+-----------------
+
+1. Patch 2 is separated into two as per the comment by Boris.
+2. Renamed MICRON_CFG_CONTI_READ into MICRON_CFG_CR.
+3. Reworked die selection function as per the comment by Boris.
+
+Changes since v3:
+-----------------
+
+1. Patch 3 and 4 reworked as follows
+   - Patch 3 introducing the Continuous read feature
+   - Patch 4 adding devices with the feature
+
+Changes since v2:
+-----------------
+
+1. Patch commit messages have been modified.
+2. Handled devices with Continuous Read feature with vendor specific flag.
+3. Reworked die selection function as per the comment.
+
+Changes since v1:
+-----------------
+
+1. The patch split into multiple patches.
+2. Added comments for selecting the die.
+
+Shivamurthy Shastri (6):
+  mtd: spinand: micron: Generalize the OOB layout structure and function
+    names
+  mtd: spinand: micron: Describe the SPI NAND device MT29F2G01ABAGD
+  mtd: spinand: micron: Add new Micron SPI NAND devices
+  mtd: spinand: micron: identify SPI NAND device with Continuous Read
+    mode
+  mtd: spinand: micron: Add M70A series Micron SPI NAND devices
+  mtd: spinand: micron: Add new Micron SPI NAND devices with multiple
+    dies
+
+ drivers/mtd/nand/spi/micron.c | 150 ++++++++++++++++++++++++++++++----
+ include/linux/mtd/spinand.h   |   1 +
+ 2 files changed, 137 insertions(+), 14 deletions(-)
+
+-- 
+2.17.1
+
