@@ -2,278 +2,207 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FF3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEACC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6325F20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6859220732
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cv2KVZLY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="INb3PM54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgB1LL5 (ORCPT
+        id S1726878AbgB1LMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:11:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43482 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgB1LL4 (ORCPT
+        Fri, 28 Feb 2020 06:12:43 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:10476 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726700AbgB1LMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:11:56 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e3so2849243lja.10
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:11:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HIdjgnxmDlkbYM0qyonP/o0ZxcL0OQPNoOF1hF19r2g=;
-        b=Cv2KVZLYpcsGc5c3LjrzUc247WmBa1Rs8HX0GklW8ofQ/Axtex93zwkAld8EeG35ZL
-         ZqTfGUdm/0/ChhFrzO9FNk1Dk00vUqOTlrajdnqF/1o3YGlsQpzTtn6sbIThs4qd72BE
-         /Mq8pvSZuaWU7YykNZIqJt3V4vJFAnXJzr8wR75FdqzAlEiUV5EmsoGVszwI/ya87TcZ
-         fdBcHUaEwjNdez154lkQZYuLwChYxxqofm4OUl5H1//AV/WXhRO9eujo7Cho8Su8WsUA
-         RiwoknK8+hEIbDfkfvirbu8mHgFG+MN4bb+hlamU09mSinzIm3sWSJV+0Ed6CmKL0RCW
-         2sgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HIdjgnxmDlkbYM0qyonP/o0ZxcL0OQPNoOF1hF19r2g=;
-        b=YAOD93bFGTPnu5HLIkDVQRyWc3ivIUugK0seSBrPg9EEhuWveKA14RfIl11aLIB2EU
-         EMRWTZ8/mKOLUcw7ZN/tfD83ofUhqiAnrUTPCnjvyhVI7YflC8uN7NYSLifCjZPCPYj/
-         4qxQOH5dgQOhN8pFkJ/nXlruEcG0yIxtGvzwtZbpJj9ho/JiLmmFUEe530hTtxHaxXxj
-         i1TPxj3qgcLq6m/RORC1dOyv7+Gp+ESEJPCnv+/DOmJFbpiLghuOW0osNUJNfRc9VYEM
-         AVsHMb7Y0P+PkB5v/3Qss0b6QjZM4AN0C1ScDGYS6zIZWWBE/eryqEaYGLeORxbSyrhB
-         CCwQ==
-X-Gm-Message-State: ANhLgQ20ka40AefPUJue/ZZhsTHYRA3EzXcdoK2wGfbamB0bXKP0Y2xy
-        mOtj1kAa1B9phPqowjI74/xhiY9KTnj3n5Rqf+Wrwg==
-X-Google-Smtp-Source: ADFU+vs/dTljw1Ck+jEuV+WavyXXeUAuVuXxlLOvOCKwV0lAjDQLBYmy1RHT4SA2+aaMOjmKB0zQrPyXZ8Tfsev/F84=
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr2447357lja.165.1582888313920;
- Fri, 28 Feb 2020 03:11:53 -0800 (PST)
+        Fri, 28 Feb 2020 06:12:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582888361; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=IVZ6CtP5L6xsu8bf6zRg6TkuiYbPIlAzMCNphwbcOsE=; b=INb3PM54afcSpsfAooNbpb+H7Oy6anOmEWuQAZmbqKXi3csORsuSAdvIvnWOa8r6OSr9nLMm
+ 7+WOKh7xkVFbjx0H26inSWZmGBmmpGBWa5qOdB5OgHE+1Y90yzWxtBEl1ymurx9MqA46WhMQ
+ H4vzlis65vCHgWk/xcWE7Nu7Jss=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e58f5a8.7fabedcc6b58-smtp-out-n01;
+ Fri, 28 Feb 2020 11:12:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1CDDAC4479D; Fri, 28 Feb 2020 11:12:39 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38AE7C43383;
+        Fri, 28 Feb 2020 11:12:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38AE7C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v8 2/3] soc: qcom: rpmh: Update dirty flag only when data
+ changes
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1582793785-22423-1-git-send-email-mkshah@codeaurora.org>
+ <1582793785-22423-3-git-send-email-mkshah@codeaurora.org>
+ <CAE=gft6VDMoTZ4mW7d7scUCtDowfJiCbOzx_1FaFkoz8tm99DQ@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <9120b876-d7bb-7e74-f1e4-0ff6f2c6c939@codeaurora.org>
+Date:   Fri, 28 Feb 2020 16:42:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200227132211.791484803@linuxfoundation.org>
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Feb 2020 16:41:41 +0530
-Message-ID: <CA+G9fYsaAq8s1v1J0qL89QrH+w2mdWdUDwKLmQ-u7gb7+HX29A@mail.gmail.com>
-Subject: Re: [PATCH 4.4 000/113] 4.4.215-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAE=gft6VDMoTZ4mW7d7scUCtDowfJiCbOzx_1FaFkoz8tm99DQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 at 19:10, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+
+On 2/27/2020 11:48 PM, Evan Green wrote:
+> On Thu, Feb 27, 2020 at 12:57 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> Currently rpmh ctrlr dirty flag is set for all cases regardless of data
+>> is really changed or not. Add changes to update dirty flag when data is
+>> changed to newer values.
+>>
+>> Also move dirty flag updates to happen from within cache_lock and remove
+>> unnecessary INIT_LIST_HEAD() call and a default case from switch.
+>>
+>> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+>> ---
+>>   drivers/soc/qcom/rpmh.c | 29 ++++++++++++++++-------------
+>>   1 file changed, 16 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index eb0ded0..3f5d9eb 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -133,26 +133,30 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+>>
+>>          req->addr = cmd->addr;
+>>          req->sleep_val = req->wake_val = UINT_MAX;
+>> -       INIT_LIST_HEAD(&req->list);
+> Thanks!
 >
-> This is the start of the stable review cycle for the 4.4.215 release.
-> There are 113 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>>          list_add_tail(&req->list, &ctrlr->cache);
+>>
+>>   existing:
+>>          switch (state) {
+>>          case RPMH_ACTIVE_ONLY_STATE:
+>> -               if (req->sleep_val != UINT_MAX)
+>> +               if (req->sleep_val != UINT_MAX) {
+>>                          req->wake_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          case RPMH_WAKE_ONLY_STATE:
+>> -               req->wake_val = cmd->data;
+>> +               if (req->wake_val != cmd->data) {
+>> +                       req->wake_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          case RPMH_SLEEP_STATE:
+>> -               req->sleep_val = cmd->data;
+>> -               break;
+>> -       default:
+>> +               if (req->sleep_val != cmd->data) {
+>> +                       req->sleep_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          }
+>>
+>> -       ctrlr->dirty = true;
+>>   unlock:
+>>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>
+>> @@ -287,6 +291,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
+>>
+>>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>>          list_add_tail(&req->list, &ctrlr->batch_cache);
+>> +       ctrlr->dirty = true;
+>>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>   }
+>>
+>> @@ -323,6 +328,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+>>          list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+>>                  kfree(req);
+>>          INIT_LIST_HEAD(&ctrlr->batch_cache);
+>> +       ctrlr->dirty = true;
+>>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>   }
+>>
+>> @@ -456,13 +462,9 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
+>>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>   {
+>>          struct cache_req *p;
+>> +       unsigned long flags;
+>>          int ret;
+>>
+>> -       if (!ctrlr->dirty) {
+>> -               pr_debug("Skipping flush, TCS has latest data.\n");
+>> -               return 0;
+>> -       }
+>> -
+>>          /* First flush the cached batch requests */
+>>          ret = flush_batch(ctrlr);
+>>          if (ret)
+>> @@ -488,7 +490,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>                          return ret;
+>>          }
+>>
+>> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>>          ctrlr->dirty = false;
+>> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> You're acquiring a lock around an operation that's already inherently
+> atomic, which is not right. If the comment earlier in this function is
+> still correct that "Nobody else should be calling this function other
+> than system PM, hence we can run without locks", then you can simply
+> remove this hunk and the part moving ->dirty = true into
+> invalidate_batch.
 >
-> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.215-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> However, if rpmh_flush() can now be called in a scenario where
+> pre-emption is enabled or multiple cores are alive, then ctrlr->cache
+> is no longer adequately protected. You'd need to add a lock
+> acquire/release around the list iteration above, and fix up the
+> comment.
+> -Evan
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hi Evan,
 
-Summary
-------------------------------------------------------------------------
+Right, rpmh_flush() now can be called from any cpu. i will remove 
+comments from above.
 
-kernel: 4.4.215-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 68572b1fc85aad5f46827fabaefbc6aaaa1f92be
-git describe: v4.4.214-114-g68572b1fc85a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.214-114-g68572b1fc85a
+part for rpmh_flush(),  flush_batch()  and ctrlr->dirty update was 
+already covered within cache lock, however its needed to protect
 
-No regressions (compared to build v4.4.214)
+entire rpmh_flush() in cache_lock now.
 
-No fixes (compared to build v4.4.214)
+updates in v9.
 
-Ran 23132 total tests in the following environments and test suites.
+Thanks,
 
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+Maulik
 
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* prep-tmp-disk
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-crypto-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* v4l2-compliance
-* install-android-platform-tools-r2600
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.215-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.215-rc1-hikey-20200227-658
-git commit: 1a36ae5dee37518be5191e87733744dc02f99366
-git describe: 4.4.215-rc1-hikey-20200227-658
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.215-rc1-hikey-20200227-658
-
-
-No regressions (compared to build 4.4.215-rc1-hikey-20200227-657)
-
-
-No fixes (compared to build 4.4.215-rc1-hikey-20200227-657)
-
-Ran 1682 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
