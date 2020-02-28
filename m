@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380F5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501D3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C71246B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E225246BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgB1Qca (ORCPT
+        id S1726995AbgB1Qc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:32:30 -0500
+        Fri, 28 Feb 2020 11:32:27 -0500
 Received: from mga14.intel.com ([192.55.52.115]:35576 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbgB1Qc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:32:28 -0500
+        id S1726933AbgB1QcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:32:25 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:28 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="227593120"
+   d="scan'208";a="227593091"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:28 -0800
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:25 -0800
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 12/12] perf hist: Add fast path for duplicate entries check approach
-Date:   Fri, 28 Feb 2020 08:30:11 -0800
-Message-Id: <20200228163011.19358-13-kan.liang@linux.intel.com>
+Subject: [PATCH 09/12] perf script: Add option to enable the LBR stitching approach
+Date:   Fri, 28 Feb 2020 08:30:08 -0800
+Message-Id: <20200228163011.19358-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228163011.19358-1-kan.liang@linux.intel.com>
 References: <20200228163011.19358-1-kan.liang@linux.intel.com>
@@ -49,116 +49,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Perf checks the duplicate entries in a callchain before adding an entry.
-However the check is very slow especially with deeper call stack.
-Almost ~50% elapsed time of perf report is spent on the check when the
-call stack is always depth of 32.
+With the LBR stitching approach, the reconstructed LBR call stack
+can break the HW limitation. However, it may reconstruct invalid call
+stacks in some cases, e.g. exception handing such as setjmp/longjmp.
+Also, it may impact the processing time especially when the number of
+samples with stitched LBRs are huge.
 
-The hist_entry__cmp() is used to compare the new entry with the old
-entries. It will go through all the available sorts in the sort_list,
-and call the specific cmp of each sort, which is very slow.
-Actually, for most cases, there are no duplicate entries in callchain.
-The symbols are usually different. It's much faster to do a quick check
-for symbols first. Only do the full cmp when the symbols are exactly the
-same.
-The quick check is only to check symbols, not dso. Export
-_sort__sym_cmp.
+Add an option to enable the approach.
 
- $perf record --call-graph lbr ./tchain_edit_64
-
- Without the patch
- $time perf report --stdio
- real    0m21.142s
- user    0m21.110s
- sys     0m0.033s
-
- With the patch
- $time perf report --stdio
- real    0m10.977s
- user    0m10.948s
- sys     0m0.027s
-
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/hist.c | 23 +++++++++++++++++++++++
- tools/perf/util/sort.c |  2 +-
- tools/perf/util/sort.h |  2 ++
- 3 files changed, 26 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-script.txt | 11 +++++++++++
+ tools/perf/builtin-script.c              |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 808ca27bd5cf..1894423f5c07 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1057,6 +1057,20 @@ iter_next_cumulative_entry(struct hist_entry_iter *iter,
- 	return fill_callchain_info(al, node, iter->hide_unresolved);
- }
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 2599b057e47b..472f20f1e479 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -426,6 +426,17 @@ include::itrace.txt[]
+ --show-on-off-events::
+ 	Show the --switch-on/off events too.
  
-+static bool
-+hist_entry__fast__sym_diff(struct hist_entry *left,
-+			   struct hist_entry *right)
-+{
-+	struct symbol *sym_l = left->ms.sym;
-+	struct symbol *sym_r = right->ms.sym;
++--stitch-lbr::
++	Show callgraph with stitched LBRs, which may have more complete
++	callgraph. The perf.data file must have been obtained using
++	perf record --call-graph lbr.
++	Disabled by default. In common cases with call stack overflows,
++	it can recreate better call stacks than the default lbr call stack
++	output. But this approach is not full proof. There can be cases
++	where it creates incorrect call stacks from incorrect matches.
++	The known limitations include exception handing such as
++	setjmp/longjmp will have calls/returns not match.
 +
-+	if (!sym_l && !sym_r)
-+		return left->ip != right->ip;
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-script-perl[1],
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index acf3107bbda2..c229e0199003 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1687,6 +1687,7 @@ struct perf_script {
+ 	bool			show_bpf_events;
+ 	bool			allocated;
+ 	bool			per_event_dump;
++	bool			stitch_lbr;
+ 	struct evswitch		evswitch;
+ 	struct perf_cpu_map	*cpus;
+ 	struct perf_thread_map *threads;
+@@ -1913,6 +1914,9 @@ static void process_event(struct perf_script *script,
+ 	if (PRINT_FIELD(IP)) {
+ 		struct callchain_cursor *cursor = NULL;
+ 
++		if (script->stitch_lbr)
++			al->thread->lbr_stitch_enable = true;
 +
-+	return !!_sort__sym_cmp(sym_l, sym_r);
-+}
-+
-+
- static int
- iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 			       struct addr_location *al)
-@@ -1083,6 +1097,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 		if (symbol_conf.use_callchain && sample->callchain &&
+ 		    thread__resolve_callchain(al->thread, &callchain_cursor, evsel,
+ 					      sample, NULL, NULL, scripting_max_stack) == 0)
+@@ -3602,6 +3606,8 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "file saving guest os /proc/kallsyms"),
+ 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 		   "file", "file saving guest os /proc/modules"),
++	OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
++		    "Enable LBR callgraph stitching approach"),
+ 	OPTS_EVSWITCH(&script.evswitch),
+ 	OPT_END()
  	};
- 	int i;
- 	struct callchain_cursor cursor;
-+	bool fast = hists__has(he_tmp.hists, sym);
- 
- 	callchain_cursor_snapshot(&cursor, &callchain_cursor);
- 
-@@ -1093,6 +1108,14 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 	 * It's possible that it has cycles or recursive calls.
- 	 */
- 	for (i = 0; i < iter->curr; i++) {
-+		/*
-+		 * For most cases, there are no duplicate entries in callchain.
-+		 * The symbols are usually different. Do a quick check for
-+		 * symbols first.
-+		 */
-+		if (fast && hist_entry__fast__sym_diff(he_cache[i], &he_tmp))
-+			continue;
-+
- 		if (hist_entry__cmp(he_cache[i], &he_tmp) == 0) {
- 			/* to avoid calling callback function */
- 			iter->he = NULL;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index ab0cfd790ad0..33e0fa1bc203 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -234,7 +234,7 @@ static int64_t _sort__addr_cmp(u64 left_ip, u64 right_ip)
- 	return (int64_t)(right_ip - left_ip);
- }
- 
--static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
-+int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
- {
- 	if (!sym_l || !sym_r)
- 		return cmp_null(sym_l, sym_r);
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 6c862d62d052..c3c3c68cbfdd 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -309,5 +309,7 @@ int64_t
- sort__daddr_cmp(struct hist_entry *left, struct hist_entry *right);
- int64_t
- sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right);
-+int64_t
-+_sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r);
- char *hist_entry__srcline(struct hist_entry *he);
- #endif	/* __PERF_SORT_H */
 -- 
 2.17.1
 
