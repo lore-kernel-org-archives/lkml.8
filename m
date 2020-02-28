@@ -2,156 +2,77 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B9BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E65C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE64D2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sY0DpGEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4C216246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582912576;
+	bh=bKRk8j6zbi5giOIXy9zRlMJqv+wENeI9FF+psFDMeMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AAkbzIEUCFsP40t6vg7cOECV042ITrGyNtizEOhdy91jeL1lpm+e1zfTIttTNZjtb
+	 Re4bknWRgK5nwfLuBKiTrcjboIrbVGqYrzKG7cqPto6mn8nrO8z2wPyV5lROGmBA4M
+	 CRHGhLvi0ebHY6hPw6cLtu5kXBAyiTHbeLkFfE4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgB1Rxi (ORCPT
+        id S1726046AbgB1R4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:53:38 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42120 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Rxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:53:38 -0500
-Received: by mail-qk1-f193.google.com with SMTP id o28so3764962qkj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:53:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7A81NCRtl/YMUGoXqhguAxYpB741arq6+hyuPYrsxj8=;
-        b=sY0DpGEQqcJV+Om5EC5uuAuFwKAdjsRvhCmg7xEn8ttC+eOSqdtl9G7psxfJzUGzyq
-         CFgexnJMO3BoZGn/iSzwSiVKiNzwcPPDrFaf2Kub18f4onnWtjyleou7j3D2qhFdanI8
-         98t3lMngB6DyG5RzEw7SjgPkXdKjFb3VE9dGVTR5oeAa+IK8b22h9bpLrpLx/BgQzkUe
-         Toz5kRGpIoqs7+ZszYosKGlJnWIVNnjOECOmsMnWFqnLNWmKzGIpmPLHE0mrnCM6fr0q
-         CIvoVZX6V+zY/5T2ce6U9NoaV0KO+J1Ir2Q/sD+StqT1lsJW9n9C8bqwLC/RPl6XtCpv
-         6fyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7A81NCRtl/YMUGoXqhguAxYpB741arq6+hyuPYrsxj8=;
-        b=Rt0UKUP2UVgH6hIGEGlWJPCP45W8p+vFnmtzUK0HcCFQfKULFd6GfhWjiItohtopGJ
-         qhyCI60t9IGdl/zQ6OTbu07xFUef1MKMgdDXOcjoEBwVeTt61HlkulU28ACbV040ymYo
-         lwL+P43Z3lnadPGWQjI6axhCxQp7eILJpLUuFHEhc8Sr+m03xwNQ9I+vJdmUkLsrJohS
-         j7gqZouVKcRHkCul9AQO7eBihsiegcRnuBLIRqbMwETfSAGN6TsXl6H/0gGNUyADk5XS
-         mHSx1U8KL3xh+3bBJSg/GsprHNV+WqPJiNVU0IeYnrapQtOQDMH/NAj3l0lpvXKqPRfY
-         XY1g==
-X-Gm-Message-State: APjAAAUGr7irbUTiDY+ZhnjHtTVBBNKLx3YfBQRijtfpqlHuOpxrZ09x
-        sL6JsyLOYekp4beokdQ/pOMM/4u5ub97r+XiVZoZ
-X-Google-Smtp-Source: APXvYqxuUZyxP1RTj056y0C7X/UxFsJhJD3+Tlwcqh1VF5LE+BUAzmAANREZPS01D5w3HfGzooO7MBqD5Ciibnynh/Y=
-X-Received: by 2002:ae9:f301:: with SMTP id p1mr5320690qkg.422.1582912416914;
- Fri, 28 Feb 2020 09:53:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20200228012036.15682-1-brendanhiggins@google.com>
- <20200228012036.15682-2-brendanhiggins@google.com> <CAFd5g46dVaV18=5mPLTHh06KQ6nDh4Xw4r8PAZDfSXASi=Qpmg@mail.gmail.com>
-In-Reply-To: <CAFd5g46dVaV18=5mPLTHh06KQ6nDh4Xw4r8PAZDfSXASi=Qpmg@mail.gmail.com>
-From:   Iurii Zaikin <yzaikin@google.com>
-Date:   Fri, 28 Feb 2020 09:53:00 -0800
-Message-ID: <CAAXuY3qnButVR4hRQcsUbUsvLFg9cSvxSe15uG82T=j+QSQUqQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] vmlinux.lds.h: add linker section for KUnit test suites
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Fri, 28 Feb 2020 12:56:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1R4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:56:14 -0500
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40ED2469F;
+        Fri, 28 Feb 2020 17:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582912574;
+        bh=bKRk8j6zbi5giOIXy9zRlMJqv+wENeI9FF+psFDMeMM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Binu4FcGs9Riko9csXM9x9D2NmqI+3pmCy4xJVSgWZgoPO3nUfwl/QTstNgOq6YnD
+         H2DcbmB1N1cKKox7a8yKvBwyaa5rBuXz03AgfKNKgY0gw93eRxpqwy+a4KKcvoM0K5
+         mQpj67XZ03bMgWzbtwEL/0enI5FHcqLGgcF36FuU=
+Date:   Fri, 28 Feb 2020 09:56:11 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Alex Elder <elder@linaro.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>,
         Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
+Message-ID: <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200228165343.8272-1-elder@linaro.org>
+References: <20200228165343.8272-1-elder@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We went with this alignment precisely because it's the largest that
-any supported arch may possibly need. The problem as I understood it
-was that the compiler, seeing a bunch of pointers decided to put them
-at the memory-access efficient alignment rather than at the section
-start. Remember that the section start used to be unaligned for some
-reason. Note that the alignment that is a multiple of smaller
-alignment is still aligned wrt the smaller alignment, so the compiler
-shouldn't need to put the pointers elsewhere.
-I wonder if there's a more robust way of forcing the compiler to put
-the pointers right at the section start and insert no gaps between
-them than playing with alignment.
+On Fri, 28 Feb 2020 10:53:43 -0600 Alex Elder wrote:
+> Define FIELD_MAX(), which supplies the maximum value that can be
+> represented by a field value.  Define field_max() as well, to go
+> along with the lower-case forms of the field mask functions.
+> 
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> ---
+> 
+>  NOTE:	I'm not entirely sure who owns/maintains this file so
+> 	I'm sending it to those who have committed things to it.
+> 	I hope someone will just take it in after review; I use
+> 	field_max() in some code I'm about to send out.
 
-On Thu, Feb 27, 2020 at 11:22 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Thu, Feb 27, 2020 at 5:20 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > Add a linker section where KUnit can put references to its test suites.
-> > This patch is the first step in transitioning to dispatching all KUnit
-> > tests from a centralized executor rather than having each as its own
-> > separate late_initcall.
-> >
-> > Co-developed-by: Iurii Zaikin <yzaikin@google.com>
-> > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >  include/asm-generic/vmlinux.lds.h | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index e00f41aa8ec4f..99a866f49cb3d 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -856,6 +856,13 @@
-> >                 KEEP(*(.con_initcall.init))                             \
-> >                 __con_initcall_end = .;
-> >
-> > +/* Alignment must be consistent with (kunit_suite *) in include/kunit/test.h */
-> > +#define KUNIT_TEST_SUITES                                              \
-> > +               . = ALIGN(8);                                           \
->
-> After posting this, I saw I had gotten an email from 0day[1]. After
-> some investigation, I discovered that this 8 byte alignment works for
-> x86 64 bit fine, but only *sometimes* for 32 bit. 4 byte alignment
-> seems to work in all cases (so far). I am not sure why we went with
-> such a large alignment in hindsight. In any case, I should have a
-> fixed revision out pretty soon.
->
-> > +               __kunit_suites_start = .;                               \
-> > +               KEEP(*(.kunit_test_suites))                             \
-> > +               __kunit_suites_end = .;
-> > +
-> >  #ifdef CONFIG_BLK_DEV_INITRD
-> >  #define INIT_RAM_FS                                                    \
-> >         . = ALIGN(4);                                                   \
-> > @@ -1024,6 +1031,7 @@
-> >                 INIT_CALLS                                              \
-> >                 CON_INITCALL                                            \
-> >                 INIT_RAM_FS                                             \
-> > +               KUNIT_TEST_SUITES                                       \
-> >         }
-> >
-> >  #define BSS_SECTION(sbss_align, bss_align, stop_align)                 \
-> > --
->
-> [1] https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4I4UW4OAT63ETMIEUJQTOF3BFTMO6ROD/
+Could you give us an example use?
+
+Is it that you find the current macros misnamed or there's something
+you can't do? Or are you trying to set fields to max?
