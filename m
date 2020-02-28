@@ -2,123 +2,94 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9AFC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412FEC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5340246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sObfravm"
+	by mail.kernel.org (Postfix) with ESMTP id 0B77D246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgB1JTw (ORCPT
+        id S1726824AbgB1JUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:19:52 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:65069 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726207AbgB1JTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:19:52 -0500
-X-UUID: caab609a429849368284e83c25abd92c-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6zeC4yb1VQBu7ApncTTy8tf7CnDnABwjHUo57+LSsO8=;
-        b=sObfravm74/bA6AytUYIAQBeFbeGeZ/0otXn+fYlZbbNA/h7vjLnFFHE7HrlJws4/KInkSIrQHMWoxXX7xuCHPJ/FPk09vAQxu/YO3qUxNp07A16o/21nq2HBHHMcmiUoLhC08rKtTmYQ++TTeaB44x2pmPVg4JXFfha1GoyLPA=;
-X-UUID: caab609a429849368284e83c25abd92c-20200228
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1234426427; Fri, 28 Feb 2020 17:19:47 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Feb 2020 17:18:48 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Feb 2020 17:19:44 +0800
-Message-ID: <1582881585.22475.0.camel@mtksdaap41>
-Subject: Re: [PATCH v10 2/5] dt-bindings: mediatek: Update mmsys binding to
- reflect it is a system controller
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 28 Feb 2020 17:19:45 +0800
-In-Reply-To: <20200227180858.1514157-3-enric.balletbo@collabora.com>
-References: <20200227180858.1514157-1-enric.balletbo@collabora.com>
-         <20200227180858.1514157-3-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 28 Feb 2020 04:20:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:35394 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbgB1JUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:20:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2C8E1FB;
+        Fri, 28 Feb 2020 01:20:19 -0800 (PST)
+Received: from [10.163.1.119] (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52C03F7B4;
+        Fri, 28 Feb 2020 01:20:10 -0800 (PST)
+Subject: Re: [PATCH] mm/debug: Add tests validating arch page table helpers
+ for core features
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-snps-arc@lists.infradead.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <1582799637-11786-1-git-send-email-anshuman.khandual@arm.com>
+ <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f99692be-5d38-fdb7-46f1-205c7cc7481c@arm.com>
+Date:   Fri, 28 Feb 2020 14:50:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: FC89D009C6FEBE11B57038010837F5A87B7460971BF352976EDF9382E63247B12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjcgYXQgMTk6MDggKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IFRoZSBtbXN5cyBzeXN0ZW0gY29udHJvbGxlciBpcyBu
-b3Qgb25seSBhIHB1cmUgY2xvY2sgY29udHJvbGxlciwgc28NCj4gdXBkYXRlIHRoZSBiaW5kaW5n
-IGRvY3VtZW50YXRpb24gdG8gcmVmbGVjdCB0aGF0IGFwYXJ0IGZyb20gcHJvdmlkaW5nDQo+IGNs
-b2NrcywgaXQgYWxzbyBwcm92aWRlcyByb3V0aW5nIGFuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wg
-cmVnaXN0ZXJzLg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
-DQoNCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0
-Ym9AY29sbGFib3JhLmNvbT4NCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYxMDoNCj4gLSBVcGRh
-dGUgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIG1tc3lzIHN5c3RlbSBjb250cm9s
-bGVyLg0KPiANCj4gQ2hhbmdlcyBpbiB2OTogTm9uZQ0KPiBDaGFuZ2VzIGluIHY4OiBOb25lDQo+
-IENoYW5nZXMgaW4gdjc6IE5vbmUNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-bWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0ICAgIHwgNyArKysrLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
-bW1zeXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
-ay9tZWRpYXRlayxtbXN5cy50eHQNCj4gaW5kZXggMzAxZWVmYmUxNjE4Li44ZDZhOWQ5OGU3YTYg
-MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVk
-aWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1zeXMudHh0DQo+IEBAIC0xLDcgKzEs
-OCBAQA0KPiAgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlcg0KPiAgPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PQ0KPiAgDQo+IC1UaGUgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlciBwcm92aWRl
-cyB2YXJpb3VzIGNsb2NrcyB0byB0aGUgc3lzdGVtLg0KPiArVGhlIE1lZGlhdGVrIG1tc3lzIHN5
-c3RlbSBjb250cm9sbGVyIHByb3ZpZGVzIGNsb2NrIGNvbnRyb2wsIHJvdXRpbmcgY29udHJvbCwN
-Cj4gK2FuZCBtaXNjZWxsYW5lb3VzIGNvbnRyb2wgaW4gbW1zeXMgcGFydGl0aW9uLg0KPiAgDQo+
-ICBSZXF1aXJlZCBQcm9wZXJ0aWVzOg0KPiAgDQo+IEBAIC0xNSwxMyArMTYsMTMgQEAgUmVxdWly
-ZWQgUHJvcGVydGllczoNCj4gIAktICJtZWRpYXRlayxtdDgxODMtbW1zeXMiLCAic3lzY29uIg0K
-PiAgLSAjY2xvY2stY2VsbHM6IE11c3QgYmUgMQ0KPiAgDQo+IC1UaGUgbW1zeXMgY29udHJvbGxl
-ciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJvbQ0KPiArRm9yIHRoZSBjbG9jayBjb250
-cm9sLCB0aGUgbW1zeXMgY29udHJvbGxlciB1c2VzIHRoZSBjb21tb24gY2xrIGJpbmRpbmcgZnJv
-bQ0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRp
-bmdzLnR4dA0KPiAgVGhlIGF2YWlsYWJsZSBjbG9ja3MgYXJlIGRlZmluZWQgaW4gZHQtYmluZGlu
-Z3MvY2xvY2svbXQqLWNsay5oLg0KPiAgDQo+ICBFeGFtcGxlOg0KPiAgDQo+IC1tbXN5czogY2xv
-Y2stY29udHJvbGxlckAxNDAwMDAwMCB7DQo+ICttbXN5czogc3lzY29uQDE0MDAwMDAwIHsNCj4g
-IAljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1tbXN5cyIsICJzeXNjb24iOw0KPiAgCXJl
-ZyA9IDwwIDB4MTQwMDAwMDAgMCAweDEwMDA+Ow0KPiAgCSNjbG9jay1jZWxscyA9IDwxPjsNCg0K
 
+
+On 02/27/2020 04:12 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 27/02/2020 à 11:33, Anshuman Khandual a écrit :
+>> This adds new tests validating arch page table helpers for these following
+>> core memory features. These tests create and test specific mapping types at
+>> various page table levels.
+>>
+>> * SPECIAL mapping
+>> * PROTNONE mapping
+>> * DEVMAP mapping
+>> * SOFTDIRTY mapping
+>> * SWAP mapping
+>> * MIGRATION mapping
+>> * HUGETLB mapping
+> 
+> For testing HUGETLB mappings, you also have to include tests of hugepd functions/helpers. Not all archictures have hugepage size which matches with page tables levels (e.g. powerpc). Those architectures use hugepd_t.
+
+Dont see much hugepd_t in generic HugeTLB. Just wondering which generic
+hugepd helpers can be tested here. Could you please be bit more specific.
+As we have not yet started looking for arch specific page table helpers
+test requirements, all the test scenarios here need to be generic.
+
+> 
+> Christophe
+> 
