@@ -2,207 +2,78 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEACC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C2EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6859220732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3192120732
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="INb3PM54"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="h2WHITZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgB1LMn (ORCPT
+        id S1726898AbgB1LMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:12:43 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10476 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726700AbgB1LMm (ORCPT
+        Fri, 28 Feb 2020 06:12:53 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35877 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgB1LMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:12:42 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582888361; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=IVZ6CtP5L6xsu8bf6zRg6TkuiYbPIlAzMCNphwbcOsE=; b=INb3PM54afcSpsfAooNbpb+H7Oy6anOmEWuQAZmbqKXi3csORsuSAdvIvnWOa8r6OSr9nLMm
- 7+WOKh7xkVFbjx0H26inSWZmGBmmpGBWa5qOdB5OgHE+1Y90yzWxtBEl1ymurx9MqA46WhMQ
- H4vzlis65vCHgWk/xcWE7Nu7Jss=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e58f5a8.7fabedcc6b58-smtp-out-n01;
- Fri, 28 Feb 2020 11:12:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1CDDAC4479D; Fri, 28 Feb 2020 11:12:39 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38AE7C43383;
-        Fri, 28 Feb 2020 11:12:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38AE7C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v8 2/3] soc: qcom: rpmh: Update dirty flag only when data
- changes
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1582793785-22423-1-git-send-email-mkshah@codeaurora.org>
- <1582793785-22423-3-git-send-email-mkshah@codeaurora.org>
- <CAE=gft6VDMoTZ4mW7d7scUCtDowfJiCbOzx_1FaFkoz8tm99DQ@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <9120b876-d7bb-7e74-f1e4-0ff6f2c6c939@codeaurora.org>
-Date:   Fri, 28 Feb 2020 16:42:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 06:12:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j16so2515044wrt.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pJgpsPTAOyTEQskkZCcN8WPjUqHPIZGQG/IVbQt6n/E=;
+        b=h2WHITZOQEvnJndGhZ+TDX7M952DgLQOWgr31Ngcy/m/dAg0BxFgqGvir/enXuUlsK
+         kcF7X6vJmNR1YHmdV01i0/Irr8N33dYBwfdc9meKii+Dc5O3Eyo+N1F4IE0ROgq55uBw
+         Lp3epqMDKrMRhCGZHzO7XQkqHKFZz0us+lB/RYxYAt9/B4x/waJnwlVxcBZAJ/O63+KT
+         Az8tRKMz0QfKvcEEoXp5Z4wj/ZQunjOj8ZKo/h1lM8UjbTSk9jNl1tVL2M+jFoHsTbl5
+         BExPopLr535QXki47KTKxzX0gw87dLNq4T3TZeieLI5slCMLO7xK7sKTwcynKlm4EUCL
+         ohIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pJgpsPTAOyTEQskkZCcN8WPjUqHPIZGQG/IVbQt6n/E=;
+        b=t03uo/nOJkbtSWTu3zsQIAVpHTaDMjNDIP3F6lurT1KdeZdvCr08iDatV5ALwx3n+n
+         HoTBU4ig5Ykj8vWFg3N+sA1D4ickbJnC60fK5Y3O/qxX8Ej4qu9hgW99XLZ0oabwFNY6
+         jOTZK2YPQrYxxx9o7h66cE+FiO76FZX6Un+XJwjqh2sPE6IXvnf/zz30EgYNHABj3aNP
+         Z14MIqpfnUQrSNQHgRB+Z8DP0aNZQvR3PCaD93+B4MUOEarBV/j4AMVr1zsFlDPKf2WG
+         LfnhxKJuOj6CObFp9yxuD7v8jLy8y1pyUgo7SizKj7wGMRFp0TYKVDyWzqfcQenq7JHf
+         ogaQ==
+X-Gm-Message-State: APjAAAXHptAYcM087KsNFPF16U5XRuxphLwEX1hiXTr3Lc3nQSm8egO3
+        aWq+mZSEP2egqLBuIoX9WuVXWRGeprEQfkONYScrNA==
+X-Google-Smtp-Source: APXvYqy6KcgmbPb1fw5V3WytN081I6/VutL5m3T3ZlzWnw7MV1kE3qIKSqavYxfdsKdocmu8raau8/qoViKot+DHhpk=
+X-Received: by 2002:a5d:56c4:: with SMTP id m4mr4484559wrw.6.1582888371081;
+ Fri, 28 Feb 2020 03:12:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft6VDMoTZ4mW7d7scUCtDowfJiCbOzx_1FaFkoz8tm99DQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <CGME20200228094033eucas1p2fa2f6cea3b882e758992d97da2fc50ed@eucas1p2.samsung.com>
+ <20200228094026.26983-1-m.szyprowski@samsung.com>
+In-Reply-To: <20200228094026.26983-1-m.szyprowski@samsung.com>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Fri, 28 Feb 2020 11:12:10 +0000
+Message-ID: <CAPj87rOH6o593kkPKibfWr7K2JYQ8yvTHuAwSu=rjhWGKgKJGA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm: panfrost: Silence warnings during deferred probe
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 28 Feb 2020 at 09:40, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-On 2/27/2020 11:48 PM, Evan Green wrote:
-> On Thu, Feb 27, 2020 at 12:57 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Currently rpmh ctrlr dirty flag is set for all cases regardless of data
->> is really changed or not. Add changes to update dirty flag when data is
->> changed to newer values.
->>
->> Also move dirty flag updates to happen from within cache_lock and remove
->> unnecessary INIT_LIST_HEAD() call and a default case from switch.
->>
->> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 29 ++++++++++++++++-------------
->>   1 file changed, 16 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index eb0ded0..3f5d9eb 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -133,26 +133,30 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>
->>          req->addr = cmd->addr;
->>          req->sleep_val = req->wake_val = UINT_MAX;
->> -       INIT_LIST_HEAD(&req->list);
-> Thanks!
->
->>          list_add_tail(&req->list, &ctrlr->cache);
->>
->>   existing:
->>          switch (state) {
->>          case RPMH_ACTIVE_ONLY_STATE:
->> -               if (req->sleep_val != UINT_MAX)
->> +               if (req->sleep_val != UINT_MAX) {
->>                          req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_WAKE_ONLY_STATE:
->> -               req->wake_val = cmd->data;
->> +               if (req->wake_val != cmd->data) {
->> +                       req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_SLEEP_STATE:
->> -               req->sleep_val = cmd->data;
->> -               break;
->> -       default:
->> +               if (req->sleep_val != cmd->data) {
->> +                       req->sleep_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          }
->>
->> -       ctrlr->dirty = true;
->>   unlock:
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->> @@ -287,6 +291,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->>
->>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>          list_add_tail(&req->list, &ctrlr->batch_cache);
->> +       ctrlr->dirty = true;
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   }
->>
->> @@ -323,6 +328,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
->>          list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
->>                  kfree(req);
->>          INIT_LIST_HEAD(&ctrlr->batch_cache);
->> +       ctrlr->dirty = true;
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   }
->>
->> @@ -456,13 +462,9 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>   {
->>          struct cache_req *p;
->> +       unsigned long flags;
->>          int ret;
->>
->> -       if (!ctrlr->dirty) {
->> -               pr_debug("Skipping flush, TCS has latest data.\n");
->> -               return 0;
->> -       }
->> -
->>          /* First flush the cached batch requests */
->>          ret = flush_batch(ctrlr);
->>          if (ret)
->> @@ -488,7 +490,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>                          return ret;
->>          }
->>
->> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>          ctrlr->dirty = false;
->> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> You're acquiring a lock around an operation that's already inherently
-> atomic, which is not right. If the comment earlier in this function is
-> still correct that "Nobody else should be calling this function other
-> than system PM, hence we can run without locks", then you can simply
-> remove this hunk and the part moving ->dirty = true into
-> invalidate_batch.
->
-> However, if rpmh_flush() can now be called in a scenario where
-> pre-emption is enabled or multiple cores are alive, then ctrlr->cache
-> is no longer adequately protected. You'd need to add a lock
-> acquire/release around the list iteration above, and fix up the
-> comment.
-> -Evan
-
-Hi Evan,
-
-Right, rpmh_flush() now can be called from any cpu. i will remove 
-comments from above.
-
-part for rpmh_flush(),  flush_batch()  and ctrlr->dirty update was 
-already covered within cache lock, however its needed to protect
-
-entire rpmh_flush() in cache_lock now.
-
-updates in v9.
-
-Thanks,
-
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Daniel Stone <daniels@collabora.com>
