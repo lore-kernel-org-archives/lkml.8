@@ -2,198 +2,227 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF3C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F9C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE90246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50AA24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:08:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNuQWssR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgB1HFo (ORCPT
+        id S1726889AbgB1HIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgB1HFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:05:43 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE03D246A3;
-        Fri, 28 Feb 2020 07:05:39 +0000 (UTC)
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20200227081805.GA5746@afzalpc>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <2c8b836e-36f7-e479-db7a-6bb3c072116a@linux-m68k.org>
-Date:   Fri, 28 Feb 2020 17:05:36 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 02:08:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33518 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgB1HIV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:08:21 -0500
+Received: by mail-wr1-f67.google.com with SMTP id x7so1769586wrr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 23:08:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Y3bqnLpG6SCjOwt4nBEcww4YzAPzL9sw6D5C7BP4ss=;
+        b=kNuQWssR1j1UXJivHjADXdQbCi8KzkCDdcAGoFjr1Uw+1MhzsyD16SW420zCLbmsno
+         tpdi00UqDp6NzXw0u0aRt5DcUYBrUI9/uxDChuz8wrrUK3dbfkM7RvYv7v+NSBSh7o8y
+         Ss8/OZZddwlPFZhyOQKwrfliuld4tiTCISnUxODZGt4FNqF9k/CZKfEpn1FDyUKRQcrl
+         H0yy/F5VaFz3Yo+W7n8fXArZh+PiYXslU0AprptuMnlO2G7QFgDjs/KOjjMQVWUpNf7q
+         lSZC9QWP0eeU9JKFSIkEOYefvNSXxEYl45Pl1Z84H/LTZA/AG5MtbT6zkQWOFbr2rAOo
+         gPiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Y3bqnLpG6SCjOwt4nBEcww4YzAPzL9sw6D5C7BP4ss=;
+        b=fJ81kqXgebXqmga325DufM26DeufzeNQZXm3Xw+RipN5IlyEwYVmmDID93HVuJcuSH
+         C1mNu7FuMqx1Qo7fzeus3dFgh0I6W3oN1aOF921EHnVTCKnSGQgeaUhVAROMPGWKfyTI
+         oAn3SL8YQ0HD9xz+lTHeL7dY3kBv6XMaiWXgqCaZ02Oj4cY0qqTtf1+1Uu8qja+n9zX/
+         nCpTvJHcB6ct4ynf0btGJcS/St1wCqrQcOWBDVGC/UCfeqAS35Deb7rewleLL6t0l5fv
+         zRJ161mjiwjO6MHeT7ZgeKAWk9UsDQkAZ/uwozg9ZJtHqizz6U5oZBM0Wu+2t083Ducs
+         AGaw==
+X-Gm-Message-State: APjAAAXRMdgo5AzaKRqnyWLm7YiZeMN7pdGFUd7+G2aBaCMcmFQnfmRp
+        8Y3efAszMSEozX9pnXicqtiaoWkIirXM3thqzg9ILg==
+X-Google-Smtp-Source: APXvYqwy838vGaHfU+raXOq8AVBEGhanWZziMBY3GYimgfDYKo0mTCncF7OS9/vpBdLq51cpEzoHDrwYM5ju/oQVf/E=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr3413854wrw.252.1582873698006;
+ Thu, 27 Feb 2020 23:08:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200227081805.GA5746@afzalpc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+In-Reply-To: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+From:   xiaohui li <lixiaohui1@xiaomi.corp-partner.google.com>
+Date:   Fri, 28 Feb 2020 15:07:45 +0800
+Message-ID: <CAAJeciXSq9yThwuFJ0WFO8-qiYzTD4GqVpVKHS0q5DHJ0f8X-Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
+ fallocate(0): fallocate2(). TP defrag.
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, viro@zeniv.linux.org.uk,
+        adilger.kernel@dilger.ca, snitzer@redhat.com, jack@suse.cz,
+        ebiggers@google.com, riteshh@linux.ibm.com, krisman@collabora.com,
+        surajjs@amazon.com, dmonakhov@gmail.com, mbobrowski@mbobrowski.org,
+        enwlinux@gmail.com, sblbir@amazon.com, khazhy@google.com,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Afzal,
+hi Kirill Tkhai:
 
-On 27/2/20 6:18 pm, afzal mohammed wrote:
-> On Wed, Feb 26, 2020 at 10:42:00AM +1000, Greg Ungerer wrote:
-> 
->>> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->>> +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
->>> +		pr_err("%s: request_irq() failed\n", "timer");
->>
->> Why not just:
->>
->>                  pr_err("timer: request_irq() failed\n");
-> 
-> The reason to use %s was that it could be automated by cocci script &
-> the o/p didn't look bad. Second arg to pr_err is what cocci
-> presents me & there is wide variation in the name across the tree as
-> Finn noted.
-> 
-> Excerpts from v1 cover letter [1],
-> 
-> - setup_irq(E1,&act);
-> + if (request_irq(E1,f_handler,f_flags,f_name,f_dev_id))
-> + 	pr_err("request_irq() on %s failed\n", f_name);
-> 
-> [ don't get mislead by string contents used, this was for v1, just to
->   show how the result was obtained. To take care of Finn's suggesstion,
->   instead of modifying cocci & then making changes other changes over
->   that (i could not fully automate w/ cocci, and Julia said my script
->   is fine as is), it was easier to run sed over the v1  patches ]
-> 
->> And maybe would it be useful to print out the error return code from a
->> failed request_irq()?
-> 
-> Since most of the existing setup_irq() didn't even check & handle
-> error return, my first thought was just s/setup_irq/request_irq, it
-> was easier from scripting pointing of view. i felt uncomfortable doing
-> nothing in case of error. Also noted that request_irq() definition has
-> a "__much_check", so decided to add it.
-> 
-> And there is a wide variation in the way return value is handled by
-> the caller, some already have a local variable, some don't. Moreover
-> in many cases caller cannot return any value, i.e. void, so what
-> to be done with return value was another issue, in some cases in
-> addition to printing error value, the error value can't be returned,
-> while some others it can.
+I agree with your idea very much.
+I had also implemented a similar fallocate interface with the unique
+flag which call tell ext4 filesystems to allocate the special free
+physical extents.
+I had done the same work as your fallocate2 work last year.
+
+but i think it has modified the core ext4 physical blocks allocator a
+lot, so the ext4 community may not accept it.
+so I didn't share it openly.
+
+but i think this fallocate2 interface just same as my work is also
+very useful in android mobile phone world.
+
+today android phone has large capacity memory and storage, just the
+same as a computer.
+and current days, customer treat phone and make full use of it by just
+the same way as they treat computer in past days.
+so after install many software and unstall them for many times in
+android phone,  the ext4 physical layout on disk has become more
+fragmented
+(the number of extents per group is large).
+at this moment, when run a sequential write workload, you will find
+the sequential write performance is very bad.
+
+but after do defragment work on some fragmented ext4 groups, and then
+run the same workload again, the sequential write performance has
+improved greatly.
+and the fallocate2 interface is a necessary component of this
+defragment work shown above.
+
+so i also think this fallocate2 interface is an important and useful
+tools for ext4 filesystems.
+
+
+
+
+
+
+
+
+
+On Wed, Feb 26, 2020 at 9:41 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
 >
->> What about displaying the requested IRQ number as well?
->> Just a thought.
-> 
-> i initially did the cocci to display IRQ number as the 3rd arg to
-> pr_err, but then it was observed that most of the those lines were
-> exceeding 80 chars, though cocci could align args properly in next
-> line, it could not put flower braces to the preceeding
-> 'if request_irq()' & in next line (though it is a single C statement
-> inside 'if', per kernel coding style, flower brace had to be put for a
-> single statement that spans multiple lines ], else it had to be
-> manually added treewide.
-> 
-> On Wed, Feb 26, 2020 at 12:11:55PM +1100, Finn Thain wrote:
-> 
->> Moreover, compare this change,
->>
->> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->> +	request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->>
->> with this change,
->>
->> +	int err;
->>
->> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->> +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->> +	if (err)
->> +		return err;
->>
->> Isn't the latter change the more common pattern? It prints nothing.
->>
->> And arguably, the former example is actually the change that's described
->> in the commit description.
->>
->> This patch seems to be making two orthogonal changes but I'll leave that
->> question to the maintainer. (I'm not really trying to NAK this patch.)
-> 
-> Instead of not checking the error value as in the existing cases &
-> mechanically replace w/ request_irq(), thought of at least giving user
-> the indication by way of pr_err (but i think most of the use is for
-> tick timer, if it fails, in most cases, system would not even boot)
-> due to the reasons mentioned above.
-> 
-> On Wed, Feb 26, 2020 at 12:11:38PM +1000, Greg Ungerer wrote:
-> 
->> Hmm, in my experience the much more common pattern is:
->>
->>> +	int err;
->>>
->>> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->>> +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->>> +	if (err) {
->>> +             pr_err("timer: request_irq() failed with err=%d\n", err);
->>> +		return err;
->>> +     }
-> 
-> This is my preferred style, but note that returning error is not
-> possible in many of these cases as callers are void return type.
-> 
-> On Wed, Feb 26, 2020 at 05:39:57PM +1100, Finn Thain wrote:
-> 
->> Besides, introducing local variables and altering control flow seems well
->> out-of-scope for this kind of refactoring, right?
-> 
-> To make changes perfect, it would be required to get into context of
-> each case (>150), and do it manually as there is wide variation like
-> whether caller can return error code, whether already a local integer
-> is defined to catch the error, whether it returns error after a goto,
-> whether we should allow it to proceed if it fails and so on.
-> 
-> And handling manually all the cases tree wide would be more error
-> prone & time consuming. i was relieved that there was only one build
-> error reported by test robot (i had done build & boot test only on ARM
-> & x86_64), given the amount of manual changes i had to do on top of
-> cocci generated ones.
-> 
-> At the same time, i didn't want to just mechanically replace & wanted
-> to add some value to the existing setup, which resulted in this patch.
-> 
-> My thought process was to do treewide removal of setup_irq() and
-> possibly low hanging cleanup's at the places where setup_irq() lives
-> to make sure that surrounding situation will be better than or at
-> least equal to the current.
-
-Ok, makes sense. Given the very large tree-wide change I can see
-why you wanted to completely automate it.
-
-
-> But if the consensus is that all these situations have to be taken
-> care, let me know.
-> 
-> On Wed, Feb 26, 2020 at 10:26:55PM +1000, Greg Ungerer wrote:
-> 
->> A quick grep shows
->> that "%s: request_irq() failed\n" has no other exact matches in the current
->> kernel source.
-> 
-> git grep -n '%s: request_irq' gives a few somewhat similar ones, i
-> remember it because searching this string after my changes to verify
-> gave more than that i added :)
-
-Unfortunately similar strings won't be coalesced...
-
-Regards
-Greg
-
+> When discard granuality of a block device is bigger than filesystem block size,
+> fstrim does not effectively release device blocks. During the filesystem life,
+> some files become deleted, some remain alive, and this results in that many
+> device blocks are used incomletely (of course, the reason is not only in this,
+> but since this is not a problem of a filesystem, this is not a subject
+> of the patchset). This results in space lose for thin provisioning devices.
+>
+> Say, a filesystem on a block device, which is provided by another filesystem
+> (say, distributed network filesystem). Semi-used blocks of the block device
+> result in bad performance and worse space usage of underlining filesystem.
+> Another example is ext4 with 4k block on loop on ext4 with 1m block. This
+> case also results in bad disk space usage.
+>
+> Choosing a bigger block size is not a solution here, since small files become
+> taking much more disk space, than they used before, and the result excess
+> disk usage is the same.
+>
+> The proposed solution is defragmentation of files based on block device
+> discard granuality knowledge. Files, which were not modified for a long time,
+> and read-only files, small files, etc, may be placed in the same block device
+> block together. I.e., compaction of some device blocks, which results
+> in releasing another device blocks.
+>
+> The problem is current fallocate() does not allow to implement effective
+> way for such the defragmentation. The below describes the situation for ext4,
+> but this should touch all filesystems.
+>
+> fallocate() goes thru standard blocks allocator, which try to behave very
+> good for life allocation cases: block placement and future file size
+> prediction, delayed blocks allocation, etc. But it almost impossible
+> to allocate blocks from specified place for our specific case. The only
+> ext4 block allocator option possible to use is that the allocator firstly
+> tries to allocate blocks from the same block group, that inode is related to.
+> But this is not enough for effective files compaction.
+>
+> This patchset implements an extension of fallocate():
+>
+>         fallocate2(int fd, int mode, loff_t offset, loff_t len,
+>                    unsigned long long physical)
+>
+> The new argument is @physical offset from start of device, which is must
+> for block allocation. In case of [@physical, @physical + len] block range
+> is available for allocation, the syscall assigns the corresponding extent/
+> extents to inode. In case of the range or its part is occupied, the syscall
+> returns with error (maybe, smaller range will be allocated. The behavior
+> is the same as when fallocate() meets no space in the middle).
+>
+> This interface allows to solve the formulated problem. Also, note, this
+> interface may allow to improve existing e4defrag algorithm: decrease
+> number of file extents more effective.
+>
+> [1-2/5] are refactoring.
+> [3/5] adds fallocate2() body.
+> [4/5] prepares ext4_mb_discard_preallocations() for handling EXT4_MB_HINT_GOAL_ONLY
+> [5/5] adds fallocate2() support for ext4
+>
+> Any comments are welcomed!
+>
+> ---
+>
+> Kirill Tkhai (5):
+>       fs: Add new argument to file_operations::fallocate()
+>       fs: Add new argument to vfs_fallocate()
+>       fs: Add fallocate2() syscall
+>       ext4: Prepare ext4_mb_discard_preallocations() for handling EXT4_MB_HINT_GOAL_ONLY
+>       ext4: Add fallocate2() support
+>
+>
+>  arch/x86/entry/syscalls/syscall_32.tbl |    1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |    1 +
+>  arch/x86/ia32/sys_ia32.c               |   10 +++++++
+>  drivers/block/loop.c                   |    2 +
+>  drivers/nvme/target/io-cmd-file.c      |    4 +--
+>  drivers/staging/android/ashmem.c       |    2 +
+>  drivers/target/target_core_file.c      |    2 +
+>  fs/block_dev.c                         |    4 +--
+>  fs/btrfs/file.c                        |    4 ++-
+>  fs/ceph/file.c                         |    5 +++-
+>  fs/cifs/cifsfs.c                       |    7 +++--
+>  fs/cifs/smb2ops.c                      |    5 +++-
+>  fs/ext4/ext4.h                         |    5 +++-
+>  fs/ext4/extents.c                      |   35 ++++++++++++++++++++-----
+>  fs/ext4/inode.c                        |   14 ++++++++++
+>  fs/ext4/mballoc.c                      |   45 +++++++++++++++++++++++++-------
+>  fs/f2fs/file.c                         |    4 ++-
+>  fs/fat/file.c                          |    7 ++++-
+>  fs/fuse/file.c                         |    5 +++-
+>  fs/gfs2/file.c                         |    5 +++-
+>  fs/hugetlbfs/inode.c                   |    5 +++-
+>  fs/io_uring.c                          |    2 +
+>  fs/ioctl.c                             |    5 ++--
+>  fs/nfs/nfs4file.c                      |    6 ++++
+>  fs/nfsd/vfs.c                          |    2 +
+>  fs/ocfs2/file.c                        |    4 ++-
+>  fs/open.c                              |   21 +++++++++++----
+>  fs/overlayfs/file.c                    |    8 ++++--
+>  fs/xfs/xfs_file.c                      |    5 +++-
+>  include/linux/fs.h                     |    4 +--
+>  include/linux/syscalls.h               |    8 +++++-
+>  ipc/shm.c                              |    6 ++--
+>  mm/madvise.c                           |    2 +
+>  mm/shmem.c                             |    4 ++-
+>  34 files changed, 190 insertions(+), 59 deletions(-)
+>
+> --
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>
