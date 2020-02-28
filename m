@@ -2,215 +2,152 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77F7C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD50C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EA0246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SeOOV8+3"
+	by mail.kernel.org (Postfix) with ESMTP id DC0322469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgB1GqF (ORCPT
+        id S1726740AbgB1Grw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:46:05 -0500
-Received: from mail-eopbgr70084.outbound.protection.outlook.com ([40.107.7.84]:26085
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        Fri, 28 Feb 2020 01:47:52 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11118 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726785AbgB1GqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:46:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JDlhaf+GBS0l63NcxELfFVtCNmaXu3d+pVpFzyB8N191M7O03yhnzsrl7jWZV3mvEPA+GJKsXOrJIHCD/Hl2ZESQOxPfhO0nKFjc3kfGwKvojrK334leX/9j6mkpK9jP6YbKiapJeDtf+Dr5MedufF+kGVmh39KT0QZcPoG2utEzeY756xPhh3I5Hh07zvviWiLxGiGaRUjsBRFmCQ5JHWwhzeRmPt2XvEHmCOOwGKLvPTHL8A5te2W83UJ1La35kx5TTp9ZckmIGsyMWKbAInvrh7Qyz4uEAkjfhpCjYU7mDbKoWNLY404hxy7D9JNf4jKZY4Jo/jVEEeB0mWdoHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g0H8XUUUxvXFu0Ir2B/SU/S8KeIfqDVQjaest89bF8M=;
- b=UeLtf662Py+FodCJK2FxlfHPq/lMnFkNs1k4suBWihEKZRjQ9no2HBiBzSoE6tudgo3eTwesflaqNOR+gAbYdlRUpZqOuzqIi6tMXZANBIF+AWbchP0NPtvI2m+B2unxumNlBnGpRIQ8cO4E63cbGwaDOl8Zkr1JZs49aEcz/2aMDWN8n26wg5t2w/K6kIR72Q36DBf/Jpqi0Pma/qHfikQ0k7JX/4tBAeH+6uHo2C4YVycVQE5wV9tS9YTFKAqDiuCINIjp5apdjSSjQtXhpIzFdCnUPoBNHfleRYXLWVYCfaTUZ8qBLvUUa0iGc8U10GtRslxBp4Ru/6N1iUG50A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g0H8XUUUxvXFu0Ir2B/SU/S8KeIfqDVQjaest89bF8M=;
- b=SeOOV8+3IMWiPOn7p142o89jSrh1iUnEIVSh2XB7bjt6ZSgQyD7oehUHQhRq0NMEwkimfuQklFNQ69V2pvpoUeySnAOmcFsRnKyHF4jUHFWHHlytOsG8sJJZk3iycf27UtT1/vImzop6+Zgs3bS3W+1LPk3wWjrRoGYqGF1E4u8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6354.eurprd04.prod.outlook.com (20.179.255.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.14; Fri, 28 Feb 2020 06:45:59 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
- 06:45:59 +0000
-From:   peng.fan@nxp.com
-To:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, abel.vesa@nxp.com, leonard.crestez@nxp.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, aisheng.dong@nxp.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, anson.huang@nxp.com,
-        ping.bai@nxp.com, l.stach@pengutronix.de,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 3/3] clk: imx8mp: use imx8m_clk_hw_composite_core to simplify code
-Date:   Fri, 28 Feb 2020 14:39:42 +0800
-Message-Id: <1582871982-29662-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582871982-29662-1-git-send-email-peng.fan@nxp.com>
-References: <1582871982-29662-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0028.apcprd02.prod.outlook.com
- (2603:1096:3:18::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        id S1725911AbgB1Grw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:47:52 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B753A221C4D03AAD032B;
+        Fri, 28 Feb 2020 14:47:38 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Feb 2020
+ 14:47:29 +0800
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     Scott Wood <oss@buserror.net>, Daniel Axtens <dja@axtens.net>,
+        <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+ <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+ <8171d326-5138-4f5c-cff6-ad3ee606f0c2@huawei.com>
+ <e8cd8f287934954cfa07dcf76ac73492e2d49a5b.camel@buserror.net>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <dd8db870-b607-3f74-d3bc-a8d9f33f9852@huawei.com>
+Date:   Fri, 28 Feb 2020 14:47:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0028.apcprd02.prod.outlook.com (2603:1096:3:18::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2772.15 via Frontend Transport; Fri, 28 Feb 2020 06:45:53 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2f69d3c1-33e9-45e1-b671-08d7bc19ddf9
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6354:|AM0PR04MB6354:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB6354C1A2135682F517004C5B88E80@AM0PR04MB6354.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:294;
-X-Forefront-PRVS: 0327618309
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(199004)(189003)(2906002)(81166006)(5660300002)(956004)(66946007)(16526019)(186003)(478600001)(4326008)(66476007)(66556008)(26005)(2616005)(6666004)(69590400007)(316002)(8676002)(36756003)(8936002)(6506007)(81156014)(86362001)(6486002)(6512007)(9686003)(52116002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6354;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8VGc7j5OBnJHNmsw0S+ZcAV5LIIXaRktSh4dCFfYldlRAb0bGRq1Rhb50ajzZVpq7Ae7m0CMZMdAJTSk2nRIdsovmecpnkXy+mswR5NOIRwt0V46gGI+VM+kTby6Ap17hjtxtkBMi6HFKPPgNBPQjxBXrxFGm5T7IIkoKsKMTZggYEt8ekbqWlx8lEKedTbvf3krNP+ToKNOzOAQx3Vb0Zn50JeNrzQT021ySSCnSmwz9ni4u7jSw/dP6TDMV1aR+vmmoRqzs6wMkuRCjUT9gxJW04ZSeEVVx7m/lqYx7wF1gCBL27tIzsyezBy5XUa8HkE6Z8lN0goVuPCNOY1H0wbD0VZslNLWlAcBRrK29Uw57t0/aYnZy7r3IiJ/9eYyruQqndB6VerayAmAz9+d16JJQEe72ie950opkn8g0fSHKWc433j1N2gPZwfQhGbR2MoRgvh4K+lGcnfh/ghj1SMbgEftmPvB7lsB6J6qCy1U/vUNvo0kXZ/MbwW3CpM8blCuOg44346NWI+KWoElsA==
-X-MS-Exchange-AntiSpam-MessageData: 7yHoTcnKRry54lcwQKupieEF7GrQ0zLiZoiVkY/NkXXwWHFgXm2vTtOeMBm55Ib4OdsEhvNRm+9Q9ljZfFInnuQx+EAbivBpendSY2EBKhSb2OyKnZ4hLwGGDGO/F0NstsJm65E7dgiR1mDFYwRLUA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f69d3c1-33e9-45e1-b671-08d7bc19ddf9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 06:45:59.7509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C+vBg465MSjgzGwIdl7jqxql1OBE0Gc1rggKZykleD3FWpG/7+TC5neAUMuV0/0xRJQ5MbP0WxDxlLcQDGe69w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6354
+In-Reply-To: <e8cd8f287934954cfa07dcf76ac73492e2d49a5b.camel@buserror.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Use imx8m_clk_hw_composite_core to simpliy clks that belong to
-core clk slice.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+在 2020/2/28 13:53, Scott Wood 写道:
+> On Wed, 2020-02-26 at 16:18 +0800, Jason Yan wrote:
+>> Hi Daniel,
+>>
+>> 在 2020/2/26 15:16, Daniel Axtens 写道:
+>>> Hi Jason,
+>>>
+>>>> This is a try to implement KASLR for Freescale BookE64 which is based on
+>>>> my earlier implementation for Freescale BookE32:
+>>>> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
+>>>>
+>>>> The implementation for Freescale BookE64 is similar as BookE32. One
+>>>> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+>>>> booting. Another difference is that ppc64 needs the kernel to be
+>>>> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+>>>> it 64K-aligned. This can save some code to creat another TLB map at
+>>>> early boot. The disadvantage is that we only have about 1G/64K = 16384
+>>>> slots to put the kernel in.
+>>>>
+>>>>       KERNELBASE
+>>>>
+>>>>             64K                     |--> kernel <--|
+>>>>              |                      |              |
+>>>>           +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>>>           |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>>>>           +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>>>           |                         |                        1G
+>>>>           |----->   offset    <-----|
+>>>>
+>>>>                                 kernstart_virt_addr
+>>>>
+>>>> I'm not sure if the slot numbers is enough or the design has any
+>>>> defects. If you have some better ideas, I would be happy to hear that.
+>>>>
+>>>> Thank you all.
+>>>>
+>>>
+>>> Are you making any attempt to hide kernel address leaks in this series?
+>>
+>> Yes.
+>>
+>>> I've just been looking at the stackdump code just now, and it directly
+>>> prints link registers and stack pointers, which is probably enough to
+>>> determine the kernel base address:
+>>>
+>>>                     SPs:               LRs:             %pS pointer
+>>> [    0.424506] [c0000000de403970] [c000000001fc0458] dump_stack+0xfc/0x154
+>>> (unreliable)
+>>> [    0.424593] [c0000000de4039c0] [c000000000267eec] panic+0x258/0x5ac
+>>> [    0.424659] [c0000000de403a60] [c0000000024d7a00]
+>>> mount_block_root+0x634/0x7c0
+>>> [    0.424734] [c0000000de403be0] [c0000000024d8100]
+>>> prepare_namespace+0x1ec/0x23c
+>>> [    0.424811] [c0000000de403c60] [c0000000024d7010]
+>>> kernel_init_freeable+0x804/0x880
+>>>
+>>> git grep \\\"REG\\\" arch/powerpc shows a few other uses like this, all
+>>> in process.c or in xmon.
+>>>
+>>
+>> Thanks for reminding this.
+>>
+>>> Maybe replacing the REG format string in KASLR mode would be sufficient?
+>>>
+>>
+>> Most archs have removed the address printing when dumping stack. Do we
+>> really have to print this?
+>>
+>> If we have to do this, maybe we can use "%pK" so that they will be
+>> hidden from unprivileged users.
+> 
+> I've found the addresses to be useful, especially if I had a way to dump the
+> stack data itself.  Wouldn't the register dump also be likely to give away the
+> addresses?
 
-V2:
- New
+If we have to print the address, then kptr_restrict and dmesg_restrict
+must be set properly so that unprivileged users cannot see them.
 
- drivers/clk/imx/clk-imx8mp.c             | 42 +++++++++++---------------------
- include/dt-bindings/clock/imx8mp-clock.h | 11 ++++++++-
- 2 files changed, 24 insertions(+), 29 deletions(-)
+> 
+> I don't see any debug setting for %pK (or %p) to always print the actual
+> address (closest is kptr_restrict=1 but that only works in certain
+> contexts)... from looking at the code it seems it hashes even if kaslr is
+> entirely disabled?  Or am I missing something?
+> 
 
-diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-index 5596dfd3387b..200c503a25ed 100644
---- a/drivers/clk/imx/clk-imx8mp.c
-+++ b/drivers/clk/imx/clk-imx8mp.c
-@@ -547,32 +547,18 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_SYS_PLL2_1000M] = imx_clk_hw_fixed_factor("sys_pll2_1000m", "sys_pll2_out", 1, 1);
- 
- 	hws[IMX8MP_CLK_A53_SRC] = imx_clk_hw_mux2("arm_a53_src", ccm_base + 0x8000, 24, 3, imx8mp_a53_sels, ARRAY_SIZE(imx8mp_a53_sels));
--	hws[IMX8MP_CLK_M7_SRC] = imx_clk_hw_mux2("arm_m7_src", ccm_base + 0x8080, 24, 3, imx8mp_m7_sels, ARRAY_SIZE(imx8mp_m7_sels));
--	hws[IMX8MP_CLK_ML_SRC] = imx_clk_hw_mux2("ml_src", ccm_base + 0x8100, 24, 3, imx8mp_ml_sels, ARRAY_SIZE(imx8mp_ml_sels));
--	hws[IMX8MP_CLK_GPU3D_CORE_SRC] = imx_clk_hw_mux2("gpu3d_core_src", ccm_base + 0x8180, 24, 3,  imx8mp_gpu3d_core_sels, ARRAY_SIZE(imx8mp_gpu3d_core_sels));
--	hws[IMX8MP_CLK_GPU3D_SHADER_SRC] = imx_clk_hw_mux2("gpu3d_shader_src", ccm_base + 0x8200, 24, 3, imx8mp_gpu3d_shader_sels, ARRAY_SIZE(imx8mp_gpu3d_shader_sels));
--	hws[IMX8MP_CLK_GPU2D_SRC] = imx_clk_hw_mux2("gpu2d_src", ccm_base + 0x8280, 24, 3, imx8mp_gpu2d_sels, ARRAY_SIZE(imx8mp_gpu2d_sels));
--	hws[IMX8MP_CLK_AUDIO_AXI_SRC] = imx_clk_hw_mux2("audio_axi_src", ccm_base + 0x8300, 24, 3, imx8mp_audio_axi_sels, ARRAY_SIZE(imx8mp_audio_axi_sels));
--	hws[IMX8MP_CLK_HSIO_AXI_SRC] = imx_clk_hw_mux2("hsio_axi_src", ccm_base + 0x8380, 24, 3, imx8mp_hsio_axi_sels, ARRAY_SIZE(imx8mp_hsio_axi_sels));
--	hws[IMX8MP_CLK_MEDIA_ISP_SRC] = imx_clk_hw_mux2("media_isp_src", ccm_base + 0x8400, 24, 3, imx8mp_media_isp_sels, ARRAY_SIZE(imx8mp_media_isp_sels));
- 	hws[IMX8MP_CLK_A53_CG] = imx_clk_hw_gate3("arm_a53_cg", "arm_a53_src", ccm_base + 0x8000, 28);
--	hws[IMX8MP_CLK_M4_CG] = imx_clk_hw_gate3("arm_m7_cg", "arm_m7_src", ccm_base + 0x8080, 28);
--	hws[IMX8MP_CLK_ML_CG] = imx_clk_hw_gate3("ml_cg", "ml_src", ccm_base + 0x8100, 28);
--	hws[IMX8MP_CLK_GPU3D_CORE_CG] = imx_clk_hw_gate3("gpu3d_core_cg", "gpu3d_core_src", ccm_base + 0x8180, 28);
--	hws[IMX8MP_CLK_GPU3D_SHADER_CG] = imx_clk_hw_gate3("gpu3d_shader_cg", "gpu3d_shader_src", ccm_base + 0x8200, 28);
--	hws[IMX8MP_CLK_GPU2D_CG] = imx_clk_hw_gate3("gpu2d_cg", "gpu2d_src", ccm_base + 0x8280, 28);
--	hws[IMX8MP_CLK_AUDIO_AXI_CG] = imx_clk_hw_gate3("audio_axi_cg", "audio_axi_src", ccm_base + 0x8300, 28);
--	hws[IMX8MP_CLK_HSIO_AXI_CG] = imx_clk_hw_gate3("hsio_axi_cg", "hsio_axi_src", ccm_base + 0x8380, 28);
--	hws[IMX8MP_CLK_MEDIA_ISP_CG] = imx_clk_hw_gate3("media_isp_cg", "media_isp_src", ccm_base + 0x8400, 28);
- 	hws[IMX8MP_CLK_A53_DIV] = imx_clk_hw_divider2("arm_a53_div", "arm_a53_cg", ccm_base + 0x8000, 0, 3);
--	hws[IMX8MP_CLK_M7_DIV] = imx_clk_hw_divider2("arm_m7_div", "arm_m7_cg", ccm_base + 0x8080, 0, 3);
--	hws[IMX8MP_CLK_ML_DIV] = imx_clk_hw_divider2("ml_div", "ml_cg", ccm_base + 0x8100, 0, 3);
--	hws[IMX8MP_CLK_GPU3D_CORE_DIV] = imx_clk_hw_divider2("gpu3d_core_div", "gpu3d_core_cg", ccm_base + 0x8180, 0, 3);
--	hws[IMX8MP_CLK_GPU3D_SHADER_DIV] = imx_clk_hw_divider2("gpu3d_shader_div", "gpu3d_shader_cg", ccm_base + 0x8200, 0, 3);
--	hws[IMX8MP_CLK_GPU2D_DIV] = imx_clk_hw_divider2("gpu2d_div", "gpu2d_cg", ccm_base + 0x8280, 0, 3);
--	hws[IMX8MP_CLK_AUDIO_AXI_DIV] = imx_clk_hw_divider2("audio_axi_div", "audio_axi_cg", ccm_base + 0x8300, 0, 3);
--	hws[IMX8MP_CLK_HSIO_AXI_DIV] = imx_clk_hw_divider2("hsio_axi_div", "hsio_axi_cg", ccm_base + 0x8380, 0, 3);
--	hws[IMX8MP_CLK_MEDIA_ISP_DIV] = imx_clk_hw_divider2("media_isp_div", "media_isp_cg", ccm_base + 0x8400, 0, 3);
-+
-+	hws[IMX8MP_CLK_M7_CORE] = imx8m_clk_hw_composite_core("m7_core", imx8mp_m7_sels, ccm_base + 0x8080);
-+	hws[IMX8MP_CLK_ML_CORE] = imx8m_clk_hw_composite_core("ml_core", imx8mp_ml_sels, ccm_base + 0x8100);
-+	hws[IMX8MP_CLK_GPU3D_CORE] = imx8m_clk_hw_composite_core("gpu3d_core", imx8mp_gpu3d_core_sels, ccm_base + 0x8180);
-+	hws[IMX8MP_CLK_GPU3D_SHADER_CORE] = imx8m_clk_hw_composite("gpu3d_shader_core", imx8mp_gpu3d_shader_sels, ccm_base + 0x8200);
-+	hws[IMX8MP_CLK_GPU2D_CORE] = imx8m_clk_hw_composite("gpu2d_core", imx8mp_gpu2d_sels, ccm_base + 0x8280);
-+	hws[IMX8MP_CLK_AUDIO_AXI] = imx8m_clk_hw_composite("audio_axi", imx8mp_audio_axi_sels, ccm_base + 0x8300);
-+	hws[IMX8MP_CLK_AUDIO_AXI_SRC] = hws[IMX8MP_CLK_AUDIO_AXI];
-+	hws[IMX8MP_CLK_HSIO_AXI] = imx8m_clk_hw_composite("hsio_axi", imx8mp_hsio_axi_sels, ccm_base + 0x8380);
-+	hws[IMX8MP_CLK_MEDIA_ISP] = imx8m_clk_hw_composite("media_isp", imx8mp_media_isp_sels, ccm_base + 0x8400);
- 
- 	/* CORE SEL */
- 	hws[IMX8MP_CLK_A53_CORE] = imx_clk_hw_mux2_flags("arm_a53_core", ccm_base + 0x9880, 24, 1, imx8mp_a53_core_sels, ARRAY_SIZE(imx8mp_a53_core_sels), CLK_IS_CRITICAL);
-@@ -713,8 +699,8 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_CLK_SDMA1_ROOT] = imx_clk_hw_gate4("sdma1_root_clk", "ipg_root", ccm_base + 0x43a0, 0);
- 	hws[IMX8MP_CLK_ENET_QOS_ROOT] = imx_clk_hw_gate4("enet_qos_root_clk", "sim_enet_root_clk", ccm_base + 0x43b0, 0);
- 	hws[IMX8MP_CLK_SIM_ENET_ROOT] = imx_clk_hw_gate4("sim_enet_root_clk", "enet_axi", ccm_base + 0x4400, 0);
--	hws[IMX8MP_CLK_GPU2D_ROOT] = imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_div", ccm_base + 0x4450, 0);
--	hws[IMX8MP_CLK_GPU3D_ROOT] = imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_core_div", ccm_base + 0x4460, 0);
-+	hws[IMX8MP_CLK_GPU2D_ROOT] = imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_core", ccm_base + 0x4450, 0);
-+	hws[IMX8MP_CLK_GPU3D_ROOT] = imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_core", ccm_base + 0x4460, 0);
- 	hws[IMX8MP_CLK_SNVS_ROOT] = imx_clk_hw_gate4("snvs_root_clk", "ipg_root", ccm_base + 0x4470, 0);
- 	hws[IMX8MP_CLK_UART1_ROOT] = imx_clk_hw_gate4("uart1_root_clk", "uart1", ccm_base + 0x4490, 0);
- 	hws[IMX8MP_CLK_UART2_ROOT] = imx_clk_hw_gate4("uart2_root_clk", "uart2", ccm_base + 0x44a0, 0);
-@@ -731,7 +717,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_CLK_GPU_ROOT] = imx_clk_hw_gate4("gpu_root_clk", "gpu_axi", ccm_base + 0x4570, 0);
- 	hws[IMX8MP_CLK_VPU_VC8KE_ROOT] = imx_clk_hw_gate4("vpu_vc8ke_root_clk", "vpu_vc8000e", ccm_base + 0x4590, 0);
- 	hws[IMX8MP_CLK_VPU_G2_ROOT] = imx_clk_hw_gate4("vpu_g2_root_clk", "vpu_g2", ccm_base + 0x45a0, 0);
--	hws[IMX8MP_CLK_NPU_ROOT] = imx_clk_hw_gate4("npu_root_clk", "ml_div", ccm_base + 0x45b0, 0);
-+	hws[IMX8MP_CLK_NPU_ROOT] = imx_clk_hw_gate4("npu_root_clk", "ml_core", ccm_base + 0x45b0, 0);
- 	hws[IMX8MP_CLK_HSIO_ROOT] = imx_clk_hw_gate4("hsio_root_clk", "ipg_root", ccm_base + 0x45c0, 0);
- 	hws[IMX8MP_CLK_MEDIA_APB_ROOT] = imx_clk_hw_gate2_shared2("media_apb_root_clk", "media_apb", ccm_base + 0x45d0, 0, &share_count_media);
- 	hws[IMX8MP_CLK_MEDIA_AXI_ROOT] = imx_clk_hw_gate2_shared2("media_axi_root_clk", "media_axi", ccm_base + 0x45d0, 0, &share_count_media);
-@@ -739,7 +725,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_CLK_MEDIA_CAM2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_cam2_pix_root_clk", "media_cam2_pix", ccm_base + 0x45d0, 0, &share_count_media);
- 	hws[IMX8MP_CLK_MEDIA_DISP1_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp1_pix_root_clk", "media_disp1_pix", ccm_base + 0x45d0, 0, &share_count_media);
- 	hws[IMX8MP_CLK_MEDIA_DISP2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp2_pix_root_clk", "media_disp2_pix", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_ISP_ROOT] = imx_clk_hw_gate2_shared2("media_isp_root_clk", "media_isp_div", ccm_base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_ISP_ROOT] = imx_clk_hw_gate2_shared2("media_isp_root_clk", "media_isp", ccm_base + 0x45d0, 0, &share_count_media);
- 
- 	hws[IMX8MP_CLK_USDHC3_ROOT] = imx_clk_hw_gate4("usdhc3_root_clk", "usdhc3", ccm_base + 0x45e0, 0);
- 	hws[IMX8MP_CLK_HDMI_ROOT] = imx_clk_hw_gate4("hdmi_root_clk", "hdmi_axi", ccm_base + 0x45f0, 0);
-diff --git a/include/dt-bindings/clock/imx8mp-clock.h b/include/dt-bindings/clock/imx8mp-clock.h
-index 46c69cd66c62..8430bc4fd182 100644
---- a/include/dt-bindings/clock/imx8mp-clock.h
-+++ b/include/dt-bindings/clock/imx8mp-clock.h
-@@ -313,6 +313,15 @@
- #define IMX8MP_SYS_PLL2_333M_CG			303
- #define IMX8MP_SYS_PLL2_500M_CG			304
- 
--#define IMX8MP_CLK_END				305
-+#define IMX8MP_CLK_M7_CORE			305
-+#define IMX8MP_CLK_ML_CORE			306
-+#define IMX8MP_CLK_GPU3D_CORE			307
-+#define IMX8MP_CLK_GPU3D_SHADER_CORE		308
-+#define IMX8MP_CLK_GPU2D_CORE			309
-+#define IMX8MP_CLK_AUDIO_AXI			310
-+#define IMX8MP_CLK_HSIO_AXI			311
-+#define IMX8MP_CLK_MEDIA_ISP			312
-+
-+#define IMX8MP_CLK_END				313
- 
- #endif
--- 
-2.16.4
+Yes, %pK (or %p) always hashes whether kaslr is disabled or not. So if
+we want the real value of the address, we cannot use it. But if you only
+want to distinguish if two pointers are the same, it's ok.
+
+> -Scott
+> 
+> 
+> 
+> .
+> 
 
