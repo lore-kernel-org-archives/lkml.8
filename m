@@ -2,190 +2,83 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4331BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BAC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C9E246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7o1rhsK"
+	by mail.kernel.org (Postfix) with ESMTP id C56EA24697
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgB1QuW (ORCPT
+        id S1727025AbgB1Qu3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:50:22 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53927 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgB1QuV (ORCPT
+        Fri, 28 Feb 2020 11:50:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37370 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgB1Qu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:50:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f15so3877701wml.3;
-        Fri, 28 Feb 2020 08:50:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mJfep6qc886uMsHNXGk5tdCaaGsgVZaFquG8wUujrTU=;
-        b=M7o1rhsKRaoCUa6UfX/eBXACh55wtTqyZLZ9mEwBsBGISJXKo7Udn31O/aMXoHBFrJ
-         +nWtGdpR2UCD5BT4cgxPGWkmSjTKIWbi0dzxYgdJJCIOUJYXGpBUuOW/a/JD1ghd9ZJ4
-         fTzKvURpInk/axfmapQpQjKuLYHEaCItxdjXxaFv+9YApQN1gREbAJ9fdta904aeB6kd
-         o9iyowDOrMPkZhalz2OZ2nnTpY0bvYk5vSZHHJW/CNz6U+2EAJ18XyczIwyxbUj0s9jq
-         c/kz8K/i7KwSDeAAx2qoJVUYpgQD3OfQhJb8Bssf3Dv01ISOt/IaDa0X9y1z+osv4o+e
-         lflA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mJfep6qc886uMsHNXGk5tdCaaGsgVZaFquG8wUujrTU=;
-        b=FmDBj4KRVi/vYjkfyiXJcV1w+VteDkqnKmm3HaqLAylC3PSKOevxhmHU+SD+5j9VUC
-         d8m7VBQw7mMtPI4qNDL30MlAzXj01+SrzQCSZhxH7GGqtmML6ye9KTXmI6o56JIrd48n
-         EWOhEWKDfoluZNg2ec6G4SsR4IZDzw1x/yVmm/p8OrifU+axWFd1J/5Jnr3idF4BlJpD
-         iSnTi6fobvCdGlqcs/ou2iAl6wK3s8axpNkty4huIhsKtA/QVuFbcAC2GVfb6pTkLB8h
-         NgA+RwQocRJtQCEGCzss8LoxUAWazLzojrpS1fhCAc03HTfVjSt/qIf1kJgl5UKmy2Hj
-         zSVw==
-X-Gm-Message-State: APjAAAUYqZD5CZA7SLEYAQ8X2r8/QbA3gQvi+h+f/HElos9S1+t5pHBa
-        +Hx2D+QpbXGSnRQJHWp0Ilw=
-X-Google-Smtp-Source: APXvYqysdmqkNy66Xr05Ml5WtI6Ku5rfT+oBrLozxXln9ZSQ9aRy2MFfskf2BZexP7XjsL6GUsAT3Q==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr5565466wmk.172.1582908618166;
-        Fri, 28 Feb 2020 08:50:18 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
-        by smtp.gmail.com with ESMTPSA id h2sm13263408wrt.45.2020.02.28.08.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 08:50:17 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] media: rcar-vin: Add support for SRGGB8_1X8
-Date:   Fri, 28 Feb 2020 16:50:11 +0000
-Message-Id: <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 28 Feb 2020 11:50:29 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1j7iqD-0002y7-Dq; Fri, 28 Feb 2020 17:50:21 +0100
+Date:   Fri, 28 Feb 2020 17:50:21 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+Message-ID: <20200228165021.76pec2cdudmtpxeu@linutronix.de>
+References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+ <20200121201843.12047-9-yu-cheng.yu@intel.com>
+ <20200221175859.GL25747@zn.tnic>
+ <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+ <20200228121724.GA25261@zn.tnic>
+ <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+ <20200228162359.GC25261@zn.tnic>
+ <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the RZ/G2x boards can support capturing frames in SRGGB8_1X8
-format, add support for this with a runtime check that the running
-hardware supports it.
+On 2020-02-28 08:20:27 [-0800], Yu-cheng Yu wrote:
+> On Fri, 2020-02-28 at 17:23 +0100, Borislav Petkov wrote:
+> > On Fri, Feb 28, 2020 at 07:53:38AM -0800, Yu-cheng Yu wrote:
+> > > Yes, saving only supervisor states is optimal, but doing XSAVES with a
+> > > partial RFBM changes xcomp_bv.
+> > 
+> > ... and that means what exactly in plain english?
+> 
+> When XSAVES writes to an xsave buffer, xsave->header.xcomp_bv is set to
+> include only saved components, effectively changing the buffer's format.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/media/platform/rcar-vin/rcar-core.c |  1 +
- drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
- drivers/media/platform/rcar-vin/rcar-dma.c  | 14 ++++++++++++--
- drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
- 4 files changed, 18 insertions(+), 2 deletions(-)
+How large is this supervisor state at most? I guess saving the AVX512
+state just to get the 2 bytes of the supervisor state at the right spot
+is not really optimal.
+But this is the performance division…
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index 7440c8965d27..76daf2fe5bcd 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rvin_dev *vin,
- 		case MEDIA_BUS_FMT_UYVY8_2X8:
- 		case MEDIA_BUS_FMT_UYVY10_2X10:
- 		case MEDIA_BUS_FMT_RGB888_1X24:
-+		case MEDIA_BUS_FMT_SRGGB8_1X8:
- 			vin->mbus_code = code.code;
- 			vin_dbg(vin, "Found media bus format for %s: %d\n",
- 				subdev->name, vin->mbus_code);
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index 5b04e4768eb1..97e4886f63f0 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
- 	{ .code = MEDIA_BUS_FMT_YUYV8_1X16,	.datatype = 0x1e, .bpp = 16 },
- 	{ .code = MEDIA_BUS_FMT_UYVY8_2X8,	.datatype = 0x1e, .bpp = 16 },
- 	{ .code = MEDIA_BUS_FMT_YUYV10_2X10,	.datatype = 0x1e, .bpp = 20 },
-+	{ .code = MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype = 0x2a, .bpp = 8 },
- };
- 
- static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index 1a30cd036371..63709b4bbf7a 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -85,6 +85,7 @@
- #define VNMC_INF_YUV8_BT601	(1 << 16)
- #define VNMC_INF_YUV10_BT656	(2 << 16)
- #define VNMC_INF_YUV10_BT601	(3 << 16)
-+#define VNMC_INF_RAW8		(4 << 16)
- #define VNMC_INF_YUV16		(5 << 16)
- #define VNMC_INF_RGB888		(6 << 16)
- #define VNMC_VUP		(1 << 10)
-@@ -587,13 +588,15 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
- 	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
- 	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
- 
--
- 	/* TODO: Add support for the UDS scaler. */
- 	if (vin->info->model != RCAR_GEN3)
- 		rvin_crop_scale_comp_gen2(vin);
- 
- 	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
--	stride = vin->format.bytesperline / fmt->bpp;
-+	if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
-+		stride = ALIGN(vin->format.bytesperline / 2, 0x10);
-+	else
-+		stride = vin->format.bytesperline / fmt->bpp;
- 	rvin_write(vin, stride, VNIS_REG);
- }
- 
-@@ -676,6 +679,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 
- 		input_is_yuv = true;
- 		break;
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+		vnmc |= VNMC_INF_RAW8;
-+		break;
- 	default:
- 		break;
- 	}
-@@ -737,6 +743,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 	case V4L2_PIX_FMT_ABGR32:
- 		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
- 		break;
-+	case V4L2_PIX_FMT_SRGGB8:
-+		dmr = 0;
-+		break;
- 	default:
- 		vin_err(vin, "Invalid pixelformat (0x%x)\n",
- 			vin->format.pixelformat);
-@@ -1110,6 +1119,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
- 	case MEDIA_BUS_FMT_UYVY10_2X10:
- 	case MEDIA_BUS_FMT_RGB888_1X24:
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
- 		vin->mbus_code = fmt.format.code;
- 		break;
- 	default:
-diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-index b12b3f88836a..d56cf85ba065 100644
---- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-@@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
- 		.fourcc			= V4L2_PIX_FMT_ABGR32,
- 		.bpp			= 4,
- 	},
-+	{
-+		.fourcc			= V4L2_PIX_FMT_SRGGB8,
-+		.bpp			= 1,
-+	},
- };
- 
- const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
--- 
-2.20.1
+> I will include this in the comments.
 
+If you do so, please state that the first hunk is only interested in the
+supervisor-state bits and everything else is ignored.
+
+> Yu-cheng
+
+Sebastian
