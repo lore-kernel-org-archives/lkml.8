@@ -2,136 +2,80 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5909C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D77246B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGTTPcGE"
+	by mail.kernel.org (Postfix) with ESMTP id A4CD9246B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgB1WNS (ORCPT
+        id S1726674AbgB1WOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:13:18 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36168 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgB1WNS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:13:18 -0500
-Received: by mail-lf1-f68.google.com with SMTP id s1so2727663lfd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:13:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
-        b=UGTTPcGEoBQyMt2ffSmRLLgjAyPIUt+r0iIa8o1P49YLGdoYVKEbB6QakZAN00mAhm
-         zy9v/0hSmLVI9UU5NBqAMSlsMEbwzjXJUYrFOUUGuxdKU48PBR44wBrg3ACsxrb/zaWM
-         Or4tdMTMz2yn0WZyUSohIWbPxmV6UCTiz32JYGddmb92FTjXa/6SjWPkUvU+rdOtCmfO
-         xQ2M/T2sSSDc2DNlZwW4KMcPv9JPGtOTigyxCycxvrdmkRaiIjVU8c1ZwVNZ6OvQgbcv
-         EhDIU4HLC/IeZT9Q78lwgZ26eC8OIKVeUBXJL6rcX9IfF0d5WMo1ny5So2z7fU+ebfXj
-         wg5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
-        b=HaT+ekETVhmW9oAPfOZE7akt3O5BUbt5rKqCsdaZXTt1a9zwNsGoGMZftgs55HN/6L
-         REQT/DQmpf7p/empmnSnqgNTRpMlR+p+a1DHBGAPE29rLEIDBWtJjs6XBs9wJqfhItKJ
-         fvCTXZowaNREhcRRismN+kirYF+41ToQ+E4jBGK+GIu5DuC1BZf8XhetDndxefi8E+bH
-         jVAx6MtKs1O7PGJo+8vurEpwbVXMCL1P4Yn7oGrGGXDdwx7u1MSHGofdBr2AKR56Yz4s
-         IyX5n8uWcNNTpFwjpdPGmhBkTgG1oL6pqtksWNj2lISCe+5OzHELbxo8YXv1zk5JuHdy
-         u4GA==
-X-Gm-Message-State: ANhLgQ2b9q6mwgDcsOaul9M+MDMijQLKXPiznEf2f50i+otPvMVxQG4G
-        sds04rN1r476bMpLSirKk35CmekklCUxGFXqvh7BIQ==
-X-Google-Smtp-Source: ADFU+vscaxQrz5bVMwzo9WHGRN+dd76KhhzlssRfrguQv31+o1oklXkSerfl7hQ6ykL3RwS+CWHsiJVG6jWWAoyAsOA=
-X-Received: by 2002:ac2:44a5:: with SMTP id c5mr3541720lfm.4.1582927994221;
- Fri, 28 Feb 2020 14:13:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com> <20200221021002.18795-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20200221021002.18795-3-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 23:13:03 +0100
-Message-ID: <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller
- to json-schema
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Fri, 28 Feb 2020 17:14:18 -0500
+Received: from mga07.intel.com ([134.134.136.100]:44027 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgB1WOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:14:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:14:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
+   d="scan'208";a="257257678"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga002.jf.intel.com with ESMTP; 28 Feb 2020 14:14:17 -0800
+Message-ID: <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Fri, 28 Feb 2020 14:13:29 -0800
+In-Reply-To: <20200228214742.GF25261@zn.tnic>
+References: <20200221175859.GL25747@zn.tnic>
+         <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+         <20200228121724.GA25261@zn.tnic>
+         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+         <20200228162359.GC25261@zn.tnic>
+         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+         <20200228172202.GD25261@zn.tnic>
+         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
+         <20200228183131.GE25261@zn.tnic>
+         <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
+         <20200228214742.GF25261@zn.tnic>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 3:10 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Fri, 2020-02-28 at 22:47 +0100, Borislav Petkov wrote:
+> On Fri, Feb 28, 2020 at 01:22:39PM -0800, Yu-cheng Yu wrote:
+> > The code is for sigreturn only.  Because of lazy-restore,
+> > copy_xregs_to_kernel() does not happen all the time.
+> 
+> What does "not all the time" mean? You need to quantify this more
+> precisely.
 
-> Convert the UniPhier pin controller binding to DT schema format.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+If the XSAVES buffer already has current data (i.e. TIF_NEED_FPU_LOAD is
+set), then skip copy_xregs_to_kernel().  This happens when the task was
+context-switched out and has not returned to user-mode.
 
-Nice!
-
-> In the original .txt file, there is a description:
-> The UniPhier pinctrl should be a subnode of a "syscon" compatible node
->
-> I did not figure out how to represent (or check) it in dt-schema.
-> I just moved it to a comment line in 'examples'.
-> If there is a better way, please let me know.
-
-There is no way to do that AFAICT, we are checking nodes from
-one node and downwards, never upwards. The syscon needs to
-have its own binding file: if it has another specific compatible
-such as compatible = "foo", "syscon"; then for the DT bindings
-for foo, make sure to add this subnode as optional/compulsory
-if you want to tie up the whole thing.
-
-> -Required properties:
-> -- compatible: should be one of the following:
-> -    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
-> -    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
-> -    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
-> -    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
-> -    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
-> -    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
-> -    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
-> -    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
-> -    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
-
-But:
-
-> +    soc-glue@5f800000 {
-> +        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
-> +        reg = <0x5f800000 0x2000>;
-> +
-> +        pinctrl: pinctrl {
-> +            compatible = "socionext,uniphier-pro4-pinctrl";
-> +        };
-> +    };
-
-It looks like you want to check also for "simple-mfd" and "syscon"
-following after the enum (two consts)
-
-It seems you want to check that reg is there.
-
-It seems the subnode pinctrl is also compulsory.
-
-All of this have examples in example-schema.yaml IIRC.
-
-Yours,
-Linus Walleij
