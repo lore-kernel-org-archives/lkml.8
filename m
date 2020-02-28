@@ -3,163 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF750C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D827C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42B1206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CF4246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTqAFVL1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m56oWDYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgB1Ffz (ORCPT
+        id S1726148AbgB1Fhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 00:35:55 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41823 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbgB1Ffy (ORCPT
+        Fri, 28 Feb 2020 00:37:47 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34014 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1Fhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 00:35:54 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t14so785853plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 21:35:54 -0800 (PST)
+        Fri, 28 Feb 2020 00:37:47 -0500
+Received: by mail-qt1-f196.google.com with SMTP id l16so1240025qtq.1;
+        Thu, 27 Feb 2020 21:37:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0GJyp688+zVIA9RAELyTu++JtY5GE6ftYiBpGjoOZZA=;
-        b=QTqAFVL1XB04RNS9sYNDcXXmTzRL0jvx5CqJkfHED/y2rrNKqqBI13hdy1qaJdy3L5
-         k5kOmFqOU8Z3xr3nm1CLYXHU4nsb4gJkZ4Dh6hejVHLLbutYSAMw6q7Ae/XWkdhjCVf+
-         Scv/Pq7ujo+FCvmb5+uuXlI6fsUAocqPgctrNWHJMlVgfziVP8yz3bJR7VGTdpXXYCKT
-         9tVrxbdeKTCmHeUhjwaqiTmbVNFceFz/p9WoTlnwexSbFBTuQM8VJECJfi8NWdu3dWxU
-         PIyYveKVYmnXplQ/NfxEdOBTxkILtiDDNIULSYfQ9sgU1eOY+RYieTlZalYJ0XIYq8GV
-         zBGQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=76wpTcV+LXA0Dyl54UG5BsW53npVN0WBYlbvd10TsrE=;
+        b=m56oWDYKo8U2gzUmdVaIuVwDYDH1S0NbqGtJxGC0Xrn3fn8ho6S2oL8qWWNALQetIM
+         uqyo2M47TbrDiO+VFYm0ulOAWEtDn6vNNAQ/dHu/Pw9kmLOaLNwn5cG7/3/MtIbEWSpW
+         fVOCJOfwASE1gDGQiNLoalDMAbVrBVP43vXFDA5HYIAGLGu8nOFC7hYBOFRBpFTrYxNI
+         ASliIuBzEzmhrIlS2na9tmr3QySr4JHhi8FXJ0AZqXNaVvcV2pYGSOmL7FiUo4juyd7S
+         Xy618Hsae7VRaQM6S7ic4uZ2OR6/GK64ON0zaxKjREicZeUC4vC798EXPyHMcLVnbmJJ
+         KqQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0GJyp688+zVIA9RAELyTu++JtY5GE6ftYiBpGjoOZZA=;
-        b=oj0ypYT2caOYKzF0GXmmBWISr4+JwIsAAWtBvm5azuaYOBodkJV85W4D20C5oKN//o
-         I+oUSsBcMx+VcPmI4TMzs6BRLwPrD3TifXSZS69ETPLzBq25h6V4XN2KAwMIMgs4AZTH
-         xgcW8jl3vh0R3xdjzh8IwUw0bQiXKU/FpwVfpWxIDZqyEeDytF+fDakYFB8mF2aVQkfR
-         mb2bFSP8Eq+F5RkFn8aPuMnmvGRZnCiGHddXj/87nSdk2eHw4GNI2sGgt4C1Z9/MD8G8
-         37tQt+VO79HMLpHHgGj51dPEzYPHGOYAoLJl4+OuAt98VRkxYe6cJ97LASAiEZHq1Zuk
-         Km2g==
-X-Gm-Message-State: APjAAAVjFM8u24idQfsfWOBcCeQ4ahMUvsO7i6xjaOs6KZdJwSEWbm0O
-        cdYCfVIz4Ah98hVvjwVBi3cMtg==
-X-Google-Smtp-Source: APXvYqyirMSHVRjCCxcV5wU5H0zwkMqjx2vvSv6NAvs47VYPqge4V0xBX7vOP9O+r+1Rl3LwTeBXUQ==
-X-Received: by 2002:a17:902:502:: with SMTP id 2mr2382085plf.151.1582868153642;
-        Thu, 27 Feb 2020 21:35:53 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v29sm8277892pgc.72.2020.02.27.21.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 21:35:52 -0800 (PST)
-Date:   Thu, 27 Feb 2020 21:35:50 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tsoni@codeaurora.org, vnkgutta@codeaurora.org
-Subject: Re: [PATCH v4 2/3] dt-bindings: soc: qcom: apr: Add protection
- domain bindings
-Message-ID: <20200228053550.GD210720@yoga>
-References: <20200226170001.24234-1-sibis@codeaurora.org>
- <20200226170001.24234-3-sibis@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=76wpTcV+LXA0Dyl54UG5BsW53npVN0WBYlbvd10TsrE=;
+        b=tiSSsifFNhCPKQ+4K3u9cz9sD8b04Mw2dQVnmrtEUzOMvy+eSoXM8o/JMF6T8F+T6Y
+         ZajEY2/wrtlqgOQpmyBdpHoNs+xr0OruB7Cj3EsUiYlQsKpdTUbysBqs0NmaFtAJJI3V
+         +66uXbXjguUy/cXZGxzRg8ZplT7oare7oeDfYnt4/t7N3wQ7IeTqLCtGj+46279a6e+/
+         IUrqhLw6ShrJyEBg+XQClNr8CJKh2IkRXIvkto97bDVFfBtaZYBEoeD9O/I7q5P1d2S5
+         ZAkJYsSqKdznKFe1PvI1Qo9dT+OFkJV1xmsUGy9ChhbZgOR5YKYbqKXkpTAcI23fHzFV
+         Qacw==
+X-Gm-Message-State: APjAAAW0WeMELilQxt5sUDtOQVHlbhK0+dOkcxwyGoq12kJYMiJLdC9X
+        YXmbYUpr2XPzcRCD8YbWFIwlJc3iWWuGJYQLYFQ=
+X-Google-Smtp-Source: APXvYqzdZ5n6FJrj5vA0szsVSQuMvUkyI8pNtv9isE32QqsWjw84Uy4YqANwFZmeFvuz0Yaz0msbBkkFnCPM66TEqVw=
+X-Received: by 2002:aed:2202:: with SMTP id n2mr3003286qtc.4.1582868266510;
+ Thu, 27 Feb 2020 21:37:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226170001.24234-3-sibis@codeaurora.org>
+References: <2d0854b00d7f85e988aff4f8186e8ac5d8a9aff2.1581410798.git.baolin.wang7@gmail.com>
+ <CA+H2tpFAZuPSH0EErLt0Lj=TKLVq3XwEox06tbGzFaquSpKa0w@mail.gmail.com> <CAGETcx9695=uVkSmtym36t6jbFXcEGf2JPVqWBi+sLZNG4xzSg@mail.gmail.com>
+In-Reply-To: <CAGETcx9695=uVkSmtym36t6jbFXcEGf2JPVqWBi+sLZNG4xzSg@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 28 Feb 2020 13:37:34 +0800
+Message-ID: <CADBw62oMztoidXGuv3YZ1Na9ouRAHfvuHc2yP30BccPh22443w@mail.gmail.com>
+Subject: Re: [PATCH] power: supply: Allow charger manager can be built as a module
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Orson Zhai <orsonzhai@gmail.com>, sre@kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26 Feb 09:00 PST 2020, Sibi Sankar wrote:
+On Fri, Feb 28, 2020 at 10:54 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Thu, Feb 27, 2020 at 8:06 AM Orson Zhai <orsonzhai@gmail.com> wrote:
+> >
+> > Hi Sebastian and other guys here,
+> >
+> > On Tue, Feb 11, 2020 at 4:51 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >
+> > > Allow charger manager can be built as a module like other charger
+> > > drivers.
+> > >
+> > What do you think about this patch?
+> > We want to set charger-manager as module in our project for new Android devices.
+> >
+> > -Orson
+> >
+> > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > ---
+> > >  drivers/power/supply/Kconfig          |    2 +-
+> > >  include/linux/power/charger-manager.h |    7 +------
+> > >  2 files changed, 2 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> > > index 9a5591a..195bc04 100644
+> > > --- a/drivers/power/supply/Kconfig
+> > > +++ b/drivers/power/supply/Kconfig
+> > > @@ -480,7 +480,7 @@ config CHARGER_GPIO
+> > >           called gpio-charger.
+> > >
+> > >  config CHARGER_MANAGER
+> > > -       bool "Battery charger manager for multiple chargers"
+> > > +       tristate "Battery charger manager for multiple chargers"
+> > >         depends on REGULATOR
+> > >         select EXTCON
+> > >         help
+> > > diff --git a/include/linux/power/charger-manager.h b/include/linux/power/charger-manager.h
+> > > index ad19e68..40493b2 100644
+> > > --- a/include/linux/power/charger-manager.h
+> > > +++ b/include/linux/power/charger-manager.h
+> > > @@ -248,11 +248,6 @@ struct charger_manager {
+> > >         u64 charging_end_time;
+> > >  };
+> > >
+> > > -#ifdef CONFIG_CHARGER_MANAGER
+> > >  extern void cm_notify_event(struct power_supply *psy,
+> > > -                               enum cm_event_types type, char *msg);
+> > > -#else
+> > > -static inline void cm_notify_event(struct power_supply *psy,
+> > > -                               enum cm_event_types type, char *msg) { }
+> > > -#endif
+> > > +                           enum cm_event_types type, char *msg);
+> > >  #endif /* _CHARGER_MANAGER_H */
+>
+> You are breaking the kernel if CONFIG_CHARGER_MANAGER is disabled. Why
 
-> Qualcomm SoCs (starting with MSM8998) allow for multiple protection
-> domains (PDs) to run on the same Q6 sub-system. This allows for
-> services like AVS AUDIO to have their own separate address space and
-> crash/recover without disrupting the other PDs running on the same Q6
-> ADSP. Add "qcom,protection-domain" bindings to capture the dependencies
-> between the APR service and the PD on which the apr service runs.
-> 
+No, now no users in mainline have called cm_notify_event() function,
+and if some charger drivers want to use the charger manager, they
+should select CHARGER_MANAGER, like:
+config CHARGER_SC2731
+        tristate "Spreadtrum SC2731 charger driver"
+        depends on MFD_SC27XX_PMIC || COMPILE_TEST
+        select CHARGER_MANAGER
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> not simple change the #ifdef to
+> #if IS_ENABLED(CONFIG_CHARGER_MANAGER)
+> ?
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> index db501269f47b8..f8fa71f5d84ba 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> @@ -45,6 +45,18 @@ by the individual bindings for the specific service
->  			12 - Ultrasound stream manager.
->  			13 - Listen stream manager.
->  
-> +- qcom,protection-domain
-> +	Usage: optional
-> +	Value type: <stringlist>
-> +	Definition: Must list the protection domain service name and path
-> +		    that the particular apr service has a dependency on.
-> +	Possible values are :
-> +			"avs/audio", "msm/adsp/audio_pd".
-> +			"kernel/elf_loader", "msm/modem/wlan_pd".
-> +			"tms/servreg", "msm/adsp/audio_pd".
-> +			"tms/servreg", "msm/modem/wlan_pd".
-> +			"tms/servreg", "msm/slpi/sensor_pd".
-> +
->  = EXAMPLE
->  The following example represents a QDSP based sound card on a MSM8996 device
->  which uses apr as communication between Apps and QDSP.
-> @@ -82,3 +94,41 @@ which uses apr as communication between Apps and QDSP.
->  			...
->  		};
->  	};
-> +
-> += EXAMPLE 2
-> +The following example represents a QDSP based sound card with protection domain
-> +dependencies specified. Here some of the apr services are dependent on services
-> +running on protection domain hosted on ADSP/SLPI remote processors while others
-> +have no such dependency.
-> +
-> +	apr {
-> +		compatible = "qcom,apr-v2";
-> +		qcom,glink-channels = "apr_audio_svc";
-> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
-> +
-> +		q6core {
-> +			compatible = "qcom,q6core";
-> +			reg = <APR_SVC_ADSP_CORE>;
-> +		};
-> +
-> +		q6afe: q6afe {
-> +			compatible = "qcom,q6afe";
-> +			reg = <APR_SVC_AFE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			...
-> +		};
-> +
-> +		q6asm: q6asm {
-> +			compatible = "qcom,q6asm";
-> +			reg = <APR_SVC_ASM>;
-> +			qcom,protection-domain = "tms/servreg", "msm/slpi/sensor_pd";
-> +			...
-> +		};
-> +
-> +		q6adm: q6adm {
-> +			compatible = "qcom,q6adm";
-> +			reg = <APR_SVC_ADM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			...
-> +		};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Yes, this also can work, and either way is okay for me. Sebastian,
+what do you prefer? Thanks.
