@@ -2,99 +2,480 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617CDC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339DFC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFD2246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B22246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBtcOnyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgB1VX3 (ORCPT
+        id S1727044AbgB1VX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:23:29 -0500
-Received: from mga03.intel.com ([134.134.136.65]:30031 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgB1VX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:23:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 13:23:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="385611917"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2020 13:23:27 -0800
-Message-ID: <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 28 Feb 2020 13:22:39 -0800
-In-Reply-To: <20200228183131.GE25261@zn.tnic>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
-         <20200121201843.12047-9-yu-cheng.yu@intel.com>
-         <20200221175859.GL25747@zn.tnic>
-         <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
-         <20200228121724.GA25261@zn.tnic>
-         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
-         <20200228162359.GC25261@zn.tnic>
-         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
-         <20200228172202.GD25261@zn.tnic>
-         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
-         <20200228183131.GE25261@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 28 Feb 2020 16:23:57 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46542 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1VX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 16:23:57 -0500
+Received: by mail-pf1-f195.google.com with SMTP id o24so2329800pfp.13;
+        Fri, 28 Feb 2020 13:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=BavgmzSDunkGnQtB4RjTodF7MWhgzfm6Vq6hYsR/Hxc=;
+        b=XBtcOnyvWZBewgwmWvN/eD4gISNgn99811SPfDuVlxcUgJrweDOFpIFzsSZ6epTHRN
+         YxJzEbQlAidoI4ejfS1cwtBk5L/nNxWezJdOsR/FUgBenhmSj8QfZbrUBr7o4TI2gwTT
+         Sjo7474txsVYfW/fsFnnJZpsCYj1ShVVMaYCNocoJ4gMJVSe2/uleO2Vn6mEJ0ajZshX
+         1DlKxZrEEBS5UDZbQ4C6U2Ka/AWKm+OIhvIjaoHgbqEJJxXjY+jUy9gZPcug/D+a6NVP
+         LhySur3t5/bZPSoEzQJlLWv+cWMEfe5mlBFL3wWtrJ+k5QBdyCzNP7KhYZ9d+WKkZBq0
+         CBdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BavgmzSDunkGnQtB4RjTodF7MWhgzfm6Vq6hYsR/Hxc=;
+        b=njXRjOa8WljWBMk0ZPekVQ/Ag38itNL5EXWyXHIrUN2TOk+5lEgSzBtc3NETssL3V/
+         eDhti/HJ0Z/c9hRTyiQa+6nArvTNmby1bcfeDlRvDWzY+iu+kN/C/xPA5RSYKNlxysXl
+         tlE4NI7XexxvUYZhws2DklJUQT01LrZsjkpoDZGYpLO2y8fnmTU0goU78h+vjM28usLu
+         gIstFTOWd5/Lezb7/Dlpn83r0/YcdcYm/JMGenrWW9ZQc4o9iK1Y/cwCZQLJQQeRVMPd
+         h4f1CO/nlHWl+vyuRl29doZRg6J0fIqD7ryOWu0SyzKGaT9Q9+k07m8HDNDRsa5o4FEi
+         Oqsw==
+X-Gm-Message-State: APjAAAWz5C7y78mEWjy+Zj7MEODmVB1Np+hukzSaBU+u1BBIlYmm+B9V
+        sfZa7FaXp8PZ1omhafY0+fSzzzEbNP0=
+X-Google-Smtp-Source: APXvYqzK4rkojELgKn3vIHA6jw4RQVHlkeIV+Zu96XR7P9XDC5Yugr59fcLJg94YRKg9cPZWs0PYQg==
+X-Received: by 2002:a63:f455:: with SMTP id p21mr6380077pgk.430.1582925035732;
+        Fri, 28 Feb 2020 13:23:55 -0800 (PST)
+Received: from raspberrypi (72-48-120-28.static.grandenetworks.net. [72.48.120.28])
+        by smtp.gmail.com with ESMTPSA id a17sm11468510pgv.11.2020.02.28.13.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 13:23:55 -0800 (PST)
+Date:   Fri, 28 Feb 2020 15:23:49 -0600
+From:   Grant Peltier <grantpeltier93@gmail.com>
+To:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc:     grantpeltier93@gmail.com, adam.vaughn.xh@renesas.com
+Subject: [PATCH] hwmon: (pmbus) Add support for 2nd Gen Renesas digital
+ multiphase
+Message-ID: <20200228212349.GA1929@raspberrypi>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 19:31 +0100, Borislav Petkov wrote:
-> On Fri, Feb 28, 2020 at 10:11:44AM -0800, Yu-cheng Yu wrote:
-> > CET has 16 bytes for ring-3 setting, 24 bytes for ring-0.
-> > Saving supervisor states somewhere else and copying back is not better
-> > either.
-> 
-> Well, if you're going to save a lot bigger user states area which is
-> going to be absolutely wasted cycles in that case, you better save those
-> couple of bytes in another buffer and then copy them into the final state
-> buffer which gets restored.
+Add a driver to support 2nd generation Renesas digital multiphase power
+regulators. The driver is meant to support a large family of part
+numbers spanning isl682xx, isl692xx, and some raa228/9 part designations.
 
-The code is for sigreturn only.  Because of lazy-restore,
-copy_xregs_to_kernel() does not happen all the time.  It is attractive in
-terms of simplicity.
+Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
+---
+ drivers/hwmon/pmbus/Kconfig    |   9 +
+ drivers/hwmon/pmbus/Makefile   |   1 +
+ drivers/hwmon/pmbus/isl692xx.c | 352 +++++++++++++++++++++++++++++++++
+ 3 files changed, 362 insertions(+)
+ create mode 100644 drivers/hwmon/pmbus/isl692xx.c
 
-XSAVES buffer has fixed 576-byte overhead (512-byte legacy + 64-byte
-header) and not suitable for partial saving.  To save only supervisor
-states, we need to read out each MSR separately and store them in a struct.
-
-> 
-> > We save supervisor states only when xfeatures_mask_supervisor() is not
-> > zero.
-> 
-> And on which systems is it not zero? On systems which have supervisor
-> features or on systems which have *and* *are* *using* supervisor
-> features?
-
-On systems using supervisor features.
-
-Yu-cheng
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index a9ea06204767..fbe7bbc8b37c 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -100,6 +100,15 @@ config SENSORS_ISL68137
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called isl68137.
+ 
++config SENSORS_ISL692XX
++        tristate "Renesas 2nd Gen Digital Multiphase"
++        help
++          If you say yes here you get hardware monitoring support for Renesas
++          2nd Generation Digital Multiphase power regulators.
++
++          This driver can also be built as a module. If so, the module will
++          be called isl692xx.
++
+ config SENSORS_LM25066
+ 	tristate "National Semiconductor LM25066 and compatibles"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index 5feb45806123..bf1ea99a6120 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
+ obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
+ obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
+ obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
++obj-$(CONFIG_SENSORS_ISL692XX)	+= isl692xx.o
+ obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
+ obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
+ obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
+diff --git a/drivers/hwmon/pmbus/isl692xx.c b/drivers/hwmon/pmbus/isl692xx.c
+new file mode 100644
+index 000000000000..26f3d90a7ddc
+--- /dev/null
++++ b/drivers/hwmon/pmbus/isl692xx.c
+@@ -0,0 +1,352 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Hardware monitoring driver for Renesas Gen 2 Digital Multiphase Devices
++ *
++ * Copyright (c) 2020 Renesas Electronics America
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++
++#include "pmbus.h"
++
++#define ISL692XX_READ_VMON        0xc8
++
++enum parts {
++        isl68220,
++        isl68221,
++        isl68222,
++        isl68223,
++        isl68224,
++        isl68225,
++        isl68226,
++        isl68227,
++        isl68229,
++        isl68233,
++        isl68239,
++        isl69222,
++        isl69223,
++        isl69224,
++        isl69225,
++        isl69227,
++        isl69228,
++        isl69234,
++        isl69236,
++        isl69239,
++        isl69242,
++        isl69243,
++        isl69247,
++        isl69248,
++        isl69254,
++        isl69255,
++        isl69256,
++        isl69259,
++        isl69260,
++        isl69268,
++        isl69269,
++        isl69298,
++        raa228000,
++        raa228004,
++        raa228006,
++        raa228228,
++        raa229001,
++        raa229004,
++};
++
++enum rail_configs { high_voltage, one_rail, two_rail, three_rail };
++
++static const struct  i2c_device_id isl692xx_id[] = {
++        { "isl68220", isl68220 },
++        { "isl68221", isl68221 },
++        { "isl68222", isl68222 },
++        { "isl68223", isl68223 },
++        { "isl68224", isl68224 },
++        { "isl68225", isl68225 },
++        { "isl68226", isl68226 },
++        { "isl68227", isl68227 },
++        { "isl68229", isl68229 },
++        { "isl68233", isl68233 },
++        { "isl68239", isl68239 },
++        { "isl69222", isl69222 },
++        { "isl69223", isl69223 },
++        { "isl69224", isl69224 },
++        { "isl69225", isl69225 },
++        { "isl69227", isl69227 },
++        { "isl69228", isl69228 },
++        { "isl69234", isl69234 },
++        { "isl69236", isl69236 },
++        { "isl69239", isl69239 },
++        { "isl69242", isl69242 },
++        { "isl69243", isl69243 },
++        { "isl69247", isl69247 },
++        { "isl69248", isl69248 },
++        { "isl69254", isl69254 },
++        { "isl69255", isl69255 },
++        { "isl69256", isl69256 },
++        { "isl69259", isl69259 },
++        { "isl69260", isl69260 },
++        { "isl69268", isl69268 },
++        { "isl69269", isl69269 },
++        { "isl69298", isl69298 },
++        { "raa228000", raa228000 },
++        { "raa228004", raa228004 },
++        { "raa228006", raa228006 },
++        { "raa228228", raa228228 },
++        { "raa229001", raa229001 },
++        { "raa229004", raa229004 },
++        { },
++};
++
++MODULE_DEVICE_TABLE(i2c, isl692xx_id);
++
++static int isl692xx_read_word_data(struct i2c_client *client, int page, int reg)
++{
++        int ret;
++
++        switch (reg) {
++        case PMBUS_VIRT_READ_VMON:
++                ret = pmbus_read_word_data(client, page, ISL692XX_READ_VMON);
++                break;
++        default:
++                ret = -ENODATA;
++                break;
++        }
++        
++        return ret;
++}
++
++static struct pmbus_driver_info isl692xx_info[] = {
++        [high_voltage] = {
++                .pages = 1,
++                .format[PSC_VOLTAGE_IN] = direct,
++                .format[PSC_VOLTAGE_OUT] = direct,
++                .format[PSC_CURRENT_IN] = direct,
++                .format[PSC_CURRENT_OUT] = direct,
++                .format[PSC_POWER] = direct,
++                .format[PSC_TEMPERATURE] = direct,
++                .m[PSC_VOLTAGE_IN] = 1,
++                .b[PSC_VOLTAGE_IN] = 0,
++                .R[PSC_VOLTAGE_IN] = 1,
++                .m[PSC_VOLTAGE_OUT] = 2,
++                .b[PSC_VOLTAGE_OUT] = 0,
++                .R[PSC_VOLTAGE_OUT] = 2,
++                .m[PSC_CURRENT_IN] = 2,
++                .b[PSC_CURRENT_IN] = 0,
++                .R[PSC_CURRENT_IN] = 2,
++                .m[PSC_CURRENT_OUT] = 1,
++                .b[PSC_CURRENT_OUT] = 0,
++                .R[PSC_CURRENT_OUT] = 1,
++                .m[PSC_POWER] = 2,
++                .b[PSC_POWER] = 0,
++                .R[PSC_POWER] = -1,
++                .m[PSC_TEMPERATURE] = 1,
++                .b[PSC_TEMPERATURE] = 0,
++                .R[PSC_TEMPERATURE] = 0,
++                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .read_word_data = isl692xx_read_word_data,
++        },
++        [one_rail] = {
++                .pages = 1,
++                .format[PSC_VOLTAGE_IN] = direct,
++                .format[PSC_VOLTAGE_OUT] = direct,
++                .format[PSC_CURRENT_IN] = direct,
++                .format[PSC_CURRENT_OUT] = direct,
++                .format[PSC_POWER] = direct,
++                .format[PSC_TEMPERATURE] = direct,
++                .m[PSC_VOLTAGE_IN] = 1,
++                .b[PSC_VOLTAGE_IN] = 0,
++                .R[PSC_VOLTAGE_IN] = 2,
++                .m[PSC_VOLTAGE_OUT] = 1,
++                .b[PSC_VOLTAGE_OUT] = 0,
++                .R[PSC_VOLTAGE_OUT] = 3,
++                .m[PSC_CURRENT_IN] = 1,
++                .b[PSC_CURRENT_IN] = 0,
++                .R[PSC_CURRENT_IN] = 2,
++                .m[PSC_CURRENT_OUT] = 1,
++                .b[PSC_CURRENT_OUT] = 0,
++                .R[PSC_CURRENT_OUT] = 1,
++                .m[PSC_POWER] = 1,
++                .b[PSC_POWER] = 0,
++                .R[PSC_POWER] = 0,
++                .m[PSC_TEMPERATURE] = 1,
++                .b[PSC_TEMPERATURE] = 0,
++                .R[PSC_TEMPERATURE] = 0,
++                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .read_word_data = isl692xx_read_word_data,
++        },
++        [two_rail] = {
++                .pages = 2,
++                .format[PSC_VOLTAGE_IN] = direct,
++                .format[PSC_VOLTAGE_OUT] = direct,
++                .format[PSC_CURRENT_IN] = direct,
++                .format[PSC_CURRENT_OUT] = direct,
++                .format[PSC_POWER] = direct,
++                .format[PSC_TEMPERATURE] = direct,
++                .m[PSC_VOLTAGE_IN] = 1,
++                .b[PSC_VOLTAGE_IN] = 0,
++                .R[PSC_VOLTAGE_IN] = 2,
++                .m[PSC_VOLTAGE_OUT] = 1,
++                .b[PSC_VOLTAGE_OUT] = 0,
++                .R[PSC_VOLTAGE_OUT] = 3,
++                .m[PSC_CURRENT_IN] = 1,
++                .b[PSC_CURRENT_IN] = 0,
++                .R[PSC_CURRENT_IN] = 2,
++                .m[PSC_CURRENT_OUT] = 1,
++                .b[PSC_CURRENT_OUT] = 0,
++                .R[PSC_CURRENT_OUT] = 1,
++                .m[PSC_POWER] = 1,
++                .b[PSC_POWER] = 0,
++                .R[PSC_POWER] = 0,
++                .m[PSC_TEMPERATURE] = 1,
++                .b[PSC_TEMPERATURE] = 0,
++                .R[PSC_TEMPERATURE] = 0,
++                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .read_word_data = isl692xx_read_word_data,
++        },
++        [three_rail] = {
++                .pages = 3,
++                .format[PSC_VOLTAGE_IN] = direct,
++                .format[PSC_VOLTAGE_OUT] = direct,
++                .format[PSC_CURRENT_IN] = direct,
++                .format[PSC_CURRENT_OUT] = direct,
++                .format[PSC_POWER] = direct,
++                .format[PSC_TEMPERATURE] = direct,
++                .m[PSC_VOLTAGE_IN] = 1,
++                .b[PSC_VOLTAGE_IN] = 0,
++                .R[PSC_VOLTAGE_IN] = 2,
++                .m[PSC_VOLTAGE_OUT] = 1,
++                .b[PSC_VOLTAGE_OUT] = 0,
++                .R[PSC_VOLTAGE_OUT] = 3,
++                .m[PSC_CURRENT_IN] = 1,
++                .b[PSC_CURRENT_IN] = 0,
++                .R[PSC_CURRENT_IN] = 2,
++                .m[PSC_CURRENT_OUT] = 1,
++                .b[PSC_CURRENT_OUT] = 0,
++                .R[PSC_CURRENT_OUT] = 1,
++                .m[PSC_POWER] = 1,
++                .b[PSC_POWER] = 0,
++                .R[PSC_POWER] = 0,
++                .m[PSC_TEMPERATURE] = 1,
++                .b[PSC_TEMPERATURE] = 0,
++                .R[PSC_TEMPERATURE] = 0,
++                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .func[2] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
++                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
++                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++                        PMBUS_HAVE_VMON,
++                .read_word_data = isl692xx_read_word_data,
++        },
++};
++
++static int isl692xx_probe(struct i2c_client *client,
++                          const struct i2c_device_id *id)
++{
++        int ret;
++
++        switch (id->driver_data) {
++        case raa228000:
++        case raa228004:
++        case raa228006:
++                ret = pmbus_do_probe(client, id, &isl692xx_info[high_voltage]);
++                break;
++        case isl68227:
++        case isl69243:
++                ret = pmbus_do_probe(client, id, &isl692xx_info[one_rail]);
++                break;
++        case isl68220:
++        case isl68222:
++        case isl68223:
++        case isl68225:
++        case isl68233:
++        case isl69222:
++        case isl69224:
++        case isl69225:
++        case isl69234:
++        case isl69236:
++        case isl69242:
++        case isl69247:
++        case isl69248:
++        case isl69254:
++        case isl69255:
++        case isl69256:
++        case isl69259:
++        case isl69260:
++        case isl69268:
++        case isl69298:
++        case raa228228:
++        case raa229001:
++        case raa229004:
++                ret = pmbus_do_probe(client, id, &isl692xx_info[two_rail]);
++                break;
++        case isl68221:
++        case isl68224:
++        case isl68226:
++        case isl68229:
++        case isl68239:
++        case isl69223:
++        case isl69227:
++        case isl69228:
++        case isl69239:
++        case isl69269:
++                ret = pmbus_do_probe(client, id, &isl692xx_info[three_rail]);
++                break;
++        default:
++                ret = -ENODEV;
++        }
++
++        return ret;
++}
++
++static struct i2c_driver isl692xx_driver = {
++        .driver = {
++                .name = "isl692xx",
++        },
++        .probe = isl692xx_probe,
++        .remove = pmbus_do_remove,
++        .id_table = isl692xx_id,
++};
++
++module_i2c_driver(isl692xx_driver);
++
++MODULE_AUTHOR("Grant Peltier");
++MODULE_DESCRIPTION("PMBus driver for 2nd Gen Renesas digital multiphase "
++                   "devices");
++MODULE_LICENSE("GPL");
++
+-- 
+2.20.1
 
