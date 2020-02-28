@@ -2,92 +2,87 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54711C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9001CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33844246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE0E24695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgB1Ifq (ORCPT
+        id S1726400AbgB1Ik2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:35:46 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11120 "EHLO huawei.com"
+        Fri, 28 Feb 2020 03:40:28 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11121 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbgB1Ifp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:35:45 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2A02FE226D94DD5082DD;
-        Fri, 28 Feb 2020 16:35:43 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Feb
- 2020 16:35:38 +0800
-Subject: Re: [PATCH 1/2] f2fs: Fix mount failure due to SPO after a successful
- online resize FS
-To:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1582799978-22277-1-git-send-email-stummala@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <c39e0cf1-dbb1-5f60-50b5-e0eb246782bc@huawei.com>
-Date:   Fri, 28 Feb 2020 16:35:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725877AbgB1Ik1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:40:27 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 69D972B2DC7E9AB1EB50;
+        Fri, 28 Feb 2020 16:40:19 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 28 Feb 2020 16:40:11 +0800
+From:   Zeng Tao <prime.zeng@hisilicon.com>
+To:     <sudeep.holla@arm.com>
+CC:     <linuxarm@huawei.com>, Zeng Tao <prime.zeng@hisilicon.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cpu-topology: Fix the potential data corruption
+Date:   Fri, 28 Feb 2020 16:35:45 +0800
+Message-ID: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <1582799978-22277-1-git-send-email-stummala@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+Currently there are only 10 bytes to store the cpu-topology info.
+That is:
+snprintf(buffer, 10, "cluster%d",i);
+snprintf(buffer, 10, "thread%d",i);
+snprintf(buffer, 10, "core%d",i);
 
-Good catch.
+In the boundary test, if the cluster number exceeds 100, there will be a
+data corrution, and the kernel will fall into dead loop. in the cluster
+parse function.
 
-On 2020/2/27 18:39, Sahitya Tummala wrote:
-> Even though online resize is successfully done, a SPO immediately
-> after resize, still causes below error in the next mount.
-> 
-> [   11.294650] F2FS-fs (sda8): Wrong user_block_count: 2233856
-> [   11.300272] F2FS-fs (sda8): Failed to get valid F2FS checkpoint
-> 
-> This is because after FS metadata is updated in update_fs_metadata()
-> if the SBI_IS_DIRTY is not dirty, then CP will not be done to reflect
-> the new user_block_count.
-> 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> ---
->  fs/f2fs/gc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index a92fa49..a14a75f 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -1577,6 +1577,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  
->  	update_fs_metadata(sbi, -secs);
->  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+So in this patch, enlarge the buffer to fix such potential issues.
 
-Need a barrier here to keep order in between above code and set_sbi_flag(DIRTY)?
+Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+---
+ drivers/base/arch_topology.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +	set_sbi_flag(sbi, SBI_IS_DIRTY);
->  	err = f2fs_sync_fs(sbi->sb, 1);
->  	if (err) {
->  		update_fs_metadata(sbi, secs);
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 6119e11..f489883 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -281,7 +281,7 @@ static int __init get_cpu_for_node(struct device_node *node)
+ static int __init parse_core(struct device_node *core, int package_id,
+ 			     int core_id)
+ {
+-	char name[10];
++	char name[20];
+ 	bool leaf = true;
+ 	int i = 0;
+ 	int cpu;
+@@ -327,7 +327,7 @@ static int __init parse_core(struct device_node *core, int package_id,
+ 
+ static int __init parse_cluster(struct device_node *cluster, int depth)
+ {
+-	char name[10];
++	char name[20];
+ 	bool leaf = true;
+ 	bool has_cores = false;
+ 	struct device_node *c;
+-- 
+2.8.1
 
-Do we need to add clear_sbi_flag(, SBI_IS_DIRTY) into update_fs_metadata(), so above
-path can be covered as well?
-
-Thanks,
-
-> 
