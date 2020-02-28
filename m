@@ -2,99 +2,90 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D44C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B943BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BD0246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CBB246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgB1VqD (ORCPT
+        id S1726765AbgB1VqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:46:03 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59612 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB1VqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:46:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 13:46:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="411532257"
-Received: from spackerm-mobl2.amr.corp.intel.com (HELO [10.255.231.253]) ([10.255.231.253])
-  by orsmga005.jf.intel.com with ESMTP; 28 Feb 2020 13:46:00 -0800
-Subject: Re: [PATCH 2/8] soundwire: intel: transition to
- sdw_master_device/driver support
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
- <20200227223206.5020-3-pierre-louis.bossart@linux.intel.com>
- <20200228073416.GC2898712@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <dd163b7f-0a12-6f99-942b-a098551b3354@linux.intel.com>
-Date:   Fri, 28 Feb 2020 10:01:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 16:46:18 -0500
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:25458 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgB1VqS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 16:46:18 -0500
+Received: from localhost.localdomain ([92.140.213.100])
+        by mwinf5d18 with ME
+        id 8Mee220022AY1JL03MefEb; Fri, 28 Feb 2020 22:38:44 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 28 Feb 2020 22:38:44 +0100
+X-ME-IP: 92.140.213.100
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, jonas.gorski@gmail.com
+Cc:     linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] spi: bcm63xx-hsspi: Really keep pll clk enabled
+Date:   Fri, 28 Feb 2020 22:38:38 +0100
+Message-Id: <20200228213838.7124-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200228073416.GC2898712@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The purpose of commit 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+was to keep the pll clk enabled through the lifetime of the device.
 
+In order to do that, some 'clk_prepare_enable()'/'clk_disable_unprepare()'
+calls have been added in the error handling path of the probe function, in
+the remove function and in the suspend and resume functions.
 
-On 2/28/20 1:34 AM, Greg KH wrote:
-> On Thu, Feb 27, 2020 at 04:32:00PM -0600, Pierre-Louis Bossart wrote:
->> +static struct sdw_master_driver intel_sdw_driver = {
->> +	.driver = {
->> +		.name = "intel-master",
->> +		.owner = THIS_MODULE,
-> 
-> Nit, setting .owner isn't needed anymore, as the core code handles this
-> for you, right?
+However, a 'clk_disable_unprepare()' call has been unfortunately left in
+the probe function. So the commit seems to be more or less a no-op.
 
-Ah, yes indeed, the following code takes care of it. Thanks for spotting 
-this!
+Axe it now, so that the pll clk is left enabled through the lifetime of
+the device, as described in the commit.
 
-I can remove this assignment in a follow-up patch if that's alright with 
-Vinod.
+Fixes: 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+To be honest, I don't see why we need to keep pll clk, or hsspi clk
+enabled during the lifetime of the driver. My understanding of the code is
+that it is only used to get the 'speed_hz' value in the probe function.
+This value is never refreshed afterwards.
+I don't see the point in enabling/disabling the clks. I think that they
+both could be disabled in the probe function, without the need to keep
+track in the bcm63xx_hsspi structure, neither during pm cycles or the
+remove fucntion.
 
-+#define sdw_register_master_driver(drv) \
-+	__sdw_register_master_driver(drv, THIS_MODULE)
+However, my knowledge on drivers is limited and I may be completly wrong :)
+---
+ drivers/spi/spi-bcm63xx-hsspi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-+/**
-+ * __sdw_register_master_driver() - register a SoundWire Master driver
-+ * @mdrv: 'Master driver' to register
-+ * @owner: owning module/driver
-+ *
-+ * Return: zero on success, else a negative error code.
-+ */
-+int __sdw_register_master_driver(struct sdw_master_driver *mdrv,
-+				 struct module *owner)
-+{
-+	mdrv->driver.bus = &sdw_bus_type;
-+
-+	if (!mdrv->probe) {
-+		pr_err("driver %s didn't provide SDW probe routine\n",
-+		       mdrv->driver.name);
-+		return -EINVAL;
-+	}
-+
-+	mdrv->driver.owner = owner;
+diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
+index 7327309ea3d5..6c235306c0e4 100644
+--- a/drivers/spi/spi-bcm63xx-hsspi.c
++++ b/drivers/spi/spi-bcm63xx-hsspi.c
+@@ -366,7 +366,6 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+ 			goto out_disable_clk;
+ 
+ 		rate = clk_get_rate(pll_clk);
+-		clk_disable_unprepare(pll_clk);
+ 		if (!rate) {
+ 			ret = -EINVAL;
+ 			goto out_disable_pll_clk;
+-- 
+2.20.1
+
