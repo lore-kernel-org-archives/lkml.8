@@ -2,140 +2,106 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77147C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85BEC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D92B246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6FA246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ncbm2mMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgB1BZF (ORCPT
+        id S1730532AbgB1BZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:25:05 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:42284 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729984AbgB1BZF (ORCPT
+        Thu, 27 Feb 2020 20:25:18 -0500
+Received: from mail-pj1-f47.google.com ([209.85.216.47]:37959 "EHLO
+        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729984AbgB1BZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:25:05 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48TBfk2HHczKmV0;
-        Fri, 28 Feb 2020 02:25:02 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id E9DZjsHHjp6i; Fri, 28 Feb 2020 02:24:58 +0100 (CET)
-Date:   Fri, 28 Feb 2020 12:24:51 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v2)
-Message-ID: <20200228012451.upnq5r7fdctrk7pv@yavin>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
- <20200225012457.GA138294@ZenIV.linux.org.uk>
+        Thu, 27 Feb 2020 20:25:18 -0500
+Received: by mail-pj1-f47.google.com with SMTP id a16so230021pju.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:25:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=58TaW2PPYK05khBxPe9LT47jiedjBGNDrtGrrUs1u3Q=;
+        b=Ncbm2mMT+BUZspKp+izFI9pTKdcn/wuxNopxCdc+FNMBTN28s9HrD6HQkijmPK/4uf
+         Cpt/X9JYHVue0jt5JHSN1kUxmlZvxvd3LKw3c6CHRcGEEw6UEoo4lWz0WPl1PQ++GTEu
+         0DFl1e2Q0A8H4NSkKyNQPnL1u9SCipXFU/ALw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=58TaW2PPYK05khBxPe9LT47jiedjBGNDrtGrrUs1u3Q=;
+        b=Wlla/E8VJWovlSgr0PD727WiIWd2G1uyc6T5GRkRmwBdexRwAQWW0zcCjaO7u5f4cU
+         asgiLNuVexV5A6YeKm+EWdC4Xco+1LcFvnHfvvv0ZN9bK/vd4Np2g+VmboD3fIIri+n4
+         UWA7jQJLFt0L9WS9J6txRPZvQVA5H6rlsdFgCZEdcir7J0egezlPOnohNoPnw82VP0Mj
+         zFef5z66X3/u4MDwXU6/3HZnL8gDOVQMt5QWEbR04eGuTZDDOvdMvNfxvKo/FVatq4YC
+         bPgjwlFflGKoCXU2QEcVQpqVyR9hhU9xdXOQk7+OAJXzK+9gCq6xaWjJutsbqa7WPvCN
+         BBpQ==
+X-Gm-Message-State: APjAAAUc/6ctK7BT8dN8SA/HJ6HPViuWbzNBmpz5HfbFkqCLXUn2szJr
+        yhGYmVJLSKIJO0RCjEpqgoFaYQ==
+X-Google-Smtp-Source: APXvYqz0TaAAJ/YT/CSTJPWpcfSSIRqy1k66k7ROqL3oLI3lJVKdpvUI4kTUQ9kJQo9qVimv3treNQ==
+X-Received: by 2002:a17:90a:d585:: with SMTP id v5mr1910474pju.4.1582853117366;
+        Thu, 27 Feb 2020 17:25:17 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id r8sm7577529pjo.22.2020.02.27.17.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 17:25:16 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:25:14 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 01/11] videobuf2: add cache management members
+Message-ID: <20200228012514.GL122464@google.com>
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+ <20200226111529.180197-2-senozhatsky@chromium.org>
+ <3c20606f-5cde-47d3-afd2-d1bbde668136@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cla7i2c4hyd6w2ul"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225012457.GA138294@ZenIV.linux.org.uk>
+In-Reply-To: <3c20606f-5cde-47d3-afd2-d1bbde668136@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (20/02/27 12:55), Hans Verkuil wrote:
+> On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
+> > Extend vb2_buffer and vb2_queue structs with cache management
+> > members.
+> > 
+> > V4L2 UAPI already contains two buffer flags which user-space,
+> > supposedly, can use to control buffer cache sync:
+> > 
+> > - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+> > - V4L2_BUF_FLAG_NO_CACHE_CLEAN
+> > 
+> > None of these, however, do anything at the moment. This patch
+> > set is intended to change it.
+> > 
+> > Since user-space cache management hints are supposed to be
+> > implemented on a per-buffer basis we need to extend vb2_buffer
+> > struct with two new memebers ->need_cache_sync_on_prepare and
+> 
+> memebers -> members
+> 
 
---cla7i2c4hyd6w2ul
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  meme bears  :)
 
-On 2020-02-25, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Sun, Feb 23, 2020 at 01:12:21AM +0000, Al Viro wrote:
-> > 	This is a slightly extended repost of the patchset posted on
-> > Jan 19.  Current branch is in vfs.git#work.do_last, the main
-> > difference from the last time around being a bit of do_last()
-> > untangling added in the end of series.  #work.openat2 is already
-> > in mainline, which simplifies the series - now it's a straight
-> > branch with no merges.
->=20
-> Whee...  While trying to massage ".." handling towards the use of
-> regular mount crossing semantics, I've found something interesting.
-> Namely, if you start in a directory with overmounted parent,
-> LOOKUP_NO_XDEV resolution of ../something will bloody well cross
-> into the overmount.
-
-Oh boy...
-
-> Reason: follow_dotdot() (and its RCU counterpart) check for LOOKUP_NO_XDEV
-> when crossing into underlying fs, but not when crossing into overmount
-> of the parent.
->=20
-> Interpretation of .. is basically
->=20
-> loop:	if we are in root					// uncommon
-> 		next =3D current position
-> 	else if we are in root of a mounted filesystem		// more rare
-> 		move to underlying mountpoint
-> 		goto loop
-> 	else
-> 		next =3D parent directory of current position	// most common
->=20
-> 	while next is overmounted				// _VERY_ uncommon
-> 		next =3D whatever's mounted on next
->=20
-> 	move to next
->=20
-> The second loop should've been sharing code with the normal mountpoint
-> crossing.  It doesn't, which has already lead to interesting inconsistenc=
-ies
-> (e.g. autofs generally expects ->d_manage() to be called before crossing
-> into it; here it's not done).  LOOKUP_NO_XDEV has just added one more...
-
-You're quite right -- LOOKUP_NO_XDEV should block that and I missed it.
-
-> Incidentally, another inconsistency is LOOKUP_BENEATH treatment in case
-> when we have walked out of the subtree by way of e.g. procfs symlink and
-> then ran into .. in the absolute root (that's
->                 if (!follow_up(&nd->path))
->                         break;
-> in follow_dotdot()).  Shouldn't that give the same reaction as ..
-> in root (EXDEV on LOOKUP_BENEATH, that is)?  It doesn't...
-
-You can't go through procfs symlinks with LOOKUP_BENEATH, but if it's
-possible to do that kind of jump then it should also be blocked (but I
-would say that I'd prefer "block any kind of weird jump").
-
-> Another one is about LOOKUP_NO_XDEV again: suppose you have process'
-> root directly overmounted and cwd in the root of whatever's overmounting
-> it.  Resolution of .. will stay in cwd - we have no parent within the
-> chroot jail we are in, so we move to whatever's overmounting that root.
-> Which is the original location.  Should we fail on LOOKUP_NO_XDEV here?
-> Plain .. in the root of chroot jail (not overmounted by anything) does
-> *not*...
-
-I think LOOKUP_NO_XDEV should block that since you end up crossing a
-mountpoint.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---cla7i2c4hyd6w2ul
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlhr4QAKCRCdlLljIbnQ
-EvPAAQCgcdH9xDc0JcNFSyizyIS0NFAVUIhgMKxeMa9A2TNSFgEA0NpX8uhWXCsy
-7vgtGIc1h9SnuYOzjrSIvz0yBm7nww4=
-=JbtI
------END PGP SIGNATURE-----
-
---cla7i2c4hyd6w2ul--
+	-ss
