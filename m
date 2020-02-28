@@ -2,88 +2,221 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABF7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF52EC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD683246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582860924;
-	bh=bj1WrnSQVnFoIj3k8BTk2xhWVva1ZbWMO1HNMcVAvFw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=uNArfTv9rL6UGFgoH1C65ebvclgTMbVFHZj/aIycwbc9H6dyCxKkBGDh6F5MznNag
-	 14YrkMFo+0vvCUchfG2UdWxf1paToxdcMHt0+YjbvzCB0VbaBhJIOD02JMjdkaNZgB
-	 AeXfNl3LfPMv/++tZpGqAg6lQkIzUgY29FhiAzo4=
+	by mail.kernel.org (Postfix) with ESMTP id 9EF4E20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvTH561/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbgB1DfX (ORCPT
+        id S1730809AbgB1DgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:35:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbgB1DfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:35:23 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E37D20665;
-        Fri, 28 Feb 2020 03:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582860923;
-        bh=bj1WrnSQVnFoIj3k8BTk2xhWVva1ZbWMO1HNMcVAvFw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M03vmg4smuyU8J07MbTZ6ELPYfx+zr11c3bSUnsYRiTS/7rIMux8Hqt4lKXM1ggUS
-         Q7jHukr/dzVNGNE8ytFcd3yE4exnvN3dDHyCO/rLpJW7DhSpCp+NFMMS61kKmLxyPr
-         L2L/PS7+99mqU+MznwEVD+h6VLojU7Xnb6eveGuI=
-Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200227132232.815448360@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e1772ba8-f03a-4423-b41c-ca54e85ad7e2@kernel.org>
-Date:   Thu, 27 Feb 2020 20:35:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 22:36:06 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46644 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730665AbgB1DgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:36:06 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v6so992879lfo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:36:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FVT7qEYhm80HqJbc3aWKfNzrLg9U8y0nUBfDpf5KnMg=;
+        b=pvTH561/K3ONvmMTS2sJ0tskdzovHpjj41uO2R9CLtDmRqcW0n3CZbTzicXccYr3K9
+         lD2aLl+mm0rYiigoxjmaAqSGcCgA4v2xlli7pdQWC9229vSGdOaMXZsU3L2R+/9j8Qib
+         qmMfsq36on+JjhbXc/FDkZBZ7tXWsqjkMynIk2O9l/G8DstFxqyocwuaaCveMI2BjUZc
+         foXcMAMVYvE9dhDwIRONN5+9hUeBuA/zhR3vuoMNKJmqaErKB783bj8UFOIT5dKS0R9W
+         NT21NGmI26AbxAxA26tOhqvsS6XFiejQ0BqopZNSmA2LdcJuk6Rz/ts2KqyQNUJE1XBI
+         +IWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FVT7qEYhm80HqJbc3aWKfNzrLg9U8y0nUBfDpf5KnMg=;
+        b=TGkkZ752hhAE6sU1BSv+R2jCP0R7Y9Zj3E6QTt+TbhT6eFXA+B98E6X7kOVG0GVXd4
+         iuE1g8enC9ri6g5mrBaTrUMgWJWNP9YNfSw/xoMPewLzN1l+flLuq+dk9mxzKrT6DQZn
+         Pmajlzq8AimZxyGRYIGZwhdLP1acvlzj/JGbFy0FD8udXKBG/rpT8dHYLFWf1QVMsNzE
+         AHaqF6/P2MfIPdEEKVrP9JYsFmMEHHtb7ZW81yMVZmgc+FngiIw3/SPMv1v7StQPlAXS
+         2ztMefbNOS3NyTdlHY8RBfF0ZCG+Gb6GdXHnMzuRWTu9mP8MspXikuCVs8A49AD4mb7+
+         Qp4w==
+X-Gm-Message-State: ANhLgQ1rkQ0106vLPw2Ox/xTtNhJ57a9BOokj+5o6iOpfvfTexdR22W5
+        68dgfBG6Iy1gbkG4zTw4c0ZfiaN964NFwQJaJ3xVSA==
+X-Google-Smtp-Source: ADFU+vvlRW8ztAcPO+osmfqDpO30hIpVhisGrk2kWl2sseV5L3WzBosUr1QJcpxZIXzUEO2mlXWAaTfTi5wI9PLftJs=
+X-Received: by 2002:a19:4f43:: with SMTP id a3mr1330526lfk.6.1582860962178;
+ Thu, 27 Feb 2020 19:36:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 28 Feb 2020 09:05:50 +0530
+Message-ID: <CA+G9fYuy_Td284_oTdxMb45vXsAZfCnTGYG8NfHA2XvemZ_hjQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/97] 4.19.107-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 6:35 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.7 release.
-> There are 150 patches in this series, all will be posted as a response
+On Thu, 27 Feb 2020 at 19:33, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.107 release.
+> There are 97 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
-> 
+>
 > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
 > Anything received after that time might be too late.
-> 
+>
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.7-rc1.gz
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.107-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
 > and the diffstat can be found below.
-> 
+>
 > thanks,
-> 
+>
 > greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-thanks,
--- Shuah
+Summary
+------------------------------------------------------------------------
+kernel: 4.19.107-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 6ed3dd5c1f76bc99760b8d2dee47709961c3596e
+git describe: v4.19.106-98-g6ed3dd5c1f76
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.106-98-g6ed3dd5c1f76
 
+No regressions (compared to build v4.19.106)
+
+No fixes (compared to build v4.19.106)
+
+Ran 28502 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-crypto-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-kasan-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
