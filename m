@@ -2,25 +2,25 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7CEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D06EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450BB246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3CA2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgB1PXB (ORCPT
+        id S1727119AbgB1PXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 28 Feb 2020 10:23:01 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40882 "EHLO huawei.com"
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40860 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727049AbgB1PXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:23:00 -0500
+        id S1726650AbgB1PXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:23:01 -0500
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE65CFFEE367F48376C9;
+        by Forcepoint Email with ESMTP id D8DD125A82D882BC737;
         Fri, 28 Feb 2020 23:22:53 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -31,12 +31,10 @@ CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mtd@lists.infradead.org>,
         <andriy.shevchenko@linux.intel.com>, <linuxarm@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC 2/3] spi: HiSilicon v3xx: Properly set CMD_CONFIG for Dual/Quad modes
-Date:   Fri, 28 Feb 2020 23:18:50 +0800
-Message-ID: <1582903131-160033-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC 0/3] spi/HiSilicon v3xx: Support dual and quad mode through DMI quirks
+Date:   Fri, 28 Feb 2020 23:18:48 +0800
+Message-ID: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -46,78 +44,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CMD_CONFIG register memory interface type field is not set configured
-for Dual and Quad modes, so set appropriately.
+As discussed during the original HiSilicon v3xx SPI driver upstreaming,
+currently there is no method for the ACPI SPI Serial Bus Connection
+Resource Descriptor to define the data buswidth [0], [1].
 
-This was not detected previously as we only ever operated in standard SPI
-mode.
+So we can look to get the ACPI spec updated for this, and I have
+submitted a proposal for a new feature here:
+https://bugzilla.tianocore.org/show_bug.cgi?id=2557
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/spi/spi-hisi-sfc-v3xx.c | 43 +++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+However I am not sure how successful that will be.
 
-diff --git a/drivers/spi/spi-hisi-sfc-v3xx.c b/drivers/spi/spi-hisi-sfc-v3xx.c
-index 4cf8fc80a7b7..45d906110ed1 100644
---- a/drivers/spi/spi-hisi-sfc-v3xx.c
-+++ b/drivers/spi/spi-hisi-sfc-v3xx.c
-@@ -17,6 +17,12 @@
- #define HISI_SFC_V3XX_VERSION (0x1f8)
- 
- #define HISI_SFC_V3XX_CMD_CFG (0x300)
-+#define HISI_SFC_V3XX_CMD_CFG_DUAL_IN_DUAL_OUT (1 << 17)
-+#define HISI_SFC_V3XX_CMD_CFG_DUAL_IO (2 << 17)
-+#define HISI_SFC_V3XX_CMD_CFG_FULL_DIO (3 << 17)
-+#define HISI_SFC_V3XX_CMD_CFG_QUAD_IN_QUAD_OUT (5 << 17)
-+#define HISI_SFC_V3XX_CMD_CFG_QUAD_IO (6 << 17)
-+#define HISI_SFC_V3XX_CMD_CFG_FULL_QIO (7 << 17)
- #define HISI_SFC_V3XX_CMD_CFG_DATA_CNT_OFF 9
- #define HISI_SFC_V3XX_CMD_CFG_RW_MSK BIT(8)
- #define HISI_SFC_V3XX_CMD_CFG_DATA_EN_MSK BIT(7)
-@@ -161,6 +167,43 @@ static int hisi_sfc_v3xx_generic_exec_op(struct hisi_sfc_v3xx_host *host,
- 	if (op->addr.nbytes)
- 		config |= HISI_SFC_V3XX_CMD_CFG_ADDR_EN_MSK;
- 
-+	switch (op->data.buswidth) {
-+	case 0 ... 1:
-+		break;
-+	case 2:
-+		if (op->addr.buswidth <= 1) {
-+			config |= HISI_SFC_V3XX_CMD_CFG_DUAL_IN_DUAL_OUT;
-+		} else if (op->addr.buswidth == 2) {
-+			if (op->cmd.buswidth <= 1) {
-+				config |= HISI_SFC_V3XX_CMD_CFG_DUAL_IO;
-+			} else if (op->cmd.buswidth == 2) {
-+				config |= HISI_SFC_V3XX_CMD_CFG_FULL_DIO;
-+			} else {
-+				return -EIO;
-+			}
-+		} else {
-+			return -EIO;
-+		}
-+		break;
-+	case 4:
-+		if (op->addr.buswidth <= 1) {
-+			config |= HISI_SFC_V3XX_CMD_CFG_QUAD_IN_QUAD_OUT;
-+		} else if (op->addr.buswidth == 4) {
-+			if (op->cmd.buswidth <= 1) {
-+				config |= HISI_SFC_V3XX_CMD_CFG_QUAD_IO;
-+			} else if (op->cmd.buswidth == 4) {
-+				config |= HISI_SFC_V3XX_CMD_CFG_FULL_QIO;
-+			} else {
-+				return -EIO;
-+			}
-+		} else {
-+			return -EIO;
-+		}
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (op->data.dir != SPI_MEM_NO_DATA) {
- 		config |= (len - 1) << HISI_SFC_V3XX_CMD_CFG_DATA_CNT_OFF;
- 		config |= HISI_SFC_V3XX_CMD_CFG_DATA_EN_MSK;
+In the meantime, as an alternate approach, this RFC proposes to allow the
+SPI controller driver override the device buswidth. In this example,
+the driver uses DMI quirks to discover the host machine and set the 
+buswidth override accordingly when the machine is known to support
+dual or quad mode of operation.
+
+I also have included a fix for dual and quad modes in the driver.
+
+Comments welcome. thanks.
+
+[0] https://lore.kernel.org/linux-mtd/20200109212842.GK3702@sirena.org.uk/
+[1] https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf, 
+     19.6.126
+
+John Garry (3):
+  spi: Allow SPI controller override device buswidth
+  spi: HiSilicon v3xx: Properly set CMD_CONFIG for Dual/Quad modes
+  spi: HiSilicon v3xx: Use DMI quirk to set controller buswidth override
+    bits
+
+ drivers/spi/spi-hisi-sfc-v3xx.c | 99 ++++++++++++++++++++++++++++++++-
+ drivers/spi/spi.c               |  4 +-
+ include/linux/spi/spi.h         |  3 +
+ 3 files changed, 104 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
