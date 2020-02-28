@@ -2,91 +2,138 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3775FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A16C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B0B246BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0FF2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YVBzc0fP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgB1Nex (ORCPT
+        id S1726906AbgB1NfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:34:53 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:36909 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgB1New (ORCPT
+        Fri, 28 Feb 2020 08:35:02 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39266 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB1NfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:34:52 -0500
-Received: by mail-il1-f197.google.com with SMTP id z79so3339207ilf.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:34:50 -0800 (PST)
+        Fri, 28 Feb 2020 08:35:02 -0500
+Received: by mail-qt1-f195.google.com with SMTP id p34so1988042qtb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:35:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SO4k+cEae+kcaRUxuLpklhk4ez8pzokBlgA+/XnFpzY=;
+        b=YVBzc0fPtfTWU3WI4CpD6wflzlKNfGdtBy6xeStvbbJrgzA1/3+LYWWJJUKFHLlNe6
+         estvGTicQLamm11cs7CeJACAaxInS7RYp50Ztlq8H6enN1ap/uDBCZGrp01GO+iJRfIo
+         f9AQLO3nan12oFT4cROZv+gFhJRYiiUvK/NiN1xOGXaQVrAU3sF5LpTxKxD41jmRvNf8
+         PaL+thoLLUdzf38op6Q1/pE7SJNflTxQSjoshQsa2XyYGSpX/1fVU/9woELTNFVBP8L6
+         j4p3BrvBSXmHOMVMeKrnH+22GmcJSgmom5xUSelUdQBcdQiwVibPhsEnqQPTwhfKHlje
+         6KdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=P2ODn0VgFvyiKsD70cUH3M74/ayRtotvviO7aFfvm90=;
-        b=PB1gdCsH1yMTn1srgpkkQhW8EFKxKo0Ku9S9V89Un664y/oK26cUb9Hk4lQu6UnXOH
-         YJS7fsla0Rjl+ut0aA71bY2ATlvDsef2bkIQ/KwN/5rq0oFCJthOnanC0BOz5QRWrnNj
-         JOXMNEN/ByG5oETef3QKCVXln3BFRj/NG224DXqkKuHm81VcK9cHUxrB5Gj/QaSwYdCG
-         2+hOJnzp3ajdjiSCmIZ6EvZ29ROJNNRaUspwgYZg3ZXnnTW7cXQN/hz390epmmMLzl/v
-         RWoO38AzWQLSJZz3ycHWSzlzIx7DG+wqW1fnrRO4nGiYqe9R6v6+VcTTLF2YOHBkSUxJ
-         nL3g==
-X-Gm-Message-State: APjAAAVc9mxN1HCcuwXWUlMeCXhUgNYSFeHP4nf+Tugp7UUNNCvW8A+l
-        NIvkvASPwXGWxgDlR1oYqVRDmNobEn0r80iYehiJGH3M8K1c
-X-Google-Smtp-Source: APXvYqwmN2kKuxPJSbIHtBy3JQ++QfG738jlmTXSZEZc21gUcEGvXA99Nd0C4Sg2sMovrsTArsupj40HpcX9Bef9Lzj4vecxJPw7
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SO4k+cEae+kcaRUxuLpklhk4ez8pzokBlgA+/XnFpzY=;
+        b=uNejXHyto6rrKsECJ4VFx/VF7LUcQQC6IQzpt6jszSQwarSK5bW1lDu7EW5OOJxytO
+         PW+DTeLjfd4L0/h1n74Swurjy5gxtkIZ4anWBSG2Qq0Y05nxUiA+EMZ/Q8eiXiWTO7hO
+         SlL3YIt5XpU/NxifcU/WeCGDaO5Iw2Io6sCJcp6sW0wA7yhsMJD17CDzwABlDMBSQPDf
+         8YPVDT392uWvlp4PQg0a+81wUPyhJDHoIfq98SNia3GibjfyahVD7lUTWlj6g/hrBr9J
+         yyqbgdTKs8ujy8qlaq04y1m9K9qyJkVjHX6zWvsrjBiIBRuBerQEtNNU6KfMjJIcXyOC
+         9dZg==
+X-Gm-Message-State: APjAAAWf8wDJUsZ/Zx0ydNnbLrbf+mIcSO56b6B8Ty4ss7bz+a0sdFsa
+        6n+bRL/rXkh9doldhyiaJ6sR0w==
+X-Google-Smtp-Source: APXvYqz34jQPrszufJ93Ceni4PEZYOnNx21NiUQdDnBqKX3jqVT7UroWcBUFS7T8hVPeCfHcAR4H6g==
+X-Received: by 2002:ac8:5190:: with SMTP id c16mr4174211qtn.200.1582896901187;
+        Fri, 28 Feb 2020 05:35:01 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o25sm5120118qkk.7.2020.02.28.05.35.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 05:35:00 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7fnA-0007ph-1Q; Fri, 28 Feb 2020 09:35:00 -0400
+Date:   Fri, 28 Feb 2020 09:35:00 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     syzbot <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: Re: possible deadlock in cma_netdev_callback
+Message-ID: <20200228133500.GN31668@ziepe.ca>
+References: <20200227164622.GJ31668@ziepe.ca>
+ <20200227155335.GI31668@ziepe.ca>
+ <20200226204238.GC31668@ziepe.ca>
+ <000000000000153fac059f740693@google.com>
+ <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
+ <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
+ <OFF9E6CFC6.7E79459D-ON0025851C.00472582-0025851C.0047F357@notes.na.collabserv.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:df2:: with SMTP id m18mr4289443ilj.56.1582896890344;
- Fri, 28 Feb 2020 05:34:50 -0800 (PST)
-Date:   Fri, 28 Feb 2020 05:34:50 -0800
-In-Reply-To: <6590a26d-8234-67a8-16e0-6391da6765d9@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dd7845059fa2e6dc@google.com>
-Subject: Re: Re: possible deadlock in tty_unthrottle
-From:   syzbot <syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com>
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OFF9E6CFC6.7E79459D-ON0025851C.00472582-0025851C.0047F357@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 27. 02. 20, 9:39, syzbot wrote:
->> Hello,
->> 
->> syzbot found the following crash on:
->> 
->> HEAD commit:    f8788d86 Linux 5.6-rc3 git tree:       upstream 
->> console output:
->> https://syzkaller.appspot.com/x/log.txt?x=1102d22de00000 kernel
->> config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f 
->> dashboard link:
->> https://syzkaller.appspot.com/bug?extid=26183d9746e62da329b8 
->> compiler:       clang version 10.0.0
->> (https://github.com/llvm/llvm-project/
->> c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> 
->> Unfortunately, I don't have any reproducer for this crash yet.
->> 
->> IMPORTANT: if you fix the bug, please add the following tag to the
->> commit: Reported-by:
->> syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
->
-> So trying below, but there is no reproducer for the issue, so I am not
-> sure if it triggers any action at all.
->
-> #syz test:
+On Fri, Feb 28, 2020 at 01:05:53PM +0000, Bernard Metzler wrote:
+> 
+> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >Date: 02/27/2020 05:46PM
+> >Cc: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+> >netdev@vger.kernel.org, parav@mellanox.com,
+> >syzkaller-bugs@googlegroups.com, willy@infradead.org
+> >Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
+> >
+> >On Thu, Feb 27, 2020 at 04:21:21PM +0000, Bernard Metzler wrote:
+> >> 
+> >> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
+> >> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
+> >> >Date: 02/27/2020 04:53PM
+> >> >Cc: "syzbot"
+> ><syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+> >> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+> >> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+> >> >netdev@vger.kernel.org, parav@mellanox.com,
+> >> >syzkaller-bugs@googlegroups.com, willy@infradead.org
+> >> >Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
+> >> >
+> >> >On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler wrote:
+> >> >
+> >> >> Thanks for letting me know! Hmm, we cannot use RCU locks since
+> >> >> we potentially sleep. One solution would be to create a list
+> >> >> of matching interfaces while under lock, unlock and use that
+> >> >> list for calling siw_listen_address() (which may sleep),
+> >> >> right...?
+> >> >
+> >> >Why do you need to iterate over addresses anyhow? Shouldn't the
+> >> >listen
+> >> >just be done with the address the user gave and a BIND DEVICE to
+> >the
+> >> >device siw is connected to?
+> >> 
+> >> The user may give a wildcard local address, so we'd have
+> >> to bind to all addresses of that device...
+> >
+> >AFAIK a wild card bind using BIND DEVICE works just fine?
+> >
+> >Jason
+> >
+> Thanks Jason, absolutely! And it makes things so easy...
 
-This crash does not have a reproducer. I cannot test it.
+Probably check to confirm, it just my memory..
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jirislaby/linux.git vc_sel
->
-> thanks,
-> -- 
-> js
-> suse labs
+Jason
