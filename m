@@ -2,107 +2,163 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F6C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F3C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6954C24695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mrY+7Knz"
+	by mail.kernel.org (Postfix) with ESMTP id E52AC246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgB1Iu0 (ORCPT
+        id S1726805AbgB1Iw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:50:26 -0500
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:53905 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726207AbgB1Iu0 (ORCPT
+        Fri, 28 Feb 2020 03:52:26 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48562 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgB1Iw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:50:26 -0500
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 7bLgjJlrFjmHT7bLjjmd50; Fri, 28 Feb 2020 09:50:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582879824; bh=Xv6fRxW1D6N2tzhBGhpeBgICfc/EY8yz2dHEhHt/LDw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=mrY+7Knz/H3ujkVHpz6ay+QOKJWgKfpXzQ0/4ALMh95gg3GabhfGL3qrbFdG4rAEq
-         jy6hhQaiVjIGFnqTlJHlumVnBjMwgBegz46ziarr4nwohTqDFGI6w035xYKxeIEHVc
-         JhS0Hc1jew8lY2gXWwp8VyezxxbCI9mYwOew7SYctTPFwklTRUXOv4kxKGLLZuZMtW
-         Tbe24zrxqOJ+iY018UUbDXc2h+YqbyZ5oNFVU+zuMsLSTGUloFR/1070OwT7RPuA4d
-         Ehxs8wx2+5gdmxK1SMchZA+8sqF6d1ZoKs9/LSXQMdfOOALl8SoQWA+2wx6/WawL3O
-         6Dh48dtHdbGIQ==
-Subject: Re: [PATCHv3 05/11] videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT
- flag
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
- <20200226111529.180197-6-senozhatsky@chromium.org>
- <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
- <20200228035759.GP122464@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <7c936a58-7ad9-60a5-1f4a-e86ee358752a@xs4all.nl>
-Date:   Fri, 28 Feb 2020 09:50:20 +0100
+        Fri, 28 Feb 2020 03:52:26 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 96CD9292A95
+Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host event.
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>, ohad@wizery.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-remoteproc@vger.kernel.org
+References: <20200214082638.92070-1-pihsun@chromium.org>
+ <83b03af1-5518-599a-3f82-ee204992edbf@collabora.com>
+ <CANdKZ0fuK1Nm_fPNKAss29pqghCcwjN3acYHi6Ez5==envgKgA@mail.gmail.com>
+ <84a66ac1-c36a-fa72-a406-9c3396c1bdf2@collabora.com>
+Message-ID: <6c78727d-8a65-097d-224d-48d93f6ceaa7@collabora.com>
+Date:   Fri, 28 Feb 2020 09:52:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200228035759.GP122464@google.com>
+In-Reply-To: <84a66ac1-c36a-fa72-a406-9c3396c1bdf2@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLTNGbK+gMrzKdnJS2vJJQ9w1zjBkvmVCo3zZD0tkJQJl8h0wzKqNQ0niDnICURtyOu4GNoN+ZC4HCh4EH2yjR/+3ZgiU5DMSpKbu+wxgzL3Ak7KWUgc
- v1CfCyBf+tQphHRWkgotjq66YNw18g+vo6Jlc4Nd8s1mHNT4LYfOS6Rcti7Ra3LIi9zjXOyP/XeBeCGzZ6HofcuKbDR5xyeym1jJaDoXvikFGzZadIVSlksy
- Ih+CpuNRWgtChceVBAFCfRgBuSf36S/YSsYYNykRlq6FmuRgFPWRBBp032Uododp2VdD/vbn8zn/3/ly74QSE9xFBdaID94DXwQIiBvvWu9OQHJ+Hsh1NIwL
- fyZY+P3fdFaoMHBWcMMyHdwhdORFEVNJHNSP5fG6OIh0M8A1sjHZbAdsqU2SFsrXy3YYzpCFsw4pd7blLNdAkO/IGiwA42KcG2vcbJODevQIm+9bBCX72qaC
- doFadKw3/n09MmCqetSF5hGbFRmibk0IVyRRQk68iOrlmgRsCD2D2oXrOKfsRMJAro3JGsIAwqbOxWHJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 4:57 AM, Sergey Senozhatsky wrote:
-> On (20/02/27 13:36), Hans Verkuil wrote:
-> [..]
->>>  	other changes, then set ``count`` to 0, ``memory`` to
->>>  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
->>>      * - __u32
->>> -      - ``reserved``\ [7]
->>> +      - ``flags``
->>> +      - Specifies additional buffer management attributes.
->>> +	See :ref:`memory-flags`. Old drivers and applications must set it to
->>> +	zero.
->>
->> Drop the last sentence, it's not relevant.
->>
->>> +
->>> +    * - __u32
->>> +      - ``reserved``\ [6]
->>>        - A place holder for future extensions. Drivers and applications
->>>  	must set the array to zero.
->>
->> Old drivers and applications still think reserved is [7] and will zero this.
+Hi Pi-Hsun,
+
+On 17/2/20 16:55, Enric Balletbo i Serra wrote:
+> Dear remoteproc experts,
 > 
-> Just to make sure, does this mean that you also want me to drop the
-> "Drivers and applications must set the array to zero" sentence?
-
-Not for the reserved field, only for the flags field.
-
-Regards,
-
-	Hans
-
+> cc'ing you for if we can have your feedback on this change.
 > 
-> 	-ss
+> Thanks Pi-Hsun, for your quick answer, makes sense but I'm still feeling that I
+> miss something (probably because I'm not a remoteproc expert), so I added the
+> Remoteproc people for if they can comment this patch. We have time as we're in
+> rc2 only, so I'd like to wait a bit in case they can take a look.
+> 
+> If no answer is received I'll take a second look and apply the patch.
 > 
 
+I'll pick this patch, just I want to request a minor change.
+
+> Thanks,
+>  Enric
+> 
+> On 15/2/20 4:56, Pi-Hsun Shih wrote:
+>> Hi Enric,
+>>
+>> On Fri, Feb 14, 2020 at 11:10 PM Enric Balletbo i Serra
+>> <enric.balletbo@collabora.com> wrote:
+>>>
+>>> Hi Pi-Hsun,
+>>>
+>>> On 14/2/20 9:26, Pi-Hsun Shih wrote:
+>>>> Host event can be sent by remoteproc by any time, and
+>>>> cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
+>>>> But the cros_ec_device is initialized after that, which cause host event
+>>>> handler to use cros_ec_device that are not initialized properly yet.
+>>>>
+>>>
+>>> I don't have the hardware to test but, can't we call first cros_ec_register and
+>>> then cros_ec_rpmsg_create_ept?
+>>>
+>>> Start receiving driver callbacks before finishing to probe the drivers itself
+>>> sounds weird to me.
+>>>
+>>> Thanks,
+>>>  Enric
+>>
+>> Since cros_ec_register calls cros_ec_query_all, which sends message to
+>> remoteproc using cros_ec_pkt_xfer_rpmsg (to query protocol version),
+>> the ec_rpmsg->ept need to be ready before calling cros_ec_register.
+>>
+>>>
+>>>> Fix this by don't schedule host event handler before cros_ec_register
+>>>> returns. Instead, remember that we have a pending host event, and
+>>>> schedule host event handler after cros_ec_register.
+>>>>
+>>>> Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
+>>>> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+>>>> ---
+>>>>  drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
+>>>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+>>>> index dbc3f5523b83..7e8629e3db74 100644
+>>>> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
+>>>> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+>>>> @@ -44,6 +44,8 @@ struct cros_ec_rpmsg {
+>>>>       struct completion xfer_ack;
+>>>>       struct work_struct host_event_work;
+>>>>       struct rpmsg_endpoint *ept;
+>>>> +     bool has_pending_host_event;
+>>>> +     bool probe_done;
+
+
+Could you try if just calling driver_probe_done() when needed works, so we don't
+need to add a new boolean flag for this?
+
+Thanks,
+ Enric
+
+>>>>  };
+>>>>
+>>>>  /**
+>>>> @@ -177,7 +179,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+>>>>               memcpy(ec_dev->din, resp->data, len);
+>>>>               complete(&ec_rpmsg->xfer_ack);
+>>>>       } else if (resp->type == HOST_EVENT_MARK) {
+>>>> -             schedule_work(&ec_rpmsg->host_event_work);
+>>>> +             /*
+>>>> +              * If the host event is sent before cros_ec_register is
+>>>> +              * finished, queue the host event.
+>>>> +              */
+>>>> +             if (ec_rpmsg->probe_done)
+>>>> +                     schedule_work(&ec_rpmsg->host_event_work);
+>>>> +             else
+>>>> +                     ec_rpmsg->has_pending_host_event = true;
+>>>>       } else {
+>>>>               dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
+>>>>                        resp->type);
+>>>> @@ -240,6 +249,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+>>>>               return ret;
+>>>>       }
+>>>>
+>>>> +     ec_rpmsg->probe_done = true;
+>>>> +
+>>>> +     if (ec_rpmsg->has_pending_host_event)
+>>>> +             schedule_work(&ec_rpmsg->host_event_work);
+>>>> +
+>>>>       return 0;
+>>>>  }
+>>>>
+>>>>
+>>>> base-commit: b19e8c68470385dd2c5440876591fddb02c8c402
+>>>>
