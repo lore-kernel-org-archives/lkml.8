@@ -2,77 +2,119 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96EBC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9212FC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F0B2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741E92469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgB1GsB (ORCPT
+        id S1726765AbgB1Gth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:48:01 -0500
-Received: from mga11.intel.com ([192.55.52.93]:33925 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgB1GsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:48:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 22:48:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="231018405"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Feb 2020 22:47:57 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Vlastimil Babka" <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
-References: <20200228033819.3857058-3-ying.huang@intel.com>
-        <0C8CC772-5840-4F0C-9859-C1D7B8BF6025@redhat.com>
-Date:   Fri, 28 Feb 2020 14:47:57 +0800
-In-Reply-To: <0C8CC772-5840-4F0C-9859-C1D7B8BF6025@redhat.com> (David
-        Hildenbrand's message of "Fri, 28 Feb 2020 07:13:33 +0100")
-Message-ID: <87eeuf8axu.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 28 Feb 2020 01:49:37 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12910 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbgB1Gth (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:49:37 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S6hlXR129175;
+        Fri, 28 Feb 2020 01:49:32 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepxau1uv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Feb 2020 01:49:32 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01S6lMdD027845;
+        Fri, 28 Feb 2020 06:49:30 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma05wdc.us.ibm.com with ESMTP id 2yepv2tf16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Feb 2020 06:49:30 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01S6nT4e37880238
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 06:49:29 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC9A76E050;
+        Fri, 28 Feb 2020 06:49:29 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01AB56E04E;
+        Fri, 28 Feb 2020 06:49:28 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 06:49:28 +0000 (GMT)
+Subject: Re: [PATCH v4 0/3] Enable vTPM 2.0 for the IBM vTPM driver
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca
+References: <20200227220346.15976-1-stefanb@linux.vnet.ibm.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <3a94fe3f-9618-b174-54bf-e0c22e5ba249@linux.ibm.com>
+Date:   Fri, 28 Feb 2020 01:49:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200227220346.15976-1-stefanb@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_01:2020-02-26,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
+Jarkko,
 
->> Am 28.02.2020 um 04:38 schrieb Huang, Ying <ying.huang@intel.com>:
->> 
->> ﻿From: Huang Ying <ying.huang@intel.com>
->> 
->> Now !PageSwapBacked() is used as the flag for the pages freed lazily
->> via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
->> new page flag for that to improve the code readability.
+  please ignore v4. Have a look at v5.
+
+   Stefan
+
+> From: Stefan Berger <stefanb@linux.ibm.com>
 >
-> This patch subject and description is *really* confusing. You‘re adding a helper function, not a page flag. It‘s a fairly easy refactoring.
-
-Yes.  Thanks for reminding.  I will revise this in the next version.
-
-Best Regards,
-Huang, Ying
-
-> (Adding new page flags is close to impossible).
+> QEMU 5.0 will support the PAPR vTPM device model for TPM 1.2 and TPM 2.0.
+> This series of patches enables vTPM 2.0 support for the IBM vTPM driver.
 >
-> Cheers!
+> Regards,
+>     Stefan
+>
+> - v3->v4:
+>    - Dropped patch 3; getting command code attributes table in IBM driver
+>
+> - v2->v3:
+>    - Added fixes tag to patch 2/4; the race seems to have existed
+>      since the driver was first added
+>    - Renamed tpm2_init to tpm2_init_commands in 3/4
+>
+> - v1->v2:
+>    - Addressed comments to v1; added patch 3 to handle case when
+>      TPM_OPS_AUTO_STARTUP is not set
+>
+>
+>
+> Stefan Berger (3):
+>    tpm: of: Handle IBM,vtpm20 case when getting log parameters
+>    tpm: ibmvtpm: Wait for buffer to be set before proceeding
+>    tpm: ibmvtpm: Add support for TPM 2
+>
+>   drivers/char/tpm/eventlog/of.c |  8 +++++++-
+>   drivers/char/tpm/tpm.h         |  1 +
+>   drivers/char/tpm/tpm2-cmd.c    |  2 +-
+>   drivers/char/tpm/tpm_ibmvtpm.c | 15 +++++++++++++++
+>   drivers/char/tpm/tpm_ibmvtpm.h |  1 +
+>   5 files changed, 25 insertions(+), 2 deletions(-)
+>
+
