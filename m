@@ -2,94 +2,115 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E56CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15F9C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA26246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffqIO3tp"
+	by mail.kernel.org (Postfix) with ESMTP id B306F246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgB1KEK (ORCPT
+        id S1727002AbgB1KEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:04:10 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33635 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgB1KEK (ORCPT
+        Fri, 28 Feb 2020 05:04:13 -0500
+Received: from m97134.mail.qiye.163.com ([220.181.97.134]:30653 "EHLO
+        m97134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgB1KEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:04:10 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d5so1618022qto.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:04:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=a7+lcYU9pjgKIGJZWhmqaLl7BQiaMH92GolwR2dAbg8=;
-        b=ffqIO3tpl78REQ8evZj33bAAf615GGOuXen7/dMMtlVM57ZCukIQFbicnpn4fDjzhN
-         HakqnZ7no0rjRd5ZWeoiCnNL2+mpury+4qBvu0Xe0PkPP0Fz5hN/tXa8ZL4QQehlmGr9
-         0e38cwDw5mQeNcq6/CIbwyELlxugMK4F6P1zIJcEMfmh4c5WIzFEz9WL4TA39GJjMb55
-         Riwi2qrKqZa5fdGbpHmmsaHjrzyaMeuIvpYrrLyqfnB15Rl2rFqQt0vC4KtLEYbhjHHH
-         R/yE8/fTbcaJO8b1Br1yzeKcx+Fd0F4C7mey16LyEXHnttErGlZGGKoROW9+kjwNis4T
-         doKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=a7+lcYU9pjgKIGJZWhmqaLl7BQiaMH92GolwR2dAbg8=;
-        b=HtKQG0qZhGbAqpfua7/Yx5V01I8Fr3ZARRjq9Xw9QEBi5OUGWEI2iUsfmb68GxkSA5
-         vVWo3Y/nfMaF6eneByXkiPIKWLcnlTOAtIWBEqHw72NoTQNw8yZWGj3TZOULKwqNY4vQ
-         Lm3rACT0KiwjZq4WA4Nb77Q9+WTb3GMKQ2qezgRGHr0KAy1w0789MmNRyId6vqD/ssdr
-         LblRsZh1Bt7ME8mnMRoN8nJuFgcFXs09B5Kw2w0nGYFieDo4oow4fyaFvZ0i56NvFRDB
-         fe8dBN4ZiBuYwwHstHk9AJcvrcRyFD374Lsl0yprM9m9OS0Potfz6BF1TMFEoohPoRXE
-         DbdQ==
-X-Gm-Message-State: APjAAAXwameB6EDEBBIabKdjJlallwef//vnM6LgimQHUsl6H7QgRfyB
-        yNyLivhslPvTJJLEJISKf6iYgXRc2jFbrnFsYcc=
-X-Google-Smtp-Source: APXvYqzLy8PbPomb8ED2slWXoo8a+ELbzweki/7I99bejM1gBBLOOYC1yLUmx8A+4B5noUAQR/fG3ykITxc2mFi/0X0=
-X-Received: by 2002:aed:31e2:: with SMTP id 89mr3568550qth.35.1582884249627;
- Fri, 28 Feb 2020 02:04:09 -0800 (PST)
-MIME-Version: 1.0
-References: <1581401993-20041-4-git-send-email-iamjoonsoo.kim@lge.com> <20200228074200.GL6548@shao2-debian>
-In-Reply-To: <20200228074200.GL6548@shao2-debian>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 28 Feb 2020 19:03:58 +0900
-Message-ID: <CAAmzW4NzT5G5ef9vFsU_=zV8+UyJHuRjfwKBbqij9kNd8wV8PQ@mail.gmail.com>
-Subject: Re: [mm/workingset] 323c95f095: fio.read_bw_MBps 19.5% improvement
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Feb 2020 05:04:12 -0500
+Received: from localhost.localdomain (unknown [101.207.233.66])
+        by smtp5 (Coremail) with SMTP id huCowAC3CPZ15VhegaOcAA--.63S2;
+        Fri, 28 Feb 2020 18:03:34 +0800 (CST)
+From:   Yu Chen <chen.yu@easystack.cn>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, yuchen1988@aliyun.com,
+        chen.yu@easystack.cn
+Subject: [PATCH] sched/deadline: Make two functions static
+Date:   Fri, 28 Feb 2020 18:03:29 +0800
+Message-Id: <20200228100329.16927-1-chen.yu@easystack.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: huCowAC3CPZ15VhegaOcAA--.63S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGw15Ar4fJw4Uur1kWr13twb_yoW5Jw1rpF
+        WDXw1UKF4UCry0gr1UAFs5u34S93s7K34fG3yUG393tr1rtryaqFn8tr4avFn8tr45CFy3
+        Ar4jg3y7KF1FkFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JbhJP_UUUUU=
+X-Originating-IP: [101.207.233.66]
+X-CM-SenderInfo: hfkh0h11x6vtxv1v3tlfnou0/1tbihRbXoFsfm-T0oQAAsa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 2=EC=9B=94 28=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 4:42, k=
-ernel test robot <rong.a.chen@intel.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
-> Greeting,
->
-> FYI, we noticed a 19.5% improvement of fio.read_bw_MBps due to commit:
+Since commit 06a76fe08d4 ("sched/deadline: Move DL related code
+from sched/core.c to sched/deadline.c"), DL related code move to
+deadline.c.
 
-Hello, all.
+Make the following two functions static since they're only used in
+deadline.c:
+	dl_change_utilization()
+	init_dl_rq_bw_ratio()
 
-Please forget this improvement report.
-My revision 1 patchset has a bug on this patch and it looks like it
-causes some improvement. :)
-I have fixed this bug at revision 2 patchset.
+Signed-off-by: Yu Chen <chen.yu@easystack.cn>
+---
+ kernel/sched/deadline.c | 6 ++++--
+ kernel/sched/sched.h    | 2 --
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks.
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 43323f875..504d2f51b 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -153,7 +153,7 @@ void sub_running_bw(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
+ 		__sub_running_bw(dl_se->dl_bw, dl_rq);
+ }
+ 
+-void dl_change_utilization(struct task_struct *p, u64 new_bw)
++static void dl_change_utilization(struct task_struct *p, u64 new_bw)
+ {
+ 	struct rq *rq;
+ 
+@@ -334,6 +334,8 @@ static inline int is_leftmost(struct task_struct *p, struct dl_rq *dl_rq)
+ 	return dl_rq->root.rb_leftmost == &dl_se->rb_node;
+ }
+ 
++static void init_dl_rq_bw_ratio(struct dl_rq *dl_rq);
++
+ void init_dl_bandwidth(struct dl_bandwidth *dl_b, u64 period, u64 runtime)
+ {
+ 	raw_spin_lock_init(&dl_b->dl_runtime_lock);
+@@ -2496,7 +2498,7 @@ int sched_dl_global_validate(void)
+ 	return ret;
+ }
+ 
+-void init_dl_rq_bw_ratio(struct dl_rq *dl_rq)
++static void init_dl_rq_bw_ratio(struct dl_rq *dl_rq)
+ {
+ 	if (global_rt_runtime() == RUNTIME_INF) {
+ 		dl_rq->bw_ratio = 1 << RATIO_SHIFT;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 280a3c735..3a59e690c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -305,7 +305,6 @@ bool __dl_overflow(struct dl_bw *dl_b, int cpus, u64 old_bw, u64 new_bw)
+ 	       dl_b->bw * cpus < dl_b->total_bw - old_bw + new_bw;
+ }
+ 
+-extern void dl_change_utilization(struct task_struct *p, u64 new_bw);
+ extern void init_dl_bw(struct dl_bw *dl_b);
+ extern int  sched_dl_global_validate(void);
+ extern void sched_dl_do_global(void);
+@@ -1869,7 +1868,6 @@ extern struct dl_bandwidth def_dl_bandwidth;
+ extern void init_dl_bandwidth(struct dl_bandwidth *dl_b, u64 period, u64 runtime);
+ extern void init_dl_task_timer(struct sched_dl_entity *dl_se);
+ extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
+-extern void init_dl_rq_bw_ratio(struct dl_rq *dl_rq);
+ 
+ #define BW_SHIFT		20
+ #define BW_UNIT			(1 << BW_SHIFT)
+-- 
+2.17.1
+
+
