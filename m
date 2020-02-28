@@ -2,88 +2,273 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1FA21927
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E8721927
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RhrZUQB/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MONMVmL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgB1WPx (ORCPT
+        id S1726783AbgB1WP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:15:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33949 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgB1WPx (ORCPT
+        Fri, 28 Feb 2020 17:15:56 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44560 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgB1WPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:15:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x7so5052220ljc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:15:52 -0800 (PST)
+        Fri, 28 Feb 2020 17:15:55 -0500
+Received: by mail-vs1-f67.google.com with SMTP id p6so2949437vsj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:15:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jhEGO5xzz687O7OpJrPZZtUZ34aFCbyFQZbIi5eRnOg=;
-        b=RhrZUQB/n4/xhEDYKZ9dObLNzVyQMv93Zmb96K9ZrPnb/piy9b8arXRmKY4RUJcI1H
-         UuMsHTFAKAD4UxmEkfEKlM0BY7ZGByBu5rtbWHBo1jL3pak+eixpPiXuw7EJi900hbxs
-         u0dsTloY948pjhat8Kf0o9aquRYTZe/cb/lVKFnOfuJvhtYT4QZMSnXHLBaSDPTdfMdx
-         AhFmIDcfkff/hWi12MKwuyMS0Ab2+Oja1qDbu1w6LoJ1rheGZJeN1N1BTKJFXX4Rp04d
-         A5MRyCKvvjQg7VePnAWCuciYr9WB36nv5h+tN40F/qMmyAfDKMTgkSnj/HobJ0ydE44M
-         vqhA==
+        bh=izrh7YjDkt7UIn90MCxZtkunk1I466I2NQe0fd5UD1c=;
+        b=MONMVmL5nJ2o7dqPCcAtuwwGnyiEV0Qi7eGjTKznec56QQA51gYOydJ5vVGSyoxi5f
+         79zwoYTsxv3Pw8fls6sBncB/7dvkthXNFRasH0eJkuTelWtCJb1CBNhQRjetfZjL/e9L
+         6yN9TbInwe0hR6I386DP5thL71lzcNBYW0kTsj25S/giiDROjYa6yZRyjCFQljUrJoPr
+         R1ZYrcZxRYErw6a/PQa2YH2Cqa4vhR80oIIvRXm8pX6BLPtls0QqsU2bXAtzvDbRXbAo
+         SNRPdwpGcTKV/2E15lddgYYSE9Th4Q58GMvolAxdmocSsDP49dIcoyqJfgjEhU31YeWj
+         taBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jhEGO5xzz687O7OpJrPZZtUZ34aFCbyFQZbIi5eRnOg=;
-        b=mc1QBEG5kBfE2LjfiTQmI8QdwGqr+hYumJzNemRd+ZRB+H6MV5/dy74Zy3ZPjjYCS/
-         ByJTPL9XlCCOMGJtEMHHikSjFiwHjTpln3ClXfwckiuCkLmzBrqK4EFRxfWbUctexoxC
-         Dff1LigyaeQvdNBhxuVNSYOeEuzVjhKObXTi8wDzptfn5TenIK9NLwIHoWHGtgjI0Co6
-         nJVN9bJMI6iIg5t5g86SttAS36gLsRCcVRszkzLuBMQBOoTQCy+0Nd2wbn9sxGoDXwcQ
-         juFepINX8SLo9nX+CyxgtVaj550dE/CJotgNfFH/M3V/1tv+tfxjkw5r2CtOaq2D4EZz
-         eA7A==
-X-Gm-Message-State: ANhLgQ1dJETyqLAOTPEq0DjEryO/KFASDYcx//xlvTcYjdpht1tOERsl
-        oqpmjHUoXRa3fjUGrCw+y/nzrrZ2cHQmZPoTKQu/YQ==
-X-Google-Smtp-Source: ADFU+vumXbpYRw8pi5KZznuwB2DpEkpHep4+FFPY+f32ZJX7gumByIl0+yGYcQjfYmqBjEmuN5lRRQlCJxgL1XIa+gc=
-X-Received: by 2002:a05:651c:216:: with SMTP id y22mr4331743ljn.277.1582928151417;
- Fri, 28 Feb 2020 14:15:51 -0800 (PST)
+        bh=izrh7YjDkt7UIn90MCxZtkunk1I466I2NQe0fd5UD1c=;
+        b=NG6Zsl3eosB04WUeSkftS8xFMRkPqRL6fXYGvANv5Mi9OyDmgPa1oBRMQ9xlDpNsXC
+         S3akimJjOwowRFJzhoG2d0Y3+hfBLgMNYycGmKZh95pK5ZltWyURfdrKAXFBVY4m5VHp
+         flFc03GVaNDsUmKUpeetwH5/2GNXOogYxgbHDCQq5ztvDa8C/sB/B2lSb+cvtp36HwQ2
+         ut8/TiVxKLRRQ/pZKLkHVGOzv7C8igPnzkYKRNC1a3gkpImHmXgnE2BU82aQes64r33J
+         vzvgMbKcJFJPUJ8aKgeX+RZxDLP89845zV9uztuqw9Tvnchb9wvb+VD8jRfaA0lkf/uc
+         Tvtg==
+X-Gm-Message-State: ANhLgQ3H3Lbhhod6dbXQWw47mtyh3zvDk7UVMzVzSU+3ezhuVyAvxvEA
+        xVdQf6byG3xdSWC1I6IWQjVyfSEgx6l/w83tLafNsw==
+X-Google-Smtp-Source: ADFU+vswZnMJG5T1/Ed3hnj2geK/OAsTlMewPwkaQ/rsOZA9oEezP0rsg5umK7KP+mqBa+9/nuq90DHtBwMWGk3s5+Y=
+X-Received: by 2002:a67:fd63:: with SMTP id h3mr4111090vsa.221.1582928153315;
+ Fri, 28 Feb 2020 14:15:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221154837.18845-1-brgl@bgdev.pl> <20200221154837.18845-3-brgl@bgdev.pl>
-In-Reply-To: <20200221154837.18845-3-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 23:15:40 +0100
-Message-ID: <CACRpkdZQCtF9YimCD7U7b207XNEyR-mvNntcqCSRgORsHuUfZQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] gpiolib: provide VALIDATE_DESC_PTR() macro
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200219014433.88424-1-minchan@kernel.org> <20200219014433.88424-2-minchan@kernel.org>
+In-Reply-To: <20200219014433.88424-2-minchan@kernel.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 28 Feb 2020 14:15:42 -0800
+Message-ID: <CAJuCfpGdOUp4pU2TyC3O=kCwL85wOc5szbNVTy9iSLe-CKVvzA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] mm: pass task and mm to do_madvise
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Jens Axboe <axboe@kernel.dk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 4:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
 >
-> We're about to add a public GPIO function that takes a descriptor as
-> argument and returns a pointer. Add a corresponding macro wrapping the
-> validate_desc() function that returns an ERR_PTR() on error.
+> In upcoming patches, do_madvise will be called from external process
+> context so we shouldn't asssume "current" is always hinted process's
+> task_struct. Furthermore, we couldn't access mm_struct via task->mm
+> once it's verified by access_mm which will be introduced in next
+> patch[1]. And let's pass *current* and current->mm as arguments of
+> do_madvise so it shouldn't change existing behavior but prepare
+> next patch to make review easy.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Note: io_madvise pass NULL as target_task argument of do_madvise
+> because it couldn't know who is target.
+>
+> [1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
+>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Jann Horn <jannh@google.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  fs/io_uring.c      |  2 +-
+>  include/linux/mm.h |  3 ++-
+>  mm/madvise.c       | 34 +++++++++++++++++++---------------
+>  3 files changed, 22 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 63beda9bafc5..a858da2ae2f4 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
+>         if (force_nonblock)
+>                 return -EAGAIN;
+>
+> -       ret = do_madvise(ma->addr, ma->len, ma->advice);
+> +       ret = do_madvise(NULL, req->work.mm, ma->addr, ma->len, ma->advice);
+>         if (ret < 0)
+>                 req_set_fail_links(req);
+>         io_cqring_add_event(req, ret);
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 52269e56c514..bc16c8774328 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2323,7 +2323,8 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+>                        struct list_head *uf, bool downgrade);
+>  extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+>                      struct list_head *uf);
+> -extern int do_madvise(unsigned long start, size_t len_in, int behavior);
+> +extern int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+> +               unsigned long start, size_t len_in, int behavior);
+>
+>  static inline unsigned long
+>  do_mmap_pgoff(struct file *file, unsigned long addr,
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 43b47d3fae02..f75c86b6c463 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -254,6 +254,7 @@ static long madvise_willneed(struct vm_area_struct *vma,
+>                              struct vm_area_struct **prev,
+>                              unsigned long start, unsigned long end)
+>  {
+> +       struct mm_struct *mm = vma->vm_mm;
+>         struct file *file = vma->vm_file;
+>         loff_t offset;
+>
+> @@ -288,12 +289,12 @@ static long madvise_willneed(struct vm_area_struct *vma,
+>          */
+>         *prev = NULL;   /* tell sys_madvise we drop mmap_sem */
+>         get_file(file);
+> -       up_read(&current->mm->mmap_sem);
+> +       up_read(&mm->mmap_sem);
+>         offset = (loff_t)(start - vma->vm_start)
+>                         + ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
+>         vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
+>         fput(file);
+> -       down_read(&current->mm->mmap_sem);
+> +       down_read(&mm->mmap_sem);
+>         return 0;
+>  }
+>
+> @@ -676,7 +677,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>         if (nr_swap) {
+>                 if (current->mm == mm)
+>                         sync_mm_rss(mm);
+> -
+>                 add_mm_counter(mm, MM_SWAPENTS, nr_swap);
+>         }
+>         arch_leave_lazy_mmu_mode();
+> @@ -756,6 +756,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+>                                   unsigned long start, unsigned long end,
+>                                   int behavior)
+>  {
+> +       struct mm_struct *mm = vma->vm_mm;
+> +
+>         *prev = vma;
+>         if (!can_madv_lru_vma(vma))
+>                 return -EINVAL;
+> @@ -763,8 +765,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+>         if (!userfaultfd_remove(vma, start, end)) {
+>                 *prev = NULL; /* mmap_sem has been dropped, prev is stale */
+>
+> -               down_read(&current->mm->mmap_sem);
+> -               vma = find_vma(current->mm, start);
+> +               down_read(&mm->mmap_sem);
+> +               vma = find_vma(mm, start);
+>                 if (!vma)
+>                         return -ENOMEM;
+>                 if (start < vma->vm_start) {
+> @@ -818,6 +820,7 @@ static long madvise_remove(struct vm_area_struct *vma,
+>         loff_t offset;
+>         int error;
+>         struct file *f;
+> +       struct mm_struct *mm = vma->vm_mm;
+>
+>         *prev = NULL;   /* tell sys_madvise we drop mmap_sem */
+>
+> @@ -845,13 +848,13 @@ static long madvise_remove(struct vm_area_struct *vma,
+>         get_file(f);
+>         if (userfaultfd_remove(vma, start, end)) {
+>                 /* mmap_sem was not released by userfaultfd_remove() */
+> -               up_read(&current->mm->mmap_sem);
+> +               up_read(&mm->mmap_sem);
+>         }
+>         error = vfs_fallocate(f,
+>                                 FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+>                                 offset, end - start);
+>         fput(f);
+> -       down_read(&current->mm->mmap_sem);
+> +       down_read(&mm->mmap_sem);
+>         return error;
+>  }
+>
+> @@ -1044,7 +1047,8 @@ madvise_behavior_valid(int behavior)
+>   *  -EBADF  - map exists, but area maps something that isn't a file.
+>   *  -EAGAIN - a kernel resource was temporarily unavailable.
+>   */
+> -int do_madvise(unsigned long start, size_t len_in, int behavior)
+> +int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+> +               unsigned long start, size_t len_in, int behavior)
+>  {
+>         unsigned long end, tmp;
+>         struct vm_area_struct *vma, *prev;
+> @@ -1082,10 +1086,10 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+>
+>         write = madvise_need_mmap_write(behavior);
+>         if (write) {
+> -               if (down_write_killable(&current->mm->mmap_sem))
+> +               if (down_write_killable(&mm->mmap_sem))
+>                         return -EINTR;
+>         } else {
+> -               down_read(&current->mm->mmap_sem);
+> +               down_read(&mm->mmap_sem);
+>         }
+>
+>         /*
+> @@ -1093,7 +1097,7 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+>          * ranges, just ignore them, but return -ENOMEM at the end.
+>          * - different from the way of handling in mlock etc.
+>          */
+> -       vma = find_vma_prev(current->mm, start, &prev);
+> +       vma = find_vma_prev(mm, start, &prev);
+>         if (vma && start > vma->vm_start)
+>                 prev = vma;
+>
+> @@ -1130,19 +1134,19 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+>                 if (prev)
+>                         vma = prev->vm_next;
+>                 else    /* madvise_remove dropped mmap_sem */
+> -                       vma = find_vma(current->mm, start);
+> +                       vma = find_vma(mm, start);
+>         }
+>  out:
+>         blk_finish_plug(&plug);
+>         if (write)
+> -               up_write(&current->mm->mmap_sem);
+> +               up_write(&mm->mmap_sem);
+>         else
+> -               up_read(&current->mm->mmap_sem);
+> +               up_read(&mm->mmap_sem);
+>
+>         return error;
+>  }
+>
+>  SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  {
+> -       return do_madvise(start, len_in, behavior);
+> +       return do_madvise(current, current->mm, start, len_in, behavior);
+>  }
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-(I expect to get this back as a pull request or something later.)
-
-Yours,
-Linus Walleij
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
