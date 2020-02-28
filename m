@@ -2,147 +2,72 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9EDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C600C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C6E246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mSMXNYrH"
+	by mail.kernel.org (Postfix) with ESMTP id 529DC246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgB1KBo (ORCPT
+        id S1727009AbgB1KCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:01:44 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48436 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgB1KBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:01:43 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SA1aHF119895;
-        Fri, 28 Feb 2020 04:01:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582884096;
-        bh=6z/8/PPg+3rpyYmmH9G+0e+u0vjhkZL9wyT6kVUOkdA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mSMXNYrHoruBwHDcCpJ0qbk5rsGBcSJsrHx9UC35V2BvsDUZRsXFWshs1WSpmEWG8
-         asovcEaNX1Sb96UV1osT242t00BABUKEOJwyMFk+z5cGAzPlhsxRP/nCUqXmhaOZcq
-         iXMEId8jMOufG5ntlUr3h8nnhV2lVkj2zogcctUk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SA1abV035337
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 04:01:36 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 04:01:35 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 04:01:35 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SA1XTu123395;
-        Fri, 28 Feb 2020 04:01:34 -0600
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
- <20200224163707.GA2618@vkoul-mobl>
- <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
- <20200228044704.GC2618@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <970899d9-1491-78e8-1e7a-14e40915d061@ti.com>
-Date:   Fri, 28 Feb 2020 12:01:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 28 Feb 2020 05:02:21 -0500
+Received: from a.mx.secunet.com ([62.96.220.36]:54818 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgB1KCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:02:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 240F22057A;
+        Fri, 28 Feb 2020 11:02:19 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tq6qlF73MTYo; Fri, 28 Feb 2020 11:02:18 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id BC85E204EF;
+        Fri, 28 Feb 2020 11:02:18 +0100 (CET)
+Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Feb 2020
+ 11:02:18 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 685DF3180277;
+ Fri, 28 Feb 2020 11:02:18 +0100 (CET)
+Date:   Fri, 28 Feb 2020 11:02:18 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     <madhuparnabhowmik10@gmail.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <joel@joelfernandes.org>, <frextrite@gmail.com>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        <paulmck@kernel.org>
+Subject: Re: [PATCH] ipv6: xfrm6_tunnel.c: Use built-in RCU list checking
+Message-ID: <20200228100218.GH19286@gauss3.secunet.de>
+References: <20200221162447.23998-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200228044704.GC2618@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200221162447.23998-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 28/02/2020 6.47, Vinod Koul wrote:
-> Hi Peter,
+On Fri, Feb 21, 2020 at 09:54:47PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> On 26-02-20, 14:10, Peter Ujfalusi wrote:
+> hlist_for_each_entry_rcu() has built-in RCU and lock checking.
 > 
->>>  do we really want a custom dbg_show()..? Drivers can add their own
->>> files...
->>
->> They could do that already ;)
->>
->> With the custom dbg_show() DMA drivers can save on the surrounding
->> code and just fill in the information regarding to their HW.
->> Again, on am654 the default information is:
->> # cat /sys/kernel/debug/dmaengine 
->> dma0 (285c0000.dma-controller): number of channels: 96
->>
->> dma1 (31150000.dma-controller): number of channels: 267
->>  dma1chan0    | 2b00000.mcasp:tx
->>  dma1chan1    | 2b00000.mcasp:rx
->>  dma1chan2    | in-use
->>  dma1chan3    | in-use
->>  dma1chan4    | in-use
->>  dma1chan5    | in-use
->>
->> With my current .dbg_show implementation for k3-udma:
->> # cat /sys/kernel/debug/dmaengine 
->> dma0 (285c0000.dma-controller): number of channels: 96
->>
->> dma1 (31150000.dma-controller): number of channels: 267
->>  dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
->>  dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
->>  dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
->>  dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
->>  dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
->>  dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
->>
->> For me this makes a huge difference.
+> Pass cond argument to list_for_each_entry_rcu() to silence
+> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> by default.
 > 
-> Ok
-> 
->>>> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
->>>> +
->>>> +static int __init dmaengine_debugfs_init(void)
->>>> +{
->>>> +	/* /sys/kernel/debug/dmaengine */
->>>> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
->>>> +			    &dmaengine_debugfs_fops);
->>>
->>> Should we add a directory? That way we can keep adding stuff into that
->>> one
->>
->> and have this file as 'summary' underneath?
-> 
-> Correct
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-/sys/kernel/debug/dmaengine/summary, right?
-
->> I like the fact hat I can get all the information via one file.
->> Saves a lot of time (and explaining to users) on finding the correct
->> one to cat...
-> 
-> But am sure we can come with more data to show, so having a directory
-> helps :)
-
-OK, so we need to store the dbgfs rootdir and add an API so DMA drivers
-can get the dentry of it, so they can implement their custom
-files/directories underneath.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Applied, thanks!
