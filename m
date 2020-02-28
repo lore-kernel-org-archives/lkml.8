@@ -2,209 +2,124 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7605C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852E6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FE8246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C10246B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mmpv59bE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p712VrGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgB1XQY (ORCPT
+        id S1726589AbgB1XUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:16:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50600 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725957AbgB1XQY (ORCPT
+        Fri, 28 Feb 2020 18:20:10 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:41252 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1XUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:16:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582931782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FFNtyPEO7ZLHkoemtDDIXS2+6UBUM9dbd+oueyee19E=;
-        b=Mmpv59bE031e7frybDxAfMeyGCr9ljiU1JUR6JW3I7beUzN8PCfwujQ+mHvNo98KZxGv4I
-        NaFJq6wEGmRy5huPg1d4GZnqluwwUf96dEXjiHH6I2KMxxVv57PfmTvUDYDVu42I/5kAxe
-        1D/3GevQWJfmj0bbI4pCBo51ckrjkXc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-218-KhxuM6SaPZK063QXXdeFHQ-1; Fri, 28 Feb 2020 18:16:13 -0500
-X-MC-Unique: KhxuM6SaPZK063QXXdeFHQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A40698017CC;
-        Fri, 28 Feb 2020 23:16:11 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFE4119756;
-        Fri, 28 Feb 2020 23:16:02 +0000 (UTC)
-Date:   Sat, 29 Feb 2020 07:15:57 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     axboe@kernel.dk, chaitanya.kulkarni@wdc.com, damien.lemoal@wdc.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        ajay.joshi@wdc.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        zhangxiaoxu5@huawei.com, luoshijie1@huawei.com
-Subject: Re: [PATCH V2] block: rename 'q->debugfs_dir' and
- 'q->blk_trace->dir' in blk_unregister_queue()
-Message-ID: <20200228231557.GA18123@ming.t460p>
-References: <20200213081252.32395-1-yukuai3@huawei.com>
+        Fri, 28 Feb 2020 18:20:09 -0500
+Received: by mail-ua1-f67.google.com with SMTP id f7so1611600uaa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VU34bwckjyg5xsCO6OcehkGprELR+hgQrM6MHlc+k24=;
+        b=p712VrGqlJPpzao7YD3m5WX0LwQXtasWycAZR6Qv7IV0othNqCEH71tVJM2dopv6af
+         sSO8BQuwI9/or54uFHbjxF2CZdx+mBayfoBqjtGedEVeI+as7B6KM8lW8g0A2yYN3KPf
+         Bt5nJiuIcPY6xqYfFiU1su+u2LEuGh6MVdzDcI9oEmRy3zU0uimpQkB2C6GNcZp1ThKW
+         ftlwSgDHO7rZaaPNKsUOMofgpJYnyN2NrPVF2PrRfd/HdlhYG0NSDq+3O5nSutE6lrIM
+         0nrGXHCVT0QfVmQkePA2n2I4pNWldsh6VIbF1ZbvzPNJCW5aIIzLigynVqrzxFeuH8Qc
+         G/EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VU34bwckjyg5xsCO6OcehkGprELR+hgQrM6MHlc+k24=;
+        b=pt1sdFFXzuGBMj8sdkhx1Q7hyaSACiChhytNzCopoQCMsTVYzsaYSj3J7lqO5rDkVl
+         FguHd5a+ephIrpFSgCumgXI7nK2H7lkWXMyHBU1+sJO+TtXoMqEVfODBxfL/1DoNe7bk
+         OY8oQKiMgTYqoxJ0fab6qkUW0iqYhbaGCJVMoZFKAkAgySslLdQ8jbsPbdu4xZ/VUvU7
+         QjQXnvYh70Wxm+VlwtOhK3Td/0ThnfcKkGhW0w/pjaqKF2PuW6VV69kg8v2bpD0C8Vm9
+         OqBg3vnJ1Xgd3O2/jcGVFJubkzl5Y3yqkkU1eIt99yZrFhKoV8bWFggUTHROCL4P/Ucx
+         LEHg==
+X-Gm-Message-State: ANhLgQ3krvMp2vH7vRPizxn8187cDrl3L6GC5DdgbzxiNbmOmIIz9Rfu
+        W1SvbOw1bL6s+Cry/LLx4ozjKA7NkR6wZl4NJs/aaKwENvU=
+X-Google-Smtp-Source: ADFU+vu77RknxSN0Qez7GxUaCFdomtgxWWwgBofJYgMiqzYUzWYSNhzh9gQeVE9ot63IVGGE/yy38i9GzlZhRohTM4M=
+X-Received: by 2002:ab0:32cf:: with SMTP id f15mr3393489uao.42.1582932006884;
+ Fri, 28 Feb 2020 15:20:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213081252.32395-1-yukuai3@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200219014433.88424-1-minchan@kernel.org> <20200219014433.88424-7-minchan@kernel.org>
+In-Reply-To: <20200219014433.88424-7-minchan@kernel.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 28 Feb 2020 15:19:55 -0800
+Message-ID: <CAJuCfpE=7aqwegMb5i3EwWb=xcphXSNE33dCCUvt=WS0Sr-wfg@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] mm/madvise: employ mmget_still_valid for write lock
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 04:12:52PM +0800, yu kuai wrote:
-> syzbot is reporting use after free bug in debugfs_remove[1].
-> 
-> This is because in request_queue, 'q->debugfs_dir' and
-> 'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
-> blk_mq_debugfs_unregister() will remove everything inside the dir.
-> 
-> With futher investigation of the reporduce repro, the problem can be
-> reporduced by following procedure:
-> 
-> 1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
-> create the dir.
-> 2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
-> 3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
-> will fail because the dir aready exist.
-> 4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
-> 5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
-> delete the files created in step 4.
-> 6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
-> And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
-> try to release the two files created in step 4, wich are aready released
-> in step 5.
-> 
-> thread1		         |kworker                   |thread2
->  ----------------------- | ------------------------ | --------------------
-> loop_control_ioctl       |                          |
->  loop_add                |                          |
->   blk_mq_debugfs_register|                          |
->    debugfs_create_dir    |                          |
-> loop_control_ioctl       |                          |
->  loop_remove		 |                          |
->   blk_release_queue      |                          |
->    schedule_work         |                          |
->                          |                          |loop_control_ioctl
->                          |                          | loop_add
->                          |                          |  ...
->                          |                          |blk_trace_ioctl
->                          |                          | __blk_trace_setup
->                          |                          |   debugfs_create_file
->                          |__blk_release_queue       |
->                          | blk_mq_debugfs_unregister|
->                          |  debugfs_remove_recursive|
->                          |                          |loop_control_ioctl
->                          |                          | loop_remove
->                          |                          |  ...
->                          |__blk_release_queue       |
->                          | blk_trace_shutdown       |
->                          |  debugfs_remove          |
-> 
-> commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
-> final release of request_queue to a workqueue, so, when loop_add() is
-> called again(step 3), __blk_release_queue() might not been called yet,
-> which causes the problem.
-> 
-> Fix the problem by renaming 'q->debugfs_dir' or 'q->blk_trace->dir'
-> in blk_unregister_queue() if they exist.
-> 
-> [1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
-> References: CVE-2019-19770
-> Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
-> Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> From: Oleksandr Natalenko <oleksandr@redhat.com>
+>
+> Do the very same trick as we already do since 04f5866e41fb. KSM hints
+> will require locking mmap_sem for write since they modify vm_flags, so
+> for remote KSM hinting this additional check is needed.
+>
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 > ---
-> Changes in V2:
->  add device name to the new dir name
->  fix compile err when 'CONFIG_BLK_DEBUG_FS' is not enabled
->  add treatment of 'q->blk_trace->dir'
-> 
->  block/blk-sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> index fca9b158f4a0..1da8d4a4915a 100644
-> --- a/block/blk-sysfs.c
-> +++ b/block/blk-sysfs.c
-> @@ -11,6 +11,7 @@
->  #include <linux/blktrace_api.h>
->  #include <linux/blk-mq.h>
->  #include <linux/blk-cgroup.h>
-> +#include <linux/debugfs.h>
->  
->  #include "blk.h"
->  #include "blk-mq.h"
-> @@ -1011,6 +1012,46 @@ int blk_register_queue(struct gendisk *disk)
->  }
->  EXPORT_SYMBOL_GPL(blk_register_queue);
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +/*
-> + * blk_prepare_release_queue - rename q->debugfs_dir and q->blk_trace->dir
-> + * @q: request_queue of which the dir to be renamed belong to.
-> + *
-> + * Because the final release of request_queue is in a workqueue, the
-> + * cleanup might not been finished yet while the same device start to
-> + * create. It's not correct if q->debugfs_dir still exist while trying
-> + * to create a new one.
-> + */
-> +static void blk_prepare_release_queue(struct request_queue *q)
-> +{
-> +	struct dentry *new = NULL;
-> +	struct dentry **old = NULL;
-> +	char name[DNAME_INLINE_LEN];
-> +	int i = 0;
-> +
-> +#ifdef CONFIG_BLK_DEBUG_FS
-> +	if (!IS_ERR_OR_NULL(q->debugfs_dir))
-> +		old = &q->debugfs_dir;
-> +#endif
-> +#ifdef CONFIG_BLK_DEV_IO_TRACE
-> +	/* q->debugfs_dir and q->blk_trace->dir can't both exist */
-> +	if (q->blk_trace && !IS_ERR_OR_NULL(q->blk_trace->dir))
-> +		old = &q->blk_trace->dir;
-> +#endif
+>  mm/madvise.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index f6d9b9e66243..c55a18fe71f9 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+>         if (write) {
+>                 if (down_write_killable(&mm->mmap_sem))
+>                         return -EINTR;
+> +               if (current->mm != mm && !mmget_still_valid(mm))
 
-If blk_trace->dir isn't same with .debugfs_dir, you will just rename
-blk_trace->dir, this way can't avoid the failure in step3, can it?
+mmget_still_valid() seems pretty light-weight, so why not just use
+that without checking that the mm belongs to the current process
+first?
 
-I understand that we just need to rename .debugfs_dir, meantime making
-sure blktrace code removes correct debugfs dir, is that enough for fixing
-this issue?
-
-> +	if (old == NULL)
-> +		return;
-> +	while (new == NULL) {
-> +		sprintf(name, "ready_to_remove_%s_%d",
-> +				kobject_name(q->kobj.parent), i++);
-> +		new = debugfs_rename(blk_debugfs_root, *old,
-> +				     blk_debugfs_root, name);
-> +	}
-
-The above code can be run concurrently with blktrace shutdown, so race might
-exit between the two code paths, then bt->dir may has been renamed or being
-renamed in debugfs_remove(bt->dir), can this function work as expected or
-correct?
-
-And there is dead loop risk, so suggest to not rename this way.
-
-
-Thanks, 
-Ming
-
+> +                       goto skip_mm;
+>         } else {
+>                 down_read(&mm->mmap_sem);
+>         }
+> @@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+>         }
+>  out:
+>         blk_finish_plug(&plug);
+> +skip_mm:
+>         if (write)
+>                 up_write(&mm->mmap_sem);
+>         else
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
