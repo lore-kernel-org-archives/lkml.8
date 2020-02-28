@@ -2,911 +2,125 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE1DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBB3C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6842469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEBB246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uth0IELq"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QLC+z2Xf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgB1Xih (ORCPT
+        id S1726688AbgB1XkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:38:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51216 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB1Xif (ORCPT
+        Fri, 28 Feb 2020 18:40:22 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37796 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgB1XkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:38:35 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so5203351wmi.1;
-        Fri, 28 Feb 2020 15:38:32 -0800 (PST)
+        Fri, 28 Feb 2020 18:40:22 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a141so5162789wme.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:40:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=UF9jSGohbL/hAD5ZEksw3MHWG5pYVrP+TeYNbRFSeuM=;
-        b=Uth0IELqDOYGJfANbYMcDxulXWv311Ldi9fMvKt6LTAqcXjvSS/swSJXlKFA6Siqbc
-         f1mfGvGxtXlWaNvX37Ti4IKgnqfjhTlbQHYz9Fc20sGlz2WFh6qoLH1SB9MMvuG5RpEc
-         mlNE72N7U/7Ybc3BLWra7E5Yxx09cVdLLHjCkVfhFZbt+Pvw1nzIYbzQFgd3I2TsiHGX
-         yck6z1ArdRwqGOA//magDR1r6vUKQkxZyUJ7mDhwRjXstU+VHUFGq0/WtpKM04Jru0HD
-         sad+/PBFI8o05Ikq/KVWdoVfK0tGk3IK4+ha4wpgNiuRLm9BdRX8SXMK7qXITS8v7S3Q
-         lWyQ==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HPQ0vMjcYBqlg394dEQ/4gsJnXVnnOWOWAqm+ggMU98=;
+        b=QLC+z2XfmDUoHotHgxdo22k3WQ516q+eTmA2xrFluquOvHy0d4Sd6g73yUVfYZ5fFR
+         NO7D5YH3pAAqVFLcKS1iF1sbJvfU5pLf2MiGieaWJnVDO/cti25b05belwneJSun35uk
+         602/rga6hTxrKRBu1psZf9zGwPquy0oltIeV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UF9jSGohbL/hAD5ZEksw3MHWG5pYVrP+TeYNbRFSeuM=;
-        b=HHCaR0tx1nuxknqiFfIYAzryEq4LaAqEeIXUz2g25xQY2erqvRL7KF1j9QcNzTQ9aU
-         ZtzvTZ23aLGSguDmTEQcRwXvN13ZtBvLOCHM/g7v+6j5dDzelYeShag2oe3kI/jirbBT
-         jZ1w9Mk8FdnduLhn7WCv4Q1UscYTc80Nhk7ZPI7C6W/PzFgfrjN2z0U9XVMUC0ztBHbP
-         R0KHVYirl3CJQK9VAQ2iQM18RmfCcpzpdqJZYCIpogzOXijtPVpKTUfXNKZAsHtkqazZ
-         EwcbYht3aGGJxedEqy3zv1/f65wJ8Syg5PE2k+5nVXw6nANXyhEl5ICSlKd/AGlYVc0b
-         V1EQ==
-X-Gm-Message-State: APjAAAVJFwmh6aMf4ZdCo5kvjA6Ot83KjOCyUzJpzmvjaDNinS8EJgLk
-        V3EqPngc3RSk0Z/VxZy6WdgANIwM
-X-Google-Smtp-Source: APXvYqwn+C0EreqqbPQ/Winr6/r6VuyDcNo2lx+5p5G8m3tuKRu1YqnXU8wRM6xIb8Cn9WiQsqf2Mg==
-X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr4048349wmj.67.1582933111863;
-        Fri, 28 Feb 2020 15:38:31 -0800 (PST)
-Received: from localhost.localdomain ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id q1sm13762512wrw.5.2020.02.28.15.38.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=HPQ0vMjcYBqlg394dEQ/4gsJnXVnnOWOWAqm+ggMU98=;
+        b=otQp+3fMdOC5W41VWcm9UwQqHaaL81YUDWMNF8i2yF6+Y4rrg6WoxgyPaLwGSM7UBV
+         SPTpRv521ZeSxZPyB37uombWC5FPrKtDgiscwhc0yEtCOHnXIZCu9+waIaBfMM/+sLZS
+         duHgrOccG0agr2fD7YnXbALzCTlSt/jaVpECxmZl3dRcsz/gw+1+ZLd2NCVO1bdn5U3Y
+         E55JOFVRnWe+ofheT/IvTePxN3/VRarRusYvADb4KkZUqHd5UtUfwfOrHORViN7AZ0b2
+         6PshmyYoFlyULp95xOcIU3970kVhZjBUK0OT51lZdE9x/lFJiDSz0NlWcJPp5ZmOgj9i
+         kaig==
+X-Gm-Message-State: APjAAAW1V5O3Xe6S5dX7u7LYnvaP/X8FuN4N1ObCLckr71j7mZtoHZjI
+        xKhfqhSirr7l69Auy//zZFakkg==
+X-Google-Smtp-Source: APXvYqyO0iFrnGt7nWTY7vEtpiJdxw3S7UzoWgSGTzWNRpRcJrW749cnTPe1nXba5aAXJO42ot+jEQ==
+X-Received: by 2002:a1c:7ec5:: with SMTP id z188mr6730603wmc.52.1582933220720;
+        Fri, 28 Feb 2020 15:40:20 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id t124sm4699111wmg.13.2020.02.28.15.40.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 15:38:31 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] io_uring: remove @nxt from the handlers
-Date:   Sat, 29 Feb 2020 02:37:25 +0300
-Message-Id: <895204fd63644bd31702d05650ba7ce63a3f2922.1582932860.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1582932860.git.asml.silence@gmail.com>
-References: <cover.1582932860.git.asml.silence@gmail.com>
+        Fri, 28 Feb 2020 15:40:19 -0800 (PST)
+Date:   Sat, 29 Feb 2020 00:40:17 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm: prevent a harmless integer overflow in
+ drm_legacy_sg_alloc()
+Message-ID: <20200228234017.GB2363188@phenom.ffwll.local>
+Mail-Followup-To: Dan Carpenter <dan.carpenter@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200228092321.axulddmkxrujkmas@kili.mountain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228092321.axulddmkxrujkmas@kili.mountain>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After io_put_req_find_next() fix, no opcode handler can return non-NULL
-nxt, that's because there is always a submission ref, which keeps them
-from doing that. Remove @nxt from them, it's intrusive but
-straightforward.
+On Fri, Feb 28, 2020 at 12:23:21PM +0300, Dan Carpenter wrote:
+> There is an integer overflow when we round up to PAGE_SIZE, but it's
+> harmless because we never re-use "request->size" for anything meaningful.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> This code predates git.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 245 ++++++++++++++++++--------------------------------
- 1 file changed, 86 insertions(+), 159 deletions(-)
+Also not compiled without CONFIG_DRM_LEGACY, which we tell everyone is to
+enable the root holes in drm :-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 8d8d93adb9c2..ee75e503964d 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1815,17 +1815,6 @@ static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
- 	io_put_req(req);
- }
- 
--static struct io_kiocb *__io_complete_rw(struct kiocb *kiocb, long res)
--{
--	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
--	struct io_kiocb *nxt = NULL;
--
--	io_complete_rw_common(kiocb, res);
--	io_put_req_find_next(req, &nxt);
--
--	return nxt;
--}
--
- static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
- {
- 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
-@@ -2020,14 +2009,14 @@ static inline void io_rw_done(struct kiocb *kiocb, ssize_t ret)
- 	}
- }
- 
--static void kiocb_done(struct kiocb *kiocb, ssize_t ret, struct io_kiocb **nxt)
-+static void kiocb_done(struct kiocb *kiocb, ssize_t ret)
- {
- 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
- 
- 	if (req->flags & REQ_F_CUR_POS)
- 		req->file->f_pos = kiocb->ki_pos;
- 	if (ret >= 0 && kiocb->ki_complete == io_complete_rw)
--		*nxt = __io_complete_rw(kiocb, ret);
-+		io_complete_rw(kiocb, ret, 0);
- 	else
- 		io_rw_done(kiocb, ret);
- }
-@@ -2276,8 +2265,7 @@ static int io_read_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	return 0;
- }
- 
--static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
--		   bool force_nonblock)
-+static int io_read(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
- 	struct kiocb *kiocb = &req->rw.kiocb;
-@@ -2317,7 +2305,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
- 
- 		/* Catch -EAGAIN return for forced non-blocking submission */
- 		if (!force_nonblock || ret2 != -EAGAIN) {
--			kiocb_done(kiocb, ret2, nxt);
-+			kiocb_done(kiocb, ret2);
- 		} else {
- copy_iov:
- 			ret = io_setup_async_rw(req, io_size, iovec,
-@@ -2366,8 +2354,7 @@ static int io_write_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	return 0;
- }
- 
--static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
--		    bool force_nonblock)
-+static int io_write(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
- 	struct kiocb *kiocb = &req->rw.kiocb;
-@@ -2431,7 +2418,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
- 		if (ret2 == -EOPNOTSUPP && (kiocb->ki_flags & IOCB_NOWAIT))
- 			ret2 = -EAGAIN;
- 		if (!force_nonblock || ret2 != -EAGAIN) {
--			kiocb_done(kiocb, ret2, nxt);
-+			kiocb_done(kiocb, ret2);
- 		} else {
- copy_iov:
- 			ret = io_setup_async_rw(req, io_size, iovec,
-@@ -2488,8 +2475,7 @@ static bool io_splice_punt(struct file *file)
- 	return !(file->f_mode & O_NONBLOCK);
- }
- 
--static int io_splice(struct io_kiocb *req, struct io_kiocb **nxt,
--		     bool force_nonblock)
-+static int io_splice(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_splice *sp = &req->splice;
- 	struct file *in = sp->file_in;
-@@ -2516,7 +2502,7 @@ static int io_splice(struct io_kiocb *req, struct io_kiocb **nxt,
- 	io_cqring_add_event(req, ret);
- 	if (ret != sp->len)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- }
- 
-@@ -2568,28 +2554,7 @@ static bool io_req_cancelled(struct io_kiocb *req)
- 	return false;
- }
- 
--static void io_link_work_cb(struct io_wq_work **workptr)
--{
--	struct io_wq_work *work = *workptr;
--	struct io_kiocb *link = work->data;
--
--	io_queue_linked_timeout(link);
--	io_wq_submit_work(workptr);
--}
--
--static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
--{
--	struct io_kiocb *link;
--
--	io_prep_next_work(nxt, &link);
--	*workptr = &nxt->work;
--	if (link) {
--		nxt->work.func = io_link_work_cb;
--		nxt->work.data = link;
--	}
--}
--
--static void __io_fsync(struct io_kiocb *req, struct io_kiocb **nxt)
-+static void __io_fsync(struct io_kiocb *req)
- {
- 	loff_t end = req->sync.off + req->sync.len;
- 	int ret;
-@@ -2600,23 +2565,19 @@ static void __io_fsync(struct io_kiocb *req, struct io_kiocb **nxt)
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- }
- 
- static void io_fsync_finish(struct io_wq_work **workptr)
- {
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 
- 	if (io_req_cancelled(req))
- 		return;
--	__io_fsync(req, &nxt);
--	if (nxt)
--		io_wq_assign_next(workptr, nxt);
-+	__io_fsync(req);
- }
- 
--static int io_fsync(struct io_kiocb *req, struct io_kiocb **nxt,
--		    bool force_nonblock)
-+static int io_fsync(struct io_kiocb *req, bool force_nonblock)
- {
- 	/* fsync always requires a blocking context */
- 	if (force_nonblock) {
-@@ -2624,11 +2585,11 @@ static int io_fsync(struct io_kiocb *req, struct io_kiocb **nxt,
- 		req->work.func = io_fsync_finish;
- 		return -EAGAIN;
- 	}
--	__io_fsync(req, nxt);
-+	__io_fsync(req);
- 	return 0;
- }
- 
--static void __io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt)
-+static void __io_fallocate(struct io_kiocb *req)
- {
- 	int ret;
- 
-@@ -2640,17 +2601,14 @@ static void __io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt)
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- }
- 
- static void io_fallocate_finish(struct io_wq_work **workptr)
- {
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 
--	__io_fallocate(req, &nxt);
--	if (nxt)
--		io_wq_assign_next(workptr, nxt);
-+	__io_fallocate(req);
- }
- 
- static int io_fallocate_prep(struct io_kiocb *req,
-@@ -2665,8 +2623,7 @@ static int io_fallocate_prep(struct io_kiocb *req,
- 	return 0;
- }
- 
--static int io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt,
--			bool force_nonblock)
-+static int io_fallocate(struct io_kiocb *req, bool force_nonblock)
- {
- 	/* fallocate always requiring blocking context */
- 	if (force_nonblock) {
-@@ -2675,7 +2632,7 @@ static int io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt,
- 		return -EAGAIN;
- 	}
- 
--	__io_fallocate(req, nxt);
-+	__io_fallocate(req);
- 	return 0;
- }
- 
-@@ -2748,8 +2705,7 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static int io_openat2(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_openat2(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct open_flags op;
- 	struct file *file;
-@@ -2780,15 +2736,14 @@ static int io_openat2(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- }
- 
--static int io_openat(struct io_kiocb *req, struct io_kiocb **nxt,
--		     bool force_nonblock)
-+static int io_openat(struct io_kiocb *req, bool force_nonblock)
- {
- 	req->open.how = build_open_how(req->open.how.flags, req->open.how.mode);
--	return io_openat2(req, nxt, force_nonblock);
-+	return io_openat2(req, force_nonblock);
- }
- 
- static int io_epoll_ctl_prep(struct io_kiocb *req,
-@@ -2816,8 +2771,7 @@ static int io_epoll_ctl_prep(struct io_kiocb *req,
- #endif
- }
- 
--static int io_epoll_ctl(struct io_kiocb *req, struct io_kiocb **nxt,
--			bool force_nonblock)
-+static int io_epoll_ctl(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_EPOLL)
- 	struct io_epoll *ie = &req->epoll;
-@@ -2830,7 +2784,7 @@ static int io_epoll_ctl(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
-@@ -2852,8 +2806,7 @@ static int io_madvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- #endif
- }
- 
--static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_madvise(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_ADVISE_SYSCALLS) && defined(CONFIG_MMU)
- 	struct io_madvise *ma = &req->madvise;
-@@ -2866,7 +2819,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
-@@ -2884,8 +2837,7 @@ static int io_fadvise_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static int io_fadvise(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_fadvise(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_fadvise *fa = &req->fadvise;
- 	int ret;
-@@ -2905,7 +2857,7 @@ static int io_fadvise(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- }
- 
-@@ -2942,8 +2894,7 @@ static int io_statx_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static int io_statx(struct io_kiocb *req, struct io_kiocb **nxt,
--		    bool force_nonblock)
-+static int io_statx(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_open *ctx = &req->open;
- 	unsigned lookup_flags;
-@@ -2980,7 +2931,7 @@ static int io_statx(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- }
- 
-@@ -3007,7 +2958,7 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- }
- 
- /* only called when __close_fd_get_file() is done */
--static void __io_close_finish(struct io_kiocb *req, struct io_kiocb **nxt)
-+static void __io_close_finish(struct io_kiocb *req)
- {
- 	int ret;
- 
-@@ -3016,22 +2967,18 @@ static void __io_close_finish(struct io_kiocb *req, struct io_kiocb **nxt)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
- 	fput(req->close.put_file);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- }
- 
- static void io_close_finish(struct io_wq_work **workptr)
- {
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 
- 	/* not cancellable, don't do io_req_cancelled() */
--	__io_close_finish(req, &nxt);
--	if (nxt)
--		io_wq_assign_next(workptr, nxt);
-+	__io_close_finish(req);
- }
- 
--static int io_close(struct io_kiocb *req, struct io_kiocb **nxt,
--		    bool force_nonblock)
-+static int io_close(struct io_kiocb *req, bool force_nonblock)
- {
- 	int ret;
- 
-@@ -3048,7 +2995,7 @@ static int io_close(struct io_kiocb *req, struct io_kiocb **nxt,
- 	 * No ->flush(), safely close from here and just punt the
- 	 * fput() to async context.
- 	 */
--	__io_close_finish(req, nxt);
-+	__io_close_finish(req);
- 	return 0;
- eagain:
- 	req->work.func = io_close_finish;
-@@ -3079,7 +3026,7 @@ static int io_prep_sfr(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static void __io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt)
-+static void __io_sync_file_range(struct io_kiocb *req)
- {
- 	int ret;
- 
-@@ -3088,24 +3035,20 @@ static void __io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt)
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- }
- 
- 
- static void io_sync_file_range_finish(struct io_wq_work **workptr)
- {
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 
- 	if (io_req_cancelled(req))
- 		return;
--	__io_sync_file_range(req, &nxt);
--	if (nxt)
--		io_wq_assign_next(workptr, nxt);
-+	__io_sync_file_range(req);
- }
- 
--static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
--			      bool force_nonblock)
-+static int io_sync_file_range(struct io_kiocb *req, bool force_nonblock)
- {
- 	/* sync_file_range always requires a blocking context */
- 	if (force_nonblock) {
-@@ -3114,7 +3057,7 @@ static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
- 		return -EAGAIN;
- 	}
- 
--	__io_sync_file_range(req, nxt);
-+	__io_sync_file_range(req);
- 	return 0;
- }
- 
-@@ -3166,8 +3109,7 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- #endif
- }
- 
--static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_sendmsg(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	struct io_async_msghdr *kmsg = NULL;
-@@ -3221,15 +3163,14 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
- 	io_cqring_add_event(req, ret);
- 	if (ret < 0)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
- #endif
- }
- 
--static int io_send(struct io_kiocb *req, struct io_kiocb **nxt,
--		   bool force_nonblock)
-+static int io_send(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	struct socket *sock;
-@@ -3272,7 +3213,7 @@ static int io_send(struct io_kiocb *req, struct io_kiocb **nxt,
- 	io_cqring_add_event(req, ret);
- 	if (ret < 0)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
-@@ -3313,8 +3254,7 @@ static int io_recvmsg_prep(struct io_kiocb *req,
- #endif
- }
- 
--static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_recvmsg(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	struct io_async_msghdr *kmsg = NULL;
-@@ -3370,15 +3310,14 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
- 	io_cqring_add_event(req, ret);
- 	if (ret < 0)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
- #endif
- }
- 
--static int io_recv(struct io_kiocb *req, struct io_kiocb **nxt,
--		   bool force_nonblock)
-+static int io_recv(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	struct socket *sock;
-@@ -3422,7 +3361,7 @@ static int io_recv(struct io_kiocb *req, struct io_kiocb **nxt,
- 	io_cqring_add_event(req, ret);
- 	if (ret < 0)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
-@@ -3450,8 +3389,7 @@ static int io_accept_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- }
- 
- #if defined(CONFIG_NET)
--static int __io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
--		       bool force_nonblock)
-+static int __io_accept(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_accept *accept = &req->accept;
- 	unsigned file_flags;
-@@ -3467,32 +3405,28 @@ static int __io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- }
- 
- static void io_accept_finish(struct io_wq_work **workptr)
- {
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 
- 	io_put_req(req);
- 
- 	if (io_req_cancelled(req))
- 		return;
--	__io_accept(req, &nxt, false);
--	if (nxt)
--		io_wq_assign_next(workptr, nxt);
-+	__io_accept(req, false);
- }
- #endif
- 
--static int io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
--		     bool force_nonblock)
-+static int io_accept(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	int ret;
- 
--	ret = __io_accept(req, nxt, force_nonblock);
-+	ret = __io_accept(req, force_nonblock);
- 	if (ret == -EAGAIN && force_nonblock) {
- 		req->work.func = io_accept_finish;
- 		return -EAGAIN;
-@@ -3527,8 +3461,7 @@ static int io_connect_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- #endif
- }
- 
--static int io_connect(struct io_kiocb *req, struct io_kiocb **nxt,
--		      bool force_nonblock)
-+static int io_connect(struct io_kiocb *req, bool force_nonblock)
- {
- #if defined(CONFIG_NET)
- 	struct io_async_ctx __io, *io;
-@@ -3566,7 +3499,7 @@ static int io_connect(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- 	return 0;
- #else
- 	return -EOPNOTSUPP;
-@@ -3957,7 +3890,7 @@ static int io_poll_add_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe
- 	return 0;
- }
- 
--static int io_poll_add(struct io_kiocb *req, struct io_kiocb **nxt)
-+static int io_poll_add(struct io_kiocb *req)
- {
- 	struct io_poll_iocb *poll = &req->poll;
- 	struct io_ring_ctx *ctx = req->ctx;
-@@ -3979,7 +3912,7 @@ static int io_poll_add(struct io_kiocb *req, struct io_kiocb **nxt)
- 
- 	if (mask) {
- 		io_cqring_ev_posted(ctx);
--		io_put_req_find_next(req, nxt);
-+		io_put_req(req);
- 	}
- 	return ipt.error;
- }
-@@ -4228,7 +4161,7 @@ static int io_async_cancel_one(struct io_ring_ctx *ctx, void *sqe_addr)
- 
- static void io_async_find_and_cancel(struct io_ring_ctx *ctx,
- 				     struct io_kiocb *req, __u64 sqe_addr,
--				     struct io_kiocb **nxt, int success_ret)
-+				     int success_ret)
- {
- 	unsigned long flags;
- 	int ret;
-@@ -4254,7 +4187,7 @@ static void io_async_find_and_cancel(struct io_ring_ctx *ctx,
- 
- 	if (ret < 0)
- 		req_set_fail_links(req);
--	io_put_req_find_next(req, nxt);
-+	io_put_req(req);
- }
- 
- static int io_async_cancel_prep(struct io_kiocb *req,
-@@ -4270,11 +4203,11 @@ static int io_async_cancel_prep(struct io_kiocb *req,
- 	return 0;
- }
- 
--static int io_async_cancel(struct io_kiocb *req, struct io_kiocb **nxt)
-+static int io_async_cancel(struct io_kiocb *req)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
- 
--	io_async_find_and_cancel(ctx, req, req->cancel.addr, nxt, 0);
-+	io_async_find_and_cancel(ctx, req, req->cancel.addr, 0);
- 	return 0;
- }
- 
-@@ -4481,7 +4414,7 @@ static void io_cleanup_req(struct io_kiocb *req)
- }
- 
- static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
--			struct io_kiocb **nxt, bool force_nonblock)
-+			bool force_nonblock)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
- 	int ret;
-@@ -4498,7 +4431,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret < 0)
- 				break;
- 		}
--		ret = io_read(req, nxt, force_nonblock);
-+		ret = io_read(req, force_nonblock);
- 		break;
- 	case IORING_OP_WRITEV:
- 	case IORING_OP_WRITE_FIXED:
-@@ -4508,7 +4441,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret < 0)
- 				break;
- 		}
--		ret = io_write(req, nxt, force_nonblock);
-+		ret = io_write(req, force_nonblock);
- 		break;
- 	case IORING_OP_FSYNC:
- 		if (sqe) {
-@@ -4516,7 +4449,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret < 0)
- 				break;
- 		}
--		ret = io_fsync(req, nxt, force_nonblock);
-+		ret = io_fsync(req, force_nonblock);
- 		break;
- 	case IORING_OP_POLL_ADD:
- 		if (sqe) {
-@@ -4524,7 +4457,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_poll_add(req, nxt);
-+		ret = io_poll_add(req);
- 		break;
- 	case IORING_OP_POLL_REMOVE:
- 		if (sqe) {
-@@ -4540,7 +4473,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret < 0)
- 				break;
- 		}
--		ret = io_sync_file_range(req, nxt, force_nonblock);
-+		ret = io_sync_file_range(req, force_nonblock);
- 		break;
- 	case IORING_OP_SENDMSG:
- 	case IORING_OP_SEND:
-@@ -4550,9 +4483,9 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 				break;
- 		}
- 		if (req->opcode == IORING_OP_SENDMSG)
--			ret = io_sendmsg(req, nxt, force_nonblock);
-+			ret = io_sendmsg(req, force_nonblock);
- 		else
--			ret = io_send(req, nxt, force_nonblock);
-+			ret = io_send(req, force_nonblock);
- 		break;
- 	case IORING_OP_RECVMSG:
- 	case IORING_OP_RECV:
-@@ -4562,9 +4495,9 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 				break;
- 		}
- 		if (req->opcode == IORING_OP_RECVMSG)
--			ret = io_recvmsg(req, nxt, force_nonblock);
-+			ret = io_recvmsg(req, force_nonblock);
- 		else
--			ret = io_recv(req, nxt, force_nonblock);
-+			ret = io_recv(req, force_nonblock);
- 		break;
- 	case IORING_OP_TIMEOUT:
- 		if (sqe) {
-@@ -4588,7 +4521,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_accept(req, nxt, force_nonblock);
-+		ret = io_accept(req, force_nonblock);
- 		break;
- 	case IORING_OP_CONNECT:
- 		if (sqe) {
-@@ -4596,7 +4529,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_connect(req, nxt, force_nonblock);
-+		ret = io_connect(req, force_nonblock);
- 		break;
- 	case IORING_OP_ASYNC_CANCEL:
- 		if (sqe) {
-@@ -4604,7 +4537,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_async_cancel(req, nxt);
-+		ret = io_async_cancel(req);
- 		break;
- 	case IORING_OP_FALLOCATE:
- 		if (sqe) {
-@@ -4612,7 +4545,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_fallocate(req, nxt, force_nonblock);
-+		ret = io_fallocate(req, force_nonblock);
- 		break;
- 	case IORING_OP_OPENAT:
- 		if (sqe) {
-@@ -4620,7 +4553,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_openat(req, nxt, force_nonblock);
-+		ret = io_openat(req, force_nonblock);
- 		break;
- 	case IORING_OP_CLOSE:
- 		if (sqe) {
-@@ -4628,7 +4561,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_close(req, nxt, force_nonblock);
-+		ret = io_close(req, force_nonblock);
- 		break;
- 	case IORING_OP_FILES_UPDATE:
- 		if (sqe) {
-@@ -4644,7 +4577,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_statx(req, nxt, force_nonblock);
-+		ret = io_statx(req, force_nonblock);
- 		break;
- 	case IORING_OP_FADVISE:
- 		if (sqe) {
-@@ -4652,7 +4585,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_fadvise(req, nxt, force_nonblock);
-+		ret = io_fadvise(req, force_nonblock);
- 		break;
- 	case IORING_OP_MADVISE:
- 		if (sqe) {
-@@ -4660,7 +4593,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_madvise(req, nxt, force_nonblock);
-+		ret = io_madvise(req, force_nonblock);
- 		break;
- 	case IORING_OP_OPENAT2:
- 		if (sqe) {
-@@ -4668,7 +4601,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_openat2(req, nxt, force_nonblock);
-+		ret = io_openat2(req, force_nonblock);
- 		break;
- 	case IORING_OP_EPOLL_CTL:
- 		if (sqe) {
-@@ -4676,7 +4609,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret)
- 				break;
- 		}
--		ret = io_epoll_ctl(req, nxt, force_nonblock);
-+		ret = io_epoll_ctl(req, force_nonblock);
- 		break;
- 	case IORING_OP_SPLICE:
- 		if (sqe) {
-@@ -4684,7 +4617,7 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			if (ret < 0)
- 				break;
- 		}
--		ret = io_splice(req, nxt, force_nonblock);
-+		ret = io_splice(req, force_nonblock);
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -4717,7 +4650,6 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- {
- 	struct io_wq_work *work = *workptr;
- 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
--	struct io_kiocb *nxt = NULL;
- 	int ret = 0;
- 
- 	/* if NO_CANCEL is set, we must still run the work */
-@@ -4728,7 +4660,7 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- 
- 	if (!ret) {
- 		do {
--			ret = io_issue_sqe(req, NULL, &nxt, false);
-+			ret = io_issue_sqe(req, NULL, false);
- 			/*
- 			 * We can get EAGAIN for polled IO even though we're
- 			 * forcing a sync submission from here, since we can't
-@@ -4748,10 +4680,6 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- 		io_cqring_add_event(req, ret);
- 		io_put_req(req);
- 	}
--
--	/* if a dependent link is ready, pass it back */
--	if (!ret && nxt)
--		io_wq_assign_next(workptr, nxt);
- }
- 
- static int io_req_needs_file(struct io_kiocb *req, int fd)
-@@ -4877,8 +4805,7 @@ static enum hrtimer_restart io_link_timeout_fn(struct hrtimer *timer)
- 
- 	if (prev) {
- 		req_set_fail_links(prev);
--		io_async_find_and_cancel(ctx, req, prev->user_data, NULL,
--						-ETIME);
-+		io_async_find_and_cancel(ctx, req, prev->user_data, -ETIME);
- 		io_put_req(prev);
- 	} else {
- 		io_cqring_add_event(req, -ETIME);
-@@ -4947,7 +4874,7 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 			old_creds = override_creds(req->work.creds);
- 	}
- 
--	ret = io_issue_sqe(req, sqe, &nxt, true);
-+	ret = io_issue_sqe(req, sqe, true);
- 
- 	/*
- 	 * We async punt it if the file wasn't marked NOWAIT, or if the file
+Thanks for your patch, queued in drm-misc-next.
+-Daniel
+
+> 
+>  drivers/gpu/drm/drm_scatter.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> index d5c386154246..ca520028b2cb 100644
+> --- a/drivers/gpu/drm/drm_scatter.c
+> +++ b/drivers/gpu/drm/drm_scatter.c
+> @@ -99,6 +99,9 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+>  	if (!drm_core_check_feature(dev, DRIVER_SG))
+>  		return -EOPNOTSUPP;
+>  
+> +	if (request->size > SIZE_MAX - PAGE_SIZE)
+> +		return -EINVAL;
+> +
+>  	if (dev->sg)
+>  		return -EINVAL;
+>  
+> -- 
+> 2.11.0
+> 
+
 -- 
-2.24.0
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
