@@ -2,62 +2,183 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1B1C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100FAC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD96724677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFC3222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THDt18G/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgB1GvK (ORCPT
+        id S1726860AbgB1Gvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:51:10 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46902 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbgB1GvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:51:10 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9C3BC72F8D68D18826AE;
-        Fri, 28 Feb 2020 14:51:03 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Feb 2020
- 14:50:53 +0800
-To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>,
-        <stable@vger.kernel.org>
-CC:     <joe@perches.com>, <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Subject: Request to backport "irqchip/gic-v3-its: Fix misuse of GENMASK macro"
-Message-ID: <47617046-53ba-ed7f-ccbb-5c7c09426552@huawei.com>
-Date:   Fri, 28 Feb 2020 14:50:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 28 Feb 2020 01:51:36 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46491 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgB1Gvg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:51:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j7so1617157wrp.13;
+        Thu, 27 Feb 2020 22:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=avF1EF6lpJLVVsTfVWBjTe/8KtvDZSIsmNvBiNuGKMg=;
+        b=THDt18G/FXoJ1iM+KNQB/v0hI6yvWK8bMDHDcfQSKeziHQIqYblvqJmEftpLKrhco2
+         SFveE9Xs3bCIREUxBls+XpZ5opNASmRCLv3D66hN1WEbzNxO90PCG4cSn+mVp+I8scI7
+         76mmSNwWiM+r92MlP+IZooSJ68GqKRUU2EDFk3sGPFzTdUcFLgdjFTp/wJQycrbHQfbs
+         U7iwR6po+Ej26juHt0u7x5m8iNe+0c+7Vrq61sMfAtTT3Ig+HMKFng3edsIIBv6W5Bm7
+         eRP0damzsRhWhiMonIWppR7VoRP6tfA6gyqPyfWwtTUofME3qfkNfJnrFUpozKjdx9Mn
+         7nig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=avF1EF6lpJLVVsTfVWBjTe/8KtvDZSIsmNvBiNuGKMg=;
+        b=bCIjAWXKFWlJ4vOyUQ7rtR6/DtO1OTtVWpdn/R+ghfVTbTvBXpSZM4jN5cC0+GDwYS
+         SsxwzF7jgQaUHmvpwmzVHEKvctBY8IOL5oiN/jcmJbyC6Gr9++NS4PPU2PFX9gHsobIX
+         jm9hTAtbOzyRSVNgNv1pXLZ0FlIAykhgKFjyDiw4TBQoOdQURyeqGL7jly6ieC3exlWF
+         OSr6ZHysrLMsGnGvamwLAvC6JQj57+0cJxcRjvJtBwlOoH3a+c6uTI7hDVT7x5RNomiy
+         sdH/R4e5WxCtS4pS33T+6s9CdACbJnnXj3iMThW7zSjF3M+wpExfetC3L+qsg9lotpH0
+         kE6w==
+X-Gm-Message-State: APjAAAXCFehncvGBD+ELltBEcnry1sTV+HBCdHVrZJKUIsMkgJfs40kq
+        SPG05RhV2tjQOFPMglQ2/dKgmrXuoColPkEJrmg=
+X-Google-Smtp-Source: APXvYqwvp4piUvF/SYce0tbofShEvKkPpBAb2O8nmlEOvn8MBRHMN7izLp5juCXAuFJGAECrBbht8pmjEp8qcymSoVM=
+X-Received: by 2002:a5d:62d0:: with SMTP id o16mr3205209wrv.197.1582872693018;
+ Thu, 27 Feb 2020 22:51:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+References: <20200228002244.15240-1-keescook@chromium.org>
+In-Reply-To: <20200228002244.15240-1-keescook@chromium.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 28 Feb 2020 07:51:21 +0100
+Message-ID: <CA+icZUVRnjOWKZynAGDniXD_H9KRccONmeKHs25DPPU1c8ZcGg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Enable orphan section warning
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg, Sasha,
+On Fri, Feb 28, 2020 at 1:22 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Hi!
+>
+> A recent bug was solved for builds linked with ld.lld, and tracking
+> it down took way longer than it needed to (a year). Ultimately, it
+> boiled down to differences between ld.bfd and ld.lld's handling of
+> orphan sections. Similarly, the recent FGKASLR series brough up orphan
+> section handling too[2]. In both cases, it would have been nice if the
+> linker was running with --orphan-handling=warn so that surprise sections
+> wouldn't silently get mapped into the kernel image at locations up to
+> the whim of the linker's orphan handling logic. Instead, all desired
+> sections should be explicitly identified in the linker script (to be
+> either kept or discarded) with any orphans throwing a warning. The
+> powerpc architecture actually already does this, so this series seeks
+> to extend this coverage to x86, arm64, and arm.
+>
+> This series depends on tip/x86/boot (where recent .eh_frame fixes[3]
+> landed), and has a minor conflict[4] with the ARM tree (related to
+> the earlier mentioned bug). As it uses refactorings in the asm-generic
+> linker script, and makes changes to kbuild, I think the cleanest place
+> for this series to land would also be through -tip. Once again (like
+> my READ_IMPLIES_EXEC series), I'm looking to get maintainer Acks so
+> this can go all together with the least disruption. Splitting it up by
+> architecture seems needlessly difficult.
+>
+> Thanks!
+>
+> -Kees
+>
+> [1] https://github.com/ClangBuiltLinux/linux/issues/282
+> [2] https://lore.kernel.org/lkml/202002242122.AA4D1B8@keescook/
+> [3] https://lore.kernel.org/lkml/158264960194.28353.10560165361470246192.tip-bot2@tip-bot2/
+> [4] https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8959/1
+>
 
-Could you please help to backport the upstream commit
-20faba848752901de23a4d45a1174d64d2069dde ("irqchip/gic-v3-its: Fix
-misuse of GENMASK macro") to the stable linux-4.19 tree since it's
-definitely a fix for 4.19. Note that it's not needed for other stable
-trees.
+Hi Kees,
 
-I've tried and it can be applied to 4.19.106 cleanly.
+is this an updated version of what you have in your
+kees/linux.git#linker/orphans/x86-arm Git branch?
+
+Especially, I saw a difference in [2] and "[PATCH 4/9] x86/boot: Warn
+on orphan section placement"
+
+[ arch/x86/boot/compressed/Makefile ]
+
++KBUILD_LDFLAGS += --no-ld-generated-unwind-info
+
+Can you comment on why this KBUILD_LDFLAGS was added/needed?
+
+I like when people offer their work in a Git branch.
+Do you plan to do that?
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/x86-arm
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=linker/orphans/x86-arm&id=e43aa77956c40b9b6db0b37b3780423aa2e661ad
 
 
-Thanks,
-Zenghui
 
+> H.J. Lu (1):
+>   Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+>
+> Kees Cook (8):
+>   scripts/link-vmlinux.sh: Delay orphan handling warnings until final
+>     link
+>   vmlinux.lds.h: Add .gnu.version* to DISCARDS
+>   x86/build: Warn on orphan section placement
+>   x86/boot: Warn on orphan section placement
+>   arm64/build: Use common DISCARDS in linker script
+>   arm64/build: Warn on orphan section placement
+>   arm/build: Warn on orphan section placement
+>   arm/boot: Warn on orphan section placement
+>
+>  arch/arm/Makefile                             |  4 ++++
+>  arch/arm/boot/compressed/Makefile             |  2 ++
+>  arch/arm/boot/compressed/vmlinux.lds.S        | 17 ++++++--------
+>  .../arm/{kernel => include/asm}/vmlinux.lds.h | 22 ++++++++++++++-----
+>  arch/arm/kernel/vmlinux-xip.lds.S             |  5 ++---
+>  arch/arm/kernel/vmlinux.lds.S                 |  5 ++---
+>  arch/arm64/Makefile                           |  4 ++++
+>  arch/arm64/kernel/vmlinux.lds.S               | 13 +++++------
+>  arch/x86/Makefile                             |  4 ++++
+>  arch/x86/boot/compressed/Makefile             |  3 ++-
+>  arch/x86/boot/compressed/vmlinux.lds.S        | 13 +++++++++++
+>  arch/x86/kernel/vmlinux.lds.S                 |  7 ++++++
+>  include/asm-generic/vmlinux.lds.h             | 11 ++++++++--
+>  scripts/link-vmlinux.sh                       |  6 +++++
+>  14 files changed, 85 insertions(+), 31 deletions(-)
+>  rename arch/arm/{kernel => include/asm}/vmlinux.lds.h (92%)
+>
+> --
+> 2.20.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200228002244.15240-1-keescook%40chromium.org.
