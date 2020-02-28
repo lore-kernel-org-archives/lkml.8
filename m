@@ -2,91 +2,77 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6677CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACD4C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A18246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADEB246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582916510;
-	bh=yo+9qf4l7lWvkRuLNSi3S+blw9yLihqrqE1sN6VGBlI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=egqvAzo8vof0l60jjzh0BbVwnBdf9NHyEIuVSkfC589EbDh1II90mzZR2ZnoJ5qWO
-	 SuhSryQ5GDrTs0oboe/PNtZjLLEo3fE6u4ASwPHfcDFnynBA6fMDxHqixTDOHpPJQg
-	 WosoTpzZdEBHsZUyA6+SyH4JJakmmjAvk4WYmhGg=
+	s=default; t=1582916537;
+	bh=RRX0Q3Pd6bQrUaDTY4Y++QQe4nlfj+rP1qpxupz/Ipg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p0QJZ+rQtK575XjRRrmUw6Sb+3o6rGftD2E4VDGDWQae3lgre6WqxLe6YrCSaE6gv
+	 KnOEnPsYJi2RhvW3seVtLWZ7ldqArY+lzlKbSG3hQkizKq48RDG2Xeh80FTkrC8u4T
+	 Y2u4VXb3lA4xjWgbkWTzfjiAh985n6Wwwj9deZb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgB1TBt (ORCPT
+        id S1726981AbgB1TCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46414 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 14:02:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1TBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:01:48 -0500
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725730AbgB1TCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:02:16 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EB602468E;
-        Fri, 28 Feb 2020 19:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CAA246B5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 19:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582916508;
-        bh=yo+9qf4l7lWvkRuLNSi3S+blw9yLihqrqE1sN6VGBlI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ybYdeMvwwOEIU8pq9ehcKuxJNOvlOLgVqLt82NVPMBc3OgiNOb7fUI5gRtF3nCukH
-         l4mAzI1W2MHubPaMP+WRYdbSc/TDAWquJLpcuGuGq3WRo606KQwYEsZVTLUdGd336g
-         U8MUtRY0u/Mb0ZUA4nwqm2Eh0fLTqmukeyn580NU=
-Date:   Fri, 28 Feb 2020 11:01:46 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
-Message-ID: <20200228110146.4e607ca3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <d2fc495b-0520-2acc-accb-4f03637dfd85@linaro.org>
-References: <20200228165343.8272-1-elder@linaro.org>
-        <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
-        <16889e77-31cf-58f6-c27e-5b8a6b3e604d@linaro.org>
-        <20200228103339.4f36d6ae@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d2fc495b-0520-2acc-accb-4f03637dfd85@linaro.org>
+        s=default; t=1582916535;
+        bh=RRX0Q3Pd6bQrUaDTY4Y++QQe4nlfj+rP1qpxupz/Ipg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cXZb11UUyULsJN01zmnl5lMYPJpyuxDATP4yQpAnFP5K6OskYKMfE+jwYFwelDdFu
+         xyZ25QFTPFLX6xBWm/mi89uUaC+XcI+eeN7ODzkGqx8iucom85BpqEZRQ+nH5zizao
+         6n25rlNXTBCVCQr2kw20l3MJAZ/ycbepiByDT5z4=
+Received: by mail-wr1-f52.google.com with SMTP id l5so4228995wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 11:02:15 -0800 (PST)
+X-Gm-Message-State: APjAAAW+wypmVq9UxcrJExxWWDKA3iH30AoiN8N2oiIFg3Wh+37MWt+c
+        YIMQCoTJB0ih1SyatXVxIzFNBHxruVQnMneLlmeBGg==
+X-Google-Smtp-Source: APXvYqxpVEvcka5rH5AEcJi1MlIEWJFzHscL2zMl5v12QwKuJLyHeZIHNntbz9NPFZYXnLT6cYqFjXXg6CqIah5GwrU=
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr5974601wrm.75.1582916533984;
+ Fri, 28 Feb 2020 11:02:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200227132826.195669-1-brgerst@gmail.com> <20200227132826.195669-9-brgerst@gmail.com>
+In-Reply-To: <20200227132826.195669-9-brgerst@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 28 Feb 2020 11:02:02 -0800
+X-Gmail-Original-Message-ID: <CALCETrUGLcQQkp3e9-A8r+VSzvwbzn0Lzi-yeVyi6BT+YvB+9A@mail.gmail.com>
+Message-ID: <CALCETrUGLcQQkp3e9-A8r+VSzvwbzn0Lzi-yeVyi6BT+YvB+9A@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] x86: Drop asmlinkage from syscalls
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 12:37:14 -0600 Alex Elder wrote:
-> On 2/28/20 12:33 PM, Jakub Kicinski wrote:
-> > On Fri, 28 Feb 2020 12:06:09 -0600 Alex Elder wrote:  
-> >> On 2/28/20 12:04 PM, Alex Elder wrote:  
-> >>>
-> >>>
-> >>> I find field_max() to be a good name for what I'm looking for.    
-> >>
-> >> Sorry I wanted to add this but clicked "send" too fast.
-> >>
-> >> Yes it's the same as field_mask(), but that name only *implies*
-> >> it is the same as the maximum value.  I mean, they're the same,
-> >> but the name I'm suggesting conveys its purpose better.  
-> > 
-> > We got FIELD_FIT tho.. The comparison is part of the macro there, 
-> > and it catches negative values if they manage to sneak in.  
-> 
-> Ahhh!  I was using the lower-case macros and it looks like there
-> isn't one (despite seeming to have all(?) of the others).
+On Thu, Feb 27, 2020 at 5:28 AM Brian Gerst <brgerst@gmail.com> wrote:
+>
+> asmlinkage is no longer required since the syscall ABI is now fully under
+> x86 architecture control.  This makes the 32-bit native syscalls a bit more
+> effecient by passing in regs via EAX instead of on the stack.
+>
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
 
-Ah, damn, I didn't check for the lower case version.
-
-> How would you feel about having field_fit() be a lower-case
-> equivalent of FIELD_FIT()?
-
-That'd be great!
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
