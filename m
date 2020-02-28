@@ -2,97 +2,189 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A11C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B038AC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7012469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787542469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jY9Esepc"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VKq8ycZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbgB1BPH (ORCPT
+        id S1730422AbgB1BSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:15:07 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45159 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730148AbgB1BPH (ORCPT
+        Thu, 27 Feb 2020 20:18:35 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37216 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729984AbgB1BSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:15:07 -0500
-Received: by mail-pg1-f194.google.com with SMTP id m15so584889pgv.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:15:06 -0800 (PST)
+        Thu, 27 Feb 2020 20:18:35 -0500
+Received: by mail-qt1-f196.google.com with SMTP id j34so900824qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:18:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O+5GIeJyL2gtlOdW0SKFFjMgLBOt56yNEFcuq5D5UzE=;
-        b=jY9EsepciEE4B8pAidHluOcxIEhSCAXUIBSt6qRZFxeqDGXCUoIr13RJBMnRAAdYFU
-         OTzX0Qt8vhxnkP25dbdNiwrw6jB3XiBiDXH1oHUKNbTnJv8ZIByXB5Hgp53CmH+UjpUN
-         lEpHBfwOj9kBwa2NA+xxBYbvQveMixCrnh6nSH1G07W1mh7TzIMvjUdiRp/t42ODzIuk
-         LYNzh0X2xhhhr1eEgqgoN/5fkfMoP5s+0mU2z45063hUG8pQ9+ZmMnpZlJVFHwA3SdeC
-         0arsbXavbl6dIx2URE4wyEcwGCRQa83+Qw1qpw/RcDYM+x8lJzla5i+yUMfef+IoFNSX
-         L8IQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QrpFr+6B3oCxyd0DiabeEBzNw/bSmCxGpvBi8A5aZsM=;
+        b=VKq8ycZLUHbZkIJ7fqNRqLHskbo3Nccf8pVFCP2A+J7iWMYocYd9Jut2denPCtA2pr
+         9fWoxec6McX0tPjjjyv6TE5tkj2Qh0YfSS/+e6EwapRo8B4R+aVMCi8lueECcaOykFFB
+         n/9BLnqtcPxkOJxj9mE4aVK3MPv61Dt4INmUUq1BLBRDQZznOw/puUiDobCciNX/vyPK
+         E5GYU59AMR0otPqifwsKL0Jzik4vWX0vr+rkpGybHOxtFVe+6K8KIuaaYG0fUfX3JRQI
+         QEvF9fwRdQkGTBGvmGexEdy32ZXeuaDk3iuyN34wEEWIVcPFpe4C8NlxCsOI487mU2yW
+         F0RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O+5GIeJyL2gtlOdW0SKFFjMgLBOt56yNEFcuq5D5UzE=;
-        b=VSYcRCm+yliO9yW0oH0Yfr1APQqrp3XxjX9vDEV1lIADfq2l8wq8uhzcupa4RttSa9
-         iOTcIM2ZpE25Qkbbap7rUteA90L1Kdjq/7YjVSz4HpssLwYXI7ArH71G1KNG4+nvBAUh
-         LhddULuMAj8bQM1UoGN5Lz4lv6xNNDjPJsMtDn15+4EnLE1pn/6N6+d6s0VH0rqQ0G24
-         oPrDnXinXMZBJOe4Aa5oGYWJJaV0aC77Rkwns145M7tuqz7L/ofNbKJ8gInR5z3nVCgk
-         A3jYy4psQhacsBdg0k3LnKhcxzIKobUpSbK/AT/Dz2KcWRAiTN1sAAy1Zt0Nf6+hLlUM
-         tuIw==
-X-Gm-Message-State: APjAAAV0s0p5ZM54mkCyyCpYsyTSUOXOI93yslyALHURO/qxwECzbepw
-        bavWSQ/iwSIl0Lytu9E++g8=
-X-Google-Smtp-Source: APXvYqwZJCvojPpJrNRSIlw2yYYhDpsAp7mwOkbZ5QS8xdTQnVl5HAC7s5NvgxvC1i+9713cdP5uzA==
-X-Received: by 2002:a63:f84b:: with SMTP id v11mr2008402pgj.133.1582852506037;
-        Thu, 27 Feb 2020 17:15:06 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id b4sm8816963pfd.18.2020.02.27.17.15.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 17:15:05 -0800 (PST)
-Date:   Fri, 28 Feb 2020 10:15:03 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Subject: Re: [PATCH v1] lib/vsprintf: update comment about
- simple_strto<foo>() functions
-Message-ID: <20200228011503.GJ122464@google.com>
-References: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
- <20200221145141.pchim24oht7nxfir@pengutronix.de>
- <CAHp75VfR+X6Mw8ywKNW5mTomzmuHSM8ecQUhxtM=LUkWaSe9CA@mail.gmail.com>
- <20200221163334.w7pocmbbw4ymimlc@pengutronix.de>
- <d6c3b369-9777-9986-f41f-3f3a4f85d64c@rasmusvillemoes.dk>
- <20200227131428.5nhvslwdmocv6fkb@pathway.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QrpFr+6B3oCxyd0DiabeEBzNw/bSmCxGpvBi8A5aZsM=;
+        b=n6j7moVf9aB42F1nGcIESU/4AbN1uGNqnNF5mOQiifNrrBxcWzvcAaRi+wQLI8V5Oh
+         BZ8sCSHkgDacnLDqxck4qdXVryc2ZQcrD8v2wQW6l+hlFUtgeITk/vCcdVe29fDHi9rP
+         XtfliBt8hwDmq4S1V5IqpCOggpUml/or1MzH1bvjqdmHzVUyk7yZdfVHLbcQRverCVCT
+         cLUlokVmp9wImum3lG6HLpFH3el9KxJmeGWD9R7uJ1tRGe5OnLIsZJD7JTxyaGPIq2QY
+         7VfU+cJwlh9HwAMu5CuqyqH8+7MxyIJpMwW23WC2Jv6NuHTdG90WQGKQ+MRInNnwJqZl
+         xZ8A==
+X-Gm-Message-State: APjAAAWmt5rL4RxS20UdQdf+eZKvA4V7AC0bq6byLvB0GEHfYnT+QjWe
+        BwM6aFW8uXq8ZPToQxPuZdmWSlYZs9GPWWsZ/ody
+X-Google-Smtp-Source: APXvYqylfKS11fJiLyTUzfHz0YNa7SNLC9pqv/Pt7PsRUJbDSNR6f+WMoPH51vpB0I2LGMfQlmL2sQ9oAbCq4YfkYcg=
+X-Received: by 2002:ac8:777b:: with SMTP id h27mr2105555qtu.251.1582852713396;
+ Thu, 27 Feb 2020 17:18:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227131428.5nhvslwdmocv6fkb@pathway.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <857c76090363b6316a89d292cf9cccd0db54c079.1582058914.git.rgb@redhat.com>
+In-Reply-To: <857c76090363b6316a89d292cf9cccd0db54c079.1582058914.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 27 Feb 2020 20:18:22 -0500
+Message-ID: <CAHC9VhT_o7P5G0FMWpOq0rwQb_V5E8Xrqk5Pq_DhQgYVBC2+=Q@mail.gmail.com>
+Subject: Re: [PATCH ghak28 V6] audit: log audit netlink multicast bind and
+ unbind events
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
+        omosnace@redhat.com, Eric Paris <eparis@parisplace.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/27 14:14), Petr Mladek wrote:
-> 
-> Is still anyone against the original patch updating the comments in
-> vsprintf.c. Otherwise, I would queue it for 5.7.
-> 
+On Tue, Feb 18, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> Log information about programs connecting to and disconnecting from the
+> audit netlink multicast socket. This is needed so that during
+> investigations a security officer can tell who or what had access to the
+> audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
+> Criteria.  Here is the systemd startup event:
+>
+> type=3DPROCTITLE msg=3Daudit(2020-02-18 15:26:50.775:10) : proctitle=3D/i=
+nit
+> type=3DSYSCALL msg=3Daudit(2020-02-18 15:26:50.775:10) : arch=3Dx86_64 sy=
+scall=3Dbind success=3Dyes exit=3D0 a0=3D0x19 a1=3D0x55645c369b70 a2=3D0xc =
+a3=3D0x7fff9fedec24 items=3D0 ppid=3D0 pid=3D1 auid=3Dunset uid=3Droot gid=
+=3Droot euid=3Droot suid=3Droot fsuid=3Droot egid=3Droot sgid=3Droot fsgid=
+=3Droot tty=3D(none) ses=3Dunset comm=3Dsystemd exe=3D/usr/lib/systemd/syst=
+emd subj=3Dkernel key=3D(null)
+> type=3DUNKNOWN[1335] msg=3Daudit(2020-02-18 15:26:50.775:10) : pid=3D1 ui=
+d=3Droot auid=3Dunset tty=3D(none) ses=3Dunset subj=3Dkernel comm=3Dsystemd=
+ exe=3D/usr/lib/systemd/systemd nl-mcgrp=3D1 op=3Dconnect res=3Dyes
+>
+> And the events from the test suite:
+>
+> type=3DPROCTITLE msg=3Daudit(2020-02-18 15:28:01.594:307) : proctitle=3D/=
+usr/bin/perl -w amcast_joinpart/test
+> type=3DSOCKADDR msg=3Daudit(2020-02-18 15:28:01.594:307) : saddr=3D{ sadd=
+r_fam=3Dnetlink nlnk-fam=3D16 nlnk-pid=3D0 }
+> type=3DSYSCALL msg=3Daudit(2020-02-18 15:28:01.594:307) : arch=3Dx86_64 s=
+yscall=3Dbind success=3Dyes exit=3D0 a0=3D0x7 a1=3D0x558ebc428be0 a2=3D0xc =
+a3=3D0x0 items=3D0 ppid=3D642 pid=3D645 auid=3Droot uid=3Droot gid=3Droot e=
+uid=3Droot suid=3Droot fsuid=3Droot egid=3Droot sgid=3Droot fsgid=3Droot tt=
+y=3DttyS0 ses=3D1 comm=3Dperl exe=3D/usr/bin/perl subj=3Dunconfined_u:uncon=
+fined_r:unconfined_t:s0-s0:c0.c1023 key=3D(null)
+> type=3DUNKNOWN[1335] msg=3Daudit(2020-02-18 15:28:01.594:307) : pid=3D645=
+ uid=3Droot auid=3Droot tty=3DttyS0 ses=3D1 subj=3Dunconfined_u:unconfined_=
+r:unconfined_t:s0-s0:c0.c1023 comm=3Dperl exe=3D/usr/bin/perl nl-mcgrp=3D1 =
+op=3Dconnect res=3Dyes
+>
+> type=3DUNKNOWN[1335] msg=3Daudit(2020-01-17 10:36:24.051:295) : pid=3D674=
+ uid=3Droot auid=3Droot tty=3DttyS0 ses=3D3 subj=3Dunconfined_u:unconfined_=
+r:unconfined_t:s0-s0:c0.c1023 comm=3Dperl exe=3D/usr/bin/perl nl-mcgrp=3D1 =
+op=3Ddisconnect res=3Dyes
+>
+> Please see the upstream issue tracker:
+>   https://github.com/linux-audit/audit-kernel/issues/28
+>   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-So=
+cket-Join-Part
+>   https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-j=
+oin
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+>
+> ---
+> Note: msg type 1334 was skipped due to BPF accepted in another tree.
+> Note: v5 due to previous 2014-10-07, 2015-07-23, 2016-11-30, 2017-10-13
+> Note: subj attrs included due to missing syscall record for systemd (audi=
+t=3D1)
+> Note: tried refactor of subj attrs, but this is yet another new order.
+> ---
+>  include/uapi/linux/audit.h |  1 +
+>  kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++=
+++----
+>  2 files changed, 45 insertions(+), 4 deletions(-)
 
-+1
+...
 
-	-ss
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 17b0d523afb3..478259f3fa53 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
+>         audit_ctl_unlock();
+>  }
+>
+> +/* Log information about who is connecting to the audit multicast socket=
+ */
+> +static void audit_log_multicast_bind(int group, const char *op, int err)
+> +{
+
+Since this is logging both bind and unbind, let's change the name to
+something a bit more generic, e.g. audit_log_multicast().
+
+> +       const struct cred *cred;
+> +       struct tty_struct *tty;
+> +       char comm[sizeof(current->comm)];
+> +       struct audit_buffer *ab;
+> +
+> +       if (!audit_enabled)
+> +               return;
+> +
+> +       ab =3D audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_L=
+ISTENER);
+> +       if (!ab)
+> +               return;
+> +
+> +       cred =3D current_cred();
+> +       tty =3D audit_get_tty();
+> +       audit_log_format(ab, "pid=3D%u uid=3D%u auid=3D%u tty=3D%s ses=3D=
+%u",
+> +                        task_pid_nr(current),
+> +                        from_kuid(&init_user_ns, cred->uid),
+> +                        from_kuid(&init_user_ns, audit_get_loginuid(curr=
+ent)),
+> +                        tty ? tty_name(tty) : "(none)",
+> +                        audit_get_sessionid(current));
+> +       audit_put_tty(tty);
+> +       audit_log_task_context(ab); /* subj=3D */
+> +       audit_log_format(ab, " comm=3D");
+> +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
+> +       audit_log_d_path_exe(ab, current->mm); /* exe=3D */
+> +       audit_log_format(ab, " nl-mcgrp=3D%d op=3D%s res=3D%d", group, op=
+, !err);
+> +       audit_log_end(ab);
+> +}
+
+--=20
+paul moore
+www.paul-moore.com
