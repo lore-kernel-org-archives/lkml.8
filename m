@@ -2,77 +2,55 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B044EC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1BAC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AA1246A3
+	by mail.kernel.org (Postfix) with ESMTP id D55B3246A8
 	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGuISWEl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582864710;
+	bh=HQ7hmvfvnb2OGkhjZtbAEIeMVAGbeP6z+iDoaV29xGg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xf2yRdAsa1sISUTmVv60+qYpc30HRIrVlRZEub4UFw9KESxP19sMt1yPqeLTq4OEE
+	 pVVLlvtM26frJku8myTjKEPIfi3ypj1uJWl9KEAPPagcYEbjBaCfxYvqOzvByuhiGi
+	 FiHMLfrHjtLl/kNbsw4i+v6C6VlMyMNw9v05XRIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbgB1EiZ (ORCPT
+        id S1730957AbgB1Ei0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Feb 2020 23:38:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730802AbgB1EiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 23:38:25 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46253 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbgB1EiZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:38:25 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y8so715891pll.13;
-        Thu, 27 Feb 2020 20:38:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
-        b=OGuISWEli9eLWMchX3FyKGExfAxWPgMbRqfnKQ71+WgTo0dAEu2wLJuIhrKoGocX7C
-         NgR5sxtUyB2qc+ar05E0dailbAMsC/Kwdrk8MOBfQ4vYqgtPKQVDCZtupwPoBDBSJaHY
-         5N3TV62amf+JgPDxaRZ8kRVzgFexamdDBZnLMUd4UHpeSeFtwRVdcFnfvP7jDC5JxKXB
-         GprPn9waSFKdqTuaDbE50CEKUjlPN4vQKSkRzh1HrfX0oIkzMyIVOEFMVnYflBo8FWGe
-         ldlX01IUa/AEq4++DIRco4fmEed+VmzvnXwDP4sNJG4uEuNpeZa3AdkdoTFZjyMu7OSo
-         lYNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=srFQTDpYVngqG0eYKY8zeXeTxEow1+Q6Yy9to892+K8=;
-        b=Pvqt70CAE30X5SEstTqe/AoHXrntr5wiFDRDQWsFO/s/n/UGPMuvzvBU558YBSAJoa
-         Nw5+hiU0mLazPgN8Y5/yBYI+haBkBmWL26g4AyO/tgHQq9tpmSksdTb4os28j1A3o4cY
-         xxp3jTo9F9zuK1QOwaY6BJ609BhJvXXinQ1IQz/oCmM7RBpR7IU+qIvaD9PjWZV2Wbia
-         88tpx4Ivy3RHq0mFpj51yCzk3mjI/1v7kqByvtNXD7B1LBYOn11RZT6U2ES6eVubuABL
-         j0zWAg48d9LLLCyX2izeKXTn2/KbWspRRhe+PSeRKbIiB6Y/SuIoOcAgChpfRZ4Z2rK/
-         a1YQ==
-X-Gm-Message-State: APjAAAXMsVnTooazmTR59kQ1n9uno1WxP78I40PfxhcUfnd/rgFwFTQk
-        uVu3UvGHmG1GomfXTSOtrlM=
-X-Google-Smtp-Source: APXvYqyvibBkO+TV6UPsBt0A3f9XT3QV3cG3heDfSZwLqQ1gjV5l3PPpcjCz6rPkJXCg+y5fzWLizA==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr2715072pjq.5.1582864703657;
-        Thu, 27 Feb 2020 20:38:23 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:962:6595:7b84:9990:1a82:371c])
-        by smtp.gmail.com with ESMTPSA id 196sm9069047pfy.86.2020.02.27.20.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 20:38:22 -0800 (PST)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 0/4] rewrite mtk-quadspi spi-nor driver with spi-mem
-Date:   Fri, 28 Feb 2020 12:36:32 +0800
-Message-Id: <20200228043636.559915-1-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA19D2469D;
+        Fri, 28 Feb 2020 04:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582864704;
+        bh=HQ7hmvfvnb2OGkhjZtbAEIeMVAGbeP6z+iDoaV29xGg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=R1JdH66yUYP82IgWNwYtnKp6TJ80AtmtFaMnGZ/ppt73Dd0sHeSZcyQZPOvif2NWz
+         M61C7KNWhgVQXHzTz7HTskXmFQftQZOqgAI6oXDzHObSziAc4JpOPqh9tRwgd8kl5G
+         1MaKi+uZlnDK4is2WTFDpTdQf+02p7X4EdifKWd4=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        grygorii tertychnyi <gtertych@cisco.com>
+Subject: [PATCH] loop: avoid EAGAIN, if offset or block_size are changed
+Date:   Thu, 27 Feb 2020 20:38:20 -0800
+Message-Id: <20200228043820.169288-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,36 +58,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds a spi-mem driver for Mediatek SPI-NOR controller,
-which already has limited support by mtk-quadspi. This new driver can
-make use of full quadspi capability of this controller.
+Previously, there was a bug where user could see stale buffer cache (e.g, 512B)
+attached in the 4KB-sized pager cache, when the block size was changed from
+512B to 4KB. That was fixed by:
+commit 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
 
-1st new commit makes spi-max-frequency optional to match current
-binding doc and make this new driver compatible with old driver dt
-bindings.
+But, there were some regression reports saying the fix returns EAGAIN easily.
+So, this patch removes previously added EAGAIN condition, nrpages != 0.
 
-Changes since v1:
- two new commits.
+Instead, it changes the flow like this:
+- sync_blockdev()
+- blk_mq_freeze_queue()
+ : change the loop configuration
+- blk_mq_unfreeze_queue()
+- sync_blockdev()
+- invalidate_bdev()
 
-Chuanhong Guo (4):
-  spi: make spi-max-frequency optional
-  spi: add support for mediatek spi-nor controller
-  dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
-  mtd: spi-nor: remove mtk-quadspi driver
+After invalidating the buffer cache, we must see the full valid 4KB page.
 
- .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   |  34 +-
- drivers/mtd/spi-nor/Kconfig                   |   8 -
- drivers/mtd/spi-nor/Makefile                  |   1 -
- drivers/mtd/spi-nor/mtk-quadspi.c             | 565 --------------
- drivers/spi/Kconfig                           |  10 +
- drivers/spi/Makefile                          |   1 +
- drivers/spi/spi-mtk-nor.c                     | 689 ++++++++++++++++++
- drivers/spi/spi.c                             |   9 +-
- 8 files changed, 717 insertions(+), 600 deletions(-)
- rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
- delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
- create mode 100644 drivers/spi/spi-mtk-nor.c
+Additional concern came from Bart in which we can lose some data when
+changing the lo_offset. In that case, this patch adds:
+- sync_blockdev()
+- blk_set_queue_dying
+- blk_mq_freeze_queue()
+ : change the loop configuration
+- blk_mq_unfreeze_queue()
+- blk_queue_flag_clear(QUEUE_FLAG_DYING);
+- sync_blockdev()
+- invalidate_bdev()
 
+Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+
+Cc: <stable@vger.kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+Cc: Bart Van Assche <bvanassche@acm.org>
+Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
+Reported-by: Gwendal Grignou <gwendal@chromium.org>
+Reported-by: grygorii tertychnyi <gtertych@cisco.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ drivers/block/loop.c | 65 ++++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 739b372a5112..8c9da7f9b1f6 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1245,6 +1245,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 	kuid_t uid = current_uid();
+ 	struct block_device *bdev;
+ 	bool partscan = false;
++	bool drop_request = false;
++	bool drop_cache = false;
+ 
+ 	err = mutex_lock_killable(&loop_ctl_mutex);
+ 	if (err)
+@@ -1264,14 +1266,21 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		goto out_unlock;
+ 	}
+ 
++	if (lo->lo_offset != info->lo_offset)
++		drop_request = true;
+ 	if (lo->lo_offset != info->lo_offset ||
+-	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	    lo->lo_sizelimit != info->lo_sizelimit)
++		drop_cache = true;
+ 
+-	/* I/O need to be drained during transfer transition */
+-	blk_mq_freeze_queue(lo->lo_queue);
++	sync_blockdev(lo->lo_device);
++
++	if (drop_request) {
++		blk_set_queue_dying(lo->lo_queue);
++		blk_mq_freeze_queue_wait(lo->lo_queue);
++	} else {
++		/* I/O need to be drained during transfer transition */
++		blk_mq_freeze_queue(lo->lo_queue);
++	}
+ 
+ 	err = loop_release_xfer(lo);
+ 	if (err)
+@@ -1298,14 +1307,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 
+ 	if (lo->lo_offset != info->lo_offset ||
+ 	    lo->lo_sizelimit != info->lo_sizelimit) {
+-		/* kill_bdev should have truncated all the pages */
+-		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+-			err = -EAGAIN;
+-			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-				__func__, lo->lo_number, lo->lo_file_name,
+-				lo->lo_device->bd_inode->i_mapping->nrpages);
+-			goto out_unfreeze;
+-		}
+ 		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+ 			err = -EFBIG;
+ 			goto out_unfreeze;
+@@ -1342,6 +1343,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 
+ out_unfreeze:
+ 	blk_mq_unfreeze_queue(lo->lo_queue);
++	if (drop_request)
++		blk_queue_flag_clear(QUEUE_FLAG_DYING, lo->lo_queue);
+ 
+ 	if (!err && (info->lo_flags & LO_FLAGS_PARTSCAN) &&
+ 	     !(lo->lo_flags & LO_FLAGS_PARTSCAN)) {
+@@ -1350,6 +1353,12 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		bdev = lo->lo_device;
+ 		partscan = true;
+ 	}
++
++	/* truncate stale pages cached by previous operations */
++	if (!err && drop_cache) {
++		sync_blockdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
++	}
+ out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
+ 	if (partscan)
+@@ -1531,7 +1540,7 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
+ 
+ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ {
+-	int err = 0;
++	bool drop_cache = false;
+ 
+ 	if (lo->lo_state != Lo_bound)
+ 		return -ENXIO;
+@@ -1539,31 +1548,23 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ 	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+ 		return -EINVAL;
+ 
+-	if (lo->lo_queue->limits.logical_block_size != arg) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	if (lo->lo_queue->limits.logical_block_size != arg)
++		drop_cache = true;
+ 
++	sync_blockdev(lo->lo_device);
+ 	blk_mq_freeze_queue(lo->lo_queue);
+-
+-	/* kill_bdev should have truncated all the pages */
+-	if (lo->lo_queue->limits.logical_block_size != arg &&
+-			lo->lo_device->bd_inode->i_mapping->nrpages) {
+-		err = -EAGAIN;
+-		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-			__func__, lo->lo_number, lo->lo_file_name,
+-			lo->lo_device->bd_inode->i_mapping->nrpages);
+-		goto out_unfreeze;
+-	}
+-
+ 	blk_queue_logical_block_size(lo->lo_queue, arg);
+ 	blk_queue_physical_block_size(lo->lo_queue, arg);
+ 	blk_queue_io_min(lo->lo_queue, arg);
+ 	loop_update_dio(lo);
+-out_unfreeze:
+ 	blk_mq_unfreeze_queue(lo->lo_queue);
+ 
+-	return err;
++	/* truncate stale pages cached by previous operations */
++	if (drop_cache) {
++		sync_blockdev(lo->lo_device);
++		invalidate_bdev(lo->lo_device);
++	}
++	return 0;
+ }
+ 
+ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
 -- 
-2.24.1
+2.25.1.481.gfbce0eb801-goog
 
