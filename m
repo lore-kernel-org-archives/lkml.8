@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABEBC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF4C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5E4246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CB924690
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgB1Dil (ORCPT
+        id S1730846AbgB1Dio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:38:41 -0500
+        Thu, 27 Feb 2020 22:38:44 -0500
 Received: from mga09.intel.com ([134.134.136.24]:36522 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgB1Dik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:38:40 -0500
+        id S1730835AbgB1Dio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:38:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:38:40 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:38:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="232107356"
+   d="scan'208";a="232107370"
 Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 19:38:37 -0800
+  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 19:38:40 -0800
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -37,12 +36,13 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
         Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Minchan Kim <minchan@kernel.org>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Hugh Dickins <hughd@google.com>
-Subject: [RFC 1/3] mm, migrate: Check return value of try_to_unmap()
-Date:   Fri, 28 Feb 2020 11:38:17 +0800
-Message-Id: <20200228033819.3857058-2-ying.huang@intel.com>
+Subject: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
+Date:   Fri, 28 Feb 2020 11:38:18 +0800
+Message-Id: <20200228033819.3857058-3-ying.huang@intel.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200228033819.3857058-1-ying.huang@intel.com>
 References: <20200228033819.3857058-1-ying.huang@intel.com>
@@ -55,81 +55,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Huang Ying <ying.huang@intel.com>
 
-During the page migration, try_to_unmap() is called to replace the
-page table entries with the migration entries.  Now its return value
-is ignored, that is generally OK in most cases.  But in theory, it's
-possible that try_to_unmap() return false (failure) for the page
-migration after arch_unmap_one() is called in unmap code.  Even if
-without arch_unmap_one(), it makes code more robust for the future
-code changing to check the return value.
-
-Known issue: I don't know what is the appropriate error code for
-try_to_unmap() failure.  Whether EIO is OK?
+Now !PageSwapBacked() is used as the flag for the pages freed lazily
+via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
+new page flag for that to improve the code readability.
 
 Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: David Hildenbrand <david@redhat.com>
 Cc: Mel Gorman <mgorman@suse.de>
 Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Zi Yan <ziy@nvidia.com>
 Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Minchan Kim <minchan@kernel.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Hugh Dickins <hughd@google.com>
 ---
- mm/migrate.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ include/linux/page-flags.h | 25 +++++++++++++++++++++++++
+ mm/rmap.c                  |  6 +++---
+ mm/swap.c                  | 11 +++--------
+ mm/vmscan.c                |  7 +++----
+ 4 files changed, 34 insertions(+), 15 deletions(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 3900044cfaa6..981f8374a6ef 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1116,8 +1116,11 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
- 		/* Establish migration ptes */
- 		VM_BUG_ON_PAGE(PageAnon(page) && !PageKsm(page) && !anon_vma,
- 				page);
--		try_to_unmap(page,
--			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
-+		if (!try_to_unmap(page,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS)) {
-+			rc = -EIO;
-+			goto out_unlock_both;
-+		}
- 		page_was_mapped = 1;
- 	}
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 49c2697046b9..759748fbcfad 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
+ TESTPAGEFLAG_FALSE(Ksm)
+ #endif
  
-@@ -1337,8 +1340,11 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
- 		goto put_anon;
++/*
++ * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
++ * anonymous pages.  They have SwapBacked flag cleared to distinguish
++ * with normal anonymous pages
++ */
++static __always_inline int PageLazyFree(struct page *page)
++{
++	page = compound_head(page);
++	return PageAnon(page) && !PageSwapBacked(page);
++}
++
++static __always_inline void SetPageLazyFree(struct page *page)
++{
++	VM_BUG_ON_PAGE(PageTail(page), page);
++	VM_BUG_ON_PAGE(!PageAnon(page), page);
++	ClearPageSwapBacked(page);
++}
++
++static __always_inline void ClearPageLazyFree(struct page *page)
++{
++	VM_BUG_ON_PAGE(PageTail(page), page);
++	VM_BUG_ON_PAGE(!PageAnon(page), page);
++	SetPageSwapBacked(page);
++}
++
+ u64 stable_page_flags(struct page *page);
  
- 	if (page_mapped(hpage)) {
--		try_to_unmap(hpage,
--			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
-+		if (!try_to_unmap(hpage,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS)) {
-+			rc = -EIO;
-+			goto unlock_both;
-+		}
- 		page_was_mapped = 1;
- 	}
+ static inline int PageUptodate(struct page *page)
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 03c5b116d30e..1dcbb1771dd7 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1598,7 +1598,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 			 * Store the swap location in the pte.
+ 			 * See handle_pte_fault() ...
+ 			 */
+-			if (unlikely(PageSwapBacked(page) != PageSwapCache(page))) {
++			if (unlikely(PageLazyFree(page) == PageSwapCache(page))) {
+ 				WARN_ON_ONCE(1);
+ 				ret = false;
+ 				/* We have to invalidate as we cleared the pte */
+@@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 			}
  
-@@ -1349,6 +1355,7 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
- 		remove_migration_ptes(hpage,
- 			rc == MIGRATEPAGE_SUCCESS ? new_hpage : hpage, false);
+ 			/* MADV_FREE page check */
+-			if (!PageSwapBacked(page)) {
++			if (PageLazyFree(page)) {
+ 				if (!PageDirty(page)) {
+ 					/* Invalidate as we cleared the pte */
+ 					mmu_notifier_invalidate_range(mm,
+@@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 				 * discarded. Remap the page to page table.
+ 				 */
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+-				SetPageSwapBacked(page);
++				ClearPageLazyFree(page);
+ 				ret = false;
+ 				page_vma_mapped_walk_done(&pvmw);
+ 				break;
+diff --git a/mm/swap.c b/mm/swap.c
+index f502a2155e85..bd5e40e14c94 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -564,7 +564,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 			    void *arg)
+ {
+-	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
++	if (PageLRU(page) && PageAnon(page) && !PageLazyFree(page) &&
+ 	    !PageSwapCache(page) && !PageUnevictable(page)) {
+ 		bool active = PageActive(page);
  
-+unlock_both:
- 	unlock_page(new_hpage);
+@@ -572,12 +572,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 				       LRU_INACTIVE_ANON + active);
+ 		ClearPageActive(page);
+ 		ClearPageReferenced(page);
+-		/*
+-		 * lazyfree pages are clean anonymous pages. They have
+-		 * SwapBacked flag cleared to distinguish normal anonymous
+-		 * pages
+-		 */
+-		ClearPageSwapBacked(page);
++		SetPageLazyFree(page);
+ 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
  
- put_anon:
-@@ -2558,8 +2565,7 @@ static void migrate_vma_unmap(struct migrate_vma *migrate)
- 			continue;
+ 		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
+@@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
+  */
+ void mark_page_lazyfree(struct page *page)
+ {
+-	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
++	if (PageLRU(page) && PageAnon(page) && !PageLazyFree(page) &&
+ 	    !PageSwapCache(page) && !PageUnevictable(page)) {
+ 		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
  
- 		if (page_mapped(page)) {
--			try_to_unmap(page, flags);
--			if (page_mapped(page))
-+			if (!try_to_unmap(page, flags))
- 				goto restore;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f14c8c6069a6..0aaee7052fb0 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
+ 	 * Anonymous pages are not handled by flushers and must be written
+ 	 * from reclaim context. Do not stall reclaim based on them
+ 	 */
+-	if (!page_is_file_cache(page) ||
+-	    (PageAnon(page) && !PageSwapBacked(page))) {
++	if (!page_is_file_cache(page) || PageLazyFree(page)) {
+ 		*dirty = false;
+ 		*writeback = false;
+ 		return;
+@@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		 * Try to allocate it some swap space here.
+ 		 * Lazyfree page could be freed directly
+ 		 */
+-		if (PageAnon(page) && PageSwapBacked(page)) {
++		if (PageAnon(page) && !PageLazyFree(page)) {
+ 			if (!PageSwapCache(page)) {
+ 				if (!(sc->gfp_mask & __GFP_IO))
+ 					goto keep_locked;
+@@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 			}
  		}
  
+-		if (PageAnon(page) && !PageSwapBacked(page)) {
++		if (PageLazyFree(page)) {
+ 			/* follow __remove_mapping for reference */
+ 			if (!page_ref_freeze(page, 1))
+ 				goto keep_locked;
 -- 
 2.25.0
 
