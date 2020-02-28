@@ -2,71 +2,99 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A39EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A84C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD2D246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED01246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oSjk+T18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgB1Jwi (ORCPT
+        id S1726773AbgB1Jy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:52:38 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2477 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726440AbgB1Jwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:52:38 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id C9D972383FDC35D57229;
-        Fri, 28 Feb 2020 09:52:35 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 28 Feb 2020 09:52:35 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 28 Feb
- 2020 09:52:35 +0000
-To:     <okaya@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-CC:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Subject: About commit "io: change inX() to have their own IO barrier
- overrides"
-Message-ID: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
-Date:   Fri, 28 Feb 2020 09:52:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 28 Feb 2020 04:54:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34120 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgB1Jy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:54:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfTU043736;
+        Fri, 28 Feb 2020 03:54:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582883681;
+        bh=tFNbyFSls0cIg9yQLf3YdifxAAy1SK7224z71RMQhnw=;
+        h=From:To:CC:Subject:Date;
+        b=oSjk+T18dNQNCcmcua4xxEqLbfPz7vn3n/UgqCMunet4Ag+0TbiP8da8pqRBFB2bA
+         phTDioT37escKJusSn4USUlThzWJQtfmC5tnxqaYhxL7Eu23H5n/iNXavjp9C6Ka0P
+         IF6EiTIfjbvEoDGsug++rTSeT0jF9t51jOeAHD/E=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sfQo101177;
+        Fri, 28 Feb 2020 03:54:41 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 03:54:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 03:54:41 -0600
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9sbB3125348;
+        Fri, 28 Feb 2020 03:54:38 -0600
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/5] clocksource: timer-ti-dm: Prepare for dynamic pwm period updates
+Date:   Fri, 28 Feb 2020 15:23:41 +0530
+Message-ID: <20200228095346.32177-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sinan,
+This series fixes dm_timer_ops used for enabling the pwm and enables
+cpu_pm notifier for context save and restore. This acts as a preparatory
+series for enabling dynamic period updates for pwm omap dm timer driver.
 
-About the commit in the $subject 87fe2d543f81, would there be any 
-specific reason why the logic pio versions of these functions did not 
-get the same treatment or should not? I'm talking about lib/logic_pio.c 
-here - commit 031e3601869c ("lib: Add generic PIO mapping method") 
-introduced this.
+Changes since v1:
+- Updated License header to use SPDX identifier
+- Implemented cpu_pm notfier
+- Added support for getting pwm current status
+- Extended set_pwm functionality.
 
-In fact, logic pio will override these for arm64 with the vanilla 
-defconfig these days.
+Lokesh Vutla (5):
+  clocksource: timer-ti-dm: Convert to SPDX identifier
+  clocksource: timer-ti-dm: Implement cpu_pm notifier for context save
+    and restore
+  clocksource: timer-ti-dm: Do not update counter on updating the period
+  clocksource: timer-ti-dm: Add support to get pwm current status
+  clocksource: timer-ti-dm: Enable autoreload in set_pwm
 
-It seems that your change was made just after that logic pio stuff went 
-into the kernel.
+ drivers/clocksource/timer-ti-dm.c          | 136 ++++++++++-----------
+ drivers/pwm/pwm-omap-dmtimer.c             |   8 +-
+ include/clocksource/timer-ti-dm.h          |   3 +-
+ include/linux/platform_data/dmtimer-omap.h |   6 +-
+ 4 files changed, 75 insertions(+), 78 deletions(-)
 
-Thanks,
-John
+-- 
+2.23.0
+
