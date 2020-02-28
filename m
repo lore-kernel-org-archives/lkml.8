@@ -2,171 +2,143 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4776FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1600FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B277246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582918673;
-	bh=GR2XIlY7VhwIG2Z0tuLnjCZ9twVNAAlxyjR6cCpLapc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DWKYQM57MeDIIbzvd2VtWqMnhubIbg4j0MyaK8NAmTH3jGT54ruPrDPFd8BV/eSiX
-	 cJxIyCC+cY6r+Rq6QTSqiKnp7YQpatunBpT8meMaiH4Gy74hCqITIuPWMk0vnG9VKS
-	 zGZfN+/yaUDP2xiPB0dM1VdkWk+M7pRKiY48Hq+4=
+	by mail.kernel.org (Postfix) with ESMTP id DFC0A24695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:43:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NEiDULsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgB1Thw (ORCPT
+        id S1726950AbgB1TnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB1Thv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:37:51 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        Fri, 28 Feb 2020 14:43:09 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:47447 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgB1TnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:43:09 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5062468E;
-        Fri, 28 Feb 2020 19:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582918670;
-        bh=GR2XIlY7VhwIG2Z0tuLnjCZ9twVNAAlxyjR6cCpLapc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MDC+EaNmqCEkJ+97BWWShMEb2fNu+dKrf+uEr314pT30XDXvN51eMNGx0x1pj7zcA
-         j6PJ/803E6x7Gg2YjNyPEG/yDRG9A4lM4u+9tXLSxCxUkDE7pF1AMx7bjx5KR1jK17
-         WhtaHaUWTauLUqNFuf/i1VYPRpA0A/RxsDQNnIC0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j7lSG-008q14-CA; Fri, 28 Feb 2020 19:37:48 +0000
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EA7D623E29;
+        Fri, 28 Feb 2020 20:43:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582918986;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t2ab2OB2vekcnc12mpz1Vb1OABfvPHjtiVIVlnMRJR0=;
+        b=NEiDULsxgUwpmlyHefAr36t7P4AKbtXKrFb2W7hE5ZDUC2Ob0iy3Lv0gW2i8cXvx/7Ok45
+        AKtyigMsI/yrzT/yLWLDf3LZlFpdeugLDH8mAk/QO77OkW1xzP57TQnt1Ltqj6VMdjwDjU
+        5oKFR3GLB2pxu+rKwaG3poaiBxgO0aM=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
+Content-Type: text/plain; charset=US-ASCII;
  format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 28 Feb 2020 19:37:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
- SGI callbacks
-In-Reply-To: <3d725ede-6631-59fb-1a10-9fb9890f3df6@huawei.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-9-maz@kernel.org>
- <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
- <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
- <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
- <3d725ede-6631-59fb-1a10-9fb9890f3df6@huawei.com>
-Message-ID: <dd9f1224b3b21ad793862406bd8855ba@kernel.org>
-X-Sender: maz@kernel.org
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Feb 2020 20:43:05 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH v2 0/2] AT8031 PHY timestamping support
+In-Reply-To: <20200228181507.GA4744@localhost>
+References: <20200228180226.22986-1-michael@walle.cc>
+ <20200228181507.GA4744@localhost>
+Message-ID: <979b0b89b2610c105310e733e98cd862@walle.cc>
+X-Sender: michael@walle.cc
 User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: EA7D623E29
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-20 03:11, Zenghui Yu wrote:
-> Hi Marc,
+Hi Richard,
+
+Am 2020-02-28 19:15, schrieb Richard Cochran:
+> On Fri, Feb 28, 2020 at 07:02:24PM +0100, Michael Walle wrote:
+>>  (1) The PHY doesn't support atomic reading of the (timestamp,
+>>      messageType, sequenceId) tuple. The workaround is to read the
+>>      timestamp again and check if it has changed. Actually, you'd have
+>>      to read the complete tuple again.
 > 
-> On 2020/2/18 23:31, Marc Zyngier wrote:
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index 7656b353a95f..0ed286dba827 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -144,7 +144,7 @@ struct event_lpi_map {
->>       u16            *col_map;
->>       irq_hw_number_t        lpi_base;
->>       int            nr_lpis;
->> -    raw_spinlock_t        vlpi_lock;
->> +    raw_spinlock_t        map_lock;
+> This HW is broken by design :(
+
+Yeah, I know. And actually I don't think I'll pursue this further. Like 
+I
+said, I just wanted to my current work. Maybe it will be useful in the
+future who knows.
+
+>> But if you're using a P2P clock with peer delay requests this whole
+>> thing falls apart because of caveat (3). You'll often see messages 
+>> like
+>>   received SYNC without timestamp
+>> or
+>>  received PDELAY_RESP without timestamp
+>> in linuxptp. Sometimes it working for some time and then it starts to
+>> loosing packets. I suspect this depends on how the PDELAY messages are
+>> interleaved with the SYNC message. If there is not enough time to 
+>> until
+>> the next event message is received either of these two messages won't
+>> have a timestamp.
 > 
-> So we use map_lock to protect both LPI's and VLPI's mapping affinity of
-> a device, and use vpe_lock to protect vPE's affinity, OK.
+> And even the case where a Sync and a DelayResp arrive at nearly the
+> same time will fail.
 > 
->>       struct its_vm        *vm;
->>       struct its_vlpi_map    *vlpi_maps;
->>       int            nr_vlpis;
->> @@ -240,15 +240,33 @@ static struct its_vlpi_map *get_vlpi_map(struct 
->> irq_data *d)
->>       return NULL;
->>   }
->> 
->> -static int irq_to_cpuid(struct irq_data *d)
->> +static int irq_to_cpuid_lock(struct irq_data *d, unsigned long 
->> *flags)
->>   {
->> -    struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->>       struct its_vlpi_map *map = get_vlpi_map(d);
->> +    int cpu;
->> 
->> -    if (map)
->> -        return map->vpe->col_idx;
->> +    if (map) {
->> +        raw_spin_lock_irqsave(&map->vpe->vpe_lock, *flags);
->> +        cpu = map->vpe->col_idx;
->> +    } else {
->> +        struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->> +        raw_spin_lock_irqsave(&its_dev->event_map.map_lock, *flags);
->> +        cpu = its_dev->event_map.col_map[its_get_event_id(d)];
->> +    }
->> 
->> -    return its_dev->event_map.col_map[its_get_event_id(d)];
->> +    return cpu;
->> +}
+>> The PHY also supports appending the timestamp to the actual ethernet 
+>> frame,
+>> but this seems to only work when the PHY is connected via RGMII. I've 
+>> never
+>> get it to work with a SGMII connection.
 > 
-> This helper is correct for normal LPIs and VLPIs, but wrong for per-vPE
-> IRQ (doorbell) and vSGIs. irq_data_get_irq_chip_data() gets confused by
-> both of them.
+> This is the way to go.  I would try to get the vendor's help in making
+> this work.
 
-Yes, I've fixed that in the current state of the tree last week. Do have 
-a
-look if you can, but it seems to survive on both the model with v4.1 and
-my D05.
+Like I said, our FAE is pretty unresponsive. But I'll at least try to 
+find
+out if my guess is correct (that it only works with RGMII). But even 
+then,
+how should the outgoing timestamping work. There are two possibilities:
 
-[...]
+  (1) According to the datasheet, the PHY will attach the TX timestamp to
+      the corresponding RX packet; whatever that means. Lets assume there
+      is such a "corresponding packet", then we would be at the mercy of 
+the
+      peer to actually send such a packet, let alone in a timely manner.
+  (2) Mixing both methods. Use attached timestamps for RX packets, read 
+the
+      timestamp via PHY registers for TX packets. Theoretically, we could
+      control how the packets are send and make sure, we fetch the TX
+      timestamp before sending another PTP packet. But well.. sounds 
+really
+      hacky to me.
 
->> -        rdbase = per_cpu_ptr(gic_rdists->rdist, 
->> vpe->col_idx)->rd_base;
->> +        cpu = irq_to_cpuid_lock(d, &flags);
->> +        rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
->>           gic_write_lpir(d->parent_data->hwirq, rdbase + 
->> GICR_INVLPIR);
->>           wait_for_syncr(rdbase);
->> +        irq_to_cpuid_unlock(d, flags);
->>       } else {
->>           its_vpe_send_cmd(vpe, its_send_inv);
->>       }
-> 
-> Do we really need to grab the vpe_lock for those which are belong to
-> the same irqchip with its_vpe_set_affinity()? The IRQ core code should
-> already ensure the mutual exclusion among them, wrong?
-
-I've been trying to think about that, but jet-lag keeps getting in the 
-way.
-I empirically think that you are right, but I need to go and check the 
-various
-code paths to be sure. Hopefully I'll have a bit more brain space next 
-week.
-
-For sure this patch tries to do too many things at once...
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+-michael
