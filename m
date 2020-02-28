@@ -2,175 +2,251 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31424C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15045C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0214A2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rk4abaK2"
+	by mail.kernel.org (Postfix) with ESMTP id E4F752469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582912880;
+	bh=QegyQo/HR+2pngYHKRkCTtN3MwRY9QFxvC/oTtQwhIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x6s8OdWv5iLbY3n+0hZWXh7bputwNblyHCj6BnEQ1gP8v8lTeUwN/JLMkXxpWaMak
+	 m2Z55Pnyq9IYRj1bxSqkJwM2DXSwhqmAPoC4Zrpt6ykEn5Gq9ba22qmWO9B7oTC3MD
+	 U9dwiVY81fZcL4B9vLaoscFNfw5N57Cp4V8hoTSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgB1R7J (ORCPT
+        id S1726525AbgB1SBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:59:09 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37513 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1R7J (ORCPT
+        Fri, 28 Feb 2020 13:01:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39919 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1SBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:59:09 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m13so1602275pjb.2;
-        Fri, 28 Feb 2020 09:59:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W479fFfJP8Am9FQwNANH6QZduIgFgYhViV6Kajs5bV4=;
-        b=Rk4abaK2BBlJk7w0X7EVEuEOL9Da3d8ZhPiQJBKVoOa+mXQZHUXEEvkFh6W77A5wh9
-         H7pcn/ozAElnkKy9m6gWdlZPyXORGd348f0fvXUQNqGbpP5ebJwTgQ5sWdyZyXMNPZ/e
-         Q5/XE7cLA72SujkIVBmLJS/MWflRhpOKrtzWnXujkphGVMlyMc6tkGV94gxtfBjk6fDN
-         iXXlrMgR+3wnNF8oSlllG/BEuoXc9pOrc1LeY+jMXv/TBwajeZGu3g0M72WFZguo+v8r
-         g+Mwlodrm+qURSwI77zyKcHy8ReHy9qilNrApYUN9NR6iGZFxceox9RDco1m0kdF1toB
-         RXmQ==
+        Fri, 28 Feb 2020 13:01:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x97so3394767ota.6;
+        Fri, 28 Feb 2020 10:01:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W479fFfJP8Am9FQwNANH6QZduIgFgYhViV6Kajs5bV4=;
-        b=MamvILzaEfRLJKai/iAOb5OO2LN3jgAz1LwnDMMAGUxyOHsrckFZGgEe+3iIfg43or
-         QPkZUPgnJWeuIMyF/JeVeu1Jr+TjAbkBf+1f5N2SUusTx96BvtR/2jMlaWsEfZJ0rKin
-         vaIHS1n+MVag4oHIP6QlrsDS7LD//daUZVD+x0EitF18zelvXF4zWttcApJmJ4vm/8cd
-         5Anh8xCOD0SZLpojX62Yg+V8fWlT/OwCZ8+sV8ZBkeswfQanS67gp0RE263RxfcAgNDY
-         Nxs1csGARMJWIpgvMi7lCRN6dVNWBElE+LHwlKhbvIgLYzLP/Zo+PZ/Qn/tiVNJqiDVQ
-         WdRw==
-X-Gm-Message-State: APjAAAWLFRC1CssRkCwU2BoNqukxI6/T3hP+6+UBwEw+arkJdmYWsA2s
-        E05gG9m86MKRRryHMItbVG4=
-X-Google-Smtp-Source: APXvYqyNA2lkChyKOMH60PML1VQHvFQkcLbvStr35TByxg9zQhCEqmhSaIwBoVN64dMR8fKnzqM5Ow==
-X-Received: by 2002:a17:90a:f492:: with SMTP id bx18mr6103523pjb.118.1582912747908;
-        Fri, 28 Feb 2020 09:59:07 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z4sm10991127pfn.42.2020.02.28.09.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 09:59:06 -0800 (PST)
-Date:   Fri, 28 Feb 2020 09:59:05 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>,
-        Boris ARZUR <boris@konbu.org>, linux-usb@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Subject: Re: [RFT PATCH 1/4] usb: dwc2: Simplify and fix DMA alignment code
-Message-ID: <20200228175905.GB3188@roeck-us.net>
-References: <20200226210414.28133-1-linux@roeck-us.net>
- <20200226210414.28133-2-linux@roeck-us.net>
- <CAD=FV=WDd4E-zDW73kb-qHo1QYQrD3BTgVpE70rzowpgeXVy7w@mail.gmail.com>
- <ce3357a1-467f-1241-ae0d-2e113116ca8d@roeck-us.net>
- <f94fc372-d81b-e8e4-e7ef-780fe7db1237@roeck-us.net>
- <CAD=FV=VNsOo--1x+pkwhWOWSGAQyVB6g6CE+o4q7phPSXaDXRw@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6pAsECt7PiBK62q88D+kfvQxUuJNH4AnYnLku6Y2cN8=;
+        b=YNIJWFRH6PD6YH6SLwtDVe2BqkZ8ClZKE2ZrfPAHu3fXTLct8n7boO8SrhcJhRsr4/
+         CV/WSU4jqXgbPVZLlkmg66qJDjU19MTlG9aiq5YbDKrgpsw5ZyrR58QGch0luPDQhbCF
+         Zx1Ck+c/1B0EVfJtO3uuG5r7q60vzeOcFsmIU1E5qB5OHvusA2wZ07BJ/uG0Sxth4P2P
+         TlTX6S6eqQEVQDNapnQjpRdkMku8W4M6Ui3PnloVPx1atZntCZFHio6Pk/PXBb9VDz1p
+         VnO7gpGHFa8ozr7WO2sd1j3cth6J+dOV+72N578DygCHSLsalmZ5c2wYygobKwg9Q+OJ
+         vhDw==
+X-Gm-Message-State: APjAAAW7zLgC7C1nbGIviJ7+K4iWZMHF0bEdDFvyioNqGcPj+jf3DNok
+        lACQtmqhb4O4qMi5QKU15Q==
+X-Google-Smtp-Source: APXvYqyc028jTANUn0xgkw/a9kxcmZKUdVZYKQUcXfDjL8GahTISwR9AkN8XD+xx3EePlmjq7gsFvg==
+X-Received: by 2002:a9d:518b:: with SMTP id y11mr4099645otg.349.1582912877111;
+        Fri, 28 Feb 2020 10:01:17 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m185sm3318360oia.26.2020.02.28.10.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 10:01:16 -0800 (PST)
+Received: (nullmailer pid 21022 invoked by uid 1000);
+        Fri, 28 Feb 2020 18:01:15 -0000
+Date:   Fri, 28 Feb 2020 12:01:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 5/9] ASoC: meson: convert axg fifo to schema
+Message-ID: <20200228180115.GA14079@bogus>
+References: <20200224145821.262873-1-jbrunet@baylibre.com>
+ <20200224145821.262873-6-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=VNsOo--1x+pkwhWOWSGAQyVB6g6CE+o4q7phPSXaDXRw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200224145821.262873-6-jbrunet@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 08:14:35AM -0800, Doug Anderson wrote:
-> Hi,
+On Mon, Feb 24, 2020 at 03:58:17PM +0100, Jerome Brunet wrote:
+> Convert the DT binding documentation for the Amlogic axg audio FIFOs to
+> schema.
 > 
-> On Thu, Feb 27, 2020 at 8:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On 2/27/20 2:27 PM, Guenter Roeck wrote:
-> > > On 2/27/20 2:06 PM, Doug Anderson wrote:
-> > [ ... ]
-> > >>> -       if (urb->num_sgs || urb->sg ||
-> > >>> -           urb->transfer_buffer_length == 0 ||
-> > >>> +       if (urb->num_sgs || urb->sg || urb->transfer_buffer_length == 0 ||
-> > >>> +           (urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) ||
-> > >>>             !((uintptr_t)urb->transfer_buffer & (DWC2_USB_DMA_ALIGN - 1)))
-> > >>
-> > >> Maybe I'm misunderstanding things, but it feels like we need something
-> > >> more here.  Specifically I'm worried about the fact when the transfer
-> > >> buffer is already aligned but the length is not a multiple of the
-> > >> endpoint's maximum transfer size.  You need to handle that, right?
-> > >> AKA something like this (untested):
-> > >>
-> > >> /* Simple case of not having to allocate a bounce buffer */
-> > >> if (urb->num_sgs || urb->sg || urb->transfer_buffer_length == 0 ||
-> > >>     (urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP))
-> > >>   return 0;
-> > >>
-> > >> /* Can also avoid bounce buffer if alignment and size are good */
-> > >> maxp = usb_endpoint_maxp(&ep->desc);
-> > >> if (maxp == urb->transfer_buffer_length &&
-> > >
-> > > No, transfer_buffer_length would have to be a multiple of maxp. There
-> > > are many situations where roundup(transfer_buffer_length, maxp) !=
-> > > transfer_buffer_length. I agree, this would be the prudent approach
-> > > (and it was my original implementation), but then it didn't seem to
-> > > cause trouble so far, and I was hesitant to add it in because it results
-> > > in creating temporary buffers for almost every receive operation.
-> > > I'd like to get some test feedback from Boris - if the current code
-> > > causes crashes with his use case, we'll know that it is needed.
-> > > Otherwise, we'll have to decide if the current approach (with fewer
-> > > copies) is worth the risk, or if we want to play save and always
-> > > copy if roundup(transfer_buffer_length, maxp) != transfer_buffer_length.
-> > >
-> >
-> > Thinking more about this, the situation is actually much worse:
-> > In Boris' testing, he found inbound transactions requested by usb
-> > storage code with a requested transfer size of 13 bytes ... with
-> > URB_NO_TRANSFER_DMA_MAP set. This means the requesting code has
-> > provided a DMA ready buffer, transfer_buffer isn't even used,
-> > and we can not reallocate it. In this situation we can just hope
-> > that the chip (and the connected USB device) don't send more data
-> > than requested.
-> >
-> > With that in mind, I think we should stick with the current
-> > scheme (ie only allocate a new buffer if the provided buffer is
-> > unaligned) unless Boris comes back and tells us that it doesn't
-> > work.
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../bindings/sound/amlogic,axg-fifo.txt       |  34 ------
+>  .../bindings/sound/amlogic,axg-fifo.yaml      | 111 ++++++++++++++++++
+>  2 files changed, 111 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
 > 
-> I dunno.  I'd rather see correctness over performance.  Certainly we'd
-> only need to do the extra bounce buffer for input buffers at least.
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+> deleted file mode 100644
+> index fa4545ed81ca..000000000000
+> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+> +++ /dev/null
+> @@ -1,34 +0,0 @@
+> -* Amlogic Audio FIFO controllers
+> -
+> -Required properties:
+> -- compatible: 'amlogic,axg-toddr' or
+> -	      'amlogic,axg-toddr' or
+> -	      'amlogic,g12a-frddr' or
+> -	      'amlogic,g12a-toddr' or
+> -	      'amlogic,sm1-frddr' or
+> -	      'amlogic,sm1-toddr'
+> -- reg: physical base address of the controller and length of memory
+> -       mapped region.
+> -- interrupts: interrupt specifier for the fifo.
+> -- clocks: phandle to the fifo peripheral clock provided by the audio
+> -	  clock controller.
+> -- resets: list of reset phandle, one for each entry reset-names.
+> -- reset-names: should contain the following:
+> -  * "arb" : memory ARB line (required)
+> -  * "rst" : dedicated device reset line (optional)
+> -- #sound-dai-cells: must be 0.
+> -- amlogic,fifo-depth: The size of the controller's fifo in bytes. This
+> -  		      is useful for determining certain configuration such
+> -		      as the flush threshold of the fifo
+> -
+> -Example of FRDDR A on the A113 SoC:
+> -
+> -frddr_a: audio-controller@1c0 {
+> -	compatible = "amlogic,axg-frddr";
+> -	reg = <0x0 0x1c0 0x0 0x1c>;
+> -	#sound-dai-cells = <0>;
+> -	interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
+> -	clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
+> -	resets = <&arb AXG_ARB_FRDDR_A>;
+> -	fifo-depth = <512>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
+> new file mode 100644
+> index 000000000000..d9fe4f624784
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.yaml
+> @@ -0,0 +1,111 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/amlogic,axg-fifo.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic AXG Audio FIFO controllers
+> +
+> +maintainers:
+> +  - Jerome Brunet <jbrunet@baylibre.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^audio-controller@.*"
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - const:
+> +            amlogic,axg-toddr
+> +      - items:
+> +        - const:
+> +            amlogic,axg-frddr
+> +      - items:
+> +        - enum:
+> +          - amlogic,g12a-toddr
+> +          - amlogic,sm1-toddr
+> +        - const:
+> +            amlogic,axg-toddr
+> +      - items:
+> +        - enum:
+> +          - amlogic,g12a-frddr
+> +          - amlogic,sm1-frddr
+> +        - const:
+> +            amlogic,axg-frddr
+> +
+> +  clocks:
+> +    items:
+> +      - description: Peripheral clock
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    items:
+> +      - description: Memory ARB line
+> +      - description: Dedicated device reset line
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    items:
+> +      - const: arb
+> +      - const: rst
+> +
+> +  amlogic,fifo-depth:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Size of the controller's fifo in bytes
+
+Aren't there some constraints on possible values? I'm sure it's more 
+than 0 and less than 2^32.
+
+> +
+> +required:
+> +  - "#sound-dai-cells"
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - amlogic,fifo-depth
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - amlogic,g12a-toddr
+> +          - amlogic,sm1-toddr
+> +          - amlogic,g12a-frddr
+> +          - amlogic,sm1-frddr
+> +then:
+> +  properties:
+> +    resets:
+> +      minItems: 2
+> +    reset-names:
+> +      minItems: 2
+> +  required:
+> +    - reset-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/axg-audio-clkc.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+> +    #include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
+> +
+> +    frddr_a: audio-controller@1c0 {
+> +        compatible = "amlogic,g12a-frddr", "amlogic,axg-frddr";
+> +        reg = <0x0 0x1c0 0x0 0x1c>;
+> +        #sound-dai-cells = <0>;
+> +        interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
+> +        clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
+> +        resets = <&arb AXG_ARB_FRDDR_A>, <&clkc_audio AUD_RESET_FRDDR_A>;
+> +        reset-names = "arb", "rst";
+> +        amlogic,fifo-depth = <512>;
+> +    };
+> +
+> -- 
+> 2.24.1
 > 
-> Although I don't love the idea, is this something where we want to
-> introduce a config option (either runtime or through KConfig),
-> something like:
-> 
-> CONFIG_DWC2_FAST_AND_LOOSE - Avoid bounce buffers and thus run faster
-> at the risk of a bad USB device being able to clobber some of your
-> memory.  Only do this if you really care about speed and have some
-> trust in the USB devices connected to your system.
-> 
-
-I understand your point. Unfortunately that would only work if the driver
-doesn't set URB_NO_TRANSFER_DMA_MAP.
-
-$ git grep "=.*URB_NO_TRANSFER_DMA_MAP" | wc
-    115     498   10104
-
-isn't exactly reassuring - a quick checks suggests that almost 50%
-of USB drivers set this flag.
-
-So all we'd really accomplish is to give people a false sense of
-security.
-
-In this context, I did play around with configuring the real receive
-buffer size (ie in my reproducer 1522 instead of 1536). If I do that,
-reading the HCTSIZ register after the transfer reports 0x7fff2
-(or -14 = 1522-1536 if I treat the value as signed) as actual transfer
-size. Maybe that would be an option, if properly handled, but who knows
-what the IP actually does in this case, and what it does on other
-implementations (not rk3288).
-
-Guenter
