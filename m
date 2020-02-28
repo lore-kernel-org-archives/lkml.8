@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A889C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5CEC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EE8246BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2D2246BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgB1Qcp (ORCPT
+        id S1726867AbgB1QcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:32:45 -0500
+        Fri, 28 Feb 2020 11:32:22 -0500
 Received: from mga14.intel.com ([192.55.52.115]:35576 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbgB1QcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:32:24 -0500
+        id S1726811AbgB1QcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:32:19 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:24 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:32:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="227593084"
+   d="scan'208";a="227593060"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:24 -0800
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 08:32:19 -0800
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 08/12] perf report: Add option to enable the LBR stitching approach
-Date:   Fri, 28 Feb 2020 08:30:07 -0800
-Message-Id: <20200228163011.19358-9-kan.liang@linux.intel.com>
+Subject: [PATCH 04/12] perf pmu: Add support for PMU capabilities
+Date:   Fri, 28 Feb 2020 08:30:03 -0800
+Message-Id: <20200228163011.19358-5-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228163011.19358-1-kan.liang@linux.intel.com>
 References: <20200228163011.19358-1-kan.liang@linux.intel.com>
@@ -49,135 +49,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-With the LBR stitching approach, the reconstructed LBR call stack
-can break the HW limitation. However, it may reconstruct invalid call
-stacks in some cases, e.g. exception handing such as setjmp/longjmp.
-Also, it may impact the processing time especially when the number of
-samples with stitched LBRs are huge.
+The PMU capabilities information, which is located at
+/sys/bus/event_source/devices/<dev>/caps, is required by perf tool.
+For example, the max LBR information is required to stitch LBR call
+stack.
 
-Add an option to enable the approach.
+Add perf_pmu__caps_parse() to parse the PMU capabilities information.
+The information is stored in a list.
 
-  # To display the perf.data header info, please use
-  # --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 6K of event 'cycles'
-  # Event count (approx.): 6492797701
-  #
-  # Children      Self  Command          Shared Object       Symbol
-  # ........  ........  ...............  ..................
-  # .................................
-  #
-    99.99%    99.99%  tchain_edit      tchain_edit        [.] f43
-            |
-            ---main
-               f1
-               f2
-               f3
-               f4
-               f5
-               f6
-               f7
-               f8
-               f9
-               f10
-               f11
-               f12
-               f13
-               f14
-               f15
-               f16
-               f17
-               f18
-               f19
-               f20
-               f21
-               f22
-               f23
-               f24
-               f25
-               f26
-               f27
-               f28
-               f29
-               f30
-               f31
-               |
-                --99.65%--f32
-                          f33
-                          f34
-                          f35
-                          f36
-                          f37
-                          f38
-                          f39
-                          f40
-                          f41
-                          f42
-                          f43
+Add perf_pmu__scan_caps() to scan the capabilities one by one.
+
+The following patch will store the capabilities information in perf
+header.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/Documentation/perf-report.txt | 11 +++++++++++
- tools/perf/builtin-report.c              |  6 ++++++
- 2 files changed, 17 insertions(+)
+ tools/perf/util/pmu.c | 87 +++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.h | 12 ++++++
+ 2 files changed, 99 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index db61f16ffa56..5e4155d2511c 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -482,6 +482,17 @@ include::itrace.txt[]
- 	This option extends the perf report to show reference callgraphs,
- 	which collected by reference event, in no callgraph event.
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 8b99fd312aae..cec551bcf519 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -844,6 +844,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
  
-+--stitch-lbr::
-+	Show callgraph with stitched LBRs, which may have more complete
-+	callgraph. The perf.data file must have been obtained using
-+	perf record --call-graph lbr.
-+	Disabled by default. In common cases with call stack overflows,
-+	it can recreate better call stacks than the default lbr call stack
-+	output. But this approach is not full proof. There can be cases
-+	where it creates incorrect call stacks from incorrect matches.
-+	The known limitations include exception handing such as
-+	setjmp/longjmp will have calls/returns not match.
+ 	INIT_LIST_HEAD(&pmu->format);
+ 	INIT_LIST_HEAD(&pmu->aliases);
++	INIT_LIST_HEAD(&pmu->caps);
+ 	list_splice(&format, &pmu->format);
+ 	list_splice(&aliases, &pmu->aliases);
+ 	list_add_tail(&pmu->list, &pmus);
+@@ -1565,3 +1566,89 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+ 	va_end(args);
+ 	return ret;
+ }
 +
- --socket-filter::
- 	Only report the samples on the processor socket that match with this filter
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 9483b3f0cae3..286f50d3fc65 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -84,6 +84,7 @@ struct report {
- 	bool			header_only;
- 	bool			nonany_branch_mode;
- 	bool			group_set;
-+	bool			stitch_lbr;
- 	int			max_stack;
- 	struct perf_read_values	show_threads_values;
- 	struct annotation_options annotation_opts;
-@@ -267,6 +268,9 @@ static int process_sample_event(struct perf_tool *tool,
- 		return -1;
- 	}
- 
-+	if (rep->stitch_lbr)
-+		al.thread->lbr_stitch_enable = true;
++static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
++{
++	struct perf_pmu_caps *caps;
 +
- 	if (symbol_conf.hide_unresolved && al.sym == NULL)
- 		goto out_put;
++	caps = zalloc(sizeof(*caps));
++	if (!caps)
++		return -ENOMEM;
++
++	caps->name = strdup(name);
++	caps->value = strndup(value, strlen(value) - 1);
++	list_add_tail(&caps->list, list);
++	return 0;
++}
++
++/*
++ * Reading/parsing the given pmu capabilities, which should be located at:
++ * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
++ * Return the number of capabilities
++ */
++int perf_pmu__caps_parse(struct perf_pmu *pmu)
++{
++	struct stat st;
++	char caps_path[PATH_MAX];
++	const char *sysfs = sysfs__mountpoint();
++	DIR *caps_dir;
++	struct dirent *evt_ent;
++	int nr_caps = 0;
++
++	if (!sysfs)
++		return -1;
++
++	snprintf(caps_path, PATH_MAX,
++		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
++
++	if (stat(caps_path, &st) < 0)
++		return 0;	/* no error if caps does not exist */
++
++	caps_dir = opendir(caps_path);
++	if (!caps_dir)
++		return -EINVAL;
++
++	while ((evt_ent = readdir(caps_dir)) != NULL) {
++		char *name = evt_ent->d_name;
++		char path[PATH_MAX];
++		char value[128];
++		FILE *file;
++
++		if (!strcmp(name, ".") || !strcmp(name, ".."))
++			continue;
++
++		snprintf(path, PATH_MAX, "%s/%s", caps_path, name);
++
++		file = fopen(path, "r");
++		if (!file)
++			break;
++
++		if (!fgets(value, sizeof(value), file) ||
++		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
++			fclose(file);
++			break;
++		}
++
++		nr_caps++;
++		fclose(file);
++	}
++
++	closedir(caps_dir);
++
++	return nr_caps;
++}
++
++struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
++					  struct perf_pmu_caps *caps)
++{
++	if (!pmu)
++		return NULL;
++
++	if (!caps)
++		caps = list_prepare_entry(caps, &pmu->caps, list);
++
++	list_for_each_entry_continue(caps, &pmu->caps, list)
++		return caps;
++
++	return NULL;
++}
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 6737e3d5d568..a228e27ae462 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -21,6 +21,12 @@ enum {
  
-@@ -1241,6 +1245,8 @@ int cmd_report(int argc, const char **argv)
- 			"Show full source file name path for source lines"),
- 	OPT_BOOLEAN(0, "show-ref-call-graph", &symbol_conf.show_ref_callgraph,
- 		    "Show callgraph from reference event"),
-+	OPT_BOOLEAN(0, "stitch-lbr", &report.stitch_lbr,
-+		    "Enable LBR callgraph stitching approach"),
- 	OPT_INTEGER(0, "socket-filter", &report.socket_filter,
- 		    "only show processor socket that match with this filter"),
- 	OPT_BOOLEAN(0, "raw-trace", &symbol_conf.raw_trace,
+ struct perf_event_attr;
+ 
++struct perf_pmu_caps {
++	char *name;
++	char *value;
++	struct list_head list;
++};
++
+ struct perf_pmu {
+ 	char *name;
+ 	__u32 type;
+@@ -32,6 +38,7 @@ struct perf_pmu {
+ 	struct perf_cpu_map *cpus;
+ 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+ 	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
++	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+ 	struct list_head list;    /* ELEM */
+ };
+ 
+@@ -102,4 +109,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+ 
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 
++int perf_pmu__caps_parse(struct perf_pmu *pmu);
++
++struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
++					  struct perf_pmu_caps *caps);
++
+ #endif /* __PMU_H */
 -- 
 2.17.1
 
