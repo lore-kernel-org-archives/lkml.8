@@ -2,186 +2,102 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70367C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F3EC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBD324672
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582882767;
-	bh=IzNmcJ7U0/BTEJT9R69BcJEZiJ8/uEbsNv2my6tGCak=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WAFaHSBz+UPQuGNsHnNJUjp8zAfqHo9D/sTyYZaXucQK80DZZ7c/S1gV/7gnH0ZxN
-	 Lk+p8uLRgKK+n9+s31ySsimuEcTB3oL0AJggclY72Ji6JJtmcI0XHiUajq1txtzVjX
-	 9eawGlcBuaocLgWosol5zdsmTxwNvcyMBGxQNCkY=
+	by mail.kernel.org (Postfix) with ESMTP id 164E224672
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgB1Jj0 (ORCPT
+        id S1726805AbgB1Jj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 28 Feb 2020 04:39:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgB1JjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33602 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgB1JjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 04:39:25 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE31246A8
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582882764;
-        bh=IzNmcJ7U0/BTEJT9R69BcJEZiJ8/uEbsNv2my6tGCak=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mfVhI3U7WgaG7HdhhVCoCFGnnO+tlWQgayuuJLZKrk2YhdSJ0dD7/ywvBGJehMx/T
-         butg6dL0el/qn+BmmkMJfzjip3qibc0m1M8iWDAFAcSkz0U4ChlMUXjpLaAKNklJDE
-         KTaqTl8cQ0dqHc4OuYjwzldwbYNDCc6gtjhXcm4s=
-Received: by mail-wr1-f41.google.com with SMTP id e8so2178307wrm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:39:24 -0800 (PST)
-X-Gm-Message-State: APjAAAUMi2RtvIA/GHmXxlkY2uOsZ/lm8yrAqU42GChxCp2gY+x5u75v
-        WzHDwTOy0I78+e2tdGHec1pbRKcCoPQ6EZwRZkRlUw==
-X-Google-Smtp-Source: APXvYqw5gA3YZv1LzWlD3AARUWxVwVyYS9iAeVMMVhZsQfyrQFSP5pXrxfcpCa/oVyi8ZMO8/nnhscpw2LeYqcZZ1NU=
-X-Received: by 2002:adf:e742:: with SMTP id c2mr3971569wrn.262.1582882762798;
- Fri, 28 Feb 2020 01:39:22 -0800 (PST)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BB4AA1C030F; Fri, 28 Feb 2020 10:39:23 +0100 (CET)
+Date:   Fri, 28 Feb 2020 10:39:23 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, Greg KH <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@denx.de>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+Message-ID: <20200228093923.GC27860@amd>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com>
+ <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+ <20200227105808.GA27003@duo.ucw.cz>
+ <20200227124329.GA994747@kroah.com>
+ <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
+ <96a31ff6-5ecf-05a7-d61f-2804f2488d1b@gmail.com>
 MIME-Version: 1.0
-References: <20200217113947.2070436-1-javierm@redhat.com> <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
- <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com> <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
-In-Reply-To: <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 28 Feb 2020 10:39:12 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com>
-Message-ID: <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
- certs if EFI vars are found
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+Content-Disposition: inline
+In-Reply-To: <96a31ff6-5ecf-05a7-d61f-2804f2488d1b@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 at 10:35, David Hildenbrand <david@redhat.com> wrote:
->
-> On 28.02.20 10:31, David Hildenbrand wrote:
-> > On 28.02.20 10:19, David Hildenbrand wrote:
-> >> On 17.02.20 12:39, Javier Martinez Canillas wrote:
-> >>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
-> >>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
-> >>>
-> >>> But it just assumes that the variables will be present and prints an error
-> >>> if the certs can't be loaded, even when is possible that the variables may
-> >>> not exist. For example the MokListRT variable will only be present if shim
-> >>> is used.
-> >>>
-> >>> So only print an error message about failing to get the certs list from an
-> >>> EFI variable if this is found. Otherwise these printed errors just pollute
-> >>> the kernel log ring buffer with confusing messages like the following:
-> >>>
-> >>> [    5.427251] Couldn't get size: 0x800000000000000e
-> >>> [    5.427261] MODSIGN: Couldn't get UEFI db list
-> >>> [    5.428012] Couldn't get size: 0x800000000000000e
-> >>> [    5.428023] Couldn't get UEFI MokListRT
-> >>>
-> >>> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> >>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> >>> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> >>
-> >> This patch seems to break a very basic x86-64 QEMU setup (booting
-> >> upstream kernel with a F31 initrd - are you running basic boot tests?).
-> >> Luckily, it only took me 5 minutes to identify this patch. Reverting
-> >> this patch from linux-next fixes it for me.
-> >>
-> >>
-> >> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
-> >> [    1.044314] zswap: loaded using pool lzo/zbud
-> >> [    1.045663] Key type ._fscrypt registered
-> >> [    1.046154] Key type .fscrypt registered
-> >> [    1.046524] Key type fscrypt-provisioning registered
-> >> [    1.051178] Key type big_key registered
-> >> [    1.055108] Key type encrypted registered
-> >> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> >> [    1.056172] #PF: supervisor instruction fetch in kernel mode
-> >> [    1.056706] #PF: error_code(0x0010) - not-present page
-> >> [    1.057367] PGD 0 P4D 0
-> >> [    1.057729] Oops: 0010 [#1] SMP NOPTI
-> >> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
-> >> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
-> >> [    1.060230] RIP: 0010:0x0
-> >> [    1.060478] Code: Bad RIP value.
-> >> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
-> >> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
-> >> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
-> >> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
-> >> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-> >> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
-> >> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
-> >> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
-> >> [    1.066562] Call Trace:
-> >> [    1.066803]  load_uefi_certs+0xc8/0x2bb
-> >> [    1.067171]  ? get_cert_list+0xfb/0xfb
-> >> [    1.067523]  do_one_initcall+0x5d/0x2f0
-> >> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
-> >> [    1.068337]  kernel_init_freeable+0x243/0x2c2
-> >> [    1.068751]  ? rest_init+0x23a/0x23a
-> >> [    1.069095]  kernel_init+0xa/0x106
-> >> [    1.069416]  ret_from_fork+0x27/0x50
-> >> [    1.069759] Modules linked in:
-> >> [    1.070050] CR2: 0000000000000000
-> >> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
-> >>
-> >>
-> >
-> > Sorry, wrong mail identified, the patch is actually
-> >
-> > commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
-> > Author: Ard Biesheuvel <ardb@kernel.org>
-> > Date:   Sun Feb 16 19:46:25 2020 +0100
-> >
-> >     integrity: Check properly whether EFI GetVariable() is available
-> >
-> >     Testing the value of the efi.get_variable function pointer is not
-> >
-> > which made it work. (not even able to find that patch on lkml ...)
->
-> To clarify for Ard, your patch breaks a basic QEMU setup (see above,
-> NULL pointer dereference). Reverting your patch from linux-next makes it
-> work again.
->
 
-Does this fix it?
+--E/DnYTRukya0zdZ1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 41269a95ff85..d1746a579c99 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -300,12 +300,12 @@ static int __init efisubsys_init(void)
- {
-        int error;
+Hi!
 
--       if (!efi_enabled(EFI_BOOT))
--               return 0;
--
-        if (!efi_enabled(EFI_RUNTIME_SERVICES))
-                efi.runtime_supported_mask = 0;
+> >> Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
+> >> represent a single output should be fine.
+> >> thanks,
+>=20
+> Thank you for making this clear.
+>=20
+> Effectively, the way to go as I see it now is just moving from
+> colors directory to channel_intensity and channel_names files.
 
-+       if (!efi_enabled(EFI_BOOT))
-+               return 0;
-+
-        if (efi.runtime_supported_mask) {
-                /*
-                 * Since we process only one efi_runtime_service() at a time, an
+Yes.
+
+> Besides that, since the issue of backwards compatibility with
+> LED class still remains, we need to apply the already worked out
+> formula for mapping brightness to color iout values.
+>=20
+> This implies that color values written to channel_intensity file
+> will be written unchanged to the hw only when global brightness
+> is equal to max_brightness. This is because they will be multiplied
+> by brightness / max_brightness ratio.
+>=20
+> Do you agree, Pavel?
+
+Yes. That seems like possible solution.
+
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--E/DnYTRukya0zdZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl5Y38sACgkQMOfwapXb+vJHkwCgofCcau0VBti/twGZP1zeOZV+
+9X4An1TLM76oJaHBTOHcUTt3MF1J5VG5
+=EYF3
+-----END PGP SIGNATURE-----
+
+--E/DnYTRukya0zdZ1--
