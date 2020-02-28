@@ -2,100 +2,115 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E37C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6A4C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05FD246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359DB2468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="hGxPnYVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgB1Ojl (ORCPT
+        id S1727102AbgB1Okg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:39:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54742 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbgB1Ojl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:39:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0DBC1B147;
-        Fri, 28 Feb 2020 14:39:39 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm,thp,compaction,cma: allow THP migration for CMA
- allocations
-To:     Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        mhocko@kernel.org, mgorman@techsingularity.net,
-        rientjes@google.com, aarcange@redhat.com, ziy@nvidia.com
-References: <cover.1582321646.git.riel@surriel.com>
- <20200227213238.1298752-2-riel@surriel.com>
- <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
- <7800e98e3688c124ac3672284b87d67321e1c29e.camel@surriel.com>
- <67185d77-87aa-400d-475c-4435d8b7be11@suse.cz>
- <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
- /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
- fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
- 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
- LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
- usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
- byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
- 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
- Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
- 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
- rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
-Message-ID: <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
-Date:   Fri, 28 Feb 2020 15:39:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Feb 2020 09:40:36 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.179]:30010 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgB1Okf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:40:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582900833;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Jh82InUV2upNUyEKq5fyvNlau0sOPuIK2LHzeIGPEiE=;
+        b=hGxPnYVdUwJWRk4xvDAXNqoGO5b0y5LN6A7XCnko5/nYXJn4D3WZVutnKr/GUpwwf5
+        SeCyNG4eCEh3rFBMOgRxwtVF84NxqjBm65f6AnphP69W8yKtATVhpnDQRJx6qgTWTIjo
+        xrke0aITeQ2nkpRRQfJyKI2fXiYBpIDqPwuLTQ/Z2l0Ps4M8Ys8OJ5TSW4hhoYiFim/i
+        5lhBSDWnJGJdWfRghtXH0UN3pZUo9LurViFy/7ywJdVb+xtYGbZpZMdjM7oby3gnpVtM
+        zvxAbrsRhDxBb8dgn6agdqhx/Apt6U4pV8J7dK0p7YrXAhzJKxqfpML4COgUfDJMZk2+
+        b/2w==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXAcKqg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SEeG1KW
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 15:40:16 +0100 (CET)
+Subject: Re: [PATCH v3 3/6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582900444.3.1@crapouillou.net>
+Date:   Fri, 28 Feb 2020 15:40:15 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D609AAD9-C068-449C-9CB6-044999A9CC99@goldelico.com>
+References: <cover.1581884459.git.hns@goldelico.com> <36aa1e80153fbb29eeb56f65cac9e3672165f7b7.1581884459.git.hns@goldelico.com> <1582900444.3.1@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 3:32 PM, Rik van Riel wrote:
 
->>> Does that need to be the following, then?
->>>
->>>      if (PageTransHuge(head) && !PageHuge(page) && !PageLRU(head)
->>> &&
->>> !__PageMovable(head))
->>>                  return page;
->>
->> I would instead make it an "else if" to the "if (PageHuge(page)...)"
->> above.
-> 
-> That was my first thought too, but that could break on
-> pages that are PageHuge when hugepage_migration_supported
-> returns true.
+> Am 28.02.2020 um 15:34 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le dim., f=E9vr. 16, 2020 at 21:20, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> There is a ACT8600 on the CI20 board and the bindings of the
+>> ACT8865 driver have changed without updating the CI20 device
+>> tree. Therefore the PMU can not be probed successfully and
+>> is running in power-on reset state.
+>> Fix DT to match the latest act8865-regulator bindings.
+>> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/mips/boot/dts/ingenic/ci20.dts | 48 =
+++++++++++++++++++++---------
+>> 1 file changed, 33 insertions(+), 15 deletions(-)
+>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
+b/arch/mips/boot/dts/ingenic/ci20.dts
+>> index 59c104289ece..4f48bc16fb52 100644
+>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>> @@ -153,6 +153,8 @@
+>> 	pinctrl-0 =3D <&pins_uart4>;
+>> };
+>> +#include <dt-bindings/regulator/active-semi,8865-regulator.h>
+>=20
+> Includes at the beginning of the file please. Keeps it tidy.
 
-Right, so then
+Ok.
 
-if (PageHuge()) {
-	if (!migration_supported) return false;
-} else if (!PageLRU(head) ...) {
-   etc...
+Well, I am infected by omap boards where this is not uncommon:
 
-IMHO it's better than adding more tests to the second if.
+=
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/ar=
+ch/arm/boot/dts/omap3-beagle-xm.dts?h=3Dv5.6-rc3#n294
+
+But it may be historic and not a good style.
+
+BR and thanks,
+Nikolaus
+
