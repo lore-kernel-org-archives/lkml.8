@@ -2,179 +2,82 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9132C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D87C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97663246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6479246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WfJ+Pvpx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gs0s1D2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgB1Ow3 (ORCPT
+        id S1727159AbgB1Oxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:52:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:55076 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgB1Ow2 (ORCPT
+        Fri, 28 Feb 2020 09:53:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49083 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726788AbgB1Oxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:52:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582901546; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c4Hpe5bJONH/FNTVGB+t29zh0HkFZmJeasNEqS8Vfj8=;
-        b=WfJ+Pvpx2y2KhO9bZiFPgod3uTc1OKPAVLSOxLatyiysiWhlrezwc7/XRj5Q/vD1YQxeiW
-        IB3syypfuEwpPisEVQOfZvz+jK1l5QVBZQxKwvLDB3t8RA9uR4b0IUWKI0YCfjYXSe4mgT
-        xHRbv52PO/NQLEFhhkPRtwP3GD9Kygw=
-Date:   Fri, 28 Feb 2020 11:52:03 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Message-Id: <1582901523.3.6@crapouillou.net>
-In-Reply-To: <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
-References: <cover.1582898302.git.hns@goldelico.com>
-        <ebd523e39aac31b087affcfa984738204fa8b542.1582898302.git.hns@goldelico.com>
-        <1582900837.3.3@crapouillou.net>
-        <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
+        Fri, 28 Feb 2020 09:53:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582901625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=Me2iAT/yAJmgAK/C/Xnwh9cHR9F8E6hzn8OdATiSink=;
+        b=gs0s1D2lFfcA5l1B2hHjxv1Yoq+DCLuxSimQmGoZx7Ob+hCUTh7bBKkMI0vtOaYgIHZTKL
+        9nWhVL1b8wjH7vcfZ31qOIsYjs8Q7gz4TiIkfrDFNPfL/l47mhs8cWELj5RTthc11vbZjo
+        NbXM7V8Itg51mMrS/1Q8yAAlQ3sI1GI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-_ZDKfHEGNxaTGc1nay5_ZA-1; Fri, 28 Feb 2020 09:53:36 -0500
+X-MC-Unique: _ZDKfHEGNxaTGc1nay5_ZA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3E8813E5;
+        Fri, 28 Feb 2020 14:53:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22CD590CC8;
+        Fri, 28 Feb 2020 14:53:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-api@vger.kernel.org
+cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <96562.1582901612.1@warthog.procyon.org.uk>
+Date:   Fri, 28 Feb 2020 14:53:32 +0000
+Message-ID: <96563.1582901612@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+	
+I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
+should be used instead of the equivalent AT_* flags for new system calls.  Is
+this the case?
 
+If so, should we comment them as being deprecated in the header file?  And
+should they be in linux/fcntl.h rather than linux/openat2.h?
 
-Le ven., f=E9vr. 28, 2020 at 15:47, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
->=20
->>  Am 28.02.2020 um 15:40 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>  Hi Nikolaus,
->>=20
->>=20
->>  Le ven., f=E9vr. 28, 2020 at 14:58, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a =E9crit :
->>>  From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>  This patch brings support for the JZ4780 efuse. Currently it only=20
->>> exposes
->>>  a read only access to the entire 8K bits efuse memory.
->>>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>>  Signed-off-by: PrasannaKumar Muralidharan=20
->>> <prasannatsmkumar@gmail.com>
->>>  Signed-off-by: Mathieu Malaterre <malat@debian.org>
->>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  [converted to yaml]
->>>  Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->>>  ---
->>>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 49=20
->>> +++++++++++++++++++
->>>  1 file changed, 49 insertions(+)
->>>  create mode 100644=20
->>> Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  diff --git=20
->>> a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml=20
->>> b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  new file mode 100644
->>>  index 000000000000..ce6690c50a34
->>>  --- /dev/null
->>>  +++=20
->>> b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>>  @@ -0,0 +1,49 @@
->>>  +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>>  +%YAML 1.2
->>>  +---
->>>  +$id:=20
->>> http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
->>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  +
->>>  +title: Ingenic JZ EFUSE driver bindings
->>>  +
->>>  +maintainers:
->>>  +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>  +
->>>  +allOf:
->>>  +  - $ref: "nvmem.yaml#"
->>>  +
->>>  +properties:
->>>  +  compatible:
->>>  +    enum:
->>>  +      - ingenic,jz4780-efuse
->>>  +
->>>  +  reg:
->>>  +    maxItems: 1
->>>  +
->>>  +  clocks:
->>>  +    # Handle for the ahb for the efuse.
->>>  +    maxItems: 1
->>>  +
->>>  +  clock-names:
->>>  +    items:
->>>  +      - const: ahb2
->>=20
->>  You still have clock-names here. You can remove it completely.
->=20
-> I have just removed them from required: and the examples: because
-> I think they are optional. Or are they forbidden?
+Also:
 
-The driver does not get its clock by name, it just takes the first one.=20
-So having 'clock-names' in the binding is just not needed.
+ (*) It should be noted that the RESOLVE_* flags are not a superset of the
+     AT_* flags (there's no equivalent of AT_NO_AUTOMOUNT for example).
 
--Paul
+ (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the default, but
+     only RESOLVE_NO_SYMLINKS exists.
 
->>=20
->>>  +
->>>  +required:
->>>  +  - compatible
->>>  +  - reg
->>>  +  - clocks
->>>  +
->>>  +unevaluatedProperties: false
->>>  +
->>>  +examples:
->>>  +  - |
->>>  +    #include <dt-bindings/clock/jz4780-cgu.h>
->>>  +
->>>  +    efuse@134100d0 {
->>>  +        compatible =3D "ingenic,jz4780-efuse";
->>>  +        reg =3D <0x134100d0 0x2c>;
->>>  +
->>>  +        clocks =3D <&cgu JZ4780_CLK_AHB2>;
->>>  +    };
->>>  +
->>>  +...
->>>  --
->>>  2.23.0
->=20
-> BR,
-> Nikolaus
->=20
-
-=
+David
 
