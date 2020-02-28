@@ -2,480 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339DFC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B22246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273DF246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBtcOnyv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ihkb5lVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgB1VX5 (ORCPT
+        id S1726796AbgB1VZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:23:57 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46542 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1VX5 (ORCPT
+        Fri, 28 Feb 2020 16:25:21 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:56296 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgB1VZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:23:57 -0500
-Received: by mail-pf1-f195.google.com with SMTP id o24so2329800pfp.13;
-        Fri, 28 Feb 2020 13:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=BavgmzSDunkGnQtB4RjTodF7MWhgzfm6Vq6hYsR/Hxc=;
-        b=XBtcOnyvWZBewgwmWvN/eD4gISNgn99811SPfDuVlxcUgJrweDOFpIFzsSZ6epTHRN
-         YxJzEbQlAidoI4ejfS1cwtBk5L/nNxWezJdOsR/FUgBenhmSj8QfZbrUBr7o4TI2gwTT
-         Sjo7474txsVYfW/fsFnnJZpsCYj1ShVVMaYCNocoJ4gMJVSe2/uleO2Vn6mEJ0ajZshX
-         1DlKxZrEEBS5UDZbQ4C6U2Ka/AWKm+OIhvIjaoHgbqEJJxXjY+jUy9gZPcug/D+a6NVP
-         LhySur3t5/bZPSoEzQJlLWv+cWMEfe5mlBFL3wWtrJ+k5QBdyCzNP7KhYZ9d+WKkZBq0
-         CBdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=BavgmzSDunkGnQtB4RjTodF7MWhgzfm6Vq6hYsR/Hxc=;
-        b=njXRjOa8WljWBMk0ZPekVQ/Ag38itNL5EXWyXHIrUN2TOk+5lEgSzBtc3NETssL3V/
-         eDhti/HJ0Z/c9hRTyiQa+6nArvTNmby1bcfeDlRvDWzY+iu+kN/C/xPA5RSYKNlxysXl
-         tlE4NI7XexxvUYZhws2DklJUQT01LrZsjkpoDZGYpLO2y8fnmTU0goU78h+vjM28usLu
-         gIstFTOWd5/Lezb7/Dlpn83r0/YcdcYm/JMGenrWW9ZQc4o9iK1Y/cwCZQLJQQeRVMPd
-         h4f1CO/nlHWl+vyuRl29doZRg6J0fIqD7ryOWu0SyzKGaT9Q9+k07m8HDNDRsa5o4FEi
-         Oqsw==
-X-Gm-Message-State: APjAAAWz5C7y78mEWjy+Zj7MEODmVB1Np+hukzSaBU+u1BBIlYmm+B9V
-        sfZa7FaXp8PZ1omhafY0+fSzzzEbNP0=
-X-Google-Smtp-Source: APXvYqzK4rkojELgKn3vIHA6jw4RQVHlkeIV+Zu96XR7P9XDC5Yugr59fcLJg94YRKg9cPZWs0PYQg==
-X-Received: by 2002:a63:f455:: with SMTP id p21mr6380077pgk.430.1582925035732;
-        Fri, 28 Feb 2020 13:23:55 -0800 (PST)
-Received: from raspberrypi (72-48-120-28.static.grandenetworks.net. [72.48.120.28])
-        by smtp.gmail.com with ESMTPSA id a17sm11468510pgv.11.2020.02.28.13.23.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 13:23:55 -0800 (PST)
-Date:   Fri, 28 Feb 2020 15:23:49 -0600
-From:   Grant Peltier <grantpeltier93@gmail.com>
-To:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc:     grantpeltier93@gmail.com, adam.vaughn.xh@renesas.com
-Subject: [PATCH] hwmon: (pmbus) Add support for 2nd Gen Renesas digital
- multiphase
-Message-ID: <20200228212349.GA1929@raspberrypi>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 28 Feb 2020 16:25:21 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SLO7j9038447
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:25:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : date : references :
+ to : in-reply-to : message-id; s=corp-2020-01-29;
+ bh=E7XyFkTvbjpmPkHbdIsblJhB2bTjT3iJeDgMpf7dsPY=;
+ b=ihkb5lVk4aI6H6lnZpcDpKsoOcz1nqFXFBv3vaBGbyAIn83DUGBuAoWH6+UoNhaycT4E
+ d9e0hV+i/F+Ycvsrv5ogSn8NuHIc3sr9KMA806LPj7zfXEJhRu4oQrayxJhpcV9JuQWO
+ eHG32X0XhNhexGcD//A3GB2Yla3gjjPrnzS05c4+GdtRys/msixFLBtIfHxPzTK8yoHb
+ 8EP8TpiJndAYA0rFReUynPlWJdIqsjyVtzDur7+sIryirdE6WKNGzEXUpbeQgpKms/j2
+ vs2/Rzg/8QZHwVLiI4Ur79CsluuZKiQIisf7YaohkujNzXU0HglVrdt4V/XAjJ9Z0/du oA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ydcsnwg2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:25:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SLGtlS115527
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:25:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2ydcsg76cr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:25:18 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01SLPIMs001480
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:25:18 GMT
+Received: from dhcp-10-154-108-96.vpn.oracle.com (/10.154.108.96)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Feb 2020 13:25:18 -0800
+From:   John Donnelly <john.p.donnelly@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH ] ipmi_si: Fix false error about IRQ registration
+Date:   Fri, 28 Feb 2020 15:25:16 -0600
+References: <161D2B48-8034-4467-A085-7B69458144C9@oracle.com>
+To:     linux-kernel@vger.kernel.org
+In-Reply-To: <161D2B48-8034-4467-A085-7B69458144C9@oracle.com>
+Message-Id: <5E488521-038E-4F6E-A2DB-5A5A61271069@oracle.com>
+X-Mailer: Apple Mail (2.3445.9.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=5 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=5 impostorscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver to support 2nd generation Renesas digital multiphase power
-regulators. The driver is meant to support a large family of part
-numbers spanning isl682xx, isl692xx, and some raa228/9 part designations.
+Please Ignore . =20
 
-Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
----
- drivers/hwmon/pmbus/Kconfig    |   9 +
- drivers/hwmon/pmbus/Makefile   |   1 +
- drivers/hwmon/pmbus/isl692xx.c | 352 +++++++++++++++++++++++++++++++++
- 3 files changed, 362 insertions(+)
- create mode 100644 drivers/hwmon/pmbus/isl692xx.c
+Let me correct the contents in v2=20
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index a9ea06204767..fbe7bbc8b37c 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -100,6 +100,15 @@ config SENSORS_ISL68137
- 	  This driver can also be built as a module. If so, the module will
- 	  be called isl68137.
- 
-+config SENSORS_ISL692XX
-+        tristate "Renesas 2nd Gen Digital Multiphase"
-+        help
-+          If you say yes here you get hardware monitoring support for Renesas
-+          2nd Generation Digital Multiphase power regulators.
-+
-+          This driver can also be built as a module. If so, the module will
-+          be called isl692xx.
-+
- config SENSORS_LM25066
- 	tristate "National Semiconductor LM25066 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index 5feb45806123..bf1ea99a6120 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
- obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
- obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
- obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
-+obj-$(CONFIG_SENSORS_ISL692XX)	+= isl692xx.o
- obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
- obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
- obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
-diff --git a/drivers/hwmon/pmbus/isl692xx.c b/drivers/hwmon/pmbus/isl692xx.c
-new file mode 100644
-index 000000000000..26f3d90a7ddc
---- /dev/null
-+++ b/drivers/hwmon/pmbus/isl692xx.c
-@@ -0,0 +1,352 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Hardware monitoring driver for Renesas Gen 2 Digital Multiphase Devices
-+ *
-+ * Copyright (c) 2020 Renesas Electronics America
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+
-+#include "pmbus.h"
-+
-+#define ISL692XX_READ_VMON        0xc8
-+
-+enum parts {
-+        isl68220,
-+        isl68221,
-+        isl68222,
-+        isl68223,
-+        isl68224,
-+        isl68225,
-+        isl68226,
-+        isl68227,
-+        isl68229,
-+        isl68233,
-+        isl68239,
-+        isl69222,
-+        isl69223,
-+        isl69224,
-+        isl69225,
-+        isl69227,
-+        isl69228,
-+        isl69234,
-+        isl69236,
-+        isl69239,
-+        isl69242,
-+        isl69243,
-+        isl69247,
-+        isl69248,
-+        isl69254,
-+        isl69255,
-+        isl69256,
-+        isl69259,
-+        isl69260,
-+        isl69268,
-+        isl69269,
-+        isl69298,
-+        raa228000,
-+        raa228004,
-+        raa228006,
-+        raa228228,
-+        raa229001,
-+        raa229004,
-+};
-+
-+enum rail_configs { high_voltage, one_rail, two_rail, three_rail };
-+
-+static const struct  i2c_device_id isl692xx_id[] = {
-+        { "isl68220", isl68220 },
-+        { "isl68221", isl68221 },
-+        { "isl68222", isl68222 },
-+        { "isl68223", isl68223 },
-+        { "isl68224", isl68224 },
-+        { "isl68225", isl68225 },
-+        { "isl68226", isl68226 },
-+        { "isl68227", isl68227 },
-+        { "isl68229", isl68229 },
-+        { "isl68233", isl68233 },
-+        { "isl68239", isl68239 },
-+        { "isl69222", isl69222 },
-+        { "isl69223", isl69223 },
-+        { "isl69224", isl69224 },
-+        { "isl69225", isl69225 },
-+        { "isl69227", isl69227 },
-+        { "isl69228", isl69228 },
-+        { "isl69234", isl69234 },
-+        { "isl69236", isl69236 },
-+        { "isl69239", isl69239 },
-+        { "isl69242", isl69242 },
-+        { "isl69243", isl69243 },
-+        { "isl69247", isl69247 },
-+        { "isl69248", isl69248 },
-+        { "isl69254", isl69254 },
-+        { "isl69255", isl69255 },
-+        { "isl69256", isl69256 },
-+        { "isl69259", isl69259 },
-+        { "isl69260", isl69260 },
-+        { "isl69268", isl69268 },
-+        { "isl69269", isl69269 },
-+        { "isl69298", isl69298 },
-+        { "raa228000", raa228000 },
-+        { "raa228004", raa228004 },
-+        { "raa228006", raa228006 },
-+        { "raa228228", raa228228 },
-+        { "raa229001", raa229001 },
-+        { "raa229004", raa229004 },
-+        { },
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, isl692xx_id);
-+
-+static int isl692xx_read_word_data(struct i2c_client *client, int page, int reg)
-+{
-+        int ret;
-+
-+        switch (reg) {
-+        case PMBUS_VIRT_READ_VMON:
-+                ret = pmbus_read_word_data(client, page, ISL692XX_READ_VMON);
-+                break;
-+        default:
-+                ret = -ENODATA;
-+                break;
-+        }
-+        
-+        return ret;
-+}
-+
-+static struct pmbus_driver_info isl692xx_info[] = {
-+        [high_voltage] = {
-+                .pages = 1,
-+                .format[PSC_VOLTAGE_IN] = direct,
-+                .format[PSC_VOLTAGE_OUT] = direct,
-+                .format[PSC_CURRENT_IN] = direct,
-+                .format[PSC_CURRENT_OUT] = direct,
-+                .format[PSC_POWER] = direct,
-+                .format[PSC_TEMPERATURE] = direct,
-+                .m[PSC_VOLTAGE_IN] = 1,
-+                .b[PSC_VOLTAGE_IN] = 0,
-+                .R[PSC_VOLTAGE_IN] = 1,
-+                .m[PSC_VOLTAGE_OUT] = 2,
-+                .b[PSC_VOLTAGE_OUT] = 0,
-+                .R[PSC_VOLTAGE_OUT] = 2,
-+                .m[PSC_CURRENT_IN] = 2,
-+                .b[PSC_CURRENT_IN] = 0,
-+                .R[PSC_CURRENT_IN] = 2,
-+                .m[PSC_CURRENT_OUT] = 1,
-+                .b[PSC_CURRENT_OUT] = 0,
-+                .R[PSC_CURRENT_OUT] = 1,
-+                .m[PSC_POWER] = 2,
-+                .b[PSC_POWER] = 0,
-+                .R[PSC_POWER] = -1,
-+                .m[PSC_TEMPERATURE] = 1,
-+                .b[PSC_TEMPERATURE] = 0,
-+                .R[PSC_TEMPERATURE] = 0,
-+                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .read_word_data = isl692xx_read_word_data,
-+        },
-+        [one_rail] = {
-+                .pages = 1,
-+                .format[PSC_VOLTAGE_IN] = direct,
-+                .format[PSC_VOLTAGE_OUT] = direct,
-+                .format[PSC_CURRENT_IN] = direct,
-+                .format[PSC_CURRENT_OUT] = direct,
-+                .format[PSC_POWER] = direct,
-+                .format[PSC_TEMPERATURE] = direct,
-+                .m[PSC_VOLTAGE_IN] = 1,
-+                .b[PSC_VOLTAGE_IN] = 0,
-+                .R[PSC_VOLTAGE_IN] = 2,
-+                .m[PSC_VOLTAGE_OUT] = 1,
-+                .b[PSC_VOLTAGE_OUT] = 0,
-+                .R[PSC_VOLTAGE_OUT] = 3,
-+                .m[PSC_CURRENT_IN] = 1,
-+                .b[PSC_CURRENT_IN] = 0,
-+                .R[PSC_CURRENT_IN] = 2,
-+                .m[PSC_CURRENT_OUT] = 1,
-+                .b[PSC_CURRENT_OUT] = 0,
-+                .R[PSC_CURRENT_OUT] = 1,
-+                .m[PSC_POWER] = 1,
-+                .b[PSC_POWER] = 0,
-+                .R[PSC_POWER] = 0,
-+                .m[PSC_TEMPERATURE] = 1,
-+                .b[PSC_TEMPERATURE] = 0,
-+                .R[PSC_TEMPERATURE] = 0,
-+                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .read_word_data = isl692xx_read_word_data,
-+        },
-+        [two_rail] = {
-+                .pages = 2,
-+                .format[PSC_VOLTAGE_IN] = direct,
-+                .format[PSC_VOLTAGE_OUT] = direct,
-+                .format[PSC_CURRENT_IN] = direct,
-+                .format[PSC_CURRENT_OUT] = direct,
-+                .format[PSC_POWER] = direct,
-+                .format[PSC_TEMPERATURE] = direct,
-+                .m[PSC_VOLTAGE_IN] = 1,
-+                .b[PSC_VOLTAGE_IN] = 0,
-+                .R[PSC_VOLTAGE_IN] = 2,
-+                .m[PSC_VOLTAGE_OUT] = 1,
-+                .b[PSC_VOLTAGE_OUT] = 0,
-+                .R[PSC_VOLTAGE_OUT] = 3,
-+                .m[PSC_CURRENT_IN] = 1,
-+                .b[PSC_CURRENT_IN] = 0,
-+                .R[PSC_CURRENT_IN] = 2,
-+                .m[PSC_CURRENT_OUT] = 1,
-+                .b[PSC_CURRENT_OUT] = 0,
-+                .R[PSC_CURRENT_OUT] = 1,
-+                .m[PSC_POWER] = 1,
-+                .b[PSC_POWER] = 0,
-+                .R[PSC_POWER] = 0,
-+                .m[PSC_TEMPERATURE] = 1,
-+                .b[PSC_TEMPERATURE] = 0,
-+                .R[PSC_TEMPERATURE] = 0,
-+                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .read_word_data = isl692xx_read_word_data,
-+        },
-+        [three_rail] = {
-+                .pages = 3,
-+                .format[PSC_VOLTAGE_IN] = direct,
-+                .format[PSC_VOLTAGE_OUT] = direct,
-+                .format[PSC_CURRENT_IN] = direct,
-+                .format[PSC_CURRENT_OUT] = direct,
-+                .format[PSC_POWER] = direct,
-+                .format[PSC_TEMPERATURE] = direct,
-+                .m[PSC_VOLTAGE_IN] = 1,
-+                .b[PSC_VOLTAGE_IN] = 0,
-+                .R[PSC_VOLTAGE_IN] = 2,
-+                .m[PSC_VOLTAGE_OUT] = 1,
-+                .b[PSC_VOLTAGE_OUT] = 0,
-+                .R[PSC_VOLTAGE_OUT] = 3,
-+                .m[PSC_CURRENT_IN] = 1,
-+                .b[PSC_CURRENT_IN] = 0,
-+                .R[PSC_CURRENT_IN] = 2,
-+                .m[PSC_CURRENT_OUT] = 1,
-+                .b[PSC_CURRENT_OUT] = 0,
-+                .R[PSC_CURRENT_OUT] = 1,
-+                .m[PSC_POWER] = 1,
-+                .b[PSC_POWER] = 0,
-+                .R[PSC_POWER] = 0,
-+                .m[PSC_TEMPERATURE] = 1,
-+                .b[PSC_TEMPERATURE] = 0,
-+                .R[PSC_TEMPERATURE] = 0,
-+                .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .func[2] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN |
-+                        PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT |
-+                        PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+                        PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+                        PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+                        PMBUS_HAVE_VMON,
-+                .read_word_data = isl692xx_read_word_data,
-+        },
-+};
-+
-+static int isl692xx_probe(struct i2c_client *client,
-+                          const struct i2c_device_id *id)
-+{
-+        int ret;
-+
-+        switch (id->driver_data) {
-+        case raa228000:
-+        case raa228004:
-+        case raa228006:
-+                ret = pmbus_do_probe(client, id, &isl692xx_info[high_voltage]);
-+                break;
-+        case isl68227:
-+        case isl69243:
-+                ret = pmbus_do_probe(client, id, &isl692xx_info[one_rail]);
-+                break;
-+        case isl68220:
-+        case isl68222:
-+        case isl68223:
-+        case isl68225:
-+        case isl68233:
-+        case isl69222:
-+        case isl69224:
-+        case isl69225:
-+        case isl69234:
-+        case isl69236:
-+        case isl69242:
-+        case isl69247:
-+        case isl69248:
-+        case isl69254:
-+        case isl69255:
-+        case isl69256:
-+        case isl69259:
-+        case isl69260:
-+        case isl69268:
-+        case isl69298:
-+        case raa228228:
-+        case raa229001:
-+        case raa229004:
-+                ret = pmbus_do_probe(client, id, &isl692xx_info[two_rail]);
-+                break;
-+        case isl68221:
-+        case isl68224:
-+        case isl68226:
-+        case isl68229:
-+        case isl68239:
-+        case isl69223:
-+        case isl69227:
-+        case isl69228:
-+        case isl69239:
-+        case isl69269:
-+                ret = pmbus_do_probe(client, id, &isl692xx_info[three_rail]);
-+                break;
-+        default:
-+                ret = -ENODEV;
-+        }
-+
-+        return ret;
-+}
-+
-+static struct i2c_driver isl692xx_driver = {
-+        .driver = {
-+                .name = "isl692xx",
-+        },
-+        .probe = isl692xx_probe,
-+        .remove = pmbus_do_remove,
-+        .id_table = isl692xx_id,
-+};
-+
-+module_i2c_driver(isl692xx_driver);
-+
-+MODULE_AUTHOR("Grant Peltier");
-+MODULE_DESCRIPTION("PMBus driver for 2nd Gen Renesas digital multiphase "
-+                   "devices");
-+MODULE_LICENSE("GPL");
-+
--- 
-2.20.1
+
+> On Feb 28, 2020, at 3:22 PM, John Donnelly =
+<john.p.donnelly@oracle.com> wrote:
+>=20
+> Since commit 7723f4c5ecdb ("driver core: platform: Add an error =
+message
+> to platform_get_irq()"), platform_get_irq() will call dev_err() on an
+> error,  even though the IRQ usage in the ipmi_si driver is optional.
+>=20
+> Use the platform_get_irq_optional() call to avoid the message from
+> alerting users with false alarms.
+>=20
+> Orabug: 30970275
+>=20
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> ---
+> drivers/char/ipmi/ipmi_si_platform.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/char/ipmi/ipmi_si_platform.c =
+b/drivers/char/ipmi/ipmi_si_platform.c
+> index c78127ccbc0d..638c693e17ad 100644
+> --- a/drivers/char/ipmi/ipmi_si_platform.c
+> +++ b/drivers/char/ipmi/ipmi_si_platform.c
+> @@ -194,7 +194,7 @@ static int platform_ipmi_probe(struct =
+platform_device *pdev)
+> 	else
+> 		io.slave_addr =3D slave_addr;
+>=20
+> -	io.irq =3D platform_get_irq(pdev, 0);
+> +	io.irq =3D platform_get_irq_optional(pdev, 0);
+> 	if (io.irq > 0)
+> 		io.irq_setup =3D ipmi_std_irq_setup;
+> 	else
+> @@ -378,7 +378,7 @@ static int acpi_ipmi_probe(struct platform_device =
+*pdev)
+> 		io.irq =3D tmp;
+> 		io.irq_setup =3D acpi_gpe_irq_setup;
+> 	} else {
+> -		int irq =3D platform_get_irq(pdev, 0);
+> +		int irq =3D platform_get_irq_optional(pdev, 0);
+>=20
+> 		if (irq > 0) {
+> 			io.irq =3D irq;
+> --=20
+> 2.20.1
 
