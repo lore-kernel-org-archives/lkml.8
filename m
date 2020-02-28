@@ -2,112 +2,117 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFE9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0374FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E88B2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5AD42469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qW06oxb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbgB1AbS (ORCPT
+        id S1730406AbgB1Ac1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:31:18 -0500
-Received: from mga06.intel.com ([134.134.136.31]:44215 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbgB1AbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:31:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:31:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="230941858"
-Received: from wggoh-mobl.gar.corp.intel.com (HELO [10.254.45.93]) ([10.254.45.93])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Feb 2020 16:31:16 -0800
-Subject: Re: [alsa-devel] [PATCH AUTOSEL 5.5 406/542] ASoC: SOF: Intel: hda:
- Fix SKL dai count
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-406-sashal@kernel.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <aa50de05-6122-0ce4-e6e9-5fa587169adf@linux.intel.com>
-Date:   Thu, 27 Feb 2020 18:31:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 19:32:27 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36719 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730117AbgB1Ac1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:32:27 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i13so746753pfe.3;
+        Thu, 27 Feb 2020 16:32:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s30J624/VP3HrEoGo1r3bYubq6LVO8D9HM/6PcACQO0=;
+        b=qW06oxb1fzVXep6BwwNAyOwG70mCiGpQS6B6veLIokygiuOnqSU1PudiZIsyJpuDx2
+         Al7uKGJQUorkbQ1IGXFelHFXnR0NglIvfd2Lq/EiNe87HNeRuAgm5FeuRv/GssADtqzS
+         tPnRqVZHQnEIK7DGqx7PWnEBCmtfPSElyVDFrTLGyLF0NhgxEItQ9kHYuoQWreLQZdyk
+         l7WdZZ5VhrfNjRKEIRBtoelpxmuc4pgibYQ4PJK2iTrnCTuKVzZ4ytwBvEOK5Zpzy7oc
+         eThbhOkSJ7pukiWAfWGhr+T/sLtsSdIFkXPifmZ5tQRfIcQSOMVAUQsIhuZCUVVB1d+r
+         pURw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s30J624/VP3HrEoGo1r3bYubq6LVO8D9HM/6PcACQO0=;
+        b=qLR+98llWly/V6pEoVQoAy6iGXNLXQj9qprzalHAYofvp0sBSdL2QdMNsV8w7WAc+B
+         ilI0quHj6IPLSgCanjQ0UvWY3tc08X/P/tfvzmH9/e52A0DCI+s5GVTB5wCsraBupV+q
+         JMcd+x6XS09jjKgOp3eVgAFpeBbasmo2VsMiSw/fsIwl+xsfgxl+rkWzjYx8SlGFuLz6
+         xsT2ddvdJVglTTgptfMhVujfZHVLg6TE874Xe160oEwEr6LCB0k86hMfAMIb8MyX9d5u
+         8Dwq6HGQCecbBs2CBSw6Nr9embWtawPG9sAA3a7DXZsh7nPQk+J1iARBYyuRKLQxsHxa
+         8gxQ==
+X-Gm-Message-State: APjAAAWg3urrk24IFtoO/iGVai0u33LQHw7Kuu1XdG5VBXkRnElBdSgj
+        ow0qyb+rjod0zuYjpBQHrX1+am0s
+X-Google-Smtp-Source: APXvYqzm2cVg7M5gfQ2fdWy+5ejprQEPAiNepZFokpFo9yk5YoIstG6fh1BrQPNVAEmApm+3Vm5q/g==
+X-Received: by 2002:a63:c550:: with SMTP id g16mr1961644pgd.9.1582849946286;
+        Thu, 27 Feb 2020 16:32:26 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u12sm7936215pgr.3.2020.02.27.16.32.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 16:32:25 -0800 (PST)
+Date:   Thu, 27 Feb 2020 16:32:24 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>,
+        Boris ARZUR <boris@konbu.org>, linux-usb@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Subject: Re: [RFT PATCH 2/4] usb: dwc2: Do not update data length if it is 0
+ on inbound transfers
+Message-ID: <20200228003224.GA11811@roeck-us.net>
+References: <20200226210414.28133-1-linux@roeck-us.net>
+ <20200226210414.28133-3-linux@roeck-us.net>
+ <CAD=FV=UutvJE+k4W0sQDs6q+oOfbz5Tz670+L-8fFHfdB=KytQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214154854.6746-406-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UutvJE+k4W0sQDs6q+oOfbz5Tz670+L-8fFHfdB=KytQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
-
-On 2/14/20 9:46 AM, Sasha Levin wrote:
-> From: Cezary Rojewski <cezary.rojewski@intel.com>
+On Thu, Feb 27, 2020 at 02:06:44PM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> [ Upstream commit a6947c9d86bcfd61b758b5693eba58defe7fd2ae ]
+> On Wed, Feb 26, 2020 at 1:04 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > The DWC2 documentation states that transfers with zero data length should
+> > set the number of packets to 1 and the transfer length to 0. This is not
+> > currently the case for inbound transfers: the transfer length is set to
+> > the maximum packet length. This can have adverse effects if the chip
+> > actually does transfer data as it is programmed to do. Follow chip
+> > documentation and keep the transfer length set to 0 in that situation.
+> >
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > ---
+> >  drivers/usb/dwc2/hcd.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> With fourth pin added for iDisp for skl_dai, update SOF_SKL_DAI_NUM to
-> account for the change. Without this, dais from the bottom of the list
-> are skipped. In current state that's the case for 'Alt Analog CPU DAI'.
+> I don't have any other test setup that you don't have, so just giving
+> my review tag and not tested tag.
 > 
-> Fixes: ac42b142cd76 ("ASoC: SOF: Intel: hda: Add iDisp4 DAI")
-
-This patch generates a kernel oops with v5.5.6 - mainly because the 
-initial commit ac42b142cd76 is missing, which ends-up creating an empty 
-entry in the skl_dai[] array.
-
-This was just reported to us, see logs at
-https://github.com/thesofproject/sof/issues/2418
-
-the same problem is likely to happen with 5.4-stable
-[PATCH AUTOSEL 5.4 349/459] ASoC: SOF: Intel: hda: Fix SKL dai count
-
-Since the initial commit to be fixed was not included, the -stable 
-branches should probably revert this patch? Adding ac42b142cd76 should 
-also not generate any problems, I tested it on top of v5.5.6
-
-The 'right' fix should be to use ARRAY_SIZE instead of hard-coded 
-defines, but there are multiple dependencies so we'd probably need to 
-refactor the code to so so.
-
-Let me know if you want more details or additional help,
--Pierre
-
-> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-> Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Link: https://lore.kernel.org/r/20200113114054.9716-1-cezary.rojewski@intel.com
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   sound/soc/sof/intel/hda.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> I will note that it feels like this should have a "Fixes" tag or a
+> direct Cc to stable to make it obvious that it should make its way
+> back to stable trees.
 > 
-> diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
-> index 63df888dddb6c..de0115294c74e 100644
-> --- a/sound/soc/sof/intel/hda.h
-> +++ b/sound/soc/sof/intel/hda.h
-> @@ -348,7 +348,7 @@
->   
->   /* Number of DAIs */
->   #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
-> -#define SOF_SKL_NUM_DAIS		14
-> +#define SOF_SKL_NUM_DAIS		15
->   #else
->   #define SOF_SKL_NUM_DAIS		8
->   #endif
-> 
+
+I added
+
+Fixes: 56f5b1cff22a1 ("staging: Core files for the DWC2 driver")
+
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks!
+
+Guenter
