@@ -2,193 +2,307 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6ABC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18708C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394DE246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D969524677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582915381;
+	bh=eAl5CYW0aDLQd2hTkXyJKqFnRf+gxtnaW7YBSBf6F3k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JD/q2Kmq0YR14umsSIFvIboDyNNvXQZw/RkfLhFuZxSNNaTmABSXF1GpOsierKxiv
+	 2eYzZH7uhO3nbWpLYvpk9ATv35mto9BE2cKDcgRJbxMNYgRa+IsY+sh2ZCehC+Q0Xm
+	 OCWRy0bCTZ5Rq3WlmrHTfLqWuakdmv8eUYvMkKV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgB1Smz (ORCPT
+        id S1726884AbgB1Sm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:42:55 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:44760 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Smz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:42:55 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Fri, 28 Feb 2020 13:42:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1Sm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:42:58 -0500
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2EED82004C;
-        Fri, 28 Feb 2020 19:42:44 +0100 (CET)
-Date:   Fri, 28 Feb 2020 19:42:42 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
- Schema
-Message-ID: <20200228184242.GA20089@ravnborg.org>
-References: <cover.1582913973.git.hns@goldelico.com>
- <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BBCE924677;
+        Fri, 28 Feb 2020 18:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582915376;
+        bh=eAl5CYW0aDLQd2hTkXyJKqFnRf+gxtnaW7YBSBf6F3k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pCihTVHhkIKLnGn/N6n/O0W/d3KcUxDOoL7RyyzM47k0sjhzpj55zBfjR8tDe5SD2
+         a/q10QdaVZgewaEVMYNpAcVi9W8gm2tbbbIDapgKri0TA53DZAZ09W6+7xC8/ooXKr
+         wMQ6kXFd1M/jZt4IA3FnyT48FHubHcfvvDewbwhg=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] x86/kvm: Handle async page faults directly through do_page_fault()
+Date:   Fri, 28 Feb 2020 10:42:48 -0800
+Message-Id: <6bf68d0facc36553324c38ec798b0feebf6742b7.1582915284.git.luto@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=r_1tXGB3AAAA:8 a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8
-        a=pSfg_kgG_YkFMEKRir4A:9 a=qn4TxXM_sh0ilUaX:21 a=kcv_VjDv9XC6Jkun:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=t8nPyN_e6usw4ciXM-Pk:22
-        a=nCm3ceeH17rKjHWsMeRo:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus.
+KVM overloads #PF to indicate two types of not-actually-page-fault
+events.  Right now, the KVM guest code intercepts them by modifying
+the IDT and hooking the #PF vector.  This makes the already fragile
+fault code even harder to understand, and it also pollutes call
+traces with async_page_fault and do_async_page_fault for normal page
+faults.
 
-On Fri, Feb 28, 2020 at 07:19:26PM +0100, H. Nikolaus Schaller wrote:
-> From: Sam Ravnborg <sam@ravnborg.org>
-> 
-> Add DT bindings for the LCD controller on the jz4780 SoC
-> Based on .txt binding from Zubair Lutfullah Kakakhel
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
+Clean it up by moving the logic into do_page_fault() using a static
+branch.  This gets rid of the platform trap_init override mechanism
+completely.
 
-As this patch was sent to you and you forward it you need to
-testify that this is OK.
-To do so follow the rules of the Developemnt Certificate of Origin
-as can be found in SubmittingPatches.rst.
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/entry/entry_64.S       |  4 ----
+ arch/x86/include/asm/kvm_para.h | 17 +++++++++++++++-
+ arch/x86/include/asm/x86_init.h |  2 --
+ arch/x86/kernel/kvm.c           | 36 +++++++++++++++++++--------------
+ arch/x86/kernel/traps.c         |  2 --
+ arch/x86/kernel/x86_init.c      |  1 -
+ arch/x86/mm/fault.c             | 20 ++++++++++++++++++
+ 7 files changed, 57 insertions(+), 25 deletions(-)
 
-In other words - you need to add your Signed-off-by: xxx <mail>
-to the patch.
-In the end we want to be able to see the patch the patch has taken
-reading the Signed-off-by: lines from top to bottom.
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index f2bb91e87877..be1fc6f2fe85 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1202,10 +1202,6 @@ idtentry xendebug		do_debug		has_error_code=0
+ idtentry general_protection	do_general_protection	has_error_code=1
+ idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
+ 
+-#ifdef CONFIG_KVM_GUEST
+-idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
+-#endif
+-
+ #ifdef CONFIG_X86_MCE
+ idtentry machine_check		do_mce			has_error_code=0	paranoid=1
+ #endif
+diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+index 9b4df6eaa11a..4d72f5488584 100644
+--- a/arch/x86/include/asm/kvm_para.h
++++ b/arch/x86/include/asm/kvm_para.h
+@@ -92,7 +92,17 @@ void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
+ void kvm_async_pf_task_wake(u32 token);
+ u32 kvm_read_and_reset_pf_reason(void);
+ extern void kvm_disable_steal_time(void);
+-void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
++extern bool do_kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address);
++
++DECLARE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
++
++static inline bool kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
++{
++	if (static_branch_unlikely(&kvm_async_pf_enabled))
++		return do_kvm_handle_async_pf(regs, error_code, address);
++	else
++		return false;
++}
+ 
+ #ifdef CONFIG_PARAVIRT_SPINLOCKS
+ void __init kvm_spinlock_init(void);
+@@ -130,6 +140,11 @@ static inline void kvm_disable_steal_time(void)
+ {
+ 	return;
+ }
++
++static inline bool kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
++{
++	return false;
++}
+ #endif
+ 
+ #endif /* _ASM_X86_KVM_PARA_H */
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 96d9cd208610..6807153c0410 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -50,14 +50,12 @@ struct x86_init_resources {
+  * @pre_vector_init:		init code to run before interrupt vectors
+  *				are set up.
+  * @intr_init:			interrupt init code
+- * @trap_init:			platform specific trap setup
+  * @intr_mode_select:		interrupt delivery mode selection
+  * @intr_mode_init:		interrupt delivery mode setup
+  */
+ struct x86_init_irqs {
+ 	void (*pre_vector_init)(void);
+ 	void (*intr_init)(void);
+-	void (*trap_init)(void);
+ 	void (*intr_mode_select)(void);
+ 	void (*intr_mode_init)(void);
+ };
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index d817f255aed8..93ab0cbd304e 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -35,6 +35,8 @@
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
+ 
++DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
++
+ static int kvmapf = 1;
+ 
+ static int __init parse_no_kvmapf(char *arg)
+@@ -242,25 +244,29 @@ u32 kvm_read_and_reset_pf_reason(void)
+ EXPORT_SYMBOL_GPL(kvm_read_and_reset_pf_reason);
+ NOKPROBE_SYMBOL(kvm_read_and_reset_pf_reason);
+ 
+-dotraplinkage void
+-do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
++bool
++do_kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
+ {
++	/*
++	 * If we get a page fault right here, the pf_reason seems likely
++	 * to be clobbered.  Bummer.
++	 */
++
+ 	switch (kvm_read_and_reset_pf_reason()) {
+ 	default:
+-		do_page_fault(regs, error_code, address);
+-		break;
++		return false;
+ 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+ 		/* page is swapped out by the host. */
+ 		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
+-		break;
++		return true;
+ 	case KVM_PV_REASON_PAGE_READY:
+ 		rcu_irq_enter();
+ 		kvm_async_pf_task_wake((u32)address);
+ 		rcu_irq_exit();
+-		break;
++		return true;
+ 	}
+ }
+-NOKPROBE_SYMBOL(do_async_page_fault);
++NOKPROBE_SYMBOL(do_kvm_handle_async_pf);
+ 
+ static void __init paravirt_ops_setup(void)
+ {
+@@ -306,7 +312,11 @@ static notrace void kvm_guest_apic_eoi_write(u32 reg, u32 val)
+ static void kvm_guest_cpu_init(void)
+ {
+ 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
+-		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
++		u64 pa;
++
++		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
++
++		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
+ 
+ #ifdef CONFIG_PREEMPTION
+ 		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
+@@ -570,11 +580,6 @@ static int kvm_cpu_down_prepare(unsigned int cpu)
+ }
+ #endif
+ 
+-static void __init kvm_apf_trap_init(void)
+-{
+-	update_intr_gate(X86_TRAP_PF, async_page_fault);
+-}
+-
+ static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+ 
+ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+@@ -611,8 +616,6 @@ static void __init kvm_guest_init(void)
+ 	register_reboot_notifier(&kvm_pv_reboot_nb);
+ 	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++)
+ 		raw_spin_lock_init(&async_pf_sleepers[i].lock);
+-	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF))
+-		x86_init.irqs.trap_init = kvm_apf_trap_init;
+ 
+ 	if (kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+ 		has_steal_clock = 1;
+@@ -652,6 +655,9 @@ static void __init kvm_guest_init(void)
+ 	 * overcommitted.
+ 	 */
+ 	hardlockup_detector_disable();
++
++	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf)
++		static_branch_enable(&kvm_async_pf_enabled);
+ }
+ 
+ static noinline uint32_t __kvm_cpuid_base(void)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 6ef00eb6fbb9..bcb514c801f2 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -936,7 +936,5 @@ void __init trap_init(void)
+ 
+ 	idt_setup_ist_traps();
+ 
+-	x86_init.irqs.trap_init();
+-
+ 	idt_setup_debugidt_traps();
+ }
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index 85f1a90c55cd..123f1c1f1788 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -79,7 +79,6 @@ struct x86_init_ops x86_init __initdata = {
+ 	.irqs = {
+ 		.pre_vector_init	= init_ISA_irqs,
+ 		.intr_init		= native_init_IRQ,
+-		.trap_init		= x86_init_noop,
+ 		.intr_mode_select	= apic_intr_mode_select,
+ 		.intr_mode_init		= apic_intr_mode_init
+ 	},
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index fa4ea09593ab..ba04be080142 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -30,6 +30,7 @@
+ #include <asm/desc.h>			/* store_idt(), ...		*/
+ #include <asm/cpu_entry_area.h>		/* exception stack		*/
+ #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
++#include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
+ 
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/exceptions.h>
+@@ -1505,6 +1506,25 @@ do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
+ 		unsigned long address)
+ {
+ 	prefetchw(&current->mm->mmap_sem);
++	/*
++	 * KVM has two types of events that are, logically, interrupts, but
++	 * are unfortunately delivered using the #PF vector.  These events are
++	 * "you just accessed valid memory, but the host doesn't have it right
++	 * not, so I'll put you to sleep if you continue" and "that memory
++	 * you tried to access earlier is available now."
++	 *
++	 * We are relying on the interrupted context being sane (valid
++	 * RSP, relevant locks not held, etc.), which is fine as long as
++	 * the the interrupted context had IF=1.  We are also relying on
++	 * the KVM async pf type field and CR2 being read consistently
++	 * instead of getting values from real and async page faults
++	 * mixed up.
++	 *
++	 * Fingers crossed.
++	 */
++	if (kvm_handle_async_pf(regs, hw_error_code, address))
++		return;
++
+ 	trace_page_fault_entries(regs, hw_error_code, address);
+ 
+ 	if (unlikely(kmmio_fault(regs, address)))
+-- 
+2.24.1
 
-Please check other patches in this series for the same issue.
-
-	Sam
-
-> ---
->  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> new file mode 100644
-> index 000000000000..c71415a3a342
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic JZ4780 LCD Controller
-> +
-> +maintainers:
-> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |
-> +  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ingenic,jz4780-lcd
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: the address & size of the LCD controller registers
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Specifies the interrupt provided by parent
-> +
-> +  clocks:
-> +    maxItems: 2
-> +    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
-> +
-> +  clock-names:
-> +    items:
-> +      - const: lcd_clk
-> +      - const: lcd_pixclk
-> +
-> +  port:
-> +    type: object
-> +    description: |
-> +      A port node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +required:
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +    - clocks
-> +    - clock-names
-> +    - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4780-cgu.h>
-> +    lcd: jz4780-lcdk@0x13050000 {
-> +        compatible = "ingenic,jz4780-lcd";
-> +        reg = <0x13050000 0x1800>;
-> +
-> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-> +        clock-names = "lcd_clk", "lcd_pixclk";
-> +
-> +        interrupt-parent = <&intc>;
-> +        interrupts = <31>;
-> +
-> +        jz4780_lcd_out: port {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            jz4780_out_hdmi: endpoint@0 {
-> +                reg = <0>;
-> +                remote-endpoint = <&hdmi_in_lcd>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.23.0
