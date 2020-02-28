@@ -2,96 +2,97 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF2EC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65F3C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6E8246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A39246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 05:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NH/H6Mbz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+LQq/5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgB1FXF (ORCPT
+        id S1726740AbgB1FXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 00:23:05 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:40054 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725536AbgB1FXE (ORCPT
+        Fri, 28 Feb 2020 00:23:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44937 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgB1FXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 00:23:04 -0500
-X-UUID: fa8bbfec1f9449b88f1bf2c313014cc2-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=iiTeyRrWpFxbRbm/zUqFMsVdCyJg1pm41Q+smhNO+Zw=;
-        b=NH/H6Mbz7CLvMC+EHLbH9LSsJnHhz2Z3LaFZV/BYHIb6tsKhkpnCg8Xr/URpAXzcySi7xGRhBIINcUWDb4mB2+P9v3SpRiQZac9JAC4nvieKdaV3o8ZWL+yXGs46GfcJ8bSKce+0iSAXzvWtVYjnMc4wXq5Y7BmT1TQmIzy6qC8=;
-X-UUID: fa8bbfec1f9449b88f1bf2c313014cc2-20200228
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1344005670; Fri, 28 Feb 2020 13:21:40 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 28 Feb
- 2020 13:22:15 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Fri, 28 Feb 2020 13:22:03 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v10 2/5] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Fri, 28 Feb 2020 13:21:25 +0800
-Message-ID: <20200228052128.82136-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200228052128.82136-1-jitao.shi@mediatek.com>
-References: <20200228052128.82136-1-jitao.shi@mediatek.com>
+        Fri, 28 Feb 2020 00:23:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so1467395wrx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 21:23:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2bzBaMImUUqw0L+J8P9rtSZngszN+fBGxhpIiKPJlto=;
+        b=X+LQq/5dc1+WU7IMxHldrauMIk+LSaWcqEIzBnnvOGwtu4AX/Jo3G+X6SAqG2ohP+U
+         qDue0EpDgQyxFA9Y+D15Tnbat/jxDMYUDj05V+b0NvlizGE+9e4sq/xwjzZDMO+JK/aP
+         VdqS2/Di9VaYTjQjzfPeQ5+Rvr+zWnH/bYmJ+8dlQwJlISNKXjWXHTem7aTaU3NhKFY4
+         Q11HFyXbV1D312U9lLyZUQB/Mc5/x5Bwnc+SsjaZTyPDcEvkKw5TY+qlYbED68s6TQqp
+         9KD0mzO9o0Knmpuv28m/3/EGYG9tIfBUvvcwIKYtMaAvqnRrgjF34woBECr6wIlcYmxI
+         MMpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2bzBaMImUUqw0L+J8P9rtSZngszN+fBGxhpIiKPJlto=;
+        b=GtY5PEc2Rv4jOD9VVEoh2Pb+NvANKQXiohHzrdQmOm7b0DoUHp/9Chb14yCnkdeaTD
+         wCYDuhnQiMywMyscgpuETc8RBuadu14SZf7Tb9SQDSc+ElhEepZTnk92f4Zt3XQlBnqq
+         rOqVrSKPI7WqvWKyHLV71YpzL2iqVlHRiSuORcpjdwrbL4TzYa7eMkSdlpy8Oitj2XWp
+         Tuzrs3o0tJheFPYchHtc8cTRNjdIyGvAWY8ZmEhlbVh0caEnnhF+3hkDMWrmLoVoWVjs
+         zFI1mjNxUo01SyjKgE5MSPSQvIvJ3DAKLFThf925N5k8Xrjw7pm8Zcnxbx1TOjt4+UQ7
+         uEIw==
+X-Gm-Message-State: APjAAAV9iZAB/aqgD/Ou2O33foqmy7SV5D6nYXk/ONpgNGJYkKURFHhs
+        ld1Iik0K/3tSnca6AdDR4zKnYIHqLOAkyeAHSSuD9Q==
+X-Google-Smtp-Source: APXvYqxtQywJ4Y9F6fMaFbR3Xwl/fYlSdJqjBEoT/9MknfP15UA5SIvrBQxjM1D5Jtq9JHmvNLdKKI2nE+J57dZxzMw=
+X-Received: by 2002:adf:dfcc:: with SMTP id q12mr2820380wrn.171.1582867420797;
+ Thu, 27 Feb 2020 21:23:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 9285102EC74516C055F4677AAD43C6BCF157A693778617175A2331D1BD6CCB922000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200228153532.1c0fa33f@canb.auug.org.au>
+In-Reply-To: <20200228153532.1c0fa33f@canb.auug.org.au>
+From:   Arjun Roy <arjunroy@google.com>
+Date:   Thu, 27 Feb 2020 21:23:29 -0800
+Message-ID: <CAOFY-A1C_VLqnjr3j6YUTvq_UM+6D8SvoYHJTJ7OYPdgoHTsWQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the akpm tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHByb3BlcnR5ICJwaW5jdHJsLW5hbWVzIiB0byBzd2FwIHBpbiBtb2RlIGJldHdlZW4gZ3Bp
-byBhbmQgZHBpIG1vZGUuIFNldA0KdGhlIGRwaSBwaW5zIHRvIGdwaW8gbW9kZSBhbmQgb3V0cHV0
-LWxvdyB0byBhdm9pZCBsZWFrYWdlIGN1cnJlbnQgd2hlbiBkcGkNCmRpc2FibGVkLg0KDQpTaWdu
-ZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgIHwg
-NyArKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVk
-aWF0ZWssZHBpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCmluZGV4IDU4OTE0Y2Y2ODFiOC4uNzdjYTMyYTMy
-Mzk5IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KQEAgLTE3LDYg
-KzE3LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3JhcGgudHh0LiBUaGlzIHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZA0KICAg
-dG8gdGhlIGlucHV0IHBvcnQgb2YgYW4gYXR0YWNoZWQgSERNSSBvciBMVkRTIGVuY29kZXIgY2hp
-cC4NCiANCitPcHRpb25hbCBwcm9wZXJ0aWVzOg0KKy0gcGluY3RybC1uYW1lczogQ29udGFpbiAi
-Z3Bpb21vZGUiIGFuZCAiZHBpbW9kZSIuDQorICBwaW5jdHJsLW5hbWVzIHNlZSBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybHBpbmN0cmwtYmluZGluZ3MudHh0DQorDQog
-RXhhbXBsZToNCiANCiBkcGkwOiBkcGlAMTQwMWQwMDAgew0KQEAgLTI3LDYgKzMxLDkgQEAgZHBp
-MDogZHBpQDE0MDFkMDAwIHsNCiAJCSA8Jm1tc3lzIENMS19NTV9EUElfRU5HSU5FPiwNCiAJCSA8
-JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfVFZEUExMPjsNCiAJY2xvY2stbmFtZXMgPSAicGl4ZWwi
-LCAiZW5naW5lIiwgInBsbCI7DQorCXBpbmN0cmwtbmFtZXMgPSAiYWN0aXZlIiwgImlkbGUiOw0K
-KwlwaW5jdHJsLTAgPSA8JmRwaV9waW5fZnVuYz47DQorCXBpbmN0cmwtMSA9IDwmZHBpX3Bpbl9p
-ZGxlPjsNCiANCiAJcG9ydCB7DQogCQlkcGkwX291dDogZW5kcG9pbnQgew0KLS0gDQoyLjIxLjAN
-Cg==
+On Thu, Feb 27, 2020 at 8:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the akpm tree, today's linux-next build (sparc defconfig)
+> produced this warning:
+>
+> mm/memory.c:1463:12: warning: 'insert_page_in_batch_locked' defined but not used [-Wunused-function]
+>  static int insert_page_in_batch_locked(struct mm_struct *mm, pmd_t *pmd,
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+Well, that's certainly a step in the right direction if it compiles :)
 
+I guess having this function be within the ifdef is the way to make
+this warning go away.
+
+I'll, er, make a v3 patch.
+
+-Arjun
+
+> Introduced by commit
+>
+>   4a879e02dd49 ("mm/memory.c: add vm_insert_pages()")
+>
+> --
+> Cheers,
+> Stephen Rothwell
