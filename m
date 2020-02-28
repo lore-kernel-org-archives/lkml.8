@@ -2,284 +2,110 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D399BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC40E2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2055E2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEOAohEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgB1RNN (ORCPT
+        id S1726974AbgB1RNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:13:13 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:37300 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgB1RNN (ORCPT
+        Fri, 28 Feb 2020 12:13:17 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38715 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgB1RNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:13:13 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j7jCJ-0005Vk-UH; Fri, 28 Feb 2020 10:13:12 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j7jCJ-0000i8-4L; Fri, 28 Feb 2020 10:13:11 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <87k146vdw3.fsf@x220.int.ebiederm.org>
-Date:   Fri, 28 Feb 2020 11:11:06 -0600
-In-Reply-To: <87k146vdw3.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Fri, 28 Feb 2020 11:07:56 -0600")
-Message-ID: <87wo86tz6d.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 28 Feb 2020 12:13:16 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d6so1833976pgn.5;
+        Fri, 28 Feb 2020 09:13:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xJi6vZcYcttW+MZfr9/rRJo0DF++IJ1/RUDtbKhU1AY=;
+        b=uEOAohEGBRoCSThVEmWLtAKPOqOCFMCaUcBA+F58HYQJ4WlwP99B0kkn5pagoVx9ia
+         ciyWMsE+sn335hZ75HM6QJ1hCDukb9Suie1cGGMW2CGkSeudg/JIePTCYGESVNsyzVvx
+         2yCpjoSiVB7B58PbXo5dzIdwKsB7nXSsB4qu/5qixVM9wJDBDP8LorAMIphl8QEyUu4w
+         tx7Ljaicm2ngq5StYDxBLLfcaHDE9bo08CT29iQoLWRs9BnkembEXNKAuMFTbN1kZnc+
+         rMUXNfZRE9iQg6Pvk4U20jO1SK28BuxQMZVUdpXosWbGA1asQrgJqXSeTclTNd72OGDS
+         4akw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xJi6vZcYcttW+MZfr9/rRJo0DF++IJ1/RUDtbKhU1AY=;
+        b=hoH0F2fupTBp2Ul+dYtwWyTm5hqo9KQbuVYZAv3ddJZAE35xFfW1p9j50Zls5QYlZ1
+         QgEdblzqPojmIfeC/qXsoQiZ3IXoTMBzP1b9GioVUbyNXk4X5zo1sQUa8iQqzreW9stL
+         wp0YS4Hrfy0J1jnGABhyDJpg224asygP0KmeJ4xOQnndzzGPtNyWqGPvfaIct2o1CUjL
+         xHzMKWlU/OxlocEijIO5uzcJh0sYNwo5Q6SKdBNTa3cMNy+O3HC/rnS5bFesYPMzkThZ
+         GZ+fuFphse9REpHumog9VTMOfQhQz/RtwKtNS1LfZJvCG7eicGbJcb9nq8exCar6xRK5
+         FKxQ==
+X-Gm-Message-State: APjAAAUSe5bLd6ffKCGMhpn/5Lb5YEimgMgKPoD2SqRwAjLhM7nzQ1ms
+        XXSgqXE+AE91qP7hkwKNE3M=
+X-Google-Smtp-Source: APXvYqwRnGkDeSmzVIq5t1dNZsR0afEyiIO9TeGMrlGYsOPCoVbGkguOPHdpxhLdA+JLiDLGB3FEAw==
+X-Received: by 2002:a63:1d22:: with SMTP id d34mr5495224pgd.21.1582909995462;
+        Fri, 28 Feb 2020 09:13:15 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q13sm11203198pgh.30.2020.02.28.09.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 09:13:14 -0800 (PST)
+Date:   Fri, 28 Feb 2020 09:13:14 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] watchdog: add support for resetting keepalive timers
+ at start
+Message-ID: <20200228171314.GA14594@roeck-us.net>
+References: <20200228142331.13716-1-t-kristo@ti.com>
+ <20200228142331.13716-3-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j7jCJ-0000i8-4L;;;mid=<87wo86tz6d.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+7VMeQ4Q+k8TToQ8eehL0qyHKTr8OBZzY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 4/5] posix-cpu-timers: Store a reference to a pid not a task
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228142331.13716-3-t-kristo@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 28, 2020 at 04:23:29PM +0200, Tero Kristo wrote:
+> Current watchdog core pets the timer always after the initial keepalive
+> time has expired from boot-up. This is incorrect for certain timers that
+> don't like to be petted immediately when they are started, if they have
+> not been running over the boot.
+> 
+> To allow drivers to reset their keepalive timers during startup, add
+> a new watchdog flag to the api, WDOG_RESET_KEEPALIVE.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/watchdog/watchdog_dev.c | 2 ++
+>  include/linux/watchdog.h        | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 8b5c742f24e8..131e40c21703 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -283,6 +283,8 @@ static int watchdog_start(struct watchdog_device *wdd)
+>  		set_bit(WDOG_ACTIVE, &wdd->status);
+>  		wd_data->last_keepalive = started_at;
+>  		watchdog_update_worker(wdd);
+> +		if (test_bit(WDOG_RESET_KEEPALIVE, &wdd->status))
+> +			wd_data->last_hw_keepalive = started_at;
 
-The posix cpu timers do not handle the death of a process well.
+I don't think the additional flag is needed. The code should just set
+last_hw_keepalive. After all, it already sets last_keepalive, which
+determines when the next internal keepalive will be sent. It makes sense
+to also set last_hw_keepalive to prevent the next keepalive from being
+sent too early.
 
-This is most clearly seen when a multi-threaded process calls exec
-from a thread that is not a leader of the thread group.  The posix cpu
-timer code continues to pin the old thread group leader and is unable
-to find the siglock from there.
-
-This results in posix_cpu_timer_del being unable to delete a timer,
-posix_cpu_timer_set being unable to set a timer.  Further to
-compensate for the problems in posix_cpu_timer_del on a multi-threaded
-exec all timers that point at the multi-threaded task are stopped.
-
-The code for the timers fundamentally needs to check if the target
-process/thread is alive.  This needs an extra level of indirection.
-We already have that level indirection in struct pid.
-
-So replace cpu.task with cpu.pid to get the needed extra layer
-of indirection.
-
-In addition to handling things more cleanly this reduces the amount of
-memory a timer can pin when a process exits and then is reaped from
-a task_struct to the vastly smaller struct pid.
-
-Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- include/linux/posix-timers.h   |  2 +-
- kernel/time/posix-cpu-timers.c | 73 +++++++++++++++++++++++++---------
- 2 files changed, 56 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index 3d10c84a97a9..e3f0f8585da4 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -69,7 +69,7 @@ static inline int clockid_to_fd(const clockid_t clk)
- struct cpu_timer {
- 	struct timerqueue_node	node;
- 	struct timerqueue_head	*head;
--	struct task_struct	*task;
-+	struct pid		*pid;
- 	struct list_head	elist;
- 	int			firing;
- };
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index dbbfa88881a3..1c21f2fd3d9b 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -118,6 +118,19 @@ static inline int validate_clock_permissions(const clockid_t clock)
- 	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
- }
- 
-+static inline enum pid_type cpu_timer_pid_type(struct k_itimer *timer)
-+{
-+	enum pid_type type = PIDTYPE_TGID;
-+	if (CPUCLOCK_PERTHREAD(timer->it_clock))
-+		type = PIDTYPE_PID;
-+	return type;
-+}
-+
-+static inline struct task_struct *cpu_timer_task_rcu(struct k_itimer *timer)
-+{
-+	return pid_task(timer->it.cpu.pid, cpu_timer_pid_type(timer));
-+}
-+
- /*
-  * Update expiry time from increment, and increase overrun count,
-  * given the current clock sample.
-@@ -391,7 +404,7 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- 
- 	new_timer->kclock = &clock_posix_cpu;
- 	timerqueue_init(&new_timer->it.cpu.node);
--	new_timer->it.cpu.task = p;
-+	new_timer->it.cpu.pid = get_task_pid(p, cpu_timer_pid_type(new_timer));
- 	return 0;
- }
- 
-@@ -404,13 +417,15 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- static int posix_cpu_timer_del(struct k_itimer *timer)
- {
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Protect against sighand release/switch in exit/exec and process/
-@@ -432,8 +447,10 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 		unlock_task_sighand(p, &flags);
- 	}
- 
-+out:
-+	rcu_read_unlock();
- 	if (!ret)
--		put_task_struct(p);
-+		put_pid(ctmr->pid);
- 
- 	return ret;
- }
-@@ -561,13 +578,21 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	u64 old_expires, new_expires, old_incr, val;
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p) {
-+		/*
-+		 * If p has just been reaped, we can no
-+		 * longer get any information about it at all.
-+		 */
-+		rcu_read_unlock();
-+		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Use the to_ktime conversion because that clamps the maximum
-@@ -584,8 +609,10 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	 * If p has just been reaped, we can no
- 	 * longer get any information about it at all.
- 	 */
--	if (unlikely(sighand == NULL))
-+	if (unlikely(sighand == NULL)) {
-+		rcu_read_unlock();
- 		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Disarm any old timer after extracting its expiry time.
-@@ -690,6 +717,7 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 
- 	ret = 0;
-  out:
-+	rcu_read_unlock();
- 	if (old)
- 		old->it_interval = ns_to_timespec64(old_incr);
- 
-@@ -701,10 +729,12 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	struct cpu_timer *ctmr = &timer->it.cpu;
- 	u64 now, expires = cpu_timer_getexpires(ctmr);
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Easy part: convert the reload time.
-@@ -712,7 +742,7 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	itp->it_interval = ktime_to_timespec64(timer->it_interval);
- 
- 	if (!expires)
--		return;
-+		goto out;
- 
- 	/*
- 	 * Sample the clock to take the difference with the expiry time.
-@@ -733,6 +763,9 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 		itp->it_value.tv_nsec = 1;
- 		itp->it_value.tv_sec = 0;
- 	}
-+out:
-+	rcu_read_unlock();
-+	return;
- }
- 
- #define MAX_COLLECTED	20
-@@ -953,14 +986,15 @@ static void check_process_timers(struct task_struct *tsk,
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
- {
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
--	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
- 	u64 now;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Fetch the current sample and update the timer's expiry time.
-@@ -975,13 +1009,16 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
- 	/* Protect timer list r/w in arm_timer() */
- 	sighand = lock_task_sighand(p, &flags);
- 	if (unlikely(sighand == NULL))
--		return;
-+		goto out;
- 
- 	/*
- 	 * Now re-arm for the new expiry time.
- 	 */
- 	arm_timer(timer, p);
- 	unlock_task_sighand(p, &flags);
-+out:
-+	rcu_read_unlock();
-+	return;
- }
- 
- /**
--- 
-2.25.0
-
+Guenter
