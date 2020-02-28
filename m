@@ -2,276 +2,110 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87C5C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1826DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDAD20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC55020658
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgB1DCA (ORCPT
+        id S1730752AbgB1DCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:02:00 -0500
-Received: from mga02.intel.com ([134.134.136.20]:38100 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgB1DCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:02:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:01:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="261722452"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Feb 2020 19:01:57 -0800
-Received: from [10.226.38.23] (unknown [10.226.38.23])
-        by linux.intel.com (Postfix) with ESMTP id 6A8B958052E;
-        Thu, 27 Feb 2020 19:01:50 -0800 (PST)
-Subject: Re: [PATCH v11 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>,
-        devicetree@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
-        Dinh Nguyen <dinguyen@kernel.org>, tien.fong.chee@intel.com,
-        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris BREZILLON <boris.brezillon@free-electrons.com>,
-        Cyrille Pitchen <cyrille.pitchen@atmel.com>,
-        david.oberhollenzer@sigma-star.at,
-        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqJno0gmUnGnsWFYdHY_3CHNijtksAmRhuEudimip0aK4w@mail.gmail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <10e65e28-197f-b094-5901-917b07f09adf@linux.intel.com>
-Date:   Fri, 28 Feb 2020 11:01:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 27 Feb 2020 22:02:03 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52602 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730445AbgB1DCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:02:02 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7Vua-002Boa-UI; Fri, 28 Feb 2020 03:02:01 +0000
+Date:   Fri, 28 Feb 2020 03:02:00 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v2)
+Message-ID: <20200228030200.GH23230@ZenIV.linux.org.uk>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200225012457.GA138294@ZenIV.linux.org.uk>
+ <20200228012451.upnq5r7fdctrk7pv@yavin>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJno0gmUnGnsWFYdHY_3CHNijtksAmRhuEudimip0aK4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228012451.upnq5r7fdctrk7pv@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, Feb 28, 2020 at 12:24:51PM +1100, Aleksa Sarai wrote:
 
-      Thank you so much for the review comments...
+> > Another one is about LOOKUP_NO_XDEV again: suppose you have process'
+> > root directly overmounted and cwd in the root of whatever's overmounting
+> > it.  Resolution of .. will stay in cwd - we have no parent within the
+> > chroot jail we are in, so we move to whatever's overmounting that root.
+> > Which is the original location.  Should we fail on LOOKUP_NO_XDEV here?
+> > Plain .. in the root of chroot jail (not overmounted by anything) does
+> > *not*...
+> 
+> I think LOOKUP_NO_XDEV should block that since you end up crossing a
+> mountpoint.
 
-On 28/2/2020 1:07 AM, Rob Herring wrote:
-> On Thu, Feb 27, 2020 at 12:27 AM Ramuthevar,Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
-> You need to run 'make dt_binding_check' because this doesn't pass.
-Sure,  run and fix it.
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ----------
->>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++++++++++++++++++
->>   2 files changed, 142 insertions(+), 67 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->
->> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->> new file mode 100644
->> index 000000000000..3ad2850c412e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->> @@ -0,0 +1,142 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller support
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  Binding Documentation for Cadence QSPI controller,This controller is
->> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
->> +  has been tested On Intel's LGM SoC.
->> +
->> +  - compatible : should be one of the following:
->> +        Generic default - "cdns,qspi-nor".
->> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
->> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
->> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
-> The schema below says all this, so drop this part.
->
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - items:
->> +        - enum:
->> +           - ti,k2g-qspi
->> +        - const: cdns,qspi-nor
->> +
->> +      - items:
->> +        - enum:
->> +           - ti,am654-ospi
->> +        - const: cdns,qspi-nor
->> +
->> +      - items:
->> +        - enum:
->> +           - intel,lgm-qspi
->> +        - const: cdns,qspi-nor
-> These 3 items can be 1 entry (combine the enums).
-Noted, will fix it.
->
->> +
->> +      - items:
->> +        - const: cdns,qspi-nor
->> +
->> +  reg:
->> +    maxItems: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  cdns,fifo-depth:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      128 or 256 bytes size of the data FIFO in words.
-> Sounds like constraints. Make them a schema.
-Sure, will make as schema.
->> +
->> +  cdns,fifo-width:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      4 byte bus width of the data FIFO in bytes.
-> That's not very clear. It should be schema constraints anyways:
->
-> enum: [ 4, 8, 12, 16, ...??? ]
->
-> or:
->
-> multipleOf: 4
-> minimum: 4
-> maximum: ?
-Noted,  will fix it.
->> +
->> +  cdns,trigger-address:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      32-bit indirect AHB trigger address.
->> +
->> +  cdns,rclk-en:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
-> Wrong type if this is a 'flag' aka boolean.
-Yes , you are correct.
->> +    description: |
->> +      Flag to indicate that QSPI return clock is used to latch the read data
->> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
->> +      on the board before using this property.
->> +
->> +# subnode's properties
->> +patternProperties:
->> +  "^.*@[0-9a-fA-F]+$":
->> +    type: object
->> +    description:
->> +      flash device uses the subnodes below defined properties.
->> +
->> +  cdns,read-delay:
->> +    description:
->> +      Delay in 4 microseconds, read capture logic, in clock cycles.
-> Huh? Is it in time or clocks?
->
-> No unit suffix here, so this needs a type ref. That's what 'make
-> dt_binding_check' fails on.
-it's clock cycles to adjustable delay,  read data delay between the 
-Flash Device data outputs and the controller data inputs
->> +
->> +  cdns,tshsl-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, for the length that the master mode chip select
->> +      outputs are de-asserted between transactions.
-> multipleOf: 50
->
-> And so on for the rest.
+You are not.  Your process' root is overmounted and your current directory
+is on that overmount.  You attempt to resolve ".." there.
 
-Okay , Noted.
+# cd /
+# unshare -m
+# stat .
+  File: .
+  Size: 4096            Blocks: 8          IO Block: 4096   directory
+Device: 801h/2049d      Inode: 2           Links: 25
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-02-26 20:51:06.623409892 -0500
+Modify: 2020-02-26 20:43:51.284020000 -0500
+Change: 2020-02-26 20:43:51.284020000 -0500
+ Birth: -
+# mkdir /tmp/foo
+# mount -t tmpfs none /tmp/foo/
+# for i in *; do test -d $i && mkdir /tmp/foo/$i && mount --rbind $i /tmp/foo/$i; done
+# cd /tmp/foo/
+# mount --move . /
+# /bin/pwd
+/
+# ls
+bin   dev  home  lib32  libx32      ltp    mnt  proc  run   srv  tmp  var
+boot  etc  lib   lib64  lost+found  media  opt  root  sbin  sys  usr
+# ls /
+253_metadump  etc             lib32       media  run   usr
+315.full      home            lib64       mnt    sbin  var
+bin           initrd.img      libx32      opt    srv   vmlinuz
+boot          initrd.img.old  lost+found  proc   sys   vmlinuz.old
+dev           lib             ltp         root   tmp
+# stat ..
+  File: ..
+  Size: 500             Blocks: 0          IO Block: 4096   directory
+Device: 19h/25d Inode: 1875746     Links: 25
+Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-02-27 21:48:45.649705410 -0500
+Modify: 2020-02-27 21:46:40.829607188 -0500
+Change: 2020-02-27 21:46:40.829607188 -0500
+ Birth: -
+# stat .
+  File: .
+  Size: 500             Blocks: 0          IO Block: 4096   directory
+Device: 19h/25d Inode: 1875746     Links: 25
+Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-02-27 21:48:45.649705410 -0500
+Modify: 2020-02-27 21:46:40.829607188 -0500
+Change: 2020-02-27 21:46:40.829607188 -0500
+ Birth: -
 
-Regards
-Vadivel
->> +
->> +  cdns,tsd2d-ns:
->> +    description: |
->> +      Delay in 50 nanoseconds, between one chip select being de-activated
->> +      and the activation of another.
->> +
->> +  cdns,tchsh-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between last bit of current transaction and
->> +      deasserting the device chip select (qspi_n_ss_out).
->> +
->> +  cdns,tslch-ns:
->> +    description: |
->> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
->> +      first bit transfer.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - cdns,fifo-depth
->> +  - cdns,fifo-width
->> +  - cdns,trigger-address
->> +
->> +examples:
->> +  - |
->> +    qspi: spi@ff705000 {
->> +          compatible = "cdns,qspi-nor";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +          reg = <0xff705000 0x1000>,
->> +                <0xffa00000 0x1000>;
->> +          interrupts = <0 151 4>;
->> +          clocks = <&qspi_clk>;
->> +          cdns,fifo-depth = <128>;
->> +          cdns,fifo-width = <4>;
->> +          cdns,trigger-address = <0x00000000>;
->> +
->> +          flash0: n25q00@0 {
->> +              compatible = "jedec,spi-nor";
->> +              reg = <0x0>;
->> +              cdns,read-delay = <4>;
->> +              cdns,tshsl-ns = <50>;
->> +              cdns,tsd2d-ns = <50>;
->> +              cdns,tchsh-ns = <4>;
->> +              cdns,tslch-ns = <4>;
->> +          };
->> +    };
->> +
->> --
->> 2.11.0
->>
+
+See what's going on?  We have a tmpfs overmounting root; current directory
+is the root of tmpfs; process root is on ext3.  Lookups for . and .. yield
+exactly the same result here - we stay in the root of tmpfs.
+
+Anyway, see #work.dotdot in vfs.git
