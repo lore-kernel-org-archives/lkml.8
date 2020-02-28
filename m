@@ -2,217 +2,60 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2016DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4536C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15B52469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ut7K4++s"
+	by mail.kernel.org (Postfix) with ESMTP id 805582469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgB1DLX (ORCPT
+        id S1730764AbgB1DL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:11:23 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38838 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730569AbgB1DLX (ORCPT
+        Thu, 27 Feb 2020 22:11:59 -0500
+Received: from mo-csw1116.securemx.jp ([210.130.202.158]:49780 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730569AbgB1DL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:11:23 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a16so335892pju.3;
-        Thu, 27 Feb 2020 19:11:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0NEaCPmHcMTUExH0eMnT6okYoT7G10RBGyN+Jnq9dgA=;
-        b=Ut7K4++s2I8f9S2Q/YL/qgP9r4dM0byVRCayMuJM0fZ2l73LKesbNns+xZDCQ0+l88
-         P+x9mlL78cFv3aVT2dAbKa+Sa0slZsJqaHrDTjPGVXACghsXx/cdY8FF+dMhJNVOK2rS
-         LoSFSeeIHGD7GRrFIUSt1XPos60yXTGWgmoO7ltRLyOn+Dp627jMz5MkL1szvPLdwXbC
-         zk8kzqhv2DpoLEu/lNQpY0BW0/sQAU0jmibp4oJMGv7dl6bwWDPSbg7926Zi7qlOkIyM
-         mbOshJ9jcI32HkT6R70rB4/Nvf1rs+4cVQf3WM353SnhHnP/sg+POZHhLWI/+w464KOR
-         sHdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0NEaCPmHcMTUExH0eMnT6okYoT7G10RBGyN+Jnq9dgA=;
-        b=c46d3M9z2kPQltA66vyVf1ki9uOf8fwKv+nLdIC/xQ2pmZoEKfqQqthJkU/rSntjNV
-         lmLBe8K2DyHVb5zJjSxQT/k1i6hK8MXUqNYVFndj7L+CybDKYyNdxL7jSC4ipy9R0nas
-         BZsLoftBYPibDACbXj1Pg2rOqrX+JEGniLrCH8pq2UaoJldgwKg3gNzuC8sX5iOI9hkp
-         sThK076Y+BWB2G8ld9YL7aMyHO3eTwLLY13ndY3R8PYO3FsylFZtGA9mzGOFVOpu1kiz
-         Wt+fPdGxi6TOkf768o4IH3FnZvGu1NmMZGGMaX1w3wVIPrm+yfW/oN0W+5SV7ZRcOFew
-         wQXQ==
-X-Gm-Message-State: APjAAAWGyZJ1a5XFPvfinBsaryz3qW5EEHCHXsOcSLEyXGVffTkAggpH
-        RAtrGjywNKyA+eidhTV1GT8=
-X-Google-Smtp-Source: APXvYqyIv73dxuwUnK3HVno066YT3MUYfEekaSRzb1LyR0YOdUJwKly1UCe/z5x6/C68NNQk4ttvgg==
-X-Received: by 2002:a17:902:b488:: with SMTP id y8mr1904248plr.206.1582859482226;
-        Thu, 27 Feb 2020 19:11:22 -0800 (PST)
-Received: from bobo.ozlabs.ibm.com (193-116-109-34.tpgi.com.au. [193.116.109.34])
-        by smtp.gmail.com with ESMTPSA id a17sm8132185pgv.11.2020.02.27.19.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 19:11:21 -0800 (PST)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, skiboot@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH 2/2] powerpc/powernv: Wire up OPAL address lookups
-Date:   Fri, 28 Feb 2020 13:10:27 +1000
-Message-Id: <20200228031027.271510-2-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200228031027.271510-1-npiggin@gmail.com>
-References: <20200228031027.271510-1-npiggin@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 22:11:59 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 01S3BV4k025720; Fri, 28 Feb 2020 12:11:31 +0900
+X-Iguazu-Qid: 2wGrMQpE3AjzZXqGSe
+X-Iguazu-QSIG: v=2; s=0; t=1582859491; q=2wGrMQpE3AjzZXqGSe; m=Gg9jScaW+L64ARWnrv/fIo0JxfoLbuRupyJP9N2Y6Rs=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1113) id 01S3BTJA006170;
+        Fri, 28 Feb 2020 12:11:30 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 01S3BTNk017041;
+        Fri, 28 Feb 2020 12:11:29 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 01S3BT1P005672;
+        Fri, 28 Feb 2020 12:11:29 +0900
+From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+To:     miquel.raynal@bootlin.com, vigneshr@ti.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH v2 0/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
+Date:   Fri, 28 Feb 2020 12:11:27 +0900
+X-TSB-HOP: ON
+Message-Id: <cover.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use ARCH_HAS_ADDRESS_LOOKUP to look up the opal symbol table. This
-allows crashes and xmon debugging to print firmware symbols.
+First patch is to rename function name becase of add new device.
+Second patch is to supprot for new device.
 
-  Oops: System Reset, sig: 6 [#1]
-  LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc2-dirty #903
-  NIP:  0000000030020434 LR: 000000003000378c CTR: 0000000030020414
-  REGS: c0000000fffc3d70 TRAP: 0100   Not tainted  (5.6.0-rc2-dirty)
-  MSR:  9000000002101002 <SF,HV,VEC,ME,RI>  CR: 28022284  XER: 20040000
-  CFAR: 0000000030003788 IRQMASK: 3
-  GPR00: 000000003000378c 0000000031c13c90 0000000030136200 c0000000012cfa10
-  GPR04: c0000000012cfa10 0000000000000010 0000000000000000 0000000031c10060
-  GPR08: c0000000012cfaaf 0000000030003640 0000000000000000 0000000000000001
-  GPR12: 00000000300e0000 c000000001490000 0000000000000000 c00000000139c588
-  GPR16: 0000000031c10000 c00000000125a900 0000000000000000 c0000000012076a8
-  GPR20: c0000000012a3950 0000000000000001 0000000031c10060 c0000000012cfaaf
-  GPR24: 0000000000000019 0000000030003640 0000000000000000 0000000000000000
-  GPR28: 0000000000000010 c0000000012cfa10 0000000000000000 0000000000000000
-  NIP [0000000030020434] .dummy_console_write_buffer_space+0x20/0x64 [OPAL]
-  LR [000000003000378c] opal_entry+0x14c/0x17c [OPAL]
+Yoshio Furuyama (2):
+  mtd: spinand: toshiba: Rename function name to change suffix and
+    prefix (8Gbit)
+  mtd: spinand: toshiba: Support for new Kioxia Serial NAND
 
-This won't unwind the firmware stack (or its Linux caller) properly if
-firmware and kernel endians don't match, but that problem could be solved
-in powerpc's unwinder.
+ drivers/mtd/nand/spi/toshiba.c | 173 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 130 insertions(+), 43 deletions(-)
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/Kconfig                       |  1 +
- arch/powerpc/include/asm/opal-api.h        |  6 +++-
- arch/powerpc/include/asm/opal.h            |  3 ++
- arch/powerpc/platforms/powernv/opal-call.c |  2 ++
- arch/powerpc/platforms/powernv/opal.c      | 40 ++++++++++++++++++++++
- 5 files changed, 51 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 497b7d0b2d7e..4d32b02d35e8 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -115,6 +115,7 @@ config PPC
- 	# Please keep this list sorted alphabetically.
- 	#
- 	select ARCH_32BIT_OFF_T if PPC32
-+	select ARCH_HAS_ADDRESS_LOOKUP		if PPC_POWERNV
- 	select ARCH_HAS_DEBUG_VIRTUAL
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_HAS_ELF_RANDOMIZE
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index c1f25a760eb1..c3a2a797177a 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,11 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_PHB_SET_OPTION			179
-+#define OPAL_PHB_GET_OPTION			180
-+#define OPAL_GET_SYMBOL				181
-+#define OPAL_LOOKUP_SYMBOL			182
-+#define OPAL_LAST				182
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..ef2d9273f06f 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -312,6 +312,9 @@ s64 opal_mpipl_query_tag(enum opal_mpipl_tags tag, u64 *addr);
- s64 opal_signal_system_reset(s32 cpu);
- s64 opal_quiesce(u64 shutdown_type, s32 cpu);
- 
-+int64_t opal_get_symbol(uint64_t addr, __be64 *symaddr, __be64 *symsize, char *namebuf, uint64_t buflen);
-+int64_t opal_lookup_symbol(const char *name, __be64 *symaddr, __be64 *symsize);
-+
- /* Internal functions */
- extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
- 				   int depth, void *data);
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..ba11112d94df 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -293,3 +293,5 @@ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
- OPAL_CALL(opal_secvar_get,			OPAL_SECVAR_GET);
- OPAL_CALL(opal_secvar_get_next,			OPAL_SECVAR_GET_NEXT);
- OPAL_CALL(opal_secvar_enqueue_update,		OPAL_SECVAR_ENQUEUE_UPDATE);
-+OPAL_CALL(opal_get_symbol,			OPAL_GET_SYMBOL);
-+OPAL_CALL(opal_lookup_symbol,			OPAL_LOOKUP_SYMBOL);
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 2b3dfd0b6cdd..fdf6c4e6f7f9 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -107,6 +107,46 @@ void opal_configure_cores(void)
- 		cur_cpu_spec->cpu_restore();
- }
- 
-+const char *arch_address_lookup(unsigned long addr,
-+			    unsigned long *symbolsize,
-+			    unsigned long *offset,
-+			    char **modname, char *namebuf)
-+{
-+	__be64 symaddr;
-+	__be64 symsize;
-+
-+	if (!firmware_has_feature(FW_FEATURE_OPAL))
-+		return NULL;
-+
-+	if (opal_get_symbol(addr, &symaddr, &symsize, namebuf,
-+			cpu_to_be64(KSYM_NAME_LEN)) != OPAL_SUCCESS)
-+		return NULL;
-+
-+	*symbolsize = be64_to_cpu(symsize);
-+	*offset = addr - be64_to_cpu(symaddr);
-+	*modname = "OPAL";
-+
-+	return namebuf;
-+}
-+
-+unsigned long arch_address_lookup_name(const char *name)
-+{
-+	__be64 addr;
-+	__be64 size;
-+
-+	if (!firmware_has_feature(FW_FEATURE_OPAL))
-+		return 0;
-+
-+	/* opal: prefix allows lookup of symbols that clash with kernel */
-+	if (!strncasecmp(name, "opal:", strlen("opal:")))
-+		name += strlen("opal:");
-+
-+	if (opal_lookup_symbol(name, &addr, &size) != OPAL_SUCCESS)
-+		return 0;
-+
-+	return be64_to_cpu(addr);
-+}
-+
- int __init early_init_dt_scan_opal(unsigned long node,
- 				   const char *uname, int depth, void *data)
- {
 -- 
-2.23.0
+1.9.1
 
