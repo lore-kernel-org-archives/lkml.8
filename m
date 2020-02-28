@@ -2,166 +2,198 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336B0C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97696C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2433246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9E6246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUvAXdKO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YfiJ3jOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgB1JRK (ORCPT
+        id S1726586AbgB1JS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:17:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38835 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgB1JRK (ORCPT
+        Fri, 28 Feb 2020 04:18:56 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38136 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgB1JSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:17:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so1415818pfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:17:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zI5jGxPKWZopGzcv8defovjFjujVgFtOE2duoJV0Wp0=;
-        b=GUvAXdKOo7OyFPS2kf6v3BkSN+skvXBZ7JcrJYs69tz3ANL8je5hZ0EjTayeqE8wNu
-         psy0bfo0H+WJ0wdJFS5wuzxG66IGW/o13shpERXrIEpovfQMt4ugk+Wvr/e0JshDNzAI
-         foQ4gFsTs4If8U9DrkoguvGEJlkfLhx1vqjl0zN5WbRspK7mF1nXpiFUe5KQUF448Bgv
-         dIwhOfLlBnzGK9OIrMZt7BvMflJ1xo1hvMwCuwRuE++Wvz1mk7rSIR/1hwPm2Uqlom45
-         iN8oIOlJopcnzWSiy+7rOC0BZIU5NN9Z4SQ+MxkxYUkGZbiCPe3xlcBXZYo7lE8K5/a7
-         JN2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zI5jGxPKWZopGzcv8defovjFjujVgFtOE2duoJV0Wp0=;
-        b=qbIER1pm0LnQsAUSPO+z7rDL51zAxGPb5V7GGKrOUSr8jP9wt1B1+fcs20de/Cq+BD
-         KM9tXQelwpCWkAnm0opa8oVJXw+c6ALv8utWqVhkcqPDXGAvJDswyfH1TK5dZP7HV9fw
-         Vdy/aakBznoKuTKdeLQZNrhcvyunqpxOwKk5Rz7GA3GbiF9F2obE9F7RKvyyLWEGOeS0
-         5hHnbAmU3c3Eq+HaNcEJj5ghieu7llPE/4Arny/mgk9SM/W/gxUX/A1xxqKA8ztPfDdE
-         DhhUtC6q2XSbjvj/NP3a3Ls4niCdljlJ1pZENcr9cIJE+y+T/NkKq9tkQtcpRTV2hxBa
-         /9Zg==
-X-Gm-Message-State: APjAAAX4hV5pW0RBcTNYLmglK86L9bQHLlVHdAjCT/FGVJn/RUGz9sH6
-        CUByxYo0cvFIaSsqb0TUCE8=
-X-Google-Smtp-Source: APXvYqzab6CgvwhYVpxAhMnw2skAcbQpWu4HxLaqCT1KtGcHPYjurfX0ws/oKB6VUNDMj8KBWL2pAQ==
-X-Received: by 2002:a63:a351:: with SMTP id v17mr3557592pgn.319.1582881428708;
-        Fri, 28 Feb 2020 01:17:08 -0800 (PST)
-Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
-        by smtp.gmail.com with ESMTPSA id x70sm1492356pgd.37.2020.02.28.01.17.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 01:17:07 -0800 (PST)
-Date:   Fri, 28 Feb 2020 17:17:00 +0800
-From:   Aaron Lu <aaron.lwe@gmail.com>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Huang Ying <ying.huang@intel.com>
-Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
- LRU list
-Message-ID: <20200228091700.GA675567@ziqianlu-desktop.localdomain>
-References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
- <20200227134806.GC39625@cmpxchg.org>
- <20200228032358.GB634650@ziqianlu-desktop.localdomain>
- <20200228040214.GA21040@js1304-desktop>
- <20200228055726.GA674737@ziqianlu-desktop.localdomain>
- <20200228065214.GA17349@js1304-desktop>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228065214.GA17349@js1304-desktop>
+        Fri, 28 Feb 2020 04:18:55 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200228091853euoutp0242b7362cce9a2fd19553d9254ceb5cb7~3hl4_l3Db0438304383euoutp02S
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:18:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200228091853euoutp0242b7362cce9a2fd19553d9254ceb5cb7~3hl4_l3Db0438304383euoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582881533;
+        bh=Cx/KisrZcE4N00t4ikLjmXXzqLLpj5BvenJ3Ar+A0ho=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=YfiJ3jODmBVbgu/nB9FF35fIgO7sed2hA/s9uMGaSTA6C+VvBsJ/L6bBHfBKcZjti
+         RKiC3CE9WDByH43DNC4tAC324ztUG1+taePAM1uNOZFrLTcGKXWGacL2Jt+D0zIvtq
+         of0x0yuXiIetZt7rJqmyOTcTnZKytKU2w5klXuyw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200228091853eucas1p21dca5e87fa987dcaf3506827725c131e~3hl4qpMBL2979429794eucas1p21;
+        Fri, 28 Feb 2020 09:18:53 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C7.A4.60698.CFAD85E5; Fri, 28
+        Feb 2020 09:18:52 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200228091852eucas1p12830eef2696807dc130216293cab4899~3hl4N-jb83168731687eucas1p13;
+        Fri, 28 Feb 2020 09:18:52 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200228091852eusmtrp1dbee03c6b8bf008fcb87ec1a6e41ec00~3hl4NXpS71679016790eusmtrp1v;
+        Fri, 28 Feb 2020 09:18:52 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-bf-5e58dafc03dc
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B8.DC.08375.CFAD85E5; Fri, 28
+        Feb 2020 09:18:52 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200228091852eusmtip1daa9176ef455ead56e6b011303518d1c~3hl3xQbYQ2822828228eusmtip1Z;
+        Fri, 28 Feb 2020 09:18:52 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/panfrost: Silence warnings during deferred probe
+Date:   Fri, 28 Feb 2020 10:18:42 +0100
+Message-Id: <20200228091842.1417-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPIsWRmVeSWpSXmKPExsWy7djP87p/bkXEGUw8aWlx7lI3q8X/bROZ
+        La58fc9mcXnXHDaLtUfuslv837OD3aLxCFCsb+0lNgcOjzXz1jB67Li7hNFj77cFLB6bVnWy
+        edzvPs7k0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBk3l9xkLDgiUXHiyWrmBsa1Il2MnBwS
+        AiYSJ15sZuti5OIQEljBKHFo7kIWCOcLo8SMO+ugnM+MEq0LbrHAtPS3v4ZKLGeU2LzzHCNc
+        y9Tu32wgVWwChhJdb7vAbBEBR4n5z96AFTEL/GKUONxxlREkISzgKtEyfy5QEQcHi4CqxMyT
+        XCBhXgEbif43O5ggtslLrN5wgBmkV0LgOZvEzSl7oc5wkVi1fQKULSzx6vgWdghbRuL05B4W
+        iIZmRomH59ayQzg9jBKXm2YwQlRZS9w59wtsM7OApsT6XfoQYUeJpxNXMYKEJQT4JG68FQQJ
+        MwOZk7ZNZ4YI80p0tAlBVKtJzDq+Dm7twQuXmCFsD4k917rBFgkJxEosafrMOoFRbhbCrgWM
+        jKsYxVNLi3PTU4uN81LL9YoTc4tL89L1kvNzNzECk8Xpf8e/7mDc9yfpEKMAB6MSD++CHeFx
+        QqyJZcWVuYcYJTiYlUR4N34NjRPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa7zoZayQQHpiSWp2
+        ampBahFMlomDU6qB8STrxTebfmkdyNH4trG0RdJ51tqyxVvs5Deo8N49d/VmV7paa27605L7
+        VR9/rRfQ/TzxalC5BwObd2Q1/5+3vqr7uyfV/Tq8IkrnZO62Rdlu/uo3Vn3uzprZc/i/7bTi
+        cznPL7/ZzXVa+EmtPef07mkOjdI31ANSW05c8TDIv/WV7fIzl4dnXyqxFGckGmoxFxUnAgAM
+        BHtxEgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsVy+t/xu7p/bkXEGZxtUrA4d6mb1eL/tonM
+        Fle+vmezuLxrDpvF2iN32S3+79nBbtF4BCjWt/YSmwOHx5p5axg9dtxdwuix99sCFo9NqzrZ
+        PO53H2fy6NuyitHj8ya5APYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9
+        O5uU1JzMstQifbsEvYybS24yFhyRqDjxZDVzA+NakS5GTg4JAROJ/vbXLCC2kMBSRolD/5Mg
+        4jISJ6c1sELYwhJ/rnWxdTFyAdV8YpRYfn83G0iCTcBQoustSIKDQ0TAWWLZ0hCQMLPAP0aJ
+        fzejQWxhAVeJlvlzwUpYBFQlZp7kAgnzCthI9L/ZwQQxXl5i9YYDzBMYeRYwMqxiFEktLc5N
+        zy021CtOzC0uzUvXS87P3cQIDM5tx35u3sF4aWPwIUYBDkYlHt4FO8LjhFgTy4orcw8xSnAw
+        K4nwbvwaGifEm5JYWZValB9fVJqTWnyI0RRo90RmKdHkfGDk5JXEG5oamltYGpobmxubWSiJ
+        83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYGRrzvp5uiFuI3/K6sv7zlyUO2bDkMRTVRxY0pPD
+        aucte72eeVLrFRbV6S/3zBLY468T1JKpxDFHZ6PjUaWr349c8Lh/aVJ+UMP7sDm1B682TNkR
+        26gUY36BR4O5TC/OblmQwErzQ4JzzbqiTL8UhShJPZPeaf7s3oQD7075nez8J//x431DOSWW
+        4oxEQy3mouJEABrPMDRkAgAA
+X-CMS-MailID: 20200228091852eucas1p12830eef2696807dc130216293cab4899
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200228091852eucas1p12830eef2696807dc130216293cab4899
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200228091852eucas1p12830eef2696807dc130216293cab4899
+References: <CGME20200228091852eucas1p12830eef2696807dc130216293cab4899@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:52:59PM +0900, Joonsoo Kim wrote:
-> On Fri, Feb 28, 2020 at 01:57:26PM +0800, Aaron Lu wrote:
-> > On Fri, Feb 28, 2020 at 01:03:03PM +0900, Joonsoo Kim wrote:
-> > > Hello,
-> > > 
-> > > On Fri, Feb 28, 2020 at 11:23:58AM +0800, Aaron Lu wrote:
-> > > > On Thu, Feb 27, 2020 at 08:48:06AM -0500, Johannes Weiner wrote:
-> > > > > On Wed, Feb 26, 2020 at 07:39:42PM -0800, Andrew Morton wrote:
-> > > > > > It sounds like the above simple aging changes provide most of the
-> > > > > > improvement, and that the workingset changes are less beneficial and a
-> > > > > > bit more risky/speculative?
-> > > > > > 
-> > > > > > If so, would it be best for us to concentrate on the aging changes
-> > > > > > first, let that settle in and spread out and then turn attention to the
-> > > > > > workingset changes?
-> > > > > 
-> > > > > Those two patches work well for some workloads (like the benchmark),
-> > > > > but not for others. The full patchset makes sure both types work well.
-> > > > > 
-> > > > > Specifically, the existing aging strategy for anon assumes that most
-> > > > > anon pages allocated are hot. That's why they all start active and we
-> > > > > then do second-chance with the small inactive LRU to filter out the
-> > > > > few cold ones to swap out. This is true for many common workloads.
-> > > > > 
-> > > > > The benchmark creates a larger-than-memory set of anon pages with a
-> > > > > flat access profile - to the VM a flood of one-off pages. Joonsoo's
-> > > > 
-> > > > test: swap-w-rand-mt, which is a multi thread swap write intensive
-> > > > workload so there will be swap out and swap ins.
-> > > > 
-> > > > > first two patches allow the VM to usher those pages in and out of
-> > > > 
-> > > > Weird part is, the robot says the performance gain comes from the 1st
-> > > > patch only, which adjust the ratio, not including the 2nd patch which
-> > > > makes anon page starting from inactive list.
-> > > > 
-> > > > I find the performance gain hard to explain...
-> > > 
-> > > Let me explain the reason of the performance gain.
-> > > 
-> > > 1st patch provides more second chance to the anonymous pages.
-> > 
-> > By second chance, do I understand correctely this refers to pages on 
-> > inactive list get moved back to active list?
-> 
-> Yes.
-> 
-> > 
-> > > In swap-w-rand-mt test, memory used by all threads is greater than the
-> > > amount of the system memory, but, memory used by each thread would
-> > > not be much. So, although it is a rand test, there is a locality
-> > > in each thread's job. More second chance helps to exploit this
-> > > locality so performance could be improved.
-> > 
-> > Does this mean there should be fewer vmstat.pswpout and vmstat.pswpin
-> > with patch1 compared to vanilla?
-> 
-> It depends on the workload. If the workload consists of anonymous
+Don't confuse user with meaningless warnings about the failure in getting
+resources in case of deferred probe.
 
-This swap-rand-w-mt workload is anon only.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/gpu/drm/panfrost/panfrost_device.c | 29 ++++++++++++++--------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-> pages only, I think, yes, pswpout/pswpin would be lower than vanilla
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+index 238fb6d54df4..1c3f2e656b53 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.c
++++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+@@ -21,7 +21,9 @@ static int panfrost_reset_init(struct panfrost_device *pfdev)
+ 
+ 	pfdev->rstc = devm_reset_control_array_get(pfdev->dev, false, true);
+ 	if (IS_ERR(pfdev->rstc)) {
+-		dev_err(pfdev->dev, "get reset failed %ld\n", PTR_ERR(pfdev->rstc));
++		if (PTR_ERR(pfdev->rstc) != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "get reset failed %ld\n",
++				PTR_ERR(pfdev->rstc));
+ 		return PTR_ERR(pfdev->rstc);
+ 	}
+ 
+@@ -44,7 +46,9 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
+ 
+ 	pfdev->clock = devm_clk_get(pfdev->dev, NULL);
+ 	if (IS_ERR(pfdev->clock)) {
+-		dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(pfdev->clock));
++		if (PTR_ERR(pfdev->clock) != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "get clock failed %ld\n",
++				PTR_ERR(pfdev->clock));
+ 		return PTR_ERR(pfdev->clock);
+ 	}
+ 
+@@ -57,8 +61,9 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
+ 
+ 	pfdev->bus_clock = devm_clk_get_optional(pfdev->dev, "bus");
+ 	if (IS_ERR(pfdev->bus_clock)) {
+-		dev_err(pfdev->dev, "get bus_clock failed %ld\n",
+-			PTR_ERR(pfdev->bus_clock));
++		if (PTR_ERR(pfdev->bus_clock) != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "get bus_clock failed %ld\n",
++				PTR_ERR(pfdev->bus_clock));
+ 		return PTR_ERR(pfdev->bus_clock);
+ 	}
+ 
+@@ -91,9 +96,10 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
+ 
+ 	pfdev->regulator = devm_regulator_get(pfdev->dev, "mali");
+ 	if (IS_ERR(pfdev->regulator)) {
+-		ret = PTR_ERR(pfdev->regulator);
+-		dev_err(pfdev->dev, "failed to get regulator: %d\n", ret);
+-		return ret;
++		if (PTR_ERR(pfdev->regulator) != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "failed to get regulator: %d\n",
++				PTR_ERR(pfdev->regulator));
++		return PTR_ERR(pfdev->regulator);
+ 	}
+ 
+ 	ret = regulator_enable(pfdev->regulator);
+@@ -124,19 +130,22 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+ 
+ 	err = panfrost_clk_init(pfdev);
+ 	if (err) {
+-		dev_err(pfdev->dev, "clk init failed %d\n", err);
++		if (err != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "clk init failed %d\n", err);
+ 		return err;
+ 	}
+ 
+ 	err = panfrost_regulator_init(pfdev);
+ 	if (err) {
+-		dev_err(pfdev->dev, "regulator init failed %d\n", err);
++		if (err != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "regulator init failed %d\n", err);
+ 		goto err_out0;
+ 	}
+ 
+ 	err = panfrost_reset_init(pfdev);
+ 	if (err) {
+-		dev_err(pfdev->dev, "reset init failed %d\n", err);
++		if (err != -EPROBE_DEFER)
++			dev_err(pfdev->dev, "reset init failed %d\n", err);
+ 		goto err_out1;
+ 	}
+ 
+-- 
+2.17.1
 
-I think LKP robot has captured these two metrics but the report didn't
-show them, which means the number is about the same with or without
-patch #1.
-
-> with patch #1. With large inactive list, we can easily find the
-> frequently referenced page and it would result in less swap in/out.
-
-But with small inactive list, the pages that would be on inactive list
-will stay on active list? I think the larger inactive list is mainly
-used to give the anon page a chance to be promoted to active list now
-that anon pages land on inactive list first, but on reclaim, I don't see
-how a larger inactive list can cause fewer swap outs.
-
-Forgive me for my curiosity and feel free to ignore my question as I
-don't want to waste your time on this. Your patchset looks a worthwhile
-thing to do, it's just the robot's report on patch1 seems er...
