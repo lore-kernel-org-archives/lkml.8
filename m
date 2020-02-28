@@ -2,86 +2,97 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA908C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A11C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF7A2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7012469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jY9Esepc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbgB1BOe (ORCPT
+        id S1730556AbgB1BPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:14:34 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46744 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgB1BOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:14:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:14:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317979084"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:14:28 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j7UEW-0002UF-2F; Fri, 28 Feb 2020 09:14:28 +0800
-Date:   Fri, 28 Feb 2020 01:40:03 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     kbuild-all@lists.01.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
-Message-ID: <202002280157.XsbiYL94%lkp@intel.com>
-References: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
+        Thu, 27 Feb 2020 20:15:07 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45159 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730148AbgB1BPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 20:15:07 -0500
+Received: by mail-pg1-f194.google.com with SMTP id m15so584889pgv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:15:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O+5GIeJyL2gtlOdW0SKFFjMgLBOt56yNEFcuq5D5UzE=;
+        b=jY9EsepciEE4B8pAidHluOcxIEhSCAXUIBSt6qRZFxeqDGXCUoIr13RJBMnRAAdYFU
+         OTzX0Qt8vhxnkP25dbdNiwrw6jB3XiBiDXH1oHUKNbTnJv8ZIByXB5Hgp53CmH+UjpUN
+         lEpHBfwOj9kBwa2NA+xxBYbvQveMixCrnh6nSH1G07W1mh7TzIMvjUdiRp/t42ODzIuk
+         LYNzh0X2xhhhr1eEgqgoN/5fkfMoP5s+0mU2z45063hUG8pQ9+ZmMnpZlJVFHwA3SdeC
+         0arsbXavbl6dIx2URE4wyEcwGCRQa83+Qw1qpw/RcDYM+x8lJzla5i+yUMfef+IoFNSX
+         L8IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O+5GIeJyL2gtlOdW0SKFFjMgLBOt56yNEFcuq5D5UzE=;
+        b=VSYcRCm+yliO9yW0oH0Yfr1APQqrp3XxjX9vDEV1lIADfq2l8wq8uhzcupa4RttSa9
+         iOTcIM2ZpE25Qkbbap7rUteA90L1Kdjq/7YjVSz4HpssLwYXI7ArH71G1KNG4+nvBAUh
+         LhddULuMAj8bQM1UoGN5Lz4lv6xNNDjPJsMtDn15+4EnLE1pn/6N6+d6s0VH0rqQ0G24
+         oPrDnXinXMZBJOe4Aa5oGYWJJaV0aC77Rkwns145M7tuqz7L/ofNbKJ8gInR5z3nVCgk
+         A3jYy4psQhacsBdg0k3LnKhcxzIKobUpSbK/AT/Dz2KcWRAiTN1sAAy1Zt0Nf6+hLlUM
+         tuIw==
+X-Gm-Message-State: APjAAAV0s0p5ZM54mkCyyCpYsyTSUOXOI93yslyALHURO/qxwECzbepw
+        bavWSQ/iwSIl0Lytu9E++g8=
+X-Google-Smtp-Source: APXvYqwZJCvojPpJrNRSIlw2yYYhDpsAp7mwOkbZ5QS8xdTQnVl5HAC7s5NvgxvC1i+9713cdP5uzA==
+X-Received: by 2002:a63:f84b:: with SMTP id v11mr2008402pgj.133.1582852506037;
+        Thu, 27 Feb 2020 17:15:06 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id b4sm8816963pfd.18.2020.02.27.17.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 17:15:05 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:15:03 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Subject: Re: [PATCH v1] lib/vsprintf: update comment about
+ simple_strto<foo>() functions
+Message-ID: <20200228011503.GJ122464@google.com>
+References: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
+ <20200221145141.pchim24oht7nxfir@pengutronix.de>
+ <CAHp75VfR+X6Mw8ywKNW5mTomzmuHSM8ecQUhxtM=LUkWaSe9CA@mail.gmail.com>
+ <20200221163334.w7pocmbbw4ymimlc@pengutronix.de>
+ <d6c3b369-9777-9986-f41f-3f3a4f85d64c@rasmusvillemoes.dk>
+ <20200227131428.5nhvslwdmocv6fkb@pathway.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200227131428.5nhvslwdmocv6fkb@pathway.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sivaprakash,
+On (20/02/27 14:14), Petr Mladek wrote:
+> 
+> Is still anyone against the original patch updating the comments in
+> vsprintf.c. Otherwise, I would queue it for 5.7.
+> 
 
-Thank you for the patch! Perhaps something to improve:
++1
 
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on v5.6-rc3 next-20200227]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Sivaprakash-Murugesan/Add-APSS-clock-controller-support-for-IPQ6018/20200227-185847
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-173-ge0787745-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/clk/qcom/apss-ipq6018.c:39:10: sparse: sparse: symbol 'apss_pll_offsets' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+	-ss
