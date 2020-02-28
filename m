@@ -2,140 +2,104 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8D9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5903C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6AD246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D09D246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582898495;
-	bh=A5fb38kM+GZ7gGMNs4Lmp1mxfiq8mi+VBCVLWTrcR14=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=pn6LQQk1BunwA7chdZdqa4dbHgh1LdAnc9rNpSMhEilgkX9ZhuHmsYlQHcnKReI8y
-	 qEtI5NQBdQlWKvbx63aAwhQ2cTJb44yTww4JNmtrupnkP0Kn83vpRE7/BYkpppo3wG
-	 KeMchShmfy2Amwmy1R3oC3JLWOu7YV5B9h7j3SzY=
+	s=default; t=1582898500;
+	bh=ucKHIT7ySSSze2KraKTyZmctHteAjwvZBbS/OOSK3/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uzOJmjUhxBqm33QaRcqdYBr2P74GwxlLsjVpj2kqhYKmj2BME6Ype/SkEgfXD+A52
+	 JznpaGdVi1kVeO72BDctSiyn/oWEs6oIp+cHE2Lxd/W7/nxWjKN5OH0Yi6WXb6+ZP4
+	 4DOxUU0D2Yzjgks4tyrwZGuVvPA+M3oQ2w18P3Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgB1OBe (ORCPT
+        id S1727530AbgB1OBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:01:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59010 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 09:01:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727515AbgB1OBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:01:31 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        id S1727507AbgB1OBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:01:30 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0DAA246B9;
-        Fri, 28 Feb 2020 14:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 562B5246AE;
+        Fri, 28 Feb 2020 14:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582898491;
-        bh=A5fb38kM+GZ7gGMNs4Lmp1mxfiq8mi+VBCVLWTrcR14=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ShUkFuMzDJfu2PbgZ4VEtk1Am3iJeV9fsCVrhVrw31NjSH6CrisH/hs+++80/Tl6+
-         3JNQ3wg1kyboVYdlkwy42/7kNug4Wo0o1TJIy7bEMyKiIXqVdD4zocbIWTLo0etxPo
-         tIl5hHDpPDrbC2LqQxeX1B6OciD9kpl5G0eBLaAA=
-Message-ID: <6567c8fa690d9f9a0682ee22e528fcd5e3b51212.camel@kernel.org>
-Subject: Re: libceph: follow redirect replies from osds
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.co>,
-        ceph-devel@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 28 Feb 2020 09:01:29 -0500
-In-Reply-To: <6ea7e486-a3f3-7def-1f88-2e645e3b9780@canonical.com>
-References: <6ea7e486-a3f3-7def-1f88-2e645e3b9780@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        s=default; t=1582898489;
+        bh=ucKHIT7ySSSze2KraKTyZmctHteAjwvZBbS/OOSK3/g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r0YqdwUsJcWd0nqfGAjQeXwUNphP2nPk7ZbCVBkZc3zLusPQTk+9CZTN1WdwSyXhJ
+         UPi7EtBD7QO7QicZt2XZJkpS7PzkxSTIIBOCCmGDLz374LwUoiTZo7dbjniSeu9vHz
+         4K8e7sa75ALno2O7r4+ivHJxrD1XbeSQFUmKLSRk=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 15/15] perf annotate: Fix segfault with source toggle
+Date:   Fri, 28 Feb 2020 11:00:14 -0300
+Message-Id: <20200228140014.1236-16-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200228140014.1236-1-acme@kernel.org>
+References: <20200228140014.1236-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 12:46 +0000, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity has detected a potential issue in the
-> following commit in function ceph_redirect_decode():
-> 
-> commit 205ee1187a671c3b067d7f1e974903b44036f270
-> Author: Ilya Dryomov <ilya.dryomov@inktank.com>
-> Date:   Mon Jan 27 17:40:20 2014 +0200
-> 
->     libceph: follow redirect replies from osds
-> 
-> The issue is as follows:
-> 
-> 
-> 3486        len = ceph_decode_32(p);
-> 
-> Unused value (UNUSED_VALUE)
-> assigned_pointer: Assigning value from len to *p here, but that stored
-> value is overwritten before it can be used.
-> 
-> 3487        *p += len; /* skip osd_instructions */
-> 3488
-> 3489        /* skip the rest */
-> 
-> value_overwrite: Overwriting previous write to *p with value from
-> struct_end.
-> 
-> 3490        *p = struct_end;
-> 
-> The *p assignment in line 3487 is effectively being overwritten by the
-> *p assignment in 3490.  Maybe the following is correct:
-> 
->         len = ceph_decode_32(p);
-> -       p += len; /* skip osd_instructions */
-> +       struct_end = *p + len;  /* skip osd_instructions */
-> 
->         /* skip the rest */
->         *p = struct_end;
-> 
-> I'm not familiar with the ceph structure here, so I'm not sure what the
-> correct fix would be.
-> 
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Probably something like this? (untested, of course)
+While rendering annotate browser from perf report tui, we keep track
+of total number of lines(asm + source) in annotation->nr_entries and
+total number of asm lines in annotation->nr_asm_entries. But we don't
+reset them before starting. Thus if user annotates same function
+multiple times, we restart incrementing these fields with old values.
 
-----------------------
+This causes a segfault when user tries to toggle source code after
+annotating same function multiple times. Fix it.
 
-[PATCH] libceph: fix up Coverity warning in ceph_redirect_decode
-
-We're going to skip to the end of the msg after checking the
-object_name anyway, so there is no need to separately decode
-the osd instructions that follow it.
-
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Link: http://lore.kernel.org/lkml/20200204045233.474937-5-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- net/ceph/osd_client.c | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/perf/util/annotate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index 8ff2856e2d52..51810db4130a 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -3483,9 +3483,6 @@ static int ceph_redirect_decode(void **p, void
-*end,
- 		goto e_inval;
- 	}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index c816e5840166..0ea95be84b3b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2621,6 +2621,8 @@ void annotation__set_offsets(struct annotation *notes, s64 size)
+ 	struct annotation_line *al;
  
--	len = ceph_decode_32(p);
--	*p += len; /* skip osd_instructions */
--
- 	/* skip the rest */
- 	*p = struct_end;
- out:
+ 	notes->max_line_len = 0;
++	notes->nr_entries = 0;
++	notes->nr_asm_entries = 0;
+ 
+ 	list_for_each_entry(al, &notes->src->source, node) {
+ 		size_t line_len = strlen(al->line);
 -- 
-2.24.1
-
-
-
+2.21.1
 
