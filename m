@@ -2,108 +2,90 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E53C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84091C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B5624691
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:36:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cu0HyuyQ"
+	by mail.kernel.org (Postfix) with ESMTP id 52CCE2469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582907841;
+	bh=5A5iE043J0H7bsRCOK/blI10h304v4dt+OVpLOWvVU8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1bKzu2tIqgszMD5RvhGgw6PD7zhVZZRY2hVwNK1gd37o6KW0lyojKEbKeW5IplIGt
+	 SfSc0HlLuNOwQ3X6VpvcUx+rwdYZv8KRmjrmbvm0L4WYRbqZoPHl9Jz1cJKwM88J7E
+	 kTown/jG/JBtsOXSFVc5ZtYBq8CSno314A48DzgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgB1QgT (ORCPT
+        id S1726359AbgB1QhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:36:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51204 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726151AbgB1QgT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:36:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582907778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9zOQZKafxylozWi2DvF14UxTPNsm87fVtDrkiWSJi14=;
-        b=cu0HyuyQmgOuEoZcP9R3tS9m4hE/7Z2nToRd2Pbmpb0TehlaOigdG5kFoxOwjEfkLGWsE6
-        loLlp7BQK0brwiL9jVkEFz9yqsN82fTv2cIH+vqs3rU5VFVilpzq+GOItjq7NMmthZwFlb
-        2DsZU7iqFMoIoo/DHWrZb8rlK9eWufU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-Zp4_17ZxNFK2J0lzcG5oIw-1; Fri, 28 Feb 2020 11:36:11 -0500
-X-MC-Unique: Zp4_17ZxNFK2J0lzcG5oIw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 28 Feb 2020 11:37:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbgB1QhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:37:19 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC3A08017CC;
-        Fri, 28 Feb 2020 16:36:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0DB690780;
-        Fri, 28 Feb 2020 16:36:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
-References: <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk> <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com> <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     dhowells@redhat.com,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8DB20732;
+        Fri, 28 Feb 2020 16:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582907839;
+        bh=5A5iE043J0H7bsRCOK/blI10h304v4dt+OVpLOWvVU8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=on4ec+8kSt94Kmj8q1fLw5B16jN29K/IftmvlVaqoFaOiVAE4i7T2jsInOeb2qea8
+         9CF18L7Iv8RNU110slHRF4pI/aEyCO/CE/O4pBtqvgrPXtvjF8jGy7vS60++mvYQSS
+         tAzGV3lf4TlOW2k4q76BOtAqDyHWZn7KphC7dLTk=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j7idZ-008np4-Hi; Fri, 28 Feb 2020 16:37:17 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <107665.1582907766.1@warthog.procyon.org.uk>
-Date:   Fri, 28 Feb 2020 16:36:06 +0000
-Message-ID: <107666.1582907766@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Feb 2020 16:37:17 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Joe Jin <joe.jin@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] genirq/debugfs: add new config option for trigger
+ interrupt from userspace
+In-Reply-To: <44a7007d-9624-8ac7-e0ab-fab8bdd39848@oracle.com>
+References: <44a7007d-9624-8ac7-e0ab-fab8bdd39848@oracle.com>
+Message-ID: <006a08b8bfb991853ede8c9d1e29d6a7@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: joe.jin@oracle.com, tglx@linutronix.de, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sysfs also has some other disadvantages for this:
+Hi Joe,
 
- (1) There's a potential chicken-and-egg problem in that you have to create a
-     bunch of files and dirs in sysfs for every created mount and superblock
-     (possibly excluding special ones like the socket mount) - but this
-     includes sysfs itself.  This might work - provided you create sysfs
-     first.
+On 2020-02-28 05:42, Joe Jin wrote:
+> commit 536e2e34bd00 ("genirq/debugfs: Triggering of interrupts from
+> userspace") is allowed developer inject interrupts via irq debugfs, 
+> which
+> is very useful during development phase, but on a production system, 
+> this
+> is very dangerous, add new config option, developers can enable it as
+> needed instead of enabling it by default when irq debugfs is enabled.
 
- (2) sysfs is memory intensive.  The directory structure has to be backed by
-     dentries and inodes that linger as long as the referenced object does
-     (procfs is more efficient in this regard for files that aren't being
-     accessed).
+I don't really mind the patch (although it could be more elegant), but 
+in
+general I object to most debugfs options being set on a production 
+kernel.
+There is way too much information in most debugfs backends to be 
+comfortable
+with it, and you can find things like page table dumps, for example...
 
- (3) It gives people extra, indirect ways to pin mount objects and
-     superblocks.
-
-For the moment, fsinfo() gives you three ways of referring to a filesystem
-object:
-
- (a) Directly by path.
-
- (b) By path associated with an fd.
-
- (c) By mount ID (perm checked by working back up the tree).
-
-but will need to add:
-
- (d) By fscontext fd (which is hard to find in sysfs).  Indeed, the superblock
-     may not even exist yet.
-
-David
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
