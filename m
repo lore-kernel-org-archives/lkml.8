@@ -2,112 +2,175 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06C9C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48486C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8283C2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A1D24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582886742;
+	bh=PCQtNVK5kUheVsS/hcAmfga2Muvb8cMpwOkvE8/P/aQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ypJmRw4SDp8moY8/qzvxkPMf/Qp0J9xXbM0zCYaURa/BYCMXYdsPJ/w/F+6SybTBK
+	 fJ8LMYDikqvMGb6I4Qk94GuzvPK1tYaqWNeQbWPNKvn3gUBAvE5aFTgEz4t1JhY+4/
+	 2/LpP0QtWq2HTlHjfdtuahC5brR2fvcaTXdx29f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgB1KpS (ORCPT
+        id S1726925AbgB1Kpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:45:18 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55090 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726063AbgB1KpR (ORCPT
+        Fri, 28 Feb 2020 05:45:40 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:20008 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgB1Kpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:45:17 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SAjGF2012430;
-        Fri, 28 Feb 2020 05:45:16 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yepv0srw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 05:45:16 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01SAjFVm045684
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 28 Feb 2020 05:45:15 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 28 Feb
- 2020 05:45:14 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 28 Feb 2020 05:45:14 -0500
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01SAjB7x020958;
-        Fri, 28 Feb 2020 05:45:11 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <dmitry.torokhov@gmail.com>, <michael.hennerich@analog.com>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH v2] input: touchscreen: ad7877: Use new structure for SPI transfer delays
-Date:   Fri, 28 Feb 2020 12:45:08 +0200
-Message-ID: <20200228104508.15564-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227130619.28142-1-sergiu.cuciurean@analog.com>
-References: <20200227130619.28142-1-sergiu.cuciurean@analog.com>
+        Fri, 28 Feb 2020 05:45:40 -0500
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01SAjZiL017509;
+        Fri, 28 Feb 2020 19:45:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01SAjZiL017509
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582886735;
+        bh=AVWPDjvEFkL5nZDtBP72nvXCX+4qaLVka0coBrV64D8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u8IBV3SfBwXEchtxhDXF8Dji6oYDaaJZNyhD0p3923ssYwY7daukuG+/ZwPWEpoRj
+         YtlNx0RX13NH6r4MYJmfUzirJ6bEx5Lo0hJkr1OX2eSucBA2Thgu9xFwr7eVFRMC44
+         jeookHN/xeyPR25zrSjTvX3iXQNHdO+VOg1+/9oj/c0YXQAaRJTdsWsDrZ1qgfdpOl
+         53KcxqzgTZ0Q0iDJcIpr8DlOlWvB/fS6n+XNOVITlOv5+4OaufgJbfqGkZvYvkln8M
+         MtgFpMYTeHvbGMv7WcWiwgl8BYcgubjFubdWB5tTpIT7I5PpLnLU1NfrDF3TiK6jpF
+         enHkOX+VediwA==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id r18so1640535vso.5;
+        Fri, 28 Feb 2020 02:45:35 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0ovsptjidtv2mqDO0Qm7zpXblOv9eKdEUOxP+0jAq00qmMtuXc
+        fKjjmyXzB37k0RrTx+iu2mXN1/MBXTUmiI2ZJ1Q=
+X-Google-Smtp-Source: ADFU+vuT4IEKXTX14l2zA9Pn0Pag7bwinoTJNY2RRdKibw8N1mxf/ANOn4DHp/+jSmwUFj20bsSXGkGbGr0YnjKgM30=
+X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr2189284vsa.181.1582886734408;
+ Fri, 28 Feb 2020 02:45:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_03:2020-02-26,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280090
+References: <20200218094139.78835-1-qperret@google.com> <20200218094139.78835-3-qperret@google.com>
+ <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com> <20200228100302.GA228304@google.com>
+In-Reply-To: <20200228100302.GA228304@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 28 Feb 2020 19:44:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATADSQDp9bGzChE1xck_vw_6B6joLXXozDBrWWv4f=v=w@mail.gmail.com>
+Message-ID: <CAK7LNATADSQDp9bGzChE1xck_vw_6B6joLXXozDBrWWv4f=v=w@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] kbuild: split adjust_autoksyms.sh in two parts
+To:     Quentin Perret <qperret@google.com>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+On Fri, Feb 28, 2020 at 7:03 PM Quentin Perret <qperret@google.com> wrote:
+>
+> On Friday 28 Feb 2020 at 01:41:50 (+0900), Masahiro Yamada wrote:
+> > Hi.
+> >
+> > On Tue, Feb 18, 2020 at 6:41 PM Quentin Perret <qperret@google.com> wrote:
+> > >
+> > > In order to prepare the ground for a build-time optimization, split
+> > > adjust_autoksyms.sh into two scripts: one that generates autoksyms.h
+> > > based on all currently available information (whitelist, and .mod
+> > > files), and the other to inspect the diff between two versions of
+> > > autoksyms.h and trigger appropriate rebuilds.
+> > >
+> > > Acked-by: Nicolas Pitre <nico@fluxnic.net>
+> > > Tested-by: Matthias Maennich <maennich@google.com>
+> > > Reviewed-by: Matthias Maennich <maennich@google.com>
+> > > Signed-off-by: Quentin Perret <qperret@google.com>
+> > > ---
+> > >  scripts/adjust_autoksyms.sh | 36 +++-----------------------
+> > >  scripts/gen_autoksyms.sh    | 51 +++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 55 insertions(+), 32 deletions(-)
+> > >  create mode 100755 scripts/gen_autoksyms.sh
+> > >
+> > > diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+> > > index ff46996525d3..2b366d945ccb 100755
+> > > --- a/scripts/adjust_autoksyms.sh
+> > > +++ b/scripts/adjust_autoksyms.sh
+> > > @@ -1,14 +1,13 @@
+> > >  #!/bin/sh
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > >
+> > > -# Script to create/update include/generated/autoksyms.h and dependency files
+> > > +# Script to update include/generated/autoksyms.h and dependency files
+> > >  #
+> > >  # Copyright:   (C) 2016  Linaro Limited
+> > >  # Created by:  Nicolas Pitre, January 2016
+> > >  #
+> > >
+> > > -# Create/update the include/generated/autoksyms.h file from the list
+> > > -# of all module's needed symbols as recorded on the second line of *.mod files.
+> > > +# Update the include/generated/autoksyms.h file.
+> > >  #
+> > >  # For each symbol being added or removed, the corresponding dependency
+> > >  # file's timestamp is updated to force a rebuild of the affected source
+> > > @@ -38,35 +37,8 @@ esac
+> > >  # We need access to CONFIG_ symbols
+> > >  . include/config/auto.conf
+> > >
+> > > -ksym_wl=/dev/null
+> > > -if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
+> > > -       # Use 'eval' to expand the whitelist path and check if it is relative
+> > > -       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
+> > > -       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
+> > > -       if [ ! -f "$ksym_wl" ]; then
+> >
+> >
+> > Just a Nit.
+> >
+> > Maybe, is testing  -r better ?
+> >
+> > 'cat - "$ksym_wl"' is piped, so its error code is not checked.
+> >
+> > So, checking the read permission here is robust, I think.
+>
+> Right, that's a good point. And actually, I think we want both -f and
+> -r. -r alone would consider a path to a folder as correct.
+>
+> This should do the trick:
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+Sounds good.
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
+Thanks.
 
-Changelog v1->v2:
-*Restore initial name of wrongfully modfied struct member
 
- drivers/input/touchscreen/ad7877.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/touchscreen/ad7877.c b/drivers/input/touchscreen/ad7877.c
-index 9b652f61837f..08f5372f0bfd 100644
---- a/drivers/input/touchscreen/ad7877.c
-+++ b/drivers/input/touchscreen/ad7877.c
-@@ -281,12 +281,14 @@ static int ad7877_read_adc(struct spi_device *spi, unsigned command)
- 
- 	req->xfer[1].tx_buf = &req->ref_on;
- 	req->xfer[1].len = 2;
--	req->xfer[1].delay_usecs = ts->vref_delay_usecs;
-+	req->xfer[1].delay.value = ts->vref_delay_usecs;
-+	req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
- 	req->xfer[1].cs_change = 1;
- 
- 	req->xfer[2].tx_buf = &req->command;
- 	req->xfer[2].len = 2;
--	req->xfer[2].delay_usecs = ts->vref_delay_usecs;
-+	req->xfer[2].delay.value = ts->vref_delay_usecs;
-+	req->xfer[2].delay.unit = SPI_DELAY_UNIT_USECS;
- 	req->xfer[2].cs_change = 1;
- 
- 	req->xfer[3].rx_buf = &req->sample;
+>
+> diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
+> index 679c9f05e4b4..16c0b2ddaa4c 100755
+> --- a/scripts/gen_autoksyms.sh
+> +++ b/scripts/gen_autoksyms.sh
+> @@ -24,7 +24,7 @@ if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
+>         # Use 'eval' to expand the whitelist path and check if it is relative
+>         eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
+>         [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
+> -       if [ ! -f "$ksym_wl" ]; then
+> +       if [ ! -f "$ksym_wl" ] || [ ! -r "$ksym_wl" ]; then
+>                 echo "ERROR: '$ksym_wl' whitelist file not found" >&2
+>                 exit 1
+>         fi
+>
+> I'll send a v6 shortly.
+>
+> Thanks!
+> Quentin
+
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
