@@ -2,110 +2,84 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1826DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6EEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC55020658
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB1F20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbgB1DCD (ORCPT
+        id S1730658AbgB1DD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:02:03 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52602 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730445AbgB1DCC (ORCPT
+        Thu, 27 Feb 2020 22:03:27 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:37276 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730520AbgB1DD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:02:02 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7Vua-002Boa-UI; Fri, 28 Feb 2020 03:02:01 +0000
-Date:   Fri, 28 Feb 2020 03:02:00 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v2)
-Message-ID: <20200228030200.GH23230@ZenIV.linux.org.uk>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
- <20200225012457.GA138294@ZenIV.linux.org.uk>
- <20200228012451.upnq5r7fdctrk7pv@yavin>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228012451.upnq5r7fdctrk7pv@yavin>
+        Thu, 27 Feb 2020 22:03:27 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01S32TN4031937
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 27 Feb 2020 21:02:32 -0600
+Message-ID: <2676013663fc8c53e02a5fdaafb1b27e18249b80.camel@kernel.crashing.org>
+Subject: Re: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 28 Feb 2020 14:02:28 +1100
+In-Reply-To: <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
+References: <20200227230507.8682-1-rentao.bupt@gmail.com>
+         <20200227230507.8682-8-rentao.bupt@gmail.com>
+         <3150424b9e9f5856c747a0fbf44647919f49209d.camel@kernel.crashing.org>
+         <20200228010444.GA19910@taoren-ubuntu-R90MNF91>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:24:51PM +1100, Aleksa Sarai wrote:
-
-> > Another one is about LOOKUP_NO_XDEV again: suppose you have process'
-> > root directly overmounted and cwd in the root of whatever's overmounting
-> > it.  Resolution of .. will stay in cwd - we have no parent within the
-> > chroot jail we are in, so we move to whatever's overmounting that root.
-> > Which is the original location.  Should we fail on LOOKUP_NO_XDEV here?
-> > Plain .. in the root of chroot jail (not overmounted by anything) does
-> > *not*...
+On Thu, 2020-02-27 at 17:05 -0800, Tao Ren wrote:
+> > Also long run I think best is going to have a child node per downstream
+> > port, so we create a matching linux struct device. This will make it
+> > easier to deal with the other device-controller in the ast2600 which is
+> > basically one of these without a vhub above it.
 > 
-> I think LOOKUP_NO_XDEV should block that since you end up crossing a
-> mountpoint.
+> Maybe a dumb question: what would be the proper place to parse the child
+> node/properties when they are added? For example, in some usb_gadget_ops
+> callback?
 
-You are not.  Your process' root is overmounted and your current directory
-is on that overmount.  You attempt to resolve ".." there.
+No. What the vhub would do is when it probes, it creates a platform
+device for each "port" child node that's linked to the DT node.
 
-# cd /
-# unshare -m
-# stat .
-  File: .
-  Size: 4096            Blocks: 8          IO Block: 4096   directory
-Device: 801h/2049d      Inode: 2           Links: 25
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-02-26 20:51:06.623409892 -0500
-Modify: 2020-02-26 20:43:51.284020000 -0500
-Change: 2020-02-26 20:43:51.284020000 -0500
- Birth: -
-# mkdir /tmp/foo
-# mount -t tmpfs none /tmp/foo/
-# for i in *; do test -d $i && mkdir /tmp/foo/$i && mount --rbind $i /tmp/foo/$i; done
-# cd /tmp/foo/
-# mount --move . /
-# /bin/pwd
-/
-# ls
-bin   dev  home  lib32  libx32      ltp    mnt  proc  run   srv  tmp  var
-boot  etc  lib   lib64  lost+found  media  opt  root  sbin  sys  usr
-# ls /
-253_metadump  etc             lib32       media  run   usr
-315.full      home            lib64       mnt    sbin  var
-bin           initrd.img      libx32      opt    srv   vmlinuz
-boot          initrd.img.old  lost+found  proc   sys   vmlinuz.old
-dev           lib             ltp         root   tmp
-# stat ..
-  File: ..
-  Size: 500             Blocks: 0          IO Block: 4096   directory
-Device: 19h/25d Inode: 1875746     Links: 25
-Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-02-27 21:48:45.649705410 -0500
-Modify: 2020-02-27 21:46:40.829607188 -0500
-Change: 2020-02-27 21:46:40.829607188 -0500
- Birth: -
-# stat .
-  File: .
-  Size: 500             Blocks: 0          IO Block: 4096   directory
-Device: 19h/25d Inode: 1875746     Links: 25
-Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-02-27 21:48:45.649705410 -0500
-Modify: 2020-02-27 21:46:40.829607188 -0500
-Change: 2020-02-27 21:46:40.829607188 -0500
- Birth: -
+The driver for the device then attaches to it via standard DT matching
+and checks if it has a vhub parent or not, and based on that, operates
+as a vhub child device or a standalone one.
+
+(For example, it might have different functions for EP selection since
+standalone devices have private EPs rather than a shared pool)
+
+They can both be in the same module or they can be separate modules
+with cross dependencies.
+
+Cheers,
+Ben.
 
 
-See what's going on?  We have a tmpfs overmounting root; current directory
-is the root of tmpfs; process root is on ext3.  Lookups for . and .. yield
-exactly the same result here - we stay in the root of tmpfs.
-
-Anyway, see #work.dotdot in vfs.git
