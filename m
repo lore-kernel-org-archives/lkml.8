@@ -2,241 +2,160 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55B1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C4DC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E58E2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895252469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSFyjzXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgB1DMW (ORCPT
+        id S1730733AbgB1DNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:12:22 -0500
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:39230 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730569AbgB1DMW (ORCPT
+        Thu, 27 Feb 2020 22:13:12 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38858 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730586AbgB1DNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:12:22 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 01S3C9bV026815; Fri, 28 Feb 2020 12:12:09 +0900
-X-Iguazu-Qid: 34tMS0bDJyvXl7dsL6
-X-Iguazu-QSIG: v=2; s=0; t=1582859528; q=34tMS0bDJyvXl7dsL6; m=FnMsAcophBYAi5C45Oqezs1rMk6MxM6AZSzIPTQjjCg=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1512) id 01S3C7KS027104;
-        Fri, 28 Feb 2020 12:12:08 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 01S3C7ep017321;
-        Fri, 28 Feb 2020 12:12:07 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 01S3C7D0006149;
-        Fri, 28 Feb 2020 12:12:07 +0900
-From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-To:     miquel.raynal@bootlin.com, vigneshr@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v2 2/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
-Date:   Fri, 28 Feb 2020 12:12:04 +0900
-X-TSB-HOP: ON
-Message-Id: <9080db5a16d0fae0b0e04245e8aacc774107222c.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
-References: <cover.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
+        Thu, 27 Feb 2020 22:13:12 -0500
+Received: by mail-pg1-f195.google.com with SMTP id d6so745842pgn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:13:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rbZrsVVuXpExOD+0yCysQl+fKQbRkZWqFru2LyAoZPY=;
+        b=hSFyjzXo02HWa1guRWKUeAN0VKp29votagDhE+nMAmp40Q8ZkcPXeyOAsh1ZQCM7Ub
+         UGRS/RYZNljlDKVvh7DG9VqSYiJEsE1esYp1DjrG69BMsMmrCqDshMPLC/NG/mQz0whs
+         SrYob3uG+0IdqympVcMBADbdLtv40r1wUgbvjts2O61sTi2REGtRsFjrSa6eWnGW6E8R
+         B3kviW057ERO+PwCG8JxVxq5viQTqxy+Y2/7JLQ5tkXwZuEzKRQfawuCfBaYCW1exUeh
+         xMB4+Yoz5gISKcrEWwoPIXLRtO4CAKLIPREp79xsLsQeGe5ziPevKyZhxoB7GGkkfTbC
+         Z3Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rbZrsVVuXpExOD+0yCysQl+fKQbRkZWqFru2LyAoZPY=;
+        b=IGUPoUCxOqj84rEtEvZghn3TMFUocvvisZ6iYbys3t5QQfgnySIc5EhxwLJqHeiA8g
+         zVOUEZaBppEqWyBRgnQ55OZYIOvksRWURlXKV89oNudzhdFGq7tPi8tvNPUTngTPlzgz
+         ldU79wAQhmTti9bKPFgBwaulYXDuYdqqxxmW3mPw5XdmxXWGAtFmFa03+fzfXxtdilnc
+         DRvH5NbC8zI/e43lTgJ4lgOqMqmtxQTcIOSvlFhA12ITxghAM8SyPgXM2ALtJRtxFxTx
+         PjZV3f3eljvb0dogo9zr0cgXCuKwgC/ZLTevJu9j31StHpHuro+m9ChBb5+CVI0NZaQN
+         tZjQ==
+X-Gm-Message-State: APjAAAUr1qKplaW7JAedH9jmGAcid5ti0+zODB6bbFgRgC1F5PJzR40G
+        79CXIeWs2uwWQ1Gz2LfqxJU=
+X-Google-Smtp-Source: APXvYqwDkm1/XT29PxUp9wmTcGwjpDIJw3FLru7RUern1EavSXu9MENAY1lnoH5AHZuWFDgYdY5dDQ==
+X-Received: by 2002:a63:114a:: with SMTP id 10mr2386967pgr.185.1582859588967;
+        Thu, 27 Feb 2020 19:13:08 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id h22sm7983405pgn.57.2020.02.27.19.13.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 19:13:08 -0800 (PST)
+Date:   Fri, 28 Feb 2020 12:13:06 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Lech Perczak <l.perczak@camlintechnologies.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
+        <k.drobinski@camlintechnologies.com>,
+        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: Regression in v4.19.106 breaking waking up of readers of
+ /proc/kmsg and /dev/kmsg
+Message-ID: <20200228031306.GO122464@google.com>
+References: <aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com>
+ <20200227123633.GB962932@kroah.com>
+ <42d3ce5c-5ffe-8e17-32a3-5127a6c7c7d8@camlintechnologies.com>
+ <e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for new Kioxia products.
-The new Kioxia products support program load x4 command, and have
-HOLD_D bit which is equivalent to QE bit.
+Cc-ing Petr, Steven, John
 
-Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
----
-changelog[v2]:Split 2 patches.
+https://lore.kernel.org/lkml/e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com
 
- drivers/mtd/nand/spi/toshiba.c | 119 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 103 insertions(+), 16 deletions(-)
+On (20/02/27 14:08), Lech Perczak wrote:
+> W dniu 27.02.2020 o 13:39, Lech Perczak pisze:
+> > W dniu 27.02.2020 o 13:36, Greg Kroah-Hartman pisze:
+> >> On Thu, Feb 27, 2020 at 11:09:49AM +0000, Lech Perczak wrote:
+> >>> Hello,
+> >>>
+> >>> After upgrading kernel on our boards from v4.19.105 to v4.19.106 we found out that syslog fails to read the messages after ones read initially after opening /proc/kmsg just after booting.
+> >>> I also found out, that output of 'dmesg --follow' also doesn't react on new printks appearing for whatever reason - to read new messages, reopening /proc/kmsg or /dev/kmsg was needed.
+> >>> I bisected this down to commit 15341b1dd409749fa5625e4b632013b6ba81609b ("char/random: silence a lockdep splat with printk()"), and reverting it on top of v4.19.106 restored correct behaviour.
+> >> That is really really odd.
+> > Very odd it is indeed.
+> >>> My test scenario for bisecting was:
+> >>> 1. run 'dmesg --follow' as root
+> >>> 2. run 'echo t > /proc/sysrq-trigger'
+> >>> 3. If trace appears in dmesg output -> good, otherwise, bad. If trace doesn't appear in output of 'dmesg --follow', re-running it will show the trace.
+> >>>
+> >>> I ran my tests on Debian 10.3 with configuration based directly on one from 4.19.0-8-amd64 (4.19.98-1) in Qemu.
+> >>> I could reproduce the same issue on several boards with x86 and ARMv7 CPUs alike, with 100% reproducibility.
+> >>>
+> >>> I haven't yet digged into why exactly this commit breaks notifications for readers of /proc/kmsg and /dev/kmsg, but as reverting it fixed the issue, I'm pretty sure this is the one. It is possible that the same happened in 5.4 line, bu I hadn't had a chance to test this as well yet.
+> >> I can revert this, but it feels like there is something else going wrong
+> >> here.  Can you try the 5.4 tree to see if that too has your same
+> >> problem?
+> > Yes, I'll check it in a short while.
+> I checked v5.4.22 just now and didn't observe the issue. Maybe this commit wasn't destined for 4.19.y due to intricacies of locking inside printk() :-)
+> 
+> From my side, there is no need to rush with the revert, as I can do this locally and drop the revert with next rebase-to-upstream, which we do very often.
+> OTOH, the issue is likely to affect a lot of users, especially ones using distros tracking this branch like Debian 10 mentioned earlier,
+> once they pick it up the change, as the kernel log content recorded by syslog will be affected, and 'dmesg --follow' behaviour will be quite surprising.
 
-diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
-index 700d86f..505f9f5 100644
---- a/drivers/mtd/nand/spi/toshiba.c
-+++ b/drivers/mtd/nand/spi/toshiba.c
-@@ -19,6 +19,18 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
- 
-+static SPINAND_OP_VARIANTS(write_cache_x4_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_x4_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+/**
-+ * Backward compatibility for 1st generation Serial NAND devices
-+ * which don't support Quad Program Load operation.
-+ */
- static SPINAND_OP_VARIANTS(write_cache_variants,
- 		SPINAND_PROG_LOAD(true, 0, NULL, 0));
- 
-@@ -94,7 +106,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- }
- 
- static const struct spinand_info toshiba_spinand_table[] = {
--	/* 3.3V 1Gb */
-+	/* 3.3V 1Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG0S3HRAIG", 0xC2,
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -104,7 +116,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 2Gb */
-+	/* 3.3V 2Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG1S3HRAIG", 0xCB,
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -114,7 +126,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 4Gb */
-+	/* 3.3V 4Gb (1st generation) */
- 	SPINAND_INFO("TC58CVG2S0HRAIG", 0xCD,
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -124,17 +136,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 3.3V 4Gb */
--	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
--		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
--		     NAND_ECCREQ(8, 512),
--		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
--					      &write_cache_variants,
--					      &update_cache_variants),
--		     0,
--		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
--				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 1Gb */
-+	/* 1.8V 1Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG0S3HRAIG", 0xB2,
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -144,7 +146,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 2Gb */
-+	/* 1.8V 2Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG1S3HRAIG", 0xBB,
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -154,7 +156,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
--	/* 1.8V 4Gb */
-+	/* 1.8V 4Gb (1st generation) */
- 	SPINAND_INFO("TC58CYG2S0HRAIG", 0xBD,
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -164,6 +166,91 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
- 		     0,
- 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
- 				     tx58cxgxsxraix_ecc_get_status)),
-+
-+	/*
-+	 * 2nd generation serial nand has HOLD_D which is equivalent to
-+	 * QE_BIT.
-+	 */
-+	/* 3.3V 1Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG0S3HRAIJ", 0xE2,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 2Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG1S3HRAIJ", 0xEB,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 4Gb (2nd generation) */
-+	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 3.3V 8Gb (2nd generation) */
-+	SPINAND_INFO("TH58CVG3S0HRAIJ", 0xE4,
-+		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 1Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG0S3HRAIJ", 0xD2,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 2Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG1S3HRAIJ", 0xDB,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 4Gb (2nd generation) */
-+	SPINAND_INFO("TC58CYG2S0HRAIJ", 0xDD,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
-+	/* 1.8V 8Gb (2nd generation) */
-+	SPINAND_INFO("TH58CYG3S0HRAIJ", 0xD4,
-+		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_x4_variants,
-+					      &update_cache_x4_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- };
- 
- static int toshiba_spinand_detect(struct spinand_device *spinand)
--- 
-1.9.1
+This is very-very odd... Hmm.
+Just out of curiosity, what happens if you comment out that
+printk() entirely?
 
+printk_deferred() should not affect the PRINTK_PENDING_WAKEUP path.
+
+Either we never queue wakeup irq_work(), e.g. because waitqueue_active()
+never lets us to do so or because `(curr_log_seq != log_next_seq)' is
+always zero:
+
+void wake_up_klogd(void)
+{
+	preempt_disable();
+	if (waitqueue_active(&log_wait)) {
+		this_cpu_or(printk_pending, PRINTK_PENDING_WAKEUP);
+		irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
+	}
+	preempt_enable();
+}
+
+int vprintk_emit()
+{
+	...
+	pending_output = (curr_log_seq != log_next_seq);
+	...
+	if (pending_output)
+		wake_up_klogd()
+}
+
+Or we do wakeup, but then either `syslog_seq != log_next_seq' or
+`user->seq != log_next_seq' fail.
+
+
+Lech, any chance you can trace what's happening in the system?
+
+	-ss
