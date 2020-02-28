@@ -2,164 +2,97 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754EBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDA2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D5D246B4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rx2MB5km"
+	by mail.kernel.org (Postfix) with ESMTP id EDE81222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgB1WXc (ORCPT
+        id S1726631AbgB1W0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:23:32 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37121 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1WXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:23:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a141so5011842wme.2;
-        Fri, 28 Feb 2020 14:23:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l0tnqF1kF4eV88+pytdt7G0UCu2eYAnWTlo0vU6Ilok=;
-        b=rx2MB5km/YacdI2Ik586qXT79BmH9inBN4Wr/FzXSkLEdCiD2qvcO0iAKj9tpQ+b9o
-         eOeaFT6z59c5C0MsNLQwZ4xpyNKXhwR0lmawmtkSmRVSMz8Eid82tOPKKAPIXsWSEmPO
-         Ep/yg49pHIyYKQxIIiLHvDXaUEXUnNW+U3feVaDyfzT23aHcA8UhPV6aT0NAAh/89pqB
-         eB2nOJ1Tvki+g1Ln2H2lw0bGMtIO7tCudthpjoOXIjruVzC5tRzp02rzEMxz6zvu2n4A
-         FBY4s5HMJuKX9X5EozOrjx4WHKC5nIP+3kvr7DTnr//RJjzch83DK72/3FTplxOQCMzA
-         taXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l0tnqF1kF4eV88+pytdt7G0UCu2eYAnWTlo0vU6Ilok=;
-        b=oie5acBEl8HjdsKKy5ndtePzXRb+OLnRrCY+4T2KU/3cAb6n+8/UAFCMUTzqeCKbSv
-         hRo7WKs2YLortD1xwWTK/7g307TeMvZpHO5F5txXXpi1r3OXa6fcWKfFHUwZgdJ9+mVr
-         Tq6cAww7kywCANdU0juFIwiIeftzkzyfUSuBxlEfj3FV+Ph8aFrLINVY8naAJg7W/f4d
-         jQ5EXVJhklxFMJWPQl7TnLJaZ6bcepr3fH0SUxCOoHJVS3Zx51W1u1GZ84atA30DQ2b8
-         GIFq6Q56PMLUWdLRTA1uRTklPDYxxTLwQRespNECQq9h4WtDsVzj7SzeMVGzHbCjfdQQ
-         cn1g==
-X-Gm-Message-State: APjAAAWHSsQ+8OoPciXU8Dq9VxT9e3+8cZnRnPtLAtHwmqYqOkTmOY7w
-        Dg871s1X4qS5w7GGwumtz6xtZEuIFDwYDiNk39I=
-X-Google-Smtp-Source: APXvYqxGoW/yNi+W5fE8+pSSWwKJBYHjV6hCLJqWEKQbGLWYXEA4cWY6XIX6tGqrsg90SouTwiQNSl6JXdhDeNKvtZ8=
-X-Received: by 2002:a05:600c:218b:: with SMTP id e11mr6822036wme.56.1582928609436;
- Fri, 28 Feb 2020 14:23:29 -0800 (PST)
+        Fri, 28 Feb 2020 17:26:47 -0500
+Received: from mga04.intel.com ([192.55.52.120]:64794 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgB1W0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:26:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:26:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
+   d="scan'208";a="232392124"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 28 Feb 2020 14:26:46 -0800
+Date:   Fri, 28 Feb 2020 14:26:46 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] KVM: x86: mmu: Add guest physical address check in
+ translate_gpa()
+Message-ID: <20200228222646.GI2329@linux.intel.com>
+References: <20200227172306.21426-1-mgamal@redhat.com>
+ <20200227172306.21426-6-mgamal@redhat.com>
+ <f81e0503-bc35-d682-4440-68b81c10784f@redhat.com>
 MIME-Version: 1.0
-References: <20200228131606.65041-1-colin.king@canonical.com>
-In-Reply-To: <20200228131606.65041-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 28 Feb 2020 17:23:17 -0500
-Message-ID: <CADnq5_M17_MMfy8YqK-wn_aew1ZG2zZtsj7kaK5eM3=Em2zzzA@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amd/display: fix indentation issue on a hunk of code
-To:     Colin King <colin.king@canonical.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f81e0503-bc35-d682-4440-68b81c10784f@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 8:16 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are multiple statements that are indented incorrectly. Add
-> in the missing tabs.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Thu, Feb 27, 2020 at 07:00:33PM +0100, Paolo Bonzini wrote:
+> On 27/02/20 18:23, Mohammed Gamal wrote:
+> > In case of running a guest with 4-level page tables on a 5-level page
+> > table host, it might happen that a guest might have a physical address
+> > with reserved bits set, but the host won't see that and trap it.
+> > 
+> > Hence, we need to check page faults' physical addresses against the guest's
+> > maximum physical memory and if it's exceeded, we need to add
+> > the PFERR_RSVD_MASK bits to the PF's error code.
+> 
+> You can just set it to PFERR_RSVD_MASK | PFERR_PRESENT_MASK (no need to
+> use an "|") and return UNMAPPED_GBA.  But I would have thought that this
+> is not needed and the
+> 
+>                 if (unlikely(FNAME(is_rsvd_bits_set)(mmu, pte, walker->level))) {
+>                         errcode = PFERR_RSVD_MASK | PFERR_PRESENT_MASK;
+>                         goto error;
+>                 }
+> 
+> code would have catch the reserved bits.
 
-Applied.  Thanks!
+That would be my assumption as well.  The only manual check should be in
+the top level EPT and NPT handlers.
 
-Alex
-
-> ---
->  .../gpu/drm/amd/display/dc/calcs/dce_calcs.c  | 46 +++++++++----------
->  1 file changed, 23 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
-> index 5d081c42e81b..2c6db379afae 100644
-> --- a/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
-> +++ b/drivers/gpu/drm/amd/display/dc/calcs/dce_calcs.c
-> @@ -3265,33 +3265,33 @@ bool bw_calcs(struct dc_context *ctx,
->                                 bw_fixed_to_int(bw_mul(data->
->                                         stutter_exit_watermark[9], bw_int_to_fixed(1000)));
->
-> -               calcs_output->stutter_entry_wm_ns[0].b_mark =
-> -                       bw_fixed_to_int(bw_mul(data->
-> -                               stutter_entry_watermark[4], bw_int_to_fixed(1000)));
-> -               calcs_output->stutter_entry_wm_ns[1].b_mark =
-> -                       bw_fixed_to_int(bw_mul(data->
-> -                               stutter_entry_watermark[5], bw_int_to_fixed(1000)));
-> -               calcs_output->stutter_entry_wm_ns[2].b_mark =
-> -                       bw_fixed_to_int(bw_mul(data->
-> -                               stutter_entry_watermark[6], bw_int_to_fixed(1000)));
-> -               if (ctx->dc->caps.max_slave_planes) {
-> -                       calcs_output->stutter_entry_wm_ns[3].b_mark =
-> +                       calcs_output->stutter_entry_wm_ns[0].b_mark =
->                                 bw_fixed_to_int(bw_mul(data->
-> -                                       stutter_entry_watermark[0], bw_int_to_fixed(1000)));
-> -                       calcs_output->stutter_entry_wm_ns[4].b_mark =
-> +                                       stutter_entry_watermark[4], bw_int_to_fixed(1000)));
-> +                       calcs_output->stutter_entry_wm_ns[1].b_mark =
->                                 bw_fixed_to_int(bw_mul(data->
-> -                                       stutter_entry_watermark[1], bw_int_to_fixed(1000)));
-> -               } else {
-> -                       calcs_output->stutter_entry_wm_ns[3].b_mark =
-> +                                       stutter_entry_watermark[5], bw_int_to_fixed(1000)));
-> +                       calcs_output->stutter_entry_wm_ns[2].b_mark =
->                                 bw_fixed_to_int(bw_mul(data->
-> -                                       stutter_entry_watermark[7], bw_int_to_fixed(1000)));
-> -                       calcs_output->stutter_entry_wm_ns[4].b_mark =
-> +                                       stutter_entry_watermark[6], bw_int_to_fixed(1000)));
-> +                       if (ctx->dc->caps.max_slave_planes) {
-> +                               calcs_output->stutter_entry_wm_ns[3].b_mark =
-> +                                       bw_fixed_to_int(bw_mul(data->
-> +                                               stutter_entry_watermark[0], bw_int_to_fixed(1000)));
-> +                               calcs_output->stutter_entry_wm_ns[4].b_mark =
-> +                                       bw_fixed_to_int(bw_mul(data->
-> +                                               stutter_entry_watermark[1], bw_int_to_fixed(1000)));
-> +                       } else {
-> +                               calcs_output->stutter_entry_wm_ns[3].b_mark =
-> +                                       bw_fixed_to_int(bw_mul(data->
-> +                                               stutter_entry_watermark[7], bw_int_to_fixed(1000)));
-> +                               calcs_output->stutter_entry_wm_ns[4].b_mark =
-> +                                       bw_fixed_to_int(bw_mul(data->
-> +                                               stutter_entry_watermark[8], bw_int_to_fixed(1000)));
-> +                       }
-> +                       calcs_output->stutter_entry_wm_ns[5].b_mark =
->                                 bw_fixed_to_int(bw_mul(data->
-> -                                       stutter_entry_watermark[8], bw_int_to_fixed(1000)));
-> -               }
-> -               calcs_output->stutter_entry_wm_ns[5].b_mark =
-> -                       bw_fixed_to_int(bw_mul(data->
-> -                               stutter_entry_watermark[9], bw_int_to_fixed(1000)));
-> +                                       stutter_entry_watermark[9], bw_int_to_fixed(1000)));
->
->                         calcs_output->urgent_wm_ns[0].b_mark =
->                                 bw_fixed_to_int(bw_mul(data->
-> --
-> 2.25.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > Also make sure the error code isn't overwritten by the page table walker.
+> 
+> Returning UNMAPPED_GVA would remove that as well.
+> 
+> I'm not sure this patch is enough however.  For a usermode access with
+> "!pte.u pte.40" for example you should be getting:
+> 
+> - a #PF with PRESENT|USER error code on a machine with physical address
+> width >=41; in this case you don't get an EPT violation or misconfig.
+> 
+> - a #PF with RSVD error code on a machine with physical address with <41.
+> 
+> You can enable verbose mode in access.c to see if this case is being generated,
+> and if so debug it.
+> 
+> The solution for this would be to trap page faults and do a page table
+> walk (with vcpu->arch.walk_mmu->gva_to_gpa) to find the correct error
+> code.
+> 
+> Paolo
+> 
