@@ -2,92 +2,87 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ECBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD86DC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A27E246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90A1246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:44:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="fOJN5p9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgB1An5 (ORCPT
+        id S1730418AbgB1Aoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:43:57 -0500
-Received: from mga04.intel.com ([192.55.52.120]:43768 "EHLO mga04.intel.com"
+        Thu, 27 Feb 2020 19:44:46 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:44592 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbgB1An4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:43:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:43:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="232379541"
-Received: from unknown (HELO lftan) ([10.226.248.77])
-  by fmsmga008.fm.intel.com with SMTP; 27 Feb 2020 16:43:53 -0800
-Received: by lftan (sSMTP sendmail emulation); Thu, 27 Feb 2020 04:20:15 +0800
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Chin Liang See <chin.liang.see@intel.com>,
-        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH RESEND] arm64: dts: socfpga: agilex: Fix gmac compatible
-Date:   Thu, 27 Feb 2020 04:20:14 +0800
-Message-Id: <20200226202014.66253-1-ley.foon.tan@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1730146AbgB1Aoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:44:46 -0500
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 9DF2E4B0B3;
+        Fri, 28 Feb 2020 00:44:42 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 08:44:37 +0800
+In-Reply-To: <e7857a3196443ac2a2a997bc9e4799d15168c527.camel@hadess.net>
+References: <20200227160802.7043-1-icenowy@aosc.io> <e7857a3196443ac2a2a997bc9e4799d15168c527.camel@hadess.net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/3] Add support for Goodix GT917S touch controller
+To:     Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ondrej Jirman <megous@megous.com>
+CC:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <5E54F9AB-DC0C-48CD-99BA-62EBE6946495@aosc.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1582850685;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=NAFUq00PW+nua6xf4tYptxv1aZHSpu8B2mMuSueIzaA=;
+        b=fOJN5p9RfsVAGICO1NHkkmMIMEHk3JjDILNtVHKCHgXBpmVaIkqniWEqzUPpwMpXDpIUMn
+        ep5zbgpBcT8pul0AgxhvmYJHA4NjqA5lRE5zTtoGgpd41BzIDnJVKRFFYQIkN0nZQmP1J8
+        /CYooStDI/7HTyYN8YfQxSapVids5RY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gmac compatible string to "altr,socfpga-stmmac-a10-s10". Gmac for
-Agilex should use same compatible as Stratix 10.
 
-Fixes: 4b36daf9ada3 ("arm64: dts: agilex: Add initial support for Intel's
-Agilex SoCFPGA")
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+=E4=BA=8E 2020=E5=B9=B42=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:51:54, Bastien Nocera <hadess@hadess=2Enet> =E5=86=99=E5=88=B0:
+>On Fri, 2020-02-28 at 00:07 +0800, Icenowy Zheng wrote:
+>> This patchset introduces support for Goodix GT917S touch controller=2E
+>>=20
+>> The major difference with other touch controllers from Goodix is that
+>> the ID string is no longer number-only (it contains a 'S'), so an
+>> additional patch is introduced for migrating the ID to a string=2E
+>>=20
+>> Icenowy Zheng (3):
+>>   dt-bindings: input: touchscreen: add compatible string for Goodix
+>>     GT917S
+>>   Input: goodix - use string-based chip ID
+>
+>I'd put the dt-bindings patch after this change, but I don't think it
+>matters much in this case=2E
+>
+>>   Input: goodix - Add support for Goodix GT917S
+>
+>I didn't receive that last patch, whether on my address or the linux-
+>input@ list=2E
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index e1d357eaad7c..d8c44d3ca15a 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -102,7 +102,7 @@
- 		};
- 
- 		gmac0: ethernet@ff800000 {
--			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-+			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
- 			reg = <0xff800000 0x2000>;
- 			interrupts = <0 90 4>;
- 			interrupt-names = "macirq";
-@@ -118,7 +118,7 @@
- 		};
- 
- 		gmac1: ethernet@ff802000 {
--			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-+			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
- 			reg = <0xff802000 0x2000>;
- 			interrupts = <0 91 4>;
- 			interrupt-names = "macirq";
-@@ -134,7 +134,7 @@
- 		};
- 
- 		gmac2: ethernet@ff804000 {
--			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-+			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
- 			reg = <0xff804000 0x2000>;
- 			interrupts = <0 92 4>;
- 			interrupt-names = "macirq";
--- 
-2.19.0
+My ISP works poorly recently and it's never sent=2E
 
+I will sent v3 now including it=2E
+
+>
+>Cheers
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
+ndroid=E8=AE=BE=E5=A4=87=E3=80=82
