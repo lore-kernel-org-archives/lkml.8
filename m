@@ -3,118 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022ADC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77147C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51272468A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D92B246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgB1BVp (ORCPT
+        id S1730460AbgB1BZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:21:45 -0500
-Received: from shelob.surriel.com ([96.67.55.147]:46704 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbgB1BVp (ORCPT
+        Thu, 27 Feb 2020 20:25:05 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:42284 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729984AbgB1BZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:21:45 -0500
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1j7ULS-0002E6-U5; Thu, 27 Feb 2020 20:21:38 -0500
-Message-ID: <7800e98e3688c124ac3672284b87d67321e1c29e.camel@surriel.com>
-Subject: Re: [PATCH v2 2/2] mm,thp,compaction,cma: allow THP migration for
- CMA allocations
-From:   Rik van Riel <riel@surriel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        mhocko@kernel.org, vbabka@suse.cz, mgorman@techsingularity.net,
-        rientjes@google.com, aarcange@redhat.com, ziy@nvidia.com
-Date:   Thu, 27 Feb 2020 20:21:38 -0500
-In-Reply-To: <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
-References: <cover.1582321646.git.riel@surriel.com>
-         <20200227213238.1298752-2-riel@surriel.com>
-         <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-GuN/ZXBkrY1Ye2qQ9BQv"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 27 Feb 2020 20:25:05 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48TBfk2HHczKmV0;
+        Fri, 28 Feb 2020 02:25:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id E9DZjsHHjp6i; Fri, 28 Feb 2020 02:24:58 +0100 (CET)
+Date:   Fri, 28 Feb 2020 12:24:51 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v2)
+Message-ID: <20200228012451.upnq5r7fdctrk7pv@yavin>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200225012457.GA138294@ZenIV.linux.org.uk>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cla7i2c4hyd6w2ul"
+Content-Disposition: inline
+In-Reply-To: <20200225012457.GA138294@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-GuN/ZXBkrY1Ye2qQ9BQv
-Content-Type: text/plain; charset="UTF-8"
+--cla7i2c4hyd6w2ul
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-02-27 at 15:41 -0800, Mike Kravetz wrote:
-> On 2/27/20 1:32 PM, Rik van Riel wrote:
-> >=20
-> > +++ b/mm/page_alloc.c
-> > @@ -8253,14 +8253,19 @@ struct page *has_unmovable_pages(struct
-> > zone *zone, struct page *page,
-> > =20
-> >  		/*
-> >  		 * Hugepages are not in LRU lists, but they're movable.
-> > +		 * THPs are on the LRU, but need to be counted as
-> > #small pages.
-> >  		 * We need not scan over tail pages because we don't
-> >  		 * handle each tail page individually in migration.
-> >  		 */
-> > -		if (PageHuge(page)) {
-> > +		if (PageHuge(page) || PageTransCompound(page)) {
-> >  			struct page *head =3D compound_head(page);
-> >  			unsigned int skip_pages;
-> > =20
-> > -			if
-> > (!hugepage_migration_supported(page_hstate(head)))
-> > +			if (PageHuge(page) &&
-> > +			    !hugepage_migration_supported(page_hstate(h
-> > ead)))
-> > +				return page;
-> > +
-> > +			if (!PageLRU(head) && !__PageMovable(head))
+On 2020-02-25, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Sun, Feb 23, 2020 at 01:12:21AM +0000, Al Viro wrote:
+> > 	This is a slightly extended repost of the patchset posted on
+> > Jan 19.  Current branch is in vfs.git#work.do_last, the main
+> > difference from the last time around being a bit of do_last()
+> > untangling added in the end of series.  #work.openat2 is already
+> > in mainline, which simplifies the series - now it's a straight
+> > branch with no merges.
 >=20
-> Pretty sure this is going to be true for hugetlb pages.  So, this
-> will change
-> behavior and make all hugetlb pages look unmovable.  Perhaps, only
-> check this
-> condition for THP pages?
+> Whee...  While trying to massage ".." handling towards the use of
+> regular mount crossing semantics, I've found something interesting.
+> Namely, if you start in a directory with overmounted parent,
+> LOOKUP_NO_XDEV resolution of ../something will bloody well cross
+> into the overmount.
 
-Does that need to be the following, then?
+Oh boy...
 
-     if (PageTransHuge(head) && !PageHuge(page) && !PageLRU(head) &&
-!__PageMovable(head))
-                 return page;
+> Reason: follow_dotdot() (and its RCU counterpart) check for LOOKUP_NO_XDEV
+> when crossing into underlying fs, but not when crossing into overmount
+> of the parent.
+>=20
+> Interpretation of .. is basically
+>=20
+> loop:	if we are in root					// uncommon
+> 		next =3D current position
+> 	else if we are in root of a mounted filesystem		// more rare
+> 		move to underlying mountpoint
+> 		goto loop
+> 	else
+> 		next =3D parent directory of current position	// most common
+>=20
+> 	while next is overmounted				// _VERY_ uncommon
+> 		next =3D whatever's mounted on next
+>=20
+> 	move to next
+>=20
+> The second loop should've been sharing code with the normal mountpoint
+> crossing.  It doesn't, which has already lead to interesting inconsistenc=
+ies
+> (e.g. autofs generally expects ->d_manage() to be called before crossing
+> into it; here it's not done).  LOOKUP_NO_XDEV has just added one more...
 
-That's an easy one liner I would be happy to send in
-if everybody agrees that should fix things :)
+You're quite right -- LOOKUP_NO_XDEV should block that and I missed it.
+
+> Incidentally, another inconsistency is LOOKUP_BENEATH treatment in case
+> when we have walked out of the subtree by way of e.g. procfs symlink and
+> then ran into .. in the absolute root (that's
+>                 if (!follow_up(&nd->path))
+>                         break;
+> in follow_dotdot()).  Shouldn't that give the same reaction as ..
+> in root (EXDEV on LOOKUP_BENEATH, that is)?  It doesn't...
+
+You can't go through procfs symlinks with LOOKUP_BENEATH, but if it's
+possible to do that kind of jump then it should also be blocked (but I
+would say that I'd prefer "block any kind of weird jump").
+
+> Another one is about LOOKUP_NO_XDEV again: suppose you have process'
+> root directly overmounted and cwd in the root of whatever's overmounting
+> it.  Resolution of .. will stay in cwd - we have no parent within the
+> chroot jail we are in, so we move to whatever's overmounting that root.
+> Which is the original location.  Should we fail on LOOKUP_NO_XDEV here?
+> Plain .. in the root of chroot jail (not overmounted by anything) does
+> *not*...
+
+I think LOOKUP_NO_XDEV should block that since you end up crossing a
+mountpoint.
 
 --=20
-All Rights Reversed.
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
---=-GuN/ZXBkrY1Ye2qQ9BQv
+--cla7i2c4hyd6w2ul
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5YayIACgkQznnekoTE
-3oPx0Af/TX+zEkUxcEv+yrrOG4Jv1BzQ8b6pdaygAYaEH2MhPrSDgprArigLLmWl
-2eWVDfgfoNPn1FW1//hUCZREJvTFQDd5UgtrXiCVw3qXt66mI0OfQQ6FtSh9yWM1
-YV2D7uzDucuGYd16wFVeOs5XkVtNZk1o1TjCWBi1UVMScPU42HROoG3rrZ3kPEtG
-JuXCdAPOq3S3s+PwyBushTVe51LNZCSFjA1lv0Y5viT52TgZU+ugySCme7wOnpb1
-mT5UMkrUyjhye2TAqr0h3z8gpTYOG7uX5psZRx77l6eG89IedY/0hOAyk0MgwtSz
-iqGb8+FoH3rjeRiXsrQ9JHpc/uW3ug==
-=zMII
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlhr4QAKCRCdlLljIbnQ
+EvPAAQCgcdH9xDc0JcNFSyizyIS0NFAVUIhgMKxeMa9A2TNSFgEA0NpX8uhWXCsy
+7vgtGIc1h9SnuYOzjrSIvz0yBm7nww4=
+=JbtI
 -----END PGP SIGNATURE-----
 
---=-GuN/ZXBkrY1Ye2qQ9BQv--
-
+--cla7i2c4hyd6w2ul--
