@@ -2,109 +2,110 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C99C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51C8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A718246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824DD246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGgynOA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgB1SMe (ORCPT
+        id S1726562AbgB1SPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:12:34 -0500
-Received: from mga18.intel.com ([134.134.136.126]:61772 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgB1SMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:12:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 10:12:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="437503672"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Feb 2020 10:12:32 -0800
-Message-ID: <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 28 Feb 2020 10:11:44 -0800
-In-Reply-To: <20200228172202.GD25261@zn.tnic>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
-         <20200121201843.12047-9-yu-cheng.yu@intel.com>
-         <20200221175859.GL25747@zn.tnic>
-         <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
-         <20200228121724.GA25261@zn.tnic>
-         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
-         <20200228162359.GC25261@zn.tnic>
-         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
-         <20200228172202.GD25261@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 28 Feb 2020 13:15:13 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41590 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1SPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:15:12 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so1907698pgm.8;
+        Fri, 28 Feb 2020 10:15:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Clif/mEcnn3ME/k5ycRzrGKqtOc9D+bOeqjCbBVwdps=;
+        b=QGgynOA/VJOt/cG7OnLMz+tVY8zs6kY14i9YkqCvq1ahYk47pCnYiv/aqOf/3LTayR
+         ZaUOLFUzqVsLIewhEEKma7/IjqWgzAUizeJpcAzf6BdNwxt1ENmE3tJ+jCUabTX1TpEq
+         g4D6LXm38BYO72RrF1NOIztO8b9g3/CyJQ3Ym5A75lOj5yWaShYE3nHie3OIZY0oKzYq
+         3cA4qDtaY4M2uLTc7FS5OXhp+LWYNLbgDls8zw0B+Y+tZK6OgHwl6sarj1kK489NVc2g
+         jR1UY1btuYEsvbwn28cQXnRw92zOl2xpiE760psokXpVjQQsIRMjFdMKv6BhIbWFY/D2
+         wU5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Clif/mEcnn3ME/k5ycRzrGKqtOc9D+bOeqjCbBVwdps=;
+        b=U9kCpWvGQHuOmhReg/JNR6d9mxPfFi23RibuZukAlBZbPiqUdKQKcIfLTgkTvXB20J
+         0MaWkSI3byBskPnOqJCUwLWps+T+4jWmHQetTbjTP2x5jW4zfAeTLPyIymhJHPJpZXsv
+         5dBIjo+JeOq3Wa+X8tJdWvkQAaoSRJkToppWLzACozV8weorn6UNXFIvXXS+CYtTsS6q
+         JBXWX17TNLFyOGO5zafJrvzC1OR8/ZM/AQaX2vR4/xirrEn+prWxE39Sjj1/nWR3bSRN
+         vFFixsKncVaxrniIO6MbPyuDRh/pU3Ezs+OtAYQez4s2OIkRNXFykBmAaKve1lLCbwqW
+         w+ew==
+X-Gm-Message-State: APjAAAX88l3q3l51we9ou+SMnlWiYrx0GeiIBUairqR5kg5DvmylCr6T
+        RLF1zmGTzmV+J1VkX6qZ6fM=
+X-Google-Smtp-Source: APXvYqxWA8rvGE5/pCJKCoTTMPwDvIxb42dP3gBtBzfZ3HBMzKlZQp9VC5RuRR2HgISpMP+Xw1cRCw==
+X-Received: by 2002:a63:257:: with SMTP id 84mr5681448pgc.304.1582913710121;
+        Fri, 28 Feb 2020 10:15:10 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id 1sm7990801pff.11.2020.02.28.10.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 10:15:09 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:15:07 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH v2 0/2] AT8031 PHY timestamping support
+Message-ID: <20200228181507.GA4744@localhost>
+References: <20200228180226.22986-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228180226.22986-1-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 18:22 +0100, Borislav Petkov wrote:
-> On Fri, Feb 28, 2020 at 08:20:27AM -0800, Yu-cheng Yu wrote:
-> > When XSAVES writes to an xsave buffer, xsave->header.xcomp_bv is set to
-> > include only saved components, effectively changing the buffer's format.
-> 
-> So you want to *save* the supervisor states and xcomp_bv will be set to
-> supervisor states only and since we don't care about the user states
-> there - they will be loaded later - we're good.
+On Fri, Feb 28, 2020 at 07:02:24PM +0100, Michael Walle wrote:
+>  (1) The PHY doesn't support atomic reading of the (timestamp,
+>      messageType, sequenceId) tuple. The workaround is to read the
+>      timestamp again and check if it has changed. Actually, you'd have
+>      to read the complete tuple again.
 
-No!
+This HW is broken by design :(
 
-> Or do you have to set xcomp_bv later in order to save the user
-> components too and also rearrange the buffer to undo the format change
-> above?
+> But if you're using a P2P clock with peer delay requests this whole
+> thing falls apart because of caveat (3). You'll often see messages like
+>   received SYNC without timestamp
+> or
+>  received PDELAY_RESP without timestamp
+> in linuxptp. Sometimes it working for some time and then it starts to
+> loosing packets. I suspect this depends on how the PDELAY messages are
+> interleaved with the SYNC message. If there is not enough time to until
+> the next event message is received either of these two messages won't
+> have a timestamp.
 
-That is the case.  If we save only supervisor states, the buffer becomes
-smaller and has only supervisor states.
+And even the case where a Sync and a DelayResp arrive at nearly the
+same time will fail.
 
-> We have using_compacted_format() and we do conversion from compacted to
-> standard buffers - I'm looking at copy_xstate_to_kernel() et al - so it
-> shouldn't be impossible. So to repeat Sebastian's question which you
-> ignored:
-> 
-> "How large is this supervisor state at most? I guess saving the AVX512
-> state just to get the 2 bytes of the supervisor state at the right spot
-> is not really optimal."
+> The PHY also supports appending the timestamp to the actual ethernet frame,
+> but this seems to only work when the PHY is connected via RGMII. I've never
+> get it to work with a SGMII connection.
 
-I thought Sebastian was saying XSAVES is not optimal.
+This is the way to go.  I would try to get the vendor's help in making
+this work.
 
-CET has 16 bytes for ring-3 setting, 24 bytes for ring-0.
-Saving supervisor states somewhere else and copying back is not better
-either.
-
-> In any case, this performance penalty better be paid only by those
-> who are actually using some supervisor states. I haven't looked at
-> the CET patchset but I'm assuming you're setting the CET bit in
-> xfeatures_mask_all only when the feature is being actually used?
-
-We save supervisor states only when xfeatures_mask_supervisor() is not
-zero.
-
-Yu-cheng
-
+Thanks,
+Richard
