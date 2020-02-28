@@ -2,161 +2,96 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18BFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E67C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5EC20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C9F20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pallissard.net header.i=@pallissard.net header.b="qYYHrJDQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsw4SLW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgB1Qij (ORCPT
+        id S1726536AbgB1Qkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:38:39 -0500
-Received: from mail-io1-f42.google.com ([209.85.166.42]:46651 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Qii (ORCPT
+        Fri, 28 Feb 2020 11:40:35 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34663 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Qkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:38:38 -0500
-Received: by mail-io1-f42.google.com with SMTP id e7so4009703ioe.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:38:37 -0800 (PST)
+        Fri, 28 Feb 2020 11:40:35 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dm3so4098157edb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:40:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pallissard.net; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=s6TbfQYdkdS79qRvr7elFHRX0zdIQXQBFFsFsnMk3to=;
-        b=qYYHrJDQnxM9Z+YDbTZ9NdW4yWXkbrPy52Oxf0Pw4I3kClEr/KVKajEAAp+607G985
-         q6tD0xXN/MiXxauNqrRERq3+FzRBqe7Z+7vWM/3oLCvafgwnsFe8KUq6L6e8XMJ9Y7WA
-         Bc5WlLIinht045eXrIJ3H5yDFUb4WtsoXkLGLv8zi/kpKDdUBJlMOFabBWsOX0OZ8MEN
-         pNsHxzzOIGDi7+r6Df83roczSnlmKGgI4ZK6U9Rq8XyYrFN04FUQC+YjEgAJDO7k+tDc
-         s3JIRhQcYot26CxWz0PLvvhztAP35/ed3ZMt2dGhZjlJdjtbFctfw9DGVy51tMCuFY8c
-         saCg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=LBzqVgkSBMQoXRl/FnbNZpFHPZCwyHEtb7aUpugamR8=;
+        b=gsw4SLW5qCHuoB7Q0zIyZ58tQGhNAJBs9d5H0Qn3wXzcqmGMfbyI21UdDwtf6PgQby
+         ckO2iRD7WDVsQpPh2Ckqotcb6Ybl3zsePd3UwVf5c7GA0A3HRwwUAgHxuhtqDERguWZH
+         MYMhHmCUAmggzDMoihqnF1EXIfkhyILA+vhuR6h16d4H3pfer/DS2BGaOWRM9Oci9Fui
+         y6ScH2YNMQbExT6wFd51vyRpbwKYM1qv1qsp2op+eNFsoAeIWP/31CUxcUnDRi1l16Jm
+         ddZKpMrkOTrhR7MjFmo+gJuna9y0sQJLo1tinoWdzktkiEnWmSa1jOzYP7e7nyKizuJo
+         vrGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s6TbfQYdkdS79qRvr7elFHRX0zdIQXQBFFsFsnMk3to=;
-        b=rg+F6eilkAf743OEdqH7cdC3BOt/NJhlhrY/FIBfR/w4gGmysYFX6ITAjS86Ei5jnK
-         wvWiVqvN5WJpiU0U/YVsymPXS7fwhrgvrUJg015Eg641VH1fTz/xbB2S1MgocQ7SVg79
-         GeAEy/wWdm/nvQ00yCECYIXjFhIsEhzB9NyogY1bpjzrfVCf62fXFecf0+OZUU5pMu4w
-         wMgZFv/9kl3XQDw8JrNEoSv3hAz9xiu7pbhRjAagEyJtmyUDenM9QqIb/0sIGf/PMy4S
-         t/DlsfHv4akgzBeSjG1TVYjyCiMUNdkypjyKZ/CBLy+BWNLc8pWLIBFiOKNVRKPpO4F9
-         xymA==
-X-Gm-Message-State: APjAAAViTLVGKLJnF74JTrert7Hm1vHIcEyz0aEBx5WicppbyS35CNoX
-        W1wmIAT1UtW+wl5X5VgC/3ZCXP7M8Is=
-X-Google-Smtp-Source: APXvYqwrMGBlylPS48mLsLMKDbUHZjva1zmfEeGk3t7XP+MX266DsHPKGFoOe8p9Af2uUZ1JMNw3dQ==
-X-Received: by 2002:a6b:410d:: with SMTP id n13mr4322042ioa.101.1582907916542;
-        Fri, 28 Feb 2020 08:38:36 -0800 (PST)
-Received: from mail.matt.pallissard.net (169.121.68.34.bc.googleusercontent.com. [34.68.121.169])
-        by smtp.gmail.com with ESMTPSA id v23sm1241338ioj.85.2020.02.28.08.38.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=LBzqVgkSBMQoXRl/FnbNZpFHPZCwyHEtb7aUpugamR8=;
+        b=C+9+PzmVY5NX7LnAIZe/1GfvdOqkKLdL2N7/NiD9NYCSqbde4o9599M8r67jE6GDwP
+         dxx/fhFGQgT1rCIurvAZdt4nAx14fSzcdsJsjbfBjYtRJdunu+g6rU/R1k7BY+QFqs/P
+         gG7DaAOoHWFp8iu454psCXhkfQV4iv+bosi12gx5QQDla3Yh6HOns33qcOPJvarkDtcG
+         /pI1K4OvCsGdpzXx7Z7ZEf8c8lWcTYyz61o+YBkIKKrBP9UB5J6Ghy/O5xdENeo4LMSm
+         ggC5YKd6BsbEHwyShT8w4A81VXLhIB/2BdhAG9x+NCsJq3Rxu5yW4iGtljBH5tkOBLHD
+         SUpA==
+X-Gm-Message-State: APjAAAV/KEblmQv68S5l3mgopuMdjKy/FlxJ91psoDIjFuz69yWoNLWJ
+        qxDuFLTjYyJMO+Y0IVJikbM=
+X-Google-Smtp-Source: APXvYqx+jWTwk6LGNR0+pA91pM1SSnE6oXHjqXSaoPZBTrWH6xMCWtiZpQzRjCndL4ZT2Uqx+dLWcg==
+X-Received: by 2002:a05:6402:cb7:: with SMTP id cn23mr5020041edb.72.1582908032490;
+        Fri, 28 Feb 2020 08:40:32 -0800 (PST)
+Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
+        by smtp.gmail.com with ESMTPSA id r19sm104180eja.5.2020.02.28.08.40.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 08:38:35 -0800 (PST)
-Date:   Fri, 28 Feb 2020 08:38:28 -0800
-From:   "Pallissard, Matthew" <matt@pallissard.net>
-To:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: possible nfsv3 write corruption
-Message-ID: <20200228163828.puahh5q5lplc6diw@matt-gen-desktop-p01.matt.pallissard.net>
-References: <20200227162843.n2qjuka2rjc44qcv@matt-gen-desktop-p01.matt.pallissard.net>
+        Fri, 28 Feb 2020 08:40:31 -0800 (PST)
+Date:   Fri, 28 Feb 2020 13:40:23 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] drm/amd/display: dc_link: cleaning up some code style
+ issues
+Message-ID: <cover.1582907436.git.melissa.srw@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227162843.n2qjuka2rjc44qcv@matt-gen-desktop-p01.matt.pallissard.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'll just bump this once before letting it slip into the ether.
+This patchset solves some coding style issues on dc_link for readability
+and cleaning up warnings. Change suggested by checkpatch.pl.
 
-Matt Pallissard
+Changes in v2:
+- Apply patches to the right amdgpu repository.
+- Remove unnecessary {} added in the previous version.
 
-On 2020-02-27T08:28:43, Pallissard, Matthew wrote:
-> 
-> Forgive me if this is the wrong list.
-> 
-> Ok, I have this super infrequent data corruption on write that seems to be limited to nfsv3 async mounts.  I have not tested nfsv4 yet.  I _think_ I've narrowed down to the 5.5.0 > X >= 5.1.4 (maybe earlier) kernels.  I had some users report they had random data corruption.  A bit of testing shows that it's reproducible and the corruption is nearly identical every time.
-> 
-> I'd like to get to the bottom of this so I can guarantee that a kernel upgrade will resolve the issue.
-> 
-> What winds up happening is every several hundred GiB[ish] we wind up with the first half of a 64 bit segment corrupted.  Here is some example output from a test.  My test writes a few Gib, alternating between 64 bits of `0`'s and 64 bits of `1`'s.  I then read it in and check the contents. Re-reading the file shows that it's corrupted on write, not read.
-> 
-> > 2020-02-14 11:04:34 crit   found mis-match on word segment 11911168 / 33554432!
-> > 2020-02-14 11:04:34 crit   found mis-match on byte 7, 188 != 255
-> > 2020-02-14 11:04:34 crit   found mis-match on byte 6, 0 != 255
-> > 2020-02-14 11:04:34 crit   found mis-match on byte 5, 16 != 255
-> > 2020-02-14 11:04:34 crit   found mis-match on byte 4, 128 != 255
-> > 2020-02-14 11:04:34 crit   1011110000000000000100001000000011111111111111111111111111111111
-> 
-> > 2020-02-14 13:38:11 crit   found mis-match on word segment 1982464 / 33554432!
-> > 2020-02-14 13:38:11 crit   found mis-match on byte 7, 188 != 255
-> > 2020-02-14 13:38:11 crit   found mis-match on byte 6, 0 != 255
-> > 2020-02-14 13:38:11 crit   found mis-match on byte 5, 16 != 255
-> > 2020-02-14 13:38:11 crit   found mis-match on byte 4, 128 != 255
-> > 2020-02-14 13:38:11 crit   1011110000000000000100001000000011111111111111111111111111111111
-> 
-> 
-> Knowns;
-> 
-> 	* does not appear to happen on CentOS/EL 3.10 series kernel
-> 
-> 	* does not appear to happen on a 5.5 series kernel
-> 		* I'm re-running all my tests now to confirm this.
-> 
-> 	* not hardware dependent
-> 
-> 	* not processor dependent
-> 		* I tested 3 different Intel processors
-> 
-> 	* appears to only happen on NFS v3 async mounts
-> 		* local disk and `-o sync` NFS v3 mounts have been tested
-> 
-> 	* It happens on random 64 bit segments
-> 
-> 	* It's *always* the same 4 bytes that are corrupted
-> 
-> 	* While often identical, the corrupted bytes are not always identical
-> 		* the identical corruption pattern can appear on separate computers.
-> 
-> 	* It's *always* on words that are written with `1`'s <- this is the part I find most interesting
-> 
-> 	* whether or not I explicitly call `fflush` and `sync` has no effect on the results.
-> 
-> 	* usually takes ~80-2000Gib to reproduce, sometimes higher or lower but infrequent.
-> 		* I've been writing 2GiB files
-> 		* sometimes I never hit the corruption case.
-> 
-> 	* I've yet to see more than one corrupted segment in a file.
-> 
-> 
-> A little bit about the build/run environments;
-> 
-> the hardware
-> 	CentOS 7.
-> 	CentOS glibc 2.17
-> 	clang 9 / lld
-> 	Dell PowerEdge R620
-> 	Dell PowerEdge C6320
-> 	Dell PowerEdge C6420
-> 	Intel(R) Xeon(R) Gold 6230 CPU @ 2.10GHz
-> 	Intel(R) Xeon(R) CPU E5-2660 v4 @ 2.00GHz
-> 	Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
-> 
-> * I did compile locally on every box.  I also tested every compiled binary on every box.  It didn't seem to affect the results.
-> * I don't have a tcpdump of this yet.  I'm hoping to get that started before the end of the week.
-> * I read and write to the same file every time, unlinking it before writing again
-> * I have not tried dropping the cache between any of the steps.
-> * I have engaged our storage vendor to see what they have to say.  They're pretty good at getting useful metrics and insight so if there is anything I should have them gather server-side please let me know.
-> 
-> 
-> If anyone as any insight or additional testing I can perform I would *greatly* appreciate it.  I would be thrilled if this turned out to be some dumb configuration option or other operational thing performed incorrectly.
-> 
-> 
-> Thank you for your time.
-> 
-> Matt Pallissard
+Melissa Wen (2):
+  drm/amd/display: dc_link: code clean up on enable_link_dp function
+  drm/amd/display: dc_link: code clean up on detect_dp function
 
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 64 +++++++++----------
+ 1 file changed, 30 insertions(+), 34 deletions(-)
+
+-- 
+2.25.0
 
