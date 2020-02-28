@@ -2,161 +2,186 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F41C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AA7C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AEA246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCF7246B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fq75hbSt"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="GIj6WEkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgB1Noj (ORCPT
+        id S1726917AbgB1No6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:44:39 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41456 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgB1Noj (ORCPT
+        Fri, 28 Feb 2020 08:44:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40138 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgB1No5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:44:39 -0500
-Received: by mail-qk1-f195.google.com with SMTP id b5so2928098qkh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:44:38 -0800 (PST)
+        Fri, 28 Feb 2020 08:44:57 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r17so2996049wrj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:44:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+Gusxub8rDloI9E9z1JdAxqVCBhNu/BE0SIv5yZJtB0=;
-        b=fq75hbStQcdTP6/tpdFP2fPlQ1qJYu9pJij48Gkh10U/d+jCPx5yNMCGpWpRHbMfEp
-         VC1gKfhHRr2X+tv2bh4h1utt2lMNKdwgKlYaFqfdqaLdt0jJzdojLIZD0EaA9KqFhZIl
-         TvtuDke1oA6IkQKF3+Qp56lzggCgiTOGVuBmuj7XS9dLLhJyXVpzyUZBeULU3blyT7Ot
-         ww128tDwZHdEGYWAmRHBeyWPQK3urK+K295l0DCM+e1uLOZPNL16s2A+Ten6EdGa081g
-         hivGoZrqUx+/m12kqFMmzd8CbAOGn+T41murnDE++VhtXnGcsVJ/RYY7+GH80lOy/vyt
-         biWw==
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aBmrl1KMZNAYJPJYiblwEdDKLEW24wzQKSiXMdI8FUk=;
+        b=GIj6WEkqlceW7Ez0LVnHmq9ekJuJO3gVz8RLHA5ud3ZYx2DpnVYoqDejU5t4enOVHE
+         ldRMeTA5uf46PxMhKG6wcmuNIZH8Lk/Rq/7rfG+mkT6++hdCyTF8VUGicN8arq/wuk/Q
+         R3tphXQZRkAc70Jw2sAdEbpj0nhRAbnH+K2akQmBUdcNo025K9ghr1gwqY7Ncg6cb8bh
+         kaelh8o+lkjEqKbcmwf49MUbv1hLO3Du6WEM/lYW4gHuz5ZxZUqKis/IyabQMPzqnbZK
+         nCpCleVuXzG1+tgnk6hz1VPhDGDOFtobk+TkmDknVFQKi1sYHcd5xDwNwGkqTlaJwfEP
+         mulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Gusxub8rDloI9E9z1JdAxqVCBhNu/BE0SIv5yZJtB0=;
-        b=VJP0ZAsHBQ0Tchhi6cOyq2GEhBWl7riy6/8hO9CG/f9QbZBnCcWkWTpoDhr/DfQ/tT
-         fG+cIASY656kaICQUfGGS7hRTsbHqFJAIE6EIrPQDyKrDGLQ6AveWlBUv7L0UPP33IpS
-         Jzpj7t3whSfduebc6omYPJXnasM2iSMkLVXXr1dsRM7Id3FuN3c9uAXkTaNObB+egaG2
-         ExpS0emvKdUryzbjf2NJObr2qoFMfpi+Zk/JlHUFyiCOp925/Byfpc+5KotZovLoCcdg
-         ruplr/+RvHvcAYT/ADt36REJqkASJRZLQre+IzRukYkXTzl0gbnlv12pZEpzyS4EUSut
-         7DGQ==
-X-Gm-Message-State: APjAAAVRONLmYB1rn2xcJPiov8A8A6t75fjcFHjQcp9BYlHPKjNjmhRf
-        ALQhzo+89XucxPArbetgB7MwyQ==
-X-Google-Smtp-Source: APXvYqyTKBYDgEEsD/JReg4oMAoT8TFz5vLvH33yj4Tz9TuOddT6xLH1eCSa+3TbalxgD6egRTt7Lg==
-X-Received: by 2002:a37:dd7:: with SMTP id 206mr4628111qkn.12.1582897478426;
-        Fri, 28 Feb 2020 05:44:38 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id d35sm3365322qtc.21.2020.02.28.05.44.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 05:44:37 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7fwS-0007x1-Br; Fri, 28 Feb 2020 09:44:36 -0400
-Date:   Fri, 28 Feb 2020 09:44:36 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
- gup fast path
-Message-ID: <20200228134436.GP31668@ziepe.ca>
-References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
- <1582889550-9101-3-git-send-email-kernelfans@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aBmrl1KMZNAYJPJYiblwEdDKLEW24wzQKSiXMdI8FUk=;
+        b=XbAy2syAOUXVblLmwoR5eoc2O8QyDAh8kfyDPaiHMaINHS1egCl0NgIshNmiFbjwig
+         DOSWjysvGb/2ppui5lLeY56qyaQeqANLpeFZLnJGfQdh8AWav0VTPIpcRS02GbDkbA1u
+         ukzRonH/ImCf97lshDPX80cp1jDh4Pm7FOqQ1Dj1Vnfv16psK1gnzB7fv6p0IpTYAy3E
+         /H9AO8mzMXK7C/WRCsvd/y/Yq9rW+/0BBtd2i2Tha+d1LsqmMGCdeqRvJPDIaEgLMA6o
+         BfObCTwyxRG+gjOqdW5yQ+hPgVcst9Mr2FUQd4EBXJ1vCcN28qWDQltwzmshObQo47i9
+         W6IA==
+X-Gm-Message-State: APjAAAWfLA409pcvxnppitLt3otsJaMr2Ca+yDO6C3jHrWOLSrlCu4IG
+        C04GKij6YXaitr9S9o8x/VrPu9qKKqOgrTa0C4l1Ag==
+X-Google-Smtp-Source: APXvYqxYe61m6gjSynnSaKs/Z4p3IA8+qVFYPLBBGUyxb2Bmz+nx9ERJLwWuBg1MD1UbBW1Tngan4sL1Y1w/AGmvPJQ=
+X-Received: by 2002:adf:a48f:: with SMTP id g15mr4994529wrb.42.1582897494424;
+ Fri, 28 Feb 2020 05:44:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582889550-9101-3-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200227151752.21985-1-eugen.hristev@microchip.com>
+In-Reply-To: <20200227151752.21985-1-eugen.hristev@microchip.com>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Fri, 28 Feb 2020 13:44:37 +0000
+Message-ID: <CAPY8ntB17QjCSyefwTrMhudwkiFYT_5x3i1=KjzFv+p6tbrQEA@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: imx219: add support for enum frame interval
+To:     Eugen Hristev <eugen.hristev@microchip.com>
+Cc:     Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 07:32:29PM +0800, Pingfan Liu wrote:
-> FOLL_LONGTERM suggests a pin which is going to be given to hardware and
-> can't move. It would truncate CMA permanently and should be excluded.
-> 
-> FOLL_LONGTERM has already been checked in the slow path, but not checked in
-> the fast path, which means a possible leak of CMA page to longterm pinned
-> requirement through this crack.
-> 
-> Place a check in try_get_compound_head() in the fast path.
-> 
-> Some note about the check:
-> Huge page's subpages have the same migrate type due to either
-> allocation from a free_list[] or alloc_contig_range() with param
-> MIGRATE_MOVABLE. So it is enough to check on a single subpage
-> by is_migrate_cma_page(subpage)
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Shuah Khan <shuah@kernel.org>
-> To: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
->  mm/gup.c | 26 +++++++++++++++++++-------
->  1 file changed, 19 insertions(+), 7 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index cd8075e..f0d6804 100644
-> +++ b/mm/gup.c
-> @@ -33,9 +33,21 @@ struct follow_page_context {
->   * Return the compound head page with ref appropriately incremented,
->   * or NULL if that failed.
->   */
-> -static inline struct page *try_get_compound_head(struct page *page, int refs)
-> +static inline struct page *try_get_compound_head(struct page *page, int refs,
-> +	unsigned int flags)
->  {
-> -	struct page *head = compound_head(page);
-> +	struct page *head;
+Hi Eugen.
+
+On Thu, 27 Feb 2020 at 15:19, Eugen Hristev <eugen.hristev@microchip.com> wrote:
+>
+> Add support for enum frame intervals IOCTL.
+> The current supported framerates are only available as comments inside
+> the code.
+> Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
+> callback as pad ops.
+>
+>  # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
+>  ioctl: VIDIOC_ENUM_FRAMEINTERVALS
+>         Interval: Discrete 0.067s (15.000 fps)
+>         Interval: Discrete 0.033s (30.000 fps)
+>         Interval: Discrete 0.033s (30.000 fps)
+
+But the frame rates are not discrete. You have frame rate control via
+V4L2_CID_VBLANK, which can be used in conjunction with V4L2_CID_HBLANK
+and V4L2_CID_PIXEL_RATE to determine actual frame period.
+
+See https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-image-source.html?highlight=v4l2_cid_vblank
+I believe this is the preferred route to doing frame rate control on
+image sensors. I assume someone will correct me if I'm wrong on that.
+
+  Dave
+
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+>
+> Hello,
+>
+> This is on top of Sakari's tree in linuxtv.org
+>
+> Thanks
+> Eugen
+>
+>  drivers/media/i2c/imx219.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> index f1effb5a5f66..17fcedd4edb6 100644
+> --- a/drivers/media/i2c/imx219.c
+> +++ b/drivers/media/i2c/imx219.c
+> @@ -127,6 +127,8 @@ struct imx219_mode {
+>         unsigned int width;
+>         /* Frame height */
+>         unsigned int height;
+> +       /* Frame rate */
+> +       u8 fps;
+>
+>         /* V-timing */
+>         unsigned int vts_def;
+> @@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
+>                 /* 8MPix 15fps mode */
+>                 .width = 3280,
+>                 .height = 2464,
+> +               .fps = 15,
+>                 .vts_def = IMX219_VTS_15FPS,
+>                 .reg_list = {
+>                         .num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
+> @@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
+>                 /* 1080P 30fps cropped */
+>                 .width = 1920,
+>                 .height = 1080,
+> +               .fps = 30,
+>                 .vts_def = IMX219_VTS_30FPS_1080P,
+>                 .reg_list = {
+>                         .num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
+> @@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
+>                 /* 2x2 binned 30fps mode */
+>                 .width = 1640,
+>                 .height = 1232,
+> +               .fps = 30,
+>                 .vts_def = IMX219_VTS_30FPS_BINNED,
+>                 .reg_list = {
+>                         .num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
+> @@ -680,6 +685,27 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
+>         return 0;
+>  }
+>
+> +static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
+> +                                     struct v4l2_subdev_pad_config *cfg,
+> +                                     struct v4l2_subdev_frame_interval_enum *fie)
+> +{
+> +       struct imx219 *imx219 = to_imx219(sd);
 > +
-> +	/*
-> +	 * Huge page's subpages have the same migrate type due to either
-> +	 * allocation from a free_list[] or alloc_contig_range() with param
-> +	 * MIGRATE_MOVABLE. So it is enough to check on a single subpage.
-> +	 */
-> +	if (unlikely(flags & FOLL_LONGTERM) &&
-> +		is_migrate_cma_page(page))
-> +		return NULL;
-
-This doesn't seem very good actually.
-
-If I understand properly, if the system has randomly decided to place,
-say, an anonymous page in a CMA region when an application did mmap(),
-then when the application tries to use this page with a LONGTERM pin
-it gets an immediate failure because of the above.
-
-This not OK - the application should not be subject to random failures
-related to long term pins beyond its direct control.
-
-Essentially, failures should only originate from the application using
-specific mmap scenarios, not randomly based on something the MM did,
-and certainly never for anonymous memory.
-
-I think the correct action here is to trigger migration of the page so
-it is not in CMA.
-
-Jason
+> +       if (fie->index >= ARRAY_SIZE(supported_modes))
+> +               return -EINVAL;
+> +
+> +       if (fie->code != imx219_get_format_code(imx219))
+> +               return -EINVAL;
+> +
+> +       if (fie->pad)
+> +               return -EINVAL;
+> +
+> +       fie->interval.numerator = 1;
+> +       fie->interval.denominator = supported_modes[fie->index].fps;
+> +
+> +       return 0;
+> +}
+> +
+>  static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
+>  {
+>         fmt->colorspace = V4L2_COLORSPACE_SRGB;
+> @@ -1004,6 +1030,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
+>         .get_fmt = imx219_get_pad_format,
+>         .set_fmt = imx219_set_pad_format,
+>         .enum_frame_size = imx219_enum_frame_size,
+> +       .enum_frame_interval = imx219_enum_frame_interval,
+>  };
+>
+>  static const struct v4l2_subdev_ops imx219_subdev_ops = {
+> --
+> 2.20.1
+>
