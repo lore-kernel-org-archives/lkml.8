@@ -2,83 +2,106 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA5CC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B246EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD9624699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fziPaJiT"
+	by mail.kernel.org (Postfix) with ESMTP id 8A2E8246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582892566;
+	bh=Wuw3bvUL29Jo42Nc55JCwqlCxD0ejzs3UCoKQSs9lGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r0h5vLcZcZkSNuwbY+QNECVBSvMj36gb5+dGSJYHHnhojDG2tofHGReXuWTGTx0OZ
+	 VLUSZXxKHf3//HxllzIxMdTEZKxmV88jCEvPKODCxELcrAAX4tEwu9pQmDN4OOSvTT
+	 69hmxqNZTGGQioGjipF0ifFDRmpfxw+a9Wi4r9d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgB1MVy (ORCPT
+        id S1726388AbgB1MWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:21:54 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:51540 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgB1MVy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:21:54 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 01SCL1XW004922;
-        Fri, 28 Feb 2020 21:21:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01SCL1XW004922
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582892461;
-        bh=5ghtF6rUXJoiM/O0pSdOPbN8zT8QLZE6M+wi9C8WvuQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fziPaJiTtPI95odVNEvQiZwh8s7oczRhLsT5hqopZ3uiv6cDdWMsA3X6vrfPcRN1q
-         /CBKto9+TVaymE8VKI1Zo6/XBRjZ4WwsI5B4wX9+c7idW7xZ/riZmSuJUhCfLgzQvt
-         ATGgfvyGt9x8jHWUKuT6IbJh6S/bk70XCi8YNjCO+vGV3cq6NSSktF6DfQSxfPko91
-         SSIx0FoGG9VZscnKpRR0GngO7bN8IInMH3AzfDDo0ko+Q2GVtC7UkHm5FvcHmz0iwg
-         Y9Njh2cyoov0cjD3J6O2L9qz3jEZxuffJl09jY7qCnH+3n4qAhaKow1R3fZqHIi6la
-         KoLdFwIDfHckA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: uniphier: Add one more generic compatible string for I2C EEPROM
-Date:   Fri, 28 Feb 2020 21:20:55 +0900
-Message-Id: <20200228122055.17008-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 28 Feb 2020 07:22:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgB1MWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:22:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC4A24699;
+        Fri, 28 Feb 2020 12:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582892562;
+        bh=Wuw3bvUL29Jo42Nc55JCwqlCxD0ejzs3UCoKQSs9lGQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e8PVnIanWSuARmWWSGRKXAd5nhh2EKSu0UkoGAoN3SXZ6Wy9usn+CkcBTORMaJANl
+         5A96sTi/Eb/KoiK8OmofVa5Qddj0i64ncUI0Hvze/+NFriRKEu2hViOC6o5EEjf/xO
+         MxFPUDQfmCN4EbDdHx8NE3xCmrkMCLyLDqC5XJmc=
+Date:   Fri, 28 Feb 2020 13:22:40 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andre Tomt <andre@tomt.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
+Message-ID: <20200228122240.GA3012646@kroah.com>
+References: <20200227132232.815448360@linuxfoundation.org>
+ <d6212f9e-7e8d-95bd-18ca-8c44de224b28@tomt.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6212f9e-7e8d-95bd-18ca-8c44de224b28@tomt.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 73f9de0c7f5d ("ARM: dts: uniphier: Add generic compatible string
-for I2C EEPROM") did not touch this node.
+On Fri, Feb 28, 2020 at 01:06:00PM +0100, Andre Tomt wrote:
+> On 27.02.2020 14:35, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.7 release.
+> > There are 150 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> > Anything received after that time might be too late.
+> 
+> There is something going on with USB in this release. My AMD X570 board is
+> constantly having ports stop working, while a older AMD X399 board seems
+> fine (maybe, there is an ATEN USB extender involved on the X570 system)
+> 
+> I've only had time to do very rudimentary debugging, but reverting all usb
+> and xhci related patches seems to have solved it, eg:
+> 
+> > usb-dwc2-fix-in-isoc-request-length-checking.patch
+> > usb-gadget-composite-fix-bmaxpower-for-superspeedplus.patch
+> > usb-dwc3-debug-fix-string-position-formatting-mixup-with-ret-and-len.patch
+> > usb-dwc3-gadget-check-for-ioc-lst-bit-in-trb-ctrl-fields.patch
+> > usb-dwc2-fix-set-clear_feature-and-get_status-flows.patch
+> > usb-hub-fix-the-broken-detection-of-usb3-device-in-smsc-hub.patch
+> > usb-hub-don-t-record-a-connect-change-event-during-reset-resume.patch
+> > usb-fix-novation-sourcecontrol-xl-after-suspend.patch
+> > usb-uas-fix-a-plug-unplug-racing.patch
+> > usb-quirks-blacklist-duplicate-ep-on-sound-devices-usbpre2.patch
+> > usb-core-add-endpoint-blacklist-quirk.patch
+> > xhci-fix-memory-leak-when-caching-protocol-extended-capability-psi-tables-take-2.patch
+> > xhci-apply-xhci_pme_stuck_quirk-to-intel-comet-lake-platforms.patch
+> > xhci-fix-runtime-pm-enabling-for-quirky-intel-hosts.patch
+> > xhci-force-maximum-packet-size-for-full-speed-bulk-devices-to-valid-range.patch
+> > usb-serial-ch341-fix-receiver-regression.patch
+> > usb-misc-iowarrior-add-support-for-the-100-device.patch
+> > usb-misc-iowarrior-add-support-for-the-28-and-28l-devices.patch
+> > usb-misc-iowarrior-add-support-for-2-oemed-devices.patch
+> 
+> I might be able to narrow it down in a day or two.
 
-Add the compatible string prefixed "atmel," so that this matches to the
-OF table.
+Narrowing it down would be good, try sticking with either the hub or
+xhci patches.  And, 'git bisect' might make it easier.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Also, does Linus's current tree show the same problems for you?
 
- arch/arm/boot/dts/uniphier-ref-daughter.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/arch/arm/boot/dts/uniphier-ref-daughter.dtsi b/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-index 04e60c295319..a11897669c26 100644
---- a/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-@@ -7,7 +7,7 @@
- 
- &i2c0 {
- 	eeprom@50 {
--		compatible = "microchip,24lc128";
-+		compatible = "microchip,24lc128", "atmel,24c128";
- 		reg = <0x50>;
- 		pagesize = <64>;
- 	};
--- 
-2.17.1
-
+greg k-h
