@@ -2,135 +2,68 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C29C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5EEC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4914246AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Kd02hTbE"
+	by mail.kernel.org (Postfix) with ESMTP id 7BDD5246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725892AbgB1LqI (ORCPT
+        id S1726287AbgB1LqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:46:08 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:39989 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgB1LqI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:46:08 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 077EF23EC2;
-        Fri, 28 Feb 2020 12:46:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582890365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gSy0XB2/CLQYbsHikr4Odo8LY3KqR1/kjbGBzsGZ6ic=;
-        b=Kd02hTbELCQ1B3UuerkL4Fc7b2vovsKQPdSO+4+x6U6aQrJ160U9Cwu+LP/T0ECtCy7M8Z
-        efZDHvUU6S+hoLWqWkcaZxzDQu+dawGFfW0f7VuUOXoAYP8G6jIdloAu7B8slL0xdRyvXF
-        8Eje0iN6yqyS0otRzEpRo7ob+v+7o3M=
+        Fri, 28 Feb 2020 06:46:21 -0500
+Received: from elvis.franken.de ([193.175.24.41]:42085 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgB1LqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:46:21 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1j7e5y-0008UT-01; Fri, 28 Feb 2020 12:46:18 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 94C2AC0EC3; Fri, 28 Feb 2020 12:46:08 +0100 (CET)
+Date:   Fri, 28 Feb 2020 12:46:08 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v1] MIPS: reduce print level for cache information
+Message-ID: <20200228114608.GB10905@alpha.franken.de>
+References: <20200228055238.11140-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 28 Feb 2020 12:46:01 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Li Yang <leoyang.li@nxp.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for
- DMA
-In-Reply-To: <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
-References: <20200221174754.5295-1-michael@walle.cc>
- <20200221174754.5295-4-michael@walle.cc>
- <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
- <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
- <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
-Message-ID: <639a1df72fbeda77436b282a99f17995@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 077EF23EC2
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228055238.11140-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob, Hi Leo,
-
-Am 2020-02-28 00:03, schrieb Rob Herring:
-> On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
->> 
->> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org> 
->> wrote:
->> >
->> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
->> > >
->> > > The DMA channel might not be available at the first probe time. This is
->> > > esp. the case if the DMA controller has an IOMMU mapping.
->> > >
->> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
->> > > reorder the code a bit, so that we don't prepare the whole UART just to
->> > > determine that the DMA channel is not ready yet and we have to undo all
->> > > the stuff. Try to map the DMA channels earlier.
->> >
->> > Changing this means you never probe successfully if you boot a kernel
->> > with the DMA driver disabled (or it's IOMMU disabled). Some other
->> > drivers request DMA in open() and can work either way.
-
-Oh, I see.
-
->> We got this exact issue previously with another driver.  When the
-
-What driver is it? I've been working on the i2c-mxs.c driver which has
-the same problem. Ie. its not working with DMA when the IOMMU is 
-enabled.
-Now that I've learned that dma_request_chan() will return EPROBE_DEFER
-if the actual DMA driver is not available, I don't think there is any
-trick like this there. There is no function which would be called late
-except you'd do something like on the first master_xfer() try to request
-the DMA channels. But I don't think that would be the way to go.
-
--michael
-
->> required DMA driver is disabled, the DMA framework cannot figure out
->> this situation and keeps returning EPROBE_DEFER.  I'm wondering if we
->> should update the DMA framework to use your deferred probe timeout
->> mechanism.  Is it still only used for debug purpose?
+On Fri, Feb 28, 2020 at 06:52:38AM +0100, Oleksij Rempel wrote:
+> Default printk log level is KERN_WARNING. This makes automatic log
+> parsing problematic, since we get false positive alarms on not critical
+> information.
 > 
-> It's undergoing some rework ATM to not just be for debug. However,
-> it's not really going to help you if you care about the console
-> because waiting for the timeout will be too late to register the
-> console.
+> Set all not critical cache related information to KERN_INFO, the same level
+> as used on most kernel drivers.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/mips/mm/c-octeon.c | 18 +++++++++---------
+>  arch/mips/mm/c-r3k.c    |  4 ++--
+>  arch/mips/mm/c-r4k.c    | 20 ++++++++++----------
+>  arch/mips/mm/c-tx39.c   |  4 ++--
+>  4 files changed, 23 insertions(+), 23 deletions(-)
 
+applied to mips-next.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
