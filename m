@@ -2,138 +2,155 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30631C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C9C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097FC246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582885598;
-	bh=a6pS6AMZKTCJMUm/J9xeeK8dJhS9wNmw3vRFuEYcLyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gTz/h8sDH9+KE/gsvcZarqRshmCJPCWCb2Fh+TDaBwstCzerZfjG3FyyYV3zH0AHY
-	 lh7w4hr59JdBM+eHuwOjOovHZovAUJHCAxAX0HPqARGa1eRTKySM8Jecyck2Yq35yf
-	 3g/tgFg3lRShOn6/Hg2mTJjgW1Gt6ZKblldZNpBE=
+	by mail.kernel.org (Postfix) with ESMTP id AFCD82469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="SToHZC4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgB1K0h (ORCPT
+        id S1726928AbgB1K0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:26:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgB1K0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:26:36 -0500
-Received: from localhost (unknown [122.182.215.25])
+        Fri, 28 Feb 2020 05:26:41 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:41257 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgB1K0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:26:39 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7062469F;
-        Fri, 28 Feb 2020 10:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582885596;
-        bh=a6pS6AMZKTCJMUm/J9xeeK8dJhS9wNmw3vRFuEYcLyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJzvhfmyo02SFTzd/qHMaf+XN8630v2AC5zdK5Zinu/QCT5b1SKfRd8Ajn5MuuqD9
-         k4b9yHklC3WUsKK8LgmgO1rwFAD/EkF2s4anZabTvR9ApRZ7FGpu3Yra6WfVMlDToi
-         iDcF43qj32b58ckdoY8InIJtoujNvvrBfu6UuJNk=
-Date:   Fri, 28 Feb 2020 15:56:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, geert@linux-m68k.org
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-Message-ID: <20200228102630.GB4148@vkoul-mobl>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
- <20200224163707.GA2618@vkoul-mobl>
- <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
- <20200228044704.GC2618@vkoul-mobl>
- <970899d9-1491-78e8-1e7a-14e40915d061@ti.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B719023EC4;
+        Fri, 28 Feb 2020 11:26:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582885596;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JD2GcxRcyRHyxJNPoNSaMvwCSde4eO14BTyUP9NZW6w=;
+        b=SToHZC4OE6rvse39oPJXX2Q9inJgFheKTK5P+jjZYtrWoqBplO97oBYw7O3csPrOuXuIEN
+        0aUtunNDkM7fZwg4F86/l8vEE+e/YXW2eTnA9ZzR3KFZNlQwgxNg/DL/TsvmjF0kFKR/Cx
+        NqxUCp95i52VS0OVn/dMrfSnJ0UR81A=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <970899d9-1491-78e8-1e7a-14e40915d061@ti.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Feb 2020 11:26:36 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: earlycon: prefer EARLYCON_DECLARE() variant
+In-Reply-To: <20200220174607.24285-1-michael@walle.cc>
+References: <20200220174607.24285-1-michael@walle.cc>
+Message-ID: <ba54e9c14d4e0947df964964c020bc71@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: /
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: B719023EC4
+X-Spamd-Result: default: False [-0.10 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[4];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-02-20, 12:01, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 28/02/2020 6.47, Vinod Koul wrote:
-> > Hi Peter,
-> > 
-> > On 26-02-20, 14:10, Peter Ujfalusi wrote:
-> > 
-> >>>  do we really want a custom dbg_show()..? Drivers can add their own
-> >>> files...
-> >>
-> >> They could do that already ;)
-> >>
-> >> With the custom dbg_show() DMA drivers can save on the surrounding
-> >> code and just fill in the information regarding to their HW.
-> >> Again, on am654 the default information is:
-> >> # cat /sys/kernel/debug/dmaengine 
-> >> dma0 (285c0000.dma-controller): number of channels: 96
-> >>
-> >> dma1 (31150000.dma-controller): number of channels: 267
-> >>  dma1chan0    | 2b00000.mcasp:tx
-> >>  dma1chan1    | 2b00000.mcasp:rx
-> >>  dma1chan2    | in-use
-> >>  dma1chan3    | in-use
-> >>  dma1chan4    | in-use
-> >>  dma1chan5    | in-use
-> >>
-> >> With my current .dbg_show implementation for k3-udma:
-> >> # cat /sys/kernel/debug/dmaengine 
-> >> dma0 (285c0000.dma-controller): number of channels: 96
-> >>
-> >> dma1 (31150000.dma-controller): number of channels: 267
-> >>  dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
-> >>  dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
-> >>  dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
-> >>  dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
-> >>  dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
-> >>  dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
-> >>
-> >> For me this makes a huge difference.
-> > 
-> > Ok
-> > 
-> >>>> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
-> >>>> +
-> >>>> +static int __init dmaengine_debugfs_init(void)
-> >>>> +{
-> >>>> +	/* /sys/kernel/debug/dmaengine */
-> >>>> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
-> >>>> +			    &dmaengine_debugfs_fops);
-> >>>
-> >>> Should we add a directory? That way we can keep adding stuff into that
-> >>> one
-> >>
-> >> and have this file as 'summary' underneath?
-> > 
-> > Correct
-> 
-> /sys/kernel/debug/dmaengine/summary, right?
+Hi Greg,
 
-Yup!
+
+Am 2020-02-20 18:46, schrieb Michael Walle:
+> If a driver exposes early consoles with EARLYCON_DECLARE() and
+> OF_EARLYCON_DECLARE(), pefer the non-OF variant if the user specifies 
+> it
+> by
+>   earlycon=<driver>,<options>
+> 
+> The rationale behind this is that some drivers register multiple setup
+> functions under the same driver name. Eg.
+> 
+> OF_EARLYCON_DECLARE(lpuart, "fsl,vf610-lpuart", 
+> lpuart_early_console_setup);
+> OF_EARLYCON_DECLARE(lpuart32, "fsl,ls1021a-lpuart",
+> lpuart32_early_console_setup);
+> OF_EARLYCON_DECLARE(lpuart32, "fsl,imx7ulp-lpuart",
+> lpuart32_imx_early_console_setup);
+> EARLYCON_DECLARE(lpuart, lpuart_early_console_setup);
+> EARLYCON_DECLARE(lpuart32, lpuart32_early_console_setup);
+> 
+> It depends on the order of the entries which console_setup() actually
+> gets called. To make things worse, I guess it also depends on the
+> compiler how these are ordered. Thus always prefer the 
+> EARLYCON_DECLARE()
+> ones.
+
+Do you have an opinon on this proposal?
+
+-michael
 
 > 
-> >> I like the fact hat I can get all the information via one file.
-> >> Saves a lot of time (and explaining to users) on finding the correct
-> >> one to cat...
-> > 
-> > But am sure we can come with more data to show, so having a directory
-> > helps :)
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/tty/serial/earlycon.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> OK, so we need to store the dbgfs rootdir and add an API so DMA drivers
-> can get the dentry of it, so they can implement their custom
-> files/directories underneath.
-
-Correct
-
--- 
-~Vinod
+> diff --git a/drivers/tty/serial/earlycon.c 
+> b/drivers/tty/serial/earlycon.c
+> index c14873b67803..2ae9190b64bb 100644
+> --- a/drivers/tty/serial/earlycon.c
+> +++ b/drivers/tty/serial/earlycon.c
+> @@ -170,6 +170,7 @@ static int __init register_earlycon(char *buf,
+> const struct earlycon_id *match)
+>  int __init setup_earlycon(char *buf)
+>  {
+>  	const struct earlycon_id **p_match;
+> +	bool empty_compatible = true;
+> 
+>  	if (!buf || !buf[0])
+>  		return -EINVAL;
+> @@ -177,6 +178,7 @@ int __init setup_earlycon(char *buf)
+>  	if (early_con.flags & CON_ENABLED)
+>  		return -EALREADY;
+> 
+> +again:
+>  	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
+>  	     p_match++) {
+>  		const struct earlycon_id *match = *p_match;
+> @@ -185,6 +187,10 @@ int __init setup_earlycon(char *buf)
+>  		if (strncmp(buf, match->name, len))
+>  			continue;
+> 
+> +		/* prefer entries with empty compatible */
+> +		if (empty_compatible && *match->compatible)
+> +			continue;
+> +
+>  		if (buf[len]) {
+>  			if (buf[len] != ',')
+>  				continue;
+> @@ -195,6 +201,11 @@ int __init setup_earlycon(char *buf)
+>  		return register_earlycon(buf, match);
+>  	}
+> 
+> +	if (empty_compatible) {
+> +		empty_compatible = false;
+> +		goto again;
+> +	}
+> +
+>  	return -ENOENT;
+>  }
