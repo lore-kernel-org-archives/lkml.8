@@ -2,89 +2,97 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C16C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E76C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90D24695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582919099;
-	bh=QGVjRtSvQfqJWUvi3mpt+fAVQFXPjfcS6Z8kvcvqNnY=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-	 References:List-ID:From;
-	b=AFDH23LvzCfn9GhItQ7kbhgAl0EvY7hhgx+dl1yY1O5dyL4poV0V3O0lgefxpxbC1
-	 yTUdAUtSAclMrZKBe/kAV4T8nDUwg3id3jR4SuBKkEBWC2ZweNXbSCbIUhFuMk8ho7
-	 Pl4Ygxn7DGbxg9MS2P5fo8IJmb/0al3VZjT6Ba/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5AA9F246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgB1To6 (ORCPT
+        id S1726867AbgB1TqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:44:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB1To5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:44:57 -0500
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C147246B7;
-        Fri, 28 Feb 2020 19:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582919096;
-        bh=QGVjRtSvQfqJWUvi3mpt+fAVQFXPjfcS6Z8kvcvqNnY=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-         References:From;
-        b=FZST07ci0AfaSyoJ4bvOQT69mGMSjeuKI48DzIZB2Ho7Y0MWs5o50ZdAJjMvGUHeK
-         YO5FSpnSwGk3zeE/mce77nm5/awWwG9ro49Fqtd2xZyGJCxG8qSJYgCpa2DB769tW4
-         3U3eYRvebQCS9NWrCpuuVzApF29f/1JnNYQ+6qDg=
-Date:   Fri, 28 Feb 2020 19:44:55 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, stable@vger.kernel.org
-Cc:     <stable@vger.kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH] loop: avoid EAGAIN, if offset or block_size are changed
-In-Reply-To: <20200228043820.169288-1-jaegeuk@kernel.org>
-References: <20200228043820.169288-1-jaegeuk@kernel.org>
-Message-Id: <20200228194456.8C147246B7@mail.kernel.org>
+        Fri, 28 Feb 2020 14:46:17 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:55899 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1TqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:46:17 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1j7lbO-0005Rf-VP; Fri, 28 Feb 2020 19:47:15 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] ARM: dts: imx6qdl-gw5910: add CC1352 UART
+Date:   Fri, 28 Feb 2020 11:46:07 -0800
+Message-Id: <1582919167-28690-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+The GW5910-C revision adds a TI CC1352 connected to IMX UART4
 
-[This is an automated email]
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 5db470e229e2 ("loop: drop caches if offset or block_size are changed").
-
-The bot has tested the following trees: v5.5.6, v5.4.22, v4.19.106, v4.14.171.
-
-v5.5.6: Build OK!
-v5.4.22: Build OK!
-v4.19.106: Build OK!
-v4.14.171: Failed to apply! Possible dependencies:
-    3148ffbdb916 ("loop: use killable lock in ioctls")
-    550df5fdacff ("loop: Push loop_ctl_mutex down to loop_set_status()")
-    757ecf40b7e0 ("loop: Push loop_ctl_mutex down to loop_set_fd()")
-    85b0a54a82e4 ("loop: Move loop_reread_partitions() out of loop_ctl_mutex")
-    a13165441d58 ("loop: Push lo_ctl_mutex down into individual ioctls")
-    c371077000f4 ("loop: Push loop_ctl_mutex down to loop_change_fd()")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+index be1af74..30fe47f 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+@@ -220,6 +220,14 @@
+ 	status = "okay";
+ };
+ 
++/* cc1352 */
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
+ /* Sterling-LWB Bluetooth */
+ &uart4 {
+ 	pinctrl-names = "default";
+@@ -411,6 +419,23 @@
+ 		>;
+ 	};
+ 
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D23__UART3_RTS_B		0x1b0b1
++			MX6QDL_PAD_EIM_D31__UART3_CTS_B		0x1b0b1
++			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x4001b0b1 /* DIO20 */
++			MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05	0x4001b0b1 /* DIO14 */
++			MX6QDL_PAD_DISP0_DAT12__GPIO5_IO06	0x4001b0b1 /* DIO15 */
++			MX6QDL_PAD_DISP0_DAT14__GPIO5_IO08	0x1b0b1 /* TMS */
++			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x1b0b1 /* TCK */
++			MX6QDL_PAD_DISP0_DAT16__GPIO5_IO10	0x1b0b1 /* TDO */
++			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x1b0b1 /* TDI */
++			MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x4001b0b1 /* RST# */
++		>;
++	};
++
+ 	pinctrl_uart4: uart4grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
 -- 
-Thanks
-Sasha
+2.7.4
+
