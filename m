@@ -2,95 +2,113 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A91C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782D1C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201FC2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpEcFTm0"
+	by mail.kernel.org (Postfix) with ESMTP id 507542467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582876672;
+	bh=447A/1eVEf79zNA/V+pehDVUNQ6KKCGcSrLGSGA9AoU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Yg1t2ai7WrXGznVOy/kim5RV6XmHNmADY1TCBYbSk4My1QC+VRy8GWcYPY2wnPbRm
+	 r7ScN0pNMxxhb5sgkKYMRXHqwOrVL+Dww5NsVrYs9OfCH4h6HTlvNyJi2yVwsyvbhZ
+	 GJqlqUNMIxD8glgG4pQmIjeUZVrqS9/UR5lq7wmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgB1H4k (ORCPT
+        id S1726785AbgB1H5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:56:40 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41496 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgB1H4j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:56:39 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b1so1085630pgm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 23:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wGIDcVupomw+rYzafmKANeDmOfnLh1mN06eyIzxgWso=;
-        b=BpEcFTm07491mAwvQ/lxlBT5Yi1WeScCAtC01qXkBjVC/b33uILPahrOsoT97mH8ll
-         T0aWZ7mM6sG41tGlAy3qfGrpEJR6Lh9tEjub6/Qf4ZYx8YjzkQP+JeYiKJ8Ud4SIze83
-         4NY1uSnH2gwhzwSX4r/MujlVllWJyGjUOrnqdgeYJAsECCfbbadBwqt0t04xBfR95GYd
-         HzttlMz1uMYb0yjOE5/jiNYlD4fgAVULVfwgcJSRk/pdIFjSyZy4Df7q4QseVkDGRWiS
-         0m+5VDe0EG6XSrSc1CHz930DjW2eOMm+rKHNOdQcWtcpbwdeV3XXS9gZcSojgEFkh/Of
-         6Tuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wGIDcVupomw+rYzafmKANeDmOfnLh1mN06eyIzxgWso=;
-        b=YzwR0wXN8BeaCnYLzndX84nfLSSkowSbmtJimjX8aiJNpHsvU+zrDF/ntgK1wyytZ2
-         teh5dRHfqFqGA7fG9wYFBdfPOUwKL15cCMtySNTQlrGnfEn52CtZx8CRQudI99gC5QXH
-         8hcsJX+7WlEOpU0uNEgmWbxry36nxCSqcEyhBQgFCLH53qx+iV1NM6TzQjnahQJqtpug
-         Iu5I9nc48H/eq9SfbmcuIRkAZE5rPXpjRvMzn1kJIsGuncehdFK5b9n9kJ8xI4eNexfE
-         I3hhjCLIa34+tM1oBvOhhxm70qvl1rFKYVJYVQXi2qBfv3CUbUWyvkq1I6uUswsmi1u4
-         i94A==
-X-Gm-Message-State: APjAAAXDk2WoBwaKT5n7be1E+0oJWM79vzGyPmPyS5J7f4wvSmd+yaLO
-        PZSeausAMKyt6pc3FG6kqWU=
-X-Google-Smtp-Source: APXvYqxNQUCwhqpvFgrUAlP7d3bHLavu7f+B2lQn85cH0TELZt3anm+RoZA2iOYnttR9WVQeUnHdOw==
-X-Received: by 2002:a63:b515:: with SMTP id y21mr3421313pge.148.1582876598811;
-        Thu, 27 Feb 2020 23:56:38 -0800 (PST)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id o17sm4156279pfe.9.2020.02.27.23.56.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 23:56:38 -0800 (PST)
-From:   Junyong Sun <sunjy516@gmail.com>
-X-Google-Original-From: Junyong Sun <sunjunyong@xiaomi.com>
-To:     mcgrof@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-        sunjunyong@xiaomi.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: fix a double abort case with fw_load_sysfs_fallback
-Date:   Fri, 28 Feb 2020 15:56:33 +0800
-Message-Id: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 28 Feb 2020 02:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbgB1H5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:57:49 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0C42467B;
+        Fri, 28 Feb 2020 07:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582876668;
+        bh=447A/1eVEf79zNA/V+pehDVUNQ6KKCGcSrLGSGA9AoU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RHtiadStP1W/S2hSUdKQj7XDq8rPJB682X4hV10pvYXtL9ykALtdjIWUE67xUbHWJ
+         MczoDw0POlqK2SDp7oQ9vJqEnFLuOfsDH/szjaSIjWgOwrKkzbdppsIm6ngOTJWRul
+         lJf/O15F8ZDHfdcjUGoBwDXTKQnyKd5OB0YCSC2c=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>, stable@vger.kernel.org
+Subject: [PATCH v2] perf probe: Fix to delete multiple probe event
+Date:   Fri, 28 Feb 2020 16:57:42 +0900
+Message-Id: <158287666197.16697.7514373548551863562.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fw_sysfs_wait_timeout may return err with -ENOENT
-at fw_load_sysfs_fallback and firmware is already
-in abort status, no need to abort again, so skip it.
+Fix to delete multiple probe event with filter correctly.
 
-Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+When we put an event with multiple probes, perf-probe fails
+to delete with filters. This comes from a failure to list
+up the event name because of overwrapping its name.
+
+To fix this issue, skip to list up the event which has
+same name.
+
+Without this patch:
+  # perf probe -l \*
+    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:21@
+    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:25@
+    probe_perf:map__map_ip (on append_inlines:12@util/machine.c in
+    probe_perf:map__map_ip (on unwind_entry:19@util/machine.c in /
+    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
+    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
+  # perf probe -d \*
+  "*" does not hit any event.
+    Error: Failed to delete events. Reason: No such file or directory (Code: -2)
+
+With this:
+  # perf probe -d \*
+  Removed event: probe_perf:map__map_ip
+
+Fixes: 72363540c009 ("perf probe: Support multiprobe event")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Reported-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- drivers/base/firmware_loader/fallback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ v2:
+  - Forward port on the latest perf/urgent tree.
+  - Add Fixes and Reporters.
+---
+ tools/perf/util/probe-file.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 8704e1b..1e9c96e 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 0f5fda11675f..8c852948513e 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -206,6 +206,9 @@ static struct strlist *__probe_file__get_namelist(int fd, bool include_group)
+ 		} else
+ 			ret = strlist__add(sl, tev.event);
+ 		clear_probe_trace_event(&tev);
++		/* Skip if there is same name multi-probe event in the list */
++		if (ret == -EEXIST)
++			ret = 0;
+ 		if (ret < 0)
+ 			break;
  	}
- 
- 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
--	if (retval < 0) {
-+	if (retval < 0 && retval != -ENOENT) {
- 		mutex_lock(&fw_lock);
- 		fw_load_abort(fw_sysfs);
- 		mutex_unlock(&fw_lock);
--- 
-2.7.4
 
