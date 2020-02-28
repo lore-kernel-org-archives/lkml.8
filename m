@@ -2,126 +2,182 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB243C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA67C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B5C246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582884921;
-	bh=apO/R4CqgBq0KEHG3iihx8Mlz4WaPP6PO1pt6M9b8Io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w/wMgNbNIfZ0e+xGrpmxi56HftbE/QOtP1dlXLnkOFSUOkw3QC7c8dyUwoEZcYCvI
-	 f5sRtpNawPmfakHAvlHq+ILMu98bwaGyRoV1948vSCrokYgW2E5PQW5tzQ8XMop4fB
-	 BrqBiHS/QG6xa7VcHTYUCQ6248S+p4iQcbeed3so=
+	by mail.kernel.org (Postfix) with ESMTP id 9DDEE246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BLsyzh4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgB1KPU (ORCPT
+        id S1726811AbgB1KQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:15:20 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38750 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgB1KPU (ORCPT
+        Fri, 28 Feb 2020 05:16:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48961 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726626AbgB1KQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:15:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id e8so2306153wrm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:15:19 -0800 (PST)
+        Fri, 28 Feb 2020 05:16:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582884976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8Yuq0w99xWOCSYSMhOpYFNZZ7MnQhsxMdcr2Kk7+fsM=;
+        b=BLsyzh4jatwVCEGpU3+gB9yEONiUDTIKHJYwvB3ha69n/j3bIOVozYgvuxs4gjRnhR43zz
+        nbIlu5DxYD5wzBq/SiOiI5XiuT3pwbpdVyv5UumjgrbZotWv0bvtBnpkcgz9f4AFqW8rnL
+        NWuM1q+nqxAr73kt/K6AXK9sntXK7vA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-Gmz7v2obM0uXOj3ZxVLm2A-1; Fri, 28 Feb 2020 05:16:14 -0500
+X-MC-Unique: Gmz7v2obM0uXOj3ZxVLm2A-1
+Received: by mail-wr1-f72.google.com with SMTP id f10so1142938wrv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:16:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N1sfoWU8RpBx2/Ft/g0pxbyKx3NRAm+lIucU0nBhEa4=;
-        b=JcM2rwwQFW4ECHFkXe/GQ+99/RoEycOKrZUjchhbGrXe7m9Bg0PdS9G82laTqXSC+Y
-         wadd9u7bZAAOIqe+3es59GTYoDeK1uX3Hs3AndNk4PPTt43WckA7zLKfWP4ndYgeagvT
-         gE80ctihoTawUuIZ3MaE2P+gzyLkXozkYUUlJ0t1p2v6MAwHaOx+1snhhez7fF65oLeA
-         7EJoAmPag3S85UM3vWZNwqO2rE36cXU1exM/T97ljSCiDgRsPxqnIhdjslf548Ugs58N
-         8x2kRI7Tyu6cwiD0tZxdqV0GIhuKOi8U4dW8d4fuWIxGhdvSt6oonUDmjAiyEnFn4ZBc
-         OeWw==
-X-Gm-Message-State: APjAAAVMAua1hAQdLsUteHrp73CJ5/J9Yfo7EX6BaFjBWWxVIWCEin6A
-        C3Mq3lIlyiRXlGTuwXae3ZM=
-X-Google-Smtp-Source: APXvYqyYh4FgDjAZov6wE9nhqyNxrqTJZ8FeLa0KxvyXz2e7oXJw6bsgjzqr6Pt1N+Fd3/8TpTeY/w==
-X-Received: by 2002:a5d:69d1:: with SMTP id s17mr4146926wrw.339.1582884918770;
-        Fri, 28 Feb 2020 02:15:18 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id g14sm12501588wrv.58.2020.02.28.02.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 02:15:17 -0800 (PST)
-Date:   Fri, 28 Feb 2020 11:15:17 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200228101517.GM3771@dhcp22.suse.cz>
-References: <20200228033819.3857058-1-ying.huang@intel.com>
- <20200228034248.GE29971@bombadil.infradead.org>
- <87a7538977.fsf@yhuang-dev.intel.com>
- <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228095048.GK3771@dhcp22.suse.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8Yuq0w99xWOCSYSMhOpYFNZZ7MnQhsxMdcr2Kk7+fsM=;
+        b=RoNGktcVcHinn3+Z2Chk9hTdwBSeIt7Oj3YZxCDH6LrdvjX4Q0Tj7Cm54sFjanrISa
+         ZZbKAvM3AuenZv3g88Pi8fhdEdOcAt42VOzUwTPEdlfMulWIaYYqi0bajMzTEYffx9M8
+         2nxqWQtM0YmnGL1lG/k1DxySZ5FFSzqs1aEHviHDN+mzeQ0THRUV+7qrv2ZSp9+P/v4O
+         2Z+tMmktB4aJr11Pb7lYgjH2C/1Cz/Ix4vKVLCOo8u2v8W/WcLLpioqkbfmFXdfUMt70
+         rv0EDCVtXFB4vcxkFw3/fs+Dw0FhGoDPDSsGZRwMKBAhIZ+CIrJjKWrBWr+4Wkl7r0Tf
+         ztKw==
+X-Gm-Message-State: APjAAAU2jLkys3DPp27MvAalnCgrVDPnudiEw9ssB6lsF/zn6LNACx2s
+        I0KzN3jMt6WUjerSh9g73cocaTIi4AMMQjPR9WMbywWUOFcL3oyVIL8bhAWm8a1Aav/ArSqt/dG
+        so9yJLlZTildHwVfCP4r0gxMQ
+X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4093675wma.84.1582884972241;
+        Fri, 28 Feb 2020 02:16:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqww48iU01L+2UIHDN8maT/6XhdwCadWPyvh9i05KWipKkTPXTpA9aSzjcGgKDcRq+I5vQkURw==
+X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4093643wma.84.1582884971917;
+        Fri, 28 Feb 2020 02:16:11 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
+        by smtp.gmail.com with ESMTPSA id 133sm1683182wmd.5.2020.02.28.02.16.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 02:16:11 -0800 (PST)
+Subject: Re: [PATCH 1/3] KVM: VMX: Always VMCLEAR in-use VMCSes during crash
+ with kexec support
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200227223047.13125-1-sean.j.christopherson@intel.com>
+ <20200227223047.13125-2-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9edc8cef-9aa4-11ca-f8f2-a1fea990b87e@redhat.com>
+Date:   Fri, 28 Feb 2020 11:16:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228095048.GK3771@dhcp22.suse.cz>
+In-Reply-To: <20200227223047.13125-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 28-02-20 10:50:50, Michal Hocko wrote:
-> On Fri 28-02-20 16:55:40, Huang, Ying wrote:
-> > David Hildenbrand <david@redhat.com> writes:
-> [...]
-> > > E.g., free page reporting in QEMU wants to use MADV_FREE. The guest will
-> > > report currently free pages to the hypervisor, which will MADV_FREE the
-> > > reported memory. As long as there is no memory pressure, there is no
-> > > need to actually free the pages. Once the guest reuses such a page, it
-> > > could happen that there is still the old page and pulling in in a fresh
-> > > (zeroed) page can be avoided.
-> > >
-> > > AFAIKs, after your change, we would get more pages discarded from our
-> > > guest, resulting in more fresh (zeroed) pages having to be pulled in
-> > > when a guest touches a reported free page again. But OTOH, page
-> > > migration is speed up (avoiding to migrate these pages).
-> > 
-> > Let's look at this problem in another perspective.  To migrate the
-> > MADV_FREE pages of the QEMU process from the node A to the node B, we
-> > need to free the original pages in the node A, and (maybe) allocate the
-> > same number of pages in the node B.  So the question becomes
-> > 
-> > - we may need to allocate some pages in the node B
-> > - these pages may be accessed by the application or not
-> > - we should allocate all these pages in advance or allocate them lazily
-> >   when they are accessed.
-> > 
-> > We thought the common philosophy in Linux kernel is to allocate lazily.
-> 
-> The common philosophy is to cache as much as possible. And MADV_FREE
-> pages are a kind of cache as well. If the target node is short on memory
-> then those will be reclaimed as a cache so a pro-active freeing sounds
-> counter productive as you do not have any idea whether that cache is
-> going to be used in future. In other words you are not going to free a
-> clean page cache if you want to use that memory as a migration target
+On 27/02/20 23:30, Sean Christopherson wrote:
+> -void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
+> +void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
+>  {
+>  	vmcs_clear(loaded_vmcs->vmcs);
+>  	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
+>  		vmcs_clear(loaded_vmcs->shadow_vmcs);
+> +
+> +	if (in_use) {
+> +		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+> +
+> +		/*
+> +		 * Ensure deleting loaded_vmcs from its current percpu list
+> +		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
+> +		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
+> +		 * to its percpu list before it's deleted from this cpu's list.
+> +		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
+> +		 */
+> +		smp_wmb();
+> +	}
+> +
 
-sorry I meant to say that you are not going to clean page cache when
-migrating it.
+I'd like to avoid the new in_use argument and, also, I think it's a 
+little bit nicer to always invoke the memory barrier.  Even though we 
+use "asm volatile" for vmclear and therefore the compiler is already 
+taken care of, in principle it's more correct to order the ->cpu write 
+against vmclear's.
 
-> right? So you should make a clear case about why MADV_FREE cache is less
-> important than the clean page cache and ideally have a good
-> justification backed by real workloads.
+This gives the following patch on top:
 
--- 
-Michal Hocko
-SUSE Labs
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index c9d6152e7a4d..77a64110577b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -656,25 +656,24 @@ static int vmx_set_guest_msr(struct vcpu_vmx *vmx, struct shared_msr_entry *msr,
+ 	return ret;
+ }
+ 
+-void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
++void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
+ {
+ 	vmcs_clear(loaded_vmcs->vmcs);
+ 	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
+ 		vmcs_clear(loaded_vmcs->shadow_vmcs);
+ 
+-	if (in_use) {
++	if (!list_empty(&loaded_vmcs->loaded_vmcss_on_cpu_link))
+ 		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+ 
+-		/*
+-		 * Ensure deleting loaded_vmcs from its current percpu list
+-		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
+-		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
+-		 * to its percpu list before it's deleted from this cpu's list.
+-		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
+-		 */
+-		smp_wmb();
+-	}
+-
++	/*
++	 * Ensure all writes to loaded_vmcs, including deleting it
++	 * from its current percpu list, complete before setting
++	 * loaded_vmcs->vcpu to -1; otherwise,, a different cpu can
++	 * see vcpu == -1 first and add loaded_vmcs to its percpu
++	 * list before it's deleted from this cpu's list.  Pairs
++	 * with the smp_rmb() in vmx_vcpu_load_vmcs().
++	 */
++	smp_wmb();
+ 	loaded_vmcs->cpu = -1;
+ 	loaded_vmcs->launched = 0;
+ }
+@@ -701,7 +700,7 @@ static void __loaded_vmcs_clear(void *arg)
+ 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+ 		per_cpu(current_vmcs, cpu) = NULL;
+ 
+-	loaded_vmcs_init(loaded_vmcs, true);
++	loaded_vmcs_init(loaded_vmcs);
+ }
+ 
+ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+@@ -2568,7 +2567,8 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+ 
+ 	loaded_vmcs->shadow_vmcs = NULL;
+ 	loaded_vmcs->hv_timer_soft_disabled = false;
+-	loaded_vmcs_init(loaded_vmcs, false);
++	INIT_LIST_HEAD(&loaded_vmcs->loaded_vmcss_on_cpu_link);
++	loaded_vmcs_init(loaded_vmcs);
+ 
+ 	if (cpu_has_vmx_msr_bitmap()) {
+ 		loaded_vmcs->msr_bitmap = (unsigned long *)
+
+Paolo
+
