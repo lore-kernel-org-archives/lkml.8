@@ -2,83 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27F0C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B264C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF16246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582896401;
-	bh=z5dwAWLcjLjo0C71mnZQrP9hXaDFY2g2woModyNi4c0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mfSpEhBYtCwoAch0lJUi9HGer1lGRwIx1I4kw/ItvVykmrnufMyXYHCNdZcYBDTNb
-	 uxw0OG6spiWlmGea+gCHSf5ZOt5ECrHRvqS0JJGV85Qp7J+yvap0hAG71Hfl1y//XG
-	 gq2MDpOFW9dhJOUqtmcgzZvitY1H5PNYwqGxsnVY=
+	by mail.kernel.org (Postfix) with ESMTP id 0CB20246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgB1N0k (ORCPT
+        id S1726809AbgB1N0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:26:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgB1N0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:26:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997F22469D;
-        Fri, 28 Feb 2020 13:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582896399;
-        bh=z5dwAWLcjLjo0C71mnZQrP9hXaDFY2g2woModyNi4c0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vXQT6sCm/cOR/vLkA3/epVyaK+gc/odiPnJpy8D+WWU8SCl7cMjkWBs3XHpc3upNc
-         xCz21kzRVtCdp88oK3Khn5r3hMziR4mkrq07D9UCd2vjGk3XstZs+hdaBPLSRlxNzf
-         aFOUTw3b2bd9xE27AfNdVu5bxA/4+C71h+M4MU2A=
-Date:   Fri, 28 Feb 2020 22:26:35 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: bootconfig: Update boot configuration
- documentation
-Message-Id: <20200228222635.96b258bedd2e68141b8a45c9@kernel.org>
-In-Reply-To: <57b79bdd-36f1-c8c3-e1d3-7d21db47a8f3@web.de>
-References: <158287861133.18632.12035327305997207220.stgit@devnote2>
-        <158287862131.18632.11822701514141299400.stgit@devnote2>
-        <57b79bdd-36f1-c8c3-e1d3-7d21db47a8f3@web.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 28 Feb 2020 08:26:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47993 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgB1N0w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:26:52 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j7ffG-00051B-1D; Fri, 28 Feb 2020 14:26:50 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j7ffE-0006RR-91; Fri, 28 Feb 2020 14:26:48 +0100
+Date:   Fri, 28 Feb 2020 14:26:48 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     devicetree@vger.kernel.org, Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v8 1/1] net: ag71xx: port to phylink
+Message-ID: <20200228132648.fgeoify3qdeb53qn@pengutronix.de>
+References: <20200226054624.14199-1-o.rempel@pengutronix.de>
+ <20200226092138.GV25745@shell.armlinux.org.uk>
+ <20200228114753.GN18808@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4s5yhyplebixnzcf"
+Content-Disposition: inline
+In-Reply-To: <20200228114753.GN18808@shell.armlinux.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:25:56 up 105 days,  4:44, 122 users,  load average: 0.47, 0.18,
+ 0.11
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 11:00:43 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
 
-> …
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> …
-> > +… All sub-keys under "kernel" root key are passed as a part of
-> > +kernel command line [1]_, and ones under "init" root key are passed as a part
-> > +of init command line. …
-> 
-> Can an enumeration be clearer for this information?
-> 
-> Will the distinction become more interesting for well-known keys?
+--4s5yhyplebixnzcf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Your question becomes more meaningless... If you have any such concern,
-you can write a patch on it for a contribution. Yes, you can!
+On Fri, Feb 28, 2020 at 11:47:53AM +0000, Russell King - ARM Linux admin wr=
+ote:
+> On Wed, Feb 26, 2020 at 09:21:38AM +0000, Russell King - ARM Linux admin =
+wrote:
+> > On Wed, Feb 26, 2020 at 06:46:24AM +0100, Oleksij Rempel wrote:
+> > > The port to phylink was done as close as possible to initial
+> > > functionality.
+> > >=20
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > > changes v8:
+> > > - set the autoneg bit
+> > > - provide implementations for the mac_pcs_get_state and mac_an_restart
+> > >   methods
+> > > - do phylink_disconnect_phy() on _stop()
+> > > - rename ag71xx_phy_setup() to ag71xx_phylink_setup()=20
+> >=20
+> > There will be one more change required; I'm changing the prototype for
+> > the mac_link_up() function, and I suggest as you don't support in-band
+> > AN that most of the setup for speed and duplex gets moved out of your
+> > mac_config() implementation to mac_link_up().
+> >=20
+> > The patches have been available on netdev for just over a week now.
+>=20
+> The patches are now in net-next.  Please respin your patch against these
+> changes, which basically means the code which programs the speed and
+> duplex in ag71xx_mac_config() needs to be moved to ag71xx_mac_link_up().
 
-Thank you,
+OK, Thank you!
+I'll  update it.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Oleksij
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--4s5yhyplebixnzcf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5ZFRMACgkQ4omh9DUa
+UbNtTxAAhCmNOMd5vUqbiJM1/w/s11cV8lfHjVZxuDKKrAeo6h+/L1xs+/Aw8ybN
+AFt2LojGejRo96MkotlhDcM5XjRpG2J7SA5tnPziTaRXwTuuyhItsxJtHcCJJrf7
+HFRnVmrEOclwfzGXFhnUsttaNgtTQrheEVgQzzfZi22o0qLOVp8jtnMoRk5XUWFB
+YtWCGMxsGyK72L3UpyXufYalpTKWnIAcWcEtL0SzAkrMIg55MoJDq3lHrecvyP1/
+FnjCToGwFDYBA0/ym0gQtlsGCeMJ4+qfgnHnMz1H8nUd9t7T5uXJOENXo3Ua/a/c
+d2BEbtgXX42QsDz3SEQDWdeQtpZv5lWPiO3xmBentFjpqkXldhLdVSSXOT+lwF0K
+puY8vSQqOt0OLoPedABEFLhUUrjndcndERdAzfuyjAtbUgSDKgiDnBW8ihjfVt9n
+Q3yWtrnSlltE8QgRlbok8DpyjZ1SoTnm3GIvlaZbHVnVWLSC1d8OY4Ev4fRr78K3
+JwmstQibR0AWWvKUsil0IPGrrNPk+AzR2lDJbdLCpnXOEHHpPLYL0dSVk103G9mx
+ntVYCNfd6BARiT55cwWrLU9zVb0n3Or8KMryTZZ9G0Vr6f+HTWr1bu7q5QrfY+Md
+c4NDy37wq1UelojjiYIg5Heli/nR6VSCvYfJyhcmp0Q9Dz56rpg=
+=vVIQ
+-----END PGP SIGNATURE-----
+
+--4s5yhyplebixnzcf--
