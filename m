@@ -2,112 +2,170 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1574C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EFC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A902920665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4418246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="khxyAtO9"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="GlaZZ6YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgB1MxI (ORCPT
+        id S1726413AbgB1MyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:53:08 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42498 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgB1MxH (ORCPT
+        Fri, 28 Feb 2020 07:54:12 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46905 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgB1MyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:53:07 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 15so1681423pfo.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 04:53:06 -0800 (PST)
+        Fri, 28 Feb 2020 07:54:12 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v6so1991915lfo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 04:54:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xvtq6YgokW3dOsLf2LiPLCXiFYliWMU8X+XdnMUFWTY=;
-        b=khxyAtO9q1wRQ+lcr4BsHyhmrJldouT8tHUupK/MZO/ZAUYk0/7vF97R72t0CoaEKy
-         JueyKryrU/84wqmBTlYE9VnXL3BKt2Chqyy3/WT0mNdcGs/h9GDtjBeTa5ENhthLvN7J
-         pcucStY7cyn4ZZ87wJKaPubABydibuewIdKqsn4nPl2MM3kSziMyUSFW6MF5igElPFC3
-         3KY/DO9VB4NahsgYIihMqOfMNQib1RNbnBI0XFqw9+COeMG5YNnPCYjzh9Ml1gO1F9gk
-         ga5N+/yuwrgzPuDFuXbTkLORhCbst8Ukk48hOQ+he2pWpMISOnySanzh8VR0ps8Z8jiX
-         tRBA==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Muv72YP2IyLq1W5BhIStFTH4ZvryXOf+fLWCoC9qpYQ=;
+        b=GlaZZ6YVAEbZFHeWJ7HE/XB2QcOxTMZAalnfiEzxpYIgJO8w+ULiOB+xpiGf+8F/jY
+         sRXUb55TJPb8m2LkyGPEl4f1evjISFaFNde7Q+8kBK3dIWf3blckzU6z94dDyYCS/729
+         HiP1f8JckGqHh5L5pJvik21lNCv+rDcXuM3lC+YRxU0IO2vCcPbqo029h+dbt+bBnO89
+         fpxxAZJDIen6JGltrxE22I3CUEJT17n50CXsEELbd+nHR9w+nh+RzyB5MvOEwd/hLn6d
+         Zf5OgnzxbhwOPv/pzF59sIK/7UUReM1EWPWhcPhC9BoheP4kL1w85/lgaOIZaXjPTSnK
+         QvXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xvtq6YgokW3dOsLf2LiPLCXiFYliWMU8X+XdnMUFWTY=;
-        b=hJ8k6SWjanglYA5VH6h+Y3DHQIjEYZVC/hvH8cWgYHZKkyJ+6kqP6p0Vi9HtdO4UEW
-         fUw3WNXANieMI8pk2pUih7yzFmnwsn10evVi57uEXou20Bp0epdXBM+hUtTZwp7DfaR4
-         s64fkiqyJYoCD1DyZ+eM8Q/Lu82lutXu5NEO1tk8R9l3X6DCNjrgwZg+asWcEZhrypBj
-         tG/vs3WFG7bKzuY98A23+Gy+SgRPFEPnCJMFGRjwUGHpkLdvGBzJkikCTTT/ocoGnBmV
-         Msad8uh2E744oE1AxMX80MptELaUoNTHkWdsB3b7beJ1kRVjfIZd80KhSiDDBWHK2SIY
-         8R+w==
-X-Gm-Message-State: APjAAAVB7WOCXY+B2zXZXCa9QHWjqH4hlJVhlSTzRts80dOspAwAkmCr
-        UUxeSlwn6LB44mkR8Br86zMw1CMM/eHO2f5Vl/kBKQ==
-X-Google-Smtp-Source: APXvYqzpwNsgK3YVAW6YE68jIRhoDu3kMleJRygqKjLOc2b4xFIq5YJb+HtXnkwHHxD99JTpetytK9OtGZnpjMJoanU=
-X-Received: by 2002:a63:f242:: with SMTP id d2mr4526336pgk.130.1582894385752;
- Fri, 28 Feb 2020 04:53:05 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Muv72YP2IyLq1W5BhIStFTH4ZvryXOf+fLWCoC9qpYQ=;
+        b=bMHGPCf3IcJiA7Fgm+jqEHg9paWw9LyMVQVKaFg64Ysu1rqEIdowOTVsYnb5U46bop
+         qd7DHGwhJWZ4FQJOCnRTVTeDvcA4cXYxWaMDZsp2aVMa4F25zHHBeiq3BSCpeShhTeeN
+         MiGVHqOgECLAXjjXQqT1Koz5/0E4pymUr4SIi0FOj62GXQ79AtVYtcpu6hH0WWeFpYrA
+         gfm3MsoMSz/s+CzzoCWCDemoVp2BnUTtR+MF4WwAgj2fq1ephTgFzUWe6nHPKp1mGx+F
+         hhm204yujiqI2VA9hbEus7ljQ4DBKbV7b6oLIOpdPHfzYQDRfmfKpDFzISG5uU+9l3sF
+         piBQ==
+X-Gm-Message-State: ANhLgQ2cL2eqw74zxwbKymEfmlNqDDcHwtxMG1EfpXAgd0TAGnH/iqX5
+        0Sg45CzPLSOzSDld8W+px+0Obal9BGI=
+X-Google-Smtp-Source: ADFU+vtNpUtRiOa5v7IhuGlCeOXKN3v7F2cRr+EBvSDMXgh7nGyjZ+h7iBG/GFHBfKYBFeG9tS3gBA==
+X-Received: by 2002:a19:2d53:: with SMTP id t19mr2569895lft.206.1582894449304;
+        Fri, 28 Feb 2020 04:54:09 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t21sm5594429ljh.14.2020.02.28.04.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 04:54:08 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 5CA68101297; Fri, 28 Feb 2020 15:54:07 +0300 (+03)
+Date:   Fri, 28 Feb 2020 15:54:07 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] huge tmpfs: try to split_huge_page() when punching hole
+Message-ID: <20200228125407.5lnmjtnvlcnniokt@box>
+References: <alpine.LSU.2.11.2002261959020.10801@eggly.anvils>
+ <20200227084704.aolem5nktpricrzo@box>
+ <alpine.LSU.2.11.2002271909250.2026@eggly.anvils>
+ <20200228042646.GF29971@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <0000000000003bf3fb059fa247eb@google.com>
-In-Reply-To: <0000000000003bf3fb059fa247eb@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 28 Feb 2020 13:52:54 +0100
-Message-ID: <CAAeHK+wXm115pU+rTpFQ_293bF6w9_5pgsEeZrFpeEQMPGBSCA@mail.gmail.com>
-Subject: Re: BUG: bad host encryption descriptor; descriptor is too short (1
- vs 5 needed)
-To:     syzbot <syzbot+2470d4931705e03b0977@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228042646.GF29971@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 1:50 PM syzbot
-<syzbot+2470d4931705e03b0977@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15cd9a81e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2470d4931705e03b0977
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15cfbd09e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170e3645e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2470d4931705e03b0977@syzkaller.appspotmail.com
->
-> usb 1-1: config 0 interface 0 altsetting 0 has 2 endpoint descriptors, different from the interface descriptor's value: 4
-> usb 1-1: New USB device found, idVendor=13dc, idProduct=5611, bcdDevice=40.15
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
-> usb 1-1: BUG: bad host encryption descriptor; descriptor is too short (1 vs 5 needed)
-> usb 1-1: supported encryption types:
-> usb 1-1: E: host doesn't support CCM-1 crypto
-> hwa-hc 1-1:0.0: Cannot initialize internals: -19
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+On Thu, Feb 27, 2020 at 08:26:46PM -0800, Matthew Wilcox wrote:
+> On Thu, Feb 27, 2020 at 08:04:21PM -0800, Hugh Dickins wrote:
+> > It's good to consider the implications for hole-punch on a persistent
+> > filesystem cached with THPs (or lower order compound pages); but I
+> > disagree that they should behave differently from this patch.
+> > 
+> > The hole-punch is fundamentally directed at freeing up the storage, yes;
+> > but its page cache must also be removed, otherwise you have the user
+> > writing into cache which is not backed by storage, and potentially losing
+> > the data later.  So a hole must be punched in the compound page in that
+> > case too: in fact, it's then much more important that split_huge_page()
+> > succeeds - not obvious what the fallback should be if it fails (perhaps
+> > in that case the compound page must be kept, but all its pmds removed,
+> > and info on holes kept in spare fields of the compound page, to prevent
+> > writes and write faults without calling back into the filesystem:
+> > soluble, but more work than tmpfs needs today)(and perhaps when that
+> > extra work is done, we would choose to rely on it rather than
+> > immediately splitting; but it will involve discounting the holes).
+> 
+> Ooh, a topic that reasonable people can disagree on!
 
-#syz dup: BUG: bad host security descriptor; not enough data (4 vs 5 left)
+Hugh wins me over on this.
+
+Removing PMDs will not do much as we track dirty status on compound page
+level.
+
+I see two reasonable options for persistent filesystem to handle the
+punch hole:
+
+  - Keep the page and PMD mappings intact, but trigger writeback if page
+    is dirty. After the page is clean we can safely punch hole in the
+    storage. Following write access to the area would trigger
+    page_mkwrite() which would allocate storage accordingly.
+
+    This is reasonable behaviour if we allow to allocate THPs not fully
+    covered by space allocated on disk.
+
+  - Try to split the page or drop it completely from the page cache (after
+    write back if need) before punching the hole. Fallback to the first
+    scenario if we cannot split or get rid of the page.
+
+I cannot say I strongly prefer one approach over another. The first one
+fits better with THP attitude: pay for performance with memory (and
+storage I guess). The second may work better if resources is limited.
+
+> The current prototype I have will allocate (huge) pages and then
+> ask the filesystem to fill them.  The filesystem may well find that
+> the extent is a hole, and if it is, it will fill the page with zeroes.
+> Then, the application may write to those pages, and if it does, the
+> filesystem will be notified to create an on-disk extent for that write.
+> 
+> I haven't looked at the hole-punch path in detail, but presumably it
+> notifies the filesystem to create a hole extent and zeroes out the
+> pagecache for that range (possibly by removing entire pages, and with
+> memset for partial pages).  Then a subsequent write to the hole will
+> cause the filesystem to allocate a new non-hole extent, just like the
+> previous case.
+> 
+> I think it's reasonable for the page cache to interpret a hole-punch
+> request as being a hint that the hole is unlikely to be accessed again,
+> so allocating new smaller pages for that region of the file (or just
+> writing back & dropping the covering page altogether) would seem like
+> a reasonable implementation decision.
+> 
+> However, it also seems reasonable that just memset() of the affected
+> region and leaving the page intact would also be an acceptable
+> implementation.  As long as writes to the newly-created hole cause the
+> page to become dirtied and thus writeback to be in effect.  It probably
+> wouldn't be as good an implementation, but it shouldn't lose writes as
+> you suggest above.
+> 
+> I'm not sure I'd choose to split a large page into smaller pages.  I think
+> I'd prefer to allocate lower-order pages and memcpy() the data over.
+> Again, that's an implementation choice, and not something that should
+> be visible outside the implementation.
+
+Copying over the data has the same limitation as split: you need to get
+refcounts to the well-known state (no extra pins) before you can proceed.
+So it will not be never-fail operation.
+
+> 
+> [1] http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/heads/xarray-pagecache
+
+-- 
+ Kirill A. Shutemov
