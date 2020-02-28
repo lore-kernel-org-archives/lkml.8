@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF0BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6511C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C002469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECE4246B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgB1PIc (ORCPT
+        id S1727168AbgB1PId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:08:32 -0500
-Received: from 8bytes.org ([81.169.241.247]:56016 "EHLO theia.8bytes.org"
+        Fri, 28 Feb 2020 10:08:33 -0500
+Received: from 8bytes.org ([81.169.241.247]:56072 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgB1PIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:08:31 -0500
+        id S1727084AbgB1PIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:08:32 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 98A183C3; Fri, 28 Feb 2020 16:08:28 +0100 (CET)
+        id 38C594D4; Fri, 28 Feb 2020 16:08:29 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 01/14] ACPI/IORT: Remove direct access of dev->iommu_fwspec
-Date:   Fri, 28 Feb 2020 16:08:07 +0100
-Message-Id: <20200228150820.15340-2-joro@8bytes.org>
+Subject: [PATCH 04/14] iommu/arm-smmu: Fix uninitilized variable warning
+Date:   Fri, 28 Feb 2020 16:08:10 +0100
+Message-Id: <20200228150820.15340-5-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228150820.15340-1-joro@8bytes.org>
 References: <20200228150820.15340-1-joro@8bytes.org>
@@ -52,35 +52,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Use the accessor functions instead of directly dereferencing
-dev->iommu_fwspec.
+Some unrelated changes in the iommu code caused a new warning to
+appear in the arm-smmu driver:
+
+  CC      drivers/iommu/arm-smmu.o
+drivers/iommu/arm-smmu.c: In function 'arm_smmu_add_device':
+drivers/iommu/arm-smmu.c:1441:2: warning: 'smmu' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  arm_smmu_rpm_put(smmu);
+  ^~~~~~~~~~~~~~~~~~~~~~
+
+The warning is a false positive, but initialize the variable to NULL
+to get rid of it.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/acpi/arm64/iort.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/arm-smmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1a7ae9..0e981d7f3c7d 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1015,6 +1015,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 		return ops;
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 16c4b87af42b..980aae73b45b 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1383,7 +1383,7 @@ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
  
- 	if (dev_is_pci(dev)) {
-+		struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 		struct pci_bus *bus = to_pci_dev(dev)->bus;
- 		struct iort_pci_alias_info info = { .dev = dev };
- 
-@@ -1028,7 +1029,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 					     iort_pci_iommu_init, &info);
- 
- 		if (!err && iort_pci_rc_supports_ats(node))
--			dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
-+			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
- 	} else {
- 		int i = 0;
- 
+ static int arm_smmu_add_device(struct device *dev)
+ {
+-	struct arm_smmu_device *smmu;
++	struct arm_smmu_device *smmu = NULL;
+ 	struct arm_smmu_master_cfg *cfg;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	int i, ret;
 -- 
 2.17.1
 
