@@ -2,91 +2,78 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49822C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A5C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A78A2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12692469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TXXSvD1x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q1MbV49L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgB1PjP (ORCPT
+        id S1727218AbgB1PkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:39:15 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48351 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726905AbgB1PjP (ORCPT
+        Fri, 28 Feb 2020 10:40:00 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbgB1PkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:39:15 -0500
-X-UUID: 3e229069cc984930aa813cf1bd848ed5-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=K1/FjNHc57KhQ76Cn3QZo1foNtzkkZjOg40TS1GEvyY=;
-        b=TXXSvD1xoKc4AxHzgApu4M+YEl7tlzngM7EeOwPiXedjYZDZFko6yJFaVrMuVddQmZo8L9lP6vlBTCvjreHEPKmV4ZdvpO4A6dh3fvwejvZsTnW+UDVPnSHUEzf6XAx/b6S8iTaZWapB414hEMZr7y8cbu2d7zRw9kJGk7nQwhs=;
-X-UUID: 3e229069cc984930aa813cf1bd848ed5-20200228
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1342788308; Fri, 28 Feb 2020 23:39:10 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Feb 2020 23:38:15 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Feb 2020 23:39:00 +0800
-Message-ID: <1582904349.14824.19.camel@mtksdaap41>
-Subject: Re: [PATCH v3 05/13] soc: mediatek: cmdq: return send msg error code
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
-Date:   Fri, 28 Feb 2020 23:39:09 +0800
-In-Reply-To: <1582897461-15105-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1582897461-15105-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 28 Feb 2020 10:40:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RLl4lTWEQ1GAiGFB/dhL9F5BLvw5PQx9CA3ElGeVs+w=; b=Q1MbV49LowiIjlZpl3pNUVex/6
+        PYMFB6kNE6s0M2yxnhWgQGvqCIe/DlhIOaRLyRdURzf1Wn9ZvewzHhgdjT/tTHbnfX5+HyKMKdxi8
+        IAwZPdqdVKoQFa+GOs3+zAa99/Z05xaPUZbij2dZIvjv+xW6oDHpR+8w3Jx30mojVKFHz36BcJJxQ
+        68phLWX6JxxZqC9nm5LoVlVlnfpPqkbHfGjnQN/KtTRnJEhMArnYpn9dzI1EzifcLvwmTvplhu+xM
+        yneLzr2C54T4EFC8UH0bqR8tFQzr2tRs7AMgJnSkRAhVUkkleL0Bsus5cB9fslrLObZAtkPCqBBJR
+        itBk+T3Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7hjz-00040e-5g; Fri, 28 Feb 2020 15:39:51 +0000
+Date:   Fri, 28 Feb 2020 07:39:51 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ian Kent <raven@themaw.net>, Andreas Dilger <adilger@dilger.ca>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+Message-ID: <20200228153951.GH29971@bombadil.infradead.org>
+References: <20200226161404.14136-1-longman@redhat.com>
+ <20200226162954.GC24185@bombadil.infradead.org>
+ <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+ <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+ <20200228033412.GD29971@bombadil.infradead.org>
+ <e8730c5e-6610-f25a-f1cc-9d4ffffe0eb5@redhat.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8730c5e-6610-f25a-f1cc-9d4ffffe0eb5@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IFJldHVybiBlcnJvciBjb2RlIHRvIGNsaWVudCBpZiBzZW5kIG1l
-c3NhZ2UgZmFpbCwNCj4gc28gdGhhdCBjbGllbnQgaGFzIGNoYW5jZSB0byBlcnJvciBoYW5kbGlu
-Zy4NCj4gDQo+IEZpeGVzOiA1NzZmMWI0YmM4MDIgKCJzb2M6IG1lZGlhdGVrOiBBZGQgTWVkaWF0
-ZWsgQ01EUSBoZWxwZXIiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5p
-cy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsv
-bXRrLWNtZHEtaGVscGVyLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVk
-aWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1o
-ZWxwZXIuYw0KPiBpbmRleCAyZTFiYzUxMzU2OWIuLjA2OTg2MTJkZTVhZCAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVy
-cy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTM1MSwxMSArMzUxLDExIEBA
-IGludCBjbWRxX3BrdF9mbHVzaF9hc3luYyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgY21kcV9hc3lu
-Y19mbHVzaF9jYiBjYiwNCj4gIAkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmY2xpZW50LT5sb2Nr
-LCBmbGFncyk7DQo+ICAJfQ0KPiAgDQo+IC0JbWJveF9zZW5kX21lc3NhZ2UoY2xpZW50LT5jaGFu
-LCBwa3QpOw0KPiArCWVyciA9IG1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0KTsN
-Cj4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tldCBpbW1lZGlhdGVseSwgc28ganVzdCBjYWxs
-IHR4ZG9uZS4gKi8NCj4gIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAwKTsNCg0K
-SWYgZXJyb3IgaGFwcGVuLCB3aHkgdHggaXMgZG9uZT8gSSB0aGluayB5b3Ugc2hvdWxkIHJldHVy
-biBpbW1lZGlhdGVseQ0Kd2hlbiBlcnJvciBoYXBwZW4uDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAN
-Cj4gLQlyZXR1cm4gMDsNCj4gKwlyZXR1cm4gZXJyOw0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChj
-bWRxX3BrdF9mbHVzaF9hc3luYyk7DQo+ICANCg0K
+On Fri, Feb 28, 2020 at 10:32:02AM -0500, Waiman Long wrote:
+> On 2/27/20 10:34 PM, Matthew Wilcox wrote:
+> > The canonical argument in favour of negative dentries is to improve
+> > application startup time as every application searches the library path
+                                                               ^^^^^^^
+> > for the same libraries.  Only they don't do that any more:
+                 ^^^^^^^^^
+>
+> It is the shell that does the path search, not the command itself.
 
