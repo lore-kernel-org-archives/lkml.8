@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F5BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DB6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC0B2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8812A2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQKCeE1s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PRRn+CmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgB1Wmd (ORCPT
+        id S1727226AbgB1Wmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:42:33 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42427 "EHLO
+        Fri, 28 Feb 2020 17:42:38 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:46047 "EHLO
         mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgB1Wmb (ORCPT
+        with ESMTP id S1727169AbgB1Wmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:42:31 -0500
-Received: by mail-yw1-f67.google.com with SMTP id n127so4916074ywd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:30 -0800 (PST)
+        Fri, 28 Feb 2020 17:42:35 -0500
+Received: by mail-yw1-f67.google.com with SMTP id d206so4890742ywa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b47MKvxD2msol8/MWCxj/Lo4whOdBr+UIw9UckJBD2M=;
-        b=JQKCeE1sINUaZmgL6fmXVTYxY6xBba3Wp0U/KnreSRt3pdxW4xtJl/tG/ljszRe7W6
-         LtrgQOGZqGn1MhU6ABB2xJ+eg7B4WmTUdi7HwFEbI8o7pC7jkPpFBl1TgD7ZPLorugIn
-         N7uepY6HvisdOPEgir6sAp6wZqcZf/zPI6TAwB5cJE2kYZclSULVURK1cZNSVyNMC3Wa
-         a9m5K9oI6fnD9e05dzulfR+7sj5cDpf9KquLxH8ek7M7c85FEJchaU4Q6ZAl8mq98I8B
-         9jbZcYlUHeW4U/+zg4VPpKTqIgZ7hR45uqbOWyTfTDfVtlAqALjC0gyBxd9Sg/tkCxHW
-         YKHg==
+        bh=JjeH9m4qgkWZXplsg1h97DYvGGWmb9nEGzu4XNBBl/I=;
+        b=PRRn+CmYC3JZq0RJ5lmrE0wu+VI4uBKBeBwXeaBfVw1X87y4eq1QsWssAD6ZeQZYps
+         jj4zR4Chfoa1X+G+cc4W1RkE/mpjufVZRSBvYMiQUTwt5tSFOfd4ytrbyXdMf8ELLuwC
+         aEMCq1tsGzEJB7O32xw0+8QMjo3KskcPGbouzIkIlJBnZThYYIqQiQg5PMUdDZDC31uo
+         N1Dj/S0HzdWaF+9fdqi9qY1ssCOv2mrCw6c1RzAEm9TcSw3w+jIlQ8Zt9klcKVH+9dmW
+         CZ9HQT4La+anXSKUjeO1e0u9mXQ4ErI45KpJFRjkeST49eTVYQ7fF/5fg7pNnadxhfxn
+         NiHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b47MKvxD2msol8/MWCxj/Lo4whOdBr+UIw9UckJBD2M=;
-        b=i2zVlnIAJ6rYvUX/arEHJS3SqdJw2+fO2nJ2XmvD65IK9MI0/p3BjBuyuqcE9i05et
-         H9AHAc5K6loyy9sJBzPhEF/GRdw2WTKwHmZHulnZfZQr3lHcHZdYZfxaYB7CQh+OmAnW
-         Nvcun4ZSIlEq8DnYkyKbVkifwA1RFH3bIpOoUJ0tc2uirpc6YnVM2WRvZ8DGBU1xQYo9
-         +GJZWYlyMp3lGzqSmQ7WfEqwJbUZuGxwAahZ+zmSKCA84ArplxBv71MevmWANIwETV5A
-         o4JZXPeJxVxQFQ1M6qQ++Prx+EiV9FFqjaE5iRwQQSWau+JY+7ynv7laTPpgqcUh3+Gc
-         7hqg==
-X-Gm-Message-State: APjAAAXRXs/Eg9K7ZJkTRVp3Iad6JbKFR8AMu+noYzNGeg+Hr13EQV5X
-        /oG6rhgMghViaril2+YGRGnYTQ==
-X-Google-Smtp-Source: APXvYqwEicRswfTvRY7H/iQHyxdQZGBArwSG6Pw6q5WZLDi4wTf5h1vi8PiJ6vnKZZRE0kPvDXU42Q==
-X-Received: by 2002:a81:8803:: with SMTP id y3mr6985802ywf.338.1582929749187;
-        Fri, 28 Feb 2020 14:42:29 -0800 (PST)
+        bh=JjeH9m4qgkWZXplsg1h97DYvGGWmb9nEGzu4XNBBl/I=;
+        b=J2FmYZ8JAQwZCN3rAUQHiSOBIfPdwCl7u1epkMZGYEcA/qFymLNJV5XHuaM0wAxuMF
+         faRiu5gWQXJDXtcgAjJ/UHQ71xLgv3twEj5miwN9sD4jbRNMwky9tnggvf02cW/kT4PN
+         G0PRmOZoi7mQWxRIqYf/hJcvsbDZi1UuLbOk9v3MQDQZ73VX1ik7RNRsmFAdXR/V8BPe
+         DzEolfjDqNPuplUdIlPZ9GBJVIyeUvM0t+Ivb0vl3rsXIYQzr3cqIRRbN4IntJ/jG/zn
+         LBaz53gZrsKEkb8842Oa6d1niGm9XS5UWNRUAv7oGC0QvXoMTFpVsZ/xgTk16cqLfDEZ
+         HZ6A==
+X-Gm-Message-State: APjAAAUCBucUCj588c+Ep3tC5rBvEvrVS5zabSiNVmapbKGbZL0XYoT9
+        zlyIaor5JYsPnyH0TT+1KTqT8g==
+X-Google-Smtp-Source: APXvYqxHolbKuUT7uwmGKRZC77ae63urmiBoIT8cuxwvPiMpKEim+omWxHz1Pqdqj+6fbOwBtFFevQ==
+X-Received: by 2002:a25:6cc4:: with SMTP id h187mr3261919ybc.391.1582929753249;
+        Fri, 28 Feb 2020 14:42:33 -0800 (PST)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.27
+        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 14:42:28 -0800 (PST)
+        Fri, 28 Feb 2020 14:42:32 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
 To:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -75,9 +75,9 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/17] soc: qcom: ipa: GSI transactions
-Date:   Fri, 28 Feb 2020 16:41:56 -0600
-Message-Id: <20200228224204.17746-10-elder@linaro.org>
+Subject: [PATCH 11/17] soc: qcom: ipa: filter and routing tables
+Date:   Fri, 28 Feb 2020 16:41:58 -0600
+Message-Id: <20200228224204.17746-12-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
 References: <20200228224204.17746-1-elder@linaro.org>
@@ -88,1059 +88,843 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements GSI transactions.  A GSI transaction is a
-structure that represents a single request (consisting of one or
-more TREs) sent to the GSI hardware.  The last TRE in a transaction
-includes a flag requesting that the GSI interrupt the AP to notify
-that it has completed.
+This patch contains code implementing filter and routing tables for
+the IPA.  A filter table allows rules to be used for filtering
+packets that depart the AP at an endpoint.  A filter table entry
+contains the address of a set of rules to apply for each endpoint
+that supports filtering.
 
-TREs are executed and completed strictly in order.  For this reason,
-the completion of a single TRE implies that all previous TREs (in
-particular all of those "earlier" in a transaction) have completed.
+A routing table allows packets to be routed to an endpoint based
+on packet metadata.  It is also a table whose entries each contain
+the address of a set of routing rules to apply.
 
-Whenever there is a need to send a request (a set of TREs) to the
-IPA, a GSI transaction is allocated, specifying the number of TREs
-that will be required.  Details of the request (e.g. transfer offsets
-and length) are represented by in a Linux scatterlist array that is
-incorporated in the transaction structure.
-
-Once all commands (TREs) are added to a transaction it is committed.
-When the hardware signals that the request has completed, a callback
-function allows for cleanup or followup activity to be performed
-before the transaction is freed.
+Neither filtering nor routing is supported by the current driver.
+All table entries refer to rules that mean "no filtering" and "no
+routing."
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/gsi_trans.c | 786 ++++++++++++++++++++++++++++++++++++
- drivers/net/ipa/gsi_trans.h | 226 +++++++++++
- 2 files changed, 1012 insertions(+)
- create mode 100644 drivers/net/ipa/gsi_trans.c
- create mode 100644 drivers/net/ipa/gsi_trans.h
+ drivers/net/ipa/ipa_table.c | 700 ++++++++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_table.h | 103 ++++++
+ 2 files changed, 803 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_table.c
+ create mode 100644 drivers/net/ipa/ipa_table.h
 
-diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
+diff --git a/drivers/net/ipa/ipa_table.c b/drivers/net/ipa/ipa_table.c
 new file mode 100644
-index 000000000000..09fbbfbcca1b
+index 000000000000..9df2a3e78c98
 --- /dev/null
-+++ b/drivers/net/ipa/gsi_trans.c
-@@ -0,0 +1,786 @@
++++ b/drivers/net/ipa/ipa_table.c
+@@ -0,0 +1,700 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019-2020 Linaro Ltd.
++ * Copyright (C) 2018-2020 Linaro Ltd.
 + */
 +
 +#include <linux/types.h>
++#include <linux/kernel.h>
 +#include <linux/bits.h>
++#include <linux/bitops.h>
 +#include <linux/bitfield.h>
-+#include <linux/refcount.h>
-+#include <linux/scatterlist.h>
-+#include <linux/dma-direction.h>
++#include <linux/io.h>
++#include <linux/build_bug.h>
++#include <linux/device.h>
++#include <linux/dma-mapping.h>
 +
-+#include "gsi.h"
-+#include "gsi_private.h"
-+#include "gsi_trans.h"
-+#include "ipa_gsi.h"
-+#include "ipa_data.h"
++#include "ipa.h"
++#include "ipa_version.h"
++#include "ipa_endpoint.h"
++#include "ipa_table.h"
++#include "ipa_reg.h"
++#include "ipa_mem.h"
 +#include "ipa_cmd.h"
++#include "gsi.h"
++#include "gsi_trans.h"
 +
 +/**
-+ * DOC: GSI Transactions
++ * DOC: IPA Filter and Route Tables
 + *
-+ * A GSI transaction abstracts the behavior of a GSI channel by representing
-+ * everything about a related group of IPA commands in a single structure.
-+ * (A "command" in this sense is either a data transfer or an IPA immediate
-+ * command.)  Most details of interaction with the GSI hardware are managed
-+ * by the GSI transaction core, allowing users to simply describe commands
-+ * to be performed.  When a transaction has completed a callback function
-+ * (dependent on the type of endpoint associated with the channel) allows
-+ * cleanup of resources associated with the transaction.
++ * The IPA has tables defined in its local shared memory that define filter
++ * and routing rules.  Each entry in these tables contains a 64-bit DMA
++ * address that refers to DRAM (system memory) containing a rule definition.
++ * A rule consists of a contiguous block of 32-bit values terminated with
++ * 32 zero bits.  A special "zero entry" rule consisting of 64 zero bits
++ * represents "no filtering" or "no routing," and is the reset value for
++ * filter or route table rules.  Separate tables (both filter and route)
++ * used for IPv4 and IPv6.  Additionally, there can be hashed filter or
++ * route tables, which are used when a hash of message metadata matches.
++ * Hashed operation is not supported by all IPA hardware.
 + *
-+ * To perform a command (or set of them), a user of the GSI transaction
-+ * interface allocates a transaction, indicating the number of TREs required
-+ * (one per command).  If sufficient TREs are available, they are reserved
-+ * for use in the transaction and the allocation succeeds.  This way
-+ * exhaustion of the available TREs in a channel ring is detected
-+ * as early as possible.  All resources required to complete a transaction
-+ * are allocated at transaction allocation time.
++ * Each filter rule is associated with an AP or modem TX endpoint, though
++ * not all TX endpoints support filtering.  The first 64-bit entry in a
++ * filter table is a bitmap indicating which endpoints have entries in
++ * the table.  The low-order bit (bit 0) in this bitmap represents a
++ * special global filter, which applies to all traffic.  This is not
++ * used in the current code.  Bit 1, if set, indicates that there is an
++ * entry (i.e. a DMA address referring to a rule) for endpoint 0 in the
++ * table.  Bit 2, if set, indicates there is an entry for endpoint 1,
++ * and so on.  Space is set aside in IPA local memory to hold as many
++ * filter table entries as might be required, but typically they are not
++ * all used.
 + *
-+ * Commands performed as part of a transaction are represented in an array
-+ * of Linux scatterlist structures.  This array is allocated with the
-+ * transaction, and its entries are initialized using standard scatterlist
-+ * functions (such as sg_set_buf() or skb_to_sgvec()).
++ * The AP initializes all entries in a filter table to refer to a "zero"
++ * entry.  Once initialized the modem and AP update the entries for
++ * endpoints they "own" directly.  Currently the AP does not use the
++ * IPA filtering functionality.
 + *
-+ * Once a transaction's scatterlist structures have been initialized, the
-+ * transaction is committed.  The caller is responsible for mapping buffers
-+ * for DMA if necessary, and this should be done *before* allocating
-+ * the transaction.  Between a successful allocation and commit of a
-+ * transaction no errors should occur.
++ *                    IPA Filter Table
++ *                 ----------------------
++ * endpoint bitmap | 0x0000000000000048 | Bits 3 and 6 set (endpoints 2 and 5)
++ *                 |--------------------|
++ * 1st endpoint    | 0x000123456789abc0 | DMA address for modem endpoint 2 rule
++ *                 |--------------------|
++ * 2nd endpoint    | 0x000123456789abf0 | DMA address for AP endpoint 5 rule
++ *                 |--------------------|
++ * (unused)        |                    | (Unused space in filter table)
++ *                 |--------------------|
++ *                          . . .
++ *                 |--------------------|
++ * (unused)        |                    | (Unused space in filter table)
++ *                 ----------------------
 + *
-+ * Committing transfers ownership of the entire transaction to the GSI
-+ * transaction core.  The GSI transaction code formats the content of
-+ * the scatterlist array into the channel ring buffer and informs the
-+ * hardware that new TREs are available to process.
++ * The set of available route rules is divided about equally between the AP
++ * and modem.  The AP initializes all entries in a route table to refer to
++ * a "zero entry".  Once initialized, the modem and AP are responsible for
++ * updating their own entries.  All entries in a route table are usable,
++ * though the AP currently does not use the IPA routing functionality.
 + *
-+ * The last TRE in each transaction is marked to interrupt the AP when the
-+ * GSI hardware has completed it.  Because transfers described by TREs are
-+ * performed strictly in order, signaling the completion of just the last
-+ * TRE in the transaction is sufficient to indicate the full transaction
-+ * is complete.
-+ *
-+ * When a transaction is complete, ipa_gsi_trans_complete() is called by the
-+ * GSI code into the IPA layer, allowing it to perform any final cleanup
-+ * required before the transaction is freed.
++ *                    IPA Route Table
++ *                 ----------------------
++ * 1st modem route | 0x0001234500001100 | DMA address for first route rule
++ *                 |--------------------|
++ * 2nd modem route | 0x0001234500001140 | DMA address for second route rule
++ *                 |--------------------|
++ *                          . . .
++ *                 |--------------------|
++ * Last modem route| 0x0001234500002280 | DMA address for Nth route rule
++ *                 |--------------------|
++ * 1st AP route    | 0x0001234500001100 | DMA address for route rule (N+1)
++ *                 |--------------------|
++ * 2nd AP route    | 0x0001234500001140 | DMA address for next route rule
++ *                 |--------------------|
++ *                          . . .
++ *                 |--------------------|
++ * Last AP route   | 0x0001234500002280 | DMA address for last route rule
++ *                 ----------------------
 + */
 +
-+/* Hardware values representing a transfer element type */
-+enum gsi_tre_type {
-+	GSI_RE_XFER	= 0x2,
-+	GSI_RE_IMMD_CMD	= 0x3,
-+};
++/* IPA hardware constrains filter and route tables alignment */
++#define IPA_TABLE_ALIGN			128	/* Minimum table alignment */
 +
-+/* An entry in a channel ring */
-+struct gsi_tre {
-+	__le64 addr;		/* DMA address */
-+	__le16 len_opcode;	/* length in bytes or enum IPA_CMD_* */
-+	__le16 reserved;
-+	__le32 flags;		/* TRE_FLAGS_* */
-+};
++/* Assignment of route table entries to the modem and AP */
++#define IPA_ROUTE_MODEM_MIN		0
++#define IPA_ROUTE_MODEM_COUNT		8
 +
-+/* gsi_tre->flags mask values (in CPU byte order) */
-+#define TRE_FLAGS_CHAIN_FMASK	GENMASK(0, 0)
-+#define TRE_FLAGS_IEOB_FMASK	GENMASK(8, 8)
-+#define TRE_FLAGS_IEOT_FMASK	GENMASK(9, 9)
-+#define TRE_FLAGS_BEI_FMASK	GENMASK(10, 10)
-+#define TRE_FLAGS_TYPE_FMASK	GENMASK(23, 16)
++#define IPA_ROUTE_AP_MIN		IPA_ROUTE_MODEM_COUNT
++#define IPA_ROUTE_AP_COUNT \
++		(IPA_ROUTE_COUNT_MAX - IPA_ROUTE_MODEM_COUNT)
 +
-+int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
-+			u32 max_alloc)
-+{
-+	void *virt;
++/* Filter or route rules consist of a set of 32-bit values followed by a
++ * 32-bit all-zero rule list terminator.  The "zero rule" is simply an
++ * all-zero rule followed by the list terminator.
++ */
++#define IPA_ZERO_RULE_SIZE		(2 * sizeof(__le32))
 +
 +#ifdef IPA_VALIDATE
-+	if (!size || size % 8)
-+		return -EINVAL;
-+	if (count < max_alloc)
-+		return -EINVAL;
-+	if (!max_alloc)
-+		return -EINVAL;
-+#endif /* IPA_VALIDATE */
 +
-+	/* By allocating a few extra entries in our pool (one less
-+	 * than the maximum number that will be requested in a
-+	 * single allocation), we can always satisfy requests without
-+	 * ever worrying about straddling the end of the pool array.
-+	 * If there aren't enough entries starting at the free index,
-+	 * we just allocate free entries from the beginning of the pool.
++/* Check things that can be validated at build time. */
++static void ipa_table_validate_build(void)
++{
++	/* IPA hardware accesses memory 128 bytes at a time.  Addresses
++	 * referred to by entries in filter and route tables must be
++	 * aligned on 128-byte byte boundaries.  The only rule address
++	 * ever use is the "zero rule", and it's aligned at the base
++	 * of a coherent DMA allocation.
 +	 */
-+	virt = kcalloc(count + max_alloc - 1, size, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
++	BUILD_BUG_ON(ARCH_DMA_MINALIGN % IPA_TABLE_ALIGN);
 +
-+	pool->base = virt;
-+	/* If the allocator gave us any extra memory, use it */
-+	pool->count = ksize(pool->base) / size;
-+	pool->free = 0;
-+	pool->max_alloc = max_alloc;
-+	pool->size = size;
-+	pool->addr = 0;		/* Only used for DMA pools */
-+
-+	return 0;
-+}
-+
-+void gsi_trans_pool_exit(struct gsi_trans_pool *pool)
-+{
-+	kfree(pool->base);
-+	memset(pool, 0, sizeof(*pool));
-+}
-+
-+/* Allocate the requested number of (zeroed) entries from the pool */
-+/* Home-grown DMA pool.  This way we can preallocate and use the tre_count
-+ * to guarantee allocations will succeed.  Even though we specify max_alloc
-+ * (and it can be more than one), we only allow allocation of a single
-+ * element from a DMA pool.
-+ */
-+int gsi_trans_pool_init_dma(struct device *dev, struct gsi_trans_pool *pool,
-+			    size_t size, u32 count, u32 max_alloc)
-+{
-+	size_t total_size;
-+	dma_addr_t addr;
-+	void *virt;
-+
-+#ifdef IPA_VALIDATE
-+	if (!size || size % 8)
-+		return -EINVAL;
-+	if (count < max_alloc)
-+		return -EINVAL;
-+	if (!max_alloc)
-+		return -EINVAL;
-+#endif /* IPA_VALIDATE */
-+
-+	/* Don't let allocations cross a power-of-two boundary */
-+	size = __roundup_pow_of_two(size);
-+	total_size = (count + max_alloc - 1) * size;
-+
-+	/* The allocator will give us a power-of-2 number of pages.  But we
-+	 * can't guarantee that, so request it.  That way we won't waste any
-+	 * memory that would be available beyond the required space.
++	/* Filter and route tables contain DMA addresses that refer to
++	 * filter or route rules.  We use a fixed constant to represent
++	 * the size of either type of table entry.  Code in ipa_table_init()
++	 * uses a pointer to __le64 to initialize table entriews.
 +	 */
-+	total_size = get_order(total_size) << PAGE_SHIFT;
++	BUILD_BUG_ON(IPA_TABLE_ENTRY_SIZE != sizeof(dma_addr_t));
++	BUILD_BUG_ON(sizeof(dma_addr_t) != sizeof(__le64));
 +
-+	virt = dma_alloc_coherent(dev, total_size, &addr, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
++	/* A "zero rule" is used to represent no filtering or no routing.
++	 * It is a 64-bit block of zeroed memory.  Code in ipa_table_init()
++	 * assumes that it can be written using a pointer to __le64.
++	 */
++	BUILD_BUG_ON(IPA_ZERO_RULE_SIZE != sizeof(__le64));
 +
-+	pool->base = virt;
-+	pool->count = total_size / size;
-+	pool->free = 0;
-+	pool->size = size;
-+	pool->max_alloc = max_alloc;
-+	pool->addr = addr;
++	/* Impose a practical limit on the number of routes */
++	BUILD_BUG_ON(IPA_ROUTE_COUNT_MAX > 32);
++	/* The modem must be allotted at least one route table entry */
++	BUILD_BUG_ON(!IPA_ROUTE_MODEM_COUNT);
++	/* But it can't have more than what is available */
++	BUILD_BUG_ON(IPA_ROUTE_MODEM_COUNT > IPA_ROUTE_COUNT_MAX);
 +
-+	return 0;
 +}
 +
-+void gsi_trans_pool_exit_dma(struct device *dev, struct gsi_trans_pool *pool)
-+{
-+	dma_free_coherent(dev, pool->size, pool->base, pool->addr);
-+	memset(pool, 0, sizeof(*pool));
-+}
-+
-+/* Return the byte offset of the next free entry in the pool */
-+static u32 gsi_trans_pool_alloc_common(struct gsi_trans_pool *pool, u32 count)
-+{
-+	u32 offset;
-+
-+	/* assert(count > 0); */
-+	/* assert(count <= pool->max_alloc); */
-+
-+	/* Allocate from beginning if wrap would occur */
-+	if (count > pool->count - pool->free)
-+		pool->free = 0;
-+
-+	offset = pool->free * pool->size;
-+	pool->free += count;
-+	memset(pool->base + offset, 0, count * pool->size);
-+
-+	return offset;
-+}
-+
-+/* Allocate a contiguous block of zeroed entries from a pool */
-+void *gsi_trans_pool_alloc(struct gsi_trans_pool *pool, u32 count)
-+{
-+	return pool->base + gsi_trans_pool_alloc_common(pool, count);
-+}
-+
-+/* Allocate a single zeroed entry from a DMA pool */
-+void *gsi_trans_pool_alloc_dma(struct gsi_trans_pool *pool, dma_addr_t *addr)
-+{
-+	u32 offset = gsi_trans_pool_alloc_common(pool, 1);
-+
-+	*addr = pool->addr + offset;
-+
-+	return pool->base + offset;
-+}
-+
-+/* Return the pool element that immediately follows the one given.
-+ * This only works done if elements are allocated one at a time.
-+ */
-+void *gsi_trans_pool_next(struct gsi_trans_pool *pool, void *element)
-+{
-+	void *end = pool->base + pool->count * pool->size;
-+
-+	/* assert(element >= pool->base); */
-+	/* assert(element < end); */
-+	/* assert(pool->max_alloc == 1); */
-+	element += pool->size;
-+
-+	return element < end ? element : pool->base;
-+}
-+
-+/* Map a given ring entry index to the transaction associated with it */
-+static void gsi_channel_trans_map(struct gsi_channel *channel, u32 index,
-+				  struct gsi_trans *trans)
-+{
-+	/* Note: index *must* be used modulo the ring count here */
-+	channel->trans_info.map[index % channel->tre_ring.count] = trans;
-+}
-+
-+/* Return the transaction mapped to a given ring entry */
-+struct gsi_trans *
-+gsi_channel_trans_mapped(struct gsi_channel *channel, u32 index)
-+{
-+	/* Note: index *must* be used modulo the ring count here */
-+	return channel->trans_info.map[index % channel->tre_ring.count];
-+}
-+
-+/* Return the oldest completed transaction for a channel (or null) */
-+struct gsi_trans *gsi_channel_trans_complete(struct gsi_channel *channel)
-+{
-+	return list_first_entry_or_null(&channel->trans_info.complete,
-+					struct gsi_trans, links);
-+}
-+
-+/* Move a transaction from the allocated list to the pending list */
-+static void gsi_trans_move_pending(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_move_tail(&trans->links, &trans_info->pending);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Move a transaction and all of its predecessors from the pending list
-+ * to the completed list.
-+ */
-+void gsi_trans_move_complete(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+	struct list_head list;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	/* Move this transaction and all predecessors to completed list */
-+	list_cut_position(&list, &trans_info->pending, &trans->links);
-+	list_splice_tail(&list, &trans_info->complete);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Move a transaction from the completed list to the polled list */
-+void gsi_trans_move_polled(struct gsi_trans *trans)
-+{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_move_tail(&trans->links, &trans_info->polled);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+}
-+
-+/* Reserve some number of TREs on a channel.  Returns true if successful */
 +static bool
-+gsi_trans_tre_reserve(struct gsi_trans_info *trans_info, u32 tre_count)
++ipa_table_valid_one(struct ipa *ipa, bool route, bool ipv6, bool hashed)
 +{
-+	int avail = atomic_read(&trans_info->tre_avail);
-+	int new;
++	struct device *dev = &ipa->pdev->dev;
++	const struct ipa_mem *mem;
++	u32 size;
 +
-+	do {
-+		new = avail - (int)tre_count;
-+		if (unlikely(new < 0))
-+			return false;
-+	} while (!atomic_try_cmpxchg(&trans_info->tre_avail, &avail, new));
++	if (route) {
++		if (ipv6)
++			mem = hashed ? &ipa->mem[IPA_MEM_V6_ROUTE_HASHED]
++				     : &ipa->mem[IPA_MEM_V6_ROUTE];
++		else
++			mem = hashed ? &ipa->mem[IPA_MEM_V4_ROUTE_HASHED]
++				     : &ipa->mem[IPA_MEM_V4_ROUTE];
++		size = IPA_ROUTE_COUNT_MAX * IPA_TABLE_ENTRY_SIZE;
++	} else {
++		if (ipv6)
++			mem = hashed ? &ipa->mem[IPA_MEM_V6_FILTER_HASHED]
++				     : &ipa->mem[IPA_MEM_V6_FILTER];
++		else
++			mem = hashed ? &ipa->mem[IPA_MEM_V4_FILTER_HASHED]
++				     : &ipa->mem[IPA_MEM_V4_FILTER];
++		size = (1 + IPA_FILTER_COUNT_MAX) * IPA_TABLE_ENTRY_SIZE;
++	}
++
++	if (!ipa_cmd_table_valid(ipa, mem, route, ipv6, hashed))
++		return false;
++
++	/* mem->size >= size is sufficient, but we'll demand more */
++	if (mem->size == size)
++		return true;
++
++	/* Hashed table regions can be zero size if hashing is not supported */
++	if (hashed && !mem->size)
++		return true;
++
++	dev_err(dev, "IPv%c %s%s table region size 0x%02x, expected 0x%02x\n",
++		ipv6 ? '6' : '4', hashed ? "hashed " : "",
++		route ? "route" : "filter", mem->size, size);
++
++	return false;
++}
++
++/* Verify the filter and route table memory regions are the expected size */
++bool ipa_table_valid(struct ipa *ipa)
++{
++	bool valid = true;
++
++	valid = valid && ipa_table_valid_one(ipa, false, false, false);
++	valid = valid && ipa_table_valid_one(ipa, false, false, true);
++	valid = valid && ipa_table_valid_one(ipa, false, true, false);
++	valid = valid && ipa_table_valid_one(ipa, false, true, true);
++	valid = valid && ipa_table_valid_one(ipa, true, false, false);
++	valid = valid && ipa_table_valid_one(ipa, true, false, true);
++	valid = valid && ipa_table_valid_one(ipa, true, true, false);
++	valid = valid && ipa_table_valid_one(ipa, true, true, true);
++
++	return valid;
++}
++
++bool ipa_filter_map_valid(struct ipa *ipa, u32 filter_map)
++{
++	struct device *dev = &ipa->pdev->dev;
++	u32 count;
++
++	if (!filter_map) {
++		dev_err(dev, "at least one filtering endpoint is required\n");
++
++		return false;
++	}
++
++	count = hweight32(filter_map);
++	if (count > IPA_FILTER_COUNT_MAX) {
++		dev_err(dev, "too many filtering endpoints (%u, max %u)\n",
++			count, IPA_FILTER_COUNT_MAX);
++
++		return false;
++	}
 +
 +	return true;
 +}
 +
-+/* Release previously-reserved TRE entries to a channel */
-+static void
-+gsi_trans_tre_release(struct gsi_trans_info *trans_info, u32 tre_count)
++#else /* !IPA_VALIDATE */
++static void ipa_table_validate_build(void)
++
 +{
-+	atomic_add(tre_count, &trans_info->tre_avail);
 +}
 +
-+/* Allocate a GSI transaction on a channel */
-+struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
-+					  u32 tre_count,
-+					  enum dma_data_direction direction)
++#endif /* !IPA_VALIDATE */
++
++/* Zero entry count means no table, so just return a 0 address */
++static dma_addr_t ipa_table_addr(struct ipa *ipa, bool filter_mask, u16 count)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_trans_info *trans_info;
-+	struct gsi_trans *trans;
++	u32 skip;
 +
-+	/* assert(tre_count <= gsi_channel_trans_tre_max(gsi, channel_id)); */
++	if (!count)
++		return 0;
 +
-+	trans_info = &channel->trans_info;
++/* assert(count <= max_t(u32, IPA_FILTER_COUNT_MAX, IPA_ROUTE_COUNT_MAX)); */
 +
-+	/* We reserve the TREs now, but consume them at commit time.
-+	 * If there aren't enough available, we're done.
-+	 */
-+	if (!gsi_trans_tre_reserve(trans_info, tre_count))
-+		return NULL;
++	/* Skip over the zero rule and possibly the filter mask */
++	skip = filter_mask ? 1 : 2;
 +
-+	/* Allocate and initialize non-zero fields in the the transaction */
-+	trans = gsi_trans_pool_alloc(&trans_info->pool, 1);
-+	trans->gsi = gsi;
-+	trans->channel_id = channel_id;
-+	trans->tre_count = tre_count;
-+	init_completion(&trans->completion);
-+
-+	/* Allocate the scatterlist and (if requested) info entries. */
-+	trans->sgl = gsi_trans_pool_alloc(&trans_info->sg_pool, tre_count);
-+	sg_init_marker(trans->sgl, tre_count);
-+
-+	trans->direction = direction;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	list_add_tail(&trans->links, &trans_info->alloc);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	refcount_set(&trans->refcount, 1);
-+
-+	return trans;
++	return ipa->table_addr + skip * sizeof(*ipa->table_virt);
 +}
 +
-+/* Free a previously-allocated transaction (used only in case of error) */
-+void gsi_trans_free(struct gsi_trans *trans)
++static void ipa_table_reset_add(struct gsi_trans *trans, bool filter,
++				u16 first, u16 count, const struct ipa_mem *mem)
 +{
-+	struct gsi_trans_info *trans_info;
++	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
++	dma_addr_t addr;
++	u32 offset;
++	u16 size;
 +
-+	if (!refcount_dec_and_test(&trans->refcount))
++	/* Nothing to do if the table memory regions is empty */
++	if (!mem->size)
 +		return;
 +
-+	trans_info = &trans->gsi->channel[trans->channel_id].trans_info;
++	if (filter)
++		first++;	/* skip over bitmap */
 +
-+	spin_lock_bh(&trans_info->spinlock);
++	offset = mem->offset + first * IPA_TABLE_ENTRY_SIZE;
++	size = count * IPA_TABLE_ENTRY_SIZE;
++	addr = ipa_table_addr(ipa, false, count);
 +
-+	list_del(&trans->links);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	ipa_gsi_trans_release(trans);
-+
-+	/* Releasing the reserved TREs implicitly frees the sgl[] and
-+	 * (if present) info[] arrays, plus the transaction itself.
-+	 */
-+	gsi_trans_tre_release(trans_info, trans->tre_count);
++	ipa_cmd_dma_shared_mem_add(trans, offset, size, addr, true);
 +}
 +
-+/* Add an immediate command to a transaction */
-+void gsi_trans_cmd_add(struct gsi_trans *trans, void *buf, u32 size,
-+		       dma_addr_t addr, enum dma_data_direction direction,
-+		       enum ipa_cmd_opcode opcode)
-+{
-+	struct ipa_cmd_info *info;
-+	u32 which = trans->used++;
-+	struct scatterlist *sg;
-+
-+	/* assert(which < trans->tre_count); */
-+
-+	/* Set the page information for the buffer.  We also need to fill in
-+	 * the DMA address for the buffer (something dma_map_sg() normally
-+	 * does).
-+	 */
-+	sg = &trans->sgl[which];
-+
-+	sg_set_buf(sg, buf, size);
-+	sg_dma_address(sg) = addr;
-+
-+	info = &trans->info[which];
-+	info->opcode = opcode;
-+	info->direction = direction;
-+}
-+
-+/* Add a page transfer to a transaction.  It will fill the only TRE. */
-+int gsi_trans_page_add(struct gsi_trans *trans, struct page *page, u32 size,
-+		       u32 offset)
-+{
-+	struct scatterlist *sg = &trans->sgl[0];
-+	int ret;
-+
-+	/* assert(trans->tre_count == 1); */
-+	/* assert(!trans->used); */
-+
-+	sg_set_page(sg, page, size, offset);
-+	ret = dma_map_sg(trans->gsi->dev, sg, 1, trans->direction);
-+	if (!ret)
-+		return -ENOMEM;
-+
-+	trans->used++;	/* Transaction now owns the (DMA mapped) page */
-+
-+	return 0;
-+}
-+
-+/* Add an SKB transfer to a transaction.  No other TREs will be used. */
-+int gsi_trans_skb_add(struct gsi_trans *trans, struct sk_buff *skb)
-+{
-+	struct scatterlist *sg = &trans->sgl[0];
-+	u32 used;
-+	int ret;
-+
-+	/* assert(trans->tre_count == 1); */
-+	/* assert(!trans->used); */
-+
-+	/* skb->len will not be 0 (checked early) */
-+	ret = skb_to_sgvec(skb, sg, 0, skb->len);
-+	if (ret < 0)
-+		return ret;
-+	used = ret;
-+
-+	ret = dma_map_sg(trans->gsi->dev, sg, used, trans->direction);
-+	if (!ret)
-+		return -ENOMEM;
-+
-+	trans->used += used;	/* Transaction now owns the (DMA mapped) skb */
-+
-+	return 0;
-+}
-+
-+/* Compute the length/opcode value to use for a TRE */
-+static __le16 gsi_tre_len_opcode(enum ipa_cmd_opcode opcode, u32 len)
-+{
-+	return opcode == IPA_CMD_NONE ? cpu_to_le16((u16)len)
-+				      : cpu_to_le16((u16)opcode);
-+}
-+
-+/* Compute the flags value to use for a given TRE */
-+static __le32 gsi_tre_flags(bool last_tre, bool bei, enum ipa_cmd_opcode opcode)
-+{
-+	enum gsi_tre_type tre_type;
-+	u32 tre_flags;
-+
-+	tre_type = opcode == IPA_CMD_NONE ? GSI_RE_XFER : GSI_RE_IMMD_CMD;
-+	tre_flags = u32_encode_bits(tre_type, TRE_FLAGS_TYPE_FMASK);
-+
-+	/* Last TRE contains interrupt flags */
-+	if (last_tre) {
-+		/* All transactions end in a transfer completion interrupt */
-+		tre_flags |= TRE_FLAGS_IEOT_FMASK;
-+		/* Don't interrupt when outbound commands are acknowledged */
-+		if (bei)
-+			tre_flags |= TRE_FLAGS_BEI_FMASK;
-+	} else {	/* All others indicate there's more to come */
-+		tre_flags |= TRE_FLAGS_CHAIN_FMASK;
-+	}
-+
-+	return cpu_to_le32(tre_flags);
-+}
-+
-+static void gsi_trans_tre_fill(struct gsi_tre *dest_tre, dma_addr_t addr,
-+			       u32 len, bool last_tre, bool bei,
-+			       enum ipa_cmd_opcode opcode)
-+{
-+	struct gsi_tre tre;
-+
-+	tre.addr = cpu_to_le64(addr);
-+	tre.len_opcode = gsi_tre_len_opcode(opcode, len);
-+	tre.reserved = 0;
-+	tre.flags = gsi_tre_flags(last_tre, bei, opcode);
-+
-+	/* ARM64 can write 16 bytes as a unit with a single instruction.
-+	 * Doing the assignment this way is an attempt to make that happen.
-+	 */
-+	*dest_tre = tre;
-+}
-+
-+/**
-+ * __gsi_trans_commit() - Common GSI transaction commit code
-+ * @trans:	Transaction to commit
-+ * @ring_db:	Whether to tell the hardware about these queued transfers
-+ *
-+ * Formats channel ring TRE entries based on the content of the scatterlist.
-+ * Maps a transaction pointer to the last ring entry used for the transaction,
-+ * so it can be recovered when it completes.  Moves the transaction to the
-+ * pending list.  Finally, updates the channel ring pointer and optionally
-+ * rings the doorbell.
++/* Reset entries in a single filter table belonging to either the AP or
++ * modem to refer to the zero entry.  The memory region supplied will be
++ * for the IPv4 and IPv6 non-hashed and hashed filter tables.
 + */
-+static void __gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
++static int
++ipa_filter_reset_table(struct ipa *ipa, const struct ipa_mem *mem, bool modem)
 +{
-+	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
-+	struct gsi_ring *ring = &channel->tre_ring;
-+	enum ipa_cmd_opcode opcode = IPA_CMD_NONE;
-+	bool bei = channel->toward_ipa;
-+	struct ipa_cmd_info *info;
-+	struct gsi_tre *dest_tre;
-+	struct scatterlist *sg;
-+	u32 byte_count = 0;
-+	u32 avail;
-+	u32 i;
-+
-+	/* assert(trans->used > 0); */
-+
-+	/* Consume the entries.  If we cross the end of the ring while
-+	 * filling them we'll switch to the beginning to finish.
-+	 * If there is no info array we're doing a simple data
-+	 * transfer request, whose opcode is IPA_CMD_NONE.
-+	 */
-+	info = trans->info ? &trans->info[0] : NULL;
-+	avail = ring->count - ring->index % ring->count;
-+	dest_tre = gsi_ring_virt(ring, ring->index);
-+	for_each_sg(trans->sgl, sg, trans->used, i) {
-+		bool last_tre = i == trans->used - 1;
-+		dma_addr_t addr = sg_dma_address(sg);
-+		u32 len = sg_dma_len(sg);
-+
-+		byte_count += len;
-+		if (!avail--)
-+			dest_tre = gsi_ring_virt(ring, 0);
-+		if (info)
-+			opcode = info++->opcode;
-+
-+		gsi_trans_tre_fill(dest_tre, addr, len, last_tre, bei, opcode);
-+		dest_tre++;
-+	}
-+	ring->index += trans->used;
-+
-+	if (channel->toward_ipa) {
-+		/* We record TX bytes when they are sent */
-+		trans->len = byte_count;
-+		trans->trans_count = channel->trans_count;
-+		trans->byte_count = channel->byte_count;
-+		channel->trans_count++;
-+		channel->byte_count += byte_count;
-+	}
-+
-+	/* Associate the last TRE with the transaction */
-+	gsi_channel_trans_map(channel, ring->index - 1, trans);
-+
-+	gsi_trans_move_pending(trans);
-+
-+	/* Ring doorbell if requested, or if all TREs are allocated */
-+	if (ring_db || !atomic_read(&channel->trans_info.tre_avail)) {
-+		/* Report what we're handing off to hardware for TX channels */
-+		if (channel->toward_ipa)
-+			gsi_channel_tx_queued(channel);
-+		gsi_channel_doorbell(channel);
-+	}
-+}
-+
-+/* Commit a GSI transaction */
-+void gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
-+{
-+	if (trans->used)
-+		__gsi_trans_commit(trans, ring_db);
-+	else
-+		gsi_trans_free(trans);
-+}
-+
-+/* Commit a GSI transaction and wait for it to complete */
-+void gsi_trans_commit_wait(struct gsi_trans *trans)
-+{
-+	if (!trans->used)
-+		goto out_trans_free;
-+
-+	refcount_inc(&trans->refcount);
-+
-+	__gsi_trans_commit(trans, true);
-+
-+	wait_for_completion(&trans->completion);
-+
-+out_trans_free:
-+	gsi_trans_free(trans);
-+}
-+
-+/* Commit a GSI transaction and wait for it to complete, with timeout */
-+int gsi_trans_commit_wait_timeout(struct gsi_trans *trans,
-+				  unsigned long timeout)
-+{
-+	unsigned long timeout_jiffies = msecs_to_jiffies(timeout);
-+	unsigned long remaining = 1;	/* In case of empty transaction */
-+
-+	if (!trans->used)
-+		goto out_trans_free;
-+
-+	refcount_inc(&trans->refcount);
-+
-+	__gsi_trans_commit(trans, true);
-+
-+	remaining = wait_for_completion_timeout(&trans->completion,
-+						timeout_jiffies);
-+out_trans_free:
-+	gsi_trans_free(trans);
-+
-+	return remaining ? 0 : -ETIMEDOUT;
-+}
-+
-+/* Process the completion of a transaction; called while polling */
-+void gsi_trans_complete(struct gsi_trans *trans)
-+{
-+	/* If the entire SGL was mapped when added, unmap it now */
-+	if (trans->direction != DMA_NONE)
-+		dma_unmap_sg(trans->gsi->dev, trans->sgl, trans->used,
-+			     trans->direction);
-+
-+	ipa_gsi_trans_complete(trans);
-+
-+	complete(&trans->completion);
-+
-+	gsi_trans_free(trans);
-+}
-+
-+/* Cancel a channel's pending transactions */
-+void gsi_channel_trans_cancel_pending(struct gsi_channel *channel)
-+{
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
++	u32 ep_mask = ipa->filter_map;
++	u32 count = hweight32(ep_mask);
 +	struct gsi_trans *trans;
-+	bool cancelled;
++	enum gsi_ee_id ee_id;
 +
-+	/* channel->gsi->mutex is held by caller */
-+	spin_lock_bh(&trans_info->spinlock);
++	if (!mem->size)
++		return 0;
 +
-+	cancelled = !list_empty(&trans_info->pending);
-+	list_for_each_entry(trans, &trans_info->pending, links)
-+		trans->cancelled = true;
-+
-+	list_splice_tail_init(&trans_info->pending, &trans_info->complete);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	/* Schedule NAPI polling to complete the cancelled transactions */
-+	if (cancelled)
-+		napi_schedule(&channel->napi);
-+}
-+
-+/* Issue a command to read a single byte from a channel */
-+int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_ring *ring = &channel->tre_ring;
-+	struct gsi_trans_info *trans_info;
-+	struct gsi_tre *dest_tre;
-+
-+	trans_info = &channel->trans_info;
-+
-+	/* First reserve the TRE, if possible */
-+	if (!gsi_trans_tre_reserve(trans_info, 1))
++	trans = ipa_cmd_trans_alloc(ipa, count);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev,
++			"no transaction for %s filter reset\n",
++			modem ? "modem" : "AP");
 +		return -EBUSY;
++	}
 +
-+	/* Now fill the the reserved TRE and tell the hardware */
++	ee_id = modem ? GSI_EE_MODEM : GSI_EE_AP;
++	while (ep_mask) {
++		u32 endpoint_id = __ffs(ep_mask);
++		struct ipa_endpoint *endpoint;
 +
-+	dest_tre = gsi_ring_virt(ring, ring->index);
-+	gsi_trans_tre_fill(dest_tre, addr, 1, true, false, IPA_CMD_NONE);
++		ep_mask ^= BIT(endpoint_id);
 +
-+	ring->index++;
-+	gsi_channel_doorbell(channel);
++		endpoint = &ipa->endpoint[endpoint_id];
++		if (endpoint->ee_id != ee_id)
++			continue;
++
++		ipa_table_reset_add(trans, true, endpoint_id, 1, mem);
++	}
++
++	gsi_trans_commit_wait(trans);
 +
 +	return 0;
 +}
 +
-+/* Mark a gsi_trans_read_byte() request done */
-+void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id)
++/* Theoretically, each filter table could have more filter slots to
++ * update than the maximum number of commands in a transaction.  So
++ * we do each table separately.
++ */
++static int ipa_filter_reset(struct ipa *ipa, bool modem)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+
-+	gsi_trans_tre_release(&channel->trans_info, 1);
-+}
-+
-+/* Initialize a channel's GSI transaction info */
-+int gsi_channel_trans_init(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	struct gsi_trans_info *trans_info;
-+	u32 tre_max;
 +	int ret;
 +
-+	/* Ensure the size of a channel element is what's expected */
-+	BUILD_BUG_ON(sizeof(struct gsi_tre) != GSI_RING_ELEMENT_SIZE);
-+
-+	/* The map array is used to determine what transaction is associated
-+	 * with a TRE that the hardware reports has completed.  We need one
-+	 * map entry per TRE.
-+	 */
-+	trans_info = &channel->trans_info;
-+	trans_info->map = kcalloc(channel->tre_count, sizeof(*trans_info->map),
-+				  GFP_KERNEL);
-+	if (!trans_info->map)
-+		return -ENOMEM;
-+
-+	/* We can't use more TREs than there are available in the ring.
-+	 * This limits the number of transactions that can be oustanding.
-+	 * Worst case is one TRE per transaction (but we actually limit
-+	 * it to something a little less than that).  We allocate resources
-+	 * for transactions (including transaction structures) based on
-+	 * this maximum number.
-+	 */
-+	tre_max = gsi_channel_tre_max(channel->gsi, channel_id);
-+
-+	/* Transactions are allocated one at a time. */
-+	ret = gsi_trans_pool_init(&trans_info->pool, sizeof(struct gsi_trans),
-+				  tre_max, 1);
++	ret = ipa_filter_reset_table(ipa, &ipa->mem[IPA_MEM_V4_FILTER], modem);
 +	if (ret)
-+		goto err_kfree;
++		return ret;
 +
-+	/* A transaction uses a scatterlist array to represent the data
-+	 * transfers implemented by the transaction.  Each scatterlist
-+	 * element is used to fill a single TRE when the transaction is
-+	 * committed.  So we need as many scatterlist elements as the
-+	 * maximum number of TREs that can be outstanding.
-+	 *
-+	 * All TREs in a transaction must fit within the channel's TLV FIFO.
-+	 * A transaction on a channel can allocate as many TREs as that but
-+	 * no more.
-+	 */
-+	ret = gsi_trans_pool_init(&trans_info->sg_pool,
-+				  sizeof(struct scatterlist),
-+				  tre_max, channel->tlv_count);
++	ret = ipa_filter_reset_table(ipa, &ipa->mem[IPA_MEM_V4_FILTER_HASHED],
++				     modem);
 +	if (ret)
-+		goto err_trans_pool_exit;
++		return ret;
 +
-+	/* Finally, the tre_avail field is what ultimately limits the number
-+	 * of outstanding transactions and their resources.  A transaction
-+	 * allocation succeeds only if the TREs available are sufficient for
-+	 * what the transaction might need.  Transaction resource pools are
-+	 * sized based on the maximum number of outstanding TREs, so there
-+	 * will always be resources available if there are TREs available.
-+	 */
-+	atomic_set(&trans_info->tre_avail, tre_max);
-+
-+	spin_lock_init(&trans_info->spinlock);
-+	INIT_LIST_HEAD(&trans_info->alloc);
-+	INIT_LIST_HEAD(&trans_info->pending);
-+	INIT_LIST_HEAD(&trans_info->complete);
-+	INIT_LIST_HEAD(&trans_info->polled);
-+
-+	return 0;
-+
-+err_trans_pool_exit:
-+	gsi_trans_pool_exit(&trans_info->pool);
-+err_kfree:
-+	kfree(trans_info->map);
-+
-+	dev_err(gsi->dev, "error %d initializing channel %u transactions\n",
-+		channel_id);
++	ret = ipa_filter_reset_table(ipa, &ipa->mem[IPA_MEM_V6_FILTER], modem);
++	if (ret)
++		return ret;
++	ret = ipa_filter_reset_table(ipa, &ipa->mem[IPA_MEM_V6_FILTER_HASHED],
++				     modem);
 +
 +	return ret;
 +}
 +
-+/* Inverse of gsi_channel_trans_init() */
-+void gsi_channel_trans_exit(struct gsi_channel *channel)
++/* The AP routes and modem routes are each contiguous within the
++ * table.  We can update each table with a single command, and we
++ * won't exceed the per-transaction command limit.
++ * */
++static int ipa_route_reset(struct ipa *ipa, bool modem)
 +{
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
++	struct gsi_trans *trans;
++	u16 first;
++	u16 count;
 +
-+	gsi_trans_pool_exit(&trans_info->sg_pool);
-+	gsi_trans_pool_exit(&trans_info->pool);
-+	kfree(trans_info->map);
++	trans = ipa_cmd_trans_alloc(ipa, 4);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev,
++			"no transaction for %s route reset\n",
++			modem ? "modem" : "AP");
++		return -EBUSY;
++	}
++
++	if (modem) {
++		first = IPA_ROUTE_MODEM_MIN;
++		count = IPA_ROUTE_MODEM_COUNT;
++	} else {
++		first = IPA_ROUTE_AP_MIN;
++		count = IPA_ROUTE_AP_COUNT;
++	}
++
++	ipa_table_reset_add(trans, false, first, count,
++			    &ipa->mem[IPA_MEM_V4_ROUTE]);
++	ipa_table_reset_add(trans, false, first, count,
++			    &ipa->mem[IPA_MEM_V4_ROUTE_HASHED]);
++
++	ipa_table_reset_add(trans, false, first, count,
++			    &ipa->mem[IPA_MEM_V6_ROUTE]);
++	ipa_table_reset_add(trans, false, first, count,
++			    &ipa->mem[IPA_MEM_V6_ROUTE_HASHED]);
++
++	gsi_trans_commit_wait(trans);
++
++	return 0;
 +}
-diff --git a/drivers/net/ipa/gsi_trans.h b/drivers/net/ipa/gsi_trans.h
++
++void ipa_table_reset(struct ipa *ipa, bool modem)
++{
++	struct device *dev = &ipa->pdev->dev;
++	const char *ee_name;
++	int ret;
++
++	ee_name = modem ? "modem" : "AP";
++
++	/* Report errors, but reset filter and route tables */
++	ret = ipa_filter_reset(ipa, modem);
++	if (ret)
++		dev_err(dev, "error %d resetting filter table for %s\n",
++				ret, ee_name);
++
++	ret = ipa_route_reset(ipa, modem);
++	if (ret)
++		dev_err(dev, "error %d resetting route table for %s\n",
++				ret, ee_name);
++}
++
++int ipa_table_hash_flush(struct ipa *ipa)
++{
++	u32 offset = ipa_reg_filt_rout_hash_flush_offset(ipa->version);
++	struct gsi_trans *trans;
++	u32 val;
++
++	/* IPA version 4.2 does not support hashed tables */
++	if (ipa->version == IPA_VERSION_4_2)
++		return 0;
++
++	trans = ipa_cmd_trans_alloc(ipa, 1);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev, "no transaction for hash flush\n");
++		return -EBUSY;
++	}
++
++	val = IPV4_FILTER_HASH_FLUSH | IPV6_FILTER_HASH_FLUSH;
++	val |= IPV6_ROUTER_HASH_FLUSH | IPV4_ROUTER_HASH_FLUSH;
++
++	ipa_cmd_register_write_add(trans, offset, val, val, false);
++
++	gsi_trans_commit_wait(trans);
++
++	return 0;
++}
++
++static void ipa_table_init_add(struct gsi_trans *trans, bool filter,
++			       enum ipa_cmd_opcode opcode,
++			       const struct ipa_mem *mem,
++			       const struct ipa_mem *hash_mem)
++{
++	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
++	dma_addr_t hash_addr;
++	dma_addr_t addr;
++	u16 hash_count;
++	u16 hash_size;
++	u16 count;
++	u16 size;
++
++	/* The number of filtering endpoints determines number of entries
++	 * in the filter table.  The hashed and non-hashed filter table
++	 * will have the same number of entries.  The size of the route
++	 * table region determines the number of entries it has.
++	 */
++	if (filter) {
++		count = hweight32(ipa->filter_map);
++		hash_count = hash_mem->size ? count : 0;
++	} else {
++		count = mem->size / IPA_TABLE_ENTRY_SIZE;
++		hash_count = hash_mem->size / IPA_TABLE_ENTRY_SIZE;
++	}
++	size = count * IPA_TABLE_ENTRY_SIZE;
++	hash_size = hash_count * IPA_TABLE_ENTRY_SIZE;
++
++	addr = ipa_table_addr(ipa, filter, count);
++	hash_addr = ipa_table_addr(ipa, filter, hash_count);
++
++	ipa_cmd_table_init_add(trans, opcode, size, mem->offset, addr,
++			       hash_size, hash_mem->offset, hash_addr);
++}
++
++int ipa_table_setup(struct ipa *ipa)
++{
++	struct gsi_trans *trans;
++
++	trans = ipa_cmd_trans_alloc(ipa, 4);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev, "no transaction for table setup\n");
++		return -EBUSY;
++	}
++
++	ipa_table_init_add(trans, false, IPA_CMD_IP_V4_ROUTING_INIT,
++			   &ipa->mem[IPA_MEM_V4_ROUTE],
++			   &ipa->mem[IPA_MEM_V4_ROUTE_HASHED]);
++
++	ipa_table_init_add(trans, false, IPA_CMD_IP_V6_ROUTING_INIT,
++			   &ipa->mem[IPA_MEM_V6_ROUTE],
++			   &ipa->mem[IPA_MEM_V6_ROUTE_HASHED]);
++
++	ipa_table_init_add(trans, true, IPA_CMD_IP_V4_FILTER_INIT,
++			   &ipa->mem[IPA_MEM_V4_FILTER],
++			   &ipa->mem[IPA_MEM_V4_FILTER_HASHED]);
++
++	ipa_table_init_add(trans, true, IPA_CMD_IP_V6_FILTER_INIT,
++			   &ipa->mem[IPA_MEM_V6_FILTER],
++			   &ipa->mem[IPA_MEM_V6_FILTER_HASHED]);
++
++	gsi_trans_commit_wait(trans);
++
++	return 0;
++}
++
++void ipa_table_teardown(struct ipa *ipa)
++{
++	/* Nothing to do */	/* XXX Maybe reset the tables? */
++}
++
++/**
++ * ipa_filter_tuple_zero() - Zero an endpoint's hashed filter tuple
++ * @endpoint_id:	Endpoint whose filter hash tuple should be zeroed
++ *
++ * Endpoint must be for the AP (not modem) and support filtering. Updates
++ * the filter hash values without changing route ones.
++ */
++static void ipa_filter_tuple_zero(struct ipa_endpoint *endpoint)
++{
++	u32 endpoint_id = endpoint->endpoint_id;
++	u32 offset;
++	u32 val;
++
++	offset = IPA_REG_ENDP_FILTER_ROUTER_HSH_CFG_N_OFFSET(endpoint_id);
++
++	val = ioread32(endpoint->ipa->reg_virt + offset);
++
++	/* Zero all filter-related fields, preserving the rest */
++	u32_replace_bits(val, 0, IPA_REG_ENDP_FILTER_HASH_MSK_ALL);
++
++	iowrite32(val, endpoint->ipa->reg_virt + offset);
++}
++
++static void ipa_filter_config(struct ipa *ipa, bool modem)
++{
++	enum gsi_ee_id ee_id = modem ? GSI_EE_MODEM : GSI_EE_AP;
++	u32 ep_mask = ipa->filter_map;
++
++	/* IPA version 4.2 has no hashed route tables */
++	if (ipa->version == IPA_VERSION_4_2)
++		return;
++
++	while (ep_mask) {
++		u32 endpoint_id = __ffs(ep_mask);
++		struct ipa_endpoint *endpoint;
++
++		ep_mask ^= BIT(endpoint_id);
++
++		endpoint = &ipa->endpoint[endpoint_id];
++		if (endpoint->ee_id == ee_id)
++			ipa_filter_tuple_zero(endpoint);
++	}
++}
++
++static void ipa_filter_deconfig(struct ipa *ipa, bool modem)
++{
++	/* Nothing to do */
++}
++
++static bool ipa_route_id_modem(u32 route_id)
++{
++	return route_id >= IPA_ROUTE_MODEM_MIN &&
++		route_id <= IPA_ROUTE_MODEM_MIN + IPA_ROUTE_MODEM_COUNT - 1;
++}
++
++/**
++ * ipa_route_tuple_zero() - Zero a hashed route table entry tuple
++ * @route_id:	Route table entry whose hash tuple should be zeroed
++ *
++ * Updates the route hash values without changing filter ones.
++ */
++static void ipa_route_tuple_zero(struct ipa *ipa, u32 route_id)
++{
++	u32 offset = IPA_REG_ENDP_FILTER_ROUTER_HSH_CFG_N_OFFSET(route_id);
++	u32 val;
++
++	val = ioread32(ipa->reg_virt + offset);
++
++	/* Zero all route-related fields, preserving the rest */
++	u32_replace_bits(val, 0, IPA_REG_ENDP_ROUTER_HASH_MSK_ALL);
++
++	iowrite32(val, ipa->reg_virt + offset);
++}
++
++static void ipa_route_config(struct ipa *ipa, bool modem)
++{
++	u32 route_id;
++
++	/* IPA version 4.2 has no hashed route tables */
++	if (ipa->version == IPA_VERSION_4_2)
++		return;
++
++	for (route_id = 0; route_id < IPA_ROUTE_COUNT_MAX; route_id++)
++		if (ipa_route_id_modem(route_id) == modem)
++			ipa_route_tuple_zero(ipa, route_id);
++}
++
++static void ipa_route_deconfig(struct ipa *ipa, bool modem)
++{
++	/* Nothing to do */
++}
++
++void ipa_table_config(struct ipa *ipa)
++{
++	ipa_filter_config(ipa, false);
++	ipa_filter_config(ipa, true);
++	ipa_route_config(ipa, false);
++	ipa_route_config(ipa, true);
++}
++
++void ipa_table_deconfig(struct ipa *ipa)
++{
++	ipa_route_deconfig(ipa, true);
++	ipa_route_deconfig(ipa, false);
++	ipa_filter_deconfig(ipa, true);
++	ipa_filter_deconfig(ipa, false);
++}
++
++/*
++ * Initialize a coherent DMA allocation containing initialized filter and
++ * route table data.  This is used when initializing or resetting the IPA
++ * filter or route table.
++ *
++ * The first entry in a filter table contains a bitmap indicating which
++ * endpoints contain entries in the table.  In addition to that first entry,
++ * there are at most IPA_FILTER_COUNT_MAX entries that follow.  Filter table
++ * entries are 64 bits wide, and (other than the bitmap) contain the DMA
++ * address of a filter rule.  A "zero rule" indicates no filtering, and
++ * consists of 64 bits of zeroes.  When a filter table is initialized (or
++ * reset) its entries are made to refer to the zero rule.
++ *
++ * Each entry in a route table is the DMA address of a routing rule.  For
++ * routing there is also a 64-bit "zero rule" that means no routing, and
++ * when a route table is initialized or reset, its entries are made to refer
++ * to the zero rule.  The zero rule is shared for route and filter tables.
++ *
++ * Note that the IPA hardware requires a filter or route rule address to be
++ * aligned on a 128 byte boundary.  The coherent DMA buffer we allocate here
++ * has a minimum alignment, and we place the zero rule at the base of that
++ * allocated space.  In ipa_table_init() we verify the minimum DMA allocation
++ * meets our requirement.
++ *
++ *	     +-------------------+
++ *	 --> |     zero rule     |
++ *	/    |-------------------|
++ *	|    |     filter mask   |
++ *	|\   |-------------------|
++ *	| ---- zero rule address | \
++ *	|\   |-------------------|  |
++ *	| ---- zero rule address |  |	IPA_FILTER_COUNT_MAX
++ *	|    |-------------------|   >	or IPA_ROUTE_COUNT_MAX,
++ *	|	      ...	    |	whichever is greater
++ *	 \   |-------------------|  |
++ *	  ---- zero rule address | /
++ *	     +-------------------+
++ */
++int ipa_table_init(struct ipa *ipa)
++{
++	u32 count = max_t(u32, IPA_FILTER_COUNT_MAX, IPA_ROUTE_COUNT_MAX);
++	struct device *dev = &ipa->pdev->dev;
++	dma_addr_t addr;
++	__le64 le_addr;
++	__le64 *virt;
++	size_t size;
++
++	ipa_table_validate_build();
++
++	size = IPA_ZERO_RULE_SIZE + (1 + count) * IPA_TABLE_ENTRY_SIZE;
++	virt = dma_alloc_coherent(dev, size, &addr, GFP_KERNEL);
++	if (!virt)
++		return -ENOMEM;
++
++	ipa->table_virt = virt;
++	ipa->table_addr = addr;
++
++	/* First slot is the zero rule */
++	*virt++ = 0;
++
++	/* Next is the filter table bitmap.  The "soft" bitmap value
++	 * must be converted to the hardware representation by shifting
++	 * it left one position.  (Bit 0 repesents global filtering,
++	 * which is possible but not used.)
++	 */
++	*virt++ = cpu_to_le64((u64)ipa->filter_map << 1);
++
++	/* All the rest contain the DMA address of the zero rule */
++	le_addr = cpu_to_le64(addr);
++	while (count--)
++		*virt++ = le_addr;
++
++	return 0;
++}
++
++void ipa_table_exit(struct ipa *ipa)
++{
++	u32 count = max_t(u32, 1 + IPA_FILTER_COUNT_MAX, IPA_ROUTE_COUNT_MAX);
++	struct device *dev = &ipa->pdev->dev;
++	size_t size;
++
++	size = IPA_ZERO_RULE_SIZE + (1 + count) * IPA_TABLE_ENTRY_SIZE;
++
++	dma_free_coherent(dev, size, ipa->table_virt, ipa->table_addr);
++	ipa->table_addr = 0;
++	ipa->table_virt = NULL;
++}
+diff --git a/drivers/net/ipa/ipa_table.h b/drivers/net/ipa/ipa_table.h
 new file mode 100644
-index 000000000000..1477fc15b30a
+index 000000000000..64ea0221441a
 --- /dev/null
-+++ b/drivers/net/ipa/gsi_trans.h
-@@ -0,0 +1,226 @@
++++ b/drivers/net/ipa/ipa_table.h
+@@ -0,0 +1,103 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019-2020 Linaro Ltd.
 + */
-+#ifndef _GSI_TRANS_H_
-+#define _GSI_TRANS_H_
++#ifndef _IPA_TABLE_H_
++#define _IPA_TABLE_H_
 +
 +#include <linux/types.h>
-+#include <linux/refcount.h>
-+#include <linux/completion.h>
-+#include <linux/dma-direction.h>
 +
-+#include "ipa_cmd.h"
++struct ipa;
 +
-+struct scatterlist;
-+struct device;
-+struct sk_buff;
++/* The size of a filter or route table entry */
++#define IPA_TABLE_ENTRY_SIZE	sizeof(__le64)	/* Holds a physical address */
 +
-+struct gsi;
-+struct gsi_trans;
-+struct gsi_trans_pool;
++/* The maximum number of filter table entries (IPv4, IPv6; hashed or not) */
++#define IPA_FILTER_COUNT_MAX	14
++
++/* The maximum number of route table entries (IPv4, IPv6; hashed or not) */
++#define IPA_ROUTE_COUNT_MAX	15
++
++#ifdef IPA_VALIDATE
 +
 +/**
-+ * struct gsi_trans - a GSI transaction
++ * ipa_table_valid() - Validate route and filter table memory regions
++ * @ipa:	IPA pointer
++
++ * @Return:	true if all regions are valid, false otherwise
++ */
++bool ipa_table_valid(struct ipa *ipa);
++
++/**
++ * ipa_filter_map_valid() - Validate a filter table endpoint bitmap
++ * @ipa:	IPA pointer
 + *
-+ * Most fields in this structure for internal use by the transaction core code:
-+ * @links:	Links for channel transaction lists by state
-+ * @gsi:	GSI pointer
-+ * @channel_id: Channel number transaction is associated with
-+ * @cancelled:	If set by the core code, transaction was cancelled
-+ * @tre_count:	Number of TREs reserved for this transaction
-+ * @used:	Number of TREs *used* (could be less than tre_count)
-+ * @len:	Total # of transfer bytes represented in sgl[] (set by core)
-+ * @data:	Preserved but not touched by the core transaction code
-+ * @sgl:	An array of scatter/gather entries managed by core code
-+ * @info:	Array of command information structures (command channel)
-+ * @direction:	DMA transfer direction (DMA_NONE for commands)
-+ * @refcount:	Reference count used for destruction
-+ * @completion:	Completed when the transaction completes
-+ * @byte_count:	TX channel byte count recorded when transaction committed
-+ * @trans_count: Channel transaction count when committed (for BQL accounting)
-+ *
-+ * The size used for some fields in this structure were chosen to ensure
-+ * the full structure size is no larger than 128 bytes.
++ * @Return:	true if all regions are valid, false otherwise
 + */
-+struct gsi_trans {
-+	struct list_head links;		/* gsi_channel lists */
++bool ipa_filter_map_valid(struct ipa *ipa, u32 filter_mask);
 +
-+	struct gsi *gsi;
-+	u8 channel_id;
++#else /* !IPA_VALIDATE */
 +
-+	bool cancelled;			/* true if transaction was cancelled */
++static inline bool ipa_table_valid(struct ipa *ipa)
++{
++	return true;
++}
 +
-+	u8 tre_count;			/* # TREs requested */
-+	u8 used;			/* # entries used in sgl[] */
-+	u32 len;			/* total # bytes across sgl[] */
++static inline bool ipa_filter_map_valid(struct ipa *ipa, u32 filter_mask)
++{
++	return true;
++}
 +
-+	void *data;
-+	struct scatterlist *sgl;
-+	struct ipa_cmd_info *info;	/* array of entries, or null */
-+	enum dma_data_direction direction;
-+
-+	refcount_t refcount;
-+	struct completion completion;
-+
-+	u64 byte_count;			/* channel byte_count when committed */
-+	u64 trans_count;		/* channel trans_count when committed */
-+};
++#endif /* !IPA_VALIDATE */
 +
 +/**
-+ * gsi_trans_pool_init() - Initialize a pool of structures for transactions
-+ * @gsi:	GSI pointer
-+ * @size:	Size of elements in the pool
-+ * @count:	Minimum number of elements in the pool
-+ * @max_alloc:	Maximum number of elements allocated at a time from pool
-+ *
-+ * @Return:	0 if successful, or a negative error code
++ * ipa_table_reset() - Reset filter and route tables entries to "none"
++ * @ipa:	IPA pointer
++ * @modem:	Whether to reset modem or AP entries
 + */
-+int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
-+			u32 max_alloc);
++void ipa_table_reset(struct ipa *ipa, bool modem);
 +
 +/**
-+ * gsi_trans_pool_alloc() - Allocate one or more elements from a pool
-+ * @pool:	Pool pointer
-+ * @count:	Number of elements to allocate from the pool
-+ *
-+ * @Return:	Virtual address of element(s) allocated from the pool
++ * ipa_table_hash_flush() - Synchronize hashed filter and route updates
++ * @ipa:	IPA pointer
 + */
-+void *gsi_trans_pool_alloc(struct gsi_trans_pool *pool, u32 count);
++int ipa_table_hash_flush(struct ipa *ipa);
 +
 +/**
-+ * gsi_trans_pool_exit() - Inverse of gsi_trans_pool_init()
-+ * @pool:	Pool pointer
++ * ipa_table_setup() - Set up filter and route tables
++ * @ipa:	IPA pointer
 + */
-+void gsi_trans_pool_exit(struct gsi_trans_pool *pool);
++int ipa_table_setup(struct ipa *ipa);
 +
 +/**
-+ * gsi_trans_pool_init_dma() - Initialize a pool of DMA-able structures
-+ * @dev:	Device used for DMA
-+ * @pool:	Pool pointer
-+ * @size:	Size of elements in the pool
-+ * @count:	Minimum number of elements in the pool
-+ * @max_alloc:	Maximum number of elements allocated at a time from pool
-+ *
-+ * @Return:	0 if successful, or a negative error code
-+ *
-+ * Structures in this pool reside in DMA-coherent memory.
++ * ipa_table_teardown() - Inverse of ipa_table_setup()
++ * @ipa:	IPA pointer
 + */
-+int gsi_trans_pool_init_dma(struct device *dev, struct gsi_trans_pool *pool,
-+			    size_t size, u32 count, u32 max_alloc);
++void ipa_table_teardown(struct ipa *ipa);
 +
 +/**
-+ * gsi_trans_pool_alloc_dma() - Allocate an element from a DMA pool
-+ * @pool:	DMA pool pointer
-+ * @addr:	DMA address "handle" associated with the allocation
-+ *
-+ * @Return:	Virtual address of element allocated from the pool
-+ *
-+ * Only one element at a time may be allocated from a DMA pool.
++ * ipa_table_config() - Configure filter and route tables
++ * @ipa:	IPA pointer
 + */
-+void *gsi_trans_pool_alloc_dma(struct gsi_trans_pool *pool, dma_addr_t *addr);
++void ipa_table_config(struct ipa *ipa);
 +
 +/**
-+ * gsi_trans_pool_exit() - Inverse of gsi_trans_pool_init()
-+ * @pool:	Pool pointer
++ * ipa_table_deconfig() - Inverse of ipa_table_config()
++ * @ipa:	IPA pointer
 + */
-+void gsi_trans_pool_exit_dma(struct device *dev, struct gsi_trans_pool *pool);
++void ipa_table_deconfig(struct ipa *ipa);
 +
 +/**
-+ * gsi_channel_trans_alloc() - Allocate a GSI transaction on a channel
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel the transaction is associated with
-+ * @tre_count:	Number of elements in the transaction
-+ * @direction:	DMA direction for entire SGL (or DMA_NONE)
-+ *
-+ * @Return:	A GSI transaction structure, or a null pointer if all
-+ *		available transactions are in use
++ * ipa_table_init() - Do early initialization of filter and route tables
++ * @ipa:	IPA pointer
 + */
-+struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
-+					  u32 tre_count,
-+					  enum dma_data_direction direction);
++int ipa_table_init(struct ipa *ipa);
 +
 +/**
-+ * gsi_trans_free() - Free a previously-allocated GSI transaction
-+ * @trans:	Transaction to be freed
++ * ipa_table_exit() - Inverse of ipa_table_init()
++ * @ipa:	IPA pointer
 + */
-+void gsi_trans_free(struct gsi_trans *trans);
++void ipa_table_exit(struct ipa *ipa);
 +
-+/**
-+ * gsi_trans_cmd_add() - Add an immediate command to a transaction
-+ * @trans:	Transaction
-+ * @buf:	Buffer pointer for command payload
-+ * @size:	Number of bytes in buffer
-+ * @addr:	DMA address for payload
-+ * @direction:	Direction of DMA transfer (or DMA_NONE if none required)
-+ * @opcode:	IPA immediate command opcode
-+ */
-+void gsi_trans_cmd_add(struct gsi_trans *trans, void *buf, u32 size,
-+		       dma_addr_t addr, enum dma_data_direction direction,
-+		       enum ipa_cmd_opcode opcode);
-+
-+/**
-+ * gsi_trans_page_add() - Add a page transfer to a transaction
-+ * @trans:	Transaction
-+ * @page:	Page pointer
-+ * @size:	Number of bytes (starting at offset) to transfer
-+ * @offset:	Offset within page for start of transfer
-+ */
-+int gsi_trans_page_add(struct gsi_trans *trans, struct page *page, u32 size,
-+		       u32 offset);
-+
-+/**
-+ * gsi_trans_skb_add() - Add a socket transfer to a transaction
-+ * @trans:	Transaction
-+ * @skb:	Socket buffer for transfer (outbound)
-+ *
-+ * @Return:	0, or -EMSGSIZE if socket data won't fit in transaction.
-+ */
-+int gsi_trans_skb_add(struct gsi_trans *trans, struct sk_buff *skb);
-+
-+/**
-+ * gsi_trans_commit() - Commit a GSI transaction
-+ * @trans:	Transaction to commit
-+ * @ring_db:	Whether to tell the hardware about these queued transfers
-+ */
-+void gsi_trans_commit(struct gsi_trans *trans, bool ring_db);
-+
-+/**
-+ * gsi_trans_commit_wait() - Commit a GSI transaction and wait for it
-+ *			     to complete
-+ * @trans:	Transaction to commit
-+ */
-+void gsi_trans_commit_wait(struct gsi_trans *trans);
-+
-+/**
-+ * gsi_trans_commit_wait_timeout() - Commit a GSI transaction and wait for
-+ *				     it to complete, with timeout
-+ * @trans:	Transaction to commit
-+ * @timeout:	Timeout period (in milliseconds)
-+ */
-+int gsi_trans_commit_wait_timeout(struct gsi_trans *trans,
-+				  unsigned long timeout);
-+
-+/**
-+ * gsi_trans_read_byte() - Issue a single byte read TRE on a channel
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel on which to read a byte
-+ * @addr:	DMA address into which to transfer the one byte
-+ *
-+ * This is not a transaction operation at all.  It's defined here because
-+ * it needs to be done in coordination with other transaction activity.
-+ */
-+int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr);
-+
-+/**
-+ * gsi_trans_read_byte_done() - Clean up after a single byte read TRE
-+ * @gsi:	GSI pointer
-+ * @channel_id:	Channel on which byte was read
-+ *
-+ * This function needs to be called to signal that the work related
-+ * to reading a byte initiated by gsi_trans_read_byte() is complete.
-+ */
-+void gsi_trans_read_byte_done(struct gsi *gsi, u32 channel_id);
-+
-+#endif /* _GSI_TRANS_H_ */
++#endif /* _IPA_TABLE_H_ */
 -- 
 2.20.1
 
