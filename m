@@ -2,143 +2,90 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0654C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C667C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817B8246A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nHZ4Y7Yb"
+	by mail.kernel.org (Postfix) with ESMTP id 3E49424691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgB1AX2 (ORCPT
+        id S1730156AbgB1A0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:23:28 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46478 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730135AbgB1AWv (ORCPT
+        Thu, 27 Feb 2020 19:26:09 -0500
+Received: from www62.your-server.de ([213.133.104.62]:57252 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729984AbgB1A0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:22:51 -0500
-Received: by mail-pf1-f196.google.com with SMTP id o24so710506pfp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oFQSSd8joQB26Yle3LRphyYOwCqM8lXqrwgR7KUB2ZM=;
-        b=nHZ4Y7YbhF6uEk5/uFndEuekX2vKGSTC1OQpgCF1rYdVz1hL9KwhWsI6HLQwltLv2c
-         olhA+OX8/TcWhf7cu831s2b1jUqHSYSvZqA7RHqWjI7TZURQ1M6+nuep8zkL0yqIzO/G
-         rYLC+NOCo0eRuvYBoJQwHOB1tY/rFRwdZY/+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oFQSSd8joQB26Yle3LRphyYOwCqM8lXqrwgR7KUB2ZM=;
-        b=DU2QwAveK/OqD3dHJgB4cc0/bLqFT7HI87N5dlvNGtEkcGiT3bTDGwGQfV5+NAxaSX
-         7u5KT6nKnS6I9zaFNN1rad41uGo6inyJh4jQrTnKCv9qTm8st4l4njJ9qOV2vH3dN2M1
-         kPZUMd1ueKZF539g6rHS6/ds4gOPHX4/I55uK9anNKLSep8owFSc9Ikdy94Vz0fLJTIB
-         llg2qnRYS0TiaAMx0xQIwXKrvlRdf+jMhM40SQhTUWYIK+pW75hy8hDyBVyO8ju7iqiP
-         jXl+dEWB49D1LhXDXrbd2iLOzgKjIiRjITxEI8WR4I9cLehRUiyZBEPOjfx+bZUin4fN
-         r99w==
-X-Gm-Message-State: APjAAAWgNGFxILZcRmoWYQ3DG8nACfkpw1eYn56mV97i2/Y9o3rNdOLX
-        9NJQiMj3IqMY3W9Ci14tqaeEKg==
-X-Google-Smtp-Source: APXvYqw6fCWM2xfT4DJ+VFMmyrDy6sPXs7ZYweUNi5l07x3V/XFaixY8I4K8wHA9HcWwEBIBYQBH6A==
-X-Received: by 2002:a63:5713:: with SMTP id l19mr1913060pgb.216.1582849369348;
-        Thu, 27 Feb 2020 16:22:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h5sm7577879pgi.28.2020.02.27.16.22.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 16:22:48 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Kees Cook <keescook@chromium.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Thu, 27 Feb 2020 19:26:09 -0500
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j7TTW-0006JB-97; Fri, 28 Feb 2020 01:25:54 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j7TTV-0003Mj-UT; Fri, 28 Feb 2020 01:25:53 +0100
+Subject: Re: [PATCH] bpf: Replace zero-length array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] x86/boot: Warn on orphan section placement
-Date:   Thu, 27 Feb 2020 16:22:39 -0800
-Message-Id: <20200228002244.15240-5-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200228002244.15240-1-keescook@chromium.org>
-References: <20200228002244.15240-1-keescook@chromium.org>
+References: <20200227001744.GA3317@embeddedor>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <1c4b814a-0f7d-ae10-9bc0-086b2bd6dea0@iogearbox.net>
+Date:   Fri, 28 Feb 2020 01:25:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227001744.GA3317@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25735/Thu Feb 27 20:18:16 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly named in the linker
-script.
+On 2/27/20 1:17 AM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Add the common debugging sections. Discard the unused note, rel, plt,
-dyn, and hash sections that are not needed in the compressed vmlinux.
-Disable .eh_frame generation in the linker and enable orphan section
-warnings.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/boot/compressed/Makefile      |  3 ++-
- arch/x86/boot/compressed/vmlinux.lds.S | 13 +++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index c33111341325..e0ea6b0924e8 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -46,6 +46,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE :=n
- 
- KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-+KBUILD_LDFLAGS += --no-ld-generated-unwind-info
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
- ifeq ($(CONFIG_X86_32),y)
-@@ -57,7 +58,7 @@ else
- KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
- 	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
- endif
--LDFLAGS_vmlinux := -T
-+LDFLAGS_vmlinux := --orphan-handling=warn -T
- 
- hostprogs	:= mkpiggy
- HOST_EXTRACFLAGS += -I$(srctree)/tools/include
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 508cfa6828c5..b5406a8cebe0 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -73,4 +73,17 @@ SECTIONS
- #endif
- 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
- 	_end = .;
-+
-+	STABS_DEBUG
-+	DWARF_DEBUG
-+
-+	DISCARDS
-+	/DISCARD/ : {
-+		*(.note.*)
-+		*(.rela.*) *(.rela_*)
-+		*(.rel.*) *(.rel_*)
-+		*(.plt) *(.plt.*)
-+		*(.dyn*)
-+		*(.hash) *(.gnu.hash)
-+	}
- }
--- 
-2.20.1
-
+Applied, thanks!
