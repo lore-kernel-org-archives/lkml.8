@@ -2,120 +2,95 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17ECC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120B6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0782051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6022051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:04:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TypOLA+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgB1ODB (ORCPT
+        id S1727000AbgB1OD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:03:01 -0500
-Received: from mga18.intel.com ([134.134.136.126]:43356 "EHLO mga18.intel.com"
+        Fri, 28 Feb 2020 09:03:59 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38578 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgB1ODA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:03:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 06:03:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="242385619"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga006.jf.intel.com with ESMTP; 28 Feb 2020 06:02:57 -0800
-Subject: Re: [PATCH V2 03/13] kprobes: Add symbols for kprobe insn pages
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200212124949.3589-1-adrian.hunter@intel.com>
- <20200212124949.3589-4-adrian.hunter@intel.com>
- <20200226152151.GA217283@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <76b53846-86ab-f0a6-1e8f-fece412099ae@intel.com>
-Date:   Fri, 28 Feb 2020 16:02:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1725892AbgB1OD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:03:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AeFlf8/3IN4nWVCE6JFON5V71Wzrs06d1BBOTko8Y5w=; b=TypOLA+sR/rR8DuzM3pJzSZvCA
+        vkjJIR1hicy4VHaIr6mi2182gwb76Ojs5OPaz2Nbef+EwvGihVSymrvKwrll12sTDhGFKdKctwHfy
+        hEW90GuiNYRHqfgP5m09vksHoA2FWQBEn9o7r3UZjyScMMgN1r3zm1S83tkhwgikyW+s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j7gF9-0004Fl-1E; Fri, 28 Feb 2020 15:03:55 +0100
+Date:   Fri, 28 Feb 2020 15:03:55 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX325x (AC3x)
+Message-ID: <20200228140355.GF19662@lunn.ch>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-2-vadym.kochan@plvision.eu>
+ <20200226155423.GC26061@nanopsycho>
+ <20200227213150.GA9372@plvision.eu>
+ <20200227214357.GB29979@lunn.ch>
+ <20200227235048.GA21304@plvision.eu>
+ <20200228063623.GI26061@nanopsycho>
 MIME-Version: 1.0
-In-Reply-To: <20200226152151.GA217283@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228063623.GI26061@nanopsycho>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/20 5:21 pm, Jiri Olsa wrote:
-> On Wed, Feb 12, 2020 at 02:49:39PM +0200, Adrian Hunter wrote:
->> Symbols are needed for tools to describe instruction addresses. Pages
->> allocated for kprobe's purposes need symbols to be created for them.
->> Add such symbols to be visible via /proc/kallsyms.
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+On Fri, Feb 28, 2020 at 07:36:23AM +0100, Jiri Pirko wrote:
+> Fri, Feb 28, 2020 at 12:50:58AM CET, vadym.kochan@plvision.eu wrote:
+> >On Thu, Feb 27, 2020 at 10:43:57PM +0100, Andrew Lunn wrote:
+> >> > > Please be consistent. Make your prefixes, name, filenames the same.
+> >> > > For example:
+> >> > > prestera_driver_kind[] = "prestera";
+> >> > > 
+> >> > > Applied to the whole code.
+> >> > > 
+> >> > So you suggested to use prestera_ as a prefix, I dont see a problem
+> >> > with that, but why not mvsw_pr_ ? So it has the vendor, device name parts
+> >> > together as a key. Also it is necessary to apply prefix for the static
+> >> > names ?
+> >> 
+> >> Although static names don't cause linker issues, you do still see them
+> >> in opps stack traces, etc. It just helps track down where the symbols
+> >> come from, if they all have a prefix.
+> >> 
+> >>      Andrew
+> >
+> >Sure, thanks, makes sense. But is it necessary that prefix should match
+> >filenames too ? Would it be OK to use just 'mvpr_' instead of 'prestera_'
 > 
-> SNIP
-> 
->> @@ -272,6 +273,8 @@ static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
->>  {									\
->>  	return __is_insn_slot_addr(&kprobe_##__name##_slots, addr);	\
->>  }
->> +#define KPROBE_INSN_PAGE_SYM		"kprobe_insn_page"
->> +#define KPROBE_OPTINSN_PAGE_SYM		"kprobe_optinsn_page"
->>  #else /* __ARCH_WANT_KPROBES_INSN_SLOT */
->>  #define DEFINE_INSN_CACHE_OPS(__name)					\
->>  static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
->> @@ -373,6 +376,13 @@ void dump_kprobe(struct kprobe *kp);
->>  void *alloc_insn_page(void);
->>  void free_insn_page(void *page);
->>  
->> +int kprobe_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
->> +		       char *sym);
->> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
->> +			     unsigned long *value, char *type, char *sym);
->> +
->> +int arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
->> +			    char *type, char *sym);
->>  #else /* !CONFIG_KPROBES: */
->>  
->>  static inline int kprobes_built_in(void)
->> @@ -435,6 +445,24 @@ static inline bool within_kprobe_blacklist(unsigned long addr)
->>  {
->>  	return true;
->>  }
->> +static inline int kprobe_get_kallsym(unsigned int symnum, unsigned long *value,
->> +				     char *type, char *sym)
->> +{
->> +	return 0;
->> +}
->> +static inline int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c,
->> +					   unsigned int *symnum,
->> +					   unsigned long *value, char *type,
->> +					   char *sym)
->> +{
->> +	return 0;
->> +}
->> +static inline int arch_kprobe_get_kallsym(unsigned int *symnum,
->> +					  unsigned long *value, char *type,
->> +					  char *sym)
->> +{
->> +	return 0;
->> +}
-> 
-> there's another arch_kprobe_get_kallsym marked as __weak,
-> is above function superfluous?
+> I would vote for "prestera_". It is clean, consistent, obvious.
 
-Yes, it is removed in V3.
+Yes, prestera_ is better. It also avoids the vendor name, which often
+changes as companies are bought, sold, split, etc.
+
+	Andrew
