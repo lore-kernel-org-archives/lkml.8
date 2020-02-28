@@ -2,126 +2,105 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517D3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC739C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26209246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8620724699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="myogx4da"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="l6JoLnB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgB1RUa (ORCPT
+        id S1726525AbgB1RWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:20:30 -0500
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:35887 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgB1RU2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:20:28 -0500
-Received: by mail-vs1-f74.google.com with SMTP id f9so285424vsh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=LdZsVkuGKO8To6YvZKUxQ0ySkhklX4pxNiwqLlI7Xsg=;
-        b=myogx4da1gzBYmUfOd833bu0VuYW6vsQ7+dKUlg5YtI4+tVSNtWRe6RHJM5OlrmqRw
-         gbF8VeBFtfhsWuZs1Rz3quMCeXrmS0QLi9FiD5JQoXkh0eKOa8mExriGuNuIf5kDmeue
-         7Qu0teoeReX6zEq9s9BZbLsbBlcLflZkKMLgcxYpAJXf8s24rQmn0q412qUln3jM6N1W
-         lzIyoqO9vvm5FKtxmi/dMEcgJ1XSonL3U+Irm/uEj+rZMQllpQoys4RyCZGGlVbZefow
-         CyaJSwt3DllydIGNGy7lnM0G45ffnLNzWSO0NyIRo484sjQ1w4m/hqmyElOJ7B0mgVUV
-         4D9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=LdZsVkuGKO8To6YvZKUxQ0ySkhklX4pxNiwqLlI7Xsg=;
-        b=Rs9YifsiJUxWeWDYg3WwV33qzcFFCHXzsE7mrjBxC+IouOZqmA2Ao3M0FFImGyuIPL
-         tYSRF6LAz/HuRbI3IdoWNvZRjlEOGSSF7S62uUzhRNDjTGYqOwguyPxr2wvNqlHWAfXZ
-         GwUzHYe9Z4WNGypElO8gknnWxNmYpRI2CzXZw23FS1boW+ssHaVl/gWS0QtE5919SOzN
-         2u3B+x7Auz1CIQER2sLJj5urnPMdC2mEytrt8VDcxovxyjDi8HgBJFn5AcQUQOtQmDIN
-         MF4BGJONNvyjE+dOSVqvYBAsEUsD/lFDo2QCVsbRR1/DfgKHyQv8A8+C2ZpFfqVoxdZ3
-         LH6Q==
-X-Gm-Message-State: ANhLgQ2keSmGIh5vF7hZAWBi2OCdn+oWL0esDyCfLSMtyG8OfWWTM2yd
-        E+hE2V8/mfDrF8x0H8N5JIIMywHHLRpd
-X-Google-Smtp-Source: ADFU+vv2m0EN19UVgDJ4CmsQ7TM/NRDXlpL8igf/hEBZF6pFa2/V3es84Fh6kfMz0fiyZPa1i/l6OILnQ5/1
-X-Received: by 2002:a9f:2612:: with SMTP id 18mr2513889uag.76.1582910427002;
- Fri, 28 Feb 2020 09:20:27 -0800 (PST)
-Date:   Fri, 28 Feb 2020 17:20:15 +0000
-In-Reply-To: <20200228172015.44369-1-qperret@google.com>
-Message-Id: <20200228172015.44369-4-qperret@google.com>
-Mime-Version: 1.0
-References: <20200228172015.44369-1-qperret@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v6 3/3] kbuild: generate autoksyms.h early
-From:   Quentin Perret <qperret@google.com>
-To:     masahiroy@kernel.org, nico@fluxnic.net
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com, jeyu@kernel.org,
-        hch@infradead.org, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Feb 2020 12:22:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:43110 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgB1RWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:22:08 -0500
+Received: from zn.tnic (p200300EC2F084600F4D7BC1685508240.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:4600:f4d7:bc16:8550:8240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7D0721EC072D;
+        Fri, 28 Feb 2020 18:22:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582910526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JO5IZ/WUY3Rkly+M1+A+be28WJqvRxpTmqHwXLrnu/k=;
+        b=l6JoLnB6p/KHZ2xOu+VeCJNe5ott5tHHykAJwFLYJ1qWmn9Itsw16rTFcDtjmCRturKhH8
+        8kUYi3WwB0+kQQjn67fY1j2XOlttssy8FNuM052a9ZA+RabyAaXgJVSkqGMCWBmyXdGJra
+        +d2XXVyIYarLOam5UHR55boUTyVaB90=
+Date:   Fri, 28 Feb 2020 18:22:02 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+Message-ID: <20200228172202.GD25261@zn.tnic>
+References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+ <20200121201843.12047-9-yu-cheng.yu@intel.com>
+ <20200221175859.GL25747@zn.tnic>
+ <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+ <20200228121724.GA25261@zn.tnic>
+ <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+ <20200228162359.GC25261@zn.tnic>
+ <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing a cold build, autoksyms.h starts empty, and is updated late
-in the build process to have visibility over the symbols used by in-tree
-drivers. But since the symbol whitelist is known upfront, it can be used
-to pre-populate autoksyms.h and maximize the amount of code that can be
-compiled to its final state in a single pass, hence reducing build time.
+On Fri, Feb 28, 2020 at 08:20:27AM -0800, Yu-cheng Yu wrote:
+> When XSAVES writes to an xsave buffer, xsave->header.xcomp_bv is set to
+> include only saved components, effectively changing the buffer's format.
 
-Do this by using gen_autoksyms.sh to initialize autoksyms.h instead of
-creating an empty file.
+So you want to *save* the supervisor states and xcomp_bv will be set to
+supervisor states only and since we don't care about the user states
+there - they will be loaded later - we're good.
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
-Tested-by: Matthias Maennich <maennich@google.com>
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- Makefile                 | 7 +++++--
- scripts/gen_autoksyms.sh | 3 ++-
- 2 files changed, 7 insertions(+), 3 deletions(-)
+Or do you have to set xcomp_bv later in order to save the user
+components too and also rearrange the buffer to undo the format change
+above?
 
-diff --git a/Makefile b/Makefile
-index 1a1a0d271697..c690a838d537 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1063,9 +1063,12 @@ endif
- 
- autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
- 
-+quiet_cmd_autoksyms_h = GEN     $@
-+      cmd_autoksyms_h = mkdir -p $(dir $@); \
-+			$(CONFIG_SHELL) $(srctree)/scripts/gen_autoksyms.sh $@
-+
- $(autoksyms_h):
--	$(Q)mkdir -p $(dir $@)
--	$(Q)touch $@
-+	$(call cmd,autoksyms_h)
- 
- ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- 
-diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
-index ef46200c366b..16c0b2ddaa4c 100755
---- a/scripts/gen_autoksyms.sh
-+++ b/scripts/gen_autoksyms.sh
-@@ -39,7 +39,8 @@ cat > "$output_file" << EOT
- 
- EOT
- 
--sed 's/ko$/mod/' modules.order |
-+[ -f modules.order ] && modlist=modules.order || modlist=/dev/null
-+sed 's/ko$/mod/' $modlist |
- xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
- cat - "$ksym_wl" |
- sort -u |
+We have using_compacted_format() and we do conversion from compacted to
+standard buffers - I'm looking at copy_xstate_to_kernel() et al - so it
+shouldn't be impossible. So to repeat Sebastian's question which you
+ignored:
+
+"How large is this supervisor state at most? I guess saving the AVX512
+state just to get the 2 bytes of the supervisor state at the right spot
+is not really optimal."
+
+In any case, this performance penalty better be paid only by those
+who are actually using some supervisor states. I haven't looked at
+the CET patchset but I'm assuming you're setting the CET bit in
+xfeatures_mask_all only when the feature is being actually used?
+
+Thx.
+
 -- 
-2.25.1.481.gfbce0eb801-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
