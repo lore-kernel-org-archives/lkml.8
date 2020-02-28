@@ -2,141 +2,81 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B86C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40089C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F394246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e6Ou04kM"
+	by mail.kernel.org (Postfix) with ESMTP id 1E9F1246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgB1Ido (ORCPT
+        id S1726766AbgB1Id5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:33:44 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53866 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgB1Idn (ORCPT
+        Fri, 28 Feb 2020 03:33:57 -0500
+Received: from smtprelay0065.hostedemail.com ([216.40.44.65]:39379 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725877AbgB1Id4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:33:43 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S8XflV024121;
-        Fri, 28 Feb 2020 02:33:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582878821;
-        bh=vW+PepXRsxAK7WkwPUYIQq/S8m7kzQ/csZbigbHHHpQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e6Ou04kMF7BtN+oobOFCQqXmtAVqXPwfnzwuvT/xCllDO0PkhZDli5M6AwHkld5C8
-         aQJptsMj0LZYmvTQURGMjV5IRfz7FIdRiRK3VJvAeTndc92tAEZs5aUYEgrrITajv5
-         tbY5MLCoPLcHV7rVB27WNgNW4HUuy3d1B2j9oDZw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S8Xf2Q049033
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 02:33:41 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 02:33:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 02:33:41 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S8XdkL108896;
-        Fri, 28 Feb 2020 02:33:39 -0600
-Subject: Re: [PATCH v2 4/5] ARM: dts: AM4372: Add the PRU-ICSS interconnect
- target-module node
-To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200227222837.7329-1-s-anna@ti.com>
- <20200227222837.7329-5-s-anna@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <f3ba0138-141c-0602-788c-8bf8f802f436@ti.com>
-Date:   Fri, 28 Feb 2020 10:33:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 03:33:56 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 3107E180265A6;
+        Fri, 28 Feb 2020 08:33:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: power64_796178c799809
+X-Filterd-Recvd-Size: 2097
+Received: from joe-laptop.perches.com (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Feb 2020 08:33:54 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-parisc@vger.kernel.org
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] parport: Use generic kernel logging styles
+Date:   Fri, 28 Feb 2020 00:32:11 -0800
+Message-Id: <cover.1582878393.git.joe@perches.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <69fb1d36-b6cf-7c46-96d1-9403de6ab47a@infradead.org>
+References: <69fb1d36-b6cf-7c46-96d1-9403de6ab47a@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200227222837.7329-5-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Well, if the parport logging is getting some generic fixing,
+here's some more generic logging fixing...
 
+Joe Perches (7):
+  parport: Convert printk(KERN_<LEVEL> to pr_<level>(
+  parport: Use more comon logging styles
+  parport: daisy: Convert DPRINTK to pr_debug
+  parport_amiga: Convert DPRINTK to pr_debug
+  parport_mfc3: Convert DPRINTK to pr_debug
+  parport_pc: Convert DPRINTK to pr_debug
+  parport: Standardize use of printmode
 
-On 28/02/2020 00:28, Suman Anna wrote:
-> The AM437x family of SoCs contains two dissimilar PRU-ICSS instances,
-> but leverage a common reset line and SYSCFG from the larger PRU-ICSS1
-> instance. This SYSC register has also very unique bit-fields. Both
-> the IPs require the PRCM reset to be deasserted to be able to access
-> any registers. Add a common PRUSS interconnect target-module with all
-> the required properties.
-> 
-> The PRUSS devices themselves shall be added as child nodes to this
-> interconnect node in the future. The PRU-ICSS instances are not
-> supported on AM4372 SoC though in the AM437x family, so the target
-> module node should be disabled in any derivative board files that
-> use this SoC.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-
-> ---
-> v2:
->   - Remove status=disabled
->   - Revise last para in patch description
-> 
->   arch/arm/boot/dts/am4372.dtsi | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index faa14dc0faff..9f39413b0d0e 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -344,6 +344,28 @@
->   			};
->   		};
->   
-> +		pruss_tm: target-module@54400000 {
-> +			compatible = "ti,sysc-pruss", "ti,sysc";
-> +			reg = <0x54426000 0x4>,
-> +			      <0x54426004 0x4>;
-> +			reg-names = "rev", "sysc";
-> +			ti,sysc-mask = <(SYSC_PRUSS_STANDBY_INIT |
-> +					 SYSC_PRUSS_SUB_MWAIT)>;
-> +			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			clocks = <&pruss_ocp_clkctrl AM4_PRUSS_OCP_PRUSS_CLKCTRL 0>;
-> +			clock-names = "fck";
-> +			resets = <&prm_per 1>;
-> +			reset-names = "rstctrl";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x54400000 0x80000>;
-> +		};
-> +
->   		gpmc: gpmc@50000000 {
->   			compatible = "ti,am3352-gpmc";
->   			ti,hwmods = "gpmc";
-> 
+ drivers/parport/daisy.c          |  29 +---
+ drivers/parport/ieee1284.c       |   4 +-
+ drivers/parport/ieee1284_ops.c   |   3 +-
+ drivers/parport/parport_amiga.c  |  22 +--
+ drivers/parport/parport_atari.c  |   2 +-
+ drivers/parport/parport_cs.c     |   6 +-
+ drivers/parport/parport_gsc.c    |  25 +--
+ drivers/parport/parport_gsc.h    |  21 ++-
+ drivers/parport/parport_ip32.c   | 117 +++++++-------
+ drivers/parport/parport_mfc3.c   |  21 +--
+ drivers/parport/parport_pc.c     | 263 +++++++++++++------------------
+ drivers/parport/parport_sunbpp.c |   2 +-
+ drivers/parport/probe.c          |  34 ++--
+ drivers/parport/procfs.c         |   6 +-
+ drivers/parport/share.c          |  37 +++--
+ 15 files changed, 261 insertions(+), 331 deletions(-)
 
 -- 
-cheers,
--roger
+2.24.0
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
