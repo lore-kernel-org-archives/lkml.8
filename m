@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D3CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AEDC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA1E24677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C59246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="B+V7j6Me"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="sxaH/oyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgB1Nxh (ORCPT
+        id S1726796AbgB1N5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:53:37 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.179]:15529 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726890AbgB1Nxg (ORCPT
+        Fri, 28 Feb 2020 08:57:08 -0500
+Received: from gateway30.websitewelcome.com ([192.185.196.18]:12646 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgB1N5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:53:36 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 5EC80A4FE
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:53:35 -0600 (CST)
+        Fri, 28 Feb 2020 08:57:08 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 2367C7E0B3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:57:07 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 7g59jpROYEfyq7g59julL8; Fri, 28 Feb 2020 07:53:35 -0600
+        id 7g8ZjOZHIAGTX7g8ZjXVe8; Fri, 28 Feb 2020 07:57:07 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9MXNMsFMVcQPW05en/+q2B+/a2FtM4H6ysZ3B1RIBDk=; b=B+V7j6MeZu508oeK16Ehu6kE4l
-        B4N9bGNmNfz2MQeZTw3MOkptYpEx+6YM4C4y1GoskBI+88i/zz7eqS+6k3QmMy4CVRsw4JiqFDuUH
-        eTyxYHzsIxZZLnzlExQgbxRYeEF+bCpFqx5OBWkTFhHXnt/HTIQzzKjZqCy37JuWEN6lDl6gM/YGP
-        /GCQCz4O7R/cxW4B4odibyMNvXHuqyzwKZJ42c7lVaZkNTlyyEBKk6/moesUH0UKHaWSNf9gzMmoT
-        mISuU4Urz7Tjk+byhp8FhXKDD/2Fs9cgnNWPpir8I8InGkxqXY7ixxd15SXA0gzwiokJiY1YiDh4r
-        i/7CRnyw==;
-Received: from [201.162.240.44] (port=6756 helo=embeddedor)
+        bh=pJ55MoBgiHzpl8kAnbu/YiwbH1syaoq6Pgucy8z9yhQ=; b=sxaH/oyQ6D3/Y76B6w4QjSjS3i
+        oagEf+gooAwg7En6IhyrywYfqPaabNp6rnN2rj0vmobFvKcPxNZ0uLdxeDt+5sqOZdb71TEJTbGNH
+        BnJD6POBt560LnLA483c8JsJGM+g7Uknv209Y9sLz/vlyVSobSY2D5E2orhip4k3nCDu1vql4HksH
+        LO6+kxvRCaOB9SF/AShWe8uQsuefMvMe9IQd+jaU9UdHwWt22Pg7PbYD5cofLsVtT9P9q7wcMZ2Nd
+        KhnmaJNKalTcn5qzenynTqbWn5JD4HPMJHhcgPlhrbbvv+1Rx6X9CePcZbUTbqIiRPLlW9DRYBm56
+        4N2u8I+w==;
+Received: from [201.162.240.44] (port=3402 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j7g57-001Yph-42; Fri, 28 Feb 2020 07:53:33 -0600
-Date:   Fri, 28 Feb 2020 07:56:29 -0600
+        id 1j7g8X-001adL-6K; Fri, 28 Feb 2020 07:57:05 -0600
+Date:   Fri, 28 Feb 2020 07:59:59 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
+To:     Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] bonding: Replace zero-length array with flexible-array
- member
-Message-ID: <20200228135629.GA30289@embeddedor>
+Subject: [PATCH][next] cfg802154: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200228135959.GA30464@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +70,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.162.240.44
 X-Source-L: No
-X-Exim-ID: 1j7g57-001Yph-42
+X-Exim-ID: 1j7g8X-001adL-6K
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.44]:6756
+X-Source-Sender: (embeddedor) [201.162.240.44]:3402
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 65
+X-Email-Count: 72
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +114,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- include/net/bonding.h | 2 +-
+ include/net/cfg802154.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/bonding.h b/include/net/bonding.h
-index 3d56b026bb9e..dc2ce31a1f52 100644
---- a/include/net/bonding.h
-+++ b/include/net/bonding.h
-@@ -183,7 +183,7 @@ struct slave {
- struct bond_up_slave {
- 	unsigned int	count;
- 	struct rcu_head rcu;
--	struct slave	*arr[0];
-+	struct slave	*arr[];
+diff --git a/include/net/cfg802154.h b/include/net/cfg802154.h
+index 6f86073a5d7d..6ed07844eb24 100644
+--- a/include/net/cfg802154.h
++++ b/include/net/cfg802154.h
+@@ -214,7 +214,7 @@ struct wpan_phy {
+ 	/* the network namespace this phy lives in currently */
+ 	possible_net_t _net;
+ 
+-	char priv[0] __aligned(NETDEV_ALIGN);
++	char priv[] __aligned(NETDEV_ALIGN);
  };
  
- /*
+ static inline struct net *wpan_phy_net(struct wpan_phy *wpan_phy)
 -- 
 2.25.0
 
