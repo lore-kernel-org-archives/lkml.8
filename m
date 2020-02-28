@@ -2,95 +2,94 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA36C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D95C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048AB246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582890797;
-	bh=wIBGmFyAq22lxQaE+5tiLvcF4if7zUYVjO/zo5SO50g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EPJCl8fdRMe8c3kgsM4TRffzg5OoYqoIV+HHq476Kq2qA9zLGiVshjsolS30P/JxP
-	 fVBfnDo26e42hMX0xghsfTXglZhbwiv2cfCDspSh00MBqkkBHvmbXMhYoS9SdVrRaA
-	 PWrmUe4ECWNDOg8uORIwsGdsRJZ/ttHin22e+Xog=
+	by mail.kernel.org (Postfix) with ESMTP id AE9CB2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgB1LxQ (ORCPT
+        id S1726579AbgB1Lxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:53:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37880 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 06:53:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:37022 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgB1LxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:53:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63712084E;
-        Fri, 28 Feb 2020 11:53:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582890795;
-        bh=wIBGmFyAq22lxQaE+5tiLvcF4if7zUYVjO/zo5SO50g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cokCTAxHZd1zY2RwGmHvnnR5kkLCdWz6JEwYN+fnetEtqbFoDYMM0oG/Su6rd4gXa
-         +Os1gJAjB76mK63hYDWyeOl/D59Nse1gYkJrAj62FTZcsRlje0CWbPXWnVogi+TNVc
-         fpq3LlPyldtz3JSdt/msU8vhCKgs+1Dn4VRmSReA=
-Date:   Fri, 28 Feb 2020 12:53:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/165] 4.9.215-stable review
-Message-ID: <20200228115312.GB2918666@kroah.com>
-References: <20200227132230.840899170@linuxfoundation.org>
- <20200227184431.GA15944@roeck-us.net>
+        id S1725827AbgB1Lxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:53:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF1934B2;
+        Fri, 28 Feb 2020 03:53:44 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36A473F7B4;
+        Fri, 28 Feb 2020 03:53:43 -0800 (PST)
+Date:   Fri, 28 Feb 2020 11:53:40 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Olof Johansson <olof@lixom.net>
+List-Id: <soc.lore.kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, SoC Team <soc@kernel.org>,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2 13/13] MAINTAINERS: Update Calxeda Highbank
+ maintainership
+Message-ID: <20200228115340.26495693@donnerap.cambridge.arm.com>
+In-Reply-To: <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+        <20200227182210.89512-14-andre.przywara@arm.com>
+        <20200227223523.GH26010@bogus>
+        <CAOesGMg1AiF5kLipKpD+3BYNE1hPfs2XYwSnFr0Szp3t=4zw-w@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227184431.GA15944@roeck-us.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:44:31AM -0800, Guenter Roeck wrote:
-> On Thu, Feb 27, 2020 at 02:34:34PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.9.215 release.
-> > There are 165 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Building powerpc:defconfig ... failed
-> --------------
-> Error log:
-> In file included from include/linux/bug.h:4:0,
->                  from include/linux/thread_info.h:11,
->                  from include/asm-generic/preempt.h:4,
->                  from ./arch/powerpc/include/generated/asm/preempt.h:1,
->                  from include/linux/preempt.h:59,
->                  from include/linux/spinlock.h:50,
->                  from include/linux/seqlock.h:35,
->                  from include/linux/time.h:5,
->                  from include/uapi/linux/timex.h:56,
->                  from include/linux/timex.h:56,
->                  from include/linux/sched.h:19,
->                  from arch/powerpc/kernel/signal_32.c:20:
-> arch/powerpc/kernel/signal_32.c: In function ‘save_tm_user_regs’:
-> arch/powerpc/kernel/signal_32.c:521:10: error: ‘tm_suspend_disabled’ undeclared
-> 
-> Also affects v4.14.y.
+On Thu, 27 Feb 2020 16:39:44 -0800
+Olof Johansson <olof@lixom.net> wrote:
 
-Thanks for letting me know, I've now dropped 3 powerpc patches from 4.14
-and 4.9 and will push out a -rc2 for those trees in a few minutes.
+> On Thu, Feb 27, 2020 at 2:35 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Feb 27, 2020 at 06:22:10PM +0000, Andre Przywara wrote:  
+> > > Rob sees little point in maintaining the Calxeda architecture (early ARM
+> > > 32-bit server) anymore.
+> > > Since I have a machine sitting under my desk, change the maintainership
+> > > to not lose support for that platform.
+> > >
+> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > > ---
+> > >  MAINTAINERS | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)  
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > Send a PR to arm-soc folks for this and the dts changes. I'll pickup the
+> > bindings.  
+> 
+> Given that it's likely to be a low volume of code, we can also just
+> apply patches directly in this case (if it's easier than setting up a
+> kernel.org account, etc). Andre, just let us know your preference.
 
-greg k-h
+I am happy (and more familiar) with just sending a final series via email. Especially if you insist on pulling from kernel.org git trees only, that is probably the only way for now.
+
+To gain more independence from "corporate email" I am looking forward to setting up a kernel.org account and sending proper PRs in the future, but indeed this is probably overkill given the expected volume of patches.
+
+Let me just run some test with the final version of the DT, then I will send a v3.
+
+Cheers,
+Andre
+
+
