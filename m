@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A3BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162A1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246ED246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFA9246A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ej0qYQRk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MiPZlyhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgB1ABe (ORCPT
+        id S1730267AbgB1ABW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:01:34 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46017 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbgB1ABa (ORCPT
+        Thu, 27 Feb 2020 19:01:22 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39920 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729956AbgB1ABV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:01:30 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so457379pls.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:01:29 -0800 (PST)
+        Thu, 27 Feb 2020 19:01:21 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so469294plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:01:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Oz6De1dIYEgjxhRabTRk4CB78qRzDNYlR7Nzf0r7zm8=;
-        b=Ej0qYQRkax6vt9VbEqKCxSCRfVTpbF6R6yfkIQH8hH+HCk4aampkSCQAJSBx/l3Eul
-         QYdGcYFrpkp7QbTQ9dqQZFDOh3Tk90FzGpRVXkXIXRjJeG0HLpM37JMU0ecBnf624Z4b
-         p9gSB349m5UGPUQTt7tNnLStSo1C536+EubDM=
+        bh=HVEfaBtq4P7YQEKJlB0rNIhGuSMdX7ZyWHWzM+iNj0k=;
+        b=MiPZlyhhgfM7UPgKZ/frWvRzNlBB5613UuXaClOb+/1qj4My0rxjR2m0/Q68Aqjer2
+         gZYS9YdvWjfD32foSE/T14ZSJwLXcxaxD5TFllT8NBx0vpNpvH9gXUcwAi9LBcMVYSoD
+         GAqgi2ibQpd1tNuqjY7zAzuM2NwWtDPz6cTyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Oz6De1dIYEgjxhRabTRk4CB78qRzDNYlR7Nzf0r7zm8=;
-        b=mmDkEWlwj2JqVTzSnt4fC2o30QOp3Gj9FSAzi2py2tnilQLHwZDG+vNDhYl4WYlJdh
-         HuUSaYOcDUEIZX25V23/Y6hdmU9zwD61mHCBo5AP0mlgOm4/ztuB0GNvXXOn6pGCTxD4
-         kxyvyEgDr12igtSaJKD1Pnj1ER2jJJVvlx4Pmo0b0iJK4Z9OPYQtWgso+8h5UUYjmKIN
-         eo+KKPyeB+Qrbi3hSyTNI2+HemroJFew1oYNzYLT6pdRkbGkVVCgIdj4pUMJEDRCf43N
-         /M5r09oQZdgyAAZA3R5n2hRSDTT4uNR/xlhwX/nkoVI7XUucsJuk/Ft+4uG0DVVd6drz
-         0Bzw==
-X-Gm-Message-State: APjAAAUQM16sU9dWlX3u+bXvpJsKDlEyRGh7nDwMp4n4yXsP1DlyxOqF
-        BvhKE9sOOUa6ucWkyoFlxRxu3A==
-X-Google-Smtp-Source: APXvYqyeGsdTWhXYKAUlxHWjZxN7BX3EeYNWjLkfclN9Kp12cCBJnK2qIKd/H/GKqRV9XMIxr86Wng==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr1609353pjn.60.1582848088646;
-        Thu, 27 Feb 2020 16:01:28 -0800 (PST)
+        bh=HVEfaBtq4P7YQEKJlB0rNIhGuSMdX7ZyWHWzM+iNj0k=;
+        b=fPSHNk5VZ/VxuqF2xxnvO/B96CIq7DKCy0zYLbI2ajj6cA6Ty+3Uuu/uXOavoziUz1
+         CeE+WwN/x0cUqQZ5hTOrhgdWeHAkyIkmCvegP0XR3DzGL99AmqqJNixq0Q/IiaeGjex6
+         dD13uLps2Kqrt2qseaNJN4yxBUWOgmBgLunpdiN1C0vGELD857verDs/6uAEKUazUINp
+         d4hUyZ3gIaZuXRniPMS542H5ly+/5V4JxPC3wsWn2oJbehtpUHVA5XKtilMLP0qQKYih
+         fUMIEXEorTlG4R2Mbu73FYrdQ2WI/ISmOVzjaxW1I26eQKX9YHds2bhlTQRtuY3kFEMX
+         UxZA==
+X-Gm-Message-State: APjAAAXZ3xbnC+A/6NfmUbeU2oavKpKShlyRofFRiQhpIRl9lOpSoOsY
+        nNSCbOtujt7FhT+WxfN8c5SIcA==
+X-Google-Smtp-Source: APXvYqymY4xDGLBpKhllQYQtdvp8eIxEJSyOvYMBEHU7xpDpUfih++1rH9KsvwXHUVBag4LFr8Qb4Q==
+X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr1614784pjk.134.1582848081160;
+        Thu, 27 Feb 2020 16:01:21 -0800 (PST)
 Received: from thgarnie.kir.corp.google.com ([2620:0:1008:1100:6e62:16fa:a60c:1d24])
-        by smtp.gmail.com with ESMTPSA id c18sm7314476pgw.17.2020.02.27.16.01.27
+        by smtp.gmail.com with ESMTPSA id c18sm7314476pgw.17.2020.02.27.16.01.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 16:01:28 -0800 (PST)
+        Thu, 27 Feb 2020 16:01:20 -0800 (PST)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
@@ -60,13 +60,12 @@ Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v11 11/11] x86/alternatives: Adapt assembly for PIE support
-Date:   Thu, 27 Feb 2020 16:00:56 -0800
-Message-Id: <20200228000105.165012-12-thgarnie@chromium.org>
+        Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Len Brown <len.brown@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 06/11] x86/CPU: Adapt assembly for PIE support
+Date:   Thu, 27 Feb 2020 16:00:51 -0800
+Message-Id: <20200228000105.165012-7-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 In-Reply-To: <20200228000105.165012-1-thgarnie@chromium.org>
 References: <20200228000105.165012-1-thgarnie@chromium.org>
@@ -77,38 +76,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly options to work with pointers instead of integers.
-The generated code is the same PIE just ensures input is a pointer.
+Change the assembly code to use only relative references of symbols for the
+kernel to be PIE compatible.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
 ---
- arch/x86/include/asm/alternative.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/processor.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 13adca37c99a..43a148042656 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -243,7 +243,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
- /* Like alternative_io, but for replacing a direct call with another one. */
- #define alternative_call(oldfunc, newfunc, feature, output, input...)	\
- 	asm_inline volatile (ALTERNATIVE("call %P[old]", "call %P[new]", feature) \
--		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
-+		: output : [old] "X" (oldfunc), [new] "X" (newfunc), ## input)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 09705ccc393c..fdf6366c482d 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -746,11 +746,13 @@ static inline void sync_core(void)
+ 		"pushfq\n\t"
+ 		"mov %%cs, %0\n\t"
+ 		"pushq %q0\n\t"
+-		"pushq $1f\n\t"
++		"leaq 1f(%%rip), %q0\n\t"
++		"pushq %q0\n\t"
+ 		"iretq\n\t"
+ 		UNWIND_HINT_RESTORE
+ 		"1:"
+-		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
++		: "=&r" (tmp), ASM_CALL_CONSTRAINT
++		: : "cc", "memory");
+ #endif
+ }
  
- /*
-  * Like alternative_call, but there are two features and respective functions.
-@@ -256,8 +256,8 @@ static inline int alternatives_text_reserved(void *start, void *end)
- 	asm_inline volatile (ALTERNATIVE_2("call %P[old]", "call %P[new1]", feature1,\
- 		"call %P[new2]", feature2)				      \
- 		: output, ASM_CALL_CONSTRAINT				      \
--		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
--		  [new2] "i" (newfunc2), ## input)
-+		: [old] "X" (oldfunc), [new1] "X" (newfunc1),		      \
-+		  [new2] "X" (newfunc2), ## input)
- 
- /*
-  * use this macro(s) if you need more than one output parameter
 -- 
 2.25.1.481.gfbce0eb801-goog
 
