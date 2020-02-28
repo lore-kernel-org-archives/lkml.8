@@ -2,100 +2,180 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26DCC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3965AC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADE82468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C94B2468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="he9+4O9G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkgKXpMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgB1Qmj (ORCPT
+        id S1726720AbgB1Qn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:42:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32494 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgB1Qmi (ORCPT
+        Fri, 28 Feb 2020 11:43:29 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41923 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgB1Qn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:42:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582908157;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SDgKBpn0a2kyKpdeNQbhT4JKfw2dNRrDMjGLH2Nskjk=;
-        b=he9+4O9GrrPHqIm7VjErNjAP+tuFFENxc8/CBbYa2/Nc6YebvsT3gUpp2xcfmUh14l6IgB
-        AYRRfUQGcq0FsWDoGuWATruT8iS812TySSFKDWJskJuBW+ThBka9z/BVwo336f1pJGCPpB
-        bAmb4+T8lHhgaMSEut/ptFTTkGcwPow=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-FMOomAvRO-WI5jDj2BH7ZQ-1; Fri, 28 Feb 2020 11:42:35 -0500
-X-MC-Unique: FMOomAvRO-WI5jDj2BH7ZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC74418FF687;
-        Fri, 28 Feb 2020 16:42:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8278526368;
-        Fri, 28 Feb 2020 16:42:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
-References: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com> <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com> <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net> <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com> <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net> <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com> <20200227151421.3u74ijhqt6ekbiss@ws.net.home> <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net> <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com> <20200228122712.GA3013026@kroah.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+        Fri, 28 Feb 2020 11:43:28 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so4054515eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=10ldW0StfDF5LQn5px5zjojzk7W9mvvMvbddw+jgFsA=;
+        b=XkgKXpMVRw195GbFLaoE1Lus3mosOPFgls1V02Wvy1Vj5vnwWa/HRfYURh8n8PZpaJ
+         GkkkX3RdNYcvyJtM4AnWGWxiNk9HM4LBrUL9G2/xBYaUn4nNhl0jhV83HNR6fI2ajKQK
+         /ETtlOkksDL/o5pz0bHC7Wi+BlJ3qRQlsiTOta/ifPscYgV+XNiDtrl/yZPGF4t75ctM
+         hTdDnCOg8YNAMiVoC8iwHNfW0zk4ML4bSbxMwJV4BwBXuY7sdgvNCYaZG6l6vkc81t78
+         6/ZYVosISVmDrBi4WrIDONYZVhLbUBgjnMstgqn+Q1pUDlwXXRVCti9+m6gKW29nAtsd
+         wgNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=10ldW0StfDF5LQn5px5zjojzk7W9mvvMvbddw+jgFsA=;
+        b=PKMV24c6TMyRtqsaFhePHyIVEZFe8D1BKQXcg94tm5ddwVLlIziuJgt+oxRP2P0pnt
+         UkUtdc2phh63sfIPlKXjByNQNgLvhUl5h7wwA19yt7waBCQ38ee6TvIMfWZZAm8P3qUd
+         5fbD0LhfYavB0nn5TmkXVM8iJAVUAbLRQzBT41LyLwj6ug5m1x5GDLxLmZV/ybc+XPMZ
+         Hg+ZOZH/XfVFjPu9IyPhEXH7G+9ZHlmNQPkPIG2PRfhrH6OHCFJqWdFcCagwCiLNFJor
+         apY9r9r11K2ul+5KSt2F2P7k6WjmPYPt9Zg9xqkwPOupLcjbJhdEb/sIUE5u70A8e+7F
+         D93A==
+X-Gm-Message-State: APjAAAURxHHOmMxbymMhomTidVzW+CuRgYsO9raB1b7KRq6+Jo9a4BUV
+        xv96zf/hLockCd4RlBpQgls=
+X-Google-Smtp-Source: APXvYqxq6JyAJsx/ABxv5xVgyd+/eUW8LdQVVIyzQs61/8UwUjygLRJ5olX/k0a0wg+uYk8PR3GkRQ==
+X-Received: by 2002:a50:eb04:: with SMTP id y4mr4879876edp.170.1582908207050;
+        Fri, 28 Feb 2020 08:43:27 -0800 (PST)
+Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
+        by smtp.gmail.com with ESMTPSA id g6sm318212edm.29.2020.02.28.08.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 08:43:26 -0800 (PST)
+Date:   Fri, 28 Feb 2020 13:43:19 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] drm/amd/display: dc_link: code clean up on detect_dp
+ function
+Message-ID: <60bc9ed29e4136eedd3b92c9fd536310b6b9c00d.1582907436.git.melissa.srw@gmail.com>
+References: <cover.1582907436.git.melissa.srw@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <108164.1582908148.1@warthog.procyon.org.uk>
-Date:   Fri, 28 Feb 2020 16:42:28 +0000
-Message-ID: <108165.1582908148@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1582907436.git.melissa.srw@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+Removes codestyle issues on detect_dp function as suggested by
+checkpatch.pl.
 
->   children/$CHILD_ID -> ../../$CHILD_ID
+CHECK: Lines should not end with a '('
+WARNING: Missing a blank line after declarations
+WARNING: line over 80 characters
+CHECK: Alignment should match open parenthesis
 
-This would really suck.  This bit would particularly affect rescanning time.
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 35 +++++++++----------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
-You also really want to read the entire child set atomically and, ideally,
-include notification counters.
-
->  supers/$SUPER_ID/
->    type: fstype
->    source: mount source (devname)
->    options: csv of mount options
-
-There's a lot more to fsinfo() than just this lot - and there's the
-possibility that some of the values may change depending on exactly which file
-you're looking at.
-
-David
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index eb9894e416ed..549bea1d725c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -585,14 +585,14 @@ static void read_current_link_settings_on_detect(struct dc_link *link)
+ 		LINK_SPREAD_05_DOWNSPREAD_30KHZ : LINK_SPREAD_DISABLED;
+ }
+ 
+-static bool detect_dp(
+-	struct dc_link *link,
+-	struct display_sink_capability *sink_caps,
+-	bool *converter_disable_audio,
+-	struct audio_support *audio_support,
+-	enum dc_detect_reason reason)
++static bool detect_dp(struct dc_link *link,
++		      struct display_sink_capability *sink_caps,
++		      bool *converter_disable_audio,
++		      struct audio_support *audio_support,
++		      enum dc_detect_reason reason)
+ {
+ 	bool boot = false;
++
+ 	sink_caps->signal = link_detect_sink(link, reason);
+ 	sink_caps->transaction_type =
+ 		get_ddc_transaction_type(sink_caps->signal);
+@@ -609,9 +609,8 @@ static bool detect_dp(
+ 			sink_caps->signal = SIGNAL_TYPE_DISPLAY_PORT_MST;
+ 			link->type = dc_connection_mst_branch;
+ 
+-			dal_ddc_service_set_transaction_type(
+-							link->ddc,
+-							sink_caps->transaction_type);
++			dal_ddc_service_set_transaction_type(link->ddc,
++							     sink_caps->transaction_type);
+ 
+ 			/*
+ 			 * This call will initiate MST topology discovery. Which
+@@ -640,13 +639,10 @@ static bool detect_dp(
+ 			if (reason == DETECT_REASON_BOOT)
+ 				boot = true;
+ 
+-			dm_helpers_dp_update_branch_info(
+-				link->ctx,
+-				link);
++			dm_helpers_dp_update_branch_info(link->ctx, link);
+ 
+-			if (!dm_helpers_dp_mst_start_top_mgr(
+-				link->ctx,
+-				link, boot)) {
++			if (!dm_helpers_dp_mst_start_top_mgr(link->ctx,
++							     link, boot)) {
+ 				/* MST not supported */
+ 				link->type = dc_connection_single;
+ 				sink_caps->signal = SIGNAL_TYPE_DISPLAY_PORT;
+@@ -654,7 +650,7 @@ static bool detect_dp(
+ 		}
+ 
+ 		if (link->type != dc_connection_mst_branch &&
+-			is_dp_active_dongle(link)) {
++		    is_dp_active_dongle(link)) {
+ 			/* DP active dongles */
+ 			link->type = dc_connection_active_dongle;
+ 			if (!link->dpcd_caps.sink_count.bits.SINK_COUNT) {
+@@ -665,14 +661,15 @@ static bool detect_dp(
+ 				return true;
+ 			}
+ 
+-			if (link->dpcd_caps.dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER)
++			if (link->dpcd_caps.dongle_type !=
++			    DISPLAY_DONGLE_DP_HDMI_CONVERTER)
+ 				*converter_disable_audio = true;
+ 		}
+ 	} else {
+ 		/* DP passive dongles */
+ 		sink_caps->signal = dp_passive_dongle_detection(link->ddc,
+-				sink_caps,
+-				audio_support);
++								sink_caps,
++								audio_support);
+ 	}
+ 
+ 	return true;
+-- 
+2.25.0
 
