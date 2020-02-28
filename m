@@ -2,115 +2,180 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB24C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3FFC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E962469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C2D246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgB1VyB (ORCPT
+        id S1726621AbgB1V7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:54:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39130 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1VyB (ORCPT
+        Fri, 28 Feb 2020 16:59:25 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38800 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1V7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:54:01 -0500
-Received: by mail-ot1-f67.google.com with SMTP id x97so4013725ota.6;
-        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pDVNEc+emqEYhHMEI0BkQh8VuJ0zUAhAe+A2963SxX0=;
-        b=BhqHVZ2BqQuaGPgq01e0uENA0LzH4IW4LbLEg18hF44ZhNSsjptFlWRf7mdSTrv2B5
-         nyhE4QjOIO0Zi3bv7qvmF1y2mXU94UT2CkNn34mDw92FK1xO2hMc0OZYcrY/AvbuHF3O
-         ytYJh3L3r4Zi+tADmEkHsCAJLiJ3+t3FHLMACuv45BEgMNUqPJ84ELsgwcprDfbgw+BF
-         ZAjZFig4VPTAMbZf6PIp9O5gEYbnLHxo1iaxVJg7SbLxcGegBHLwE6PtwtxzMnRe9Goj
-         0edfYjMIOe9+FRJVdnER342QK7GU0SbCekf1vxlYsLn6GvpJuJe35hz9jr4pGS+/2iNl
-         gKdw==
-X-Gm-Message-State: APjAAAXsFRSHRklY3pV+F9u7njfYAh/ObPNHX+JG6RZffDRJ4yRx9BTn
-        N9cTgAT49QolC9W0Wbe82iUYtiYXITA=
-X-Google-Smtp-Source: APXvYqwcD8KegygDg2uXmfGc0b5s3g2iOWW8QB+yGdhZqZT2cbFUJgwyKh2XZap9Gmfhgkl0wuZRrg==
-X-Received: by 2002:a9d:7593:: with SMTP id s19mr4713096otk.219.1582926840159;
-        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id 17sm2358741oth.7.2020.02.28.13.53.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
-Received: by mail-ot1-f51.google.com with SMTP id x97so4013634ota.6;
-        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
-X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr5033412ota.63.1582926839216;
- Fri, 28 Feb 2020 13:53:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
- <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
- <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
- <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
- <639a1df72fbeda77436b282a99f17995@walle.cc> <24b9a657a65f75a4f4f10baa17561451@walle.cc>
-In-Reply-To: <24b9a657a65f75a4f4f10baa17561451@walle.cc>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 28 Feb 2020 15:53:47 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
-Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-To:     Michael Walle <michael@walle.cc>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Fri, 28 Feb 2020 16:59:25 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j7nfF-0006mm-I0; Fri, 28 Feb 2020 21:59:21 +0000
+Date:   Fri, 28 Feb 2020 22:59:20 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: Re: [PATCH 2/3] uml: Create a private mount of proc for mconsole
+Message-ID: <20200228215920.tlw74xzhl5qkvt4p@wittgenstein>
+References: <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+ <87lfp7h422.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+ <87pnejf6fz.fsf@x220.int.ebiederm.org>
+ <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+ <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
+ <878skmsbyy.fsf_-_@x220.int.ebiederm.org>
+ <87wo86qxcs.fsf_-_@x220.int.ebiederm.org>
+ <20200228203058.jcnqeyvmqhfslcym@wittgenstein>
+ <87zhd2pfjd.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87zhd2pfjd.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 3:51 PM Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-02-28 12:46, schrieb Michael Walle:
-> > Hi Rob, Hi Leo,
+On Fri, Feb 28, 2020 at 03:28:54PM -0600, Eric W. Biederman wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> writes:
+> 
+> > On Fri, Feb 28, 2020 at 02:18:43PM -0600, Eric W. Biederman wrote:
+> >> 
+> >> The mconsole code only ever accesses proc for the initial pid
+> >> namespace.  Instead of depending upon the proc_mnt which is
+> >> for proc_flush_task have uml create it's own mount of proc
+> >> instead.
+> >> 
+> >> This allows proc_flush_task to evolve and remove the
+> >> need for having a proc_mnt to do it's job.
+> >> 
+> >> Cc: Jeff Dike <jdike@addtoit.com>
+> >> Cc: Richard Weinberger <richard@nod.at>
+> >> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> >> Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+> >> ---
+> >>  arch/um/drivers/mconsole_kern.c | 28 +++++++++++++++++++++++++++-
+> >>  1 file changed, 27 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
+> >> index e8f5c81c2c6c..30575bd92975 100644
+> >> --- a/arch/um/drivers/mconsole_kern.c
+> >> +++ b/arch/um/drivers/mconsole_kern.c
+> >> @@ -36,6 +36,8 @@
+> >>  #include "mconsole_kern.h"
+> >>  #include <os.h>
+> >>  
+> >> +static struct vfsmount *proc_mnt = NULL;
+> >> +
+> >>  static int do_unlink_socket(struct notifier_block *notifier,
+> >>  			    unsigned long what, void *data)
+> >>  {
+> >> @@ -123,7 +125,7 @@ void mconsole_log(struct mc_request *req)
+> >>  
+> >>  void mconsole_proc(struct mc_request *req)
+> >>  {
+> >> -	struct vfsmount *mnt = init_pid_ns.proc_mnt;
+> >> +	struct vfsmount *mnt = proc_mnt;
+> >>  	char *buf;
+> >>  	int len;
+> >>  	struct file *file;
+> >> @@ -134,6 +136,10 @@ void mconsole_proc(struct mc_request *req)
+> >>  	ptr += strlen("proc");
+> >>  	ptr = skip_spaces(ptr);
+> >>  
+> >> +	if (!mnt) {
+> >> +		mconsole_reply(req, "Proc not available", 1, 0);
+> >> +		goto out;
+> >> +	}
+> >>  	file = file_open_root(mnt->mnt_root, mnt, ptr, O_RDONLY, 0);
+> >>  	if (IS_ERR(file)) {
+> >>  		mconsole_reply(req, "Failed to open file", 1, 0);
+> >> @@ -683,6 +689,24 @@ void mconsole_stack(struct mc_request *req)
+> >>  	with_console(req, stack_proc, to);
+> >>  }
+> >>  
+> >> +static int __init mount_proc(void)
+> >> +{
+> >> +	struct file_system_type *proc_fs_type;
+> >> +	struct vfsmount *mnt;
+> >> +
+> >> +	proc_fs_type = get_fs_type("proc");
+> >> +	if (!proc_fs_type)
+> >> +		return -ENODEV;
+> >> +
+> >> +	mnt = kern_mount(proc_fs_type);
+> >> +	put_filesystem(proc_fs_type);
+> >> +	if (IS_ERR(mnt))
+> >> +		return PTR_ERR(mnt);
+> >> +
+> >> +	proc_mnt = mnt;
+> >> +	return 0;
+> >> +}
+> >> +
+> >>  /*
+> >>   * Changed by mconsole_setup, which is __setup, and called before SMP is
+> >>   * active.
+> >> @@ -696,6 +720,8 @@ static int __init mconsole_init(void)
+> >>  	int err;
+> >>  	char file[UNIX_PATH_MAX];
+> >>  
+> >> +	mount_proc();
 > >
-> > Am 2020-02-28 00:03, schrieb Rob Herring:
-> >> On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
-> >>>
-> >>> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org>
-> >>> wrote:
-> >>> >
-> >>> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
-> >>> > >
-> >>> > > The DMA channel might not be available at the first probe time. This is
-> >>> > > esp. the case if the DMA controller has an IOMMU mapping.
-> >>> > >
-> >>> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
-> >>> > > reorder the code a bit, so that we don't prepare the whole UART just to
-> >>> > > determine that the DMA channel is not ready yet and we have to undo all
-> >>> > > the stuff. Try to map the DMA channels earlier.
-> >>> >
-> >>> > Changing this means you never probe successfully if you boot a kernel
-> >>> > with the DMA driver disabled (or it's IOMMU disabled). Some other
-> >>> > drivers request DMA in open() and can work either way.
-> >
-> > Oh, I see.
-> >
-> >>> We got this exact issue previously with another driver.  When the
-> >
-> > What driver is it? I've been working on the i2c-mxs.c driver which has
->
-> whoops, i2c-imx.c, not i2c-mxs.c
+> > Hm, either check the return value or make the mount_proc() void?
+> > Probably worth logging something but moving on without proc.
+> 
+> I modified mconsole_proc (the only place that cares to see if
+> it has a valid proc_mnt).
+> 
+> So the code already does the moving on without mounting proc
+> and continues to work.
 
-Ya.  Same one.  I have added CONFIG_FSL_EDMA into the arm64/defconfig
-as a workaround.
+Ok, but then make mount_proc()
 
-Regards,
-Leo
+static void __init mount_proc(void)
+
+and not
+
+static int __init mount_proc(void)
+
+like you have now. That was what I was getting it. Unless there's
+another reason for this.
+
+Christian
