@@ -2,116 +2,111 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233BCC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7B2C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7622468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C436124672
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="ATAbGjog"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QehJgRuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgB1Gg0 (ORCPT
+        id S1726867AbgB1GhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:36:26 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54757 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgB1Gg0 (ORCPT
+        Fri, 28 Feb 2020 01:37:22 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40689 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgB1GhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:36:26 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z12so1969808wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 22:36:25 -0800 (PST)
+        Fri, 28 Feb 2020 01:37:22 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so875217pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 22:37:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m49OdKPe1I/oPM1RnkJb6B2gHY6zkx2O7ln3AzFZcfU=;
-        b=ATAbGjogBvVdPfzGc7nWLhIysYWI0IeFcclb3bwuMJA/jCu1D+zew5i++bdrqRSqaK
-         WdfsIsfHlggASETKp2IrEB2lX4ZSQ3Kdzh+vvufqEVmJWY2Uo7QaPihzBYDAWZHkTFzX
-         UqF5EagV2+pQu6ToENGYUbBlLkh1igMHH/694s6EcKN1Or/cU8RU/09xf5eYHwKXPSHR
-         m9G6z4J4NRqP9aajm/6xfPTLZgoD1aUwBpDTUWbgSSsJOeVW2l4iHHL5ByhgyxFQenSu
-         i/zoWc/CO50mhPR4P7DA2wtIwVYfpy3ZLS1ihleCQBM/CwRJsQf0y6ODMavx9WU2XJHi
-         /Peg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=sWuRilzkWYZAyZcN+NIINqDWTQC9Ad4zFhRqNEFgkTw=;
+        b=QehJgRuGyVx8z9rSKmAD6g+auU5HoaMXW9zJbFfPLiggBLOu1zfe1nCsYSv3jIHHA9
+         81XQOHQd7TKbEr8mX7faBOYVQrg1DXadDYIAcnHaZCSx9vh5Lux9/T8/tFX86UAHWrzl
+         UH8HICUXcYBHshfyCCutETnbAkBnaIovyYOjxw1SbdubdUH5fEL9jCP4mwAeLbp4swFC
+         ElLUA4b4YBAVlUSIyWJipJEsjEwWBSAE7460aGxKcNBlBKkIQhyJR1lKGKwSegzk1N0x
+         fRgPbgmW1UxrSsa91qKk31073n5YDFpsf5KmFcl8mNO4CDEk1zZb1fo3oO5AYENP9klD
+         vSSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m49OdKPe1I/oPM1RnkJb6B2gHY6zkx2O7ln3AzFZcfU=;
-        b=FgY80An4DETwtfYqLZPTlnfqw4R2H4HNmtwwqWxYlx+Ow7Gj/QVj5UqTxav80M5tJW
-         f+QCWQ1bnue1T1XshL50BmN7jxGnvG7q9HC5pamrvxv6cPuhscmmTYC1oXjyxouIcCW2
-         LWLFGzKdYGuMvGCpVAAqRLfqRU4gtv+H0kEBAohcuqlEuQVuvzoKba+ojyOW7/07mL8m
-         eVrmszUU25GzjLwh5Fmsq5Gx2lpLqvk5JcWi8XOLK8FrLB3rQc43t+P3E6S8nmAmS2sv
-         Wgr4FIL9kOzjJw1EgWZXV+FaVhENAbmSV17p9YNxF/wWiRMlCO20l4oerlWWSdj4iB4V
-         4fpg==
-X-Gm-Message-State: APjAAAWNDjgVvTaFNUIklgDvsoicWKtUNPGOKGTdxQ0HBnF5QKQ24XjA
-        tV8Mi0otZhHgu/zK6hn67DmIzs3QHRM=
-X-Google-Smtp-Source: APXvYqz0V6Uk9J3YCoC1wGe50nb9nt68xJZQGKZs6eOrVSfnA0BSW27zUDWztk3gdFiF+lGVMzQxGg==
-X-Received: by 2002:a05:600c:2409:: with SMTP id 9mr3208126wmp.140.1582871784752;
-        Thu, 27 Feb 2020 22:36:24 -0800 (PST)
-Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
-        by smtp.gmail.com with ESMTPSA id l4sm11640069wrv.22.2020.02.27.22.36.23
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sWuRilzkWYZAyZcN+NIINqDWTQC9Ad4zFhRqNEFgkTw=;
+        b=JLqrGPkD0AFWyenHBEHQ6fpi/gJeBsvSu3BklbP04jATLD+9NSfSi4KYUCv3wGCW1T
+         PFMP3eBzncSg28b67T8IQhj2vqmf6iBY78dzxH6im6ZaTazrAhK0Mhit3A8j79JsM803
+         kRrzuNtuggqtJqvHu4cWTYgeFhHljJV6j8EvCLBtJ+u3tSBktAAEsHvd3Lkx6wT/EW4s
+         2IKCxrjSoDRAqFhW30yqwkOedfxarC1Q0EUh8l8JgdU2rJdWT0uLfamdiB+fe+1V8lf2
+         hA7BiU+gs4c64yAVxLbGy3BEK/69nKnuQx/zBjnWQjNH+2W9TMwohuQp1nQNDAWyDQO4
+         GLZQ==
+X-Gm-Message-State: APjAAAWlDkbCL7SiqCBeyPl/cEg3eUNxYJJ+v2iVQH2ym4834RwjiF6c
+        6zOnlrDidM35NddR5wG6zuRfhg==
+X-Google-Smtp-Source: APXvYqw2AVYSRI6xdhUxPas/8l5T+VD5ebOml8D5RzfzJBtkwjtvAjJrDecbuRyx8K93vxbli58a1w==
+X-Received: by 2002:a17:902:b949:: with SMTP id h9mr2705815pls.57.1582871841250;
+        Thu, 27 Feb 2020 22:37:21 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f8sm9313696pfn.2.2020.02.27.22.37.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 22:36:24 -0800 (PST)
-Date:   Fri, 28 Feb 2020 07:36:23 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Message-ID: <20200228063623.GI26061@nanopsycho>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-2-vadym.kochan@plvision.eu>
- <20200226155423.GC26061@nanopsycho>
- <20200227213150.GA9372@plvision.eu>
- <20200227214357.GB29979@lunn.ch>
- <20200227235048.GA21304@plvision.eu>
+        Thu, 27 Feb 2020 22:37:20 -0800 (PST)
+Date:   Thu, 27 Feb 2020 22:37:18 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+Subject: Re: [PATCH v2 4/4] arm64: defconfig: Enable SoC sleep stats driver
+ for Qualcomm
+Message-ID: <20200228063718.GB857139@builder>
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-5-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227235048.GA21304@plvision.eu>
+In-Reply-To: <1582274986-17490-5-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Feb 28, 2020 at 12:50:58AM CET, vadym.kochan@plvision.eu wrote:
->On Thu, Feb 27, 2020 at 10:43:57PM +0100, Andrew Lunn wrote:
->> > > Please be consistent. Make your prefixes, name, filenames the same.
->> > > For example:
->> > > prestera_driver_kind[] = "prestera";
->> > > 
->> > > Applied to the whole code.
->> > > 
->> > So you suggested to use prestera_ as a prefix, I dont see a problem
->> > with that, but why not mvsw_pr_ ? So it has the vendor, device name parts
->> > together as a key. Also it is necessary to apply prefix for the static
->> > names ?
->> 
->> Although static names don't cause linker issues, you do still see them
->> in opps stack traces, etc. It just helps track down where the symbols
->> come from, if they all have a prefix.
->> 
->>      Andrew
->
->Sure, thanks, makes sense. But is it necessary that prefix should match
->filenames too ? Would it be OK to use just 'mvpr_' instead of 'prestera_'
+On Fri 21 Feb 00:49 PST 2020, Maulik Shah wrote:
 
-I would vote for "prestera_". It is clean, consistent, obvious.
+> Enable SoC sleep stats driver. The driver gives statistics for
+> various SoC level low power modes.
+> 
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 0f21288..c63399d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -767,6 +767,7 @@ CONFIG_QCOM_SMD_RPM=y
+>  CONFIG_QCOM_SMP2P=y
+>  CONFIG_QCOM_SMSM=y
+>  CONFIG_QCOM_SOCINFO=m
+> +CONFIG_QCOM_SOC_SLEEP_STATS=y
 
+Afaict the driver is not crucial to boot the system or to collect the
+statics, so you should be able to make this =m.
 
->for funcs & types in this particular case ?
->
->Regards,
->Vadym Kochan
+Regards,
+Bjorn
+
+>  CONFIG_ARCH_R8A774A1=y
+>  CONFIG_ARCH_R8A774B1=y
+>  CONFIG_ARCH_R8A774C0=y
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
