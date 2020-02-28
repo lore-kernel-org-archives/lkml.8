@@ -2,86 +2,91 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3B0C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A54C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0002467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF002467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LWyZS36Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgB1QQK (ORCPT
+        id S1726418AbgB1QRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:16:10 -0500
-Received: from mga05.intel.com ([192.55.52.43]:51515 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbgB1QQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:16:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:16:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="261900316"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Feb 2020 08:16:09 -0800
-Message-ID: <e35cc25c4ba1dcb4154276b1e2731891a3c600ec.camel@intel.com>
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Fri, 28 Feb 2020 07:55:33 -0800
-In-Reply-To: <202002251159.939AA6A@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-2-yu-cheng.yu@intel.com>
-         <202002251159.939AA6A@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 28 Feb 2020 11:17:30 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:47037 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1QRa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:17:30 -0500
+Received: by mail-qv1-f65.google.com with SMTP id bo12so1554986qvb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:17:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zKdk38aJhA82hTscy9LF9azysMLoDz1ezEIJvuBKa8A=;
+        b=LWyZS36QTY1vsAoUR3es9SvlYx3lYN3A53KEZ57uzSbow9k+2Vp3NuFz7Z+D8pVq5/
+         JWj3jtVCw8/0GT57CwTd7SkK9TaNk787ExJyePNfD6e6i2rDmYDCRo2TM/sPxUNsvLp6
+         Owq24V+xwgUtq5PPDhFm2qUCFRCWqjXYHHEfvL6owrafX7W44vg9CeeyXKa7scBPfa98
+         Lz8uzDO5KvRtUkiTTc0DBYEpIMZBjLVwg7r00CaPQbpO6hbl3p/3ZkCW2GVovZBUefAs
+         MCtrJjjxrDIysGQIVi3OWfluEq0tHV6wRhEiEPV1v4qw3maghZZa8lZERuHkPBHeGe/d
+         jVvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zKdk38aJhA82hTscy9LF9azysMLoDz1ezEIJvuBKa8A=;
+        b=Afr/p4QqLPIJxDCv+Wpvz71nZu9XT/yU1SRNANfoApsW2XVLWWGNfMwARWDAnMaRx7
+         3cqO4eme9T0zpA36L5GY1IauC/t410Ssf83qIJq+sK3qjCKBw9cMYgChMsYukO9KWT9S
+         1apkaO5Lwx4SfhsQ4uT9JLCcZWjqkT75icCLNaB0cO4tu1/kspdae2oaNC1ZAd0Od/qC
+         lz1VdJL4ANOSqoKhpaIPGS/5mRhqQCyfzPrjfIpJV3/8dDuliaOvxKhCk2xj22YKGz5J
+         XOJhiWPby2lrXGdjQ4+36pEtw02VHkqE7oNk6QVRqvWBb2okQ7VPX2Y6V3svdpbCFPN1
+         WGNQ==
+X-Gm-Message-State: APjAAAWaZEOhMc1yW8AhAUqZ8Ou78OpGw0gH5EVayQUIUOvQWlI1Zdvc
+        5OO9PlITYg0slKFjSsQqXbopVQ==
+X-Google-Smtp-Source: APXvYqziLkBoEb6rQTlAFGTGstcdRLdHTq/BBvQvyn2/V2cOoRQ/UjvaRO7NSbHN485P6/4/Q/0RmQ==
+X-Received: by 2002:ad4:4684:: with SMTP id bq4mr4174239qvb.35.1582906649607;
+        Fri, 28 Feb 2020 08:17:29 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id p126sm5375393qkd.108.2020.02.28.08.17.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 08:17:29 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7iKO-0006xA-Oh; Fri, 28 Feb 2020 12:17:28 -0400
+Date:   Fri, 28 Feb 2020 12:17:28 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <bmt@zurich.ibm.com>
+Cc:     dledford@redhat.com, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH for-rc] RDMA/siw: Fix failure handling during device
+ creation
+Message-ID: <20200228161728.GT31668@ziepe.ca>
+References: <20200226142920.11074-1-bmt@zurich.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226142920.11074-1-bmt@zurich.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 12:02 -0800, Kees Cook wrote:
-> On Wed, Feb 05, 2020 at 10:19:09AM -0800, Yu-cheng Yu wrote:
-> > Explain no_cet_shstk/no_cet_ibt kernel parameters, and introduce a new
-> > document on Control-flow Enforcement Technology (CET).
-> > 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> 
-> I'm not a huge fan of the boot param names, but I can't suggest anything
-> better. ;) I love the extensive docs!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+On Wed, Feb 26, 2020 at 03:29:20PM +0100, Bernard Metzler wrote:
+> A failing call to ib_device_set_netdev() during device creation
+> caused system crash due to xa_destroy of uninitialized xarray
+> hit by device deallocation. Fixed by moving xarray initialization
+> before potential device deallocation.
+> Fixes also correct propagation of ib_device_set_netdev() failure
+> to caller.
 
-Thanks for reviewing!
+This is for -rc, so please split into two patches. The error
+propagation is probably not -rc worthy
 
-Yu-cheng
-
+Jason
