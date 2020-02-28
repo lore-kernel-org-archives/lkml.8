@@ -2,112 +2,136 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC25C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3109D246B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D77246B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pgn/BGOm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGTTPcGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1WNB (ORCPT
+        id S1726688AbgB1WNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:13:01 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51143 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgB1WNA (ORCPT
+        Fri, 28 Feb 2020 17:13:18 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36168 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgB1WNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:13:00 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so4998807wmb.0;
-        Fri, 28 Feb 2020 14:12:58 -0800 (PST)
+        Fri, 28 Feb 2020 17:13:18 -0500
+Received: by mail-lf1-f68.google.com with SMTP id s1so2727663lfd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4vEgSlwH75ppaka6b+eKVprx44dYfhzjy3hFcJ1TMew=;
-        b=Pgn/BGOmhwNTEW9jt9xY95LAAaP/UusK+8Su8i9f6r3ojI8KeWFQuDqpmJ1FzAhokR
-         tT8tcCFvUGmp/p70sk2gIiHpRUeylLGWL0bpUAO6Kdp85WvIFX6wGSHzmFI8l2B2gSvu
-         Qih+FYevFdaaedcaR0c6dFEw1RyExACbuXfv2iztndTNz8vDErMsRdzdevj4nTsTGOJ6
-         NTOLrb6stEwM/3MZb6szs7jgOysv2cZhuMjBdrdu1GiSbYicm/kFRAECfyHxazTcRyzX
-         785Z5a5QtAxxXzKU7+F7y4UVszryTRBQEdSvu2ZvpQmESl7UJRqRq5NbryYs4ZUr0G46
-         PJOw==
+        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
+        b=UGTTPcGEoBQyMt2ffSmRLLgjAyPIUt+r0iIa8o1P49YLGdoYVKEbB6QakZAN00mAhm
+         zy9v/0hSmLVI9UU5NBqAMSlsMEbwzjXJUYrFOUUGuxdKU48PBR44wBrg3ACsxrb/zaWM
+         Or4tdMTMz2yn0WZyUSohIWbPxmV6UCTiz32JYGddmb92FTjXa/6SjWPkUvU+rdOtCmfO
+         xQ2M/T2sSSDc2DNlZwW4KMcPv9JPGtOTigyxCycxvrdmkRaiIjVU8c1ZwVNZ6OvQgbcv
+         EhDIU4HLC/IeZT9Q78lwgZ26eC8OIKVeUBXJL6rcX9IfF0d5WMo1ny5So2z7fU+ebfXj
+         wg5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4vEgSlwH75ppaka6b+eKVprx44dYfhzjy3hFcJ1TMew=;
-        b=ohLTXiU4QI8eWvtuOjgrzO3ckH0Hctwc6AteKzs2XD2uR2OkspLo2c5oHT/a3Xp3M+
-         mpeW8oWAUqzWQfO8H7bnjsyeTcm5KnObF3CwgUBZENHf0HWUJLZ3l3FLIKvmdRxvVClz
-         t+7bUwMDUpMjvGEGR/rCiXcviYII+Lb+tbwfkIkO5TTiHmpwvHOoXw6UFWJYFaNZqe7r
-         F4Pa45KfZkEaEyA4OcPa1QvZUHk8f3eWhtkmd/Ac0oaFZjg4WoW8jlYwn3ofDrGAeAmK
-         Mz3lM4bdpdsSr35PC7afCBpNB+KJbza8GjcFN/AHjo9N/LeoxX1ljVLxLzcbqBpcBhIJ
-         NL2w==
-X-Gm-Message-State: APjAAAWdsvXRtaVrW/0LL/e8+Q6G/CeCCTplUbgm6tzF2PM0cpmTsvYD
-        8r1orSzHNXyurzFQbuWlfLDPHcJ+f5mz6/mqPXQ=
-X-Google-Smtp-Source: APXvYqyg3Su2Vwre81Y3TJjLjQDh/KfhxYi5ii+aVVnW0os7zljNoaDM0iXi4ScsRG1uz0qAapyLHxVvt9Xn+3EXPl0=
-X-Received: by 2002:a7b:c257:: with SMTP id b23mr6528043wmj.70.1582927977310;
- Fri, 28 Feb 2020 14:12:57 -0800 (PST)
+        bh=Ns84jhjwh80AF+NgTsU5G8wYY3x4+c5K/NhAZhbbc6Q=;
+        b=HaT+ekETVhmW9oAPfOZE7akt3O5BUbt5rKqCsdaZXTt1a9zwNsGoGMZftgs55HN/6L
+         REQT/DQmpf7p/empmnSnqgNTRpMlR+p+a1DHBGAPE29rLEIDBWtJjs6XBs9wJqfhItKJ
+         fvCTXZowaNREhcRRismN+kirYF+41ToQ+E4jBGK+GIu5DuC1BZf8XhetDndxefi8E+bH
+         jVAx6MtKs1O7PGJo+8vurEpwbVXMCL1P4Yn7oGrGGXDdwx7u1MSHGofdBr2AKR56Yz4s
+         IyX5n8uWcNNTpFwjpdPGmhBkTgG1oL6pqtksWNj2lISCe+5OzHELbxo8YXv1zk5JuHdy
+         u4GA==
+X-Gm-Message-State: ANhLgQ2b9q6mwgDcsOaul9M+MDMijQLKXPiznEf2f50i+otPvMVxQG4G
+        sds04rN1r476bMpLSirKk35CmekklCUxGFXqvh7BIQ==
+X-Google-Smtp-Source: ADFU+vscaxQrz5bVMwzo9WHGRN+dd76KhhzlssRfrguQv31+o1oklXkSerfl7hQ6ykL3RwS+CWHsiJVG6jWWAoyAsOA=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr3541720lfm.4.1582927994221;
+ Fri, 28 Feb 2020 14:13:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228130821.64695-1-colin.king@canonical.com>
-In-Reply-To: <20200228130821.64695-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 28 Feb 2020 17:12:45 -0500
-Message-ID: <CADnq5_NU-GFbj0pTkzjGeMh_J5KM_mNV_NJ_gMFsjt0-Xi=vZw@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amdkfd: fix indentation issue
-To:     Colin King <colin.king@canonical.com>
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com> <20200221021002.18795-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200221021002.18795-3-yamada.masahiro@socionext.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Feb 2020 23:13:03 +0100
+Message-ID: <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller
+ to json-schema
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Fri, Feb 21, 2020 at 3:10 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-On Fri, Feb 28, 2020 at 8:08 AM Colin King <colin.king@canonical.com> wrote:
+> Convert the UniPhier pin controller binding to DT schema format.
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Nice!
+
+> In the original .txt file, there is a description:
+> The UniPhier pinctrl should be a subnode of a "syscon" compatible node
 >
-> There is a statement that is indented with spaces instead of a tab.
-> Replace spaces with a tab.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> index f547e4769831..5db42814dd51 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> @@ -490,7 +490,7 @@ static ssize_t node_show(struct kobject *kobj, struct attribute *attr,
->                         dev->node_props.num_sdma_queues_per_engine);
->         sysfs_show_32bit_prop(buffer, "num_cp_queues",
->                         dev->node_props.num_cp_queues);
-> -    sysfs_show_64bit_prop(buffer, "unique_id",
-> +       sysfs_show_64bit_prop(buffer, "unique_id",
->                         dev->node_props.unique_id);
->
->         if (dev->gpu) {
-> --
-> 2.25.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> I did not figure out how to represent (or check) it in dt-schema.
+> I just moved it to a comment line in 'examples'.
+> If there is a better way, please let me know.
+
+There is no way to do that AFAICT, we are checking nodes from
+one node and downwards, never upwards. The syscon needs to
+have its own binding file: if it has another specific compatible
+such as compatible = "foo", "syscon"; then for the DT bindings
+for foo, make sure to add this subnode as optional/compulsory
+if you want to tie up the whole thing.
+
+> -Required properties:
+> -- compatible: should be one of the following:
+> -    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
+> -    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
+> -    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
+> -    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
+> -    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
+> -    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
+> -    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
+> -    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
+> -    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
+
+But:
+
+> +    soc-glue@5f800000 {
+> +        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
+> +        reg = <0x5f800000 0x2000>;
+> +
+> +        pinctrl: pinctrl {
+> +            compatible = "socionext,uniphier-pro4-pinctrl";
+> +        };
+> +    };
+
+It looks like you want to check also for "simple-mfd" and "syscon"
+following after the enum (two consts)
+
+It seems you want to check that reg is there.
+
+It seems the subnode pinctrl is also compulsory.
+
+All of this have examples in example-schema.yaml IIRC.
+
+Yours,
+Linus Walleij
