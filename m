@@ -2,230 +2,121 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCF0C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB87C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A982469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gd3Q5kzI"
+	by mail.kernel.org (Postfix) with ESMTP id 8759A246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582865231;
+	bh=o9SImtHE09RBaeiSg/akjbnZtC8kIVnBm6fIALqjHEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OJSGlu6eIY4KrN+XmX7I3UQWN3+TnNBnLaohEw9r+g4aSP2V3IIfQBa2I8AFqROGg
+	 AYwq8fHiujmFgxpJbj1yBbWNc5KRI2qqYPveiHucbZpgdP4EUZSPZHt0vQMsSqmHR2
+	 r+pbbjmH4TWePIGvseHipxkmrRSdhyXPyswq2iq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgB1Epw (ORCPT
+        id S1725970AbgB1ErK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:45:52 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33492 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Epw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:45:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so749335plb.0;
-        Thu, 27 Feb 2020 20:45:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PiYPcJuAxp1SDZtFC2pIYopA68irB9Gd6d8vzAHZmww=;
-        b=Gd3Q5kzIu2PEgeziWxtedXRAGIid2KxpRI01XrAaHHqazvdrWesoxeIycvuYx9+aiT
-         iYVYOpd18gZFP0AxXkzvT5usdG+gFEXtBNRXKeIb9akqpu0qvvhPa3h3g/CIfhkeKiLU
-         9nn1iaCVbKD9I/2oXK/Y5LeM1xK1g2AqfHuGXPO3z5Qg/LkT8ctdSyq3NFYSZWcdovmg
-         NA0ckd4+T1j76NAlEAwS5iQ7Ud3FhMq8IAowYJXliL3gGt/h7GGDR3fOv8krYSLyFFGS
-         z8qLPmohrbtB1KQswqRDGwGi1zD+PYaIL5pCerjReDqkJjXVtmy9WCmTO/Cwe31NjBOs
-         gUAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PiYPcJuAxp1SDZtFC2pIYopA68irB9Gd6d8vzAHZmww=;
-        b=Npn8dYmHP3HZfB1jLB+Lx44J7VKuw5KIVrUHSA9iICJYZrCOXoEyMNDrPEMlCK6mSn
-         Byk8yJNEbYN8mLDZ2RSYics7mY28wnOSVxbkEms4n180WJnngns2tfXvTblKyHmO9QwT
-         mLNU9+QQTD7cle4oJlB/LAcvko7ffF+HKe2T2B60JG2kxMIcy1BW8HRMxZrdp8Fb748K
-         8nRI42jjKpyYUIrvh/ytBTJ/GSPBaNTDatcvAWxfV0EDR/Neba9ffKXXXP3Q1Jo1KlEe
-         dupAdUEYVRRd9yM97bQvqgIiTRq1lZk42vL1oytkDOOMxgk6IhskTrJnxDhwgK5qRbLQ
-         bPlw==
-X-Gm-Message-State: APjAAAUdaUzRdwHmHFlGfi7/23f/Uo46mJX8SwbEKY3EQg0xbowKkSqN
-        1jHagrGBl+pM2nbmaq1W/ZZBPeC4J9m54g==
-X-Google-Smtp-Source: APXvYqyuSvEUiDe+JjbiS+jiVf8qcYO1fAr/XE9AhsKKiniRRVucu7utcqaJGOHLhQYVY4EBG/7M1A==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr2680575pjn.60.1582865150915;
-        Thu, 27 Feb 2020 20:45:50 -0800 (PST)
-Received: from localhost.localdomain ([183.128.239.135])
-        by smtp.googlemail.com with ESMTPSA id s23sm316101pjq.17.2020.02.27.20.45.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 20:45:50 -0800 (PST)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, davem@davemloft.net,
-        kuba@kernel.org, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Yanhu Cao <gmayyyha@gmail.com>
-Subject: [PATCH] ceph: using POOL FULL flag instead of OSDMAP FULL flag
-Date:   Fri, 28 Feb 2020 12:45:18 +0800
-Message-Id: <20200228044518.20314-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
+        Thu, 27 Feb 2020 23:47:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1ErK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 23:47:10 -0500
+Received: from localhost (unknown [122.182.215.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8682469D;
+        Fri, 28 Feb 2020 04:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582865229;
+        bh=o9SImtHE09RBaeiSg/akjbnZtC8kIVnBm6fIALqjHEc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=chNQvRu+nGQVEvNZP9fKMItT1iL3YxeCcK/Ir4p+vH8SYCHpIUzfIf+JVVf118D69
+         sSJt6awBXYH918n0btJcNrQluaZMHGECWEZS+GuHINNcvL+fbu5FVzEkoUnpLsnZ5L
+         /CRmJdQrumBIAnac1ukK/g/YIKl+gitYICNVCasg=
+Date:   Fri, 28 Feb 2020 10:17:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, geert@linux-m68k.org
+Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
+Message-ID: <20200228044704.GC2618@vkoul-mobl>
+References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
+ <20200224163707.GA2618@vkoul-mobl>
+ <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OSDMAP_FULL and OSDMAP_NEARFULL are deprecated since mimic.
+Hi Peter,
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
----
- fs/ceph/file.c                  |  6 ++++--
- include/linux/ceph/osd_client.h |  2 ++
- include/linux/ceph/osdmap.h     |  3 ++-
- net/ceph/osd_client.c           | 23 +++++++++++++----------
- 4 files changed, 21 insertions(+), 13 deletions(-)
+On 26-02-20, 14:10, Peter Ujfalusi wrote:
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 7e0190b1f821..60ea1eed1b84 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1482,7 +1482,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	}
- 
- 	/* FIXME: not complete since it doesn't account for being at quota */
--	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-+	if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-+				CEPH_POOL_FLAG_FULL)) {
- 		err = -ENOSPC;
- 		goto out;
- 	}
-@@ -1575,7 +1576,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	}
- 
- 	if (written >= 0) {
--		if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-+		if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-+					CEPH_POOL_FLAG_NEARFULL))
- 			iocb->ki_flags |= IOCB_DSYNC;
- 		written = generic_write_sync(iocb, written);
- 	}
-diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-index 5a62dbd3f4c2..be9007b93862 100644
---- a/include/linux/ceph/osd_client.h
-+++ b/include/linux/ceph/osd_client.h
-@@ -375,6 +375,8 @@ static inline bool ceph_osdmap_flag(struct ceph_osd_client *osdc, int flag)
- 	return osdc->osdmap->flags & flag;
- }
- 
-+bool pool_flag(struct ceph_osd_client *osdc, s64 pool_id, int flag);
-+
- extern int ceph_osdc_setup(void);
- extern void ceph_osdc_cleanup(void);
- 
-diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-index e081b56f1c1d..88faacc11f55 100644
---- a/include/linux/ceph/osdmap.h
-+++ b/include/linux/ceph/osdmap.h
-@@ -36,7 +36,8 @@ int ceph_spg_compare(const struct ceph_spg *lhs, const struct ceph_spg *rhs);
- 
- #define CEPH_POOL_FLAG_HASHPSPOOL	(1ULL << 0) /* hash pg seed and pool id
- 						       together */
--#define CEPH_POOL_FLAG_FULL		(1ULL << 1) /* pool is full */
-+#define CEPH_POOL_FLAG_FULL		(1ULL << 1)  /* pool is full */
-+#define CEPH_POOL_FLAG_NEARFULL	(1ULL << 11) /* pool is nearfull */
- 
- struct ceph_pg_pool_info {
- 	struct rb_node node;
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index b68b376d8c2f..9ad2b96c3e78 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -1447,9 +1447,9 @@ static void unlink_request(struct ceph_osd *osd, struct ceph_osd_request *req)
- 		atomic_dec(&osd->o_osdc->num_homeless);
- }
- 
--static bool __pool_full(struct ceph_pg_pool_info *pi)
-+static bool __pool_flag(struct ceph_pg_pool_info *pi, int flag)
- {
--	return pi->flags & CEPH_POOL_FLAG_FULL;
-+	return pi->flags & flag;
- }
- 
- static bool have_pool_full(struct ceph_osd_client *osdc)
-@@ -1460,14 +1460,14 @@ static bool have_pool_full(struct ceph_osd_client *osdc)
- 		struct ceph_pg_pool_info *pi =
- 		    rb_entry(n, struct ceph_pg_pool_info, node);
- 
--		if (__pool_full(pi))
-+		if (__pool_flag(pi, CEPH_POOL_FLAG_FULL))
- 			return true;
- 	}
- 
- 	return false;
- }
- 
--static bool pool_full(struct ceph_osd_client *osdc, s64 pool_id)
-+bool pool_flag(struct ceph_osd_client *osdc, s64 pool_id, int flag)
- {
- 	struct ceph_pg_pool_info *pi;
- 
-@@ -1475,8 +1475,10 @@ static bool pool_full(struct ceph_osd_client *osdc, s64 pool_id)
- 	if (!pi)
- 		return false;
- 
--	return __pool_full(pi);
-+	return __pool_flag(pi, flag);
- }
-+EXPORT_SYMBOL(pool_flag);
-+
- 
- /*
-  * Returns whether a request should be blocked from being sent
-@@ -1489,7 +1491,7 @@ static bool target_should_be_paused(struct ceph_osd_client *osdc,
- 	bool pauserd = ceph_osdmap_flag(osdc, CEPH_OSDMAP_PAUSERD);
- 	bool pausewr = ceph_osdmap_flag(osdc, CEPH_OSDMAP_PAUSEWR) ||
- 		       ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
--		       __pool_full(pi);
-+		       __pool_flag(pi, CEPH_POOL_FLAG_FULL);
- 
- 	WARN_ON(pi->id != t->target_oloc.pool);
- 	return ((t->flags & CEPH_OSD_FLAG_READ) && pauserd) ||
-@@ -2320,7 +2322,8 @@ static void __submit_request(struct ceph_osd_request *req, bool wrlocked)
- 		   !(req->r_flags & (CEPH_OSD_FLAG_FULL_TRY |
- 				     CEPH_OSD_FLAG_FULL_FORCE)) &&
- 		   (ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
--		    pool_full(osdc, req->r_t.base_oloc.pool))) {
-+		   pool_flag(osdc, req->r_t.base_oloc.pool,
-+			     CEPH_POOL_FLAG_FULL))) {
- 		dout("req %p full/pool_full\n", req);
- 		if (ceph_test_opt(osdc->client, ABORT_ON_FULL)) {
- 			err = -ENOSPC;
-@@ -2539,7 +2542,7 @@ static int abort_on_full_fn(struct ceph_osd_request *req, void *arg)
- 
- 	if ((req->r_flags & CEPH_OSD_FLAG_WRITE) &&
- 	    (ceph_osdmap_flag(osdc, CEPH_OSDMAP_FULL) ||
--	     pool_full(osdc, req->r_t.base_oloc.pool))) {
-+	     pool_flag(osdc, req->r_t.base_oloc.pool, CEPH_POOL_FLAG_FULL))) {
- 		if (!*victims) {
- 			update_epoch_barrier(osdc, osdc->osdmap->epoch);
- 			*victims = true;
-@@ -3707,7 +3710,7 @@ static void set_pool_was_full(struct ceph_osd_client *osdc)
- 		struct ceph_pg_pool_info *pi =
- 		    rb_entry(n, struct ceph_pg_pool_info, node);
- 
--		pi->was_full = __pool_full(pi);
-+		pi->was_full = __pool_flag(pi, CEPH_POOL_FLAG_FULL);
- 	}
- }
- 
-@@ -3719,7 +3722,7 @@ static bool pool_cleared_full(struct ceph_osd_client *osdc, s64 pool_id)
- 	if (!pi)
- 		return false;
- 
--	return pi->was_full && !__pool_full(pi);
-+	return pi->was_full && !__pool_flag(pi, CEPH_POOL_FLAG_FULL);
- }
- 
- static enum calc_target_result
+> >  do we really want a custom dbg_show()..? Drivers can add their own
+> > files...
+> 
+> They could do that already ;)
+> 
+> With the custom dbg_show() DMA drivers can save on the surrounding
+> code and just fill in the information regarding to their HW.
+> Again, on am654 the default information is:
+> # cat /sys/kernel/debug/dmaengine 
+> dma0 (285c0000.dma-controller): number of channels: 96
+> 
+> dma1 (31150000.dma-controller): number of channels: 267
+>  dma1chan0    | 2b00000.mcasp:tx
+>  dma1chan1    | 2b00000.mcasp:rx
+>  dma1chan2    | in-use
+>  dma1chan3    | in-use
+>  dma1chan4    | in-use
+>  dma1chan5    | in-use
+> 
+> With my current .dbg_show implementation for k3-udma:
+> # cat /sys/kernel/debug/dmaengine 
+> dma0 (285c0000.dma-controller): number of channels: 96
+> 
+> dma1 (31150000.dma-controller): number of channels: 267
+>  dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
+>  dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
+>  dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
+>  dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
+>  dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
+>  dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
+> 
+> For me this makes a huge difference.
+
+Ok
+
+> >> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
+> >> +
+> >> +static int __init dmaengine_debugfs_init(void)
+> >> +{
+> >> +	/* /sys/kernel/debug/dmaengine */
+> >> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
+> >> +			    &dmaengine_debugfs_fops);
+> > 
+> > Should we add a directory? That way we can keep adding stuff into that
+> > one
+> 
+> and have this file as 'summary' underneath?
+
+Correct
+
+> I like the fact hat I can get all the information via one file.
+> Saves a lot of time (and explaining to users) on finding the correct
+> one to cat...
+
+But am sure we can come with more data to show, so having a directory
+helps :)
+
 -- 
-2.21.1
-
+~Vinod
