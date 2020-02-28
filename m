@@ -2,107 +2,96 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89057C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB30C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F542469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CFE2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgB1PXN (ORCPT
+        id S1727104AbgB1PYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:23:13 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40906 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726940AbgB1PXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:23:06 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E895CBCDD998B0D1E4CE;
-        Fri, 28 Feb 2020 23:22:53 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Feb 2020 23:22:44 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <broonie@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        <andriy.shevchenko@linux.intel.com>, <linuxarm@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH RFC 1/3] spi: Allow SPI controller override device buswidth
-Date:   Fri, 28 Feb 2020 23:18:49 +0800
-Message-ID: <1582903131-160033-2-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
+        Fri, 28 Feb 2020 10:24:31 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52761 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgB1PYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:24:30 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j7hV6-0004yt-9A; Fri, 28 Feb 2020 15:24:28 +0000
+Date:   Fri, 28 Feb 2020 16:24:27 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
+        metze@samba.org, torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fweimer@redhat.com
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+References: <96563.1582901612@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <96563.1582901612@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently ACPI firmware description for a SPI device does not have any
-method to describe the data buswidth on the board.
+[Cc Florian since that ends up on libc's table sooner or later...]
 
-So even through the controller and device may support higher modes than
-standard SPI, it cannot be assumed that the board does - as such, that
-device is limited to standard SPI in such a circumstance.
+On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
+> 	
+> I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
+> should be used instead of the equivalent AT_* flags for new system calls.  Is
+> this the case?
 
-As a workaround, allow the controller driver supply buswidth override bits,
-which are used inform the core code that the controller driver knows the
-buswidth supported on that board for that device.
+Imho, it would make sense to use RESOLVE_* flags for new system calls
+and afair this was the original intention.
+The alternative is that RESOLVE_* flags are special to openat2(). But
+that seems strange, imho. The semantics openat2() has might be very
+useful for new system calls as well which might also want to support
+parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
+flags mirroring the new RESOLVE_* flags or we end up adding new
+RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
+possibility I vote for RESOLVE_* flags going forward. The have better
+naming too imho.
 
-A host controller driver might know this info from DMI tables, for example.
+An argument against this could be that we might end up causing more
+confusion for userspace due to yet another set of flags. But maybe this
+isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
+When we introduce a new syscall userspace will have to add support for
+it anyway.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/spi/spi.c       | 4 +++-
- include/linux/spi/spi.h | 3 +++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> If so, should we comment them as being deprecated in the header file?  And
+> should they be in linux/fcntl.h rather than linux/openat2.h?
+> 
+> Also:
+> 
+>  (*) It should be noted that the RESOLVE_* flags are not a superset of the
+>      AT_* flags (there's no equivalent of AT_NO_AUTOMOUNT for example).
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 38b4c78df506..292f26807b41 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
- 	spi->dev.bus = &spi_bus_type;
- 	spi->dev.release = spidev_release;
- 	spi->cs_gpio = -ENOENT;
-+	spi->mode = ctlr->buswidth_override_bits;
- 
- 	spin_lock_init(&spi->statistics.lock);
- 
-@@ -2181,9 +2182,10 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
- 		return AE_NO_MEMORY;
- 	}
- 
-+
- 	ACPI_COMPANION_SET(&spi->dev, adev);
- 	spi->max_speed_hz	= lookup.max_speed_hz;
--	spi->mode		= lookup.mode;
-+	spi->mode		|= lookup.mode;
- 	spi->irq		= lookup.irq;
- 	spi->bits_per_word	= lookup.bits_per_word;
- 	spi->chip_select	= lookup.chip_select;
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 6d16ba01ff5a..600e3793303e 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -481,6 +481,9 @@ struct spi_controller {
- 	/* spi_device.mode flags understood by this controller driver */
- 	u32			mode_bits;
- 
-+	/* spi_device.mode flags override flags for this controller */
-+	u32			buswidth_override_bits;
-+
- 	/* bitmask of supported bits_per_word for transfers */
- 	u32			bits_per_word_mask;
- #define SPI_BPW_MASK(bits) BIT((bits) - 1)
--- 
-2.17.1
+That's true but it seems we could just add e.g. RESOLVE_NO_AUTOMOUNT as
+soon as we have a new syscall showing up that needs it or we have an
+existing syscall (e.g. openat2()) that already uses RESOLVE_* flags and
+needs it?
 
+> 
+>  (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the default, but
+>      only RESOLVE_NO_SYMLINKS exists.
+
+I'd be very much in favor of not following symlinks being the default.
+That's usually a source of a lot of security issues.
+And since no kernel with openat2() has been released there's still time
+to switch it and with openat2() being a new syscall it won't hurt if it
+has new semantics; I mean it deviates from openat() - intentionally -
+already.
+
+Christian
