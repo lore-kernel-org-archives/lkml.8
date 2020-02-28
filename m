@@ -2,182 +2,118 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A508C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A49EC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0218E2469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA300246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:55:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/MYdSTF"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="GDZKy5wC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgB1QzR (ORCPT
+        id S1727118AbgB1QzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:55:17 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38425 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgB1QzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:55:14 -0500
-Received: by mail-wm1-f66.google.com with SMTP id n64so2635039wme.3;
-        Fri, 28 Feb 2020 08:55:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=casrlj1Hqx5LF5+z91d1KG1nSFyqQK6E1q8wczBteSc=;
-        b=T/MYdSTF77UGkyKWECcieIpTI1iM2awpa/dkwRRpuEuANpfwC9Phjc7/EY2h6Fbxkg
-         sWl3xD+WbCVOU6l+xYB469AM9XaziUWaQ72SzVMmqkaVg+A9dTy7DKe+9mCiujjK2kPI
-         Ira+3tHjBYTnJKXybKy+lq5W6t1mxcykeCivGWwdHLAoRpwwspapXRwyXyi4YT4XrMd2
-         80eikQsion726w0tCiDLmPaSYD4ZIcZ/JNmM66FjUU9UjwFlYUxwuElLA6WtLhunhs4U
-         gEGCcI/C5nRFolLtFwIPz5EA56tmNJH2lQyRTL38xXHVvJwaJ/D+UrJQNHG0Sp0d6nG6
-         TIPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=casrlj1Hqx5LF5+z91d1KG1nSFyqQK6E1q8wczBteSc=;
-        b=PKdEHda4OozeRq3P1A6+n5plCryPB6wOyMTpGwJmbzC8aUfZDILxOHZG8nPSV9DE/J
-         cWYwZFHWBdvGJ2d7Zx2Wzs14JzdN38FVYGR8mi9heQtBfC3n89C9z/pB9w3dzbFjDM/P
-         KFG5KyKefexSegD62VqmFYgMIQaZZQQaUoNmlYftlo4S8WdOO3mB9CfEiqdjTpA1dC76
-         OrbsAyLJXLZAr076aVOKLVkuBaVdTit+YK9NQoip5UoDJQ4/nYOZ9WLTWybtIs8kdEce
-         G4Vs9nQImCS1W7rJq8gO4arEivT6lfZYDTCZl/ft6Yl162idxS9g5IKXKtM1OeAjai9k
-         zrzA==
-X-Gm-Message-State: APjAAAUZbz0jBXKbG3qlDQ46F3LJZ50X9huqMdz8Hz4eGG9T7rGT5WxJ
-        GtdVueBSPquF7zNQ6ll4o3A=
-X-Google-Smtp-Source: APXvYqzQCjwWAxyxs7x4WoHMBibiEKhdb4HfRyEGj4RtvGJupfpjHBlowkQQfcuwMFFc2v/f7rcnQg==
-X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr5449538wme.125.1582908912646;
-        Fri, 28 Feb 2020 08:55:12 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
-        by smtp.gmail.com with ESMTPSA id s1sm13300071wro.66.2020.02.28.08.55.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 08:55:12 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 3/3] media: i2c: imx219: Add support 640x480
-Date:   Fri, 28 Feb 2020 16:55:03 +0000
-Message-Id: <20200228165503.18054-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 28 Feb 2020 11:55:20 -0500
+Received: from mail-vi1eur05on2090.outbound.protection.outlook.com ([40.107.21.90]:63009
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727044AbgB1QzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:55:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jamKoMxzo1/+8oU29mC2Dz1DJxy5YEWMMNoZizPMyYU9nkz6WUyk5JwxtCdcFg3XzJWzL2rxlcowgJwrGukLermyLu2Nr0ICEc6LN3erP+ISiOQIHgHAmnofCXcQvA6wWelBircbN4x8zrafEDWhF+QcqtInTp6ph6kWpldVW6bgPoO72jWLLzDGgAkBlrMTeLSX6JD7WF2wEmvoYK3rxibcRT5BvALBx3+Ka4hmB0RUWvZaeN0xr1l8elLtl5xzHcLPmyD7fNHE6aaxMB3HwwI3+NZBQCV82xQAWZd3cuzWlZ7czORz82rot/E+NH6hz7hEU01ZuNDzIFNdNmWiaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4d71Obl06XQbfQRE3DWlIYF6n75RT+P73/3960kppU=;
+ b=AmkFj1udg+yD4xhsTL1zL5pLUpSB6Il2Ph6bJvmhpbnOtKf83YkZc4pW9XLzyG9Aezy8nE/6op2rSME4yTCWLo1JgzRvFC218k0Z6VoywAk+T4VeBsHCez86+WFXA8CgUeMHF/iVBqVcVaCEgMrDU6ll1VD16I3NigwbY7yaRNlQVad69VHKcq5+rZn+MgS+KODgTwRJlHgQiVs8aGBr8nYqlwvnUdnr7cBIra2oIXfRqXvhQDojrhY1CsYfN2MYfl5odpXxB9JAL9z68lqvGAre58CTn5C2y4o4SoSW+Kilold48a0Cc/FI/YiO9KMZVneJm/G8kWjeBDArUyaD2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4d71Obl06XQbfQRE3DWlIYF6n75RT+P73/3960kppU=;
+ b=GDZKy5wCQHmDt7y50u0r9WxRjJ9KlkXa7qW8stuOg1KXCJJAwypMmE5HaouCJVYWHaFmB1hOlbQcdAAb+rosQNO5Aigr6acjjX9Gmh0okwpemhSE8b9FpAmDrtQN8QiU9CTwP0ylawTLnxxErVSiXwpvoI+md+Yv1OsV0T+jLlg=
+Received: from VI1PR05MB6845.eurprd05.prod.outlook.com (10.186.163.80) by
+ VI1PR05MB5886.eurprd05.prod.outlook.com (20.178.127.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15; Fri, 28 Feb 2020 16:55:12 +0000
+Received: from VI1PR05MB6845.eurprd05.prod.outlook.com
+ ([fe80::c13:1d07:fa02:6eeb]) by VI1PR05MB6845.eurprd05.prod.outlook.com
+ ([fe80::c13:1d07:fa02:6eeb%7]) with mapi id 15.20.2772.018; Fri, 28 Feb 2020
+ 16:55:12 +0000
+From:   Marcel Ziswiler <marcel.ziswiler@toradex.com>
+To:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "igor.opaniuk@gmail.com" <igor.opaniuk@gmail.com>
+CC:     Max Krummenacher <max.krummenacher@toradex.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v1 5/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
+ GPL-2.0
+Thread-Topic: [PATCH v1 5/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
+ GPL-2.0
+Thread-Index: AQHV6zhumDbfzaMjgUuB9n2COTwjlqgw2TyA
+Date:   Fri, 28 Feb 2020 16:55:12 +0000
+Message-ID: <8a775c784ed587617db8829e1a3532a028e202bd.camel@toradex.com>
+References: <1582565548-20627-1-git-send-email-igor.opaniuk@gmail.com>
+         <1582565548-20627-5-git-send-email-igor.opaniuk@gmail.com>
+In-Reply-To: <1582565548-20627-5-git-send-email-igor.opaniuk@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=marcel.ziswiler@toradex.com; 
+x-originating-ip: [81.221.74.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c9f8cc08-dfe4-4aa9-44c0-08d7bc6ef9f2
+x-ms-traffictypediagnostic: VI1PR05MB5886:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB5886B7A26ABE3D1BFA187742FBE80@VI1PR05MB5886.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0327618309
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(366004)(396003)(376002)(346002)(136003)(189003)(199004)(91956017)(7416002)(81166006)(26005)(186003)(8676002)(5660300002)(8936002)(4744005)(66556008)(478600001)(2906002)(54906003)(66446008)(6486002)(110136005)(316002)(6512007)(71200400001)(6506007)(81156014)(4326008)(66946007)(66476007)(64756008)(86362001)(76116006)(44832011)(36756003)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5886;H:VI1PR05MB6845.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZkpwCu/fiKkQ8+d5NEKUbELJZOLbDc/yfaJf4J+1eR3nU7yW/Zb/MKAp5iFYqNxVpmpVZHTpBylJkwPdfYczv/JmjJ2w089azPJj4FSmvR+dL6vPRnIqOs0lZe5j+IzcIE79zT1F2/1p5O84ZhNQuo+0Ka46Kf13lfIxTNSLw/6APXXchk3uThweBme7pBkWYYg2VXp8xewgEUKJChiIGMWHELbsu/RQfdE7jHcTSIlyQKmmLcct+vvHn3qDCPT6ZfoOB4Uw8JeSAumXIXFZYeHVijyuKmlPhbgP09qGIJlPQbUC2d1NO7oz1dSYPUtaP+74eTn7mNSuAZSZmX3BCRoCUiV+hRptH799M1sq/se9nxQphrpaUHiiVbah3D/9EYtWPDpcQZyy22SOadDA4v4thlIuB/KzwqBVKVod/GSj0t0KKaqUUlSvK7VXOVvv
+x-ms-exchange-antispam-messagedata: MwgZR5oBRRg/KkjwYX6TU8Vw/43I9pXolS3td3rYSYiRRpZESwkDyqgNzbjmsfEOtyE5i5LlYRxI+LBUv6F7FsJKeR1SpiVKkhzHnlPaLye/05Aoja2OsEmFi5dfQgmaRx9pbPjS958XS67/thVmIA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6331F9AE5937AB4F9B3FBCCD1A362453@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9f8cc08-dfe4-4aa9-44c0-08d7bc6ef9f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 16:55:12.0410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NNGeFQ0PQafn/5ng6JeKec02eiysO5x/w+CC62MuPODzImIoltzt07OIiPvKiW9EuWAmJZVuwbF7vtdxOfqrXGV/TSXcraZTvqa0HPjynGM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5886
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to 640x480 cropped resolution for the sensor
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/media/i2c/imx219.c | 70 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
-
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index 1388c9bc00bb..232ebf41063a 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -54,6 +54,7 @@
- #define IMX219_VTS_15FPS		0x0dc6
- #define IMX219_VTS_30FPS_1080P		0x06e3
- #define IMX219_VTS_30FPS_BINNED		0x06e3
-+#define IMX219_VTS_30FPS_640x480	0x0239
- #define IMX219_VTS_MAX			0xffff
- 
- #define IMX219_VBLANK_MIN		4
-@@ -329,6 +330,65 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
- 	{0x0163, 0x78},
- };
- 
-+static const struct imx219_reg mode_640_480_regs[] = {
-+	{0x0100, 0x00},
-+	{0x30eb, 0x0c},
-+	{0x30eb, 0x05},
-+	{0x300a, 0xff},
-+	{0x300b, 0xff},
-+	{0x30eb, 0x05},
-+	{0x30eb, 0x09},
-+	{0x0114, 0x01},
-+	{0x0128, 0x01},
-+	{0x012a, 0x18},
-+	{0x012b, 0x00},
-+	{0x0162, 0x0d},
-+	{0x0163, 0xe7},
-+	{0x0164, 0x03},
-+	{0x0165, 0xe8},
-+	{0x0166, 0x08},
-+	{0x0167, 0xe7},
-+	{0x0168, 0x02},
-+	{0x0169, 0xf0},
-+	{0x016a, 0x06},
-+	{0x016b, 0xaf},
-+	{0x016c, 0x02},
-+	{0x016d, 0x80},
-+	{0x016e, 0x01},
-+	{0x016f, 0xe0},
-+	{0x0170, 0x01},
-+	{0x0171, 0x01},
-+	{0x0172, 0x00},
-+	{0x0174, 0x03},
-+	{0x0175, 0x03},
-+	{0x0301, 0x05},
-+	{0x0303, 0x01},
-+	{0x0304, 0x03},
-+	{0x0305, 0x03},
-+	{0x0306, 0x00},
-+	{0x0307, 0x39},
-+	{0x0309, 0x08},
-+	{0x030b, 0x01},
-+	{0x030c, 0x00},
-+	{0x030d, 0x72},
-+	{0x0624, 0x06},
-+	{0x0625, 0x68},
-+	{0x0626, 0x04},
-+	{0x0627, 0xd0},
-+	{0x455e, 0x00},
-+	{0x471e, 0x4b},
-+	{0x4767, 0x0f},
-+	{0x4750, 0x14},
-+	{0x4540, 0x00},
-+	{0x47b4, 0x14},
-+	{0x4713, 0x30},
-+	{0x478b, 0x10},
-+	{0x478f, 0x10},
-+	{0x4793, 0x10},
-+	{0x4797, 0x0e},
-+	{0x479b, 0x0e},
-+};
-+
- static const char * const imx219_test_pattern_menu[] = {
- 	"Disabled",
- 	"Color Bars",
-@@ -414,6 +474,16 @@ static const struct imx219_mode supported_modes[] = {
- 			.regs = mode_1640_1232_regs,
- 		},
- 	},
-+	{
-+		/* 640x480 30fps mode */
-+		.width = 640,
-+		.height = 480,
-+		.vts_def = IMX219_VTS_30FPS_640x480,
-+		.reg_list = {
-+			.num_of_regs = ARRAY_SIZE(mode_640_480_regs),
-+			.regs = mode_640_480_regs,
-+		},
-+	},
- };
- 
- struct imx219 {
--- 
-2.20.1
-
+SGkgSWdvcg0KDQpPbiBNb24sIDIwMjAtMDItMjQgYXQgMTk6MzIgKzAyMDAsIElnb3IgT3Bhbml1
+ayB3cm90ZToNCj4gRnJvbTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+
+DQo+IA0KPiBTcGVjaWZ5IGV4cGxpY2l0bHkgdGhhdCBHUEwtMi4wIGxpY2Vuc2UgY2FuIGJlIHVz
+ZWQgYW5kIG5vdA0KPiBHUEwtMi4wKyAod2hpY2ggYWxzbyBpbmNsdWRlcyBuZXh0IGxlc3MgcGVy
+bWlzc2l2ZSB2ZXJzaW9ucyBvZiBHUEwpDQo+IGluIFRvcmFkZXggVnlicmlkLWJhc2VkIFNvTSBk
+ZXZpY2UgdHJlZXMuDQoNCk5BSywgYXMgc3RhdGVkIGJlZm9yZS4NCg0KVGhhbmtzIQ0KDQpDaGVl
+cnMNCg0KTWFyY2VsDQo=
