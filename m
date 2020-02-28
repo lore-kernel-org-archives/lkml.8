@@ -2,127 +2,101 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB3BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBADC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346BB24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC47246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AykcLh89"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HEioBiCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgB1MQc (ORCPT
+        id S1726418AbgB1MRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:16:32 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34816 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgB1MQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:16:32 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 145so2719363qkl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 04:16:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jW+oim1VKB75nwiyeU54QJMiA6ZEtr8g9KMSvdI3vz8=;
-        b=AykcLh89sWZynHDKkElwfoxjaLKCsJqV1sXME/jD+lPWIn8yQMaVrd05+dRnpy/5is
-         PWMq8k5d21GsrzfFNDTWMd9WSK8HXFxKMKCqBe225VEszplUAHOHtC610oFzYAAOrtFl
-         hYAHWYGSYsSaGwXKcG9RoBvrDxPfxtXjSUFzz99vzNfuqj6edbpVE9QRu4L8VQPTpzY9
-         cXrmtkZrzjcfkrtwHPrJz2J4Ix8KePzJwQ1CpVxrEvYfUR2x5fFrKoUIYNbK+dzAT4Ap
-         o7H73mEf8SamKPsHa0GUGbIUfoZUWPrsHcXJCqU72QWv1zhHkizkYuzNfG+BYlymI8dS
-         lk1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jW+oim1VKB75nwiyeU54QJMiA6ZEtr8g9KMSvdI3vz8=;
-        b=Lzg3eMC4EP+BYnuS6YoIQPecgw+QpkrBX+QatakfzYChcOaQBS2V9/NYOqz55JyNVu
-         zKcFDGkkVnd99eppvoKz2YftKhCstHKNpkJoG/VRX2eSGvyLgsWDBKb4SJKzHRap9DVn
-         KAJEF7N8fUaUCsLw/8vm+apfEAI482PcgD1McjfG4q7J/95OEaUuQu9eX8PiLUss5yO3
-         MUJptfhQSQk2eMKWxhPkkocO8a2iSBRs/h61uocGu1f4oMNB8eHJHN3K39VCWCbjzWQN
-         QpPvXv+AzPFHe1wplcrYLFDyzr2LcyoTVtgpAry0Z8/qCsRByPYjnJnYKcgK7h1QhBtR
-         jSNQ==
-X-Gm-Message-State: APjAAAXEA39ghJDXcPQEOXFawRwAoXukjamLIN9suFC1XYhCnLa8lN3q
-        g1Mrct+SZGdlpA5SfjhVKHt8lqAt/6JL7iJv2WHJAg==
-X-Google-Smtp-Source: APXvYqzMcs4xH83OCydBwkkGvs4VqYu/TjyplsOfHV6hLy/Tvr7wP9fzKzFY0pvTGD1FfhZesOpdLTJ6PMJPcvrLRwE=
-X-Received: by 2002:a37:84c6:: with SMTP id g189mr3611903qkd.427.1582892191000;
- Fri, 28 Feb 2020 04:16:31 -0800 (PST)
+        Fri, 28 Feb 2020 07:17:32 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:53952 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgB1MRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:17:32 -0500
+Received: from zn.tnic (p200300EC2F08460041E63C1DC591983D.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:4600:41e6:3c1d:c591:983d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B58D1EC02FE;
+        Fri, 28 Feb 2020 13:17:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582892250;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gpbPci87piKc5kSbTtScQpgQ/Cpf5WwOJ0tjLIp24PA=;
+        b=HEioBiCAC03WKPulacDjf2tOeLtLFYa4ps4yMpWhhoCloRf6BRo6g/9tZ2DtJV/wTmgRsm
+        KW5vo9RZU2DaUKVUv5MO4WWKRIhWD2YogFUFVCGY81sssSstnXEkE2QZqG9yNjBWzGKSsD
+        GKbNlcCvW58dNHqv4FDtFX983cWxtF0=
+Date:   Fri, 28 Feb 2020 13:17:24 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+Message-ID: <20200228121724.GA25261@zn.tnic>
+References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+ <20200121201843.12047-9-yu-cheng.yu@intel.com>
+ <20200221175859.GL25747@zn.tnic>
+ <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
 MIME-Version: 1.0
-References: <20200203121620.9002-1-benjamin.gaignard@st.com> <75b302aa739511b3cc2abf4360d5780a08e7c17a.camel@redhat.com>
-In-Reply-To: <75b302aa739511b3cc2abf4360d5780a08e7c17a.camel@redhat.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Fri, 28 Feb 2020 13:16:20 +0100
-Message-ID: <CA+M3ks6xifM2xwx6PR_xuLRYV2GEprtgcM7+_26Z3WbZMRrVeg@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp_mst: Check crc4 value while building sideband message
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mar. 4 f=C3=A9vr. 2020 =C3=A0 20:00, Lyude Paul <lyude@redhat.com> a =C3=
-=A9crit :
->
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
->
+On Thu, Feb 27, 2020 at 02:52:12PM -0800, Yu-cheng Yu wrote:
+> > So the code sets TIF_NEED_FPU_LOAD unconditionally, why are you changing
+> > this?
+> > 
+> > Why don't you simply do:
+> > 
+> > 		set_thread_flag(TIF_NEED_FPU_LOAD);
+> > 		fpregs_lock();
+> > 		if (xfeatures_mask_supervisor())
+> > 			copy_xregs_to_kernel(&fpu->state.xsave);
+> > 		fpregs_unlock();
+> 
+> If TIF_NEED_FPU_LOAD is set, then xstates are already in the xsave buffer. 
+> We can skip saving them again.
 
-Applied on drm-misc-next
-Thanks,
-Benjamin
+Ok, then pls use test_and_set_thread_flag().
 
-> On Mon, 2020-02-03 at 13:16 +0100, Benjamin Gaignard wrote:
-> > Check that computed crc value is matching the one encoded in the messag=
-e.
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> > CC: lyude@redhat.com
-> > CC: airlied@linux.ie
-> > CC: jani.nikula@linux.intel.com
-> >  drivers/gpu/drm/drm_dp_mst_topology.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > index 822d2f177f90..eee899d6742b 100644
-> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > @@ -736,6 +736,10 @@ static bool drm_dp_sideband_msg_build(struct
-> > drm_dp_sideband_msg_rx *msg,
-> >       if (msg->curchunk_idx >=3D msg->curchunk_len) {
-> >               /* do CRC */
-> >               crc4 =3D drm_dp_msg_data_crc4(msg->chunk, msg->curchunk_l=
-en -
-> > 1);
-> > +             if (crc4 !=3D msg->chunk[msg->curchunk_len - 1])
-> > +                     print_hex_dump(KERN_DEBUG, "wrong crc",
-> > +                                    DUMP_PREFIX_NONE, 16, 1,
-> > +                                    msg->chunk,  msg->curchunk_len, fa=
-lse);
-> >               /* copy chunk into bigger msg */
-> >               memcpy(&msg->msg[msg->curlen], msg->chunk, msg->curchunk_=
-len -
-> > 1);
-> >               msg->curlen +=3D msg->curchunk_len - 1;
-> --
-> Cheers,
->         Lyude Paul
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Also, in talking to Sebastian about this on IRC, he raised a valid
+concern: if we are going to save supervisor states here, then
+copy_xregs_to_kernel() should better save *only* supervisor states
+because we're not interested in the user states - they're going to be
+overwritten with the states from the stack.
+
+So copy_xregs_to_kernel() needs to learn about a second parameter called
+@mask like copy_kernel_to_xregs().
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
