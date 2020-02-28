@@ -2,199 +2,223 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E465DC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7919C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B962924692
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07AB24692
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdaDLB40"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Esy8PrSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbgB1D1j (ORCPT
+        id S1730772AbgB1D3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:27:39 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40654 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730646AbgB1D1j (ORCPT
+        Thu, 27 Feb 2020 22:29:45 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37241 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730668AbgB1D3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:27:39 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a142so1523107oii.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:27:38 -0800 (PST)
+        Thu, 27 Feb 2020 22:29:45 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so1031443lfc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:29:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NDgUQnCysZ7NFsIwDokx6+x5eoZKUCkBzb/ZNj5Uk14=;
-        b=qdaDLB40g+oyHb7JAcITCqVVaUs363TrbWV1T7QaYfFPpjtX8uy60Dkj2GU6XBpJGN
-         lAN731kvw5+DtZs/Jmqj9a2zAwq3yyiugAXweWmF+/7ozu2pZbH5NlF01boeMxI4jdgy
-         wPRxGYAstclqvIhU99ubI0HPyarsbPFL0vGzov59t9CBbria3MovzKiPtqyjDYHWW2JH
-         2VT7OciJqRRyU7x4MX7hi9uKOBuzKgCDwo/tWsH1Su907YVLYbNXINavQw2gJe+mO85A
-         /jDNEzcKqvCRg53uCe5vIYRMa8+V2F9YUQ2DdfHUYcFd8Xslim1gBU7pGdnNPZQA37BA
-         sbBA==
+         :cc:content-transfer-encoding;
+        bh=78tHbOll36uBw2XMxvLXTIrb/7Hwcn3/bSQBtRwNyV4=;
+        b=Esy8PrSDrE8pziSziw6UMtRLBPv9knn60C6HwboX7hLSXMn40d9NOyO5Pmi6O/EkBd
+         feru0BtMSB6K1RwlP1g+aFOiMHS5b8fdanX3dnXciHmFxqlOkPFBXPKKgX0JXYwbv0NH
+         R8v6TbaLCvh9+RmXjcvW9As+oQ6zojN2AnzUIGs3E7I4wrdgMedhWxNl+tO3pzi5BK5R
+         3iq0B09gkoAtBGPaNQyQpUomEmacdCA/z+aRX1i99vcMelOLfeEPM6HV2Pzkz+NXeFfs
+         L2fsF2RbrEcGgxaZy+P0vnGbotgZSh7/WwQPPBK1KMZ86GyJlVV4MPp6ECO4btrqF0eI
+         Yhew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NDgUQnCysZ7NFsIwDokx6+x5eoZKUCkBzb/ZNj5Uk14=;
-        b=FTvj7j5e+YneaAja2l3npVYTANQd+h1E5yzJWjjaiz88RnO9L4RTXEYD5SV9tCLsad
-         jcbCyZc4GdVtFqkBu7w6T83V7qiVrYqarrDKOsIkGbyqTb5Xw5Nz/EsSftz3b7Agerds
-         opq0HBKodAitY6a+YNj818PCtu8iR1MD8oWfX9x197sfnJmiG4ZuIuLRJN4bcqNCEWEB
-         3ZZzse4bWPhEjPpOIhcAeLJvZRu6qqUjyHstWQ0zVu2r6E/ie7hxv4dBqlUXjcEEiKXn
-         XcRzXwrqHRwjlcW7vjPCEWskPvNeNn71Znkb3SuMfqqT7dWqbwqRrBiLh9ssXYlDiT3P
-         Jeig==
-X-Gm-Message-State: APjAAAU5wcQDKCkJNYOvrguRjqZ/QzdZFbFr+gqbIzeuglLOl6RfHLag
-        qOb6NH9giGvd73QyDPk3elDYb+8nv2hDsh/tSsTDzQ==
-X-Google-Smtp-Source: APXvYqyOVn3TXyhx+GoHYcgMBBF9yOdT1HuTV+3w8j1kxYzXCl2z3YA80qnpCa43jnHHo1tUjwE1QG14/Zn3P7OrhMk=
-X-Received: by 2002:aca:5205:: with SMTP id g5mr5640oib.43.1582860458043; Thu,
- 27 Feb 2020 19:27:38 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=78tHbOll36uBw2XMxvLXTIrb/7Hwcn3/bSQBtRwNyV4=;
+        b=R6AIMBCUuAthXhKW7S6vc+CwwbciDYAiCJWGQcvuPxRtxdhEH+/4wC5d+yNERePRHM
+         tyBiJCXg9H4X3r9n4XRJpS3XOpiU6y9KwSP8k+HnHwzYt15odw3NIVGSAT3HlTcqMZeE
+         Yk0ik+MhM5VW74/Z3D7+Ldn0wiwFZ/3iK1fbMnQ2mDHMW+eYYGQ4joTl095HcGZPlTKr
+         9xs9IuCTJlOwsr2oWkwl3pgo9H/TS8KHrDdiy0LVZNOSU7HiLqAy3ES3tsyr0fhgDEqN
+         AO+Yw04g42vzwuB/AkOV3SKJfBtG5ugRfM9k1UBj8vyFEncnUAEE4pMT5JjvGmQnAWmj
+         fOgg==
+X-Gm-Message-State: ANhLgQ2Oum9SnKaQhGttUFhIcRdZ+aIr74AYsdS3JNcy68zfR+eUseRd
+        s/+rI177m2zS6AE3YLmsrNdQk8bP880j3v0EPvl1/YU7zjs=
+X-Google-Smtp-Source: ADFU+vvuQAgNrjgT3mnY4SiNWU/Oj1NGZRYrcJYA8fh4Jpu4CjS8OByXAxe/MyN76/cnDE/LRq0wM3dCm6lifHt9UGA=
+X-Received: by 2002:a05:6512:3e5:: with SMTP id n5mr1359899lfq.55.1582860582649;
+ Thu, 27 Feb 2020 19:29:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20200222014038.180923-1-saravanak@google.com> <20200222014038.180923-3-saravanak@google.com>
-In-Reply-To: <20200222014038.180923-3-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 27 Feb 2020 19:27:01 -0800
-Message-ID: <CAGETcx-xxd_E=-zF5+a58queyGg_5JX9tbCm49YBtcvFUhVEZw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] driver core: Add fw_devlink kernel commandline option
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 28 Feb 2020 08:59:30 +0530
+Message-ID: <CA+G9fYse5vNkUmMJ7E5DL2NcY9Cp1RUdAJif+DVsDdv+u9QiTw@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/237] 4.14.172-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 5:40 PM Saravana Kannan <saravanak@google.com> wrote:
+On Thu, 27 Feb 2020 at 19:23, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> fwnode_operations.add_links allows creating device links from
-> information provided by firmware.
+> This is the start of the stable review cycle for the 4.14.172 release.
+> There are 237 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> fwnode_operations.add_links is currently implemented only by
-> OF/devicetree code and a specific case of efi. However, there's nothing
-> preventing ACPI or other firmware types from implementing it.
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
 >
-> The OF implementation is currently controlled by a kernel commandline
-> parameter called of_devlink.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.172-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
 >
-> Since this feature is generic isn't limited to OF, add a generic
-> fw_devlink kernel commandline parameter to control this feature across
-> firmware types.
+> thanks,
 >
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         | 18 +++++++++++++
->  drivers/base/core.c                           | 27 ++++++++++++++++++-
->  include/linux/fwnode.h                        |  2 ++
->  3 files changed, 46 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index dbc22d684627..29985152b66d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1350,6 +1350,24 @@
->                         can be changed at run time by the max_graph_depth file
->                         in the tracefs tracing directory. default: 0 (no limit)
->
-> +       fw_devlink=     [KNL] Create device links between consumer and supplier
-> +                       devices by scanning the firmware to infer the
-> +                       consumer/supplier relationships. This feature is
-> +                       especially useful when drivers are loaded as modules as
-> +                       it ensures proper ordering of tasks like device probing
-> +                       (suppliers first, then consumers), supplier boot state
-> +                       clean up (only after all consumers have probed),
-> +                       suspend/resume & runtime PM (consumers first, then
-> +                       suppliers).
-> +                       Format: { off | permissive | on | rpm }
-> +                       off --  Don't create device links from firmware info.
-> +                       permissive -- Create device links from firmware info
-> +                               but use it only for ordering boot state clean
-> +                               up (sync_state() calls).
-> +                       on --   Create device links from firmware info and use it
-> +                               to enforce probe and suspend/resume ordering.
-> +                       rpm --  Like "on", but also use to order runtime PM.
-> +
+> greg k-h
 
-A bit of bikeshedding myself: I could rename "on" to "enforce" and
-"rpm" to "enforce-rpm".
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Let me know if any of you have a strong preference on these two options.
+Summary
+------------------------------------------------------------------------
 
--Saravana
+kernel: 4.14.172-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 47e811c62a4a89755af4c26a95985cec9cf10e80
+git describe: v4.14.171-238-g47e811c62a4a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.171-238-g47e811c62a4a
 
->         gamecon.map[2|3]=
->                         [HW,JOY] Multisystem joystick and NES/SNES/PSX pad
->                         support via parallel port (up to 5 devices per port)
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index d32a3aefff32..aeaca8a3aad9 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -2345,6 +2345,31 @@ static int device_private_init(struct device *dev)
->         return 0;
->  }
->
-> +u32 fw_devlink_flags;
-> +static int __init fw_devlink_setup(char *arg)
-> +{
-> +       if (!arg)
-> +               return -EINVAL;
-> +
-> +       if (strcmp(arg, "off") == 0) {
-> +               fw_devlink_flags = 0;
-> +       } else if (strcmp(arg, "permissive") == 0) {
-> +               fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
-> +       } else if (strcmp(arg, "on") == 0) {
-> +               fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> +       } else if (strcmp(arg, "rpm") == 0) {
-> +               fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
-> +                                  DL_FLAG_PM_RUNTIME;
-> +       }
-> +       return 0;
-> +}
-> +early_param("fw_devlink", fw_devlink_setup);
-> +
-> +u32 fw_devlink_get_flags(void)
-> +{
-> +       return fw_devlink_flags;
-> +}
-> +
->  /**
->   * device_add - add device to device hierarchy.
->   * @dev: device.
-> @@ -2493,7 +2518,7 @@ int device_add(struct device *dev)
->          */
->         device_link_add_missing_supplier_links();
->
-> -       if (fwnode_has_op(dev->fwnode, add_links)) {
-> +       if (fw_devlink_flags && fwnode_has_op(dev->fwnode, add_links)) {
->                 fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
->                 if (fw_ret == -ENODEV)
->                         device_link_wait_for_mandatory_supplier(dev);
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 8feeb94b8acc..e0abafbb17f8 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -170,4 +170,6 @@ struct fwnode_operations {
->         } while (false)
->  #define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
->
-> +extern u32 fw_devlink_get_flags(void);
-> +
->  #endif
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+No regressions (compared to build v4.14.171)
+
+No fixes (compared to build v4.14.171)
+
+Ran 28113 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-crypto-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
