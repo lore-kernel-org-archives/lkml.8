@@ -2,165 +2,196 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAB1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59634C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B46F246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="GSoa1RXl";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="XGeUOs5Z"
+	by mail.kernel.org (Postfix) with ESMTP id 2780F246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582883064;
+	bh=EY3N5ARkuQ2Fmd9dLsdkczWCpYQSSmA2gTdVVcCS6/A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VimMQ90mVI5wEyW8dLHERpG87WOZ01d4UEpmRHFsuwthHXqxrl8M4k1721S6Qf8Dz
+	 0qSITaITlsALpAD8AE/ofcev23SHOhCifStsODgixBIyJzcRu8wNa4WVXsC+rmZCuF
+	 /mbWPS+P2fyfks1qBARyQqZmKYslaNGBHAsw95Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgB1Jns (ORCPT
+        id S1727027AbgB1JoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:43:48 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:54904 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726894AbgB1Jno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:43:44 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S9dgH5024994;
-        Fri, 28 Feb 2020 01:43:31 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=fei+1EkzRukgHoU2oL8ccEl20bRBoqJ5tKPYO57SdLc=;
- b=GSoa1RXl8xmVl5efJRf514d5O1zXUw8NfW0Cy/bTgAGEZrGDPmpeTLCHFG2ssCPjWF6x
- 301nzNSwIGHzgY/7EkBeUtyOth8KeC947BL9CnFzsJd4y46Ra9XJE8M8RMcoOKhHCZn6
- Mq13qQZDN0yk1BOmYr78igBJW/YnFBaUZWAyG9MLF8uhoE6H4Sm/6tslNiTQp5hrxDJx
- KIMylFtDACN5Wi5VsHio0HIXB6RZowf0VX/E214dtQaRJyCaZ9dy5OXSYVuXSReBUTvQ
- Opmljj5lZGXC27eW8yevFuoTvRC/jOAplr7AEN4Q5kJTg52dzDcgm4i8dOT3Q4HU77bl EQ== 
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2052.outbound.protection.outlook.com [104.47.46.52])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2yepvct0rd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 01:43:31 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JlBtUIUqcnz0GwPOqLkEZx+uSJIT/4ET9uC2XnbULaw/aD90xu6hwfJoikzuVU5vk1Q0w1gEIAqwLaeX+8Kyldj/h82G5ZkXdpMcdKMBgniZcAD6eS1yBPOP4D1P+PxkhJqSH4BpKXLdT8dXAyWYOruK4bQM8RVpTmAn/bfKK+sbMj/nxL1aAtynn6pDgGUtsU3nTb719gA8UfkQ5/9GWSBIXLXH1p/jBtX9+L3VAjwbRZFs58s542OWWHSf2+jXZpUAh8f/GInblCi1kZsxEmIP7qNcf3cIcQ92Iuc+BKCjpawD6eeM9T5YEYSkIVOG9wczv+5B7LRJ+zBhOKRZZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fei+1EkzRukgHoU2oL8ccEl20bRBoqJ5tKPYO57SdLc=;
- b=H3GjkaKnA5VTEoubCGIaJa8NQ+nQYV0ZUQ04rTCJp0RHVzoG72cQILv0Tu82xVf2KEevkwBafU9wVa4Y7KK0kntT9vB8OSpTQLa1ArfCHSHPxnmDnPojKJxD6SF3YvPMzyZb1zn1Au4YPN6pdognG65KPr7AVZ9voCUTQOVve3TlcddSnFoVe+/Hi7BY99NNLysmZwML82YbG42VYJL93lS7qtShKKG3x24TgARn6tGJ5jv2b+Xm7C+HBAiJBJ7yK/acmYz6xE5nxkOHxZWMf9Rp4aKE4uY77XJS74IW57kk3xuEEaMnLtrN+30MVRYm2j/keL/yb/yekdLiUhYFFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 158.140.1.28) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fei+1EkzRukgHoU2oL8ccEl20bRBoqJ5tKPYO57SdLc=;
- b=XGeUOs5ZB1hkjCkkY4eVgbvfC9tzA/BJIhKE+xZ8mR1CjtJT3HGu7Tik/nyCDvNZJ3JZaOGyR0xBrUArvXJSIc0vCsE87a+YfRw0S8N8AaF21XSVhDJfQzOzmCyI8vIPkSJJKda1iHLR/CJVAErBhSa2n893PhoBFUjf8E7O9os=
-Received: from MWHPR14CA0071.namprd14.prod.outlook.com (2603:10b6:300:81::33)
- by CY4PR0701MB3636.namprd07.prod.outlook.com (2603:10b6:910:93::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Fri, 28 Feb
- 2020 09:43:29 +0000
-Received: from MW2NAM12FT044.eop-nam12.prod.protection.outlook.com
- (2603:10b6:300:81:cafe::f3) by MWHPR14CA0071.outlook.office365.com
- (2603:10b6:300:81::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend
- Transport; Fri, 28 Feb 2020 09:43:29 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
- client-ip=158.140.1.28; helo=sjmaillnx1.cadence.com;
-Received: from sjmaillnx1.cadence.com (158.140.1.28) by
- MW2NAM12FT044.mail.protection.outlook.com (10.13.180.247) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.5 via Frontend Transport; Fri, 28 Feb 2020 09:43:28 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 01S9hPFH026489
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 28 Feb 2020 01:43:27 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 28 Feb 2020 10:43:24 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 28 Feb 2020 10:43:24 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01S9hODU013664;
-        Fri, 28 Feb 2020 10:43:24 +0100
-Received: (from dkangude@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01S9hORA013663;
-        Fri, 28 Feb 2020 10:43:24 +0100
-From:   Dhananjay Kangude <dkangude@cadence.com>
-To:     <linux-edac@vger.kernel.org>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
-        <mparab@cadence.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Dhananjay Kangude <dkangude@cadence.com>
-Subject: [PATCH v1 0/2] Add EDAC support for Cadence ddr controller
-Date:   Fri, 28 Feb 2020 10:43:20 +0100
-Message-ID: <20200228094322.13617-1-dkangude@cadence.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 28 Feb 2020 04:44:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgB1JoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:44:22 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC12246B7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582883061;
+        bh=EY3N5ARkuQ2Fmd9dLsdkczWCpYQSSmA2gTdVVcCS6/A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DDFiZ942ndAh4/uGo+flTje203xmGj7xn0NowQTvbLbY7+SQw33rROqAa5nibZGrJ
+         XSfWGSTyfiKZL0a/vmlhmTKqCMrKbN0PCcuo98GLBVV3e1/LvTfdH9HmiR3rLlzYTC
+         VtsGWYbncN4LRy5rVHDyA/PhCjVwK2G2KjwRXL1A=
+Received: by mail-wm1-f51.google.com with SMTP id z12so2468487wmi.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:44:20 -0800 (PST)
+X-Gm-Message-State: APjAAAXElwFVwpV+TLe1bU2kpoardPvQ/mCEbjuelR3kgaOGbykSdnZC
+        zmYPgEvHnJdPAQM/LXXT91ye10rIqfZgYzdKYj67fg==
+X-Google-Smtp-Source: APXvYqzQDeiE9uETc0v0SlldVjq0AbI0gGMk7x0p0dQwOWlkIdt6C1NHOKlKwQufolI6IQPaR0rg9t9cVXd31TKDLwI=
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4334566wmk.68.1582883059353;
+ Fri, 28 Feb 2020 01:44:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(396003)(376002)(199004)(189003)(36092001)(336012)(2616005)(426003)(86362001)(4326008)(107886003)(5660300002)(186003)(26005)(70586007)(70206006)(2906002)(1076003)(356004)(6666004)(42186006)(316002)(54906003)(6916009)(478600001)(36756003)(8676002)(8936002)(7636002)(26826003)(246002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR0701MB3636;H:sjmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b58717a-53c2-43d8-f55d-08d7bc32aa39
-X-MS-TrafficTypeDiagnostic: CY4PR0701MB3636:
-X-Microsoft-Antispam-PRVS: <CY4PR0701MB3636B96C90C3BEB2C619D920CDE80@CY4PR0701MB3636.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:586;
-X-Forefront-PRVS: 0327618309
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4o5+1mylJfvpYVqo6W1VkP21sg7AYJUwJOuuGR1ASATn73fJu8V5t8YW0kVJqWV8aqzLoPtCnVMFdEckX6s3CTF48KDbvI9od2Ioxpz97si8iX+ZmNGhbOJb5caGdKruwv5Ag4XH0+r/s+sinanTcwuymqg7yHpI4uJnmDMeBUSf+YRYJu1pKIuEUSnsbdyBfHioG6qYwW1mtUgK7+x63V8HtuaO5SSgENmByBRQFbSO9pNA637bWZCo9viF3QSmgA42uMba6yrh4DVIgAbQmFGDk2Ze26c+z8QPyZT6WgAmMHZ8mkzSLzLvULtWrG4LhQl54bFfedX1wKca6UYmZQ4IAvqMGGNg9UFzr3VaVa9sfyBQRhS+d3PrTOSigZoRzI1V/M69yZvecN08qGsjZvFSXw0G/zdbPgpqvj/S785kwDmCxpqyIe2tLu09rzHUN9zZjphirlc+mKbAwwypH8V28r4IqufWiBGtrFri5VQG6kHtGgLQBzL7FqKHiJ+J
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 09:43:28.5876
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b58717a-53c2-43d8-f55d-08d7bc32aa39
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0701MB3636
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_02:2020-02-26,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 mlxlogscore=517
- clxscore=1015 adultscore=0 suspectscore=1 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280081
+References: <20200217113947.2070436-1-javierm@redhat.com> <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
+ <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com> <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
+ <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com> <0d8e7525-545d-23d5-dace-6804833447d2@redhat.com>
+In-Reply-To: <0d8e7525-545d-23d5-dace-6804833447d2@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 28 Feb 2020 10:44:08 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu-OO_YiDWbF2pRBQTGe3FxC5CmjuxCnCwxJmnzRHhEz_g@mail.gmail.com>
+Message-ID: <CAKv+Gu-OO_YiDWbF2pRBQTGe3FxC5CmjuxCnCwxJmnzRHhEz_g@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
+ certs if EFI vars are found
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches add new edac driver for Cadence ddr memory controller.
-Cadence controller detects single(CE) and double(UE) bit errors during
-memory operations(RMW). DDR controller raised the interrupt on detection
-of the ecc error event and fill the data into registers. Driver handle
-the interrupt event and notify edac subsystem about ecc errors.
+On Fri, 28 Feb 2020 at 10:43, David Hildenbrand <david@redhat.com> wrote:
+>
+> On 28.02.20 10:39, Ard Biesheuvel wrote:
+> > On Fri, 28 Feb 2020 at 10:35, David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 28.02.20 10:31, David Hildenbrand wrote:
+> >>> On 28.02.20 10:19, David Hildenbrand wrote:
+> >>>> On 17.02.20 12:39, Javier Martinez Canillas wrote:
+> >>>>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
+> >>>>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
+> >>>>>
+> >>>>> But it just assumes that the variables will be present and prints an error
+> >>>>> if the certs can't be loaded, even when is possible that the variables may
+> >>>>> not exist. For example the MokListRT variable will only be present if shim
+> >>>>> is used.
+> >>>>>
+> >>>>> So only print an error message about failing to get the certs list from an
+> >>>>> EFI variable if this is found. Otherwise these printed errors just pollute
+> >>>>> the kernel log ring buffer with confusing messages like the following:
+> >>>>>
+> >>>>> [    5.427251] Couldn't get size: 0x800000000000000e
+> >>>>> [    5.427261] MODSIGN: Couldn't get UEFI db list
+> >>>>> [    5.428012] Couldn't get size: 0x800000000000000e
+> >>>>> [    5.428023] Couldn't get UEFI MokListRT
+> >>>>>
+> >>>>> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> >>>>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> >>>>> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> >>>>
+> >>>> This patch seems to break a very basic x86-64 QEMU setup (booting
+> >>>> upstream kernel with a F31 initrd - are you running basic boot tests?).
+> >>>> Luckily, it only took me 5 minutes to identify this patch. Reverting
+> >>>> this patch from linux-next fixes it for me.
+> >>>>
+> >>>>
+> >>>> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
+> >>>> [    1.044314] zswap: loaded using pool lzo/zbud
+> >>>> [    1.045663] Key type ._fscrypt registered
+> >>>> [    1.046154] Key type .fscrypt registered
+> >>>> [    1.046524] Key type fscrypt-provisioning registered
+> >>>> [    1.051178] Key type big_key registered
+> >>>> [    1.055108] Key type encrypted registered
+> >>>> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >>>> [    1.056172] #PF: supervisor instruction fetch in kernel mode
+> >>>> [    1.056706] #PF: error_code(0x0010) - not-present page
+> >>>> [    1.057367] PGD 0 P4D 0
+> >>>> [    1.057729] Oops: 0010 [#1] SMP NOPTI
+> >>>> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
+> >>>> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
+> >>>> [    1.060230] RIP: 0010:0x0
+> >>>> [    1.060478] Code: Bad RIP value.
+> >>>> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
+> >>>> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
+> >>>> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
+> >>>> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
+> >>>> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+> >>>> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
+> >>>> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
+> >>>> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>>> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
+> >>>> [    1.066562] Call Trace:
+> >>>> [    1.066803]  load_uefi_certs+0xc8/0x2bb
+> >>>> [    1.067171]  ? get_cert_list+0xfb/0xfb
+> >>>> [    1.067523]  do_one_initcall+0x5d/0x2f0
+> >>>> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
+> >>>> [    1.068337]  kernel_init_freeable+0x243/0x2c2
+> >>>> [    1.068751]  ? rest_init+0x23a/0x23a
+> >>>> [    1.069095]  kernel_init+0xa/0x106
+> >>>> [    1.069416]  ret_from_fork+0x27/0x50
+> >>>> [    1.069759] Modules linked in:
+> >>>> [    1.070050] CR2: 0000000000000000
+> >>>> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
+> >>>>
+> >>>>
+> >>>
+> >>> Sorry, wrong mail identified, the patch is actually
+> >>>
+> >>> commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
+> >>> Author: Ard Biesheuvel <ardb@kernel.org>
+> >>> Date:   Sun Feb 16 19:46:25 2020 +0100
+> >>>
+> >>>     integrity: Check properly whether EFI GetVariable() is available
+> >>>
+> >>>     Testing the value of the efi.get_variable function pointer is not
+> >>>
+> >>> which made it work. (not even able to find that patch on lkml ...)
+> >>
+> >> To clarify for Ard, your patch breaks a basic QEMU setup (see above,
+> >> NULL pointer dereference). Reverting your patch from linux-next makes it
+> >> work again.
+> >>
+> >
+> > Does this fix it?
+> >
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index 41269a95ff85..d1746a579c99 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -300,12 +300,12 @@ static int __init efisubsys_init(void)
+> >  {
+> >         int error;
+> >
+> > -       if (!efi_enabled(EFI_BOOT))
+> > -               return 0;
+> > -
+> >         if (!efi_enabled(EFI_RUNTIME_SERVICES))
+> >                 efi.runtime_supported_mask = 0;
+> >
+> > +       if (!efi_enabled(EFI_BOOT))
+> > +               return 0;
+> > +
+> >         if (efi.runtime_supported_mask) {
+> >                 /*
+> >                  * Since we process only one efi_runtime_service() at a time, an
+> >
+>
+> Yes, does the trick!
+>
 
-Changes since v1:
-=================
-- Made predefined arrays as static
- Fixes: 201447a5db9b ("EDAC/Cadence:Add EDAC driver for cadence memory controller")
-- Replace macro 'EDAC_DIMM_PTR' with newly introduce function
-- Removed unused variable root
-
-Dhananjay Kangude (2):
-  EDAC/Cadence:Add EDAC driver for cadence memory controller
-  dt-bindings: edac: Add cadence ddr mc support
-
- .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |  59 ++
- drivers/edac/Kconfig                               |   7 +
- drivers/edac/Makefile                              |   1 +
- drivers/edac/cadence_edac.c                        | 615 +++++++++++++++++++++
- 4 files changed, 682 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
- create mode 100644 drivers/edac/cadence_edac.c
-
-
-base-commit: ffa9a9758be2793d11b0c51bc2845f7dd200e261
--- 
-2.15.0
-
+Thanks, David. I'll get this out and into -next asap.
