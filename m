@@ -2,136 +2,130 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E81C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A32EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6449246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D389246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="pn3452AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgB1IeW (ORCPT
+        id S1726671AbgB1Ifa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:34:22 -0500
-Received: from smtprelay0074.hostedemail.com ([216.40.44.74]:52671 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725877AbgB1IeH (ORCPT
+        Fri, 28 Feb 2020 03:35:30 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39147 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgB1If3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:34:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B02CA181D3025;
-        Fri, 28 Feb 2020 08:34:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: coach43_7b1caf2ddb420
-X-Filterd-Recvd-Size: 3660
-Received: from joe-laptop.perches.com (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 28 Feb 2020 08:34:05 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] parport_mfc3: Convert DPRINTK to pr_debug
-Date:   Fri, 28 Feb 2020 00:32:16 -0800
-Message-Id: <66cf3d4a9dbdb24bd3d299b71a2ae05e196ee207.1582878394.git.joe@perches.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1582878393.git.joe@perches.com>
-References: <cover.1582878393.git.joe@perches.com>
+        Fri, 28 Feb 2020 03:35:29 -0500
+Received: by mail-il1-f193.google.com with SMTP id w69so2045847ilk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 00:35:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OXyFeX6mAXl7ibpfgMxisE4ycSpVpmIz9s5cjNf8Vhw=;
+        b=pn3452AKsTBvGlo0Y5JA0NZltS3uiCzuNxlOu9vIU/91jdvfz1MmnUcdniXZft8fOK
+         uRgelnJFXnk/5446/FJEkurj9vFQkfopb6YzN9hGnaI6ygpIsXBuRwoK4kfbvuwENiZZ
+         0wpCmRg1DtQDcyWKqHDbVr5FOAQOpPzh6yVGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OXyFeX6mAXl7ibpfgMxisE4ycSpVpmIz9s5cjNf8Vhw=;
+        b=H5XjKRdwK/1lpHOs+u5iCvU/XRbr6pN0BMh/KSHmuvbArUNjiJ5zNm3tcQLTQNchWK
+         rm0VRgf03ydVA/Hqt/Gy73YIMKUMRXIyFt7tD9GfJGm4+X/iXqLu4ZScC90b8emOOnjf
+         oku2r5z6/Vc5NkdToawsyZQrDFoA931+XYYe3iKAKP0T6SWScMFdm6tPJ39dDfQwKFBX
+         XFaTiYcDhZ8Ru/3iOi4OJ2MjaGUalpjLag1hczS9LU9KHRzFAS2ieXEq6fEPhqDosHS7
+         WCe//4b2ZAI3RmIGy/lXh4LqCPjCYjT9AaTB0E7/fmVncx1B1ON6FN6frvSJ8g/ltgLC
+         XImQ==
+X-Gm-Message-State: APjAAAUH/I94nxPXOiMo6VEr/STf0GP3PhM/yO+8yUC3ULEcghxpvvAA
+        N7sKRFbKg4HM3mD0VJgXio7C3ODpQStB46hp08NNnw==
+X-Google-Smtp-Source: APXvYqxjtpW0+aq1pP5LqW+8ExOWmG1iZmCw8TTmpTp910yfA5bDPzQCZIQLWAdbpcyM6H+iB+v7QzmYJWaDKFsm31s=
+X-Received: by 2002:a92:c0c9:: with SMTP id t9mr3379386ilf.174.1582878928605;
+ Fri, 28 Feb 2020 00:35:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+ <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+ <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
+ <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+ <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+ <20200227151421.3u74ijhqt6ekbiss@ws.net.home> <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
+In-Reply-To: <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 28 Feb 2020 09:35:17 +0100
+Message-ID: <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Ian Kent <raven@themaw.net>
+Cc:     Karel Zak <kzak@redhat.com>, Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        util-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a more common logging style.
+On Fri, Feb 28, 2020 at 1:43 AM Ian Kent <raven@themaw.net> wrote:
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/parport/parport_mfc3.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+> > I'm not sure about sysfs/, you need somehow resolve namespaces, order
+> > of the mount entries (which one is the last one), etc. IMHO translate
+> > mountpoint path to sysfs/ path will be complicated.
+>
+> I wonder about that too, after all sysfs contains a tree of nodes
+> from which the view is created unlike proc which translates kernel
+> information directly based on what the process should see.
+>
+> We'll need to wait a bit and see what Miklos has in mind for mount
+> table enumeration and nothing has been said about name spaces yet.
 
-diff --git a/drivers/parport/parport_mfc3.c b/drivers/parport/parport_mfc3.c
-index 3190ef0..d6bbe8 100644
---- a/drivers/parport/parport_mfc3.c
-+++ b/drivers/parport/parport_mfc3.c
-@@ -70,11 +70,6 @@
- #define MAX_MFC 5
- 
- #undef DEBUG
--#ifdef DEBUG
--#define DPRINTK printk
--#else
--static inline int DPRINTK(void *nothing, ...) {return 0;}
--#endif
- 
- static struct parport *this_port[MAX_MFC] = {NULL, };
- static volatile int dummy; /* for trigger readds */
-@@ -84,7 +79,7 @@ static struct parport_operations pp_mfc3_ops;
- 
- static void mfc3_write_data(struct parport *p, unsigned char data)
- {
--DPRINTK(KERN_DEBUG "write_data %c\n",data);
-+	pr_debug("write_data %c\n", data);
- 
- 	dummy = pia(p)->pprb; /* clears irq bit */
- 	/* Triggers also /STROBE.*/
-@@ -128,13 +123,13 @@ static unsigned char control_mfc3_to_pc(unsigned char control)
- 
- static void mfc3_write_control(struct parport *p, unsigned char control)
- {
--DPRINTK(KERN_DEBUG "write_control %02x\n",control);
-+	pr_debug("write_control %02x\n", control);
- 	pia(p)->ppra = (pia(p)->ppra & 0x1f) | control_pc_to_mfc3(control);
- }
- 	
- static unsigned char mfc3_read_control( struct parport *p)
- {
--DPRINTK(KERN_DEBUG "read_control \n");
-+	pr_debug("read_control\n");
- 	return control_mfc3_to_pc(pia(p)->ppra & 0xe0);
- }
- 
-@@ -142,7 +137,7 @@ static unsigned char mfc3_frob_control( struct parport *p, unsigned char mask, u
- {
- 	unsigned char old;
- 
--DPRINTK(KERN_DEBUG "frob_control mask %02x, value %02x\n",mask,val);
-+	pr_debug("frob_control mask %02x, value %02x\n", mask, val);
- 	old = mfc3_read_control(p);
- 	mfc3_write_control(p, (old & ~mask) ^ val);
- 	return old;
-@@ -171,7 +166,7 @@ static unsigned char mfc3_read_status(struct parport *p)
- 	unsigned char status;
- 
- 	status = status_mfc3_to_pc(pia(p)->ppra & 0x1f);
--DPRINTK(KERN_DEBUG "read_status %02x\n", status);
-+	pr_debug("read_status %02x\n", status);
- 	return status;
- }
- 
-@@ -202,7 +197,7 @@ static void mfc3_disable_irq(struct parport *p)
- 
- static void mfc3_data_forward(struct parport *p)
- {
--	DPRINTK(KERN_DEBUG "forward\n");
-+	pr_debug("forward\n");
- 	pia(p)->crb &= ~PIA_DDR; /* make data direction register visible */
- 	pia(p)->pddrb = 255; /* all pins output */
- 	pia(p)->crb |= PIA_DDR; /* make data register visible - default */
-@@ -210,7 +205,7 @@ static void mfc3_data_forward(struct parport *p)
- 
- static void mfc3_data_reverse(struct parport *p)
- {
--	DPRINTK(KERN_DEBUG "reverse\n");
-+	pr_debug("reverse\n");
- 	pia(p)->crb &= ~PIA_DDR; /* make data direction register visible */
- 	pia(p)->pddrb = 0; /* all pins input */
- 	pia(p)->crb |= PIA_DDR; /* make data register visible - default */
--- 
-2.24.0
+Adding Greg for sysfs knowledge.
 
+As far as I understand the sysfs model is, basically:
+
+  - list of devices sorted by class and address
+  - with each class having a given set of attributes
+
+Superblocks and mounts could get enumerated by a unique identifier.
+mnt_id seems to be good for mounts, s_dev may or may not be good for
+superblock, but  s_id (as introduced in this patchset) could be used
+instead.
+
+As for namespaces, that's "just" an access control issue, AFAICS.
+For example a task with a non-initial mount namespace should not have
+access to attributes of mounts outside of its namespace.  Checking
+access to superblock attributes would be similar: scan the list of
+mounts and only allow access if at least one mount would get access.
+
+> While fsinfo() is not similar to proc it does handle name spaces
+> in a sensible way via. file handles, a bit similar to the proc fs,
+> and ordering is catered for in the fsinfo() enumeration in a natural
+> way. Not sure how that would be handled using sysfs ...
+
+I agree that the access control is much more straightforward with
+fsinfo(2) and this may be the single biggest reason to introduce a new
+syscall.
+
+Let's see what others thing.
+
+Thanks,
+Miklos
