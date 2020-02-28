@@ -2,154 +2,111 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02585C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E800CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE991246B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDAA246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PMUK1n34"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CqcNDJAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgB1Oou (ORCPT
+        id S1727240AbgB1Opg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:44:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37465 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727031AbgB1Oou (ORCPT
+        Fri, 28 Feb 2020 09:45:36 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49806 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgB1Opg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:44:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582901089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OXGpTAeTsc+HYb8q55xKk+dP/T7Dt1sKVwoGRCyxIxk=;
-        b=PMUK1n34XBZwz0JIyWyNPKJfmeKQXU8FtR9bd2Q7Tnim+GTxJOPWW3A/bZSYtx8Cug5o6e
-        /G6BxxU8CHwy5YRD/BAlGFENcRU08z4w6XvEvP/rzx1VPcJCTL8JopwiqfhL9iYzVyIdHS
-        XsZyAUuvGooL2IpHGAeKCn7zHluP4oQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-BJGbG-SrMxWfLot1IfDJjQ-1; Fri, 28 Feb 2020 09:44:48 -0500
-X-MC-Unique: BJGbG-SrMxWfLot1IfDJjQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37D04800D5A;
-        Fri, 28 Feb 2020 14:44:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 412941CB;
-        Fri, 28 Feb 2020 14:44:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200226022913.i2b3rnb3ua4dlym3@yavin.dot.cyphar.com>
-References: <20200226022913.i2b3rnb3ua4dlym3@yavin.dot.cyphar.com> <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk> <158230816405.2185128.14624101691579582829.stgit@warthog.procyon.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
-        darrick.wong@oracle.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/17] fsinfo: Add fsinfo() syscall to query filesystem information [ver #17]
+        Fri, 28 Feb 2020 09:45:36 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SEjXZM059045;
+        Fri, 28 Feb 2020 08:45:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582901133;
+        bh=LClidEhMakJ9azCSCmF19f1My8yyf6YsRzolNJCMSE8=;
+        h=From:To:CC:Subject:Date;
+        b=CqcNDJAzE/7vA52SGId7T2zcxynj+YOTqoZngDOnG1mzcJILq0SpGD4BnIkS175sx
+         LUoPS8Itw0s0Nktf8p766l1eIT5W1zgGFRvIKGD9YrB0BHD82MjaWNAYtUqGUhwRPN
+         Y1ft8XUa2HYyex3PFUcE6FoFRMIidPzcQ5zr0H24=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SEjXow063219
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 08:45:33 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 08:45:31 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 08:45:31 -0600
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SEjTi4079785;
+        Fri, 28 Feb 2020 08:45:30 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <linux-pm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH] cpufreq: ti-cpufreq: Add support for OPP_PLUS
+Date:   Fri, 28 Feb 2020 16:45:29 +0200
+Message-ID: <20200228144529.14548-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <95824.1582901083.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 28 Feb 2020 14:44:43 +0000
-Message-ID: <95825.1582901083@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aleksa Sarai <cyphar@cyphar.com> wrote:
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-> > If params is given, all of params->__reserved[] must be 0.
-> =
+DRA762 SoC introduces OPP_PLUS which runs at 1.8GHz. Add
+support for this OPP in ti-cpufreq driver.
 
-> I would suggest that rather than having a reserved field for future
-> extensions, you make use of copy_struct_from_user() and have extensible
-> structs:
+Acked-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/cpufreq/ti-cpufreq.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Yeah.  I seem to recall that special support was required for 6-arg syscal=
-ls
-on some arches, though I could move the dfd argument into the parameter bl=
-ock
-and make AT_FDCWD the default.
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index 557cb513bf7f..d62b6b21325a 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -25,11 +25,14 @@
+ 
+ #define DRA7_EFUSE_HAS_OD_MPU_OPP		11
+ #define DRA7_EFUSE_HAS_HIGH_MPU_OPP		15
++#define DRA76_EFUSE_HAS_PLUS_MPU_OPP		18
+ #define DRA7_EFUSE_HAS_ALL_MPU_OPP		23
++#define DRA76_EFUSE_HAS_ALL_MPU_OPP		24
+ 
+ #define DRA7_EFUSE_NOM_MPU_OPP			BIT(0)
+ #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
+ #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
++#define DRA76_EFUSE_PLUS_MPU_OPP		BIT(3)
+ 
+ #define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
+ #define OMAP3_CONTROL_IDCODE			0x4830A204
+@@ -80,6 +83,9 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+ 	 */
+ 
+ 	switch (efuse) {
++	case DRA76_EFUSE_HAS_PLUS_MPU_OPP:
++	case DRA76_EFUSE_HAS_ALL_MPU_OPP:
++		calculated_efuse |= DRA76_EFUSE_PLUS_MPU_OPP;
+ 	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+ 	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+ 		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
+-- 
+2.17.1
 
-> I dropped the "const" on fsinfo_params because the planned CHECK_FiELDS
-> feature for extensible-struct syscalls requires writing to the struct.
-
-Ummm...  Why?  You shouldn't be trying to alter the parameters structure. =
- It
-could feasibly be stored static const in userspace (though I'm not sure ho=
-w
-likely it would be that someone would do that).
-
-> I also switched the flags field to u64 because CHECK_FiELDS is intended =
-to
-> use (1<<63) for all syscalls (this has the nice benefit of removing the =
-need
-> of a padding field entirely).
-
- 	struct fsinfo_params {
- 		__u32	flags;
- 		__u32	at_flags;
- 		__u32	request;
- 		__u32	Nth;
- 		__u32	Mth;
- 	};
-
-What padding? ;-)
-
-Though possibly the struct does need forcing to 64-bit alignment for futur=
-e
-expansion.
-
-> > dfd, filename and params->at_flags indicate the file to query.  There =
-is no
-> > equivalent of lstat() as that can be emulated with fsinfo() by setting
-> > AT_SYMLINK_NOFOLLOW in params->at_flags.
-> =
-
-> Minor gripe -- can we make the default be AT_SYMLINK_NOFOLLOW and you
-> need to explicitly pass AT_SYMLINK_FOLLOW? Accidentally following
-> symlinks is a constant source of security bugs.
-
-Someone else has said that all new syscalls should be using RESOLVE_* flag=
-s in
-preference to AT_* flags (even though RESOLVE_* flags are not a superset o=
-f
-AT_* flags and appear to be in a header named specifically for the openat2=
-()
-syscall, not generic).
-
-I'm not sure who authored openat2.h, but they went with a RESOLVE_NO_SYMLI=
-NKS
-rather than a RESOLVE_SYMLINKS ;-)
-
-> > There is also no equivalent of fstat() as that can be emulated by
-> > passing a NULL filename to fsinfo() with the fd of interest in dfd.
-> =
-
-> Presumably you also need to pass AT_EMPTY_PATH?
-
-Actually, you need to set FSINFO_FLAGS_QUERY_FD in fsinfo_params::flags.  =
-I
-need to update the description for this.
-
-> Sounds good, though I think we should zero-fill the tail end of the
-> buffer (if the buffer is larger than the in-kernel one).
-
-I do that.  I should make it clearer in the patch description.
-
-David
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
