@@ -2,160 +2,107 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCCC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A0CC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86492468A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8A52468A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsxo5mfK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL0eJDOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgB1GNT (ORCPT
+        id S1726793AbgB1GNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:13:19 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34130 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1GNT (ORCPT
+        Fri, 28 Feb 2020 01:13:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36619 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725805AbgB1GNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:13:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id x7so2049012ljc.1;
-        Thu, 27 Feb 2020 22:13:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7dy/Kujh8oupW/pVHgPs57WktyNPAbW19eFPb391nVY=;
-        b=fsxo5mfKJg6j7cF0VkdAc/Hf3t4sJlFk33XPf59uRYualOkUrk/UJzxZ7KWH04ia5n
-         xj09T9DCmsQsThEtDPqXm6TCNRL/V0/Lo5ep2lfIavLQJo3HYvJKrTSzdqx/Yzf5mO00
-         VF7rP+MEuKyBGOJkzXioIcKPm3D4Bd/8L7gC18p0gjCpv47SQ7fmbsA7MChCo3obBPzc
-         cZHCMZpRZKtIIDnVpEcx/ZiwPUmgcs//DbDVz7kuc/Fsh19/Pip/fLXsvHsw4p91DTD4
-         JHfZNCChQdQ5o0KyQF7A4LgJmrUTZZks0/rLgCEwkJERmzE26+Ey7oxRSzBYMq74e4ae
-         u+7A==
+        Fri, 28 Feb 2020 01:13:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582870422;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bQZy9BsnvGs4DJv5PXGxTDbanrd6o8j4AgcuAD33/N0=;
+        b=gL0eJDOl7vlHydvzS5K977amjwoLSuIk8HVsK7iIh9eIQQJtlBPIdLnursLB05zRYZTCKT
+        5uqK/hWKwEey9p4RXXxI6PGLVHpgdTzPXJzNHtC1wWvI+/2Pe/m7RnHDSa3waRHYaqGh40
+        JcvXxyzInXwS1ECKfz8p+XGcPsJ7fAE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-_OK5fbG8OAS5AcWh7nKAPg-1; Fri, 28 Feb 2020 01:13:41 -0500
+X-MC-Unique: _OK5fbG8OAS5AcWh7nKAPg-1
+Received: by mail-wr1-f70.google.com with SMTP id w18so901958wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 22:13:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7dy/Kujh8oupW/pVHgPs57WktyNPAbW19eFPb391nVY=;
-        b=Bj3SXKYXHSdFaMnYbat2KP4+3qR4N/AxWC3if7FmWMCzjGBTS+3Xf2SufybpWNjp/T
-         IoM9CmdBSl+e41SiIe0Se4dTTtApt+fzqrPwix0TfEA4iO8jKYR7qaL6HPEqxvRnNBD3
-         0Bx7KFi2Mfqc0e85iGJfVQxfnsu93P8MP3L29sh3jXsld/9f/OdCU+gt600kmOMmZmLa
-         +357FzULS+nLDrCLmI9zsZr+z2UvphaDkIHPDEU3ws/0zXYsVqNZzF6KKhNuM87CQOjW
-         aFAQSUtQc6LsVHU6ygZkBDetQ7JtaDBTwHK3tbSzwlkc7Bgo/X97ewQseOvRGl3t6HEW
-         NIPg==
-X-Gm-Message-State: ANhLgQ2VUveI7sHNUIKFhjd+0MJXzLRuMB07jd9FyYBV2nk8MIjzb6J/
-        ZmMabyYR5mWgCTxv148iI3U=
-X-Google-Smtp-Source: ADFU+vu9lkUYGTP4dyLaBRdQUY25f/Yt3QOACVP1pzgNmvrwnRgocQ5ZZOd/qLXvw4ZmQ/Mhq32Jtg==
-X-Received: by 2002:a2e:9a93:: with SMTP id p19mr1812515lji.177.1582870397017;
-        Thu, 27 Feb 2020 22:13:17 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id f14sm4149299lfh.40.2020.02.27.22.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 27 Feb 2020 22:13:16 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Nick Xie <nick@khadas.com>
-Subject: [PATCH] arm64: dts: meson: add thermal zones to gxl-s905x-khadas-vim
-Date:   Fri, 28 Feb 2020 10:12:26 +0400
-Message-Id: <1582870346-74145-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=bQZy9BsnvGs4DJv5PXGxTDbanrd6o8j4AgcuAD33/N0=;
+        b=BXTswqCSAX8UEIgC3eZ96qj5IpvBJWzywRlYJ/yn+SS6zbPWwnqv6qQGInza4waj2q
+         sOtf7JsE4rpqHNIkaqdAxhbtlgZlhikU49Pjj4iGrM2dF8WVMU2s8qTKhIo1/S2ZdVex
+         mxq/FxwW3a9gB5XJYqVrzezUFhZnKnVLCyKD3vAvUm0rYe+llhWxCgdK56QvQnYV2eGa
+         DeWU4k6tlcbdDntq5TVCWS6rajsXdQKZPzAKfrgpYf9TnkYhYdxwkJYrGkwkR5FFaOxc
+         0swxWdniyledfxJKhanqNQMuRbAcQcj1jI6F0MANsE71eXHseADMbF2zuQg1+naploIW
+         Kwjw==
+X-Gm-Message-State: APjAAAXs11ptvbcnWwqIZ0iQItyTclfqyGvjw3ODE2xqq3p0gFZbjVyY
+        Z1sqxq9Q1dN2iakvAJLSHVt9UyxjO07ppGOcXdxK23gQJVdOIIibQWv2sp36apoC7RqDrWQ40f9
+        q0iZKn2pawVxYpmwSCe9649EV
+X-Received: by 2002:adf:cd11:: with SMTP id w17mr3255777wrm.66.1582870419889;
+        Thu, 27 Feb 2020 22:13:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqytLtf3bqBmoH4VSVokPNlQ4OLwr+04hPKM7EP6nAym2oOemd792mZP0+koSwsZr1UOB4jSLg==
+X-Received: by 2002:adf:cd11:: with SMTP id w17mr3255756wrm.66.1582870419682;
+        Thu, 27 Feb 2020 22:13:39 -0800 (PST)
+Received: from [192.168.3.122] ([91.12.99.244])
+        by smtp.gmail.com with ESMTPSA id 25sm682892wmi.32.2020.02.27.22.13.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 22:13:39 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
+Date:   Fri, 28 Feb 2020 07:13:33 +0100
+Message-Id: <0C8CC772-5840-4F0C-9859-C1D7B8BF6025@redhat.com>
+References: <20200228033819.3857058-3-ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+In-Reply-To: <20200228033819.3857058-3-ying.huang@intel.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add thermal zones to the VIM1 board, copying the zone config from the
-existing VIM2 board.
 
-Suggested-by: Nick Xie <nick@khadas.com>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-index 440bc23..2c198c4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- #include "meson-gxl-s905x-p212.dtsi"
- 
-@@ -63,6 +64,39 @@
- 			};
- 		};
- 	};
-+
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&scpi_sensors 0>;
-+
-+			trips {
-+				cpu_alert0: cpu-alert0 {
-+					temperature = <70000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "active";
-+				};
-+
-+				cpu_alert1: cpu-alert1 {
-+					temperature = <80000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert1>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &cec_AO {
-@@ -72,6 +106,22 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&cpu0 {
-+	#cooling-cells = <2>;
-+};
-+
-+&cpu1 {
-+	#cooling-cells = <2>;
-+};
-+
-+&cpu2 {
-+	#cooling-cells = <2>;
-+};
-+
-+&cpu3 {
-+	#cooling-cells = <2>;
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
--- 
-2.7.4
+> Am 28.02.2020 um 04:38 schrieb Huang, Ying <ying.huang@intel.com>:
+>=20
+> =EF=BB=BFFrom: Huang Ying <ying.huang@intel.com>
+>=20
+> Now !PageSwapBacked() is used as the flag for the pages freed lazily
+> via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
+> new page flag for that to improve the code readability.
+
+This patch subject and description is *really* confusing. You=E2=80=98re add=
+ing a helper function, not a page flag. It=E2=80=98s a fairly easy refactori=
+ng.
+
+(Adding new page flags is close to impossible).
+
+Cheers!=
 
