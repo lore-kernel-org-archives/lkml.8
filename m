@@ -2,78 +2,147 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A504C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB5EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF4F24699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4339524699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czUtcTbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgB1QlD (ORCPT
+        id S1726747AbgB1Qle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:41:03 -0500
-Received: from mga14.intel.com ([192.55.52.115]:36307 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1QlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:41:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:41:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="439285606"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Feb 2020 08:41:02 -0800
-Message-ID: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 28 Feb 2020 08:20:27 -0800
-In-Reply-To: <20200228162359.GC25261@zn.tnic>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
-         <20200121201843.12047-9-yu-cheng.yu@intel.com>
-         <20200221175859.GL25747@zn.tnic>
-         <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
-         <20200228121724.GA25261@zn.tnic>
-         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
-         <20200228162359.GC25261@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 28 Feb 2020 11:41:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53706 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgB1Qld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:41:33 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f15so3844030wml.3;
+        Fri, 28 Feb 2020 08:41:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X5lwKhEkYPb9uFlg3S0kiEOPjUxyOuwawAZ72KaGw1I=;
+        b=czUtcTbXEvp4mZ7wtGwtLvOLqcZDZlcZuz3vhgz+v/+rlvyULWIomKGtLHqP8fikwu
+         g83gvPCTOCs5rTKZgRIL6gVLYZggOrS5iRFJmwgwj5iIISr9NRYe3v7hdocYspriLyOx
+         zQ0xYB9h0wlpxsoi0pb/IMf/O+nB/jgyii3rlke9Hlgn7k3pBu0uGLW/i/11iKeTscB0
+         Roghbmt5MLisRFksRBXU6TGaUQfpebPc5oBID2VTurhw3Wglf7nVzXv0+j0kgJLI5bNq
+         1eXN0OSorz7i52T937g+ngq+oIh2jMPqLT/316e443cQip13YNuFNi/+/QOoDsIzZcIh
+         bD+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X5lwKhEkYPb9uFlg3S0kiEOPjUxyOuwawAZ72KaGw1I=;
+        b=C8p6n2Ekn4YBljw7ZtkpzHvkkYsXi3Jz+noe3vpgobHMasS2Y4RBRkk+1Mkm/Rwk3W
+         6H/UDDjAlrjttAUYipoN8EaZd7U8uCMKE9GrusYor13+DiuY9Qtg4ZnkiDs4TBsT8qp2
+         XgO+30H3gyHnel1ftUOvLrbuDnThvp+9wNTe2khUt65WApDR9f/s3JBXNT7zpueHbJ7a
+         gk1WVP82rsA+RjeROjiwuPWzZpI60MYg/DXbzz2czfacKoYuNg/iKZWLGmuoW5DWdytU
+         OZkc931htUQjKykfDh3+YpH/pD4gWm5J6Y4btpECbANCZvyyZPG1BpTmwvjIMw7YnmGW
+         PHhQ==
+X-Gm-Message-State: APjAAAWfS2jt8eaeb/GflR2ENcTzh3HOoZ1gcHdmLnv8yvPzdpcNrikt
+        JVhb8/Rci1GdR+XjpE36Aec=
+X-Google-Smtp-Source: APXvYqzocoSmWjrOQ3OYNBEyzBu4M21vN1njgPy+5EDu+DImCvi/+Wkhc/Ch9Qtn3ou8YPNSaZfcIA==
+X-Received: by 2002:a1c:a9d1:: with SMTP id s200mr5766137wme.181.1582908091322;
+        Fri, 28 Feb 2020 08:41:31 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
+        by smtp.gmail.com with ESMTPSA id t187sm3028493wmt.25.2020.02.28.08.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 08:41:30 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
+Date:   Fri, 28 Feb 2020 16:41:26 +0000
+Message-Id: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 17:23 +0100, Borislav Petkov wrote:
-> On Fri, Feb 28, 2020 at 07:53:38AM -0800, Yu-cheng Yu wrote:
-> > Yes, saving only supervisor states is optimal, but doing XSAVES with a
-> > partial RFBM changes xcomp_bv.
-> 
-> ... and that means what exactly in plain english?
+OV5645 can operate in virtual channel 0-3 in CSI2 interfaces, this patch
+adds support for module parameter virtual_channel to select the required
+channel. By default OV5645 operates in virtual channel 0.
 
-When XSAVES writes to an xsave buffer, xsave->header.xcomp_bv is set to
-include only saved components, effectively changing the buffer's format.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/media/i2c/ov5645.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-I will include this in the comments.
-
-Yu-cheng
+diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+index a6c17d15d754..0a0671164623 100644
+--- a/drivers/media/i2c/ov5645.c
++++ b/drivers/media/i2c/ov5645.c
+@@ -54,6 +54,7 @@
+ #define OV5645_TIMING_TC_REG21		0x3821
+ #define		OV5645_SENSOR_MIRROR		BIT(1)
+ #define OV5645_MIPI_CTRL00		0x4800
++#define OV5645_REG_DEBUG_MODE		0x4814
+ #define OV5645_PRE_ISP_TEST_SETTING_1	0x503d
+ #define		OV5645_TEST_PATTERN_MASK	0x3
+ #define		OV5645_SET_TEST_PATTERN(x)	((x) & OV5645_TEST_PATTERN_MASK)
+@@ -61,6 +62,11 @@
+ #define OV5645_SDE_SAT_U		0x5583
+ #define OV5645_SDE_SAT_V		0x5584
+ 
++static u8 virtual_channel;
++module_param(virtual_channel, byte, 0644);
++MODULE_PARM_DESC(virtual_channel,
++		 "MIPI CSI-2 virtual channel (0..3), default 0");
++
+ /* regulator supplies */
+ static const char * const ov5645_supply_name[] = {
+ 	"vdddo", /* Digital I/O (1.8V) supply */
+@@ -983,12 +989,34 @@ static int ov5645_get_selection(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static int ov5645_set_virtual_channel(struct ov5645 *ov5645)
++{
++	u8 temp, channel = virtual_channel;
++	int ret;
++
++	if (channel > 3)
++		return -EINVAL;
++
++	ret = ov5645_read_reg(ov5645, OV5645_REG_DEBUG_MODE, &temp);
++	if (ret)
++		return ret;
++
++	temp &= ~(3 << 6);
++	temp |= (channel << 6);
++
++	return ov5645_write_reg(ov5645, OV5645_REG_DEBUG_MODE, temp);
++}
++
+ static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+ {
+ 	struct ov5645 *ov5645 = to_ov5645(subdev);
+ 	int ret;
+ 
+ 	if (enable) {
++		ret = ov5645_set_virtual_channel(ov5645);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_set_register_array(ov5645,
+ 					ov5645->current_mode->data,
+ 					ov5645->current_mode->data_size);
+-- 
+2.20.1
 
