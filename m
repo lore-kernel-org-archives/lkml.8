@@ -2,66 +2,121 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C845C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E5B20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E790E20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="LjZqGN6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgB1MwA (ORCPT
+        id S1726748AbgB1MwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:52:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36639 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgB1MwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:52:00 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1j7f7Q-000737-MY; Fri, 28 Feb 2020 13:51:52 +0100
-Date:   Fri, 28 Feb 2020 13:51:52 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-Message-ID: <20200228125152.nxp6vntmxconc4bj@linutronix.de>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
- <20200121201843.12047-9-yu-cheng.yu@intel.com>
- <20200221175859.GL25747@zn.tnic>
- <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
- <20200228121724.GA25261@zn.tnic>
+        Fri, 28 Feb 2020 07:52:03 -0500
+Received: from mail1.skidata.com ([91.230.2.99]:63410 "EHLO mail1.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgB1MwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:52:02 -0500
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Feb 2020 07:52:01 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1582894322; x=1614430322;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g/fumDPqX7LPA3wXxiP1dS805jxlDQnX8YtVKUMeu98=;
+  b=LjZqGN6QzHklV6YiFhSqYetNYrYn8bjM9JqpeNng0UnezFAhpXrmWHu6
+   BR00jGPg9M60QK0/3c53EzQOl7pviMJdWbMhtV1RDFZs69ZXSb4gZ+UDZ
+   IyrcsN3YS6f4pUHcYIELYAAq/4/6UTFyooVHfu7+gjezTQWvplbXIli2R
+   py2/kIf5QaLbO1V2Ok9xocu3wrSp+nVMjS26vrQaAq4tDeZRwzF3l8lIO
+   sueyrPpHw9mXayIKPTd3Xf2iQFx1LQdN59MY/dl6ZPiibZ5AnKGYKOHpB
+   +yGbuGGoZX9QySvs52yvAk7TcMOomPxGMwzFvcxlXRqyJyDv8jBLn07Q9
+   Q==;
+IronPort-SDR: 08BFDbudq1MaMeOSQQ+Gr+tpOdBaghZBiTJoclI9zpC7I1cY4eavjFCRIGYIm6UxiXKZiGbpCh
+ 5nEss8HtL7INBEMdm9q0dm9ZdiGzxuQDeYYNUGresM574MXNUjSs40GfPn4EeZDM61hp230D75
+ kp96qCOjdjvkfVtBPmqGyuBgtjq0aNsJOeLu5Dr+3VPNJYAVB4gZHbebABmkrTYdW2swMKek1c
+ nrh19pKH2WaOn+Wxg3inHxnCqCBpPIPzAUyWogmBvnV0OAWuSWAmjfATc078ZFTvTr/SskG9i6
+ Q80=
+X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
+   d="scan'208";a="22939519"
+Date:   Fri, 28 Feb 2020 13:44:48 +0100
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+CC:     <dmaengine@vger.kernel.org>, <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
+Message-ID: <20200228124448.GA1689606@pcleri>
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200228121724.GA25261@zn.tnic>
+In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex3srv.skidata.net (192.168.111.81) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-28 13:17:24 [+0100], Borislav Petkov wrote:
-> On Thu, Feb 27, 2020 at 02:52:12PM -0800, Yu-cheng Yu wrote:
-> > If TIF_NEED_FPU_LOAD is set, then xstates are already in the xsave buffer. 
-> > We can skip saving them again.
+Hi,
+
+On Wed, Jan 29, 2020 at 02:40:06PM +0100, Martin Fuzzey wrote:
+> There is a DMA problem with the serial ports on i.MX6.
 > 
-> Ok, then pls use test_and_set_thread_flag().
+> When the following sequence is performed:
+> 
+> 1) Open a port
+> 2) Write some data
+> 3) Close the port
+> 4) Open a *different* port
+> 5) Write some data
+> 6) Close the port
+> 
+> The second write sends nothing and the second close hangs.
+> If the first close() is omitted it works.
+> 
+> Adding logs to the the UART driver shows that the DMA is being setup but
+> the callback is never invoked for the second write.
+> 
+> This used to work in 4.19.
+> 
+> Git bisect leads to:
+> 	ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> 
+> This commit adds a "context_loaded" flag used to avoid unnecessary context
+> setups.
+> However the flag is only reset in sdma_channel_terminate_work(),
+> which is only invoked in a worker triggered by sdma_terminate_all() IF
+> there is an active descriptor.
+> 
+> So, if no active descriptor remains when the channel is terminated, the
+> flag is not reset and, when the channel is later reused the old context
+> is used.
+> 
+> Fix the problem by always resetting the flag in sdma_free_chan_resources().
+> 
+> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+> 
 
-I've been told not to do this while I crafted kernel_fpu_begin() because
-this would introduce an atomic operation which we want avoid.
+Thanks for the patch!
+We were chasing this issue for days and just found your patch as we were
+preparing our (quite similar) solution for submission ;-)
 
-Sebastian
+I've successfully tested your patch on a custom i.MX6Solo board.
+Therefore feel free to add
+
+Tested-by: Richard Leitner <richard.leitner@skidata.com>
+
+regards;rl
