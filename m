@@ -2,69 +2,68 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B19C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64866C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3B52467D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C752467D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="HyQLBYON"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwI0UQ8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgB2TqS (ORCPT
+        id S1727254AbgB2TtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 14:46:18 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.100]:29580 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgB2TqC (ORCPT
+        Sat, 29 Feb 2020 14:49:19 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39696 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgB2TtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 14:46:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583005560;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=F7Q7dzKizkE8VkIH23/riTwDlFWCGM9XLFl0TNbD9Eo=;
-        b=HyQLBYONSpKazKT0nG4Zrvx2MYRUW66AjpzXy/rHbxEIpQ38agh7e0iWK70PejP2uS
-        /Twl85GzXe0pZpkLQUd6AGbBIajRSeFrdh6PeC2TImrogz0SXmipezNbbA6kJEgZt9JI
-        AgPIaW7zfg1R6UhIaelKFqf7PAx3dHHYfix5w576sn1xXssZOFnEIUbnsD8fQr1CBDf+
-        4oCJFAtARQ8spZNjmmzFvFeNPNMb1Vo4vae34YkJ/kMD6AHw5kNbfFxs7RQKiLGowoRC
-        if/uCl0ypxe40cNhY5DCW3KHyaPrraKuC02wgIcCWdorkJIlBaha5akGNdFGKn+b89/5
-        6IDg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6HGqvi2w="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1TJjq6m6
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sat, 29 Feb 2020 20:45:52 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v5 5/5] MIPS: CI20: defconfig: multiple improvements
-Date:   Sat, 29 Feb 2020 20:45:48 +0100
-Message-Id: <f6e5ba77a45ba55b52e4780c27927c4f9bf6f426.1583005548.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1583005548.git.hns@goldelico.com>
-References: <cover.1583005548.git.hns@goldelico.com>
+        Sat, 29 Feb 2020 14:49:19 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so7535102wrn.6;
+        Sat, 29 Feb 2020 11:49:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hYAMEXGO5cVVYedHxQ0SqxqcBi3GOauYjlJCDMcLs4U=;
+        b=LwI0UQ8nur42CPV2gJ/rv6TexA/7yx2qlhzF6hdCoV4wCMhgGeXdSkCSTmz5CjbN3+
+         gsw2w0FdAfu+Jodcb6FMl8mYVJ7nycYYDd88fUCDwjyQ/nWskKlbrZ6nXGYZknWJtIgu
+         i1596rMXypskETUi//u6EoMCQOphC1mhQf1hh4O69lGKjm9FSZZKfMv3gBb5j8NMSlkI
+         ECxAzvbph5dRC1EQqCdqGILdv3IKZ/W76Jp65O4/fbdolF25WX6RoR26MCTW/DIPF8gy
+         PewkENq/UjSRGuX0b0wyvt73YwKOXPplHFqktzjGt9pQs0usdBMEoeT93VuQlqEtUmrq
+         78CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hYAMEXGO5cVVYedHxQ0SqxqcBi3GOauYjlJCDMcLs4U=;
+        b=Y29YTdOyZFbstbqV0VnGLUQ+QDAdmWRocyAz6HBUSQKQMWmsJQiWDBKVYWgw55i+sL
+         //mi+dk9kdZNxK6NoABo7mWKu09ZJiWznUH0jhwZBmb71hbIDbtEkWBwkHW0iLstWvzE
+         F/FGOmPc+nI5Bwm3WTcwA+D3Q36R908DC4Vkudwk0D0+hjJ7thak+dUo8sqRrUjLl2pO
+         JRnQg7DpftJHd2Pb+Xm/mAJjF9vzeibqPLgIfblB/eHss4sgI4oCst1ogLKP30GCzIb1
+         /EJhz9veMn3DfnzoCTIXU4u2daVU0ZHt1KlkaxIIkthJukH/V84D+Q/HTPjhMIQjGzXv
+         qXoQ==
+X-Gm-Message-State: APjAAAUWe47c3rfAJv+O3bJp7W1uYi1juGI6ztFLtow0SKbONErKHiKP
+        v9qzl+MRrnAAXWRgyOgmsp3fnCWs
+X-Google-Smtp-Source: APXvYqyA7aioZ9rx7j0tootssFvt9Uv8fQXvFET2nxu9RNdjPr78OFNhc4ec5vri+OgyGZjTSDh2SA==
+X-Received: by 2002:adf:a4c4:: with SMTP id h4mr11756313wrb.112.1583005757386;
+        Sat, 29 Feb 2020 11:49:17 -0800 (PST)
+Received: from localhost.localdomain ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id j15sm19246297wrp.9.2020.02.29.11.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 11:49:16 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: remove extra nxt check after punt
+Date:   Sat, 29 Feb 2020 22:48:24 +0300
+Message-Id: <29e9f945f8aa6646186065469ba00c0a4ef5b210.1583005578.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,83 +71,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-a) configure for supporting modules
+After __io_queue_sqe() ended up in io_queue_async_work(), it's already
+known that there is no @nxt req, so skip the check and return from the
+function.
 
-Not all drivers need to be compiled into the kernel.
-Support building and loading of kernel modules.
+Also, @nxt initialisation now can be done just before
+io_put_req_find_next(), as there is no jumping until it's checked.
 
-b) compile leds-gpio driver into the kernel and configure for LED triggers
-
-DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
-and enable the triggers.
-
-c) configure CONFIG_REGULATOR_ACT8865 for PMU
-
-The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
-Since it is not compiled, the PMU and the CI20 board is running in
-power-on reset state of the PMU.
-
-d) compile gpio-ir driver
-
-The CI20 board has a gpio based IR receiver.
-
-e) configure for CONFIG_KEYBOARD_GPIO=m
-
-The SW1 button is hooked up to send input events.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- arch/mips/configs/ci20_defconfig | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ fs/io_uring.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2a81fb..0db0088bbc1c 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -1,4 +1,5 @@
- # CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_MODULES=y
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-@@ -88,12 +89,14 @@ CONFIG_I2C_JZ4780=y
- CONFIG_SPI=y
- CONFIG_SPI_GPIO=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_KEYBOARD_GPIO=m
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_JZ4740_WDT=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_DEBUG=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_ACT8865=y
- # CONFIG_VGA_CONSOLE is not set
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
-@@ -166,3 +169,21 @@ CONFIG_STACKTRACE=y
- # CONFIG_FTRACE is not set
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_MTD=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
-+CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-+CONFIG_LEDS_TRIGGER_TRANSIENT=y
-+CONFIG_LEDS_TRIGGER_CAMERA=m
-+CONFIG_LIRC=y
-+CONFIG_MEDIA_SUPPORT=m
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_GPIO_CIR=m
-+CONFIG_IR_GPIO_TX=m
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8d8d93adb9c2..74498c9cd023 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4931,7 +4931,7 @@ static struct io_kiocb *io_prep_linked_timeout(struct io_kiocb *req)
+ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+ 	struct io_kiocb *linked_timeout;
+-	struct io_kiocb *nxt = NULL;
++	struct io_kiocb *nxt;
+ 	const struct cred *old_creds = NULL;
+ 	int ret;
+ 
+@@ -4958,7 +4958,7 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		if (io_arm_poll_handler(req)) {
+ 			if (linked_timeout)
+ 				io_queue_linked_timeout(linked_timeout);
+-			goto done_req;
++			goto exit;
+ 		}
+ punt:
+ 		if (io_op_defs[req->opcode].file_table) {
+@@ -4972,10 +4972,11 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		 * submit reference when the iocb is actually submitted.
+ 		 */
+ 		io_queue_async_work(req);
+-		goto done_req;
++		goto exit;
+ 	}
+ 
+ err:
++	nxt = NULL;
+ 	/* drop submission reference */
+ 	io_put_req_find_next(req, &nxt);
+ 
+@@ -4992,15 +4993,14 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		req_set_fail_links(req);
+ 		io_put_req(req);
+ 	}
+-done_req:
+ 	if (nxt) {
+ 		req = nxt;
+-		nxt = NULL;
+ 
+ 		if (req->flags & REQ_F_FORCE_ASYNC)
+ 			goto punt;
+ 		goto again;
+ 	}
++exit:
+ 	if (old_creds)
+ 		revert_creds(old_creds);
+ }
 -- 
-2.23.0
+2.24.0
 
