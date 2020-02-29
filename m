@@ -2,52 +2,52 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A55C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6467B246AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407772469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="WuXEIAFr"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="SOoitiHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgB2QTQ (ORCPT
+        id S1727364AbgB2QTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:19:16 -0500
+        Sat, 29 Feb 2020 11:19:19 -0500
 Received: from mail-am6eur05hn2202.outbound.protection.outlook.com ([52.101.152.202]:18118
         "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727306AbgB2QTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:19:14 -0500
+        id S1727137AbgB2QTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 11:19:16 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MUp4VGOAu/hsVi3DKWkEe1dsIJMSCxzlCRV+1gXScKNM8PnFkyNxiSg67pIGlm8cbfmyODnR3Sl9+HwiqVyqGLh1PpVVeKNyPWhwoSWXLBtr3svwbFlmuUAixyfeVrDHNBe+fBWNU4uVGgBxgCdyxmwOVq1TD1U5sEgzQkC0TZTttD0Q86x+SBgeMTqDefcld7eBYy9hImnXkZfOT304mYLCzje0PrqtqxPyfMWeRzm+rVNLzjiHNt/LOLDFGLMd4Y0Rmog76LlKZWkm2NaTXO4cSK4B6T+xME3Vcv3MTtBVziUwqdM9L9E6JyS/7eBMrLHXpd1Sc7hZEPoW0ZQ8yg==
+ b=ADsCManT+AainKl5i9X5+zvHTTKmkjep1WstFvYF3Z7P9j+bnB2peB0o+7hxwqaeeucjY5M3Jpx/YAkpplJWg590GSPU0kpnGWnzeNN0qiGs3Sg26QwCuoG1jw8/aBNodIWA0zKDOVKo1RurTP4ukGbzyIg4esPyhuhHklnLpPED2J57va60XFtE+WwXX5+7GeR0pJt6gXDihsfh6Az5I7+0KRFHpY2UJXmm1nfyeT8YQIF3dwQxVP8K0MdR5agVbp1TK4Vw18/5ZVcVT7uo4eG1P+ZD5/pzM5sRNdeoip4kpuhBRh9d5iYLFOyaqzewC4jy8qAjHRr39vFeoGJauA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JBveL+w3P65mqb0cynVeAJtK3CCR7mathV5B4/ddM64=;
- b=hm4pjB13xxQpVxHGdl6hSc3wonOFpsflFYTqac7cw9ojIDKw8MPvc83E6H7eIgc9YPVWA6TIT4flLh9xcqiIixzGPzEI3jo7f7MNJiSDjAXo9lmW8aYOZLITPmbIOsgv10DjfN5QFn8jlWcRcF3n+zhJdr6mV5V2imtHBHzMHE9KO0Mgy15FiLJJeTvsTgAQ09xhoZGL+iyR0zHFwkc3IuMFtfTAneBHFh2YsOX+xOi/s4CUE0zKAY6uVptbeFVmKrUFWiocCk7Gm+C4+b7P/OcDaGW+fnGU/qFj2LFyFQfxj6pMnqP4ZklF09vGYBOPM3tG+lTXecLrygUTyrbK5A==
+ bh=6Dx1t2RQ5/QjbB15WBRYNhP5FjeKTDD/gThb77QhS8w=;
+ b=A1wgGaeFA+FDueU6emPnUqjlxodUPie+mRlKQn+TSe7Xd4zBGBgsWusvJyztpTByMiK8024T+SVjvux/p2OfXozF5DQ+pZpMdpfBOfcaKwPmo8kc7EZngCWLVetlvZSEvfnL2+UZc6FKJjvWRuQVmEILK2p3EqhLSHb7vWoc46nCRk5jkzCBN13m5RIIbjFrGZ9ZjEF6JwZluu0gmO13GqcH8IOmamJHe6aamPlHsdT9CvI2t6Sf2/Wcr/QpgZ0T7s74lRXW68rTKHWKdEmYT5E+AeVnSOlpQMO+/hJwKlRtY2Vbi7CjWQGk+nIiCiTNCp8AG/m9Ijis94MW2+j3zg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
  dkim=pass header.d=toradex.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JBveL+w3P65mqb0cynVeAJtK3CCR7mathV5B4/ddM64=;
- b=WuXEIAFrdAPLj0ypklU0tputpc7L+ZVtJGZPnqauj+i7xlIjcy5ToLSJ33M4fnRnIVUvZ6Q4xhk4O5FYlHRsb7+QZJjqbfnADDXCuxoLr68ZtIxwU50bd2XXFwAQkpSjk7A0/wQZGq9ucPE5sYM0zm35nDZWTttQtpyHWqWpcf0=
+ bh=6Dx1t2RQ5/QjbB15WBRYNhP5FjeKTDD/gThb77QhS8w=;
+ b=SOoitiHJl3qfLD06jxOknqG4uY10uDvLrRpR7be/7OMNRN8cBgZfPanRwZpjiypcApv4bVRX+CDTingvODuGPhSZxPgciaBX+UzgBO1s/nGfy3bjmlePsJfeP6ubEkaAsSjJjIDvsthjaJvvW8VGWk1W3xzKbHmMidRZLvCvZns=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=oleksandr.suvorov@toradex.com; 
 Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
  VI1PR05MB5581.eurprd05.prod.outlook.com (20.177.202.217) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Sat, 29 Feb 2020 16:18:49 +0000
+ 15.20.2772.15; Sat, 29 Feb 2020 16:18:58 +0000
 Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
  ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
  ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2772.012; Sat, 29 Feb 2020
- 16:18:49 +0000
+ 16:18:58 +0000
 From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 To:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
@@ -56,61 +56,79 @@ Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
         Philippe Schenker <philippe.schenker@toradex.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 0/2] spi: spidev: Fix messages in spidev
-Date:   Sat, 29 Feb 2020 18:18:39 +0200
-Message-Id: <20200229161841.89144-1-oleksandr.suvorov@toradex.com>
+Subject: [PATCH 2/2] spi: spidev: fix speed setting message
+Date:   Sat, 29 Feb 2020 18:18:41 +0200
+Message-Id: <20200229161841.89144-3-oleksandr.suvorov@toradex.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200229161841.89144-1-oleksandr.suvorov@toradex.com>
+References: <20200229161841.89144-1-oleksandr.suvorov@toradex.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: PR2P264CA0040.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:101:1::28) To VI1PR05MB3279.eurprd05.prod.outlook.com
+X-ClientProxiedBy: PR3P191CA0046.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:102:55::21) To VI1PR05MB3279.eurprd05.prod.outlook.com
  (2603:10a6:802:1c::24)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (194.105.145.90) by PR2P264CA0040.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101:1::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18 via Frontend Transport; Sat, 29 Feb 2020 16:18:48 +0000
+Received: from localhost (194.105.145.90) by PR3P191CA0046.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:55::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18 via Frontend Transport; Sat, 29 Feb 2020 16:18:58 +0000
 X-Mailer: git-send-email 2.24.1
 X-Originating-IP: [194.105.145.90]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 29aafc42-2239-4412-726c-08d7bd330f0e
+X-MS-Office365-Filtering-Correlation-Id: f5970205-fb10-4aad-7135-08d7bd3314cf
 X-MS-TrafficTypeDiagnostic: VI1PR05MB5581:|VI1PR05MB5581:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5581E72C8BF31F198FB2DEAEF9E90@VI1PR05MB5581.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5581944FE89A6C8DC6B606D5F9E90@VI1PR05MB5581.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
 X-Forefront-PRVS: 03283976A6
 X-Forefront-Antispam-Report: SFV:SPM;SFS:(10019020)(4636009)(366004)(376002)(396003)(346002)(39840400004)(136003)(199004)(189003)(478600001)(2906002)(54906003)(86362001)(5660300002)(4326008)(36756003)(1076003)(316002)(6486002)(44832011)(8936002)(81166006)(81156014)(8676002)(66556008)(956004)(2616005)(15650500001)(6666004)(66476007)(4744005)(6496006)(52116002)(16526019)(186003)(26005)(66946007)(23200700001);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR05MB5581;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;CAT:OSPM;
 Received-SPF: None (protection.outlook.com: toradex.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HG7J4nULmTzBuBcdrtvXZC4nY69lqxf2UAIvYwGzumyIMzctFr8A1H8v5KxjnA3itP8+PTkp+abaTWljw7yn0Hy+hyAompk5U7VhniJvgw8N0PolvB458XBeObDpROTTtpPnXZ7jaMsh7piM3mAd7KLR5avGRJ6/NdpAiabL/cZmUsXyRgf+zF8GaGVadJo7gkbSpdsNv1RGB2E2ADp2YZtrLybRobLlf9/534xjPFuYz3FNl3BYuSft5JFpABhE0JyRhFJBUOYZxxHQCdTUgt7YsXjT7p13nDA1nZiPOo3fCRT9Bf9D6StkU6yTSJsOxRTAkGG5fD0MTioZsQXgyHqr5s75v6Xg+l+yQqlXPM7prsNNys1L4WHJQ5/gdDmvG5TThC6UXS1/xyerWQ7j4gMLTmTxWbGt/+IRjc0iIxt0JSyu0n3X4A5G77xb1+0/eq3j96DeNdy9tG3/Rcs3gDrs/zPQgo36Q73Ja4V/c+SV2cYZQzzDM/RlqnuyNsyV2nt1M5561qfZPsTPti4DFrNqp1sYhApTK9YcgOddxg950zEZi38GLNevkLxOmcSrOiGUghjxSQEBzC6PEPLxnCpe7hZMPJOGPFJCNiyMKf/tDvtD5H8ppA0Udk3Np1OEu45dTpfJgHim/ayimAmSyF8tnkbgxYpzlS5jDRzQNYtnYzeVBgAWYRvXfwGxtD5sgQdA6vVWv+C/M0mu7ailCb7yuOlaplR0jnOR83Q9ZhV+Tt8FoHA4CFL2b/R49eVLfMR+6rSQBGDbp+rmaZFhqg==
-X-MS-Exchange-AntiSpam-MessageData: qyyT6KtTJNszaOGKyRM1WqEXuigiAeZmrjqj0Yc6IAQtu1h9gz/jN4WPSkLjdVW3xI6cHyWVueiV+Gq7BxKrnOgCXnTHjuwCAOfk7iZYL8yZMjPR3HUc1iKOfKlV8d+r6Rjy/Ly+DZ0WYeSNKWv1LQ==
+X-Microsoft-Antispam-Message-Info: PonE2eLV5muMcgyLZqXR0BfigvXrP94VQbYNml2ZKREIGc5ZZM7CtHTA2nbqLJxaZSz8EW2FeGEjALY7FFUbx8+9Qf18JCdEC5qPWiNVcNBOP5Br1T6MdcPs8dJbN9JMiGjlWJBgJaCvuEAeLBJg7l/7SUipFkLE9rMM9OOUADwWE58M+c5Osou9pgDwvaqXIwWpqWwgVLW/L34RRqmDuRMj97eUt7mgh2KnfmNsWbn2xetLINYz14NlYlpsenAiWUOcXUsLM9mawFExiJfPGPdNMFko4DbW0fIdHJswZhBrrPRtEy5UHm6Xnwmu1rsBTJq3xOLwLmdApc7WCxy0aqZzA0X6Om+vouniVFe1fKMV6WnYHFYXYbHhJhl3HNnRxMNIwj3Pbjv/xXCCet7CHi/Y4eLib0S5cHkHSoki/aJKxgwXGQfAYYXZN5kBCB0NGVR062XgtnbakrB5rwMUVKYPs0YZD0zZWl+dI8txT3E7yeGwYyB5PACGTd5Q89aBWZ3oWDl6zGCnWgqA9w9dIt8wtcfnOpkBXaJemOhU+2kFMHRCGpeIOwTAs/mHQVSQHZ6JAL6WXcqsgRKIAnOZlrsB7sJg4rIKHy0ajRKfScBiP/DSMZd+0Z1A2X9+PzdfP+DjNcg6kYzu18YGKaseba1daSZE9csgeJ+ItqBbJ5dBC2HmH3wW6DqMBydHK9FNXekbI2zLzmg/FhnoIaAIAFMFZzWmQxPMmAjE3zQhLj7gs0CXodyUB6tntmOvPDpqKBaS6tasbxLN6HkFepxpFw==
+X-MS-Exchange-AntiSpam-MessageData: mM6CnhwY5KrMAmGrpfUrKGXks37vU7p50Z0KmKbYH1e1VUqLMYxTDO6+5prQ/rVV4g9faiWBvpMw+7L98UoyH/0kD8vU16ew8Bc9VYglK7p1edwYt8blk2GGd9OGxr0YOtgzBW7F7+5KUd1d7gTV7Q==
 X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29aafc42-2239-4412-726c-08d7bd330f0e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2020 16:18:49.1180
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5970205-fb10-4aad-7135-08d7bd3314cf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2020 16:18:58.7844
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0bqivpgyPpPsQRh9cP2Asx3EuMbABO0884at0sIJXiLDvQUb+vbHOtyn3h18gWgTsrDHVFXb4bVBAhDZZM7O15Nb1NvdTzg38c1INK0LLHE=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5RYYPfL2233vSHlXRa8baqZsGI8iOMqDMYUF3keOaS6eJFmm/condYtdK8WF/fl9ITTC8qqtiPdxJXfdLD/Nifeby0GPyafeEWwLlFLb6Q8=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5581
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The message of max device speed setting is shown when
+an error in spi_setup() occurs.
+Instead, it should be shown when the setup call succeeds.
 
-- fix the values source for the xfer debug message.
-- fix the "max speed setting" message showing.
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+---
 
+ drivers/spi/spidev.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-
-Oleksandr Suvorov (2):
-  spi: spidev: fix a debug message value
-  spi: spidev: fix speed setting message
-
- drivers/spi/spidev.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index c97e853dbf5c..80dd1025b953 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -454,10 +454,11 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 
+ 			spi->max_speed_hz = tmp;
+ 			retval = spi_setup(spi);
+-			if (retval >= 0)
++			if (retval == 0) {
+ 				spidev->speed_hz = tmp;
+-			else
+-				dev_dbg(&spi->dev, "%d Hz (max)\n", tmp);
++				dev_dbg(&spi->dev, "%d Hz (max)\n",
++					spidev->speed_hz);
++			}
+ 			spi->max_speed_hz = save;
+ 		}
+ 		break;
 -- 
 2.24.1
 
