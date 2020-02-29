@@ -2,99 +2,195 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38A2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 05:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16F4C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 05:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA60D2468A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 05:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D132087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 05:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIhRZZ/U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ekh6UTfW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgB2FrI (ORCPT
+        id S1726752AbgB2F7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 00:47:08 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38645 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgB2FrI (ORCPT
+        Sat, 29 Feb 2020 00:59:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36142 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgB2F7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 00:47:08 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so2827455pfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 21:47:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FzjQfiyBaI95K3lk74duJ7hSEngiyDv1IIK2CSJpD0U=;
-        b=FIhRZZ/U4PsaL7I1/OKBE6qkqx4Lcz77kJVE0ZH7NLU1WaT1Rmpq9Wg+hWiaeAkuNx
-         kOHNhHGlGz70H6WjYV+NnYsANqVqP+sxzVf5O8k2/Pty1vfdDUqk6qJP25eyUMbAFTqT
-         P4VHOyjsE2WIncbzdgBEQJ9pu6tJ1VeMWeBw/+okBYoqWYnu3RsaJP15MrCMIpavt5df
-         aF3Fmm02gsY0VM1mIE3S01hSizKqjWFyC7AlSMy0m3DxE90YU2yldHXDc1iADvD0qX0P
-         Bc5NXWWswEvhChJBpr6F9VBXYTwGUgc2kUwDmJ2VZhS1JV+VCHqMXx0Zkgp2p7305jQW
-         07rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FzjQfiyBaI95K3lk74duJ7hSEngiyDv1IIK2CSJpD0U=;
-        b=hn765Ka4wJxg7jS393ne+0yCoCO7wtqbtJzfVru+bPDfVyI5UodiRAy+ZhvieaTyh4
-         WK2Geu9p7ksTY5+amlZ1NQESKbtEIOsudh4ZaAG+NNtY7jpftIwh7icapS2jMmBEtSYm
-         Dgq58EsF8bgDgONZojC3qwRzqCTYXdJO8sNJRjnkOypj6fknj5XcVuvrDGL/ETGkTWF8
-         QprPOYbLW6g5w6c13Xp+RPJniGYg/zQDFP4oeFigKwzr2zJZlblhly+d6zZ9Y4jVigKa
-         a0PKQuLrQHLub8JZsA5a6UkXff3V3I7KDbl6wKiROZ+Jh3Elw9M0MOEvXJ02JxhwBZCW
-         aQqw==
-X-Gm-Message-State: APjAAAUJ2liBF2Me1qDjA+1BxXtzoo/OhnkOF9RmhIF8r6y7qq+yerLt
-        L+Wz0WUm3Wu5On986y8dnLE=
-X-Google-Smtp-Source: APXvYqyQIhbtEe/ZbsEy6P4+aahXlqLVF9alAhmoOeP9JccuU/5H+2ULGQ9BYYIQgVgmGS9alq9SVQ==
-X-Received: by 2002:a63:4282:: with SMTP id p124mr8563287pga.59.1582955227314;
-        Fri, 28 Feb 2020 21:47:07 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id y18sm12647940pfe.19.2020.02.28.21.47.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 21:47:06 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sat, 29 Feb 2020 14:47:03 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] printk/console: Fix preferred console handling
-Message-ID: <20200229054703.GA561@jagdpanzerIV.localdomain>
-References: <20200213095133.23176-1-pmladek@suse.com>
- <20200217130308.GA447@jagdpanzerIV.localdomain>
- <20200218095232.q6tqjmome4fhc6f5@pathway.suse.cz>
- <025fe463a37a01a39e8b988530b36ce79210897b.camel@kernel.crashing.org>
- <20200228145820.6k4ddp457kf4e6c4@pathway.suse.cz>
+        Sat, 29 Feb 2020 00:59:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=ohlSJGQzr6OomkRSMJ0q0CC7j3gpUcVQAsjMXoqgXwQ=; b=Ekh6UTfWNnb6YYQ06cQVM+HiXS
+        G9yRyeiIHZpWLxLqgwxhd1jSvJaGh3PR5Hvp9wRGbyW92wqNyQ1oa1XCBnrY+kbmV2omumyBDcmry
+        VjfVqwHtWqcpErDyZdG8TcJudBcDu/GeWByU14bzNWvm+sgqiTs+uhv9yyg0hnzA3oAmRmAB47LCi
+        t198Y7kT8KjUmET8Z4ra4C3L4Vr5lAY4kZMnmPl5SD6W7nm53+Ex8KHCN8SSH8FCoBpovS8HDIq4N
+        2YFxRx/tbTTAzOVPIFvRGQiiC6Jqpa+l2AR9DOoFf9Fj2/K/XCztOC1LqoViZcwZCpWuuuVnlV+iI
+        NBizwiYQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7vAB-0002cD-Pi; Sat, 29 Feb 2020 05:59:47 +0000
+Subject: Re: [PATCH v2] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+References: <158287861133.18632.12035327305997207220.stgit@devnote2>
+ <158287862131.18632.11822701514141299400.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <972ba3a8-9dd7-e043-d2f0-8fa8620686f7@infradead.org>
+Date:   Fri, 28 Feb 2020 21:59:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228145820.6k4ddp457kf4e6c4@pathway.suse.cz>
+In-Reply-To: <158287862131.18632.11822701514141299400.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/28 15:58), Petr Mladek wrote:
-> > > 
-> > Do you plan to send any of this to -stable ?
+On 2/28/20 12:30 AM, Masami Hiramatsu wrote:
+> Update boot configuration documentation.
 > 
-> Good question. I would prefer to wait until 5.7 gets release or even
-> longer. Changes in console registration order are prone to
-> regressions. People then complain that they do not longer see console
-> after reboot.
+>  - Not using "config" abbreviation but configuration or description.
+>  - Rewrite descriptions of node and its maxinum number.
+>  - Add a section of use cases of boot configuration.
+>  - Move how to use bootconfig to earlier section.
+>  - Fix some typos, indents and format mistakes.
 > 
-> linux-next and rc phase has only pretty limited number of users.
-> Released kernels hit much bigger user base, for example, via
-> OpenSUSE Tumbleweed.
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+> Changes in v2:
+>  - Fixes additional typos (Thanks Markus and Randy!)
+>  - Change a section title to "Tree Structured Key".
+> ---
+>  Documentation/admin-guide/bootconfig.rst |  180 +++++++++++++++++++-----------
+>  Documentation/trace/boottime-trace.rst   |    2 
+>  2 files changed, 116 insertions(+), 66 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+> index cf2edcd09183..6a58d5e64896 100644
+> --- a/Documentation/admin-guide/bootconfig.rst
+> +++ b/Documentation/admin-guide/bootconfig.rst
+> @@ -11,19 +11,98 @@ Boot Configuration
+>  Overview
+>  ========
+>  
+> -The boot configuration expands the current kernel command line to support
+> -additional key-value data when booting the kernel in an efficient way.
+> -This allows administrators to pass a structured-Key config file.
+> +Boot configuration expands the current kernel command line to support
+> +additional key-value data while booting the kernel in an efficient way.
+> +This allows administrators to pass a structured key configuration file
+> +as a way to supplement the kernel command line to pass system boot parameters.
+>  
+> -Config File Syntax
+> -==================
+> +Compared with the kernel command line, the boot configuration can provide
+> +scalability (up to 32 KiB configuration data), readability (structured
+> +configuration with comments) and compact expression of option groups.
 
-Agreed. Let's not rather rush it.
+Do the comments count in the 32 KiB of data?  I.e., is the max bootconfig
+file size 32 KiB?
 
-	-ss
+> +
+> +When to Use the Boot Configuration?
+> +-----------------------------------
+> +
+> +The boot configuration supports kernel command line options and init daemon
+> +boot options. All sub-keys under "kernel" root key are passed as a part of
+> +kernel command line [1]_, and ones under "init" root key are passed as a part
+> +of init command line. For example, ::
+> +
+> +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
+> +
+> +This can be written as following boot configuration file.::
+> +
+> +   kernel {
+> +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
+> +      ro       # mount rootfs as read only
+> +      quiet    # No console log
+> +      splash   # show splash image on boot screen
+> +      console = "ttyS0,115200n8" # 1st console to serial device
+> +      console += tty0            # add 2nd console
+> +   }
+> +
+> +If you think that kernel/init options becomes too long to write in boot-loader
+> +configuration file or you want to comment on each option, the boot
+> +configuration may be suitable. If unsure, you can still continue to use the
+> +legacy kernel command line.
+> +
+> +Also, some subsystem may depend on the boot configuration, and it has own
+> +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
+> +describe its options [2]_. In this case, you need to use the boot
+> +configuration.
+
+Does this say that "ftrace" requires use of bootconfig?
+It seems to say that.
+
+> +
+> +.. [1] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
+> +.. [2] See :ref:`Documentation/trace/boottime-trace.rst <boottimetrace>`
+> +
+> +
+> +How to Use the Boot Configuration?
+> +----------------------------------
+> +
+> +To enable the boot configuration support on your kernel, it must be built with
+> +``CONFIG_BOOT_CONFIG=y`` and ``CONFIG_BLK_DEV_INITRD=y``.
+> +
+> +Next, you can write a boot configuration file and attach it to initrd image.
+> +
+> +The boot configuration file is attached to the end of the initrd (initramfs)
+> +image file with size, checksum and 12-byte magic word as below.
+> +
+> +[initrd][bootconfig][size(u32)][checksum(u32)][#BOOTCONFIG\n]
+> +
+> +The Linux kernel decodes the last part of the initrd image in memory to
+> +get the boot configuration data.
+> +Because of this "piggyback" method, there is no need to change or
+> +update the boot loader and the kernel image itself.
+> +
+> +To do this operation, Linux kernel provides "bootconfig" command under
+> +tools/bootconfig, which allows admin to apply or delete the configuration
+> +file to/from initrd image. You can build it by the following command::
+> +
+> + # make -C tools/bootconfig
+
+Please make that honor O=builddir instead of building in the kernel
+source tree and ignoring O=builddir.
+
+> +
+> +To add your boot configuration file to initrd image, run bootconfig as below
+> +(Old data is removed automatically if exists)::
+> +
+> + # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
+>  
+> -The boot config syntax is a simple structured key-value. Each key consists
+> -of dot-connected-words, and key and value are connected by ``=``. The value
+> -has to be terminated by semi-colon (``;``) or newline (``\n``).
+> +To remove the configuration from the image, you can use -d option as below::
+> +
+> + # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
+> +
+> +At last, add ``bootconfig`` on the normal kernel command line to tell the
+> +kernel to look for the bootconfig at the end of the initrd file. For example::
+> +
+> +  GRUB_CMDLINE_LINUX="bootconfig"
+
+
+thanks.
+-- 
+~Randy
+
