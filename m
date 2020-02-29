@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2CDC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF4AC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 08:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC23324695
+	by mail.kernel.org (Postfix) with ESMTP id DF3B5246AF
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 08:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgB2I6h (ORCPT
+        id S1726859AbgB2I7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 03:58:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51260 "EHLO
+        Sat, 29 Feb 2020 03:59:01 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15036 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbgB2I6h (ORCPT
+        by vger.kernel.org with ESMTP id S1725747AbgB2I7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 03:58:37 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01T8tCmi086855
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:58:36 -0500
+        Sat, 29 Feb 2020 03:59:01 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01T8rjTh036481
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:59:00 -0500
 Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmu1r34n-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfhs1kq7a-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:58:35 -0500
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:58:59 -0500
 Received: from localhost
         by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Sat, 29 Feb 2020 08:58:34 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        Sat, 29 Feb 2020 08:58:58 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
         by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 29 Feb 2020 08:58:31 -0000
+        Sat, 29 Feb 2020 08:58:55 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01T8wTil49807486
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01T8vtUK48169262
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Feb 2020 08:58:29 GMT
+        Sat, 29 Feb 2020 08:57:56 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3203A405B;
-        Sat, 29 Feb 2020 08:58:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7D59BA4054;
+        Sat, 29 Feb 2020 08:58:53 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16846A4054;
-        Sat, 29 Feb 2020 08:58:28 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C2783A405C;
+        Sat, 29 Feb 2020 08:58:51 +0000 (GMT)
 Received: from [9.199.55.146] (unknown [9.199.55.146])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat, 29 Feb 2020 08:58:27 +0000 (GMT)
-Subject: Re: [RFC 0/1] Weighted approach to gather and use history in TEO
+        Sat, 29 Feb 2020 08:58:51 +0000 (GMT)
+Subject: Re: [RFC 1/1] Weighted approach to gather and use history in TEO
  governor
 To:     ego@linux.vnet.ibm.com
 Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
@@ -56,28 +56,29 @@ Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
         daniel.lezcano@linaro.org, svaidy@linux.ibm.com,
         pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
 References: <20200222070002.12897-1-psampat@linux.ibm.com>
- <20200225051306.GG12846@in.ibm.com>
+ <20200222070002.12897-2-psampat@linux.ibm.com>
+ <20200225061857.GH12846@in.ibm.com>
 From:   Pratik Sampat <psampat@linux.ibm.com>
-Date:   Sat, 29 Feb 2020 14:28:27 +0530
+Date:   Sat, 29 Feb 2020 14:28:51 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200225051306.GG12846@in.ibm.com>
+In-Reply-To: <20200225061857.GH12846@in.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-TM-AS-GCONF: 00
-x-cbid: 20022908-0016-0000-0000-000002EB63E6
+x-cbid: 20022908-0016-0000-0000-000002EB63E7
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022908-0017-0000-0000-0000334E9FF2
-Message-Id: <c583eef3-6a82-a724-c4e3-c8299a4e7293@linux.ibm.com>
+x-cbparentid: 20022908-0017-0000-0000-0000334E9FF4
+Message-Id: <af2e45f2-3e20-77f3-690d-a1f0b296cf43@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-29_02:2020-02-28,2020-02-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=1 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- bulkscore=0 mlxscore=0 impostorscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002290067
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
+ suspectscore=1 clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002290067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,209 +86,225 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello Gautham,
 
-Thanks for your comments.
-
-
-On 25/02/20 10:43 am, Gautham R Shenoy wrote:
-> Hello Pratik,
->
-> On Sat, Feb 22, 2020 at 12:30:01PM +0530, Pratik Rajesh Sampat wrote:
->> Currently the TEO governor apart from the TEO timer and hit/miss/early
->> hit buckets; also gathers history of 8 intervals and if there are
->> significant idle durations less than the current, then it decides if a
->> shallower state must be chosen.
->>
->> The current sliding history window does do a fair job at prediction,
->> however, the hard-coded window can be a limiting factor for an accurate
->> prediction and having the window size increase can also linearly affect
->> both space and time complexity of the prediction.
->>
->> To complement the current moving window history, an approach is devised
->> where each idle state separately maintains a weight for itself and its
->> counterpart idle states to form a probability distribution.
->>
->> When a decision needs to be made, the TEO governor selects an idle state
->> based on its timer and other hits/early hits metric. After which, the
->> probability distribution of that selected idle state is looked at which
->> gives insight into how probable that state is to occur if picked.
->>
->> The probability distribution is nothing but a n*n matrix, where
->> n = drv->state_count.
->> Each entry in the array signifies a weight for that row.
->> The weights can vary from the range [0-10000].
->>
->> For example:
->> state_mat[1][2] = 3000 means that previously when state 1 was selected,
->> the probability that state 2 will occur is 30%.
-> Could you clarify what this means ? Do you mean that when state 1 is
-> selected, the probability that the CPU will be in state 1 for the
-> duration corresponding to state 2's residency is 30% ?
-
-Yes. This precisely means that. In the case when the original logic
-chooses the state X, the probability that it should have gone to
-state Y because its residency is Z%
-
-> Further more, this means that during idle state selection we have O(n)
-> complexity if n is the number of idle states, since we want to select
-> a state where we are more likely to reside ?
-
-Absolutely. Although it has constant space complexity, the time
-complexity is linear.
-
->> The trailing zeros correspond to having more resolution while increasing
->> or reducing the weights for correction.
->>
->> Currently, for selection of an idle state based on probabilities, a
->> weighted random number generator is used to choose one of the idle
->> states. Naturally, the states with higher weights are more likely to be
->> chosen.
->>
->> On wakeup, the weights are updated. The state with which it should have
->> woken up with (could be the hit / miss / early hit state) is increased
->> in weight by the "LEARNING_RATE" % and the rest of the states for that
->> index are reduced by the same factor.
-> So we only update the weight in just one cell ?
->
-> To use the example above, if we selected state 1, and we resided in it
-> for a duration corresponding to state 2's residency, we will only
-> update state_mat[1][2] ?
-
-No that is not the case, the weight for stat_mat[1][2] will increase while
-the weights for rest of the states of state_mat[1][X] will decrease with
-the equal amount.
-
->> The advantage of this approach is that unlimited history of idle states
->> can be maintained in constant overhead, which can help in more accurate
->> prediction for choosing idle states.
->>
->> The advantage of unlimited history can become a possible disadvantage as
->> the lifetime history for that thread may make the weights stale and
->> influence the choosing of idle states which may not be relevant
->> anymore.
-> Can the effect of this staleless be observed ? For instance, if we
-> have a particular idle entry/exit pattern for a very long duration,
-> say a few 10s of minutes and then the idle entry/exit pattern changes,
-> how bad will the weighted approach be compared to the current TEO
-> governor ?
->
-I haven't been able to observe any adverse effects of the statelessness
-affecting when run for long durations.
-The reason I believe for that is we also leverage the recent history
-for this, when we run something and then idle the system only for us
-to run it again, the recent moving window history initially does not
-get triggered, however it may later. This gives our weights ample
-amount of time to be adjusted properly.
+Snip [...]
 
 >
+> I know this is an RFC patch, not meant for inclusion, but it is good
+> practice to have your Signed-off-by.
 >
->> Aging the weights could be a solution for that, although this RFC does
->> not cover the implementation for that.
->>
->> Having a finer view of the history in addition to weighted randomized
->> salt seems to show some promise in terms of saving power without
->> compromising performance.
->>
->> Benchmarks:
->> Note: Wt. TEO governor represents the governor after the proposed change
->>
->> Schbench
->> ========
->> Benchmarks wakeup latencies
->> Scale of measurement:
->> 1. 99th percentile latency - usec
->> 2. Power - Watts
->>
->> Command: $ schbench -c 30000 -s 30000 -m 6 -r 30 -t <Threads>
->> Varying parameter: -t
->>
->> Machine: IBM POWER 9
->>
->> +--------+-------------+-----------------+-----------+-----------------+
->> | Threads| TEO latency | Wt. TEO latency | TEO power | Wt. TEO power   |
->> +--------+-------------+-----------------+-----------+-----------------+
->> | 2      | 979         | 949  ( +3.06%)  | 38        | 36  ( +5.26%)   |
->> | 4      | 997         | 1042 ( -4.51%)  | 51        | 39  ( +23.52%)  |
->> | 8      | 1158        | 1050 ( +9.32%)  | 89        | 63  ( +29.21%)  |
->> | 16     | 1138        | 1135 ( +0.26%)  | 105       | 117 ( -11.42%)  |
->> +--------+-------------+-----------------+-----------+-----------------+
->>
->> Sleeping Ebizzy
->> ===============
->> Program to generate workloads resembling web server workloads.
->> The benchmark is customized to allow for a sleep interval -i
->> Scale of measurement:
->> 1. Number of records/s
->> 2. systime (s)
->>
->> Parameters:
->> 1. -m => Always use mmap instead of malloc
->> 2. -M => Never use mmap
->> 3. -S <seconds> => Number of seconds to run
->> 4. -i <interval> => Sleep interval
->>
->> Machine: IBM POWER 9
->>
->> +-------------------+-------------+-------------------+-----------+---------------+
->> | Parameters        | TEO records | Wt. TEO records   | TEO power | Wt. TEO power |
->> +-------------------+-------------+-------------------+-----------+---------------+
->> | -S 60 -i 10000    | 1115000     | 1198081 ( +7.45%) | 149       | 150 ( -0.66%) |
->> | -m -S 60 -i 10000 | 15879       | 15513   ( -2.30%) | 23        | 22  ( +4.34%) |
->> | -M -S 60 -i 10000 | 72887       | 77546   ( +6.39%) | 104       | 103 ( +0.96%) |
->> +-------------------+-------------+-------------------+-----------+---------------+
->>
->> Hackbench
->> =========
->> Creates a specified number of pairs of schedulable entities
->> which communicate via either sockets or pipes and time how long  it
->> takes for each pair to send data back and forth.
->> Scale of measurement:
->> 1. Time (s)
->> 2. Power (watts)
->>
->> Command: Sockets: $ hackbench -l <Messages>
->>           Pipes  : $ hackbench --pipe -l <Messages>
->> Varying parameter: -l
->>
->> Machine: IBM POWER 9
->>
->> +----------+------------+-------------------+----------+-------------------+
->> | Messages | TEO socket | Wt. TEO socket    | TEO pipe | Wt. TEO pipe      |
->> +----------+------------+-------------------+----------+-------------------+
->> | 100      | 0.042      | 0.043   ( -2.32%) | 0.031    | 0.032   ( +3.12%) |
->> | 1000     | 0.258      | 0.272   ( +5.14%) | 0.301    | 0.312   ( -3.65%) |
->> | 10000    | 2.397      | 2.441   ( +1.80%) | 5.642    | 5.092   ( +9.74%) |
->> | 100000   | 23.691     | 23.730  ( -0.16%) | 57.762   | 57.857  ( -0.16%) |
->> | 1000000  | 234.103    | 233.841 ( +0.11%) | 559.807  | 592.304 ( -5.80%) |
->> +----------+------------+-------------------+----------+-------------------+
->>
->> Power :Socket: Consistent between 135-140 watts for both TEO and Wt. TEO
->>         Pipe: Consistent between 125-130 watts for both TEO and Wt. TEO
->>
->>
+Sorry about that, my bad.
+
+
+
+Snip [...]
+
+>> +	/*
+>> +	 * Rearrange the weight distribution of the state, increase the weight
+>> +	 * by the LEARNING RATE % for the idle state that was supposed to be
+>> +	 * chosen and reduce by the same amount for rest of the states
+>> +	 *
+>> +	 * If the weights are greater than (100 - LEARNING_RATE) % or lesser
+>> +	 * than LEARNING_RATE %, do not increase or decrease the confidence
+>> +	 * respectively
+>> +	 */
+>> +	for (i = 0; i < drv->state_count; i++) {
+>> +		unsigned int delta;
+>> +
+>> +		if (idx == -1)
+>> +			break;
+>> +		if (i ==  idx) {
+>> +			delta = (LEARNING_RATE * cpu_data->state_mat[last_idx][i]) / 100;
+>> +			if (cpu_data->state_mat[last_idx][i] + delta >=
+>> +			    (100 - LEARNING_RATE) * 100)
+>> +				continue;
+>> +			cpu_data->state_mat[last_idx][i] += delta;
+>> +			continue;
+>> +		}
+>> +		delta = (LEARNING_RATE * cpu_data->state_mat[last_idx][i]) /
+>> +			((drv->state_count - 1) * 100);
 >
-> Could you also provide power measurements for the duration when the
-> system is completely idle for each of the variants of TEO governor ?
-> Is it the case that the benefits that we are seeing above are only due
-> to Wt. TEO being more conservative than TEO governor by always
-> choosing a shallower state ?
+> What happens when drv->state_count == 1?
+
+In that case, the idx has to be 0 and the weights go on increasing upto
+(100 - LEARNING_RATE) %. However that would not affect how states are
+chosen. Although I could break if we have only one state and spare us some cycles.
+
+>> +		if (cpu_data->state_mat[last_idx][i] - delta <=
+>> +		    LEARNING_RATE * 100)
+>> +			continue;
+>> +		cpu_data->state_mat[last_idx][i] -= delta;
+> So, even update takes O(n) time, since we have to increase the weight
+> for one state, and correspondingly decrease the state for all the
+> other states.
+
+Yes it does take O(n).
+
 >
->
->
->
->
->> Pratik Rajesh Sampat (1):
->>    Weighted approach to gather and use history in TEO governor
+>> +	}
+>> +
+>>   	/*
+>>   	 * Save idle duration values corresponding to non-timer wakeups for
+>>   	 * pattern detection.
+>> @@ -244,7 +288,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>>   	s64 latency_req = cpuidle_governor_latency_req(dev->cpu);
+>>   	u64 duration_ns;
+>>   	unsigned int hits, misses, early_hits;
+>> -	int max_early_idx, prev_max_early_idx, constraint_idx, idx, i;
+>> +	int max_early_idx, prev_max_early_idx, constraint_idx, idx, i, og_idx;
+>>   	ktime_t delta_tick;
 >>
->>   drivers/cpuidle/governors/teo.c | 95 +++++++++++++++++++++++++++++++--
->>   1 file changed, 90 insertions(+), 5 deletions(-)
+>>   	if (dev->last_state_idx >= 0) {
+>> @@ -374,10 +418,13 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>>   	if (constraint_idx < idx)
+>>   		idx = constraint_idx;
+>>
+>> +	og_idx = idx;
+>> +
+>>   	if (idx < 0) {
+>>   		idx = 0; /* No states enabled. Must use 0. */
+>>   	} else if (idx > 0) {
+>> -		unsigned int count = 0;
+>> +		unsigned int count = 0, sum_weights = 0, weights_list[CPUIDLE_STATE_MAX];
+>> +		int i, j = 0, rnd_wt, rnd_num = 0;
+>>   		u64 sum = 0;
+>>
+>>   		/*
+>> @@ -412,6 +459,29 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>>   								       idx, avg_ns);
+>>   			}
+>>   		}
+>> +		/*
+>> +		 * In case, the recent history yields a shallower state, then
+>> +		 * the probability distribution is looked at.
+>> +		 * The weighted random number generator uses the weights as a
+>> +		 * bias to choose the next idle state
+>> +		 */
+>> +		if (og_idx != idx) {
+>> +			for (i = 0; i <= idx; i++) {
+>
+> So it seems like we are restricting our choice to states no deeper
+> than the selected state.
+>
+> Is it not possible that cpu_data->state_mat[idx][j] has the
+> maximum weight when j > idx ? If yes, why are we leaving those states
+> out ?
+
+It is certainly possible, however, the idea is that the state
+selected because of a timer is the deepest it could have gone unless interrupted
+otherwise for which it may have to choose a shallower state.
+
+Having said that, timers can get cancelled prompting to choose a deeper state,
+however, it may not be often enough for us to start amounting in the mix.
+Certainly more testing of various workloads is required to determine if that
+is indeed the case.
+
+>> +				if (dev->states_usage[i].disable)
+>> +					continue;
+>> +				sum_weights += cpu_data->state_mat[idx][i];
+>> +				weights_list[j++] = sum_weights;
+>> +			}
+> Assume that cpu_data->stat_mat[idx] = {4, 5, 6, 9}
+> weight_list[] = {4, 9, 15, 24}
+>
+>> +			get_random_bytes(&rnd_num, sizeof(rnd_num));
+>> +			rnd_num = rnd_num % 100;
+> Assume rnd_num = 50.
+>> +			rnd_wt = (rnd_num * sum_weights) / 100;
+>
+> Then, rnd_wt = 12.
+>
+>  From the logic, below, it appears that you want to pick the shallowest
+> state i at which rnd_wt < weights_list[i]. In which case it would be
+> the state corresponding to the weight 6 (as the cumulative weight at
+> that point is 15).
+>
+>
+>> +			for (i = 0; i < j; i++) {
+>> +				if (rnd_wt < weights_list[i])
+>> +					break;
+>> +				rnd_wt -= weights_list[i];
+>
+> And yet, because of this additional subtraction, after the first
+> iteration of this loop, rnd_wt = 12 - 4 = 8, which means that you will
+> end up picking the state corresponding to weight 5 (cumulative weight
+> being 9 at this point).
+>
+> This doesn't seem right.
+
+You're right. I've made a mistake here.
+The line: rnd_wt -= weights_list[i]; is not needed and throws the algorithm off.
+
+I've re-run the benchmarks again to check for the affects.
+Although I see some variation in results, however I do see the algorithm improve
+over the conventional TEO.
+
+Initial weight distribution 60-40.
+Learning rate: 10%
+
+Schbench
++---------+-------------+----------------+-----------+--------------+
+| Threads | TEO latency | Wt.TEO latency | TEO power | Wt.TEO power |
++---------+-------------+----------------+-----------+--------------|
+| 2       | 979         | 947(+3.26%)    | 38        | 34(+10.52%)  |
+|---------|-------------|----------------|-----------|--------------|
+| 4       | 997         | 1110(-11.34%)  | 51        | 41(+19.60%)  |
+|---------|-------------|----------------|-----------|--------------|
+| 8       | 1158        | 1070(+7.59%)   | 89        | 71(+20.22%)  |
+|---------|-------------|----------------|-----------|--------------|
+| 16      | 1138        | 1334(-17.22%)  | 105       | 101(+3.80%)  |
++---------+-------------+----------------+-----------+--------------+
+
+Hackbench
++-------------------+-------------+-----------------+-----------+--------------+
+| Parameters        | TEO records | Wt.TEO records  | TEO power | Wt.TEO power |
++-------------------+-------------+-----------------+-----------+--------------+
+| -S 60 -i 10000    | 1115000     | 1180442(+5.86%) | 149       | 147(+1.34%)  |
+|-------------------|-------------|-----------------|-----------|--------------|
+| -m -S 60 -i 10000 | 15879       | 15953(+0.46%)   | 23        | 22(+4.34%)   |
+|-------------------|-------------|-----------------|-----------|--------------|
+| -M -S 60 -i 10000 | 72887       | 75454(+3.52%)   | 104       | 100(+3.84%)  |
++-------------------+-------------+-----------------+-----------+--------------+
+
+>> +			}
+>> +			idx = i;
+>> +		}
+>>   	}
+>>
+>>   	/*
+>> @@ -468,13 +538,28 @@ static int teo_enable_device(struct cpuidle_driver *drv,
+>>   			     struct cpuidle_device *dev)
+>>   {
+>>   	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
+>> -	int i;
+>> +	int i, j;
+>>
+>>   	memset(cpu_data, 0, sizeof(*cpu_data));
+>>
+>>   	for (i = 0; i < INTERVALS; i++)
+>>   		cpu_data->intervals[i] = U64_MAX;
+>>
+>> +	/*
+>> +	 * Populate initial weights for each state
+>> +	 * The stop state is initially more biased for itself.
+>> +	 *
+>> +	 * Currently the initial distribution of probabilities are 70%-30%.
+>> +	 * The trailing 0s are for increased resolution.
+>> +	 */
+>> +	for (i = 0; i < drv->state_count; i++) {
+>> +		for (j = 0; j < drv->state_count; j++) {
+>> +			if (i == j)
+>> +				cpu_data->state_mat[i][j] = 7000;
+>> +			else
+>> +				cpu_data->state_mat[i][j] = 3000 / (drv->state_count - 1);
+>
+>> +		}
+>> +	}
+>>   	return 0;
+>>   }
 >>
 >> -- 
 >> 2.17.1
 >>
-> --
-> Thanks and Regards
-> gautham.
-
 ---
 
 Pratik
