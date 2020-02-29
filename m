@@ -2,63 +2,65 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33F8C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0DBC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B4224691
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167EC24672
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgJE8xO/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7j93h5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgB2WTV (ORCPT
+        id S1727364AbgB2W31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 17:19:21 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37135 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgB2WTV (ORCPT
+        Sat, 29 Feb 2020 17:29:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33750 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgB2W30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 17:19:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a141so7171295wme.2;
-        Sat, 29 Feb 2020 14:19:19 -0800 (PST)
+        Sat, 29 Feb 2020 17:29:26 -0500
+Received: by mail-wr1-f68.google.com with SMTP id x7so7826141wrr.0;
+        Sat, 29 Feb 2020 14:29:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=Rq6vkQgTaOQDotxYomeOOqqSCicKb0gWij/0lXcfMPs=;
-        b=CgJE8xO/dLhkcoI8oDJycGzTipj/BjsRi8gPl7dxzATB+E11EFGNPqwjARxZDBWPAX
-         16X1rDAZ9yb/Z6NFnor2DsJL00bxBBrGN7rkUeAIPCFRm+o1S+0vOVECfv8GW2VZUIZm
-         sEyWeNrlkocUdU8TF9Wjvjg9sHHxgGGhhWxtH5eIbUeHN19k7BIrPIFhqPU9wvD986P3
-         fk5MM0AwaTqi7PjI/JO8EW7cZ5B2CwZRiixWKWCB4TnXarse20/5Io2MWR8+zkrRMEBT
-         HCav4h+AdvfB/UywRqHQiJHKyRzntakvLfAc22Sst+kYvS9tBRplDOFHsvRFEZF7ywoN
-         uaAw==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JUcStTd1OYnX+4/KTZoNwT3pKFBsMhYYxXgdxB6jewU=;
+        b=W7j93h5+gAXFNx9VjTexyPvITCCvM44iEc9yXZLJWWLzai9hpbYKLIPlAjzD61SKGy
+         NfQCBuAYb0M6t5HyCnmkWvzu7e2kJCxUa4lL6GfIm/8nsgALkayLXcSQ11KNVgoLfUjp
+         dR0iUK1MWrbED6doNC+8a6LcjaYZFtw3nXLG+cFCzYIxbc+hP4gbGiFJwSNSsRcn6YMr
+         qFs/0sr/K6WqfQWm5OIzt53tNNbyEvKJwTYttGysoXUJsPjCgOr/MGIqHHnYDIWbv59W
+         hyWN/KajLBnQF369IgqPkFZh42HTTMAMuKgC8rd8PEA5J3DYEqz0H3mowyc8mOvAPslA
+         cHjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Rq6vkQgTaOQDotxYomeOOqqSCicKb0gWij/0lXcfMPs=;
-        b=gGnHu4APny8GVRkCvhxh8TZwDdgfNc9BfycINpnTh18h6aSicmhU3MWNwdcwZkdcZx
-         chGGD/2dbYaaFQa+nZjsHZ/4dGFHtXu0IJugEKkiG9C1DbfoKwFBEZJGgjRf8Pn1b+S2
-         89kJGYk8KdhpRHeGxqD2AsV61LSG0yvN7pFplF/yinJ6Xygc8RYbLFY8jKr/3t8jWT/p
-         q0xMMTmlsnOxYZOKkFBdw2mdJvoMCHFPQs/SDuW6cbTPi39W+b+rDNVAPMeuJ/xyG57m
-         3SlF6H0lVVlLDBbACt2OJ/epQDVPSX/YBKzlX834b1Hwks0o9WiYodNEMAFfQcCvKB4t
-         x0lw==
-X-Gm-Message-State: APjAAAUzKLSwDU2B+svkPXD57Zw7/cOAyWH2+hI0GOUYdGitF0RMM2/+
-        tC1Mz3OMwM6LJ5EIv0tPZ6o=
-X-Google-Smtp-Source: APXvYqw67IGoTwJ8NzM3XM89iPMypR15cLOYPYs07JIUP1A0ezQRFsrvQbuM+HTJimit4msBKUXa4w==
-X-Received: by 2002:a1c:9a88:: with SMTP id c130mr10592334wme.73.1583014759103;
-        Sat, 29 Feb 2020 14:19:19 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JUcStTd1OYnX+4/KTZoNwT3pKFBsMhYYxXgdxB6jewU=;
+        b=F5XBMskfak5fPZRHhESnq1g5wOxKemBsYzT7oUbXgB4MGhNNDbteQRf0FrpQ0cNtNN
+         RCQODVVUpV7sfd8vs6auLnnyPW70sFAF8g285yFbF2zdeS5X1LCuxVIo5hQpLuoD7vcj
+         CWKH9ligM8l2vOzNRNBWJ1yqKemwRfTS3GOO7zGWzfz08ebxv2RnoARmQRdmP4UI/yZx
+         d+wTObP4+2wCHIN1/PnpT8ysn7E/Jlq/HXcFuDjAf9ViBZPkhZQminXldZTZCza5RR18
+         fDuvnl0zsKekcwrQAoyfJ3uWONWgcwVxPdrGyiN0OK2knOKRss56j29E45ufgdQ0SmjR
+         L9Sg==
+X-Gm-Message-State: APjAAAUiWy9+MWg4Ay+GP7yjhIAH/yLsrpNmPVA7R4+qiLA1x3J3UkKc
+        nFpyyK6D+X/byctufsxMtI4a0RX5
+X-Google-Smtp-Source: APXvYqxDK8DmyGmZovFQT4NhCchWjRPiRjKFyOka2xlPwNfL3r2zy7c1fFhpYk0IV1YBKCtG+HsPdQ==
+X-Received: by 2002:a5d:424c:: with SMTP id s12mr12210642wrr.244.1583015364175;
+        Sat, 29 Feb 2020 14:29:24 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:7150:76fe:91ca:7ab5? (p200300EA8F296000715076FE91CA7AB5.dip0.t-ipconnect.de. [2003:ea:8f29:6000:7150:76fe:91ca:7ab5])
-        by smtp.googlemail.com with ESMTPSA id v2sm18217864wme.2.2020.02.29.14.19.17
+        by smtp.googlemail.com with ESMTPSA id q3sm7781235wmj.38.2020.02.29.14.29.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Feb 2020 14:19:18 -0800 (PST)
+        Sat, 29 Feb 2020 14:29:23 -0800 (PST)
+Subject: [PATCH v4 01/10] net: marvell: add PCI_STATUS_SIG_TARGET_ABORT to PCI
+ status error bits
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v4 00/10] PCI: Add and use constant PCI_STATUS_ERROR_BITS and
- helper pci_status_get_and_clear_errors
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
         David Miller <davem@davemloft.net>,
@@ -70,11 +72,13 @@ Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         alsa-devel@alsa-project.org
-Message-ID: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
-Date:   Sat, 29 Feb 2020 23:19:13 +0100
+References: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
+Message-ID: <497952d4-de09-e268-0e2a-511a473198d7@gmail.com>
+Date:   Sat, 29 Feb 2020 23:20:32 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,54 +87,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several drivers have own definitions for this constant, so move it
-to the PCI core. In addition in multiple places the following code
-sequence is used:
-1. Read PCI_STATUS
-2. Mask out non-error bits
-3. Action based on set error bits
-4. Write back set error bits to clear them
+In preparation of factoring out PCI_STATUS error bit handling let drivers
+use the same collection of error bits. To facilitate bisecting we do this
+in a separate patch per affected driver. For the Marvell drivers we have
+to add PCI_STATUS_SIG_TARGET_ABORT to the error bits.
 
-As this is a repeated pattern, add a helper to the PCI core.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/net/ethernet/marvell/skge.h | 1 +
+ drivers/net/ethernet/marvell/sky2.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-Most affected drivers are network drivers. But as it's about core
-PCI functionality, I suppose the series should go through the PCI
-tree.
-
-v2:
-- fix formal issue with cover letter
-v3:
-- fix dumb typo in patch 7
-v4:
-- add patches 1-3
-- move new constant PCI_STATUS_ERROR_BITS to include/linux/pci.h
-- small improvements in commit messages
-
-Heiner Kallweit (10):
-  net: marvell: add PCI_STATUS_SIG_TARGET_ABORT to PCI status error bits
-  net: skfp: add PCI_STATUS_REC_TARGET_ABORT to PCI status error bits
-  r8169: add PCI_STATUS_PARITY to PCI status error bits
-  PCI: Add constant PCI_STATUS_ERROR_BITS
-  PCI: Add pci_status_get_and_clear_errors
-  r8169: use pci_status_get_and_clear_errors
-  net: sun: use pci_status_get_and_clear_errors
-  net: skfp: use new constant PCI_STATUS_ERROR_BITS
-  PCI: pci-bridge-emul: Use new constant PCI_STATUS_ERROR_BITS
-  sound: bt87x: use pci_status_get_and_clear_errors
-
- drivers/net/ethernet/marvell/skge.h       |  6 -----
- drivers/net/ethernet/marvell/sky2.h       |  6 -----
- drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
- drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
- drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
- drivers/net/fddi/skfp/drvfbi.c            |  4 +--
- drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
- drivers/pci/pci-bridge-emul.c             | 14 ++---------
- drivers/pci/pci.c                         | 23 +++++++++++++++++
- include/linux/pci.h                       |  8 ++++++
- sound/pci/bt87x.c                         |  7 +-----
- 11 files changed, 61 insertions(+), 85 deletions(-)
-
+diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
+index 6fa7b6a34..e76c03c87 100644
+--- a/drivers/net/ethernet/marvell/skge.h
++++ b/drivers/net/ethernet/marvell/skge.h
+@@ -19,6 +19,7 @@
+ 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+ 			       PCI_STATUS_REC_MASTER_ABORT | \
+ 			       PCI_STATUS_REC_TARGET_ABORT | \
++			       PCI_STATUS_SIG_TARGET_ABORT | \
+ 			       PCI_STATUS_PARITY)
+ 
+ enum csr_regs {
+diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+index b02b65230..aee87f838 100644
+--- a/drivers/net/ethernet/marvell/sky2.h
++++ b/drivers/net/ethernet/marvell/sky2.h
+@@ -256,6 +256,7 @@ enum {
+ 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+ 			       PCI_STATUS_REC_MASTER_ABORT | \
+ 			       PCI_STATUS_REC_TARGET_ABORT | \
++			       PCI_STATUS_SIG_TARGET_ABORT | \
+ 			       PCI_STATUS_PARITY)
+ 
+ enum csr_regs {
 -- 
 2.25.1
+
 
