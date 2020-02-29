@@ -2,92 +2,68 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3165C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94303C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8851A214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F8C2467D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgB2SEA (ORCPT
+        id S1727505AbgB2SIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:04:00 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45042 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727209AbgB2SD7 (ORCPT
+        Sat, 29 Feb 2020 13:08:39 -0500
+Received: from mail-out.m-online.net ([212.18.0.10]:35013 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbgB2SIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 13:03:59 -0500
-Received: from callcc.thunk.org (75-104-88-164.mobility.exede.net [75.104.88.164] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01TI3N6m018652
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 29 Feb 2020 13:03:30 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 2E9B042045B; Sat, 29 Feb 2020 13:03:23 -0500 (EST)
-Date:   Sat, 29 Feb 2020 13:03:23 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200229180323.GC7378@mit.edu>
-References: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
- <20200229110456.GY25745@shell.armlinux.org.uk>
- <20200229151907.GA7378@mit.edu>
- <20200229170328.GD25745@shell.armlinux.org.uk>
+        Sat, 29 Feb 2020 13:08:38 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48VDtD2wlqz1rfPg;
+        Sat, 29 Feb 2020 19:08:35 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48VDtC6Sd5z1qql9;
+        Sat, 29 Feb 2020 19:08:35 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id ZgJXLnzSXOOR; Sat, 29 Feb 2020 19:08:35 +0100 (CET)
+X-Auth-Info: uOJgOoUGSWhnpYpJZ6Ce4sZpFOhSnb7o1YTun+Kg6Kk=
+Received: from crub (pD95F11D0.dip0.t-ipconnect.de [217.95.17.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sat, 29 Feb 2020 19:08:35 +0100 (CET)
+Date:   Sat, 29 Feb 2020 19:08:30 +0100
+From:   Anatolij Gustschin <agust@denx.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] powerpc: Update MPC5XXX MAINTAINERS entry
+Message-ID: <20200229190830.52eebda0@crub>
+In-Reply-To: <20200224233146.23734-6-mpe@ellerman.id.au>
+References: <20200224233146.23734-1-mpe@ellerman.id.au>
+        <20200224233146.23734-6-mpe@ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229170328.GD25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 05:03:28PM +0000, Russell King - ARM Linux admin wrote:
-> > There's a test-appliance designed to be run on ARM64 here[1].
-> > 
-> > [1] https://kernel.org/pub/linux/kernel/people/tytso/kvm-xfstests/xfstests-amd64.tar.xz
-> 
-> The filename seems to say "amd64" not "arm64" ?
+On Tue, 25 Feb 2020 10:31:44 +1100
+Michael Ellerman mpe@ellerman.id.au wrote:
 
-Sorry, I cut and pasted the wrong link: s/amd64/arm64/
+>It's several years since the last commit from Anatolij, so mark
+>MPC5XXX as "Odd Fixes" rather than "Maintained".
+>
+>Also the git link no longer works so remove it.
+>
+>Cc: Anatolij Gustschin <agust@denx.de>
+>Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 
-If there are arm64-specific locking issues, we can probably flush them
-out if we could figure out some way of running some of the stress
-tests in xfstests.  I don't know a whole lot about arm-64
-architectures; would running xfstests on, say, an Amazon AWS arm-based
-VM be representative of your new architecture?  Or are there a lot of
-sub-architecture differences in the arm-64 world?
+Acked-by: Anatolij Gustschin <agust@denx.de>
 
-						- Ted
+
