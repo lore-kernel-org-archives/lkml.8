@@ -2,285 +2,562 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C67C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E5AC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C633246A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q9p5W+6p"
+	by mail.kernel.org (Postfix) with ESMTP id AB06B24695
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB2LF3 (ORCPT
+        id S1726918AbgB2LH1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 06:05:29 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41630 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgB2LF3 (ORCPT
+        Sat, 29 Feb 2020 06:07:27 -0500
+Received: from mailoutvs42.siol.net ([185.57.226.233]:50596 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726857AbgB2LH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 06:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wuUpV5SHCRJYUop9hRbOcq6qSohuXXb7u+JkS37PiYg=; b=q9p5W+6pavIOD//8IHWCpzjOr
-        Y1ZEJ6TqSVwIynLiC+KJHBAHMaeqDY/LgdnHCNHWMrgtdgESsKNSQ3EpwHAXRVP7rcde5/+qjZ9W8
-        Wx2O1L2n9Db9cVyUP2wNsKltIux+pwQt87Ik7WK8+Aij8lC2Lui5Ps2lt6gA3NWMVunL3G0T2VdcH
-        xYagoaVexzJ73H91KgiMTXRVFTVcmY6xNd7j5vp02lxnhOz/85PNJ8/7AYa0Nye+1ZVMK9YIfUyqW
-        PtmfW8M4N/5xaCKCttbAWsYLQdwwyTW3Sg/tUcGPpq1qidsjw4IrrU6QizNZssXLYmE08eHQDHEdo
-        +PKLeQkdA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58468)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j7zvh-00015K-76; Sat, 29 Feb 2020 11:05:09 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j7zvU-0002uI-JD; Sat, 29 Feb 2020 11:04:56 +0000
-Date:   Sat, 29 Feb 2020 11:04:56 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200229110456.GY25745@shell.armlinux.org.uk>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
+        Sat, 29 Feb 2020 06:07:27 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 7F4E45222AB;
+        Sat, 29 Feb 2020 12:07:20 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wsE15d5diRwz; Sat, 29 Feb 2020 12:07:19 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 6B0195223EF;
+        Sat, 29 Feb 2020 12:07:19 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 627CA5222AB;
+        Sat, 29 Feb 2020 12:07:18 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        boris.brezillon@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>
+Cc:     linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format negociation
+Date:   Sat, 29 Feb 2020 12:07:17 +0100
+Message-ID: <2970638.5fSG56mABF@jernej-laptop>
+In-Reply-To: <64b6ef10-b2e2-02f3-56dd-14dd0782a7aa@kwiboo.se>
+References: <20200206191834.6125-1-narmstrong@baylibre.com> <5330543.DvuYhMxLoT@jernej-laptop> <64b6ef10-b2e2-02f3-56dd-14dd0782a7aa@kwiboo.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229095550.GX25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 09:55:50AM +0000, Russell King - ARM Linux admin wrote:
-> On Mon, Feb 10, 2020 at 03:22:57PM +0000, Russell King - ARM Linux admin wrote:
-> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > >
-> > > > Hi Olof,
-> > > >
-> > > > Thanks a lot for your comments!
-> > > > And sorry for my delay respond!
-> > > 
-> > > Actually, they apply with only minor conflicts on top of current -next.
-> > > 
-> > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > enable full use of a promising ARM developer system, the SolidRun
-> > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > use with mainline or -next without any additional patches applied --
-> > > which this patchset achieves.
-> > > 
-> > > I know there are pending revisions based on feedback. I'll leave it up
-> > > to you and others to determine if that can be done with incremental
-> > > patches on top, or if it should be fixed before the initial patchset
-> > > is applied. But all in all, it's holding up adaption by me and surely
-> > > others of a very interesting platform -- I'm looking to replace my
-> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > before I do.
+Dne sobota, 29. februar 2020 ob 11:09:14 CET je Jonas Karlman napisal(a):
+> Hi Jernej,
+> 
+> On 2020-02-29 08:42, Jernej Škrabec wrote:
+> > Hi Neil!
 > > 
-> > If you're going to be using NVMe, make sure you use a power-fail safe
-> > version; I've already had one instance where ext4 failed to mount
-> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > Serror'd, and then I powered it down after a few hours before later
-> > booting it back up.
+> > Dne četrtek, 06. februar 2020 ob 20:18:27 CET je Neil Armstrong 
+napisal(a):
+> >> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to
+> >> negociate
+> >> the possible output and input formats for the current mode and monitor,
+> >> and use the negotiated formats in a basic atomic_check callback.
+> >> 
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >> 
+> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
+> >>  1 file changed, 268 insertions(+), 4 deletions(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> >> fec4a4bcd1fe..15048ad694bc 100644
+> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >> @@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> >> struct drm_display_mode *mode)
+> >> hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
+> >> 
+> >>  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
+> >> 
+> >> -	/* TOFIX: Get input format from plat data or fallback to RGB888 */
+> >> 
+> >>  	if (hdmi->plat_data->input_bus_format)
+> >>  	
+> >>  		hdmi->hdmi_data.enc_in_bus_format =
+> >>  		
+> >>  			hdmi->plat_data->input_bus_format;
+> >> 
+> >> -	else
+> >> +	else if (hdmi->hdmi_data.enc_in_bus_format == MEDIA_BUS_FMT_FIXED)
+> >> 
+> >>  		hdmi->hdmi_data.enc_in_bus_format =
 > > 
-> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > EXT4-fs (nvme0n1p2): error loading journal
+> > MEDIA_BUS_FMT_RGB888_1X24;
+> > 
+> >>  	/* TOFIX: Get input encoding from plat data or fallback to none */
+> >> 
+> >> @@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> >> struct
+> >> drm_display_mode *mode) else
+> >> 
+> >>  		hdmi->hdmi_data.enc_in_encoding =
+> > 
+> > V4L2_YCBCR_ENC_DEFAULT;
+> > 
+> >> -	/* TOFIX: Default to RGB888 output format */
+> >> -	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> >> +	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
+> >> +		hdmi->hdmi_data.enc_out_bus_format =
+> > 
+> > MEDIA_BUS_FMT_RGB888_1X24;
+> > 
+> >>  	hdmi->hdmi_data.pix_repet_factor = 0;
+> >>  	hdmi->hdmi_data.hdcp_enable = 0;
+> >> 
+> >> @@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs
+> >> dw_hdmi_connector_helper_funcs = .atomic_check =
+> >> dw_hdmi_connector_atomic_check,
+> >> 
+> >>  };
+> >> 
+> >> +/*
+> >> + * Possible output formats :
+> >> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48,
+> >> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+> >> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+> >> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
+> >> + * - MEDIA_BUS_FMT_YUV16_1X48,
+> >> + * - MEDIA_BUS_FMT_RGB161616_1X48,
+> >> + * - MEDIA_BUS_FMT_UYVY12_1X24,
+> >> + * - MEDIA_BUS_FMT_YUV12_1X36,
+> >> + * - MEDIA_BUS_FMT_RGB121212_1X36,
+> >> + * - MEDIA_BUS_FMT_UYVY10_1X20,
+> >> + * - MEDIA_BUS_FMT_YUV10_1X30,
+> >> + * - MEDIA_BUS_FMT_RGB101010_1X30,
+> >> + * - MEDIA_BUS_FMT_UYVY8_1X16,
+> >> + * - MEDIA_BUS_FMT_YUV8_1X24,
+> >> + * - MEDIA_BUS_FMT_RGB888_1X24,
+> >> + */
+> >> +
+> >> +/* Can return a maximum of 12 possible output formats for a
+> >> mode/connector
+> >> */ +#define MAX_OUTPUT_SEL_FORMATS	12
+> >> +
+> >> +static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge
+> >> *bridge, +					struct
+> > 
+> > drm_bridge_state *bridge_state,
+> > 
+> >> +					struct drm_crtc_state
+> > 
+> > *crtc_state,
+> > 
+> >> +					struct
+> > 
+> > drm_connector_state *conn_state,
+> > 
+> >> +					unsigned int
+> > 
+> > *num_output_fmts)
+> > 
+> >> +{
+> >> +	struct drm_connector *conn = conn_state->connector;
+> >> +	struct drm_display_info *info = &conn->display_info;
+> >> +	struct drm_display_mode *mode = &crtc_state->mode;
+> >> +	u8 max_bpc = conn_state->max_requested_bpc;
+> >> +	bool is_hdmi2_sink = info->hdmi.scdc.supported ||
+> >> +			     (info->color_formats &
+> > 
+> > DRM_COLOR_FORMAT_YCRCB420);
+> > 
+> >> +	u32 *output_fmts;
+> >> +	int i = 0;
+> >> +
+> >> +	*num_output_fmts = 0;
+> >> +
+> >> +	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS, 
+sizeof(*output_fmts),
+> >> +			      GFP_KERNEL);
+> >> +	if (!output_fmts)
+> >> +		return NULL;
+> >> +
+> >> +	/*
+> >> +	 * If the current mode enforces 4:2:0, force the output but format
+> >> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+> >> +	 */
+> >> +	if (conn->ycbcr_420_allowed &&
+> >> +	    (drm_mode_is_420_only(info, mode) ||
+> >> +	     ())) {
+> >> +
+> >> +		/* Order bus formats from 16bit to 8bit if supported */
+> >> +		if (max_bpc >= 16 && info->bpc == 16 &&
+> >> +		    (info->hdmi.y420_dc_modes &
+> > 
+> > DRM_EDID_YCBCR420_DC_48))
+> > 
+> >> +			output_fmts[i++] =
+> > 
+> > MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+> > 
+> >> +
+> >> +		if (max_bpc >= 12 && info->bpc >= 12 &&
+> >> +		    (info->hdmi.y420_dc_modes &
+> > 
+> > DRM_EDID_YCBCR420_DC_36))
+> > 
+> >> +			output_fmts[i++] =
+> > 
+> > MEDIA_BUS_FMT_UYYVYY12_0_5X36;
+> > 
+> >> +
+> >> +		if (max_bpc >= 10 && info->bpc >= 10 &&
+> >> +		    (info->hdmi.y420_dc_modes &
+> > 
+> > DRM_EDID_YCBCR420_DC_30))
+> > 
+> >> +			output_fmts[i++] =
+> > 
+> > MEDIA_BUS_FMT_UYYVYY10_0_5X30;
+> > 
+> >> +
+> >> +		/* Default 8bit fallback */
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+> >> +
+> >> +		*num_output_fmts = i;
+> >> +
+> >> +		return output_fmts;
+> > 
+> > Driver shouldn't return just yet for case "is_hdmi2_sink &&
+> > drm_mode_is_420_also(info, mode)", because monitor/TV also supports YCbCr
+> > 4:4:4 in that case. IMO YCbCr 4:4:4 should be even prefered. What do you
+> > think?
 > 
-> ... and last night, I just got more ext4fs errors on the NVMe, without
-> any unclean power cycles:
+> I think we need to have some way for controller driver and userspace to
+> control what hdmi output format gets selected. I know for a fact that some
+> Samsung TV have issues with 444 YCbCr modes at 4k 50/60hz but have no
+> problems with 420 modes. The Samsung TV edid lie and/or the TV is not fully
+> following HDMI specs
+
+Interesting, maybe just some bandwith issues? I guess we should have a 
+blacklist for such cases. I know that at least Allwinner BSP driver for DW 
+HDMI has a blacklist, in this case for 2 monitors which claim to support YCbCr 
+4:4:4 mode but they not.
+
 > 
-> [73729.556544] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> [73729.565354] Aborting journal on device nvme0n1p2-8.
-> [73729.568995] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
-> [73729.569077] EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:61: Detected aborted journal
-> [73729.573741] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> [73729.593330] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm mv: iget: checksum invalid
+> From a personal and mediaplayer userspace perspective I would like to prefer
+> 420/444 YCbCr mode as soon as any yuv drm plane is active and rgb 444
+> anytime else.
+
+I would argue that YCbCr is always prefered:
+- CEA 861 prefers it for all CEA modes
+- avoid dealing with quantization range - it's always limited range for < hdmi 
+2.0 and selectable on some hdmi 2.0 capable sinks
+
+Anyway, there is no universal solution to avoid color space conversion in all 
+cases. For example, due to design of Allwinner Display Engine 2, it can only 
+work in RGB format internally, but it can convert final output to YCbCr right 
+before it's feeded to DW HDMI. On the other hand, you have meson display 
+pipeline which works in YCbCr format internally and relies on DW HDMI CSC unit 
+to convert output to RGB. Fortunately, there are also display pipelines which 
+can work in any colorspace internally, like Allwinner Display Engine 3. Not 
+sure in which category Rockchip display pipeline falls into.
+
 > 
-> The affected file is /var/backups/dpkg.status.6.gz
+> On Rockchip SoCs the display controller cannot output yuv422 to dw-hdmi
+> block, the optimal output format selection in such case should put yuv422
+> last.
+
+Note that DW HDMI has decimation support which converts 444 to 422. This is 
+part of CSC unit.
+
+Side note: CSC unit is optional feature of DW-HDMI and presence is indicated 
+by config register. However, it seems that CSC support is broken in DW HDMI 
+controller on 40nm Allwinner SoCs. If it is enabled, TV loses signal. I have 
+to investigate if only CSC is broken or decimation also don't work.
+
 > 
-> It was cleanly shut down and powered off on the 22nd February, booted
-> yesterday morning followed by another reboot a few minutes later.
+> Maybe dw-hdmi can call a dw-hdmi glue driver callback to get the preferred
+> output format order?
 > 
-> What worries me is the fact that corruption has happened - and if that
-> happens to a file rather than an inode, it will likely go unnoticed
-> for a considerably longer time.
+> On a side note but related issue, the dw-hdmi format negotiation code should
+> probably also filter modes on tmds rate, something like [1].
+> It is needed to filter out deep color modes that is not supported by the
+> sink or hdmi spec.
+
+Ah, you mean on TMDS rates supported by the sink. Could this avoid Samsung 
+deep color issues? If so, we don't need blacklist then.
+
+Best regards,
+Jernej
+
 > 
-> I think I'm getting to the point of deciding NVMe or the LX2160A to be
-> just too unreliable for serious use.  I hadn't noticed any issues when
-> using the rootfs on the eMMC, so it suggests either the NVMe is
-> unreliable, or there's a problem with PCIe on this platform (which we
-> kind of know about with Jon's GPU rendering issues.)
+> [1]
+> https://github.com/Kwiboo/linux-rockchip/commit/fc3df6903384e764ab6ac59879c
+> 489cbef55fcbe
+> 
+> Best regards,
+> Jonas
+> 
+> > Best regards,
+> > Jernej
+> > 
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * Order bus formats from 16bit to 8bit and from YUV422 to RGB
+> >> +	 * if supported. In any case the default RGB888 format is added
+> >> +	 */
+> >> +
+> >> +	if (max_bpc >= 16 && info->bpc == 16) {
+> >> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >> +
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >> +	}
+> >> +
+> >> +	if (max_bpc >= 12 && info->bpc >= 12) {
+> >> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >> +			output_fmts[i++] = 
+MEDIA_BUS_FMT_UYVY12_1X24;
+> >> +
+> >> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >> +
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >> +	}
+> >> +
+> >> +	if (max_bpc >= 10 && info->bpc >= 10) {
+> >> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >> +			output_fmts[i++] = 
+MEDIA_BUS_FMT_UYVY10_1X20;
+> >> +
+> >> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >> +
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >> +	}
+> >> +
+> >> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >> +
+> >> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >> +		output_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >> +
+> >> +	/* Default 8bit RGB fallback */
+> >> +	output_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >> +
+> >> +	*num_output_fmts = i;
+> >> +
+> >> +	return output_fmts;
+> >> +}
+> >> +
+> >> +/*
+> >> + * Possible input formats :
+> >> + * - MEDIA_BUS_FMT_RGB888_1X24
+> >> + * - MEDIA_BUS_FMT_YUV8_1X24
+> >> + * - MEDIA_BUS_FMT_UYVY8_1X16
+> >> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24
+> >> + * - MEDIA_BUS_FMT_RGB101010_1X30
+> >> + * - MEDIA_BUS_FMT_YUV10_1X30
+> >> + * - MEDIA_BUS_FMT_UYVY10_1X20
+> >> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30
+> >> + * - MEDIA_BUS_FMT_RGB121212_1X36
+> >> + * - MEDIA_BUS_FMT_YUV12_1X36
+> >> + * - MEDIA_BUS_FMT_UYVY12_1X24
+> >> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36
+> >> + * - MEDIA_BUS_FMT_RGB161616_1X48
+> >> + * - MEDIA_BUS_FMT_YUV16_1X48
+> >> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48
+> >> + */
+> >> +
+> >> +/* Can return a maximum of 4 possible input formats for an output format
+> >> */ +#define MAX_INPUT_SEL_FORMATS	4
+> >> +
+> >> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge
+> >> *bridge, +					struct
+> > 
+> > drm_bridge_state *bridge_state,
+> > 
+> >> +					struct drm_crtc_state
+> > 
+> > *crtc_state,
+> > 
+> >> +					struct
+> > 
+> > drm_connector_state *conn_state,
+> > 
+> >> +					u32 output_fmt,
+> >> +					unsigned int
+> > 
+> > *num_input_fmts)
+> > 
+> >> +{
+> >> +	u32 *input_fmts;
+> >> +	int i = 0;
+> >> +
+> >> +	*num_input_fmts = 0;
+> >> +
+> >> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+> >> +			     GFP_KERNEL);
+> >> +	if (!input_fmts)
+> >> +		return NULL;
+> >> +
+> >> +	switch (output_fmt) {
+> >> +	/* 8bit */
+> >> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >> +		break;
+> >> +
+> >> +	/* 10bit */
+> >> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >> +		break;
+> >> +
+> >> +	/* 12bit */
+> >> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV12_1X36:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >> +		break;
+> >> +
+> >> +	/* 16bit */
+> >> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >> +		break;
+> >> +	case MEDIA_BUS_FMT_YUV16_1X48:
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >> +		break;
+> >> +
+> >> +	/* 420 */
+> >> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> >> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> >> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+> >> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+> >> +		input_fmts[i++] = output_fmt;
+> >> +		break;
+> >> +	}
+> >> +
+> >> +	*num_input_fmts = i;
+> >> +
+> >> +	if (*num_input_fmts == 0) {
+> >> +		kfree(input_fmts);
+> >> +		input_fmts = NULL;
+> >> +	}
+> >> +
+> >> +	return input_fmts;
+> >> +}
+> >> +
+> >> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+> >> +				       struct drm_bridge_state
+> > 
+> > *bridge_state,
+> > 
+> >> +				       struct drm_crtc_state
+> > 
+> > *crtc_state,
+> > 
+> >> +				       struct drm_connector_state
+> > 
+> > *conn_state)
+> > 
+> >> +{
+> >> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> >> +
+> >> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+> >> +			bridge_state->output_bus_cfg.format);
+> >> +
+> >> +	hdmi->hdmi_data.enc_out_bus_format =
+> >> +			bridge_state->output_bus_cfg.format;
+> >> +
+> >> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+> >> +			bridge_state->input_bus_cfg.format);
+> >> +
+> >> +	hdmi->hdmi_data.enc_in_bus_format =
+> >> +			bridge_state->input_bus_cfg.format;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> 
+> >>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+> >>  {
+> >>  
+> >>  	struct dw_hdmi *hdmi = bridge->driver_private;
+> >> 
+> >> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs
+> >> dw_hdmi_bridge_funcs = { .atomic_reset = drm_atomic_helper_bridge_reset,
+> >> 
+> >>  	.attach = dw_hdmi_bridge_attach,
+> >>  	.detach = dw_hdmi_bridge_detach,
+> >> 
+> >> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+> >> +	.atomic_get_output_bus_fmts =
+> > 
+> > dw_hdmi_bridge_atomic_get_output_bus_fmts,
+> > 
+> >> +	.atomic_get_input_bus_fmts =
+> > 
+> > dw_hdmi_bridge_atomic_get_input_bus_fmts,
+> > 
+> >>  	.enable = dw_hdmi_bridge_enable,
+> >>  	.disable = dw_hdmi_bridge_disable,
+> >>  	.mode_set = dw_hdmi_bridge_mode_set,
+> >> 
+> >> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >> 
+> >>  	hdmi->bridge.driver_private = hdmi;
+> >>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+> >> 
+> >> +
+> >> 
+> >>  #ifdef CONFIG_OF
+> >>  
+> >>  	hdmi->bridge.of_node = pdev->dev.of_node;
+> >>  
+> >>  #endif
 
-Adding Ted and Andreas...
 
-Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
-and probably a similar size):
 
-debugfs:  id <917527>
-0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
-0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
-0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
-0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
-0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
-0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
-0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
 
-and for the affected inode:
-debugfs:  id <917524>
-0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
-0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-
-and "stat" output:
-debugfs:  stat <917527>
-Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
-Generation: 172755908    Version: 0x00000000:00000001
-User:     0   Group:     0   Project:     0   Size: 261936
-File ACL: 0
-Links: 1   Blockcount: 512
-Fragment:  Address: 0    Number: 0    Size: 0
- ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
- atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
- mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
-Size of extra inode fields: 32
-Inode checksum: 0xf2958438
-EXTENTS:
-(0-63):3704704-3704767
-debugfs:  stat <917524>
-Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
-Generation: 3033515103    Version: 0x00000000:00000001
-User:     0   Group:     0   Project:     0   Size: 261936
-File ACL: 0
-Links: 1   Blockcount: 512
-Fragment:  Address: 0    Number: 0    Size: 0
- ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
- atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
- mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
-Size of extra inode fields: 32
-Inode checksum: 0xc31c23af
-EXTENTS:
-(0-63):3705024-3705087
-
-When using sif (set_inode_info) to re-set the UID to 0 on this (so
-provoke the checksum to be updated):
-
-debugfs:  id <917524>
-0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
-                                    ^^^^
-0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-           ^^^^
-0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-*
-
-The values with "^^^^" are the checksum, which are the only values
-that have changed here - the checksum is now 0x15aa1fb6 rather than
-0xc31c23af.
-
-With that changed, running e2fsck -n on the filesystem results in a
-pass:
-
-root@cex7:~# e2fsck -n /dev/nvme0n1p2
-e2fsck 1.44.5 (15-Dec-2018)
-Warning: skipping journal recovery because doing a read-only filesystem check.
-/dev/nvme0n1p2 contains a file system with errors, check forced.
-Pass 1: Checking inodes, blocks, and sizes
-Pass 2: Checking directory structure
-Pass 3: Checking directory connectivity
-Pass 4: Checking reference counts
-Pass 5: Checking group summary information
-/dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
-
-and the file now appears to be intact (being a gzip file, gzip verifies
-that the contents are now as it expects.)
-
-So, it looks like the _only_ issue is that the checksum on the inode
-became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
-issue.
-
-I wonder whether the journal would contain anything useful, but I don't
-know how to use debugfs to find that out - while I can dump the journal,
-I'd need to know which block contains the inode, and then work out where
-in the journal that block was going to be written.  If that would help,
-let me know ASAP as I'll hold off rebooting the platform for a while
-(which means the filesystem will remain as-is - and yes, I have the
-debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
-the block number out of the e2undo file?
-
-tune2fs says:
-
-Checksum type:            crc32c
-Checksum:                 0x682f91b9
-
-I guess this is what is used to checksum the inodes?  If so, it's using
-the kernel's crc32c-generic driver (according to /proc/crypto).
-
-Could it be a race condition, or some problem that's specific to the
-ARM64 kernel that's provoking this corruption?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
