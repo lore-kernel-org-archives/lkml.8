@@ -2,99 +2,87 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44828C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A70C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148A2246A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yEBCNkd7"
+	by mail.kernel.org (Postfix) with ESMTP id EBB9624699
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgB2NnT (ORCPT
+        id S1727078AbgB2OJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 08:43:19 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38302 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgB2NnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 08:43:19 -0500
-Received: by mail-io1-f67.google.com with SMTP id s24so6748736iog.5
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:43:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
-        b=yEBCNkd7TJPUolzMHraLOsqEKzyKk6k2VfvLZhLJ8KOtcCks9KKwcLIF7jtCJvEgNe
-         SfIuchTv6Akv0aO7WL/MmIz3m2ktu7zv7FbTScrI9QeIb8++K1jD3o6bxHNTvtAUdEzk
-         wA9ZAJVVeBbT6cL3h0IuO6rdHP/raUGBzFK23EUNSIOtfdbJIdTbkha/+ktdspR0Zprm
-         M+n6x/LMk7vsHzsHS/h3F6MTMs78BN4rrq5q2la/aycPRkjBqi8DN7sJeHZn9O8H/2F7
-         Ik3cMc2EQ03Q4EKE/FxXqENqMLvMF+64f/qz1ETyn6VpfIIg6AZW4mErLr9svMbeK6hk
-         RjmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
-        b=BpQGOrm47LbeN8Q72zZ20w82u9af1ZKVzaBmy/Pt/YN/dzuhWHORSH5edmSCUQFjkN
-         fHQ4SaR3/Ikjx8FiNSCRn/xPpq3IiDvG+/rys083F/znMzKyKARK+xDdIszjwi+bSm/O
-         jlDijxRPhNf7OTHdSNT68eOqIxvMYVyvFub7cgOkqRjNDAOxhwMx2GNga16ba/MfCHiV
-         ntNw/feyn9TYrrFVcq4VUJDbaPM/+G9wCMnvXOMjCG23o//yKke40kqWLWBIw7mfAF9u
-         ee2hk3u+s9gHdR/whfzlw/bkLTbA2JI8QgNPExBvOqnfOxskWW9yHfwXZhGDG8eu1DkX
-         IhuA==
-X-Gm-Message-State: APjAAAUd57PPsBsFQw2zzXgjfbeB6d2ZY3FDtBBoArynomlw77w7CE2G
-        WWLsJadL8XJ31JuXpxh7LFS2KavKCUIJjEphH199rw==
-X-Google-Smtp-Source: APXvYqx8B+uG/d/zKTMD48jcMo2J92qHC86/tYSeXqTePGHZdl43A91WpjzUyjWqUJ4bMNeYSsp64ZF8rvX3Azc+XMg=
-X-Received: by 2002:a5d:8952:: with SMTP id b18mr7228069iot.40.1582983798962;
- Sat, 29 Feb 2020 05:43:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20200226135323.1840-1-brgl@bgdev.pl> <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-In-Reply-To: <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Feb 2020 14:43:08 +0100
-Message-ID: <CAMRc=McxeRWVaG3_+V4fodBf=vK8mLDna8dFdg=PjK5Bk0zJiw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event watching
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 29 Feb 2020 09:09:07 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:39594 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbgB2OJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 09:09:07 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DC00F1A0710;
+        Sat, 29 Feb 2020 15:09:05 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AB33C1A06F4;
+        Sat, 29 Feb 2020 15:08:59 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05DC940246;
+        Sat, 29 Feb 2020 22:08:51 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        daniel.baluta@nxp.com, jun.li@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mn-evk: Add i2c3 support
+Date:   Sat, 29 Feb 2020 22:03:01 +0800
+Message-Id: <1582984982-29151-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 29 lut 2020 o 00:20 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Wed, Feb 26, 2020 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > When operating on the bits of watched_lines bitmap, we're using
-> > desc_to_gpio() which returns the GPIO number from the global numberspac=
-e.
-> > This leads to all sorts of memory corruptions and invalid behavior. We
-> > should switch to using gpio_chip_hwgpio() instead.
-> >
-> > Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes i=
-n line info")
-> > Reported-by: Kent Gibson <warthog618@gmail.com>
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This looks good but where should it be applied?
-> It fails to apply to my devel branch where this lives.
->
-> Yours,
-> Linus Walleij
+Enable i2c3 for i.MX8MN EVK board.
 
-This depends on Kent's other patch. I'll send you a PR.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Bart
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+index 0d2ec4a..2fb599f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+@@ -102,6 +102,13 @@
+ 	};
+ };
+ 
++&i2c3 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
+ &snvs_pwrkey {
+ 	status = "okay";
+ };
+@@ -202,6 +209,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX8MN_IOMUXC_I2C3_SCL_I2C3_SCL		0x400001c3
++			MX8MN_IOMUXC_I2C3_SDA_I2C3_SDA		0x400001c3
++		>;
++	};
++
+ 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+ 		fsl,pins = <
+ 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+-- 
+2.7.4
+
