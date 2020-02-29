@@ -2,218 +2,159 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC35EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A44DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E34124688
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4D824688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="r7EXfM5j"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uup9BWov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbgB2UM7 (ORCPT
+        id S1727481AbgB2UPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:12:59 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40866 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727247AbgB2UM7 (ORCPT
+        Sat, 29 Feb 2020 15:15:33 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46738 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbgB2UPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:12:59 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y1so2594848plp.7
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:12:58 -0800 (PST)
+        Sat, 29 Feb 2020 15:15:33 -0500
+Received: by mail-qk1-f196.google.com with SMTP id u124so6418174qkh.13
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:15:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=0G4OUp8C4Ql/B1PTKhqRXXsr2EA2E7yf/lAnvlcFoiI=;
-        b=r7EXfM5jDZUHCTHSEoKMH49CUhBE27hnSQQfOZpsuoxVpMy0qD05f7M49I4XOYLAaz
-         PLxlMPX5L1MKabAF/t2ovlm82r4Nuq5scgbGO6vQfAR1ujFzH8ZxGtyukSYQgRvHrZUD
-         vlEMRDw0OfkUT2xA26YVCN7clwyWnXycDTR5Z7RfTCX4BxbOcd5dqWvi9UqzpkT+lcYU
-         uRL1tOH2bDUGLh6N422Q2/y9Or3Ce9zlWv+SReSlRP9Axc0tAQ7XhyoIQkT1Nz0Pc5Ds
-         TuTksO7gKtY/pIxHj1QU3EuLIYmz0Qnq9pRYgCKSniVhB5WPk8Hs6infNE59lT82vz2Z
-         esqw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AkrOHzBpT7aSQxxu38gPuAtFlmcZ6KFfZpcl7dVQr/M=;
+        b=uup9BWovE5FGwg1628u7bfPLkVBD9SZqdEYgHMubCpmL63Z2e/FT5XNp9gSaoqhImR
+         RLoP2Pvp0RUdtP3iIBUPTw6ce4OX7Oe8eND+OV/7aOC5VWMmod2GSMOZtGX+HxivBLkv
+         XDU7H3PTOG/aiheZDXmJS585P0Wa8RvBE70sLr3tq74BydCqkZoMCMB6/tcMhkKxd9XG
+         hM4yJrdFndljuU+7dxf3g2teocvJO4/wntC4cmY90OcQIPUjc1rxfg6r3p39i7TTuqve
+         vY06hq2DoIi47te7BJiqAY5U2RefHs2BmEA6qV/oQLXZmGMhgBBkwB6Vjz01+LbDmIAJ
+         rOZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=0G4OUp8C4Ql/B1PTKhqRXXsr2EA2E7yf/lAnvlcFoiI=;
-        b=bhbXgfVlXYZ0OddzluYn4wCIsK7Tsxq+hgVX7dxZuCUsnzbGPyMQ8BH70OaljQkpHS
-         LdcNuHZ8AQCq7XPVzAp0O4ZYZLvr5mOc5pQ91ZKolccetU+Up8gYHTdrequyMMs4cfWx
-         6N87n8XBaKRh8krO/+vIkr8eXIF90COF5wQzNOnR8pk3BMPA3RzdnI/DIsmffwZtlpEk
-         SY28H4tQHn2f+Sw22/izm7zUXPnYmXYmwrfuD2lh1XfoIQ16HvxTnDGmMSptJV3Pg2bN
-         X4PPSng3Sujzv2HLydwI+QJrMT5bZZC9yEAXh3TcRZrKmn80tsjI2LCkeAd2+qu3WH+a
-         5EVw==
-X-Gm-Message-State: APjAAAXINosHZmkO1QHUtEAWadQ5BUydDn7kd0Q3JbnvRutx1ZyFrYAW
-        6h48D7R2C9v26lTU58fa2AHhqg==
-X-Google-Smtp-Source: APXvYqxff7tvINHICD/n4zqu2Ch1Mjo4Yf2ZnTbxn4PSHwFGNKZnYz4QOnC70GwR0rQwOuhXQFuLWA==
-X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr10526775plp.6.1583007177660;
-        Sat, 29 Feb 2020 12:12:57 -0800 (PST)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id l8sm6763724pjy.24.2020.02.29.12.12.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Feb 2020 12:12:56 -0800 (PST)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <F2CA6010-F7E5-4891-A337-FA1FEB32B935@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
-Date:   Sat, 29 Feb 2020 13:12:52 -0700
-In-Reply-To: <20200228211610.GQ10737@dread.disaster.area>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
-        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
-        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
-        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
- <20200226155521.GA24724@infradead.org>
- <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
- <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
- <eda406cc-8ce3-e67a-37be-3e525b58d5a1@virtuozzo.com>
- <4933D88C-2A2D-4ACA-823E-BDFEE0CE143F@dilger.ca>
- <20200228211610.GQ10737@dread.disaster.area>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AkrOHzBpT7aSQxxu38gPuAtFlmcZ6KFfZpcl7dVQr/M=;
+        b=swnwDdxipH0BCBOQ2Rb1F8ZAuw8Azcp7pfpWBNJnp0BV/lc0HPc8r/W9VzJTxwUV2Z
+         7UxsDDbvb4RqWa87dsa4ieUArn4jevASob3hgd6A6gIggdWjyC9OvGpmPCK5kHE0W2jw
+         6vkQ5QEo1kORJo27zuV1ZSU0OexFSz006fY6fWoW2KcKHE8q7g0AWI7PJy9SXl8iKtZF
+         0sKGo8Fq6453gw8vPutsh3ITvaZZHrON9Oh6LMCKEjKe65ao0dRAqhGiJ6hEMJpxkeGM
+         ePxydhNw9kcByahzTBpyokgOqVSEOu3C5O9M2fa5KMSQdyaTBhkIkFqAY8RKwR9wY/Ap
+         nWHA==
+X-Gm-Message-State: APjAAAX0L3jh3ZkUX/lVaakl7e3nVBp1G6C6qaxI0OcbosSgLvds0dmH
+        QyMbC+NqhpGcRdz7aI3uIlhEud1yApR1pEd01KmkTSkJ
+X-Google-Smtp-Source: APXvYqzkEFsbspGj5NQAyfgvc+06G3bNPskSG6F1LOR+Vx4D/xFT8f1Lvp8T1uiMCoD/QYcEJldeRaClcTK/m1tcHuA=
+X-Received: by 2002:a37:4808:: with SMTP id v8mr9042223qka.263.1583007332121;
+ Sat, 29 Feb 2020 12:15:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221154837.18845-1-brgl@bgdev.pl> <20200221154837.18845-4-brgl@bgdev.pl>
+ <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
+In-Reply-To: <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Sat, 29 Feb 2020 21:15:21 +0100
+Message-ID: <CAMpxmJW2So7jNC+C4EJrnmp_heoge_biQ83Giojbx8Gnuh_vJw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpiolib: use kref in gpio_desc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pt., 28 lut 2020 o 23:33 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Fri, Feb 21, 2020 at 4:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > GPIO descriptors are freed by consumers using gpiod_put(). The name of
+> > this function suggests some reference counting is going on but it's not
+> > true.
+> >
+> > Use kref to actually introduce reference counting for gpio_desc objects=
+.
+> > Add a corresponding gpiod_get() helper for increasing the reference cou=
+nt.
+> >
+> > This doesn't change anything for already existing (correct) drivers but
+> > allows us to keep track of GPIO descs used by multiple users.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> I'm having some trouble figuring out if we might be reinventing
+> a wheel here.
+>
+> A while back there was a proposed patch to add device links
+> between GPIO producers and consumers, so that a GPIO
+> chip won't be dropped while there are active consumers.
+>
+> (I don't remember who sent the patch.)
+>
+> We have a similar functionality in pin control if the
+> .link_consumers property is set on the pincontrol device.
+> I was thinking about making that compulsory at one point.
+>
+> The device links use a kref already existing in struct
+> device and would in this case be the kref in the struct
+> device for the struct gpio_device.
+>
+> So if that existed, gpiod_ref could just grab another
+> device_link_add().
+>
 
---Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+I was always under the impression that device links are aimed mostly
+at runtime PM.
 
-On Feb 28, 2020, at 2:16 PM, Dave Chinner <david@fromorbit.com> wrote:
-> 
-> On Fri, Feb 28, 2020 at 08:35:19AM -0700, Andreas Dilger wrote:
->> On Feb 27, 2020, at 5:24 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>> 
->>> So, this interface is 3-in-1:
->>> 
->>> 1)finds a placement for inodes extents;
->> 
->> The target allocation size would be sum(size of inodes), which should
->> be relatively small in your case).
->> 
->>> 2)assigns this space to some temporary donor inode;
->> 
->> Maybe yes, or just reserves that space from being allocated by anyone.
->> 
->>> 3)calls ext4_move_extents() for each of them.
->> 
->> ... using the target space that was reserved earlier
->> 
->>> Do I understand you right?
->> 
->> Correct.  That is my "5 minutes thinking about an interface for grouping
->> small files together without exposing kernel internals" proposal for this.
-> 
-> You don't need any special kernel interface with XFS for this. It is
-> simply:
-> 
-> 	mkdir tmpdir
-> 	create O_TMPFILEs in tmpdir
-> 
-> Now all the tmpfiles you create and their data will be co-located
-> around the location of the tmpdir inode. This is the natural
-> placement policy of the filesystem. i..e the filesystem assumes that
-> files in the same directory are all related, so will be accessed
-> together and so should be located in relatively close proximity to
-> each other.
+> Maybe we should just add device links between all
+> GPIO consumers (devices) and struct gpio_device:s
+> struct device and implement it like this so we don't
+> have to back out of this later?
+>
+> C.f. commit
+> commit 036f394dd77f8117346874151793ec38967d843f
+> pinctrl: Enable device link creation for pin control
+>
 
-Sure, this will likely get inodes allocate _close_ to each other on
-ext4 as well (the new directory will preferentially be located in a
-group that has free space), but it doesn't necessarily result in
-all of the files being packed densely.  For 1MB+4KB and 1MB-4KB files
-they will still prefer to be aligned on 1MB boundaries rather than
-packed together.
+Yes, definitely looks like it's done with PM in mind. Maybe we should
+do what nvmem does? Define a struct device_type for GPIO chips with an
+appropriate release() callback and use get_device() and put_device()?
+Although nvmem seems to use kref for cells and device reference
+counting somewhat separately - maybe that's something to address too.
 
->>> Can we introduce a flag, that some of inode is unmovable?
->> 
->> There are very few flags left in the ext4_inode->i_flags for use.
->> You could use "IMMUTABLE" or "APPEND_ONLY" to mean that, but they
->> also have other semantics.  The EXT4_NOTAIL_FL is for not merging the
->> tail of a file, but ext4 doesn't have tails (that was in Reiserfs),
->> so we might consider it a generic "do not merge" flag if set?
-> 
-> Indeed, thanks to XFS, ext4 already has an interface that can be
-> used to set/clear a "no defrag" flag such as you are asking for.
-> It's the FS_XFLAG_NODEFRAG bit in the FS_IOC_FS[GS]ETXATTR ioctl.
-> In XFS, that manages the XFS_DIFLAG_NODEFRAG on-disk inode flag,
-> and it has special meaning for directories. From the 'man 3 xfsctl'
-> man page where this interface came from:
-> 
->      Bit 13 (0x2000) - XFS_XFLAG_NODEFRAG
-> 	No defragment file bit - the file should be skipped during a
-> 	defragmentation operation. When applied to  a directory,
-> 	new files and directories created will inherit the no-defrag
-> 	bit.
+> (...)
+> > @@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struc=
+t device *dev,
+> >  struct gpio_descs *__must_check gpiod_get_array_optional(struct device=
+ *dev,
+> >                                                         const char *con=
+_id,
+> >                                                         enum gpiod_flag=
+s flags);
+> > +struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
+> >  void gpiod_put(struct gpio_desc *desc);
+> >  void gpiod_put_array(struct gpio_descs *descs);
+>
+> You forgot to add a stub for the case where GPIOLIB is not
+> compiled in I think? (Lower in the same file.)
+>
+> Yours,
+> Linus Walleij
 
-The interface is not the limiting factor here, but rather the number
-of flags available in the inode.  Since chattr/lsattr from e2fsprogs
-was used as "common ground" for a few years, there are a number of
-flags in the namespace that don't actually have any meaning for ext4.
+Yeah this is fixed in the next version (with a different subject since
+it no longer concerns nvmem that much).
 
-One of those flags is:
-
-#define EXT4_NOTAIL_FL    0x00008000 /* file tail should not be merged */
-
-This was added for Reiserfs, but it is not used by any other filesystem,
-so generalizing it slightly to mean "no migrate" is reasonable.  That
-doesn't affect Reiserfs in any way, and it would still be possible to
-also wire up the XFS_XFLAG_NODEFRAG bit to be stored as that flag.
-
-It wouldn't be any issue at all to chose an arbitrary unused flag to
-store this in ext4 inode internally, except that chattr/lsattr are used
-by a variety of different filesystems, so whatever flag is chosen will
-immediately also apply to any other filesystem that users use those
-tools on.
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIyBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5axcQACgkQcqXauRfM
-H+BrEw/4/xX6/kAej+OjkMhA17Rp8GyQjqkGTwu4jrUcDGCjtl8uPxDAt3zZuXPF
-KducnBKDK4eFnBHBMVelWFYL0EjD5qON3aPjth+Zn+SjgPVtpuPHBAFhwNuLt4KT
-EGsvqABmyxZE0pTtfAcx5z54JaU99+9B/XB8iPN3is8gLvnEjo8v6RPOC4t8SyHz
-e0hnJoRdv/mikO53be3L4kt+k1mSthu+1jqEwT9t3uHVqtpDZYVdFaMirYmCRsId
-wabocrWrqoxCbOXeMTQtuUmZL/pTD7hWxKpUdpmBSqSaFA7mbxt/9VpxZbLGD03f
-/SDcGlKSUj5j6NzVD3IwiIluJ4LROf4F+jIq8dtWHLk7QenMAnZK7H6Y+pGOr5K8
-SN+YkjaSgqC3aAs3wTuOe49duET5zc3k7nF+uaJO/zAI5rwtXsAg7u1mBjYnaUgQ
-criV7ldi5m4nkN4iAPgAOhndn+dyW210nZRALd0bhH22JPgt+LLQZ1fueED2RbZa
-I1+Tplu9kQBU0mYsrosQROsiGNdoKzhDwrwngOKHGTwAefMMO8yPW7N9kkFV5VLc
-MjOEpq/u6II2oVbzy2xtPibhCo4G1hQgU3sEzeoh9J/UsWZ6lwlEYXEt+77ajZWW
-RsZ+BnYWK1Ajx3OWqYGubarK3WjSDwQxxGqeig9SdHjs4JiJWA==
-=woXX
------END PGP SIGNATURE-----
-
---Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2--
+Bart
