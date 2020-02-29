@@ -6,58 +6,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7873C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBB7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96181222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A040222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="CqI85+c/"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="09+H6QEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgB2Woc (ORCPT
+        id S1727530AbgB2Wr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 17:44:32 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38212 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgB2Wob (ORCPT
+        Sat, 29 Feb 2020 17:47:59 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36267 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgB2Wr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 17:44:31 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 2so6666779oiz.5
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 14:44:30 -0800 (PST)
+        Sat, 29 Feb 2020 17:47:58 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j14so1859527otq.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 14:47:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7fImmI76PTkUm0FnhIT75xAfAmVx1VzhBKKsN9mVGyw=;
-        b=CqI85+c/yRtEkfdvKZhyimiv+7VpsWo116oMWIFfgpozuKdLs8C42nteZDsX5BGC18
-         YFA3FIVS39K+jrHV363NgaZbyyIgxeUDc50ebfZEV6Dg195VTUcmJ5ks4GK7LLMTfdRG
-         eyz/jrExrPaaWO449Bs08Z5ZvCBAF8pQBclZvBaZdySo4pDGyePu6OJWj4OeXrvOl5KY
-         ro66cJo/Qcj1ASkeP0uL8RRPE1gEVH5S6C3g2weZyNNFDalPOuYmVgtTK4js076KGUP1
-         sjl87SdTRjtqnsitz4qtdRmuFsvpmQAbp/SMu5PjS/fDvEIs6oFk7/24LGUbW+6A+6f/
-         UVDQ==
+        bh=8rTAnPPQPQ2zDwIh6KNULPqO4A3SBF/aTaf3+a0KIRA=;
+        b=09+H6QEX0IFkK+L3p4GHO6Y0ATs+adHreQcu1bdLJyN+n2Vgctq6CmsN235zfYz7cz
+         Zjowwp86NseHUm8hZsO+r0jOlHoaSUrXGunU/rqFwsJ1s7n5AN8EwU8Ta7ZV68MEDMoy
+         cYFY629qtjE7k7S8TFWxiMwDorJu8ZM8TrjzCM6bvmFSocUCibA7lH7EUmIS6yLAffHg
+         Ym9Ff+mKB4LVR21VHWSFek6dY5HD72PiWKRZfpQCH7KVSONiX3j+r8BDKOrr5WjC/edI
+         3j/m/eKnMAevYsWQnEm1mQYYcl4k+knJqW8Hze1OVUGbNTe30vZzkPj3LXSahhmiaB5B
+         dHBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7fImmI76PTkUm0FnhIT75xAfAmVx1VzhBKKsN9mVGyw=;
-        b=lHMZNY32CS3cvkjvElFD5DKy34W4wtfM8ObKU7SNlRN7dbtjK4LHxlOkvplst/H63i
-         ZkD19gtZeDW7m0S/v7QiDfnwN589d3/AN5YSDB7UpnN74C8xBmmsf49Yda783ksqUAU5
-         DKU8Cgc7V70GWMH7FvsChiWCM8h7rhOL5hKrBCWn7Ex96Oh6FvFicJpt9ho/un8RNEst
-         OtE/Xe3YYi4KDfVs0kD4A+7yiURUjLTn9hA29GncTfArrWKFH5PBKxhYkb8E8rCzCebY
-         hstEpySuCCjpXdo1orBlUd6GR891JS/zX6LvtGWn9sMuR2FQDBgqcCx7lhk6TqGUA3iT
-         fqxg==
-X-Gm-Message-State: APjAAAXkAHiD3EdaMc7F/hdmDW2a5zmktv+aUlhTV3una27oA2xPQRAa
-        ZVQkoRdm2jx27WSgc/SAykLoVdDTyVo8pT7RK4YdSg==
-X-Google-Smtp-Source: APXvYqyGByPH6pnWrwmTwQrskzg89P8NSyX2Okxw9rUGjppQ4dvnm0/DLDGVxjpQFnKlb3H7KIX7HBwNZb3emn/5hZY=
-X-Received: by 2002:aca:ec02:: with SMTP id k2mr7594496oih.105.1583016270294;
- Sat, 29 Feb 2020 14:44:30 -0800 (PST)
+        bh=8rTAnPPQPQ2zDwIh6KNULPqO4A3SBF/aTaf3+a0KIRA=;
+        b=Tq3Rwz8EFXjbx8VJ4dxweup6SnE2RqvhMPVO+3xSej6mMdwTOSAuMonR+Gkrpv7HTh
+         LGaI20lH5CBVAOMDmchtsj33kSzawQsiNEd083vo/HBsR/K4w4uHZb/MDd2tQi5koO1D
+         n9NytHoeAcvM78UwAm+tVs5BtRl3DFKs4UBTDCnxBUu8mkQ7aXwpYS8r04WmvNV/RzHp
+         O4bh0bkiihlff63IrHEEWz4u8GHCZIU9Q4DBH/V1D2E4JRi7yWS13AxsMzTTcfVoY5gC
+         zQPyL1N5y44yEe1TvduPwKQ2ml/jZlAgl3KV8YH2QfcUS9gWorDhbLddu/sYvkpOD6Vi
+         f62A==
+X-Gm-Message-State: APjAAAVKVcGUzwS8NnY5UaZcfpDUbHNaN5aWiCa6hunrh0Q0GZ0uGg7B
+        5kVF8B1N921cNKDJzxKSUK5+9S5IE2K9eKPZ0XS3Yg==
+X-Google-Smtp-Source: APXvYqwSzpqJpUKxRtH4EHX0XgauIJ4nXMymmXz192v5Aj+PoXy5ct4ECYTcjg/oqiVXoujFwDEj//qBNgc38LEqyHw=
+X-Received: by 2002:a9d:5d09:: with SMTP id b9mr8013603oti.207.1583016478029;
+ Sat, 29 Feb 2020 14:47:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-7-logang@deltatee.com>
-In-Reply-To: <20200221182503.28317-7-logang@deltatee.com>
+References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-8-logang@deltatee.com>
+In-Reply-To: <20200221182503.28317-8-logang@deltatee.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 29 Feb 2020 14:44:19 -0800
-Message-ID: <CAPcyv4gR1+NaWzteqNKip=cYk89oEVW18HNao7Xv=JipzzDagw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] mm/memory_hotplug: Add pgprot_t to mhp_params
+Date:   Sat, 29 Feb 2020 14:47:47 -0800
+Message-ID: <CAPcyv4gNi3sesGnujShStoF8bi8kYg+MQkqhQRCT_1+wex5wbw@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] mm/memremap: Set caching mode for PCI P2PDMA
+ memory to WC
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
@@ -79,7 +80,7 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Eric Badger <ebadger@gigaio.com>,
-        Michal Hocko <mhocko@suse.com>
+        Jason Gunthorpe <jgg@ziepe.ca>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -88,134 +89,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
 >
-> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
-> struct page mappings for IO memory. At present, these mappings are created
-> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
-> x86, an mtrr register will typically override this and force the cache
-> type to be UC-. In the case firmware doesn't set this register it is
-> effectively WB and will typically result in a machine check exception
-> when it's accessed.
+> PCI BAR IO memory should never be mapped as WB, however prior to this
+> the PAT bits were set WB and it was typically overridden by MTRR
+> registers set by the firmware.
 >
-> Other arches are not currently likely to function correctly seeing they
-> don't have any MTRR registers to fall back on.
+> Set PCI P2PDMA memory to be WC (writecombining) as the only current
+> user (the NVMe CMB) was originally mapped WC before the P2PDMA code
+> replaced the mapping with devm_memremap_pages().
+
+Will the change to UC regress this existing use case?
+
 >
-> To solve this, provide a way to specify the pgprot value explicitly to
-> arch_add_memory().
->
-> Of the arches that support MEMORY_HOTPLUG: x86_64, and arm64 need a simple
-> change to pass the pgprot_t down to their respective functions which set
-> up the page tables. For x86_32, set the page tables explicitly using
-> _set_memory_prot() (seeing they are already mapped). For ia64, s390 and
-> sh, reject anything but PAGE_KERNEL settings -- this should be fine,
-> for now, seeing these architectures don't support ZONE_DEVICE.
->
-> A check in __add_pages() is also added to ensure the pgprot parameter was
-> set for all arches.
+> Future use-cases may need to generalize this by adding flags to
+> select the caching type, as some P2PDMA cases will not want WC.
+> However, those use-cases are not upstream yet and this can be changed
+> when they arrive.
 >
 > Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
 > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
 > ---
->  arch/arm64/mm/mmu.c            | 3 ++-
->  arch/ia64/mm/init.c            | 3 +++
->  arch/powerpc/mm/mem.c          | 3 ++-
->  arch/s390/mm/init.c            | 3 +++
->  arch/sh/mm/init.c              | 3 +++
->  arch/x86/mm/init_32.c          | 5 +++++
->  arch/x86/mm/init_64.c          | 2 +-
->  include/linux/memory_hotplug.h | 2 ++
->  mm/memory_hotplug.c            | 5 ++++-
->  mm/memremap.c                  | 6 +++---
->  10 files changed, 28 insertions(+), 7 deletions(-)
+>  mm/memremap.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index ee37bca8aba8..ea3fa844a8a2 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
->                 flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
->
->         __create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
-> -                            size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
-> +                            size, params->pgprot, __pgd_pgtable_alloc,
-> +                            flags);
->
->         memblock_clear_nomap(start, size);
->
-> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-> index 97bbc23ea1e3..d637b4ea3147 100644
-> --- a/arch/ia64/mm/init.c
-> +++ b/arch/ia64/mm/init.c
-> @@ -676,6 +676,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         unsigned long nr_pages = size >> PAGE_SHIFT;
->         int ret;
->
-> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
-> +               return -EINVAL;
-> +
->         ret = __add_pages(nid, start_pfn, nr_pages, params);
->         if (ret)
->                 printk("%s: Problem encountered in __add_pages() as ret=%d\n",
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 19b1da5d7eca..832412bc7fad 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -138,7 +138,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
->         resize_hpt_for_hotplug(memblock_phys_mem_size());
->
->         start = (unsigned long)__va(start);
-> -       rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
-> +       rc = create_section_mapping(start, start + size, nid,
-> +                                   params->pgprot);
->         if (rc) {
->                 pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
->                         start, start + size, rc);
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index e9e4a7abd0cc..87b2d024e75a 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -277,6 +277,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         if (WARN_ON_ONCE(params->altmap))
->                 return -EINVAL;
->
-> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
-> +               return -EINVAL;
-> +
->         rc = vmem_add_mapping(start, size);
->         if (rc)
->                 return rc;
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index e5114c053364..b9de2d4fa57e 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         unsigned long nr_pages = size >> PAGE_SHIFT;
->         int ret;
->
-> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
-> +               return -EINVAL;
-> +
->         /* We only have ZONE_NORMAL, so this is easy.. */
->         ret = __add_pages(nid, start_pfn, nr_pages, params);
->         if (unlikely(ret))
-> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> index e25a4218e6ff..96d8e4fb1cc8 100644
-> --- a/arch/x86/mm/init_32.c
-> +++ b/arch/x86/mm/init_32.c
-> @@ -858,6 +858,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> +       int ret;
-> +
-> +       ret = _set_memory_prot(start, nr_pages, params->pgprot);
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 06742372a203..8d141c3e3364 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -190,7 +190,10 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+>                 }
+>                 break;
+>         case MEMORY_DEVICE_DEVDAX:
+> +               need_devmap_managed = false;
+> +               break;
+>         case MEMORY_DEVICE_PCI_P2PDMA:
+> +               params.pgprot = pgprot_writecombine(params.pgprot);
 
-Perhaps a comment since it's not immediately obvious where the
-PAGE_KERNEL prot was established, and perhaps add a conditional to
-skip this call in the param->pgprot == PAGE_KERNEL case?
+Approach looks good to me, modulo Jason's comment that this should be
+UC. Upcoming DAX changes will want to pass this via pgmap, but as you
+say this can wait for this changes to arrive.
 
-Other than that looks good to me, but only an ack since I'm only
-testing the x86 changes.
+After change to UC:
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
