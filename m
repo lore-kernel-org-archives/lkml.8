@@ -2,149 +2,102 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26206C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93681C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CD724691
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E142467B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BiwbYIPv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="c/Efms7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgB2GMf (ORCPT
+        id S1726764AbgB2Glk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 01:12:35 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:21082 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgB2GMf (ORCPT
+        Sat, 29 Feb 2020 01:41:40 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:16056 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgB2Glj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 01:12:35 -0500
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 01T6CUaM007883;
-        Sat, 29 Feb 2020 15:12:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 01T6CUaM007883
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582956751;
-        bh=eUac00y4+KjD0ZFkpw13qSxG2E1VV85gjairgIZ++iU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BiwbYIPvVAtUArrnn9d47b0HltiNy5y8LXEUK8LZB1Kp4Yyog9aLThfOcmqwT7aFi
-         NKeewG1nLH5CSU3rr9scD0zEIjKW1khdHKTyBRIDwri0r4bTUKLK7g7NUuBk9rscVE
-         V6hFn9NEZTMn7o8fKQqCfWRE1VOMUp5Wu67h7S+NbgB7uqH+NhdbOi9CS3k0uDXs5A
-         K7yAkkeL4ibsqZHwl/QoK3ctHqj6bID2THaT36Kvcz5onAWcJSUJPTtpGTormdXCoh
-         vw4qQww4Rgv8wWhqEznT1jQjUO8ZICeJI+NRBdVQ5ds1ES9c7HCiUgqgZJ4Ed5DIfi
-         wB5pYXpF4FY5g==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id i78so1579832vke.0;
-        Fri, 28 Feb 2020 22:12:31 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3kidTyFEzDTtv3TL+6r0BhRYG6QG9fwelQmTQrAXnLFmwpykwI
-        QJ0JpcjPtMAJTT0mqFj2eYDm0JefRxSGN0NmGLA=
-X-Google-Smtp-Source: ADFU+vuplMIRZuW5G8+FaAaCGMpR7KsnrGDyb+zzSiSHiyXAJwy+8RJztwATJpKRuKBVa3zHwzqoCxDMrmkWljbu8g4=
-X-Received: by 2002:a1f:b401:: with SMTP id d1mr2587941vkf.26.1582956750237;
- Fri, 28 Feb 2020 22:12:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20200222064445.14903-1-yamada.masahiro@socionext.com> <20200222064445.14903-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20200222064445.14903-2-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 29 Feb 2020 15:11:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARE4uo8+_+zHthy+nQQrVvT-DeNx8F_7i5jWF-33DMkMQ@mail.gmail.com>
-Message-ID: <CAK7LNARE4uo8+_+zHthy+nQQrVvT-DeNx8F_7i5jWF-33DMkMQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] arm64: dts: uniphier: change SD/eMMC node names to
- follow json-schema
-To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 29 Feb 2020 01:41:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582958496;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=0ME2SplYdZp/EcXKhCp8KyLMdT2ULtuVLwdKdNAFg6E=;
+        b=c/Efms7OL7pq8mGZHfLZOcbzDL1vn992XFmTCyE+TCrnL1gMKoHFFBEREUk5HZHnVr
+        S1GjWb/4nOiB8klGMDyDtsPq8/cpIl5ZGkwgsPlsTBe8Xi2LATC+Z4yA0jjbG1KZDQ4h
+        TXZlVpzdrkhcDe8WxtIoA3bLUAt/uCKmCjRGWBh3Q1x0gFVLfw8EN1214nZFr6EQaWVn
+        d8AL1Ohe4NHBg3m7Mat8ZJyGgj8LXLzWkz8maLDqaRV57HCxGZ7CNIgfVRwlFo7vz7Ac
+        X4184LR1WJlR5T8hbhFVDq+GS8f06Zlqw4MR4aucGl39zGxfGNPRt4ChE/EhlkfAhKDk
+        4GCQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAwF5A=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1T6fI3wF
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 29 Feb 2020 07:41:18 +0100 (CET)
+Subject: Re: [RFC v2 5/8] pinctrl: ingenic: add hdmi-ddc pin control group
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
+Date:   Sat, 29 Feb 2020 07:41:17 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A87158C4-E5AC-4B4A-B132-3A82982E37FC@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com> <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com> <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 3:45 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Follow the standard nodename pattern "^mmc(@.*)?$" defined in
-> Documentation/devicetree/bindings/mmc/mmc-controller.yaml
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
 
+> Am 28.02.2020 um 23:05 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>=20
+> On Fri, Feb 28, 2020 at 7:19 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>=20
+>> From: Paul Boddie <paul@boddie.org.uk>
+>>=20
+>> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>=20
+> This looks good, can I just apply this to the pinctrl tree?
 
-Applied to linux-uniphier.
+Yes. It is more or less a base commit for the others.
 
+>=20
+> Yours,
+> Linus Walleij
 
+BR and thanks,
+Nikolaus
 
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 4 ++--
->  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 4 ++--
->  3 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> index 5b18bda9c5a6..7510db465f33 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> @@ -433,7 +433,7 @@
->                         };
->                 };
->
-> -               emmc: sdhc@5a000000 {
-> +               emmc: mmc@5a000000 {
->                         compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
->                         reg = <0x5a000000 0x400>;
->                         interrupts = <0 78 4>;
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> index f2dc5f695020..8d360c5cc32b 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> @@ -559,7 +559,7 @@
->                         };
->                 };
->
-> -               emmc: sdhc@5a000000 {
-> +               emmc: mmc@5a000000 {
->                         compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
->                         reg = <0x5a000000 0x400>;
->                         interrupts = <0 78 4>;
-> @@ -578,7 +578,7 @@
->                         cdns,phy-dll-delay-sdclk-hsmmc = <21>;
->                 };
->
-> -               sd: sdhc@5a400000 {
-> +               sd: mmc@5a400000 {
->                         compatible = "socionext,uniphier-sd-v3.1.1";
->                         status = "disabled";
->                         reg = <0x5a400000 0x800>;
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> index 73e7e1203b09..d51b0735917c 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> @@ -353,7 +353,7 @@
->                         };
->                 };
->
-> -               emmc: sdhc@5a000000 {
-> +               emmc: mmc@5a000000 {
->                         compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
->                         reg = <0x5a000000 0x400>;
->                         interrupts = <0 78 4>;
-> @@ -372,7 +372,7 @@
->                         cdns,phy-dll-delay-sdclk-hsmmc = <21>;
->                 };
->
-> -               sd: sdhc@5a400000 {
-> +               sd: mmc@5a400000 {
->                         compatible = "socionext,uniphier-sd-v3.1.1";
->                         status = "disabled";
->                         reg = <0x5a400000 0x800>;
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
