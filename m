@@ -2,44 +2,38 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8F2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3A524699
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pIeEPB4O"
+	by mail.kernel.org (Postfix) with ESMTP id 58FFC24699
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgB2QE4 (ORCPT
+        id S1727269AbgB2QFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:04:56 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:60514 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgB2QEz (ORCPT
+        Sat, 29 Feb 2020 11:05:00 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:44099 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbgB2QE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:04:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582992293; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=U+bTaqw3ChcPXdwAu0239Q0g38tlXUK/Pg8FxcX6kas=;
-        b=pIeEPB4OqTEnN5H7AVgAqjPxxHNLHLAyDjL3waCtxnnfexnXd3HoWD+rtrT9K02lW2k/Ps
-        kvTmt55RSCj2s/WrU8evemxBsmEm3rjaZDa67x/z8VNznIY9dS1zK3YxUMZ34OXfrrqCmY
-        +JdRg/W5CZmTdUPjH1HBydyJ6eliCLQ=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>, od@zcrc.me,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: ingenic: Fix unmet dependency if COMPILE_TEST
-Date:   Sat, 29 Feb 2020 13:04:43 -0300
-Message-Id: <20200229160443.11208-1-paul@crapouillou.net>
+        Sat, 29 Feb 2020 11:04:59 -0500
+Received: from localhost (lfbn-ren-1-591-115.w81-53.abo.wanadoo.fr [81.53.169.115])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7B566240003;
+        Sat, 29 Feb 2020 16:04:56 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>, stable@vger.kernel.org
+Subject: [PATCH] ath9k: Handle txpower changes even when TPC is disabled
+Date:   Sat, 29 Feb 2020 17:13:47 +0100
+Message-Id: <20200229161347.31341-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,35 +41,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7c779cf7c1f7 ("mtd: rawnand: ingenic: Allow to compile test the
-new Ingenic driver") dropped the dependency on JZ4780_NEMC when
-COMPILE_TEST was set, which is wrong, as the driver requires symbols
-provided by the jz4780-nemc driver.
+When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+reconfigure HW's maximum txpower.
 
-Change the dependency to (MIPS || COMPILE_TEST) && JZ4780_NEMC to
-address the issue.
+This fixes 0dBm txpower setting when user attaches to an interface for
+the first time with the following scenario:
 
-Fixes: 7c779cf7c1f7 ("mtd: rawnand: ingenic: Allow to compile test the new Ingenic driver")
+ieee80211_do_open()
+    ath9k_add_interface()
+        ath9k_set_txpower() /* Set TX power with not yet initialized
+                               sc->hw->conf.power_level */
+
+    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+                             raise IEEE80211_CONF_CHANGE_POWER */
+
+    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+
+This issue can be reproduced with the following:
+
+  $ modprobe -r ath9k
+  $ modprobe ath9k
+  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+  $ killall wpa_supplicant
+  $ iw dev /* TX power goes back to calibrated value and subsequent
+              calls will be fine */
+
+Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- drivers/mtd/nand/raw/ingenic/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
-index 485abfa3f80b..96c5ae8b1bbc 100644
---- a/drivers/mtd/nand/raw/ingenic/Kconfig
-+++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config MTD_NAND_JZ4780
- 	tristate "JZ4780 NAND controller"
--	depends on JZ4780_NEMC || COMPILE_TEST
-+	depends on MIPS || COMPILE_TEST
-+	depends on JZ4780_NEMC
- 	help
- 	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
- 	  based boards, using the BCH controller for hardware error correction.
+diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
+index 0548aa3702e3..ef2b856670e1 100644
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1457,6 +1457,9 @@ static int ath9k_config(struct ieee80211_hw *hw, u32 changed)
+ 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
+ 	}
+ 
++	if (changed & IEEE80211_CONF_CHANGE_POWER)
++		ath9k_set_txpower(sc, NULL);
++
+ 	mutex_unlock(&sc->mutex);
+ 	ath9k_ps_restore(sc);
+ 
 -- 
-2.25.1
+2.25.0
 
