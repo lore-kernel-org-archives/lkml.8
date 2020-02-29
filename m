@@ -2,174 +2,138 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C802AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF39C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3CF246AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A836F2469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqYEQ7Qz"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="r/hOCw/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgB2O0W (ORCPT
+        id S1727102AbgB2Ogv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:26:22 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:40615 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgB2O0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:26:22 -0500
-Received: by mail-lj1-f180.google.com with SMTP id 143so6589830ljj.7;
-        Sat, 29 Feb 2020 06:26:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8lF8H+HPNV9yqi6reo0Z0/eePrVcgyCK4OulUHpKMuw=;
-        b=fqYEQ7Qze/CQkw1K6edTA0b4xH8wgmbnE8yXE90UsjgL6ybvNyeLqC1guwoJWS9Jx1
-         ulpjqc1U4FXK6FEVURNdR2H6/mA3GW+YKfwAyBaKhAkS4y89pErNhAnwyEgFnROaFaF4
-         HlPMEQNuiKTYobxbl1agQ/ix7hg2MFuYSvYJWS62dsrPSGXK4r7lHmVI29j0TQ6wNSe4
-         6+4/1weLRYAcqBIwRNqelnvofCloMYOj/didFdZZqgUbZ0ElwM5jl5jXfO+XuMNlUz3O
-         41RGAejR+cMauuwEQdDJoxYugqQD5dGWO9rCfSoC/X2q45ePZESUtfeVRZ86ZmmqFPWs
-         EoOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8lF8H+HPNV9yqi6reo0Z0/eePrVcgyCK4OulUHpKMuw=;
-        b=JBarKwsRQgx9HFTHdbN/7MRXTK+H6L0zt3N/p240wLRY0VGV0HNYfE23e55cym4SUB
-         GlbN5ni4k1RhJevkl7DhYgsYCpx46jdMAshWTEdazvViXpVG4nhSXpATe7s3asbnck1F
-         qfCG0JY1RP3kyKuGNv2+hNuKiFON87hnH1aDZe2EtxyLHsLb1px1ImQp1aM3D2T68rv8
-         LLmPX/DS79rREh7df7eK14YrH35f7dQT1nDvU78foGJvM2ODZn1Udcf/l+DfErvHYbXL
-         5Sw3p+u0Zd3tVNAGSj4HHQDH4uRN0rj20cQUtcIdUX2RMN9ShJ4sDiOgt0AmEJtqviPv
-         KfHw==
-X-Gm-Message-State: ANhLgQ2mWIXvAED+sgwpEXzwNfz88JdKSI4rpxXd26RYbFiZPg4ssqhS
-        FYfYGHfOWFOE9/4yIYAYYwXNe40RkK4lZYjOjs8=
-X-Google-Smtp-Source: ADFU+vtp5JJbklvMS0gen5OzjqgXnIu47muzipNwGvjbdORX1H1/A2zJQoRHQP7b2mMKXffkZ5ThEjLsf8c+q1AVsXQ=
-X-Received: by 2002:a05:651c:cf:: with SMTP id 15mr6313734ljr.288.1582986378924;
- Sat, 29 Feb 2020 06:26:18 -0800 (PST)
+        Sat, 29 Feb 2020 09:36:51 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39600 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbgB2Ogv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 09:36:51 -0500
+Received: from zn.tnic (p200300EC2F1D580074FEC020E389DD32.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:5800:74fe:c020:e389:dd32])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 976921EC0C9D;
+        Sat, 29 Feb 2020 15:36:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582987009;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=l/xIGwTtnSO9nmCEizm7Hm3VTAwFUx4IN8eQJwkGvM0=;
+        b=r/hOCw/dys8HCW+V26Y7NtUc0mCpAWfj3q68cI0pJ0c8PUE90EIrI00PkoI5fbFCwjbHNJ
+        C6lKMNY79y9IkvfHEPWFKHjOoMYL7TsCip2dQnG8bdQKq+dn7PhK4q9Sm08xWksQN/LUaf
+        Zqt+UOjvK5JwuHnO2xw1fzSuaPj7Sa4=
+Date:   Sat, 29 Feb 2020 15:36:44 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+Message-ID: <20200229143644.GA1129@zn.tnic>
+References: <20200228121724.GA25261@zn.tnic>
+ <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+ <20200228162359.GC25261@zn.tnic>
+ <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+ <20200228172202.GD25261@zn.tnic>
+ <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
+ <20200228183131.GE25261@zn.tnic>
+ <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
+ <20200228214742.GF25261@zn.tnic>
+ <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
 MIME-Version: 1.0
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sat, 29 Feb 2020 11:26:08 -0300
-Message-ID: <CAOMZO5CrvxZDuRfBvwLV6uJJwtPuj1-vqoELKP3j15k3TbSjyg@mail.gmail.com>
-Subject: rcu_sched stalls on 4.14
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Fri, Feb 28, 2020 at 02:13:29PM -0800, Yu-cheng Yu wrote:
+> If the XSAVES buffer already has current data (i.e. TIF_NEED_FPU_LOAD is
+> set), then skip copy_xregs_to_kernel().  This happens when the task was
+> context-switched out and has not returned to user-mode.
 
-An ARM64 i.MX8QXP user reported the following rcu_sched stalls on 4.14.98:
+So I got tired of this peacemeal game back'n'forth and went and did your
+work for ya.
 
-[55255.673846] INFO: rcu_sched detected stalls on CPUs/tasks:
-[55255.679365]  0-...: (1 GPs behind) idle=74a/2/0
-softirq=311527/311574 fqs=36000
-[55255.686763]  (detected by 1, t=225888 jiffies, g=460, c=459, q=57)
-[55255.692949] Task dump for CPU 0:
-[55255.696182] swapper/0       R  running task        0     0      0 0x00000022
-[55255.703244] Call trace:
-[55255.705708] [<ffff0000080853b4>] __switch_to+0x94/0xd8
-[55282.491408] INFO: rcu_preempt self-detected stall on CPU
-[55282.496747]  0-...: (1 GPs behind) idle=74a/2/0
-softirq=311572/311574 fqs=1676930
-[55282.504319]   (t=8844361 jiffies g=63547 c=63546 q=60986)
-[55282.509725] Task dump for CPU 0:
-[55282.512956] swapper/0       R  running task        0     0      0 0x00000022
-[55282.520018] Call trace:
-[55282.522475] [<ffff0000080892f0>] dump_backtrace+0x0/0x3c8
-[55282.527878] [<ffff0000080896cc>] show_stack+0x14/0x20
-[55282.532933] [<ffff0000080f5164>] sched_show_task+0x14c/0x180
-[55282.538595] [<ffff0000080f60b8>] dump_cpu_task+0x40/0x50
-[55282.543916] [<ffff000008126788>] rcu_dump_cpu_stacks+0x94/0xd4
-[55282.549752] [<ffff00000812554c>] rcu_check_callbacks+0x64c/0x958
-[55282.555764] [<ffff0000081296f4>] update_process_times+0x2c/0x58
-[55282.561692] [<ffff000008138b98>] tick_sched_handle.isra.4+0x30/0x48
-[55282.567961] [<ffff000008138bf0>] tick_sched_timer+0x40/0x90
-[55282.573538] [<ffff00000812a370>] __hrtimer_run_queues+0xe8/0x168
-[55282.579549] [<ffff00000812a5f0>] hrtimer_interrupt+0xa8/0x230
-[55282.585305] [<ffff0000085c70e0>] arch_timer_handler_phys+0x28/0x48
-[55282.591497] [<ffff000008118e50>] handle_percpu_devid_irq+0x80/0x138
-[55282.597767] [<ffff000008113684>] generic_handle_irq+0x24/0x38
-[55282.603518] [<ffff000008113cf4>] __handle_domain_irq+0x5c/0xb8
-[55282.609356] [<ffff000008080fe0>] gic_handle_irq+0x78/0x174
-[55282.614845] Exception stack(0xffff000008003d90 to 0xffff000008003ed0)
-[55282.621292] 3d80:
-0000000000000000 ffff000008cc5880
-[55282.629129] 3da0: 0000000000000000 00000001004acd07
-000000000000000f 0000000000000002
-[55282.636966] 3dc0: 444c1236fa69ce5f ffff80003ff60180
-ffff80003a020248 ffff000008003c70
-[55282.644801] 3de0: 00000000960ca760 0000000000000001
-0000000000000400 ffff0000091ed860
-[55282.652638] 3e00: 0000000000000000 0000000000000000
-ffff00000813d758 0000000000000000
-[55282.660474] 3e20: 0000000000000000 ffff000008b1e000
-000000000000001a ffff000008cc5880
-[55282.668310] 3e40: ffff000008b1e018 ffff800012405480
-ffff000008cc4000 00000001004acd06
-[55282.676146] 3e60: ffff000008004000 ffff000008870000
-0000000000000001 ffff000008003ed0
-[55282.683983] 3e80: ffff0000080cf8e8 ffff000008003ed0
-ffff000008081184 0000000040000145
-[55282.691819] 3ea0: ffff8000125a78a4 ffff8000125a7800
-0000ffffffffffff ffff8000125a7828
-[55282.699652] 3ec0: ffff000008003ed0 ffff000008081184
-[55282.704535] [<ffff000008082a30>] el1_irq+0xb0/0x124
-[55282.709418] [<ffff000008081184>] __do_softirq+0xa4/0x218
-[55282.714737] [<ffff0000080cf8e8>] irq_exit+0xd0/0xf0
-[55282.719618] [<ffff000008113cf8>] __handle_domain_irq+0x60/0xb8
-[55282.725455] [<ffff000008080fe0>] gic_handle_irq+0x78/0x174
-[55282.730944] Exception stack(0xffff000008c43dd0 to 0xffff000008c43f10)
-[55282.737391] 3dc0:
-0000000000000000 0000000000000000
-[55282.745229] 3de0: 0000000000000001 0000000000000000
-ffff000008b22108 ffff000008c43f00
-[55282.753066] 3e00: 000080003743e000 ffff80003ff65b60
-ffff000008c55240 ffff000008c43e90
-[55282.760901] 3e20: 00000000000008e0 0000000000000000
-0000000000000001 0000000000000000
-[55282.768737] 3e40: 00000000f6292434 0000000000000000
-ffff00000813d758 0000000000000000
-[55282.776574] 3e60: 0000000000000000 ffff000008b1e018
-ffff000008c4a000 ffff000008c4a000
-[55282.784410] 3e80: ffff000008b26a30 ffff000008c4a9e0
-0000000000000000 0000000000000000
-[55282.792246] 3ea0: ffff000008c54900 0000000000000400
-0000000080cc0018 ffff000008c43f10
-[55282.800082] 3ec0: ffff000008084f04 ffff000008c43f10
-ffff000008084f08 0000000000000145
-[55282.807918] 3ee0: 0000000000000000 00000000bfe9eb84
-ffffffffffffffff ffff000008138d14
-[55282.815752] 3f00: ffff000008c43f10 ffff000008084f08
-[55282.820635] [<ffff000008082a30>] el1_irq+0xb0/0x124
-[55282.825519] [<ffff000008084f08>] arch_cpu_idle+0x10/0x18
-[55282.830835] [<ffff0000081063e0>] do_idle+0x120/0x1e0
-[55282.835804] [<ffff000008106638>] cpu_startup_entry+0x20/0x28
-[55282.841472] [<ffff000008840fe4>] rest_init+0xcc/0xd8
-[55282.846442] [<ffff000008ac0b88>] start_kernel+0x37c/0x390
+First of all, on my fairly new KBL test box, the context size is almost
+a kB:
 
-They were initially using 4.14.68, which did not show this problem.
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
+[    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
+[    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
 
-Git bisect pointed to the ollowing commit:
+Then, I added this ontop of your patchset:
 
-016a8fc59d14 ("rcu: Make need_resched() respond to urgent RCU-QS needs")
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 0d3e06a772b0..2e57b8d79c0e 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -337,6 +337,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+         */
+        fpregs_lock();
+        if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
++               trace_printk("!NEED_FPU_LOAD, size: %d, supervisor: 0x%llx\n",
++                            size, xfeatures_mask_supervisor());
+                if (xfeatures_mask_supervisor())
+                        copy_xregs_to_kernel(&fpu->state.xsave);
+                set_thread_flag(TIF_NEED_FPU_LOAD);
 
-Reverting this commit on top of 4.14.98 fixes the problem.
+and traced a fairly boring kernel build workload where the kernel
+.config is not even a distro one but a tailored for this machine.
 
-They have also tried applying:
- e97a32a5a3bc ("rcu: Do RCU GP kthread self-wakeup from softirq and interrupt")
+Which means, it took 3m35.058s to build and the trace buffer had 53973
+entries like this one:
 
-without reverting 016a8fc59d14, but it does not fix the problem.
+bash-1211  [002] ...1   648.238585: __fpu__restore_sig: !NEED_FPU_LOAD, size: 1092, supervisor: 0x0
 
-Any suggestions/help are appreciated.
+which means I have
 
-Thanks
+53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
+
+And this only during this single workload - I don't even wanna imagine
+what that number would be if it were a huge, overloaded box with a
+signal heavy workload.
+
+And all this overhead to save 16 + 24 bytes supervisor states and throw
+away the rest up to 960 bytes each time.
+
+Err, I don't think so.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
