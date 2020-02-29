@@ -2,75 +2,87 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557D3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE17C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376D224699
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E9724699
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NomLyUZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgB2OJJ (ORCPT
+        id S1727121AbgB2OKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:09:09 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:57216 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgB2OJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:09:08 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EDB26200730;
-        Sat, 29 Feb 2020 15:09:06 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BBF58200736;
-        Sat, 29 Feb 2020 15:09:00 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 17C80402CB;
-        Sat, 29 Feb 2020 22:08:53 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        daniel.baluta@nxp.com, jun.li@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] arm64: dts: imx8mn-evk: Enable pca6416 on i2c3 bus
-Date:   Sat, 29 Feb 2020 22:03:02 +0800
-Message-Id: <1582984982-29151-2-git-send-email-Anson.Huang@nxp.com>
+        Sat, 29 Feb 2020 09:10:06 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41284 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgB2OKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 09:10:06 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u26so6406473ljd.8;
+        Sat, 29 Feb 2020 06:10:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q1D9zlcvNyYo46fhZp8SkasZqL/qaSdiAry5tMG2fAw=;
+        b=NomLyUZQLLmi+T6Pk4g7aRbCnrybttmZOL2ID0dn6OeLEPUjqdidyiSlY5KQkEczm6
+         9XGZ6VS1iMlkwXSdfo+WLR4SIiL4XpvBffncXi9P5B3I3qc5vnmRpmBotLDGsQ/TuUsg
+         VDfalj69WXCPI1QuoqXAzBtIWNg/5RJWGdJvmh8EMuTqVpg6w0s2U7EtO3p6NM0QGi+A
+         G7a3nyPKKqYuhgoiymMf0rdb4aVU5PlXWSdt2StPCrJ3zRVpKqQI0xd3gVUkMBtv8bOY
+         M2KnIkgJVHPNho/FsPLlQuxFlNZKgj2xz4NC+9JFoGqbY/+auFvb/aWqZAQ9KDFKGhQ/
+         fgBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q1D9zlcvNyYo46fhZp8SkasZqL/qaSdiAry5tMG2fAw=;
+        b=ublu0C1JLh+ZXJMAByYM+rPlxcX2bUs+idRbBuHqi5fgu+a0Xpb/8K6uSavKKAHfn1
+         LSTP+sUAo8Y+4DAzl8l9mzNvCNXaIeHczvJdKv54w0f7ltAECIqzXkBplEX+EFI+S9i6
+         NwDpTfRTT5s1qX1WXLCPAbM6qRNt/ipJOmuRCKj4mTyNbJEkeiV8d1y97e9HnHn3nbOe
+         6YPgYwzq5UJx0v67qEWyS77YEBQEXGzu5GNJCrUXeCKqydDMXp9GLoRNrqs5bRr3pXTO
+         LlEebNYGktuGDEiKpCkOzNMvlXhzYCFPysifVrqWeFXOFnDyczJbg4jHbOUnZEb34I3l
+         eYCA==
+X-Gm-Message-State: ANhLgQ0M0qKLGUcWZWlYaGyFynrJeTPtkKv7GW8bHKRSlNf9yfOl647C
+        PRi0oZb2J7ooRqaJwVJpV3E=
+X-Google-Smtp-Source: ADFU+vt8sOTpYv6VA6Nc47IHgZZX7w5n6LB0r6W1CMkeuA37qXQZc8NAkGzxKVZ2YFkIgTxvpt9x2g==
+X-Received: by 2002:a05:651c:545:: with SMTP id q5mr6126951ljp.139.1582985404026;
+        Sat, 29 Feb 2020 06:10:04 -0800 (PST)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id j11sm7104124lfb.58.2020.02.29.06.10.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 29 Feb 2020 06:10:03 -0800 (PST)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 0/2] arm64: dts: meson: add dts/bindings for Beelink GT-King
+Date:   Sat, 29 Feb 2020 18:09:11 +0400
+Message-Id: <1582985353-83371-1-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582984982-29151-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582984982-29151-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable pca6416 on i.MX8MN EVK board's i2c3 bus.
+This series adds new bindings and a device-tree file for the Beelink
+GT-King set-top box.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Christian Hewitt (2):
+  dt-bindings: arm: amlogic: add support for the Beelink GT-King
+  arm64: dts: meson-g12b-gtking: add initial device-tree
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-index 2fb599f..85fc0aa 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-@@ -107,6 +107,13 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
-+
-+	pca6416: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
- };
- 
- &snvs_pwrkey {
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts  | 557 +++++++++++++++++++++
+ 3 files changed, 559 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+
 -- 
 2.7.4
 
