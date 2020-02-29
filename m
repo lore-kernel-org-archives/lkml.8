@@ -2,157 +2,381 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9692C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C765C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9695C2073D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63178222C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WuGamnAl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dnI56PQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgB2RDo (ORCPT
+        id S1727327AbgB2RER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 12:03:44 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45952 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgB2RDn (ORCPT
+        Sat, 29 Feb 2020 12:04:17 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35141 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgB2RER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 12:03:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VJa4/ENqUUcyzQ50adGWhHo++94I/SPwFtIFyNEIG/M=; b=WuGamnAlOyuSYmTPlM/hnFV3Y
-        1IRzG/u5tcAan1mpj9ClDlUoxpvpfnYNsNO5Gh1YPhynX7JwAlSR233K+fmlM6xUzbnLP82u9nNuG
-        uJEFbtIPC5pghl/ddLd7vKTmeq5KHptLRAaAOHo1M77aGGLrAQT3ltKd7Vd7DfYw/eowQozBB2/lZ
-        WBASy0BUaKINZQHan6rUE098SKz/odQWVVLQ91+EwJmc5p6bvRNrvUTt0MhapgkZHO1/SfJn2/Loc
-        fGumiPlir8nJUR4QT+TH5RrkB3UePEIhw2UmlPY2zZZDZn8ZfmW/aQ1zACfMfRmlPKQiQ9rG+XxCw
-        rnqWtOcqQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58578)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j85WW-0002dX-Gr; Sat, 29 Feb 2020 17:03:32 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j85WS-00037o-IM; Sat, 29 Feb 2020 17:03:28 +0000
-Date:   Sat, 29 Feb 2020 17:03:28 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200229170328.GD25745@shell.armlinux.org.uk>
-References: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
- <20200229110456.GY25745@shell.armlinux.org.uk>
- <20200229151907.GA7378@mit.edu>
+        Sat, 29 Feb 2020 12:04:17 -0500
+Received: by mail-wr1-f66.google.com with SMTP id r7so7206981wro.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 09:04:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LjnPFAuYRx1+e9Nusu+GLt62/h8wv1vBF+D3fWY8HaY=;
+        b=dnI56PQbf3ak5OriYGgZjFWVU9FHoAWf6obRSPHL6mp0DlrvKtft7qmVQW+coi0PCW
+         t40GyfgyQOKWUVUewc1ZeWk3qqc06L7Wa8qbS18q42BSOGTzGxHwIeibWD0qQIhqwq1B
+         tT+UOqA6P8k398WsQzLrY6IPZT+hR9qHx4taAylliaQl4ZvUdlZXs7awiAqjjVyZ9b0j
+         X7mS4G1USzmTQqDDlbAtLMv1cI7xSxExnBmagwb9UWZB9nnUwZjbHrG1xJbnXkzdyy9m
+         NhE3EJSNbyFlPvX/P5BgnuCQdTF8jmA4BXGjc0T7z+YBLh5cnn2b9+KWs4z0zHLFUOFh
+         /U9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LjnPFAuYRx1+e9Nusu+GLt62/h8wv1vBF+D3fWY8HaY=;
+        b=IoppkH1bFDnrU335X2RxVnfkpijkmjuOhsauebr19Iye1GFgB7/MsItHJSZ6xCRHfY
+         XRSlwIp586ZhTbgUDMTZHUYACchgShyibSHIGn2WyaQrO7x0EBdoTiSEBA3VGTooREUo
+         yFndI33gQxtTMbtMMtLpfTdFbvmykBQafiMUYU+FAxmrShZ9TcQI6RIsi5QxfgUiUoT7
+         Q+C5h7hmLS+KFl2a5/0/knHsa9Z6jQY8zLS/o7j2+f7X493A+cY6KOcfzW2gw9tBuBSI
+         +2Xlc/Npdb09jrfyKz/w+qN1bQapLY+ufAU+33d6KiinxrnkrvpTpye2sy6Oxj3H9qX5
+         2G3g==
+X-Gm-Message-State: APjAAAUM0glehR72Z0YQNh53kHZrmH1OtngfMNptlg+UpzHUUxjq+vYw
+        thu5TgY0a+S2ZhdSwucd0rfagw==
+X-Google-Smtp-Source: APXvYqx12uM+Pz8xkprft5U521IRBIh4vG5dGTbiwnDmbiUL0IQ8HifC7xzmHOfqf8uaKpfL8t+5qw==
+X-Received: by 2002:a5d:638b:: with SMTP id p11mr11597986wru.338.1582995853137;
+        Sat, 29 Feb 2020 09:04:13 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ecba:5540:6f5c:582a:cc84:32f5])
+        by smtp.gmail.com with ESMTPSA id 18sm7178304wmf.1.2020.02.29.09.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 09:04:12 -0800 (PST)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH v3 2/2] arm64: dts: mediatek: add pumpkin board dts
+Date:   Sat, 29 Feb 2020 18:04:01 +0100
+Message-Id: <20200229170401.1287324-2-fparent@baylibre.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200229170401.1287324-1-fparent@baylibre.com>
+References: <20200229170401.1287324-1-fparent@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229151907.GA7378@mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 10:19:07AM -0500, Theodore Y. Ts'o wrote:
-> On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
-> > Could it be a race condition, or some problem that's specific to the
-> > ARM64 kernel that's provoking this corruption?
-> 
-> Since I got brought in mid-way through this discussion, can someone
-> summarize the vital details of the bughunt?  What kernel version is
-> involved, and is this a regression?  If so, what's the last version of
-> the kernel where you didn't have a problem on this hardware?
+The pumpkin board is  made by Gossamer Engineering and is using
+a MediaTek SoC. The board currently comes in two available version:
+MT8516 SoC and MT8167 SoC.
+The board provides the following IOs: eMMC, NAND, SD card, USB type-A,
+Ethernet, Wi-Fi, Bluetooth, Audio (jack out, 2 PDM port, 1 analog in),
+serial over USB, and an expansion header.
 
-It's a new platform, I've run most 5.x kernels on it, but only recently
-have I had a NVMe.  Currently running a 5.5 based kernel (for which I
-have to patch in support for the platform), and I've no idea if it is
-a regression or not.
+Additionally there is a HDMI port, DSI port, and camera port only
+on the MT8167 version of the board.
 
-> Can you trigger this failure reliably?
+The board can be powered by battery and/or via a USB Type-C port and
+is using a PMIC MT6392.
 
-No - the very first time I ended up with a corrupted ext4 fs was on the
-8th February, and at that time it was put down to the NVMe not being
-power-off safe: the machine had crashed sometime over night, resulting
-in a section of my network going offline (due to a pause frame storm).
-So, I powered it down from crashed state - and from what people tell me,
-NVMe _may_ keep blocks unwritten to safe media for a considerable time.
+The eMMC and NAND are sharing pins and cannot be used together.
 
-I never bothered to investigate it because the explanation seemed
-reasonable, and manually running e2fsck fixed the filesystem.
+This commit is adding the basic boot support for the Pumpkin MT8516
+board on the eMMC.
 
-The system was then booted back into using the NVMe rootfs, and
-continued to do so without apparent issue until the 21st Feb, when I
-cleanly shut it down, and powered it off.  During the time it was
-running, it likely saw many reboots of the 5.5 kernel.
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
 
-I powered it back on yesterday morning, and this morning it found the
-fs corruption while trying to do a logrotate.
+V3:
+	* Fix warnings from dtbs_check and checkpatch.pl
+	* Add FW optee nodes
+	* Add usb0 and usb0_phy nodes
 
-As I say in my last email, I suspect it isn't an ext4 bug, but either
-a locking implementation issue, coherency issue, or interconnect issue.
-The 4k block with the affected inode looks perfectly reasonable with
-the only exception that the checksum is incorrect for that one inode -
-and other inodes stored in the same 4k block were modified afterwards.
-It suggests to me that the writes to update the two 16-bit words
-containing the checksum were somehow lost for this particular inode.
+V2:
+	* Remove dependency on PMIC MT6392 to make it easier to merge the DTS
+	until the PMIC code is merged.
+	* Rename a bunch of label to make them more straighforward
+	* Use names for keycode instead of magic values
+	* Add chosen for serial port
 
-> Unfortunately, while I'm regularly running xfstests on x86_64 on a
-> Google Compute Engine VM, I'm not doing any runs on arm64.  I can
-> certainly build an arm-64.
-> 
-> There's a test-appliance designed to be run on ARM64 here[1].
-> 
-> [1] https://kernel.org/pub/linux/kernel/people/tytso/kvm-xfstests/xfstests-amd64.tar.xz
+---
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ .../boot/dts/mediatek/mt8516-pumpkin.dts      |  20 ++
+ .../boot/dts/mediatek/pumpkin-common.dtsi     | 221 ++++++++++++++++++
+ 3 files changed, 242 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
 
-The filename seems to say "amd64" not "arm64" ?
-
-> which is a Debian chroot, designed to be run via android-xfstests[2], but
-> if you unpack it, it should be possible to enter the chroot and
-> trigger the xfstests run manually on any arm64 system.
-> 
-> [2] https://thunk.org/android-xfstests
-> 
-> Does anyone know if kernel CI is running xfstests regularly?
-
-I don't know...
-
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 458bbc422a94..2f8967cb8717 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -8,3 +8,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+diff --git a/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts b/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
+new file mode 100644
+index 000000000000..cce642c53812
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Fabien Parent <fparent@baylibre.com>
++ */
++
++/dts-v1/;
++
++#include "mt8516.dtsi"
++#include "pumpkin-common.dtsi"
++
++/ {
++	model = "Pumpkin MT8516";
++	compatible = "mediatek,mt8516";
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
+new file mode 100644
+index 000000000000..a31093d7142b
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 BayLibre, SAS.
++ * Author: Fabien Parent <fparent@baylibre.com>
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:921600n8";
++	};
++
++	firmware {
++		optee: optee@4fd00000 {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		input-name = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_default>;
++
++		volume-up {
++			gpios = <&pio 42 GPIO_ACTIVE_LOW>;
++			label = "volume_up";
++			linux,code = <115>;
++			wakeup-source;
++			debounce-interval = <15>;
++		};
++
++		volume-down {
++			gpios = <&pio 43 GPIO_ACTIVE_LOW>;
++			label = "volume_down";
++			linux,code = <114>;
++			wakeup-source;
++			debounce-interval = <15>;
++		};
++	};
++};
++
++&i2c0 {
++	clock-div = <2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	tca6416: gpio@20 {
++		compatible = "ti,tca6416";
++		reg = <0x20>;
++		rst-gpio = <&pio 65 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&tca6416_pins>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		eint20_mux_sel0 {
++			gpio-hog;
++			gpios = <0 0>;
++			input;
++			line-name = "eint20_mux_sel0";
++		};
++
++		expcon_mux_sel1 {
++			gpio-hog;
++			gpios = <1 0>;
++			input;
++			line-name = "expcon_mux_sel1";
++		};
++
++		mrg_di_mux_sel2 {
++			gpio-hog;
++			gpios = <2 0>;
++			input;
++			line-name = "mrg_di_mux_sel2";
++		};
++
++		sd_sdio_mux_sel3 {
++			gpio-hog;
++			gpios = <3 0>;
++			input;
++			line-name = "sd_sdio_mux_sel3";
++		};
++
++		sd_sdio_mux_ctrl7 {
++			gpio-hog;
++			gpios = <7 0>;
++			output-low;
++			line-name = "sd_sdio_mux_ctrl7";
++		};
++
++		hw_id0 {
++			gpio-hog;
++			gpios = <8 0>;
++			input;
++			line-name = "hw_id0";
++		};
++
++		hw_id1 {
++			gpio-hog;
++			gpios = <9 0>;
++			input;
++			line-name = "hw_id1";
++		};
++
++		hw_id2 {
++			gpio-hog;
++			gpios = <10 0>;
++			input;
++			line-name = "hw_id2";
++		};
++
++		fg_int_n {
++			gpio-hog;
++			gpios = <11 0>;
++			input;
++			line-name = "fg_int_n";
++		};
++
++		usba_pwr_en {
++			gpio-hog;
++			gpios = <12 0>;
++			output-high;
++			line-name = "usba_pwr_en";
++		};
++
++		wifi_3v3_pg {
++			gpio-hog;
++			gpios = <13 0>;
++			input;
++			line-name = "wifi_3v3_pg";
++		};
++
++		cam_rst {
++			gpio-hog;
++			gpios = <14 0>;
++			output-low;
++			line-name = "cam_rst";
++		};
++
++		cam_pwdn {
++			gpio-hog;
++			gpios = <15 0>;
++			output-low;
++			line-name = "cam_pwdn";
++		};
++	};
++};
++
++&i2c2 {
++	clock-div = <2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++	dr_mode = "peripheral";
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++	};
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&pio {
++	gpio_keys_default: gpiodefault {
++		pins_cmd_dat {
++			pinmux = <MT8516_PIN_42_KPCOL0__FUNC_GPIO42>,
++				 <MT8516_PIN_43_KPCOL1__FUNC_GPIO43>;
++			bias-pull-up;
++			input-enable;
++		};
++	};
++
++	i2c0_pins_a: i2c0@0 {
++		pins1 {
++			pinmux = <MT8516_PIN_58_SDA0__FUNC_SDA0_0>,
++				 <MT8516_PIN_59_SCL0__FUNC_SCL0_0>;
++			bias-disable;
++		};
++	};
++
++	i2c2_pins_a: i2c2@0 {
++		pins1 {
++			pinmux = <MT8516_PIN_60_SDA2__FUNC_SDA2_0>,
++				 <MT8516_PIN_61_SCL2__FUNC_SCL2_0>;
++			bias-disable;
++		};
++	};
++
++	tca6416_pins: pinmux_tca6416_pins {
++		gpio_mux_rst_n_pin {
++			pinmux = <MT8516_PIN_65_UTXD1__FUNC_GPIO65>;
++			output-high;
++		};
++
++		gpio_mux_int_n_pin {
++			pinmux = <MT8516_PIN_64_URXD1__FUNC_GPIO64>;
++			input-enable;
++			bias-pull-up;
++		};
++	};
++};
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.25.0
+
