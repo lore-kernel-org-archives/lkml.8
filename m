@@ -6,93 +6,146 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6591BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DECC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360F920866
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E83B21556
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l9EQuuIW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkF9xsc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgB2QkO (ORCPT
+        id S1727435AbgB2Qus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:40:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44936 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbgB2QkO (ORCPT
+        Sat, 29 Feb 2020 11:50:48 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33670 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgB2Qur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:40:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=QKxTCrWTi/nBnxdSjd5RMFTXvxgyun4TFo8efZJ13XI=; b=l9EQuuIWGaVP/vj9Z3i5+dLoQE
-        jRJJbU2s4kedO8kne+4uf9LmU4mCuv/g4cAe3tYmuBZiQvDx9JE9OfEzkjnx2AzzFAiXu3E3FR3wV
-        Gp6k64adhxHt7sQCPnRTtyLYaWoTxTKdMUilUrEDcedpPMy61uAmB1Ba1EU0XRxXt3m4QFwpbKiHi
-        l/J548t1HmGN3dGhn6rgUQOpsrFUWYRJ/z5JlIvB6idG5DPnsAfHvUE01wafuWkPgQtnvPUCg8uvp
-        TgjRgn3gcKVU48nh9CNxPAxJykzsOTJ8YcwXykExObluInnr9x0k2j+FVNIGx+VRDdi/o79JOFA1r
-        zDnHaPVQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j859x-0001b0-N1; Sat, 29 Feb 2020 16:40:13 +0000
-Subject: Re: [PATCH 0/7] parport: Use generic kernel logging styles
-To:     Joe Perches <joe@perches.com>, linux-parisc@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org
-References: <69fb1d36-b6cf-7c46-96d1-9403de6ab47a@infradead.org>
- <cover.1582878393.git.joe@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d03d6ce4-f40e-2905-1641-089a82720383@infradead.org>
-Date:   Sat, 29 Feb 2020 08:40:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 29 Feb 2020 11:50:47 -0500
+Received: by mail-qt1-f195.google.com with SMTP id x8so2316941qts.0;
+        Sat, 29 Feb 2020 08:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qukwWikGcINxLygrM52wRnkiMQepoX66/gICPazqEbw=;
+        b=WkF9xsc3RCvW89Rdb8UnqX8NATmcWDcQuHsevc3f8UW2bQ2qH2s4ST7k/39ipav6BI
+         uDdY3u28Wtabsn4tY6ES19oG19ZlmrmSayYFwpOF0X1C6tpnQQJqMkPCTi/jJew3a5re
+         AQdh5fTJIvJSVX3d3fRq524/awTsKbVnEcXUux3vaVLi9ZjyBKEOTygGDY8d9IExqLOE
+         BY8RmArtKcsvkWeMy33BrPnGHjkWdyAsOc7JRwCWoo5xkfm221BUOuX1zd7aVZp0ca2h
+         5/PL9PJ0tjv620D4I7o+naYWpb0bgdjHeV4BvvIfFT1TsCetY68Ce9vHfPKFI00HvY1B
+         IA7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qukwWikGcINxLygrM52wRnkiMQepoX66/gICPazqEbw=;
+        b=gAxwbnzgP1216aWvkfn8eOQUskqaMUO6U/FGYlz1sA7MwVDYP7TuYlG4tNcL8k4cgR
+         PkQwxgWtdoNdYOTJbssKrGIzMDLIEJ8OOyLWU42F/EfbJLJhrYwI+83wBOCouLj3rQwF
+         jRuFwPf0e5zTkH74nc6+wHsOsAjikMJCC8XPtGiFyYDfJzsjfE/nbI1YaDkem9YpDsS1
+         P+Zpnl7Q8uzLtULp/YAJZjd25eOAm6lDYHvz09pj3R6PWo0p7s1RyyIxcIRXqirS2IGr
+         J7BAbE8CYfBLRWjAzzlu8oYTm6xjJ3odFfz1y7hWIiDRkgf4oOTI5s5wy770s2qKnsSL
+         kxOw==
+X-Gm-Message-State: APjAAAX6EGPPox+ljfDVQnEeTsdx98Sx/x8aMSzaL4gfYb0vJ7CiOGOm
+        llrRagnrsqCKgDkuMw66rALPxXdI2Fw=
+X-Google-Smtp-Source: APXvYqy8G8TCNGPr1To3wkltVQhap17PH7rYo9xy6m1uhA/V3fEZkrNsvoYRyCBfWU3W0Zmdy/RdlA==
+X-Received: by 2002:aed:24b2:: with SMTP id t47mr8856120qtc.337.1582995046272;
+        Sat, 29 Feb 2020 08:50:46 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x34sm2776166qta.82.2020.02.29.08.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 08:50:45 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 29 Feb 2020 11:50:44 -0500
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
+ post-relocation
+Message-ID: <20200229165043.GA703247@rani.riverdale.lan>
+References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
+ <20200226230031.3011645-2-nivedita@alum.mit.edu>
+ <20200227081229.GA29411@gmail.com>
+ <20200227151643.GA3498170@rani.riverdale.lan>
+ <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
+ <20200227155421.GA3507597@rani.riverdale.lan>
+ <CAKv+Gu-k0c8GzKysv4Z9tYzEvfhJUzuiKx5nfwD0JU8ys=LZdg@mail.gmail.com>
+ <20200227180305.GA3598722@rani.riverdale.lan>
+ <20200229092425.GB92847@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1582878393.git.joe@perches.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200229092425.GB92847@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 12:32 AM, Joe Perches wrote:
-> Well, if the parport logging is getting some generic fixing,
-> here's some more generic logging fixing...
+On Sat, Feb 29, 2020 at 10:24:25AM +0100, Ingo Molnar wrote:
 > 
-> Joe Perches (7):
->   parport: Convert printk(KERN_<LEVEL> to pr_<level>(
->   parport: Use more comon logging styles
->   parport: daisy: Convert DPRINTK to pr_debug
->   parport_amiga: Convert DPRINTK to pr_debug
->   parport_mfc3: Convert DPRINTK to pr_debug
->   parport_pc: Convert DPRINTK to pr_debug
->   parport: Standardize use of printmode
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks, Joe.
-
->  drivers/parport/daisy.c          |  29 +---
->  drivers/parport/ieee1284.c       |   4 +-
->  drivers/parport/ieee1284_ops.c   |   3 +-
->  drivers/parport/parport_amiga.c  |  22 +--
->  drivers/parport/parport_atari.c  |   2 +-
->  drivers/parport/parport_cs.c     |   6 +-
->  drivers/parport/parport_gsc.c    |  25 +--
->  drivers/parport/parport_gsc.h    |  21 ++-
->  drivers/parport/parport_ip32.c   | 117 +++++++-------
->  drivers/parport/parport_mfc3.c   |  21 +--
->  drivers/parport/parport_pc.c     | 263 +++++++++++++------------------
->  drivers/parport/parport_sunbpp.c |   2 +-
->  drivers/parport/probe.c          |  34 ++--
->  drivers/parport/procfs.c         |   6 +-
->  drivers/parport/share.c          |  37 +++--
->  15 files changed, 261 insertions(+), 331 deletions(-)
+> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
 > 
+> > On Thu, Feb 27, 2020 at 06:47:55PM +0100, Ard Biesheuvel wrote:
+> > > 
+> > > Interesting. I am going to rip most of the EFI handover protocol stuff
+> > > out of OVMF, since it is mostly unnecessary, and having the PE/COFF
+> > > loader put the image in the correct place right away is a nice
+> > > complimentary improvement to that. (Note that the OVMF implementation
+> > > of the EFI handover protocol does not currently honor the preferred
+> > > address from the setup header anyway)
+> > 
+> > Yeah, for my testing I'm running the image from the EFI shell, which
+> > enters via PE entry point and honors the pref address.
+> 
+> So with KASLR, which is the distro default on most x86 distros, we'll 
+> relocate the kernel to another address anyway, right?
+> 
+> But telling the bootloader the preferred address would avoid any 
+> relocation overhead even in this case, right?
+> 
+> Thanks,
+> 
+> 	Ingo
 
+If I understand correctly, pref_address was added to try to avoid having
+to apply the relocations (vmlinux.relocs) by loading at the link-time
+address if possible, and you're saying that with KASLR, we have to do
+relocations anyway; and without KASLR the bootloader knows the preferred
+address from the setup header already?
 
--- 
-~Randy
+The patch I'm working on is meant to address the case when we are loaded
+via the EFI LoadImage service, which is a generic PE loader, and hence
+doesn't look at the pref_address in the setup header. We currently will
+end up with at least 2 copies of the kernel, with 1 additional copy if
+KASLR is enabled. The loader puts us somewhere, the EFI stub then makes
+a copy trying to move us to pref_address, and then KASLR will allocate
+an additional copy (not really a copy, but a buffer of the same size to
+decompress into). By telling the PE loader what the preferred address is
+I'm trying to avoid the EFI stub creating an additional copy, so we'll
+have 1 copy, or 2 with KASLR.
 
+That was the original motivation for the patch. As I've been working on
+it, I'm thinking that the copy in the EFI stub can be avoided in more
+cases.
+
+AFAICT, pref_address is completely irrelevant on 64-bit, which will have
+relocations applied only if KASLR is enabled and changes the virtual
+address, but it never cares what physical address it's running out of.
+It only requires being above LOAD_PHYSICAL_ADDR and below 2^46 or 2^52.
+All we need to do is align the decompression buffer correctly.
+
+For 32-bit, loading at pref_address can avoid relocations being applied,
+but if we're not already loaded there in the first place, trying to
+allocate a new buffer and copying the whole image is probably not worth
+it. It does have more restrictions on physical addresses in that it
+can't run at too high a physical address, so it may still be necessary
+to relocate to avoid that.
+
+Thanks.
