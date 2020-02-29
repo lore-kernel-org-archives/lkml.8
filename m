@@ -2,91 +2,122 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3010C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA5CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E2024688
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187AF2469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="v0lGJtOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgB2QK2 (ORCPT
+        id S1727250AbgB2QSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:10:28 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41128 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgB2QK2 (ORCPT
+        Sat, 29 Feb 2020 11:18:32 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgB2QSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:10:28 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b1so3135809pgm.8;
-        Sat, 29 Feb 2020 08:10:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pP4CQ7G4jGSfref1jPaLEXJVzlZ46InxEZXCpcyYqG4=;
-        b=hZLFM8W02cvJdSaKuHImhUZzMfHVTlwGe8Mwabawt5gyjhyavIOmg+8fLjPLvIaxC6
-         TeKWk/bpIvqXCY4rj+t9PuH9V8+Zks22hgWTj2bRD7wB+aP8hdb7H7S8+Qfek0vkgtRy
-         qUh1ZYWkMcSBDReE2KAPFO1dKnvgKKnnvBqdcffCHvsOOuYs+Yayvv8yu9IwzlnTlOiD
-         nEtSv4rJ3nMm1dVAyZpj5+S9FbujPH2sdoKsCI9PJwHTIb+HY05dILLlZULDbtAdThk2
-         3jiRwuAoHtEvV11V4RCUwuRs+89nRmGDZViYnqeVKjAgffblVv+ewZaIpzWoaS3xFHZx
-         NGfQ==
-X-Gm-Message-State: APjAAAVqNkk4f20frPFBStaE2a5Wfdp5peW7XuDr/LkQX9t4KfSKRTUc
-        W+Q0KyHBAsWHtVGeZ5Hpj1E=
-X-Google-Smtp-Source: APXvYqwd9wyn2obC4qdmkw87KNT0wl3dn2/aY9qXt6Mv2H5yqp4oISyTKGJh9qR0OeYzsUE1t8firw==
-X-Received: by 2002:a63:b91d:: with SMTP id z29mr10730208pge.52.1582992626847;
-        Sat, 29 Feb 2020 08:10:26 -0800 (PST)
-Received: from localhost ([123.51.145.16])
-        by smtp.gmail.com with ESMTPSA id b21sm15926727pfp.0.2020.02.29.08.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 08:10:26 -0800 (PST)
-Received: from root by localhost with local (Exim 4.93)
-        (envelope-from <root@localhost>)
-        id 1j84h7-003eot-9I; Sun, 01 Mar 2020 00:10:25 +0800
-From:   =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?= 
-        <sz.lin@moxa.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?= 
-        <sz.lin@moxa.com>, Kaiden PK Yu <KaidenPK.Yu@moxa.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: Fix inconsistent comment
-Date:   Sun,  1 Mar 2020 00:09:58 +0800
-Message-Id: <20200229160959.871801-1-sz.lin@moxa.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 29 Feb 2020 11:18:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582993109; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=lZfOPkwgE6nYYSnIfv4pFhy7q8haHYJZ5qG0aVOe4oU=;
+        b=v0lGJtOJYKbBiHlWAzMord2ep9YNFVEXMg/a+IOzhRXD9a0Ye1ha/D3c8qeThq2Gz8dAWa
+        EF/fW95Uyr6C0dbsM+UQ4ejmSx1a0JpqrEZvEO7KamBo9XqRhA6OMbAn0lgsnDaMYSGiTB
+        /t+DJgzP5FRUtLo8HMvfLpxpQpcx6Hs=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/2] dt-bindings: Document JZ4770 PHY bindings
+Date:   Sat, 29 Feb 2020 13:18:19 -0300
+Message-Id: <20200229161820.17824-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 2042b5486bd3 ("kbuild: unset variables in top Makefile
-instead of setting 0") renamed the variable from "config-targets"
-to "config-build", the comment should be consistent accordingly.
+Add documentation for the devicetree bindings of the
+Ingenic JZ4770 USB transceiver.
 
-Signed-off-by: Kaiden PK Yu (余泊鎧) <KaidenPK.Yu@moxa.com>
-Signed-off-by: SZ Lin (林上智) <sz.lin@moxa.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 90ee2a22e88b..01ac935f28bd 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1805,7 +1805,7 @@ existing-targets := $(wildcard $(sort $(targets)))
- 
- -include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
- 
--endif # config-targets
-+endif # config-build
- endif # mixed-build
- endif # need-sub-make
- 
+Notes:
+    v2: No change
+
+ .../bindings/usb/ingenic,jz4770-phy.yaml      | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+new file mode 100644
+index 000000000000..a81b0b1a2226
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/ingenic,jz4770-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic JZ4770 USB PHY devicetree bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: '^usb-phy@.*'
++
++  compatible:
++    enum:
++      - ingenic,jz4770-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  vcc-supply:
++    description: VCC power supply
++
++  '#phy-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - vcc-supply
++  - '#phy-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4770-cgu.h>
++    otg_phy: usb-phy@3c {
++      compatible = "ingenic,jz4770-phy";
++      reg = <0x3c 0x10>;
++
++      vcc-supply = <&vcc>;
++      clocks = <&cgu JZ4770_CLK_OTG_PHY>;
++
++      #phy-cells = <0>;
++    };
 -- 
 2.25.1
 
