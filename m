@@ -2,131 +2,161 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62809C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E680C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291DB246A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF8E246A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tRctQ/gt"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e9oti6Cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgB2AIK (ORCPT
+        id S1726764AbgB2AIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:08:10 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.221]:24084 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbgB2AIJ (ORCPT
+        Fri, 28 Feb 2020 19:08:25 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7815 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB2AIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:08:09 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 2CC00187B7E
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:08:08 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7pfsjR3Cy8vkB7pfsjLkIa; Fri, 28 Feb 2020 18:08:08 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zfaaTppUw/YMS2SHvO7uOLQjxhi/2WNpD6bDMsCd+WU=; b=tRctQ/gtfM+yfdtCBct6yCTOYK
-        p4IaMOXmC3ve32NhJZ5OGIAXtY8Du6SqDiPoCaO4MCsPxCjqHlSQvLq2KxkRQoQP7NfzbzBU16C/Y
-        LSkGzGx3gnCbAqLJ3X/S9Yh7v0H0XGES3WKVDY2VpDvBKiGY0OBU1d011I79L2AfWqG3GiQW/Rzhr
-        D6UtIcV+E1Y5hWpJZsVy8DgmvLns4z5o1fbt76O/pju18PsjbrxGm33lTdYUXFzxHAQeIqDW7JaiE
-        QAV+pIbY/BOMnWHW1mbtPy6420c3fGB9Hgy2VwOUyfO/45hX69U1X0LB+rDK6jnyjvsMHPfJ2eSZw
-        F0MRS4hw==;
-Received: from [200.39.15.57] (port=9598 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7pfq-002cpS-Bo; Fri, 28 Feb 2020 18:08:06 -0600
-Date:   Fri, 28 Feb 2020 18:11:02 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: sock_reuseport: Replace zero-length array with
- flexible-array member
-Message-ID: <20200229001102.GA6418@embeddedor>
+        Fri, 28 Feb 2020 19:08:25 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e59ab6a0000>; Fri, 28 Feb 2020 16:08:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 28 Feb 2020 16:08:24 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 28 Feb 2020 16:08:24 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 29 Feb
+ 2020 00:08:24 +0000
+Subject: Re: [RFC v1 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>
+CC:     <david@redhat.com>, <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+ <20200228154322.329228-4-imbrenda@linux.ibm.com>
+ <2e3bf1a2-b672-68e0-97b6-42f08133e077@de.ibm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <ff35804f-81ef-a245-01d9-1f9b525e3410@nvidia.com>
+Date:   Fri, 28 Feb 2020 16:08:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.15.57
-X-Source-L: No
-X-Exim-ID: 1j7pfq-002cpS-Bo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:9598
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <2e3bf1a2-b672-68e0-97b6-42f08133e077@de.ibm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582934891; bh=yxIDtoPKrUYqvWkM5+UoiqZc7tHLKr+Ih8YJdIY9WjU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=e9oti6CdWa4q8g8UsXOdbEFsaaMNCkkgCH21XTmEsj8pYNW8+RLDE7C44WSKG7Mhg
+         PERhs2qeyvndpBhK48YgUn4k2jCcC6Mgs2FJ9Ql/o9Ya4FI6eEAmjiis0K4iMLhJ1/
+         wJh8unpxJk/LzJA3kfjdQOJljkQg/PxDqLR0pLPRU4t/QFBwYdz1fJowJ0LilHFS8T
+         v0n1+6XyWBj/aYuU7KkbE5ufV6Z+3p0SbaJ6lTjOjHCbSqEOY4gDjGBEqjX9+QE48x
+         aWHvcIOhI+s+7FqOJ8pKt/hHS4qD5YbVzGQ7XyyNsX8xLWs4UKx5/QrnOKl3CajOh1
+         /skkEY65LmpFw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On 2/28/20 8:08 AM, Christian Borntraeger wrote:
+> Andrew,
+> 
+> while patch 1 is a fixup for the FOLL_PIN work in your patch queue,
+> I would really love to see this patch in 5.7. The exploitation code
+> of kvm/s390 is in Linux next also scheduled for 5.7.
+> 
+> Christian
+> 
+> On 28.02.20 16:43, Claudio Imbrenda wrote:
+>> With the introduction of protected KVM guests on s390 there is now a
+>> concept of inaccessible pages. These pages need to be made accessible
+>> before the host can access them.
+>>
+>> While cpu accesses will trigger a fault that can be resolved, I/O
+>> accesses will just fail.  We need to add a callback into architecture
+>> code for places that will do I/O, namely when writeback is started or
+>> when a page reference is taken.
+>>
+>> This is not only to enable paging, file backing etc, it is also
+>> necessary to protect the host against a malicious user space. For
+>> example a bad QEMU could simply start direct I/O on such protected
+>> memory.  We do not want userspace to be able to trigger I/O errors and
+>> thus we the logic is "whenever somebody accesses that page (gup) or
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+I actually kind of like the sound of that: "We the logic of the kernel,
+in order to form a more perfect computer..." :)
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Probably this wording is what you want, though:
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+"thus the logic is "whenever somebody (gup) accesses that page or"
 
-This issue was found with the help of Coccinelle.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+...
+>> @@ -458,7 +457,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+>>  	}
+>>  
+>>  	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
+>> -		int ret;
+>>  		get_page(page);
+>>  		pte_unmap_unlock(ptep, ptl);
+>>  		lock_page(page);
+>> @@ -475,6 +473,14 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+>>  		page = ERR_PTR(-ENOMEM);
+>>  		goto out;
+>>  	}
+>> +	if (flags & FOLL_PIN) {
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/net/sock_reuseport.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
-index 3ecaa15d1850..505f1e18e9bf 100644
---- a/include/net/sock_reuseport.h
-+++ b/include/net/sock_reuseport.h
-@@ -24,7 +24,7 @@ struct sock_reuseport {
- 	unsigned int		bind_inany:1;
- 	unsigned int		has_conns:1;
- 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
--	struct sock		*socks[0];	/* array of sock pointers */
-+	struct sock		*socks[];	/* array of sock pointers */
- };
- 
- extern int reuseport_alloc(struct sock *sk, bool bind_inany);
+What about FOLL_GET? Unless your calling code has some sort of BUG_ON(flags & FOLL_GET),
+I'm not sure it's a good idea to leave that case unhandled.
+
+
+>> +		ret = arch_make_page_accessible(page);
+>> +		if (ret) {
+>> +			unpin_user_page(page);
+>> +			page = ERR_PTR(ret);
+>> +			goto out;
+>> +		}
+>> +	}
+>>  	if (flags & FOLL_TOUCH) {
+>>  		if ((flags & FOLL_WRITE) &&
+>>  		    !pte_dirty(pte) && !PageDirty(page))
+>> @@ -2143,6 +2149,13 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>>  
+>>  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+>>  
+>> +		if (flags & FOLL_PIN) {
+>> +			ret = arch_make_page_accessible(page);
+>> +			if (ret) {
+>> +				unpin_user_page(page);
+
+
+Same concern as above, about leaving FOLL_GET unhandled.
+
+
+thanks,
 -- 
-2.25.0
+John Hubbard
+NVIDIA
+
+
 
