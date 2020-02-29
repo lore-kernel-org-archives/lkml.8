@@ -2,53 +2,47 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.7 required=3.0 tests=FUZZY_XPILL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44D2C3F2D8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C2BC3F2D3
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF94246CB
+	by mail.kernel.org (Postfix) with ESMTP id 22429246C9
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgB2JRE (ORCPT
+        id S1726954AbgB2JRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 04:17:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38862 "EHLO
+        Sat, 29 Feb 2020 04:17:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38827 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgB2JRC (ORCPT
+        with ESMTP id S1726674AbgB2JQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 04:17:02 -0500
+        Sat, 29 Feb 2020 04:16:59 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7yEq-0005oH-1s; Sat, 29 Feb 2020 10:16:48 +0100
+        id 1j7yEw-0005sn-K9; Sat, 29 Feb 2020 10:16:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AEE1D1C2187;
-        Sat, 29 Feb 2020 10:16:47 +0100 (CET)
-Date:   Sat, 29 Feb 2020 09:16:47 -0000
-From:   "tip-bot2 for He Zhe" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3D6011C0243;
+        Sat, 29 Feb 2020 10:16:51 +0100 (CET)
+Date:   Sat, 29 Feb 2020 09:16:50 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf probe: Check return value of strlist__add()
- for -ENOMEM
-Cc:     He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+Subject: [tip: perf/urgent] tools headers UAPI: Update tools's copy of kvm.h headers
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1582727404-180095-1-git-send-email-zhe.he@windriver.com>
-References: <1582727404-180095-1-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
-Message-ID: <158296780745.28353.11946839303577702274.tip-bot2@tip-bot2>
+Message-ID: <158296781094.28353.15066391796531146670.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,120 +58,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     bd862b1d839221322b2e38eb8a06861604804b5e
-Gitweb:        https://git.kernel.org/tip/bd862b1d839221322b2e38eb8a06861604804b5e
-Author:        He Zhe <zhe.he@windriver.com>
-AuthorDate:    Wed, 26 Feb 2020 22:30:04 +08:00
+Commit-ID:     0d6f94fd498a7f9d15c5cbf64567727361fd35c0
+Gitweb:        https://git.kernel.org/tip/0d6f94fd498a7f9d15c5cbf64567727361fd35c0
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Thu, 27 Feb 2020 09:51:30 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 27 Feb 2020 11:03:13 -03:00
+CommitterDate: Thu, 27 Feb 2020 09:51:30 -03:00
 
-perf probe: Check return value of strlist__add() for -ENOMEM
+tools headers UAPI: Update tools's copy of kvm.h headers
 
-strlist__add() may fail with -ENOMEM. Check it and give debugging hint
-in advance.
+Picking the changes from:
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+  5ef8acbdd687 ("KVM: nVMX: Emulate MTF when performing instruction emulation")
+
+Silencing this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h' differs from latest version at 'arch/x86/include/uapi/asm/kvm.h'
+  diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
+
+No change in tooling ensues, just the x86 kvm tooling gets rebuilt as
+those headers are included in its build:
+
+  $ cp arch/x86/include/uapi/asm/kvm.h tools/arch/x86/include/uapi/asm/kvm.h
+  $ make -C tools/perf
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j12' parallel build
+
+  Auto-detecting system features:
+  ...                         dwarf: [ on  ]
+  <SNIP>
+  ...        disassembler-four-args: [ on  ]
+
+    DESCEND  plugins
+    CC       /tmp/build/perf/arch/x86/util/kvm-stat.o
+  <SNIP>
+    LD       /tmp/build/perf/arch/x86/util/perf-in.o
+    LD       /tmp/build/perf/arch/x86/perf-in.o
+    LD       /tmp/build/perf/arch/perf-in.o
+    LD       /tmp/build/perf/perf-in.o
+    LINK     /tmp/build/perf/perf
+  <SNIP>
+  $
+
+As it doesn't seem to be used there:
+
+  $ grep STATE tools/perf/arch/x86/util/kvm-stat.c
+  $
+
+And the 'perf trace' beautifier table generator isn't interested in
+these things:
+
+  $ grep regex= tools/perf/trace/beauty/kvm_ioctl.sh
+  regex='^#[[:space:]]*define[[:space:]]+KVM_(\w+)[[:space:]]+_IO[RW]*\([[:space:]]*KVMIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+  $
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/1582727404-180095-1-git-send-email-zhe.he@windriver.com
+Cc: Oliver Upton <oupton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-probe.c   |  6 ++++--
- tools/perf/util/probe-file.c | 28 ++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 6 deletions(-)
+ tools/arch/x86/include/uapi/asm/kvm.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 26bc592..70548df 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -449,7 +449,8 @@ static int perf_del_probe_events(struct strfilter *filter)
- 		ret = probe_file__del_strlist(kfd, klist);
- 		if (ret < 0)
- 			goto error;
--	}
-+	} else if (ret == -ENOMEM)
-+		goto error;
+diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
+index 503d3f4..3f3f780 100644
+--- a/tools/arch/x86/include/uapi/asm/kvm.h
++++ b/tools/arch/x86/include/uapi/asm/kvm.h
+@@ -390,6 +390,7 @@ struct kvm_sync_regs {
+ #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
+ #define KVM_STATE_NESTED_EVMCS		0x00000004
++#define KVM_STATE_NESTED_MTF_PENDING	0x00000008
  
- 	ret2 = probe_file__get_events(ufd, filter, ulist);
- 	if (ret2 == 0) {
-@@ -459,7 +460,8 @@ static int perf_del_probe_events(struct strfilter *filter)
- 		ret2 = probe_file__del_strlist(ufd, ulist);
- 		if (ret2 < 0)
- 			goto error;
--	}
-+	} else if (ret2 == -ENOMEM)
-+		goto error;
- 
- 	if (ret == -ENOENT && ret2 == -ENOENT)
- 		pr_warning("\"%s\" does not hit any event.\n", str);
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 5003ba4..0f5fda1 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -301,10 +301,15 @@ int probe_file__get_events(int fd, struct strfilter *filter,
- 		p = strchr(ent->s, ':');
- 		if ((p && strfilter__compare(filter, p + 1)) ||
- 		    strfilter__compare(filter, ent->s)) {
--			strlist__add(plist, ent->s);
-+			ret = strlist__add(plist, ent->s);
-+			if (ret == -ENOMEM) {
-+				pr_err("strlist__add failed with -ENOMEM\n");
-+				goto out;
-+			}
- 			ret = 0;
- 		}
- 	}
-+out:
- 	strlist__delete(namelist);
- 
- 	return ret;
-@@ -511,7 +516,11 @@ static int probe_cache__load(struct probe_cache *pcache)
- 				ret = -EINVAL;
- 				goto out;
- 			}
--			strlist__add(entry->tevlist, buf);
-+			ret = strlist__add(entry->tevlist, buf);
-+			if (ret == -ENOMEM) {
-+				pr_err("strlist__add failed with -ENOMEM\n");
-+				goto out;
-+			}
- 		}
- 	}
- out:
-@@ -672,7 +681,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
- 		command = synthesize_probe_trace_command(&tevs[i]);
- 		if (!command)
- 			goto out_err;
--		strlist__add(entry->tevlist, command);
-+		ret = strlist__add(entry->tevlist, command);
-+		if (ret == -ENOMEM) {
-+			pr_err("strlist__add failed with -ENOMEM\n");
-+			goto out_err;
-+		}
-+
- 		free(command);
- 	}
- 	list_add_tail(&entry->node, &pcache->entries);
-@@ -853,9 +867,15 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
- 			break;
- 		}
- 
--		strlist__add(entry->tevlist, buf);
-+		ret = strlist__add(entry->tevlist, buf);
-+
- 		free(buf);
- 		entry = NULL;
-+
-+		if (ret == -ENOMEM) {
-+			pr_err("strlist__add failed with -ENOMEM\n");
-+			break;
-+		}
- 	}
- 	if (entry) {
- 		list_del_init(&entry->node);
+ #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
