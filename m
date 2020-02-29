@@ -2,117 +2,151 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E276CC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD2BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBF8246B4
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C0B246B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csg7gxtK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eNe6W9/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgB2DdA (ORCPT
+        id S1726857AbgB2DhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 22:33:00 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44846 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgB2Dc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:32:59 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d9so1978687plo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 19:32:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WWlc7PySHsdvwwIYJR3k0LGstQ/VQF9XESI8/nbyPDg=;
-        b=csg7gxtKkqhVqKb8DlMR0ncRzgv5p7AA1oIATkymki1e+cq/FMCCQC/WaWChUx/TvQ
-         kcOUBUiZUfMVUNtOAdCXFHv6KcUPmS6MvRJ5JMH6Ncv7NbFmPK8XhDV9GCB5tAeMNd7h
-         Cp4ELClEzN1Xf6U10pGs9pnlWCK8TesOFZVL3VtxGQKm2vg0GBehsf7704sNmSa2SDsL
-         bxzx+PIr17g23xdFHAciunDiNLg9p5sBAFkyoqE+rlT8EThZNShZ6quSusngWpKETcU5
-         pbaUYs0v/TIdje5mh4aBK0veeAyqHoQ3BHp72dAF0vGH8lq/KfT6/HcyZyWeTOmc4+eE
-         yX/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WWlc7PySHsdvwwIYJR3k0LGstQ/VQF9XESI8/nbyPDg=;
-        b=Ia795x8EbiZB8f/RLVokuuev7A2FL/bx4+ScI+qh6/ew4F9PGPYrYB1BLpW3uy/EnO
-         OsLipaxU+NOP/WB5QqWRVl8SZPfr/0hi5sxD+JbcD28lkCoNJel4hmKk/7mXxDZE/K/f
-         oa8bJY3qsOpi1RdJRVAA+n19QxvPBf8sjvMRLCftdn+Jhy4KrOAK+KNmHNlNtGJAR8Sj
-         OrkWcHuYSn/ls/bVrt5a0dwwftfNxEp+RWa7YQhD0bCDEHhwn6E+yuzVj8RA/IMej6Wo
-         fZodcCCpNVfhMoujbqwQfghICB+iVDkX4ttm3xh9NDU7doOygZxl2X1bb3246ZTe9q6v
-         L9QQ==
-X-Gm-Message-State: APjAAAXYSIszIgh1omMGC4weW0IvcJNn+P5oSLjiFwyUNPoqFxmAEKuK
-        wlefmFT+d7f0krn+PjY/v8o=
-X-Google-Smtp-Source: APXvYqxbEKVGTDVu4gesY42kCC0StwycrEMxDzkBFbAM++iBEiZrBE64A3hMch8AkeWudI3kvs+PDw==
-X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr7863628pjg.111.1582947177174;
-        Fri, 28 Feb 2020 19:32:57 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id m12sm3781362pjf.25.2020.02.28.19.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 19:32:56 -0800 (PST)
-Date:   Sat, 29 Feb 2020 12:32:53 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Lech Perczak <l.perczak@camlintechnologies.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
-        <k.drobinski@camlintechnologies.com>,
-        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Regression in v4.19.106 breaking waking up of readers of
- /proc/kmsg and /dev/kmsg
-Message-ID: <20200229033253.GA212847@google.com>
-References: <aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com>
- <20200227123633.GB962932@kroah.com>
- <42d3ce5c-5ffe-8e17-32a3-5127a6c7c7d8@camlintechnologies.com>
- <e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com>
- <20200228031306.GO122464@google.com>
- <20200228100416.6bwathdtopwat5wy@pathway.suse.cz>
- <20200228105836.GA2913504@kroah.com>
- <20200228113214.kew4xi5tkbo7bpou@pathway.suse.cz>
- <20200228130217.rj6qge2en26bdp7b@pathway.suse.cz>
- <20200228205334.GF101220@mit.edu>
+        Fri, 28 Feb 2020 22:37:11 -0500
+Received: from mail-am6eur05on2055.outbound.protection.outlook.com ([40.107.22.55]:63072
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgB2DhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 22:37:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E+5OonKfGMbe5YXEVuBqa4+NAZpOUBJ1T2huP3fCoGoJfgbtZGRzIQFf9HicHdbnXDrdnCnUfCFF1k+Hg7Z1ReTpr7qtyKGKUhd/pbJVjJdHzubqDD23Ye1HvLL0Is4lupnZRkRr2ysOaliFV9lt43e0VAwbAoDV9EzBer7UxEJuewCr7NURtQHk7RLHzxlOy2TsSI5SJEzTySC4Nqr4zz26w0YVFKpkvNI4bMkMHvbAX9sQTcLNpA+yvZMgaJc1j0QAw8DnZtloXNag77xn6uI+JSAGKRjcuV4tldu2zVetDwj0YwHh8ejWFdPRoxPnyvfFoPsY+yon8oM6/glE+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3HiP7wU4u+cSKZ4bUyp4/UgGO9XUeOqbcw7XBSvWpTk=;
+ b=WnZXgYHGzc4HI7klvhgU/AKOJDk/NxZkxmt3Lz56+Pc+x/z6BQRtOzwhuptYE/Ud/x6iSmzoB9yuljwNtLaRK3TsIDRzBFPN4X2x14Zz63djqRtzK60o882AiWg3VmVFfV+hwVBKvnf7OZuWZHxm7RfgWBKEaxwFSYLa8WGSP9o8ygFWenz5u3NlISMkOXp3lib4Ds4+NhAAO7O73CYZ4cy9xO0Zne8pbb4hiEkOcORk6TI8FVmcLdNmwM2cV/djTDWyEgZ82hJN/I2pESZ1NaQ+xTGgYQ5d/hxiPY1ZWdB4/i59WrSmkx1/inrSbWmKBbHHR/y7HWQlIPmTR8CGYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3HiP7wU4u+cSKZ4bUyp4/UgGO9XUeOqbcw7XBSvWpTk=;
+ b=eNe6W9/D6alvjRpT6ZJTmsh3xAjm2KARC4mHOIHLpdBmKGV7mqcUsVkpthxBSipVc01TZFPieeUmP+7F7bw90fkUFr0ktGq2/rafZIOfPEPbxCe1he3trhW7VVjadFMIMWN0sKaPbHPtoTnkhg6EHP2DNAc5zOHETKWrPQaNHXk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3899.eurprd04.prod.outlook.com (52.134.71.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.22; Sat, 29 Feb 2020 03:37:02 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2772.018; Sat, 29 Feb 2020
+ 03:37:02 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
+ thermal monitoring unit
+Thread-Topic: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
+ thermal monitoring unit
+Thread-Index: AQHV58cPTXVn3qoaD0ekPBUouxzRXKgu7K0AgADqiSCAAIztAIABLqNA
+Date:   Sat, 29 Feb 2020 03:37:02 +0000
+Message-ID: <DB3PR0402MB39160BF1E6FDF0990E462708F5E90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
+ <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
+ <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
+ <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
+In-Reply-To: <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2288d29c-009e-425c-a6a1-08d7bcc8a3c0
+x-ms-traffictypediagnostic: DB3PR0402MB3899:|DB3PR0402MB3899:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3899D50190BD9B07E194F66AF5E90@DB3PR0402MB3899.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03283976A6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(366004)(136003)(376002)(189003)(199004)(7416002)(9686003)(6506007)(110136005)(53546011)(71200400001)(55016002)(26005)(186003)(7696005)(33656002)(52536014)(478600001)(8676002)(44832011)(86362001)(8936002)(316002)(5660300002)(4326008)(66556008)(66946007)(66446008)(64756008)(2906002)(81156014)(66476007)(81166006)(76116006)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3899;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kVkouESgX8d312YHm8PqbzCk48SVZHhSTYVEhqVRcHM3P6hBoUDISW0CYV2QpMDLGVD/+bKxI1l650iSp0+lV4ta3tv5x2iAt7PGtkVDTzmCgZAk0sto+oL2prINPPw00Om3jL8EGfsfAl134ScZ/V9akLw7Is8vlr//pLuYyUZFVO6DSAgzdFrACeOe3C0AeirOUe4ctJqB75YF7HaRvMi6ir7Hfeeh/8XnAsxIQ6aIzWwBeBOjOMsZitZ8BEqaGwSVMDB4Pccy3/1ntzG3fAE0I6cJHGdSeW0tl5IRYw0f7S2RGBgbYEDosrhDIESK0m23YJoxJLyiz4/fMAUBrLygYGPLQeVgg2JFfCqyza8UJ26xF5hjPYpXit9zYcEp6E3Gl2GxggpHsQI/b+jkyKBeYMdskSk0ZsXnQ+lnc3SaRaShSKAKcsSFRbMnC9nh3NDgugg96WuCU5wlUdtJrrWML7Dwrl3y9NS29T2q0ogHGUE+4CsZhOzxlQ5mLB19GJI9FixVM4N9qf4p/gz5Ow==
+x-ms-exchange-antispam-messagedata: KWvdbkvmNm4epppZmMiY22IDli0y43WrWM9yNPPEvuFOBw4pi3lal/om4HDUBzLNwiG4jNpZIG2rg64Jz5QKUfDBnMKUtbwWq6XQBepzgZIK9/BEGRGQUCPehx1LuGdeQyn1pVBDcqEL8jZjY+8/Mw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228205334.GF101220@mit.edu>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2288d29c-009e-425c-a6a1-08d7bcc8a3c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2020 03:37:02.1498
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MN/lWzRFPSBRQCFqYEZ+r/eDZUh5EDKKCpAu3cz1lXqNXFB2JjguM/YJd5eGnWq/JmmiCe3lE4fVEINWxvPFnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3899
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/28 15:53), Theodore Y. Ts'o wrote:
-> > So, I would still prefer to _revert_ the commit 15341b1dd409749f
-> > ("char/random: silence a lockdep splat with printk()"). It calmed
-> > down lockdep report. The real life danger is dubious. The warning
-> > is printed early when the system is running on single CPU where
-> > it could not race.
-> 
-> I'm wondering now if we should revert this commit before 5.6 comes out
-> (it landed in 5.6-rc1).  "Is much less likely to happen given the
-> other random initialization patches" is not the same as "guaranteed
-> not to happen".
-> 
-> What do folks think?
-
-Well, my 5 cents, there is nothing that prevents "too-early"
-printk_deferred() calls in the future. From that POV I'd probably
-prefer to "forbid" printk_deffered() to touch per-CPU deferred
-machinery until it's not "too early" anymore. Similar to what we
-do in printk_safe::queue_flush_work().
-
-	-ss
+SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIDIvNF0gdGhlcm1hbDog
+aW14OG1tOiBBZGQgc3VwcG9ydCBmb3INCj4gaS5NWDhNTSB0aGVybWFsIG1vbml0b3JpbmcgdW5p
+dA0KPiANCj4gT24gMjgvMDIvMjAyMCAwMjoxMiwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gSGks
+IERhbmllbA0KPiANCj4gWyAuLi4gXQ0KPiANCj4gPj4+ICtzdGF0aWMgaW50IHRtdV9nZXRfdGVt
+cCh2b2lkICpkYXRhLCBpbnQgKnRlbXApIHsNCj4gPj4+ICsJc3RydWN0IGlteDhtbV90bXUgKnRt
+dSA9IGRhdGE7DQo+ID4+PiArCXUzMiB2YWw7DQo+ID4+PiArDQo+ID4+PiArCS8qIHRoZSB0ZW1w
+IHNlbnNvciBuZWVkIGFib3V0IDFtcyB0byBmaW5pc2ggdGhlIG1lYXN1cmVtZW50ICovDQo+ID4+
+PiArCXVzbGVlcF9yYW5nZSgxMDAwLCAyMDAwKTsNCj4gPj4NCj4gPj4gV2h5IGRvIHlvIG5lZWQg
+dG8gZm9yY2UgYSBkZWxheSBoZXJlPyBJZiB0aGUgc2Vuc29yIGNhbiBub3QgYmUgcmVhZA0KPiA+
+PiBtb3JlIHRoYW4gb25lIHRpbWUgZXZlcnkgMW1zLCB0aGVuIHNwZWNpZnkgdGhhdCBpbiB0aGUg
+RFQgc3dpdGNoaW5nDQo+ID4+IHRoZSBwb2xsaW5nIHRvIHRoZSByaWdodCB2YWx1ZSwgbm8/DQo+
+ID4NCj4gPiBUaGUgcG9sbGluZyB0aW1lKDIgc2Vjb25kcykgaXMgT0sgZm9yIHRoaXMgY2FzZSwg
+YWRkaW5nIHRoaXMgc2xlZXAgaXMNCj4gPiB0byBwcmV2ZW50IHVzZXIgZnJvbSByZWFkaW5nIHRl
+bXBlcmF0dXJlIGZyb20gc3lzZnMgaW50ZXJmYWNlIHZlcnkNCj4gZnJlcXVlbnRseSBsaWtlIGxl
+c3MgdGhhbiAxbXMsIGRvZXMgaXQgbWFrZSBzZW5zZT8NCj4gDQo+IE5vdCByZWFsbHksIHdlbGwg
+ZXhjZXB0IGlmIHRoZSB1c2VyIGlzIGFibGUgdG8gcHJlc3MgdGhlIGtleXMgaW4gbGVzcyB0aGFu
+IDFtcyA6KQ0KPiANCj4gSWYgdGhlIHVzZXJzcGFjZSB3cml0ZXMgYSBwb2xsaW5nIHNjcmlwdCBy
+ZWFkaW5nIHRoZSB0ZW1wZXJhdHVyZSBpbiBhIGJ1c3kgbG9vcCwNCj4gdGhlcmUgaXMgbm90aGlu
+ZyB3ZSBjYW4gZG8gYWdhaW5zdCBzaWxseSBwcm9ncmFtbWluZyA6Lw0KDQpNYWtlIHNlbnNl8J+Y
+ig0KDQo+IA0KPiBIb3dldmVyLCBpdCBjb3VsZCBpbnRlcmVzdGluZyB0byBhZGQgYSA8bWluIHBv
+bGxpbmcgaW50ZXJ2YWw+IGluIHRoZSB0aGVybWFsDQo+IHN0cnVjdHVyZSBhbmQgaGFuZGxlIHRo
+YXQgZnJvbSB0aGUgY29yZSBmcmFtZXdvcmsgYnkgY2FjaGluZyB0aGUgbGFzdCB2YWx1ZQ0KPiBh
+bmQgcmV0dXJuIGl0IGluIGNhc2UgZ2V0X3RlbXAgaXMgY2FsbGVkIHRvbyBmYXN0Lg0KDQpPSywg
+SSB3aWxsIHJlc2VuZCBWMiBwYXRjaCBzZXQgdG8gcmVtb3ZlIHRoZSBzbGVlcCBpbiB0aGlzIGRy
+aXZlciBhbmQgc2VlIGlmIHRoZXJlIGlzDQpyZWFsIGlzc3VlIG9mIHN1Y2ggY29ybmVyIGNhc2Us
+IGlmIGFueSBpc3N1ZSBvYnNlcnZlZCwgSSB3aWxsIHRyeSBzdW1taXQgYSBwYXRjaCB0byBjb3Jl
+DQpmcmFtZXdvcmsgbGF0ZXIuDQoNClRoYW5rcywNCkFuc29uDQoNCg==
