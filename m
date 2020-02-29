@@ -2,105 +2,115 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958AFC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD71C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BE4246C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28A824677
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582968273;
+	bh=cGBBMVSgNEa2yMATVwA8/LRDx3d3/mLF9cUosPH04Dg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dpNf/qK4SweYbYPOImGxcJM7NSSj4asDYwZTwlV0yuY78sxZYF3DcZMmeQ0rUlP9c
+	 hZN64f7JQbqC2Axd63HJXhsmDiQXRtGAEC7BtvHQr7Z0bVRY9sX1tDQsLQusxWaQhR
+	 3supIlyEDbvdUoFoVM2juYwlrjtPY0mJfgP3TqLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgB2JRs (ORCPT
+        id S1726857AbgB2JYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 04:17:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38808 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgB2JQ5 (ORCPT
+        Sat, 29 Feb 2020 04:24:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42820 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgB2JYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 04:16:57 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7yEo-0005o3-VJ; Sat, 29 Feb 2020 10:16:47 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 61D761C0243;
-        Sat, 29 Feb 2020 10:16:46 +0100 (CET)
-Date:   Sat, 29 Feb 2020 09:16:46 -0000
-From:   "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf annotate: Fix segfault with source toggle
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200204045233.474937-5-ravi.bangoria@linux.ibm.com>
-References: <20200204045233.474937-5-ravi.bangoria@linux.ibm.com>
+        Sat, 29 Feb 2020 04:24:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id p18so6075200wre.9;
+        Sat, 29 Feb 2020 01:24:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RgPJE0orJQVDrDLEaPJ8R2RxW8F5htMBVkLJo9I+3vI=;
+        b=o9rkUgC3sZYDJqLH0G98KAbq5NAH7w8L5tbrS2uN5TzpAoyRCzhVio6e2iwYrB13dY
+         xHsrTSzVBewKcPJcBcLzDrgOToNImEQeZ9joKizsBvGASOzPAiW8/NWryBSUuGRig3Gu
+         NW2y73yAVN4drVh9it/+OBI0+f7gcI7ZM4Y/oiyKjLMWsAYlrMTv+XgxrdYFQ+fxT9tr
+         n0aG94hIH5s6TkVWYbIlamSVDTv2ES+8PkP3zujOXMJ38DcbXtkIt4HCcpsjUcajFbY4
+         JjFcnwg7F8iJT1AT8g6lvnSohzgu6kTK9M6zQqr40j1ST8e7grDp2i6htBLXaxgQH9Wv
+         x1nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RgPJE0orJQVDrDLEaPJ8R2RxW8F5htMBVkLJo9I+3vI=;
+        b=jOPr61QL0QiUaEzpPuWwmFKstJ1f+Ll3dj4VA+os+ppsN85rOuOX6Gz0g0Fd+NN54r
+         QK6rC/kUOsZaBa9WPWh6GLlrVufwT6BvaJf2qisGvWis/E/rGZ3f9Z+XUKRD2+iMD1Ha
+         I9oBDq9e8f0PCykDzzkyR34qslLkLUEv8z8YRdCJ5tuJUqW2SvM6QeFbHAw8qCbhjhuC
+         VK6OfPIdhiGk8x2YDYMhOHyXU3/58h6jVsDFl4mteSzQBqPM0Q4GL9S9QBbc3zIDiw5N
+         jRBKj8dYeq2RsxH18GU8WvTNiQ3Jm4hmi7nGMp95dj1/uQ7nRVi2oj4YUSdXd/65mEwv
+         h67A==
+X-Gm-Message-State: APjAAAWcZemcRXjr2pvPCdzjycZslsa9ABUJyFbXZRc0kS58NRLxcgCw
+        qRRG34f9ht9c/BC0bT4vIf4=
+X-Google-Smtp-Source: APXvYqypQZFf++sh1JdwJcb+KL95+X3s+ht196vQUdpvCNcMCeFhfMHU9OUnkaQTMr1064b6VZ1vPA==
+X-Received: by 2002:a5d:4384:: with SMTP id i4mr5183282wrq.396.1582968268971;
+        Sat, 29 Feb 2020 01:24:28 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id p17sm14011569wre.89.2020.02.29.01.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 01:24:27 -0800 (PST)
+Date:   Sat, 29 Feb 2020 10:24:25 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
+ post-relocation
+Message-ID: <20200229092425.GB92847@gmail.com>
+References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
+ <20200226230031.3011645-2-nivedita@alum.mit.edu>
+ <20200227081229.GA29411@gmail.com>
+ <20200227151643.GA3498170@rani.riverdale.lan>
+ <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
+ <20200227155421.GA3507597@rani.riverdale.lan>
+ <CAKv+Gu-k0c8GzKysv4Z9tYzEvfhJUzuiKx5nfwD0JU8ys=LZdg@mail.gmail.com>
+ <20200227180305.GA3598722@rani.riverdale.lan>
 MIME-Version: 1.0
-Message-ID: <158296780605.28353.6653240778636614172.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227180305.GA3598722@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc
-Gitweb:        https://git.kernel.org/tip/e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc
-Author:        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-AuthorDate:    Tue, 04 Feb 2020 10:22:31 +05:30
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 27 Feb 2020 11:47:23 -03:00
+* Arvind Sankar <nivedita@alum.mit.edu> wrote:
 
-perf annotate: Fix segfault with source toggle
+> On Thu, Feb 27, 2020 at 06:47:55PM +0100, Ard Biesheuvel wrote:
+> > 
+> > Interesting. I am going to rip most of the EFI handover protocol stuff
+> > out of OVMF, since it is mostly unnecessary, and having the PE/COFF
+> > loader put the image in the correct place right away is a nice
+> > complimentary improvement to that. (Note that the OVMF implementation
+> > of the EFI handover protocol does not currently honor the preferred
+> > address from the setup header anyway)
+> 
+> Yeah, for my testing I'm running the image from the EFI shell, which
+> enters via PE entry point and honors the pref address.
 
-While rendering annotate browser from perf report tui, we keep track
-of total number of lines(asm + source) in annotation->nr_entries and
-total number of asm lines in annotation->nr_asm_entries. But we don't
-reset them before starting. Thus if user annotates same function
-multiple times, we restart incrementing these fields with old values.
+So with KASLR, which is the distro default on most x86 distros, we'll 
+relocate the kernel to another address anyway, right?
 
-This causes a segfault when user tries to toggle source code after
-annotating same function multiple times. Fix it.
+But telling the bootloader the preferred address would avoid any 
+relocation overhead even in this case, right?
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200204045233.474937-5-ravi.bangoria@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/annotate.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks,
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index c816e58..0ea95be 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2621,6 +2621,8 @@ void annotation__set_offsets(struct annotation *notes, s64 size)
- 	struct annotation_line *al;
- 
- 	notes->max_line_len = 0;
-+	notes->nr_entries = 0;
-+	notes->nr_asm_entries = 0;
- 
- 	list_for_each_entry(al, &notes->src->source, node) {
- 		size_t line_len = strlen(al->line);
+	Ingo
