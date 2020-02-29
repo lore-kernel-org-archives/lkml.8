@@ -2,58 +2,60 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E740C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 12:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77FEC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 12:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759DC246B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 12:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3A0246AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 12:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF+PnU8y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsBF+G4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgB2MQ6 (ORCPT
+        id S1727045AbgB2MRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 07:16:58 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44388 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726933AbgB2MQ5 (ORCPT
+        Sat, 29 Feb 2020 07:17:01 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:40951 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgB2MRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 07:16:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 7so4099967lfz.11;
-        Sat, 29 Feb 2020 04:16:56 -0800 (PST)
+        Sat, 29 Feb 2020 07:17:00 -0500
+Received: by mail-lj1-f174.google.com with SMTP id 143so6363668ljj.7;
+        Sat, 29 Feb 2020 04:16:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HUQahJ8jieCI4R4OACtWdxDB3DdcfhrTI/7VNOoaPK8=;
-        b=fF+PnU8ypTPRYP2StXGZUT73bB/q0X22+IzS9vRlhTkiVKY2TQ7/D3RIQf809t0GID
-         GQyq5z+7IGlHTP+Thu+DJ8pJ8CGEI9MjxzVXX+HsSgS5AeanZ9v5NTafVFIO/62vMLrX
-         +OG7rW4w7XmgIyL1aWNB4zfB39z6Rl5IksWRdwjUJI9/rm2wRFxVSqJaA1RCfVVXOXsJ
-         zurj3FLrv+kFuR2t+W+KISSdagPuLefEHgmZXbA8bRbLxbAfoaxH7IlcF3/fRm9dFJXx
-         MdJ4jxvQ/9gSJplaJV3UEC10zSCWEeyCpP237XfweYQIDD7QoL1FeaqGwjHINgAOpvNn
-         iI/g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NmeW9ngS8eifN3sjrGPI1hv1F6A8Nf5uvazYyp+BS9k=;
+        b=fsBF+G4rrEavnF+deIdP/ZIXTHhFb3889bXztI6LtHsY8wWGlxctMe+BkXmv3Ob2H2
+         3yvmUfXu5eevF8q9+7pUZJl+2HysP2echSLEFErLmDwQ4tybS+6SAQ+kkIjCMt1EiIyL
+         uqZLIeln4glcBLnvAbjmTIDzAvClK4mCiLpOEMcZ1pipEK1yiWQYM4wmcgxDzzx76dRx
+         z5x0x0afGREgGohTSF0X7dUK1m7Hng6MuYGXLbLPPi3hjMhOKq2gdftxc1AwlI0G6lUM
+         XkKsljviErQv5OfynUOeaZ6Q5ii6imWqtiSClUrcGyN9Wn3xr5ZDH3M08mPZ5IOupEB/
+         cKtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HUQahJ8jieCI4R4OACtWdxDB3DdcfhrTI/7VNOoaPK8=;
-        b=G3YJBLwdyk0kbwLKGtVvoRYYEdjc8Zz2/gnI1G32A/jCxFZxoZKQRv6nHag32DYrzg
-         zs1hK9xn1mYpYn2iUIY0Gxnvd1TKcaxLCiB9Jvv0/6SqS72sjgWBKyWmlasxd5V9cIl0
-         3vhz41Hw+ovRvKIKgp7zytPAZHfkc4LTahT3tQq5AearjVmZdZAEGI7PKmlvKwMZrd0t
-         B2conqL3YI+XD2gmncR6qTBmhaBuELHeOOeS1C6ZS4HIJT8L5OvLmL5FGjQG54fHc1VM
-         Fw4GvgRRfv1xM2W+jOBBGKjFk7SUqyQnd7eA1PSGsRtz3scAyRIqpDHRg0eXHKxplk93
-         YgTQ==
-X-Gm-Message-State: ANhLgQ3u/ilWrWGANTnpS9XZpL6o/GplDLoee4WYBGWoVt5S5smoifGU
-        Mfe0B6seZrwf/RraH+f5YjU=
-X-Google-Smtp-Source: ADFU+vsLBJTIEqIzdTzPSw9aHFuC1dvOqRssdzID6BwrYxGJAlETK+qn94/K1264KDgW4nbrqvGOCQ==
-X-Received: by 2002:a05:6512:6c7:: with SMTP id u7mr5408308lff.176.1582978615322;
-        Sat, 29 Feb 2020 04:16:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NmeW9ngS8eifN3sjrGPI1hv1F6A8Nf5uvazYyp+BS9k=;
+        b=T4ocQTZwx9Ruai6YvsCg6MLgzqF0AhoEsalVMGgfqCOneWayxjFi44+I4I9iE6GSPu
+         /EEZBQE5PhK/4OTbf5Xoy9LNicRnbl3a2I6e0If5EC1+bCWhFrUkqj3hkVPyFrYnl0kU
+         oHwNDXYzs9MSlPBl2hEIQrN7Vbd+lIl6WxxR02SomIrvxsIAXJv1UTDixRdQWymi+jpY
+         DxapnlaMrrywRverPHnd36yvyUcuPVTOcG20teun58dvoP4vZS5lwn1uRuhJKeL/vyll
+         +LMawhghudS4ylSIL95ToxckYUJd1btLQziT6lFYKdb+utI2//VRiL8OCFc+cshMm0NN
+         mz5A==
+X-Gm-Message-State: ANhLgQ3qmLv/ORcBEoau0penWxLFcfHsj8OBYA2GETnbvPiM9RfCZQQH
+        0QG7jm45MJ5C4bpger7eBhCqdOCz/5JYSA==
+X-Google-Smtp-Source: ADFU+vvZe2Fm5iD/DxxWhWMNcaKeu1vbIPgY+k5XIhBFqHSSJoUbfekOeo/upkJ/GuljLDMmof05/g==
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr5935430ljj.97.1582978618295;
+        Sat, 29 Feb 2020 04:16:58 -0800 (PST)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x1sm6270232lfq.46.2020.02.29.04.16.52
+        by smtp.gmail.com with ESMTPSA id x1sm6270232lfq.46.2020.02.29.04.16.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 29 Feb 2020 04:16:54 -0800 (PST)
+        Sat, 29 Feb 2020 04:16:57 -0800 (PST)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -63,51 +65,40 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Christian Hewitt <christianshewitt@gmail.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         =?UTF-8?q?Jer=C3=B4me=20Brunet?= <jbrunet@baylibre.com>
-Subject: [PATCH v4 0/3] arm64: dts: meson: add dts/bindings for SmartLabs SML-5442TW
-Date:   Sat, 29 Feb 2020 16:16:01 +0400
-Message-Id: <1582978564-81491-1-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH v4 1/3] dt-bindings: add vendor prefix for SmartLabs LLC
+Date:   Sat, 29 Feb 2020 16:16:02 +0400
+Message-Id: <1582978564-81491-2-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582978564-81491-1-git-send-email-christianshewitt@gmail.com>
+References: <1582978564-81491-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds new bindings and a device-tree file for the Smartlabs
-SML-5442TW set-top box. The previous v3 attempt [1] was 15-months ago
-but nothing has really changed apart from a change to yaml bindings. I
-have checked and the hci_qca driver does not provide QCA9377 bindings
-so there is no alernative to the gpio-hog for enabling BT support.
+SmartLabs LLC are a professional integrator of Interactive TV solutions
+and IPTV/VOD devices [1].
 
-It would be good if Jerome would check the audio card config. It looks
-correct from dmesg output but the driver is new and there's currently
-no upstream prior-art to copy. I've cribbed node details from his WIP
-gitlab branches.
+[1] https://www.smartlabs.tv/en/about/
 
-v4 - typos/corrections from Andreas
-   - add sound node back
-   - confirmed gpio-hog is necessary
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v3 - change to Smartlabs LLC
-   - removed sound node
-
-v2 - removed audio nodes
-   - changes soundcard name to "meson-gx-audio"
-   - added missing uart-has-rtscts;
-
-[1] https://patchwork.kernel.org/cover/10674939/
-
-Christian Hewitt (3):
-  dt-bindings: add vendor prefix for Smartlabs LLC
-  dt-bindings: arm: amlogic: add support for the Smartlabs SML-5442TW
-  arm64: dts: meson: add support for the Smartlabs SML-5442TW
-
- Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 386 +++++++++++++++++++++
- 4 files changed, 390 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9e67944..a34ed82 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -901,6 +901,8 @@ patternProperties:
+     description: Sitronix Technology Corporation
+   "^skyworks,.*":
+     description: Skyworks Solutions, Inc.
++  "^smartlabs,.*":
++    description: SmartLabs LLC
+   "^smsc,.*":
+     description: Standard Microsystems Corporation
+   "^snps,.*":
 -- 
 2.7.4
 
