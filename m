@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF47CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B71FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D94221D7E
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A3921D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgB2Uty (ORCPT
+        id S1727523AbgB2Utz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:49:54 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39471 "EHLO
+        Sat, 29 Feb 2020 15:49:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39479 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgB2Uty (ORCPT
+        with ESMTP id S1727328AbgB2Utz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:49:54 -0500
+        Sat, 29 Feb 2020 15:49:55 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j893Y-0004iJ-7H; Sat, 29 Feb 2020 21:49:52 +0100
+        id 1j893Z-0004jA-5V; Sat, 29 Feb 2020 21:49:53 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6DFF41C21A2;
-        Sat, 29 Feb 2020 21:49:51 +0100 (CET)
-Date:   Sat, 29 Feb 2020 20:49:51 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE3831C21A3;
+        Sat, 29 Feb 2020 21:49:52 +0100 (CET)
+Date:   Sat, 29 Feb 2020 20:49:52 -0000
 From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Stop disabling timers on mt-exec
+Subject: [tip: timers/core] posix-cpu-timers: cpu_clock_sample_group() no
+ longer needs siglock
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158300939113.28353.1023964272199586302.tip-bot2@tip-bot2>
+Message-ID: <158300939258.28353.113131585377048578.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,56 +55,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     d51692f23fc0249a9c4e32c81d32aef734a02daf
-Gitweb:        https://git.kernel.org/tip/d51692f23fc0249a9c4e32c81d32aef734a02daf
+Commit-ID:     6d022b20c011a75df24d2be90d22769d1d4461d0
+Gitweb:        https://git.kernel.org/tip/6d022b20c011a75df24d2be90d22769d1d4461d0
 Author:        Eric W. Biederman <ebiederm@xmission.com>
-AuthorDate:    Fri, 28 Feb 2020 11:15:03 -06:00
+AuthorDate:    Fri, 28 Feb 2020 11:08:45 -06:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 29 Feb 2020 21:44:47 +01:00
+CommitterDate: Sat, 29 Feb 2020 21:44:45 +01:00
 
-posix-cpu-timers: Stop disabling timers on mt-exec
+posix-cpu-timers: cpu_clock_sample_group() no longer needs siglock
 
-The reasons why the extra posix_cpu_timers_exit_group() invocation has been
-added are not entirely clear from the commit message.  Today all that
-posix_cpu_timers_exit_group() does is stop timers that are tracking the
-task from firing.  Every other operation on those timers is still allowed.
+As of e78c3496790e ("time, signal: Protect resource use statistics with
+seqlock") cpu_clock_sample_group() no longer needs siglock protection so
+remove the stale comment.
 
-The practical implication of this is posix_cpu_timer_del() which could
-not get the siglock after the thread group leader has exited (because
-sighand == NULL) would be able to run successfully because the timer
-was already dequeued.
-
-With that locking issue fixed there is no point in disabling all of the
-timers.  So remove this ``tempoary'' hack.
-
-Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- kernel/exit.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ kernel/time/posix-cpu-timers.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2833ffb..df54631 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -103,17 +103,8 @@ static void __exit_signal(struct task_struct *tsk)
- 
- #ifdef CONFIG_POSIX_TIMERS
- 	posix_cpu_timers_exit(tsk);
--	if (group_dead) {
-+	if (group_dead)
- 		posix_cpu_timers_exit_group(tsk);
--	} else {
--		/*
--		 * This can only happen if the caller is de_thread().
--		 * FIXME: this is the temporary hack, we should teach
--		 * posix-cpu-timers to handle this case correctly.
--		 */
--		if (unlikely(has_group_leader_pid(tsk)))
--			posix_cpu_timers_exit_group(tsk);
--	}
- #endif
- 
- 	if (group_dead) {
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 8ff6da7..46cc188 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -336,9 +336,7 @@ static void __thread_group_cputime(struct task_struct *tsk, u64 *samples)
+ /*
+  * Sample a process (thread group) clock for the given task clkid. If the
+  * group's cputime accounting is already enabled, read the atomic
+- * store. Otherwise a full update is required.  Task's sighand lock must be
+- * held to protect the task traversal on a full update. clkid is already
+- * validated.
++ * store. Otherwise a full update is required.  clkid is already validated.
+  */
+ static u64 cpu_clock_sample_group(const clockid_t clkid, struct task_struct *p,
+ 				  bool start)
