@@ -2,181 +2,146 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856C3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8254BC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DAE2073D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UgzyFTYZ"
+	by mail.kernel.org (Postfix) with ESMTP id 62973222C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgB2Q7M (ORCPT
+        id S1727257AbgB2RBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:59:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48494 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgB2Q7L (ORCPT
+        Sat, 29 Feb 2020 12:01:22 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:57985 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbgB2RBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:59:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=um491tknGMwvuRborSIu7y3JlDzepuilcVoKSXsG30w=; b=UgzyFTYZAfjIol3CC/Zuiy2xEt
-        Dka6bj5QqokLzbK3VNd2Nnq1raig+a5gaZjJFH8+13BKlH3LlcK5zP3Sx/b1blVJWa1ekp7lLlqk8
-        HgOeOrvYAmNCReEXA5rTw6gTnIWx0JfMLsXQJ1pShDs9UEeoDPL+uxH3eTyx3TM/VaO65i9qWlY4C
-        hvrw1ovPLibARNpfnH5+znYI5vgklPacIqmPdmaEXywdE2CGhnlrrVaaTkPgzQj6jd7WD8PdBpORi
-        0NIuUr6kzHU+lEF/cYtAy4x8mP+LHbaQ0KdJOclWrO9qtAJrKhViB3j3YhkrQFSmJKsvub/HuvirP
-        tEaMQtSA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j85SJ-0006Pp-Cx; Sat, 29 Feb 2020 16:59:11 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] seq_file: Remove m->version
-Date:   Sat, 29 Feb 2020 08:59:09 -0800
-Message-Id: <20200229165910.24605-5-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200229165910.24605-1-willy@infradead.org>
-References: <20200229165910.24605-1-willy@infradead.org>
+        Sat, 29 Feb 2020 12:01:22 -0500
+Received: from localhost (lfbn-ren-1-591-115.w81-53.abo.wanadoo.fr [81.53.169.115])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 47DB6200004;
+        Sat, 29 Feb 2020 17:01:17 +0000 (UTC)
+Date:   Sat, 29 Feb 2020 18:10:12 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200229171012.GN2248@voidbox>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
+ <7h8sklbcmo.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Hi
 
-The process maps file was the only user of version (introduced back
-in 2005).  Now that it uses ppos instead, we can remove it.
+On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> 
+> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
+> >> PCIe device probing failures have been seen on AXG platforms and were
+> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> >> in MIPI's PHY registers solved the problem. This bit controls band gap
+> >> reference.
+> >> 
+> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> >> a PHY driver to control this bit instead, as well as setting the band
+> >> gap one in order to get reliable PCIE communication.
+> >> 
+> >> While at it add another PHY driver to control PCIE only PHY registers,
+> >> making AXG code more similar to G12A platform thus allowing to remove
+> >> some specific platform handling in pci-meson driver.
+> >> 
+> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> >> serie.
+> >> 
+> >> Changes since v5:
+> >>  - Add additionalProperties in device tree binding documentation
+> >>  - Make analog PHY required
+> >> 
+> >> Changes since v4:
+> >>  - Rename the shared MIPI/PCIe PHY to analog
+> >>  - Chain the MIPI/PCIe PHY to the PCIe one
+> >> 
+> >> Changes since v3:
+> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+> >>  - Remove syscon usage
+> >>  - Add all dt-bindings documentation
+> >> 
+> >> Changes since v2:
+> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+> >>    in PCIE only driver instead
+> >>  - Include devicetree documentation
+> >> 
+> >> Changes sinve v1:
+> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+> >>  - Add a PHY driver for PCIE_PHY registers
+> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
+> >>    handling for AXG and G12A
+> >> 
+> >> [1] https://lkml.org/lkml/2019/12/16/119
+> >> 
+> >> Remi Pommarel (7):
+> >>   dt-bindings: Add AXG PCIE PHY bindings
+> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
+> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+> >>   PCI: amlogic: Use AXG PCIE
+> >> 
+> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
+> >>  drivers/phy/amlogic/Makefile                  |  12 +-
+> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+> >>  9 files changed, 543 insertions(+), 112 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> >
+> > Hi Remi,
+> >
+> > I am ready to pull this series in, do you want me to ? Or you prefer
+> > it to go via a different tree upstream ?
+> 
+> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
+> amlogic tree, but feel free to take the rest.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/seq_file.c            | 28 ----------------------------
- include/linux/seq_file.h |  1 -
- 2 files changed, 29 deletions(-)
+Hi Lorenzo, Kevin,
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index 1600034a929b..79781ebd2145 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -67,13 +67,6 @@ int seq_open(struct file *file, const struct seq_operations *op)
- 	// to the lifetime of the file.
- 	p->file = file;
- 
--	/*
--	 * Wrappers around seq_open(e.g. swaps_open) need to be
--	 * aware of this. If they set f_version themselves, they
--	 * should call seq_open first and then set f_version.
--	 */
--	file->f_version = 0;
--
- 	/*
- 	 * seq_files support lseek() and pread().  They do not implement
- 	 * write() at all, but we clear FMODE_PWRITE here for historical
-@@ -94,7 +87,6 @@ static int traverse(struct seq_file *m, loff_t offset)
- 	int error = 0;
- 	void *p;
- 
--	m->version = 0;
- 	m->index = 0;
- 	m->count = m->from = 0;
- 	if (!offset)
-@@ -160,26 +152,12 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 
- 	mutex_lock(&m->lock);
- 
--	/*
--	 * seq_file->op->..m_start/m_stop/m_next may do special actions
--	 * or optimisations based on the file->f_version, so we want to
--	 * pass the file->f_version to those methods.
--	 *
--	 * seq_file->version is just copy of f_version, and seq_file
--	 * methods can treat it simply as file version.
--	 * It is copied in first and copied out after all operations.
--	 * It is convenient to have it as  part of structure to avoid the
--	 * need of passing another argument to all the seq_file methods.
--	 */
--	m->version = file->f_version;
--
- 	/*
- 	 * if request is to read from zero offset, reset iterator to first
- 	 * record as it might have been already advanced by previous requests
- 	 */
- 	if (*ppos == 0) {
- 		m->index = 0;
--		m->version = 0;
- 		m->count = 0;
- 	}
- 
-@@ -190,7 +168,6 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 		if (err) {
- 			/* With prejudice... */
- 			m->read_pos = 0;
--			m->version = 0;
- 			m->index = 0;
- 			m->count = 0;
- 			goto Done;
-@@ -243,7 +220,6 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 		m->buf = seq_buf_alloc(m->size <<= 1);
- 		if (!m->buf)
- 			goto Enomem;
--		m->version = 0;
- 		p = m->op->start(m, &m->index);
- 	}
- 	m->op->stop(m, p);
-@@ -287,7 +263,6 @@ ssize_t seq_read(struct file *file, char __user *buf, size_t size, loff_t *ppos)
- 		*ppos += copied;
- 		m->read_pos += copied;
- 	}
--	file->f_version = m->version;
- 	mutex_unlock(&m->lock);
- 	return copied;
- Enomem:
-@@ -313,7 +288,6 @@ loff_t seq_lseek(struct file *file, loff_t offset, int whence)
- 	loff_t retval = -EINVAL;
- 
- 	mutex_lock(&m->lock);
--	m->version = file->f_version;
- 	switch (whence) {
- 	case SEEK_CUR:
- 		offset += file->f_pos;
-@@ -329,7 +303,6 @@ loff_t seq_lseek(struct file *file, loff_t offset, int whence)
- 				/* with extreme prejudice... */
- 				file->f_pos = 0;
- 				m->read_pos = 0;
--				m->version = 0;
- 				m->index = 0;
- 				m->count = 0;
- 			} else {
-@@ -340,7 +313,6 @@ loff_t seq_lseek(struct file *file, loff_t offset, int whence)
- 			file->f_pos = offset;
- 		}
- 	}
--	file->f_version = m->version;
- 	mutex_unlock(&m->lock);
- 	return retval;
- }
-diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-index 5998e1f4ff06..0d434bc4a779 100644
---- a/include/linux/seq_file.h
-+++ b/include/linux/seq_file.h
-@@ -21,7 +21,6 @@ struct seq_file {
- 	size_t pad_until;
- 	loff_t index;
- 	loff_t read_pos;
--	u64 version;
- 	struct mutex lock;
- 	const struct seq_operations *op;
- 	int poll_event;
--- 
-2.25.0
+The only issue I see here is that PATCH 6/7 does not have any
+Reviewed-by/Acked-by, but if that is ok with you that will be nice to
+have this upstream, thanks.
 
+Sorry for the mail delivery error you could have received, silly me
+forgot to renew the domain name.
+
+Thanks
+
+Remi
