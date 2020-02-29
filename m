@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FAFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0DDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167A424691
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA8624691
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LbPDSFz5"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XaaC3iYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgB2GLi (ORCPT
+        id S1726884AbgB2GMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 01:11:38 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:17517 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgB2GLi (ORCPT
+        Sat, 29 Feb 2020 01:12:24 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:45017 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgB2GMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 01:11:38 -0500
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 01T6BSRL028585;
-        Sat, 29 Feb 2020 15:11:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01T6BSRL028585
+        Sat, 29 Feb 2020 01:12:23 -0500
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 01T6C9cp020131;
+        Sat, 29 Feb 2020 15:12:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01T6C9cp020131
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582956689;
-        bh=S8ie6xcSgZjQKTwEkbDG56p/lOho2ipiDfPyiqZ7rvI=;
+        s=dec2015msa; t=1582956730;
+        bh=S0njFHUxsIxjdz5yDTcE8c9CmwQQMKBJYk9q7UJP43s=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LbPDSFz5NguZ7qy+jJ2GTcVzpff7THwcImiuRRN+cm4HYVPvFHt2LbNcMT2OOPt7T
-         Sn2PR3GodRycRePEbcksXISSHWOpfueUxiTquU41htdzf6pCV11J/JB6SGO4qa/5X7
-         7zUzTdCe0JbQR2jMvJZo++gFNYBapYNgjMkUOvWoEOR1ZqJ8pRAmrN1zAqCjvVxEXZ
-         BNjQz1zEblNaXSH1OrQwlN0TZSm8LbqO18IdjBpHg+lddEQvm0S9oANx8emS+HoJX+
-         oaSSaT1UBck46ZNz6WVdVZxz+7qvnwKBjeq4925fWIJ1txrrda6LlUwhGj/MGqT/NF
-         2oxkPxEKCsaCg==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id c7so1806095uaf.5;
-        Fri, 28 Feb 2020 22:11:29 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1nIxIASV9AoFbHdqV4EM0mxxyjbayaFbHp3e1DfoPHIaOG0tsG
-        SRW3ET+9/blgb9eTpd2kIYQV3NVHi7/hBKXuSuI=
-X-Google-Smtp-Source: ADFU+vubh8kH92wzbPEOmByx/QnpSuJQV0HHcAkbw9vppZxNRv2USNuA4QfgAwjQSHZkZXIXBCMYVYnetsx1bYYikKk=
-X-Received: by 2002:ab0:2881:: with SMTP id s1mr3837997uap.95.1582956688322;
- Fri, 28 Feb 2020 22:11:28 -0800 (PST)
+        b=XaaC3iYJbQAIenxVhP41okTS5fB0mpjVw7mgy+/WvZLWHg4kokqhbheDfQTyytYvm
+         aJ/pqSqz31qLMVnRIS9OZy2dwJzu9rC4/R6//DG+RR5tfmP1+fSKtylUcTin8xnuUR
+         4TVvYg6N368tKeXNtCxKv5P2oOEocfl4/xsAZd2QNX3nrkIhPxCz42jpLsCpXWEuH4
+         mAN6dHJF6HCAnSnW7pDQfF23bFtFif29HBOeuNtn3JgawDyEdvLDya+GXPggfS9qAQ
+         EFSeAB9Wo6byUC3RzLq/gLI/EKkBLFk8pJqw92J+A4PgDRKdDVgAVa7Auc+lUpC8Ha
+         7qmjX7XglSUqg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id 7so3373923vsr.10;
+        Fri, 28 Feb 2020 22:12:09 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0w6Js8afRzv3PZ0XCexOGHBHerwYnwlb7f8SJEKKZJwwi4/obs
+        RmOwW1GljhwTjNTmDLTNf6HuHW0I+v3qeqkxV+I=
+X-Google-Smtp-Source: ADFU+vsr21moWJFN7V7QE8rx/N7pQ9ZhwoS/WYbo35jUF1cpQQ1ACOrc6b/XUt9sAeFWUZYy0BBG3rYpX/INBSWsitE=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr4503502vsq.155.1582956728783;
+ Fri, 28 Feb 2020 22:12:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20200222064445.14903-1-yamada.masahiro@socionext.com> <20200222064445.14903-4-yamada.masahiro@socionext.com>
-In-Reply-To: <20200222064445.14903-4-yamada.masahiro@socionext.com>
+References: <20200222064445.14903-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222064445.14903-1-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 29 Feb 2020 15:10:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASnmVJKvVA815oTwL-a37W9qhpV98RfGU+o5cMiM4Ek_w@mail.gmail.com>
-Message-ID: <CAK7LNASnmVJKvVA815oTwL-a37W9qhpV98RfGU+o5cMiM4Ek_w@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: uniphier: rename aidet node names to
+Date:   Sat, 29 Feb 2020 15:11:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARa-t5f9d0NcyzQfGq3RaX8PnjUeuST8s0Wdfs1kP_vvg@mail.gmail.com>
+Message-ID: <CAK7LNARa-t5f9d0NcyzQfGq3RaX8PnjUeuST8s0Wdfs1kP_vvg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: uniphier: change SD/eMMC node names to
  follow json-schema
 To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -67,61 +67,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Sat, Feb 22, 2020 at 3:45 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> Follow the standard nodename pattern "^interrupt-controller(@[0-9a-f,]+)*$"
-> defined in schemas/interrupt-controller.yaml of dt-schema.
+> Follow the standard nodename pattern "^mmc(@.*)?$" defined in
+> Documentation/devicetree/bindings/mmc/mmc-controller.yaml
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 
 
-
 Applied to linux-uniphier.
 
 
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
->  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  arch/arm/boot/dts/uniphier-ld4.dtsi  | 4 ++--
+>  arch/arm/boot/dts/uniphier-pro4.dtsi | 6 +++---
+>  arch/arm/boot/dts/uniphier-pro5.dtsi | 4 ++--
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi | 4 ++--
+>  arch/arm/boot/dts/uniphier-sld8.dtsi | 4 ++--
+>  5 files changed, 11 insertions(+), 11 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> index 7510db465f33..2e53daca9f5c 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> @@ -566,7 +566,7 @@
+> diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> index 64ec46c72a4c..f3a20dc0b22b 100644
+> --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> @@ -245,7 +245,7 @@
+>                         #dma-cells = <1>;
+>                 };
+>
+> -               sd: sdhc@5a400000 {
+> +               sd: mmc@5a400000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a400000 0x200>;
+> @@ -265,7 +265,7 @@
+>                         sd-uhs-sdr50;
+>                 };
+>
+> -               emmc: sdhc@5a500000 {
+> +               emmc: mmc@5a500000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a500000 0x200>;
+> diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> index 2ec04d7972ef..e96b5796f0f8 100644
+> --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> @@ -279,7 +279,7 @@
+>                         #dma-cells = <1>;
+>                 };
+>
+> -               sd: sdhc@5a400000 {
+> +               sd: mmc@5a400000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a400000 0x200>;
+> @@ -299,7 +299,7 @@
+>                         sd-uhs-sdr50;
+>                 };
+>
+> -               emmc: sdhc@5a500000 {
+> +               emmc: mmc@5a500000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a500000 0x200>;
+> @@ -317,7 +317,7 @@
+>                         non-removable;
+>                 };
+>
+> -               sd1: sdhc@5a600000 {
+> +               sd1: mmc@5a600000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a600000 0x200>;
+> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> index ea3961f920a0..f794a0676760 100644
+> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> @@ -469,7 +469,7 @@
+>                         resets = <&sys_rst 2>, <&sys_rst 2>;
+>                 };
+>
+> -               emmc: sdhc@68400000 {
+> +               emmc: mmc@68400000 {
+>                         compatible = "socionext,uniphier-sd-v3.1";
+>                         status = "disabled";
+>                         reg = <0x68400000 0x800>;
+> @@ -485,7 +485,7 @@
+>                         non-removable;
+>                 };
+>
+> -               sd: sdhc@68800000 {
+> +               sd: mmc@68800000 {
+>                         compatible = "socionext,uniphier-sd-v3.1";
+>                         status = "disabled";
+>                         reg = <0x68800000 0x800>;
+> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> index 13b0d4a7741f..04d6bef3a00f 100644
+> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> @@ -446,7 +446,7 @@
 >                         };
 >                 };
 >
-> -               aidet: aidet@5fc20000 {
-> +               aidet: interrupt-controller@5fc20000 {
->                         compatible = "socionext,uniphier-ld11-aidet";
->                         reg = <0x5fc20000 0x200>;
->                         interrupt-controller;
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> index 8d360c5cc32b..be984200a70e 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> @@ -664,7 +664,7 @@
->                         };
->                 };
->
-> -               aidet: aidet@5fc20000 {
-> +               aidet: interrupt-controller@5fc20000 {
->                         compatible = "socionext,uniphier-ld20-aidet";
->                         reg = <0x5fc20000 0x200>;
->                         interrupt-controller;
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> index d51b0735917c..994fea7b12c1 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+> -               emmc: sdhc@5a000000 {
+> +               emmc: mmc@5a000000 {
+>                         compatible = "socionext,uniphier-sd-v3.1.1";
+>                         status = "disabled";
+>                         reg = <0x5a000000 0x800>;
 > @@ -462,7 +462,7 @@
->                         };
+>                         non-removable;
 >                 };
 >
-> -               aidet: aidet@5fc20000 {
-> +               aidet: interrupt-controller@5fc20000 {
->                         compatible = "socionext,uniphier-pxs3-aidet";
->                         reg = <0x5fc20000 0x200>;
->                         interrupt-controller;
+> -               sd: sdhc@5a400000 {
+> +               sd: mmc@5a400000 {
+>                         compatible = "socionext,uniphier-sd-v3.1.1";
+>                         status = "disabled";
+>                         reg = <0x5a400000 0x800>;
+> diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> index 4fc6676f5486..beb1eac85436 100644
+> --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> @@ -249,7 +249,7 @@
+>                         #dma-cells = <1>;
+>                 };
+>
+> -               sd: sdhc@5a400000 {
+> +               sd: mmc@5a400000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a400000 0x200>;
+> @@ -269,7 +269,7 @@
+>                         sd-uhs-sdr50;
+>                 };
+>
+> -               emmc: sdhc@5a500000 {
+> +               emmc: mmc@5a500000 {
+>                         compatible = "socionext,uniphier-sd-v2.91";
+>                         status = "disabled";
+>                         reg = <0x5a500000 0x200>;
 > --
 > 2.17.1
 >
