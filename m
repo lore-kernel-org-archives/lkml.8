@@ -2,152 +2,207 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C564C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6AAC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A8C246AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582948299;
-	bh=rr3r6D1CaRDXFXxCtKLzgpjKx+Os8TS7hfd+qs2GWeE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T6/CrjfdoN3vzlqmBvMt+e2V3Dtg7GSDmHW4S8L9EhC+KsTkkPJ+7s+5/OZQI+ddk
-	 OOC0sVDsPn9/bespZw5N2oIKIGe08kar70RPCqn7+Al+quKCMye/50HA+oQ0mx849C
-	 4yPaCUHDmvk6gvGD0yV8xCt+8BLmca63bz03Uyu8=
+	by mail.kernel.org (Postfix) with ESMTP id AE5FF24690
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYIN4TTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgB2Dvi (ORCPT
+        id S1726798AbgB2EIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 22:51:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbgB2Dvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:51:38 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9F2246AE;
-        Sat, 29 Feb 2020 03:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582948297;
-        bh=rr3r6D1CaRDXFXxCtKLzgpjKx+Os8TS7hfd+qs2GWeE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G/SBNwtYegUIIUloqzyCypjRqlIXXCp5RcNKYFOCEtET5a0GKZWb6LGaMwL7a0S93
-         f/dZmC5ECGHm3BFrhtqzsaErl+avvBcUk85xMc0bb40e733pBXPELOf9Uho9MZfiz+
-         9QpNJIFt3/ifiyktg0o7TgLZYEpjORMF8y7o4nL0=
-Date:   Sat, 29 Feb 2020 12:51:31 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 28 Feb 2020 23:08:12 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36792 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgB2EIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 23:08:12 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so2097330pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 20:08:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v5PL0DckcMdjXI0OvIdNniFq0kiSP1GTTk9Nw356ENw=;
+        b=RYIN4TTggFdbxLU73hgoFX90EogvSx9+RuGE+rVokerPN5Ubzfylnu4lC7yl4DzDkK
+         mWIxkiuNXzP5y8FurNW3S5w9N//W3wPRfEm+ujHg4ohO5aFxHydkyrYtOhDfRQESs8OP
+         XBpR8QKfmFxZK0lPx9vUy5BxeMgB/sXBXsM6MSywu8ee0p0KFXaDzQFkLUeum1iDQNNY
+         4GjL0neyMaRWAMJMu+nz3L9dRkC/vdTIX4SyEJ+YnXpJPvLbvRfsWYXrjT1lwXXgZf4T
+         G+LnhTuN+odaoWBuTr+SteTDXmIpNfi7zUJKaZGTRyKei7GyhtSsN95o3uy8sLG6uvNj
+         +S7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v5PL0DckcMdjXI0OvIdNniFq0kiSP1GTTk9Nw356ENw=;
+        b=GBYW0DGDcKKC6NhZRCux8ZvdSY2aiWCNlny8AnqMol7fWt2jLqCxnqiOYjUnAc9X+3
+         V5rDSLRlbAJ/ci7RhR1rpsV7F45QMMAUw+WrkJiGKdeGf1Z4s7OXgEU1IxnFYQk4U0QV
+         ufK5qIo2sYyJRSf8NNa1FTbwodMp4wevSHnCfR6/cwrvwhSNDYsKpcSnJcc9pcqT2gzQ
+         lZDmrbUHyWfFxiM/Yl4ShfmhMahmVqxQG87NZrg/WKTu/rwbxeJ7BjzAP5LJurNS6AZ5
+         BfT7BmvnpMLvkPtyBL+l6eqNPPPivePQd6+AojyESQNCnWmTc33bRx3iccThzEI4I166
+         NYaw==
+X-Gm-Message-State: ANhLgQ1uysxoH0Ytl880VM5mV5VVSgGogCjPlzkSjuYpSy2CuqGygAl5
+        T14jEvcHRb8OxmdYVzXOEKI=
+X-Google-Smtp-Source: ADFU+vtb97VnPqN3jjsuKI3W3y3H5u2PePmg/3qD9kKgIYW44EOcPkPr5terd5DbO1midXG+uCgNQA==
+X-Received: by 2002:a17:90b:2301:: with SMTP id mt1mr4389931pjb.76.1582949289153;
+        Fri, 28 Feb 2020 20:08:09 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id q187sm12535240pfq.185.2020.02.28.20.08.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 20:08:08 -0800 (PST)
+Date:   Sat, 29 Feb 2020 13:08:06 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Petr Mladek <pmladek@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 04/13] kprobes: Add perf ksymbol events for kprobe
- insn pages
-Message-Id: <20200229125131.536409697dfa78d4db4e0dfc@kernel.org>
-In-Reply-To: <20200229001114.91f010e8683418b0dc133837@kernel.org>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
-        <20200228135125.567-5-adrian.hunter@intel.com>
-        <20200229001114.91f010e8683418b0dc133837@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
+        <k.drobinski@camlintechnologies.com>,
+        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Regression in v4.19.106 breaking waking up of readers of
+ /proc/kmsg and /dev/kmsg
+Message-ID: <20200229040806.GA72248@google.com>
+References: <20200227123633.GB962932@kroah.com>
+ <42d3ce5c-5ffe-8e17-32a3-5127a6c7c7d8@camlintechnologies.com>
+ <e9358218-98c9-2866-8f40-5955d093dc1b@camlintechnologies.com>
+ <20200228031306.GO122464@google.com>
+ <20200228100416.6bwathdtopwat5wy@pathway.suse.cz>
+ <20200228105836.GA2913504@kroah.com>
+ <20200228113214.kew4xi5tkbo7bpou@pathway.suse.cz>
+ <20200228130217.rj6qge2en26bdp7b@pathway.suse.cz>
+ <20200228205334.GF101220@mit.edu>
+ <20200229033253.GA212847@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229033253.GA212847@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Feb 2020 00:11:14 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Fri, 28 Feb 2020 15:51:16 +0200
-> Adrian Hunter <adrian.hunter@intel.com> wrote:
-> 
-> > Symbols are needed for tools to describe instruction addresses. Pages
-> > allocated for kprobe's purposes need symbols to be created for them.
-> > Add such symbols to be visible via perf ksymbol events.
+On (20/02/29 12:32), Sergey Senozhatsky wrote:
+> > I'm wondering now if we should revert this commit before 5.6 comes out
+> > (it landed in 5.6-rc1).  "Is much less likely to happen given the
+> > other random initialization patches" is not the same as "guaranteed
+> > not to happen".
 > > 
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> > ---
-> >  include/uapi/linux/perf_event.h |  5 +++++
-> >  kernel/kprobes.c                | 12 ++++++++++++
-> >  2 files changed, 17 insertions(+)
-> > 
-> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> > index bae9e9d2d897..9b38ac04c110 100644
-> > --- a/include/uapi/linux/perf_event.h
-> > +++ b/include/uapi/linux/perf_event.h
-> > @@ -1031,6 +1031,11 @@ enum perf_event_type {
-> >  enum perf_record_ksymbol_type {
-> >  	PERF_RECORD_KSYMBOL_TYPE_UNKNOWN	= 0,
-> >  	PERF_RECORD_KSYMBOL_TYPE_BPF		= 1,
-> > +	/*
-> > +	 * Out of line code such as kprobe-replaced instructions or optimized
-> > +	 * kprobes.
-> > +	 */
-> > +	PERF_RECORD_KSYMBOL_TYPE_OOL		= 2,
-> >  	PERF_RECORD_KSYMBOL_TYPE_MAX		/* non-ABI */
-> >  };
-> >  
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 229d1b596690..f880eb2189c0 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -35,6 +35,7 @@
-> >  #include <linux/ftrace.h>
-> >  #include <linux/cpu.h>
-> >  #include <linux/jump_label.h>
-> > +#include <linux/perf_event.h>
-> >  
-> >  #include <asm/sections.h>
-> >  #include <asm/cacheflush.h>
-> > @@ -184,6 +185,10 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
-> >  	kip->cache = c;
-> >  	list_add_rcu(&kip->list, &c->pages);
-> >  	slot = kip->insns;
-> > +
-> > +	/* Record the perf ksymbol register event after adding the page */
-> > +	perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL, (u64)kip->insns,
-> > +			   PAGE_SIZE, false, c->sym);
-> >  out:
-> >  	mutex_unlock(&c->mutex);
-> >  	return slot;
-> > @@ -202,6 +207,13 @@ static int collect_one_slot(struct kprobe_insn_page *kip, int idx)
-> >  		 * next time somebody inserts a probe.
-> >  		 */
-> >  		if (!list_is_singular(&kip->list)) {
-> > +			/*
-> > +			 * Record perf ksymbol unregister event before removing
-> > +			 * the page.
-> > +			 */
-> > +			perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
-> > +					   (u64)kip->insns, PAGE_SIZE, true,
-> > +					   kip->cache->sym);
-> >  			list_del_rcu(&kip->list);
-> >  			synchronize_rcu();
+> > What do folks think?
 > 
-> If you think this event should happen after unused the page,
-> here is the best position to do that.
+> Well, my 5 cents, there is nothing that prevents "too-early"
+> printk_deferred() calls in the future. From that POV I'd probably
+> prefer to "forbid" printk_deffered() to touch per-CPU deferred
+> machinery until it's not "too early" anymore. Similar to what we
+> do in printk_safe::queue_flush_work().
 
-Oops, I've mixed up with another synchronization. Ignore it.
-This kip should already be safe because all slots are clean here.
+Informal patch
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+=====
+Subject: [PATCH] printk: defer printk_deferred() until irq_work is ready
 
-Thank you,
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ kernel/printk/internal.h    |  3 +++
+ kernel/printk/printk.c      |  6 ++++++
+ kernel/printk/printk_safe.c | 11 ++++++++---
+ 3 files changed, 17 insertions(+), 3 deletions(-)
 
-
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index c8e6ab689d42..2f051fb83c00 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -23,6 +23,8 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args);
+ void __printk_safe_enter(void);
+ void __printk_safe_exit(void);
+ 
++bool printk_irq_work_ready(void);
++
+ #define printk_safe_enter_irqsave(flags)	\
+ 	do {					\
+ 		local_irq_save(flags);		\
+@@ -64,4 +66,5 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args) { return 0; }
+ #define printk_safe_enter_irq() local_irq_disable()
+ #define printk_safe_exit_irq() local_irq_enable()
+ 
++bool printk_irq_work_ready(void) { return false; }
+ #endif /* CONFIG_PRINTK */
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index ad4606234545..bb545c86124e 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3009,6 +3009,9 @@ static DEFINE_PER_CPU(struct irq_work, wake_up_klogd_work) = {
+ 
+ void wake_up_klogd(void)
+ {
++	if (!printk_irq_work_ready())
++		return;
++
+ 	preempt_disable();
+ 	if (waitqueue_active(&log_wait)) {
+ 		this_cpu_or(printk_pending, PRINTK_PENDING_WAKEUP);
+@@ -3019,6 +3022,9 @@ void wake_up_klogd(void)
+ 
+ void defer_console_output(void)
+ {
++	if (!printk_irq_work_ready())
++		return;
++
+ 	preempt_disable();
+ 	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
+ 	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index b4045e782743..5d2c282984d0 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -27,7 +27,7 @@
+  * There are situations when we want to make sure that all buffers
+  * were handled or when IRQs are blocked.
+  */
+-static int printk_safe_irq_ready __read_mostly;
++static bool __printk_irq_work_ready __read_mostly;
+ 
+ #define SAFE_LOG_BUF_LEN ((1 << CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT) -	\
+ 				sizeof(atomic_t) -			\
+@@ -48,10 +48,15 @@ static DEFINE_PER_CPU(int, printk_context);
+ static DEFINE_PER_CPU(struct printk_safe_seq_buf, nmi_print_seq);
+ #endif
+ 
++bool printk_irq_work_ready(void)
++{
++	return __printk_irq_work_ready;
++}
++
+ /* Get flushed in a more safe context. */
+ static void queue_flush_work(struct printk_safe_seq_buf *s)
+ {
+-	if (printk_safe_irq_ready)
++	if (printk_irq_work_ready())
+ 		irq_work_queue(&s->work);
+ }
+ 
+@@ -408,7 +413,7 @@ void __init printk_safe_init(void)
+ 	 * variable is set.
+ 	 */
+ 	barrier();
+-	printk_safe_irq_ready = 1;
++	__printk_irq_work_ready = true;
+ 
+ 	/* Flush pending messages that did not have scheduled IRQ works. */
+ 	printk_safe_flush();
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.25.0.265.gbab2e86ba0-goog
+
