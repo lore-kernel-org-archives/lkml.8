@@ -2,132 +2,97 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462B8C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6504C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1243420836
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F352087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="A9fApO1Q"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TYpFojaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgB2UhD (ORCPT
+        id S1727393AbgB2Uop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:37:03 -0500
-Received: from mout.web.de ([212.227.17.11]:47869 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgB2UhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:37:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1583008618;
-        bh=w9cAr7LmPhwGLRr4s0x8s5Z4bBjVwaC0/iME9jkIhgw=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=A9fApO1QkF8GVgWIQ2GHbgdHaHLgz+26IDFvyghJUKv9Kr0EbD5vr8jNPzwA5Hg57
-         bO3mpjBwUQt88sfJLcl9tc6emyrvw7cU6PQo337ATD2JMMJO2SnqajS8CsnIUM+BUx
-         vhwuMJ7BhzQHRhCGgVT8CsNFq9rlqRJYvYbF+tFU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.10] ([95.157.55.156]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LfiuU-1jitRT3LlS-00pLzh; Sat, 29
- Feb 2020 21:36:57 +0100
-Subject: Re: [FYI PATCH 1/3] KVM: nVMX: Don't emulate instructions in guest
- mode
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable@vger.kernel.org
-References: <1582570596-45387-1-git-send-email-pbonzini@redhat.com>
- <1582570596-45387-2-git-send-email-pbonzini@redhat.com>
- <41d80479-7dbc-d912-ff0e-acd48746de0f@web.de>
- <CAOQ_QshE7SMX2cO7H+21Fkdpg53oE2D3xrHPJHR_MCfH4r9QCQ@mail.gmail.com>
- <CALMp9eRETy1RLWHWKtFHqpcpFHbQKtPgJHDD_N+LPzaUPx-Jvg@mail.gmail.com>
- <e8fe4664-d948-f239-4ec9-82d9010b7d26@web.de>
- <CALMp9eR9zcXO64n7hDTzZHPkfV8qtuMHAbc=nLX8S8x7Crum+A@mail.gmail.com>
-From:   Jan Kiszka <jan.kiszka@web.de>
-Message-ID: <3b63f015-8a00-9aae-87a0-8713195001aa@web.de>
-Date:   Sat, 29 Feb 2020 21:36:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 29 Feb 2020 15:44:45 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33531 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgB2Uop (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 15:44:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w6so6004914otk.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
+        b=TYpFojaFQdUqaHBll6wgyaBq0JuxhRQyFCiHl2aCihv5uMBc1KFDLDDeMczLWyt8tD
+         qnLbcLplw+2WoNzbCgJnxTLzJUgibDfZbhT9vNbt0/enEuXTff8alC+u6o+URMJGyNJ6
+         ou1NISRDvkqJtex7bh+3kcVgLSIao7pALFZD+un2PFXr3PJS3k+VeI1R+qVg2jI4wJXw
+         L5hTOFFVEbsKWNM3uV0YKQ+t9u+eM/SZ1W/MR2NG+K24z72IjJI5pZ4CTLDqOY2K4PT1
+         nii7SoL/cAdaHD/p50gusTVN3y7GcODdwr9wZ2TLWb8bhxiKX9kOGosaY8MhItMZJRCE
+         nAQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
+        b=gc7QIra1gEZWNtP0lJ+H7Atvd7sWSj/7X52k9KHLxMXK+FRLoCpVktRbjHxLoQA7fC
+         Umfe2duIuzZrpNE09qPejC2cJ9z1YBk2O4+FKQd/PwubRBP4Vsms7C6TiAqygivdGQ3H
+         eXznVmoD80fDWtMdlFWzlgX1M/kiF/mPfZ2fVuzq/zVEaEPUJqfJ0UYOpL2l8kPU/0wP
+         F84VCey4Ajp7tYOBGvrR8PPmZkSBx+1caXi8tVLHxaWO15thqcjkyCLkYwl2wHbXIDt7
+         mxwqDx+gUzDWIyGO5pMcbYLGtCEo54qVLVo2u5nvgTBU5B1ptVWxW5cqt9rRkirGywyR
+         XWig==
+X-Gm-Message-State: APjAAAUVQ4C10CTfZbNFPg3yxJQm9/o+YApv9yMJ7PqnH8IeHweEBu7s
+        2IIP58x5ed8Fe3sYLpdQGC/Cusr/57+4FVJJSvktbiKI
+X-Google-Smtp-Source: APXvYqwuD7hXgqDuHa7bNKr2aGN5ZsRtxcfrMKKpE5k3aRoSjSLBCzEO28z30FjlnmPqDSMCgEWPc3EsieveZxFwGeE=
+X-Received: by 2002:a05:6830:134c:: with SMTP id r12mr7849308otq.126.1583009084306;
+ Sat, 29 Feb 2020 12:44:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eR9zcXO64n7hDTzZHPkfV8qtuMHAbc=nLX8S8x7Crum+A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q/ugFKcVWk5O4DZmpOtPypb3xEqE7vN6F4jI5L2kwElt8Q2DPz1
- aqR9mHRZwKVESdyulkhjYq2PPNhlIM/0vcLev4bEV5jnKJjypnxKcC3/ZYWCUPTWRntfcBq
- 0EETDI23Vopdf5xkU+UVIXmTrTL/4kxHAXh0j+BxdSg2B2moOl5r7QtFWvtjrek1KumBHxa
- AJDlMgTKkiDDpagPI6Ciw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+/hErHdUzRA=:yEIdljjMPrGM4NTE9dVn6K
- QSzujLVelMxzlrbs/JLPNPAIwPp3GucYa4b6MUhaZcFGhPXlOQUrSmBjJO328HqYV7C/FAWX/
- iLJxQq1rjfOS/MpEe94olRO4WddYNILtm0qhzhUfE8wxMqj2YWFzFNf/O2so7Is/UfsljpnOk
- s1gIgp6aOsbmEgjGn2cLlwJStWmE7VF36NluaKcxuy/TOq7kpCkvtpqbUpHmL8D3sPC+wQNFJ
- A73McUh4CGkTDVPBgCZ42navVtjiMI6C27BMMC7TP9wFVNwrtib9fOYhe3LoXwNtqsmxv19x1
- LjffLuX3uNv7/gS0ne5XPkbukBd2QkLSyVg+bi9nk0Mf/yzyi8H97YBGX5nkfAR0xu7Ki37Ch
- nMJJqeKgDT254jw1tMa1gOTIEqrM7r9HrEfc9ooF90bQZ1J3oDGWP5KAg/PlzGXFY7HHjDkEG
- esQXabbZTtOzffcmF1lhZg1TDMFzavajXQYaMC86VGQ3HttM+YfzXMiMiLrbpaYQ7B5VwvXeK
- cjrhFU8bqhIJZyc4UXgjpyGxa0YJcDpXh+5u0OvJuphwxOrPaYItDfNNFMks34/aNLd9bM+He
- 5SPVy3uascjGhKKZ+6gO9EBoVWq8X1pDK8NNaCO3nd8FfxPE78QTJ9jZNl/I669GqQkwtf24h
- FjKKXKceMXg3GALzMYgQ3UEwOwzMUFoZpqITZ+MHMzoX/7+80vCTy1O1BpQrUJOaSIWPlRcmd
- buVoA0S/bnBvMIxzb4rvEBr2/fqYh5ObA881ja1KVXSc9V8zJyUixiU7PmI1oaspEQpoqg8K8
- gTYorMU1d/4jhJIhew2JHINUPnJb+6xx55qkr2WCL3gj1geM1brONKYpd7GG58lXhiymOjaB9
- aI6wameCL6Ya/x/LcqaI6tmq9J/iVGoLjHeNWm6Dik9I5W9czr7kEgUM9YgEu5YHu1P/LN10W
- 4h/pcqoe9oQHHNLJFBXCvHbz8odYm2mFMEaU14D741PXbPX/ZKZE88mo5jDcSfp6FDJlo0lOC
- wjfkuVJxPna2dGOHAUpvNdMpixfFxCJvm9xY8rSBOVpV187fCbLcgwSdgA/nxqGUrk25huSAX
- FUzBCJd7SqldF+neZ0LE4dZ1y7oEDJKCCGb1+prdynUboxHXagt02uV9M4bto2MV0IEKcelPg
- yAuyEHuooZIsAlWEPwJrgdS4n2+vZXL8o4k+d3Dy1ozgqK9SOitsj+7Ad+ImExJkSKEokYOAK
- 9lmvE7hqA8xudmW5j
+References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-3-logang@deltatee.com>
+In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 29 Feb 2020 12:44:29 -0800
+Message-ID: <CAPcyv4hLvciwxSnsQRye9SuB-sy9fm+_6CwZSuHifkmbWQs-+g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to mhp_params
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.02.20 21:17, Jim Mattson wrote:
-> Since UMIP emulation is broken, I'm not sure why anyone would use it.
-> (Sorry, Paolo.)
-
-FWIW, adding "-umip" to the "-cpu host" in my qemu setup works around
-the bug.
-
-Jan
-
+On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
 >
-> On Sat, Feb 29, 2020 at 11:21 AM Jan Kiszka <jan.kiszka@web.de> wrote:
->>
->> On 29.02.20 20:00, Jim Mattson wrote:
->>> On Sat, Feb 29, 2020 at 10:33 AM Oliver Upton <oupton@google.com> wrot=
-e:
->>>>
->>>> Hi Jan,
->>>>
->>>> On Sat, Feb 29, 2020 at 10:00 AM Jan Kiszka <jan.kiszka@web.de> wrote=
-:
->>>>> Is this expected to cause regressions on less common workloads?
->>>>> Jailhouse as L1 now fails when Linux as L2 tries to boot a CPU: L2-L=
-inux
->>>>> gets a triple fault on load_current_idt() in start_secondary(). Only
->>>>> bisected so far, didn't debug further.
->>>>
->>>> I'm guessing that Jailhouse doesn't use 'descriptor table exiting', s=
-o
->>>> when KVM gets the corresponding exit from L2 the emulation burden is
->>>> on L0. We now refuse the emulation, which kicks a #UD back to L2. I
->>>> can get a patch out quickly to address this case (like the PIO exitin=
-g
->>>> one that came in this series) but the eventual solution is to map
->>>> emulator intercept checks into VM-exits + call into the
->>>> nested_vmx_exit_reflected() plumbing.
->>>
->>> If Jailhouse doesn't use descriptor table exiting, why is L0
->>> intercepting descriptor table instructions? Is this just so that L0
->>> can partially emulate UMIP on hardware that doesn't support it?
->>>
->>
->> That seems to be the case: My host lacks umip, L1 has it. So, KVM is
->> intercepting descriptor table load instructions to emulate umip.
->> Jailhouse never activates that interception.
->>
->> Jan
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_params as it is a list
+> of extended parameters.
+>
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+
+Tests ok, and looks good to me:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
