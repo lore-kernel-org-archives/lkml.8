@@ -2,372 +2,215 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D1C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F2BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9381246B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E310246A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0RHo2Z06"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HFn83XBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgB2Ncx (ORCPT
+        id S1727028AbgB2Ngk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 08:32:53 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43344 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgB2Ncx (ORCPT
+        Sat, 29 Feb 2020 08:36:40 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26518 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726973AbgB2Ngk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 08:32:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y7GPcpbrEFsg3Kfwu1RdbSFuSbDIImcUEIM8ir32cq0=; b=0RHo2Z068fLncnGlNSzCml0t2
-        vKfV3ubrdoLQe3t8E5L0nxBR5M5wtrLRCFAkXPT4kPi0CGQFb2uOH6/U84qmagvwM9z0akVc38hOq
-        ciNkhRXebZZNQWtULP0CjwVrX8OY9x5yT9gKbYQICiYyP7RBE58UzLG/0es7ZNK6/qBVtDLILcXry
-        QBGo+Ck0fU0nc+qDSUzyDKJtFjqcKMZyuqpI/BIczfFjB6crLu4ImuZKroHHBD6MifhEXUfUB+WzA
-        C6YSSUkUxKX0G31q26xdHWIQeTa7L3thd3wqR5YLshfyDrX0a0LZ+rDYeJuiGsO7acZgq2dLkqzVL
-        1/HyYb10g==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46862)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j82ER-0001iZ-72; Sat, 29 Feb 2020 13:32:39 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j82EM-000306-En; Sat, 29 Feb 2020 13:32:34 +0000
-Date:   Sat, 29 Feb 2020 13:32:34 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200229133234.GA25745@shell.armlinux.org.uk>
-References: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <20200229095550.GX25745@shell.armlinux.org.uk>
- <20200229110456.GY25745@shell.armlinux.org.uk>
- <20200229120828.GZ25745@shell.armlinux.org.uk>
+        Sat, 29 Feb 2020 08:36:40 -0500
+X-UUID: 08d7846565454e66bdbcaa117a462aae-20200229
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Dx2qiVbtcnvo9hiyRO0Rt8sPm8J4l82Ym1oh2Kcvb5E=;
+        b=HFn83XBjSN2ZxM7F4CXsfaqhgxrVYIf5dQFCh9EOWelxD2KgmyjkdYxi9Tj6zgzVmGEtRibQ4XXGyJR6EMVPy3YqXx5f1wVLtt9OSW98ITV4Y7aL2Pe1uhC43IGpxXS7S9VKmbV4ZE/S8k0RsuO5JJ6sy5tWcQ72kYedJ+6W6vs=;
+X-UUID: 08d7846565454e66bdbcaa117a462aae-20200229
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 690810008; Sat, 29 Feb 2020 21:36:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 29 Feb 2020 21:38:08 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 29 Feb 2020 21:36:09 +0800
+Message-ID: <1582983391.21073.1.camel@mtkswgap22>
+Subject: Re: [PATCH v3 02/13] mailbox: cmdq: variablize address shift in
+ platform
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Sat, 29 Feb 2020 21:36:31 +0800
+In-Reply-To: <1582903376.14824.16.camel@mtksdaap41>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582903376.14824.16.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229120828.GZ25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 12:08:28PM +0000, Russell King - ARM Linux admin wrote:
-> On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
-> > On Sat, Feb 29, 2020 at 09:55:50AM +0000, Russell King - ARM Linux admin wrote:
-> > > On Mon, Feb 10, 2020 at 03:22:57PM +0000, Russell King - ARM Linux admin wrote:
-> > > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > > > >
-> > > > > > Hi Olof,
-> > > > > >
-> > > > > > Thanks a lot for your comments!
-> > > > > > And sorry for my delay respond!
-> > > > > 
-> > > > > Actually, they apply with only minor conflicts on top of current -next.
-> > > > > 
-> > > > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > > > enable full use of a promising ARM developer system, the SolidRun
-> > > > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > > > use with mainline or -next without any additional patches applied --
-> > > > > which this patchset achieves.
-> > > > > 
-> > > > > I know there are pending revisions based on feedback. I'll leave it up
-> > > > > to you and others to determine if that can be done with incremental
-> > > > > patches on top, or if it should be fixed before the initial patchset
-> > > > > is applied. But all in all, it's holding up adaption by me and surely
-> > > > > others of a very interesting platform -- I'm looking to replace my
-> > > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > > > before I do.
-> > > > 
-> > > > If you're going to be using NVMe, make sure you use a power-fail safe
-> > > > version; I've already had one instance where ext4 failed to mount
-> > > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > > > Serror'd, and then I powered it down after a few hours before later
-> > > > booting it back up.
-> > > > 
-> > > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > > > EXT4-fs (nvme0n1p2): error loading journal
-> > > 
-> > > ... and last night, I just got more ext4fs errors on the NVMe, without
-> > > any unclean power cycles:
-> > > 
-> > > [73729.556544] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> > > [73729.565354] Aborting journal on device nvme0n1p2-8.
-> > > [73729.568995] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
-> > > [73729.569077] EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:61: Detected aborted journal
-> > > [73729.573741] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
-> > > [73729.593330] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm mv: iget: checksum invalid
-> > > 
-> > > The affected file is /var/backups/dpkg.status.6.gz
-> > > 
-> > > It was cleanly shut down and powered off on the 22nd February, booted
-> > > yesterday morning followed by another reboot a few minutes later.
-> > > 
-> > > What worries me is the fact that corruption has happened - and if that
-> > > happens to a file rather than an inode, it will likely go unnoticed
-> > > for a considerably longer time.
-> > > 
-> > > I think I'm getting to the point of deciding NVMe or the LX2160A to be
-> > > just too unreliable for serious use.  I hadn't noticed any issues when
-> > > using the rootfs on the eMMC, so it suggests either the NVMe is
-> > > unreliable, or there's a problem with PCIe on this platform (which we
-> > > kind of know about with Jon's GPU rendering issues.)
-> > 
-> > Adding Ted and Andreas...
-> > 
-> > Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
-> > and probably a similar size):
-> > 
-> > debugfs:  id <917527>
-> > 0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
-> > 0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
-> > 0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
-> > 0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > and for the affected inode:
-> > debugfs:  id <917524>
-> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> > 0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
-> > 0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > and "stat" output:
-> > debugfs:  stat <917527>
-> > Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
-> > Generation: 172755908    Version: 0x00000000:00000001
-> > User:     0   Group:     0   Project:     0   Size: 261936
-> > File ACL: 0
-> > Links: 1   Blockcount: 512
-> > Fragment:  Address: 0    Number: 0    Size: 0
-> >  ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
-> >  atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
-> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> > crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
-> > Size of extra inode fields: 32
-> > Inode checksum: 0xf2958438
-> > EXTENTS:
-> > (0-63):3704704-3704767
-> > debugfs:  stat <917524>
-> > Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
-> > Generation: 3033515103    Version: 0x00000000:00000001
-> > User:     0   Group:     0   Project:     0   Size: 261936
-> > File ACL: 0
-> > Links: 1   Blockcount: 512
-> > Fragment:  Address: 0    Number: 0    Size: 0
-> >  ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
-> >  atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
-> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
-> > crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
-> > Size of extra inode fields: 32
-> > Inode checksum: 0xc31c23af
-> > EXTENTS:
-> > (0-63):3705024-3705087
-> > 
-> > When using sif (set_inode_info) to re-set the UID to 0 on this (so
-> > provoke the checksum to be updated):
-> > 
-> > debugfs:  id <917524>
-> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
-> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
-> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
-> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
-> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
-> > 0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
-> >                                     ^^^^
-> > 0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
-> >            ^^^^
-> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
-> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
-> > *
-> > 
-> > The values with "^^^^" are the checksum, which are the only values
-> > that have changed here - the checksum is now 0x15aa1fb6 rather than
-> > 0xc31c23af.
-> > 
-> > With that changed, running e2fsck -n on the filesystem results in a
-> > pass:
-> > 
-> > root@cex7:~# e2fsck -n /dev/nvme0n1p2
-> > e2fsck 1.44.5 (15-Dec-2018)
-> > Warning: skipping journal recovery because doing a read-only filesystem check.
-> > /dev/nvme0n1p2 contains a file system with errors, check forced.
-> > Pass 1: Checking inodes, blocks, and sizes
-> > Pass 2: Checking directory structure
-> > Pass 3: Checking directory connectivity
-> > Pass 4: Checking reference counts
-> > Pass 5: Checking group summary information
-> > /dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
-> > 
-> > and the file now appears to be intact (being a gzip file, gzip verifies
-> > that the contents are now as it expects.)
-> > 
-> > So, it looks like the _only_ issue is that the checksum on the inode
-> > became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
-> > issue.
-> > 
-> > I wonder whether the journal would contain anything useful, but I don't
-> > know how to use debugfs to find that out - while I can dump the journal,
-> > I'd need to know which block contains the inode, and then work out where
-> > in the journal that block was going to be written.  If that would help,
-> > let me know ASAP as I'll hold off rebooting the platform for a while
-> > (which means the filesystem will remain as-is - and yes, I have the
-> > debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
-> > the block number out of the e2undo file?
-> 
-> Okay, the inode was stored in block 3670049, and the journal appears
-> to contains no entries for that block.
-> 
-> > tune2fs says:
-> > 
-> > Checksum type:            crc32c
-> > Checksum:                 0x682f91b9
-> > 
-> > I guess this is what is used to checksum the inodes?  If so, it's using
-> > the kernel's crc32c-generic driver (according to /proc/crypto).
-> > 
-> > Could it be a race condition, or some problem that's specific to the
-> > ARM64 kernel that's provoking this corruption?
-> 
-> Something else occurs to me:
-> 
-> root@cex7:~# ls -li --time=ctime --full-time /var/backups/dpkg.status*
-> 917622 -rw-r--r-- 1 root root 999052 2020-02-29 06:25:01.852231277 +0000 /var/backups/dpkg.status
-> 917583 -rw-r--r-- 1 root root 999052 2020-02-21 06:25:01.958160960 +0000 /var/backups/dpkg.status.0
-> 917520 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.954161050 +0000 /var/backups/dpkg.status.1.gz
-> 917531 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.854163293 +0000 /var/backups/dpkg.status.2.gz
-> 917532 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.3.gz
-> 917509 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.4.gz
-> 917527 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.846163473 +0000 /var/backups/dpkg.status.5.gz
-> 917524 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.842163563 +0000 /var/backups/dpkg.status.6.gz
-> 
-> So the last time that the kernel changed inode 917524 was on the 21th
-> of February, probably when it was last renamed by logrotate, and like
-> several other files stored in the same inode block.  Yet, _only_ the
-> checksum for 917524 was corrupted, the rest were fine.
-> 
-> I would guess that logrotate behaves as follows:
-> - remove /var/backups/dpkg.status.6.gz
-> - rename /var/backups/dpkg.status.5.gz to /var/backups/dpkg.status.6.gz
-> - repeat for other dpkg.status.*.gz files
-> - gzip /var/backups/dpkg.status.0 to /var/backups/dpkg.status.1.gz
-> - rename /var/backups/dpkg.status to /var/backups/dpkg.status.0
-> - create new /var/backups/dpkg.status
-> 
-> Looking at the inode block in the e2undo file, inode 917524 is at
-> offset 0x300 into the block, which means the first inode in the
-> block is 917521 and the last is 917536, which means we have several
-> of the dpkg.status.* files that are stored in this inode block.
-> 
-> That would've meant that the inode for /var/backups/dpkg.status.6.gz
-> would have been updated just before the inode for
-> /var/backups/dpkg.status.5.gz.  I wonder if the inode block was
-> written out somehow out of order, with the ctime for
-> /var/backups/dpkg.status.6.gz having been updated but not the checksum
-> as a result of the later changes - maybe as a result of having
-> executed on a different CPU?  That would suggest a weakness in the
-> ARM64 locking implementation, coherency issues, or interconnect issues.
+SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBGcmksIDIwMjAtMDItMjgg
+YXQgMjM6MjIgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiBIaSwgRGVubmlzOg0KPiANCj4gT24gRnJp
+LCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4g
+U29tZSBnY2UgaGFyZHdhcmUgc2hpZnQgcGMgYW5kIGVuZCBhZGRyZXNzIGluIHJlZ2lzdGVyIHRv
+IHN1cHBvcnQNCj4gPiBsYXJnZSBkcmFtIGFkZHJlc3NpbmcuDQo+ID4gSW1wbGVtZW50IGdjZSBh
+ZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5kIHJlZ2lzdGVyLg0KPiA+
+IEFuZCBhZGQgc2hpZnQgYml0IGluIHBsYXRmb3JtIGRlZmluaXRpb24uDQo+ID4gDQo+ID4gU2ln
+bmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jICAgICAg
+IHwgNTcgKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gv
+bXRrLWNtZHEtbWFpbGJveC5oIHwgIDIgKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2Vy
+dGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1h
+aWxib3guYw0KPiA+IGluZGV4IDlhNmNlOWY1YTdkYi4uYTk4ZjAzNTdkZDdkIDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiArKysgYi9kcml2
+ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+ID4gQEAgLTc2LDggKzc2LDIyIEBAIHN0
+cnVjdCBjbWRxIHsNCj4gPiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiA+ICAJc3Ry
+dWN0IGNsawkJKmNsb2NrOw0KPiA+ICAJYm9vbAkJCXN1c3BlbmRlZDsNCj4gPiArCXU4CQkJc2hp
+ZnRfcGE7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiA+ICsJdTMy
+IHRocmVhZF9ucjsNCj4gPiArCXU4IHNoaWZ0Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArdTggY21k
+cV9tYm94X3NoaWZ0KHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ID4gK3sNCj4gPiArCXN0cnVj
+dCBjbWRxICpjbWRxID0gY29udGFpbmVyX29mKGNoYW4tPm1ib3gsIHN0cnVjdCBjbWRxLCBtYm94
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ID4gK30NCj4gPiArRVhQ
+T1JUX1NZTUJPTChjbWRxX21ib3hfc2hpZnQpOw0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBjbWRx
+X3RocmVhZF9zdXNwZW5kKHN0cnVjdCBjbWRxICpjbWRxLCBzdHJ1Y3QgY21kcV90aHJlYWQgKnRo
+cmVhZCkNCj4gPiAgew0KPiA+ICAJdTMyIHN0YXR1czsNCj4gPiBAQCAtMTgzLDcgKzE5Nyw3IEBA
+IHN0YXRpYyB2b2lkIGNtZHFfdGFza19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2sp
+DQo+ID4gIAlmb3IgKGkgPSAwOyBpIDwgQ01EUV9OVU1fQ01EKHRhc2stPnBrdCk7IGkrKykNCj4g
+PiAgCQlpZiAoY21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gPiAgCQkJYmFzZVtpXSA9
+ICh1NjQpQ01EUV9KVU1QX0JZX09GRlNFVCA8PCAzMiB8DQo+ID4gLQkJCQkgIENNRFFfSlVNUF9Q
+QVNTOw0KPiA+ICsJCQkJICBDTURRX0pVTVBfUEFTUyA+PiB0YXNrLT5jbWRxLT5zaGlmdF9wYTsN
+Cj4gPiAgCWRtYV9zeW5jX3NpbmdsZV9mb3JfZGV2aWNlKGRldiwgdGFzay0+cGFfYmFzZSwgdGFz
+ay0+cGt0LT5jbWRfYnVmX3NpemUsDQo+ID4gIAkJCQkgICBETUFfVE9fREVWSUNFKTsNCj4gPiAg
+fQ0KPiA+IEBAIC0yMjEsMTMgKzIzNSwxNSBAQCBzdGF0aWMgdm9pZCBjbWRxX3Rhc2tfaGFuZGxl
+X2Vycm9yKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBjbWRx
+X3RocmVhZCAqdGhyZWFkID0gdGFzay0+dGhyZWFkOw0KPiA+ICAJc3RydWN0IGNtZHFfdGFzayAq
+bmV4dF90YXNrOw0KPiA+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSB0YXNrLT5jbWRxOw0KPiA+ICAN
+Cj4gPiAgCWRldl9lcnIodGFzay0+Y21kcS0+bWJveC5kZXYsICJ0YXNrIDB4JXAgZXJyb3JcbiIs
+IHRhc2spOw0KPiA+ICAJV0FSTl9PTihjbWRxX3RocmVhZF9zdXNwZW5kKHRhc2stPmNtZHEsIHRo
+cmVhZCkgPCAwKTsNCj4gDQo+IElmIHlvdSBpbnZlbnQgbG9jYWwgdmFyaWFibGUgJ2NtZHEnLCBJ
+IHRoaW5rIHlvdSBjb3VsZCByZXBsYWNlIGFsbA0KPiB0YXNrLT5jbWRxIHdpdGggY21kcSBpbiB0
+aGlzIGZ1bmN0aW9uLg0KPiANCg0KT2ssIHdpbGwgZG8uDQoNCg0KPiA+ICAJbmV4dF90YXNrID0g
+bGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZ0aHJlYWQtPnRhc2tfYnVzeV9saXN0LA0KPiA+ICAJ
+CQlzdHJ1Y3QgY21kcV90YXNrLCBsaXN0X2VudHJ5KTsNCj4gPiAgCWlmIChuZXh0X3Rhc2spDQo+
+ID4gLQkJd3JpdGVsKG5leHRfdGFzay0+cGFfYmFzZSwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJf
+Q1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwobmV4dF90YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNo
+aWZ0X3BhLA0KPiA+ICsJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIp
+Ow0KPiA+ICAJY21kcV90aHJlYWRfcmVzdW1lKHRocmVhZCk7DQo+ID4gIH0NCj4gPiAgDQo+ID4g
+QEAgLTI1Nyw3ICsyNzMsNyBAQCBzdGF0aWMgdm9pZCBjbWRxX3RocmVhZF9pcnFfaGFuZGxlcihz
+dHJ1Y3QgY21kcSAqY21kcSwNCj4gPiAgCWVsc2UNCj4gPiAgCQlyZXR1cm47DQo+ID4gIA0KPiA+
+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+
+ID4gKwljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8
+PCBjbWRxLT5zaGlmdF9wYTsNCj4gPiAgDQo+ID4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUo
+dGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4gPiAgCQkJCSBsaXN0X2VudHJ5
+KSB7DQo+ID4gQEAgLTM3MywxNiArMzg5LDIwIEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRf
+ZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCVdBUk5fT04o
+Y2xrX2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gPiAgCQlXQVJOX09OKGNtZHFfdGhyZWFk
+X3Jlc2V0KGNtZHEsIHRocmVhZCkgPCAwKTsNCj4gPiAgDQo+ID4gLQkJd3JpdGVsKHRhc2stPnBh
+X2Jhc2UsIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+ID4gLQkJd3JpdGVs
+KHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSwNCj4gPiArCQl3cml0ZWwodGFzay0+
+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gPiArCQkgICAgICAgdGhyZWFkLT5iYXNlICsg
+Q01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwoKHRhc2stPnBhX2Jhc2UgKyBwa3Qt
+PmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4gIAkJICAgICAgIHRocmVhZC0+
+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiArDQo+ID4gIAkJd3JpdGVsKHRocmVhZC0+
+cHJpb3JpdHksIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX1BSSU9SSVRZKTsNCj4gPiAgCQl3cml0
+ZWwoQ01EUV9USFJfSVJRX0VOLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9JUlFfRU5BQkxFKTsN
+Cj4gPiAgCQl3cml0ZWwoQ01EUV9USFJfRU5BQkxFRCwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJf
+RU5BQkxFX1RBU0spOw0KPiA+ICAJfSBlbHNlIHsNCj4gPiAgCQlXQVJOX09OKGNtZHFfdGhyZWFk
+X3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiA+IC0JCWN1cnJfcGEgPSByZWFkbCh0aHJl
+YWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiA+IC0JCWVuZF9wYSA9IHJlYWRsKHRo
+cmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiArCQljdXJyX3BhID0gcmVhZGwo
+dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8PA0KPiA+ICsJCQljbWRxLT5zaGlm
+dF9wYTsNCj4gPiArCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRf
+QUREUikgPDwNCj4gPiArCQkJY21kcS0+c2hpZnRfcGE7DQo+ID4gIA0KPiA+ICAJCS8qDQo+ID4g
+IAkJICogQXRvbWljIGV4ZWN1dGlvbiBzaG91bGQgcmVtb3ZlIHRoZSBmb2xsb3dpbmcgd2ZlLCBp
+LmUuIG9ubHkNCj4gPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3Nl
+bmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCQkJY21k
+cV90aHJlYWRfd2FpdF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KPiA+ICAJCQkJV0FSTl9PTihjbWRx
+X3RocmVhZF9zdXNwZW5kKGNtZHEsIHRocmVhZCkgPCAwKTsNCj4gPiAgCQkJCS8qIHNldCB0byB0
+aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gPiAtCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KPiA+
+ICsJCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4gIAkJCQkg
+ICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiAgCQkJfSBlbHNl
+IHsNCj4gPiAgCQkJCWNtZHFfdGFza19pbnNlcnRfaW50b190aHJlYWQodGFzayk7DQo+ID4gQEAg
+LTQwNywxNCArNDI3LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3Qg
+bWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCQlpZiAoY3Vycl9wYSA9PSBlbmRf
+cGEgLSBDTURRX0lOU1RfU0laRSB8fA0KPiA+ICAJCQkgICAgY3Vycl9wYSA9PSBlbmRfcGEpIHsN
+Cj4gPiAgCQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gPiAtCQkJCXdyaXRl
+bCh0YXNrLT5wYV9iYXNlLA0KPiA+ICsJCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgPj4gY21kcS0+
+c2hpZnRfcGEsDQo+ID4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
+RERSKTsNCj4gPiAgCQkJfSBlbHNlIHsNCj4gPiAgCQkJCWNtZHFfdGFza19pbnNlcnRfaW50b190
+aHJlYWQodGFzayk7DQo+ID4gIAkJCQlzbXBfbWIoKTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVu
+YWJsZSB0aHJlYWQgKi8NCj4gPiAgCQkJfQ0KPiA+ICAJCX0NCj4gPiAtCQl3cml0ZWwodGFzay0+
+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiA+ICsJCXdyaXRlbCgodGFzay0+cGFfYmFz
+ZSArIHBrdC0+Y21kX2J1Zl9zaXplKSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gPiAgCQkgICAgICAg
+dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpOw0KPiA+ICAJCWNtZHFfdGhyZWFkX3Jl
+c3VtZSh0aHJlYWQpOw0KPiA+ICAJfQ0KPiA+IEBAIC00NjEsNiArNDgxLDcgQEAgc3RhdGljIGlu
+dCBjbWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlzdHJ1Y3Qg
+cmVzb3VyY2UgKnJlczsNCj4gPiAgCXN0cnVjdCBjbWRxICpjbWRxOw0KPiA+ICAJaW50IGVyciwg
+aTsNCj4gPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0KPiA+ICANCj4gPiAgCWNtZHEg
+PSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmNtZHEpLCBHRlBfS0VSTkVMKTsNCj4gPiAgCWlm
+ICghY21kcSkNCj4gPiBAQCAtNDc5LDcgKzUwMCwxNCBAQCBzdGF0aWMgaW50IGNtZHFfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4g
+PiAgCX0NCj4gPiAgDQo+ID4gLQljbWRxLT50aHJlYWRfbnIgPSAodTMyKSh1bnNpZ25lZCBsb25n
+KW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJcGxhdF9kYXRhID0gKHN0cnVj
+dCBnY2VfcGxhdCAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJaWYgKCFw
+bGF0X2RhdGEpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgbWF0Y2ggZGF0
+YVxuIik7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJY21k
+cS0+dGhyZWFkX25yID0gcGxhdF9kYXRhLT50aHJlYWRfbnI7DQo+ID4gKwljbWRxLT5zaGlmdF9w
+YSA9IHBsYXRfZGF0YS0+c2hpZnQ7DQo+ID4gIAljbWRxLT5pcnFfbWFzayA9IEdFTk1BU0soY21k
+cS0+dGhyZWFkX25yIC0gMSwgMCk7DQo+ID4gIAllcnIgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwg
+Y21kcS0+aXJxLCBjbWRxX2lycV9oYW5kbGVyLCBJUlFGX1NIQVJFRCwNCj4gPiAgCQkJICAgICAg
+ICJtdGtfY21kcSIsIGNtZHEpOw0KPiA+IEBAIC01NDIsOSArNTcwLDEyIEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgZGV2X3BtX29wcyBjbWRxX3BtX29wcyA9IHsNCj4gPiAgCS5yZXN1bWUgPSBjbWRx
+X3Jlc3VtZSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3Bs
+YXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2fTsNCj4gPiArc3RhdGljIGNvbnN0IHN0
+cnVjdCBnY2VfcGxhdCBnY2VfcGxhdF92MyA9IHsudGhyZWFkX25yID0gMjR9Ow0KPiA+ICsNCj4g
+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgY21kcV9vZl9pZHNbXSA9IHsNCj4g
+PiAtCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAq
+KTE2fSwNCj4gPiAtCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZ2NlIiwgLmRhdGEg
+PSAodm9pZCAqKTI0fSwNCj4gPiArCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZ2Nl
+IiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92Mn0sDQo+ID4gKwl7LmNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRhID0gKHZvaWQgKikmZ2NlX3BsYXRfdjN9LA0KPiA+
+ICAJe30NCj4gPiAgfTsNCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVs
+cGVyLmMNCj4gPiBpbmRleCBkZTIwZTZjYmE4M2IuLjJlMWJjNTEzNTY5YiAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTI5MSw3ICsyOTEs
+OCBAQCBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0K
+PiA+ICANCj4gPiAgCS8qIEpVTVAgdG8gZW5kICovDQo+ID4gIAlpbnN0Lm9wID0gQ01EUV9DT0RF
+X0pVTVA7DQo+ID4gLQlpbnN0LnZhbHVlID0gQ01EUV9KVU1QX1BBU1M7DQo+ID4gKwlpbnN0LnZh
+bHVlID0gQ01EUV9KVU1QX1BBU1MgPj4NCj4gPiArCQljbWRxX21ib3hfc2hpZnQoKChzdHJ1Y3Qg
+Y21kcV9jbGllbnQgKilwa3QtPmNsKS0+Y2hhbik7DQo+IA0KPiBXaHkgbm90IGp1c3QgY21kcV9t
+Ym94X3NoaWZ0KHBrdC0+Y2wtPmNoYW4pID8NCg0KT2ssIHdpbGwgZG8uDQoNCg0KUmVnYXJkcywN
+CkRlbm5pcw0KDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IENLDQo+IA0KPiA+ICAJZXJyID0gY21kcV9w
+a3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiAgDQo+ID4gIAlyZXR1cm4gZXJyOw0K
+PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
+IGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+IGluZGV4IGE0
+ZGM0NWZiZWMwYS4uZGZlNWIyZWI4NWNjIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+bWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxi
+b3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gQEAgLTg4LDQgKzg4LDYgQEAgc3RydWN0IGNtZHFf
+cGt0IHsNCj4gPiAgCXZvaWQJCQkqY2w7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICt1OCBjbWRxX21i
+b3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbik7DQo+ID4gKw0KPiA+ICAjZW5kaWYgLyog
+X19NVEtfQ01EUV9NQUlMQk9YX0hfXyAqLw0KPiANCj4gDQoNCg==
 
-Looking at the errata configuration, I have:
-
-# ARM errata workarounds via the alternatives framework
-#
-CONFIG_ARM64_WORKAROUND_CLEAN_CACHE=y
-CONFIG_ARM64_ERRATUM_826319=y
-CONFIG_ARM64_ERRATUM_827319=y
-CONFIG_ARM64_ERRATUM_824069=y
-CONFIG_ARM64_ERRATUM_819472=y
-CONFIG_ARM64_ERRATUM_832075=y
-CONFIG_ARM64_ERRATUM_834220=y
-CONFIG_ARM64_ERRATUM_845719=y
-CONFIG_ARM64_ERRATUM_843419=y
-CONFIG_ARM64_ERRATUM_1024718=y
-CONFIG_ARM64_ERRATUM_1418040=y
-CONFIG_ARM64_ERRATUM_1165522=y
-CONFIG_ARM64_ERRATUM_1286807=y
-CONFIG_ARM64_ERRATUM_1319367=y
-CONFIG_ARM64_ERRATUM_1463225=y
-# CONFIG_ARM64_ERRATUM_1542419 is not set
-# CONFIG_CAVIUM_ERRATUM_22375 is not set
-# CONFIG_CAVIUM_ERRATUM_23154 is not set
-# CONFIG_CAVIUM_ERRATUM_27456 is not set
-# CONFIG_CAVIUM_ERRATUM_30115 is not set
-# CONFIG_CAVIUM_TX2_ERRATUM_219 is not set
-CONFIG_QCOM_FALKOR_ERRATUM_1003=y
-CONFIG_ARM64_WORKAROUND_REPEAT_TLBI=y
-CONFIG_QCOM_FALKOR_ERRATUM_1009=y
-CONFIG_QCOM_QDF2400_ERRATUM_0065=y
-# CONFIG_SOCIONEXT_SYNQUACER_PREITS is not set
-# CONFIG_HISILICON_ERRATUM_161600802 is not set
-CONFIG_QCOM_FALKOR_ERRATUM_E1041=y
-# CONFIG_FUJITSU_ERRATUM_010001 is not set
-# end of ARM errata workarounds via the alternatives framework
-...
-CONFIG_FSL_ERRATUM_A008585=y
-CONFIG_HISILICON_ERRATUM_161010101=y
-CONFIG_ARM64_ERRATUM_858921=y
-
-so I don't think it's a missing errata kconfig setting, unless there's
-an erratum that isn't in v5.5 that's necessary.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
