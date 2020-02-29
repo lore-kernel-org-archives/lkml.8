@@ -2,149 +2,259 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B05BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B0FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125052468D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD938246AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="v0aKr7r6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WKqJxdxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgB2BEI (ORCPT
+        id S1726658AbgB2BJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 20:04:08 -0500
-Received: from gateway34.websitewelcome.com ([192.185.149.46]:21906 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbgB2BEH (ORCPT
+        Fri, 28 Feb 2020 20:09:50 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42381 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgB2BJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 20:04:07 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 0C1A816939
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 19:04:06 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7qY2jdT7AAGTX7qY2jmKHk; Fri, 28 Feb 2020 19:04:06 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vvupL0C0NS9tkoKlwv3g8aYAD+hhxqruyG0GLjGtntI=; b=v0aKr7r6gdPxVVp8v4Me+VFpon
-        LGCJeChvsl7MqZYZPjVhj6za2m25Cv3nMW9RTqoswNR3m81ztAIu3S2iLnNHyfzra/2kEc+DorOjw
-        k7WZjB2DsQ752gKgpbQVmBoKDtBjKalaRHzd1bXM3oXNE+MPO6PXm0jNDzQJ+cAx+UwMXsIwxadzS
-        fdzPP1Qi7eyfNIRA2wtd74maw4UhUVaxhjm7zGhTk2IWFl9RSH0zrUSlDl+g9VFS8Hrfmo/eC4icv
-        dgEZ54YPPq5Rk48BbtuwwJGYXQJdot/IEl4IRGjBos92b+FyWb3pzamufRik0ToBfgOYJtpYuIhqQ
-        Y0IVbZ8g==;
-Received: from [200.39.15.57] (port=19448 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7qY0-0032Jb-Dw; Fri, 28 Feb 2020 19:04:04 -0600
-Date:   Fri, 28 Feb 2020 19:07:01 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] arcnet: Replace zero-length array with flexible-array
- member
-Message-ID: <20200229010701.GA9883@embeddedor>
+        Fri, 28 Feb 2020 20:09:50 -0500
+Received: by mail-wr1-f67.google.com with SMTP id p18so5271522wre.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 17:09:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SN7G4tCYEshnaGRAM2db2SQakrRhJKUvOkKXHESfWSo=;
+        b=WKqJxdxaP6DLs6jiwlJJtTd0WErcLP34u5ymXqYFgJbaMP/bEACze0j7crZ8VA3FpE
+         Y3BsoU0SqG6DXnwEiKFUJFU9/WIfrGbAf4f0+jKQ+8LOdWlVnyfoV86VbjafHOsYx/sF
+         F979t68lxm+z0kUemuIVU7JfFHKkiYPY+lmE5OnfCrjC4uxAoJLDBZMDs/fmeirtwvNc
+         itNHrbqBvV2a3tZg8VI84x92tSj7YcIaJTOoix+eRdZxKhHoQf218baRx4cB1MirsuLT
+         pMsfK7cPD3DicE7Fm7aZYJWJu7Rpm0JGifK/4b67WxxKTrCOCBvfzsLOitstebl1qo1S
+         B3/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SN7G4tCYEshnaGRAM2db2SQakrRhJKUvOkKXHESfWSo=;
+        b=POgm3c0AldSQmNYxYsG4nv0NVHLxTsQ5dWuWnPQ2jmUP9jDoFePxUurHH3iJM2+ufC
+         RtRy1xV1bTRO+nbtwjGA7l4GviF0DDpCr2zwYa+Syb+rbGj6OjfiG57tEbGBevrhF69+
+         getMS8Ui9mUhq+uGURCuWb5m/WpeWstQc7OmOLUDPCNSJRJwVD3WH2uwn8L7PM7XclJY
+         8gLW7XwsEY1mlhh5vY7nRB7G+zc3jG/J2rs/++ouPpW3KSwiIc2x+szQPFryiKPnuKSh
+         SF9y+T2fzVin4zFFFmm7DcJzTqqIy7DTSpJLMSoaa+amNgE4uLsIZLUPjIT7DFDUkK1L
+         TLyg==
+X-Gm-Message-State: APjAAAWBZtatb79L99BpaBMPJwLPThValrZ2lL+Lq+LEuTotpo2uKKfQ
+        jGsEmp1bqhav0b1FnbB45yxLHSxvCQqetUaRMZVGFg==
+X-Google-Smtp-Source: APXvYqxLoQcjGHdsmqNCSUfGKvuwO4lJf8HCEOOxQ8Ti69YhsLIV+/uNHNSbz25KtqH8ETwZe7ZpX1ULegnX4dKKxHg=
+X-Received: by 2002:adf:82ef:: with SMTP id 102mr6964889wrc.23.1582938585758;
+ Fri, 28 Feb 2020 17:09:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.15.57
-X-Source-L: No
-X-Exim-ID: 1j7qY0-0032Jb-Dw
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:19448
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+bO7N_80N7NkjOstp=dxGnV1GZUoH3sh6XU90ro0_7M0A@mail.gmail.com>
+In-Reply-To: <CACT4Y+bO7N_80N7NkjOstp=dxGnV1GZUoH3sh6XU90ro0_7M0A@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Fri, 28 Feb 2020 17:09:34 -0800
+Message-ID: <CAKFsvUKB=S9p6JjRHg=h9d2MM_kb+BoRYO8-wkWPEQex2W1vZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>, vincent.guittot@linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, Feb 27, 2020 at 6:39 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> >
+> > Integrate KASAN into KUnit testing framework.
+> >  - Fail tests when KASAN reports an error that is not expected
+> >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+> >  - KUnit struct added to current task to keep track of the current test
+> > from KASAN code
+> >  - Booleans representing if a KASAN report is expected and if a KASAN
+> >  report is found added to kunit struct
+> >  - This prints "line# has passed" or "line# has failed"
+> >
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > ---
+> > If anyone has any suggestions on how best to print the failure
+> > messages, please share!
+> >
+> > One issue I have found while testing this is the allocation fails in
+> > kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
+> > does cause the test to fail on the KUnit side, as expected, but it
+> > seems to skip all the tests before this one because the output starts
+> > with this failure instead of with the first test, kmalloc_oob_right().
+> >
+> >  include/kunit/test.h                | 24 ++++++++++++++++++++++++
+> >  include/linux/sched.h               |  7 ++++++-
+> >  lib/kunit/test.c                    |  7 ++++++-
+> >  mm/kasan/report.c                   | 19 +++++++++++++++++++
+> >  tools/testing/kunit/kunit_kernel.py |  2 +-
+> >  5 files changed, 56 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index 2dfb550c6723..2e388f8937f3 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -21,6 +21,8 @@ struct kunit_resource;
+> >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
+> >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+> >
+> > +void kunit_set_failure(struct kunit *test);
+> > +
+> >  /**
+> >   * struct kunit_resource - represents a *test managed resource*
+> >   * @allocation: for the user to store arbitrary data.
+> > @@ -191,6 +193,9 @@ struct kunit {
+> >          * protect it with some type of lock.
+> >          */
+> >         struct list_head resources; /* Protected by lock. */
+> > +
+> > +       bool kasan_report_expected;
+> > +       bool kasan_report_found;
+> >  };
+> >
+> >  void kunit_init_test(struct kunit *test, const char *name);
+> > @@ -941,6 +946,25 @@ do {                                                                              \
+> >                                                 ptr,                           \
+> >                                                 NULL)
+> >
+> > +/**
+> > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
+> > + * not cause a KASAN error.
+>
+> Oh, I see, this is not a test, but rather an ASSERT-like macro.
+> Then maybe we should use it for actual expressions that are supposed
+> to trigger KASAN errors?
+>
+> E.g. KUNIT_EXPECT_KASAN_FAIL(test, *(volatile int*)p);
+>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+This is one possible approach. I wasn't sure what would be the most
+useful. Would it be most useful to assert an error is reported on a
+function or assert an error is reported at a specific address?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+>
+> > + *
+> > + */
+> > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do {  \
+>
+> s/condition/expression/
+>
+> > +       test->kasan_report_expected = true;     \
+>
+> Check that kasan_report_expected is unset. If these are nested things
+> will break in confusing ways.
+> Or otherwise we need to restore the previous value at the end.
+>
+Good point! I think I was just unsure of where I should set this value
+and what the default should be.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> > +       test->kasan_report_found = false; \
+> > +       condition; \
+> > +       if (test->kasan_report_found == test->kasan_report_expected) { \
+>
+> We know that kasan_report_expected is true here, so we could just said:
+>
+> if (!test->kasan_report_found)
+>
+Good point! This is much more readable
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> > +               pr_info("%d has passed", __LINE__); \
+> > +       } else { \
+> > +               kunit_set_failure(test); \
+> > +               pr_info("%d has failed", __LINE__); \
+>
+> This needs a more readable error.
+>
+Yes, this was just a stand-in. I was wondering if you might have a
+suggestion for the best way to print this failure message? Alan
+suggested reusing the KUNIT_EXPECT_EQ() macro so the error message
+would look something like:
+"Expected kasan_report_expected == kasan_report_found, but
+kasan_report_expected == true
+kasan_report_found == false"
 
-This issue was found with the help of Coccinelle.
+What do you think of this?
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > +       } \
+> > +       test->kasan_report_expected = false;    \
+> > +       test->kasan_report_found = false;       \
+> > +} while (0)
+> > +
+> >  /**
+> >   * KUNIT_EXPECT_TRUE() - Causes a test failure when the expression is not true.
+> >   * @test: The test context object.
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 04278493bf15..db23d56061e7 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -32,6 +32,8 @@
+> >  #include <linux/posix-timers.h>
+> >  #include <linux/rseq.h>
+> >
+> > +#include <kunit/test.h>
+> > +
+> >  /* task_struct member predeclarations (sorted alphabetically): */
+> >  struct audit_context;
+> >  struct backing_dev_info;
+> > @@ -1178,7 +1180,10 @@ struct task_struct {
+> >
+> >  #ifdef CONFIG_KASAN
+> >         unsigned int                    kasan_depth;
+> > -#endif
+> > +#ifdef CONFIG_KUNIT
+> > +       struct kunit *kasan_kunit_test;
+>
+> I would assume we will use this for other things as well (failing
+> tests on LOCKDEP errors, WARNINGs, etc).
+> So I would call this just kunit_test and make non-dependent on KASAN right away.
+>
+Yeah, I think I just wanted to make it clear that this is only used
+for KASAN, but I believe that was before we talked about extending
+this.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/uapi/linux/if_arcnet.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> > +       if (current->kasan_kunit_test) {
+>
+> Strictly saying, this also needs to check in_task().
+>
 
-diff --git a/include/uapi/linux/if_arcnet.h b/include/uapi/linux/if_arcnet.h
-index 683878036d76..b122cfac7128 100644
---- a/include/uapi/linux/if_arcnet.h
-+++ b/include/uapi/linux/if_arcnet.h
-@@ -60,7 +60,7 @@ struct arc_rfc1201 {
- 	__u8  proto;		/* protocol ID field - varies		*/
- 	__u8  split_flag;	/* for use with split packets		*/
- 	__be16   sequence;	/* sequence number			*/
--	__u8  payload[0];	/* space remaining in packet (504 bytes)*/
-+	__u8  payload[];	/* space remaining in packet (504 bytes)*/
- };
- #define RFC1201_HDR_SIZE 4
- 
-@@ -69,7 +69,7 @@ struct arc_rfc1201 {
-  */
- struct arc_rfc1051 {
- 	__u8 proto;		/* ARC_P_RFC1051_ARP/RFC1051_IP	*/
--	__u8 payload[0];	/* 507 bytes			*/
-+	__u8 payload[];	/* 507 bytes			*/
- };
- #define RFC1051_HDR_SIZE 1
- 
-@@ -80,7 +80,7 @@ struct arc_rfc1051 {
- struct arc_eth_encap {
- 	__u8 proto;		/* Always ARC_P_ETHER			*/
- 	struct ethhdr eth;	/* standard ethernet header (yuck!)	*/
--	__u8 payload[0];	/* 493 bytes				*/
-+	__u8 payload[];	/* 493 bytes				*/
- };
- #define ETH_ENCAP_HDR_SIZE 14
- 
+I was not aware of in_task()... can you explain its importance to me?
+
+> > +               if (current->kasan_kunit_test->kasan_report_expected) {
+> > +                       current->kasan_kunit_test->kasan_report_found = true;
+> > +                       return;
+> > +               }
+> > +               kunit_set_failure(current->kasan_kunit_test);
+> > +       }
+>
+> This chunk is duplicated 2 times. I think it will be more reasonable
+> for KASAN code to just notify KUNIT that the error has happened, and
+> then KUNIT will figure out what it means and what to do.
+>
+>
+Yeah, I think moving this to the KUnit files is best too. I would like
+to keep kunit_set_failure a static function as well.
+
+
 -- 
-2.25.0
+Thank you for the comments!
 
+Patricia Alfonso
