@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E68C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF03C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908ED246CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0A5246D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgB2JRL (ORCPT
+        id S1727169AbgB2JRW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 04:17:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38885 "EHLO
+        Sat, 29 Feb 2020 04:17:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38904 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgB2JRH (ORCPT
+        with ESMTP id S1727084AbgB2JRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 04:17:07 -0500
+        Sat, 29 Feb 2020 04:17:12 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7yEs-0005q7-Sn; Sat, 29 Feb 2020 10:16:51 +0100
+        id 1j7yEw-0005py-Kr; Sat, 29 Feb 2020 10:16:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 833C51C0243;
-        Sat, 29 Feb 2020 10:16:50 +0100 (CET)
-Date:   Sat, 29 Feb 2020 09:16:50 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5252B1C2187;
+        Sat, 29 Feb 2020 10:16:49 +0100 (CET)
+Date:   Sat, 29 Feb 2020 09:16:48 -0000
 From:   "tip-bot2 for Ravi Bangoria" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf annotate: Fix --show-total-period for tui/stdio2
+Subject: [tip: perf/urgent] perf annotate: Make perf config effective
 Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -48,15 +48,15 @@ Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Yisheng Xie <xieyisheng1@huawei.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200213064306.160480-3-ravi.bangoria@linux.ibm.com>
-References: <20200213064306.160480-3-ravi.bangoria@linux.ibm.com>
+In-Reply-To: <20200213064306.160480-6-ravi.bangoria@linux.ibm.com>
+References: <20200213064306.160480-6-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158296781026.28353.5295953335002460380.tip-bot2@tip-bot2>
+Message-ID: <158296780897.28353.7011546647615002956.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -67,38 +67,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     68aac855b643e1540012cbefa0dee06207c3dc64
-Gitweb:        https://git.kernel.org/tip/68aac855b643e1540012cbefa0dee06207c3dc64
+Commit-ID:     7384083ba616092e62df7bfb4f2034730e631e40
+Gitweb:        https://git.kernel.org/tip/7384083ba616092e62df7bfb4f2034730e631e40
 Author:        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-AuthorDate:    Thu, 13 Feb 2020 12:13:00 +05:30
+AuthorDate:    Thu, 13 Feb 2020 12:13:03 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 27 Feb 2020 10:44:40 -03:00
+CommitterDate: Thu, 27 Feb 2020 10:44:59 -03:00
 
-perf annotate: Fix --show-total-period for tui/stdio2
+perf annotate: Make perf config effective
 
-perf annotate --show-total-period does not really show total period.
+perf default config set by user in [annotate] section is totally ignored
+by annotate code. Fix it.
 
-The reason is we have two separate variables for the same purpose.
+Before:
 
-One is in symbol_conf.show_total_period and another is
-annotation_options.show_total_period.
+  $ ./perf config
+  annotate.hide_src_code=true
+  annotate.show_nr_jumps=true
+  annotate.show_nr_samples=true
 
-We save command line option in symbol_conf.show_total_period but uses
-annotation_option.show_total_period while rendering tui/stdio2 browser.
+  $ ./perf annotate shash
+         │    unsigned h = 0;
+         │      movl   $0x0,-0xc(%rbp)
+         │    while (*s)
+         │    ↓ jmp    44
+         │    h = 65599 * h + *s++;
+   11.33 │24:   mov    -0xc(%rbp),%eax
+   43.50 │      imul   $0x1003f,%eax,%ecx
+         │      mov    -0x18(%rbp),%rax
 
-Though, we copy symbol_conf.show_total_period to
-annotation__default_options.show_total_period but that is not really
-effective as we don't use annotation__default_options once we copy
-default options to dynamic variable annotate.opts in cmd_annotate().
+After:
 
-Instead of all these complication, keep only one variable and use it all
-over. symbol_conf.show_total_period is used by perf report/top as well.
-So let's kill annotation_options.show_total_period.
+         │        movl   $0x0,-0xc(%rbp)
+         │      ↓ jmp    44
+       1 │1 24:   mov    -0xc(%rbp),%eax
+       4 │        imul   $0x1003f,%eax,%ecx
+         │        mov    -0x18(%rbp),%rax
 
-On a side note, I've kept annotation_options.show_total_period
-definition because it's still used by perf-config code. Follow up patch
-to fix perf-config for annotate will remove
-annotation_options.show_total_period.
+Note that we have removed show_nr_samples and show_total_period from
+annotation_options because they are not used. Instead of them we use
+symbol_conf.show_nr_samples and symbol_conf.show_total_period.
+
+Committer testing:
+
+Using 'perf annotate --stdio2' to use the TUI rendering but emitting the output to stdio:
+
+  # perf config
+  #
+  # perf config annotate.hide_src_code=true
+  # perf config
+  annotate.hide_src_code=true
+  #
+  # perf config annotate.show_nr_jumps=true
+  # perf config annotate.show_nr_samples=true
+  # perf config
+  annotate.hide_src_code=true
+  annotate.show_nr_jumps=true
+  annotate.show_nr_samples=true
+  #
+  #
+
+Before:
+
+  # perf annotate --stdio2 ObjectInstance::weak_pointer_was_finalized
+  Samples: 1  of event 'cycles', 4000 Hz, Event count (approx.): 830873, [percent: local period]
+  ObjectInstance::weak_pointer_was_finalized() /usr/lib64/libgjs.so.0.0.0
+  Percent
+              00000000000609f0 <ObjectInstance::weak_pointer_was_finalized()@@Base>:
+                endbr64
+                cmpq    $0x0,0x20(%rdi)
+              ↓ je      10
+                xor     %eax,%eax
+              ← retq
+                xchg    %ax,%ax
+  100.00  10:   push    %rbp
+                cmpq    $0x0,0x18(%rdi)
+                mov     %rdi,%rbp
+              ↓ jne     20
+          1b:   xor     %eax,%eax
+                pop     %rbp
+              ← retq
+                nop
+          20:   lea     0x18(%rdi),%rdi
+              → callq   JS_UpdateWeakPointerAfterGC(JS::Heap<JSObject*
+                cmpq    $0x0,0x18(%rbp)
+              ↑ jne     1b
+                mov     %rbp,%rdi
+              → callq   ObjectBase::jsobj_addr() const@plt
+                mov     $0x1,%eax
+                pop     %rbp
+              ← retq
+  #
+
+After:
+
+  # perf annotate --stdio2 ObjectInstance::weak_pointer_was_finalized 2> /dev/null
+  Samples: 1  of event 'cycles', 4000 Hz, Event count (approx.): 830873, [percent: local period]
+  ObjectInstance::weak_pointer_was_finalized() /usr/lib64/libgjs.so.0.0.0
+  Samples       endbr64
+                cmpq    $0x0,0x20(%rdi)
+              ↓ je      10
+                xor     %eax,%eax
+              ← retq
+                xchg    %ax,%ax
+     1  1 10:   push    %rbp
+                cmpq    $0x0,0x18(%rdi)
+                mov     %rdi,%rbp
+              ↓ jne     20
+        1 1b:   xor     %eax,%eax
+                pop     %rbp
+              ← retq
+                nop
+        1 20:   lea     0x18(%rdi),%rdi
+              → callq   JS_UpdateWeakPointerAfterGC(JS::Heap<JSObject*
+                cmpq    $0x0,0x18(%rbp)
+              ↑ jne     1b
+                mov     %rbp,%rdi
+              → callq   ObjectBase::jsobj_addr() const@plt
+                mov     $0x1,%eax
+                pop     %rbp
+              ← retq
+  #
+  # perf config annotate.show_nr_jumps
+  annotate.show_nr_jumps=true
+  # perf config annotate.show_nr_jumps=false
+  # perf config annotate.show_nr_jumps
+  annotate.show_nr_jumps=false
+  #
+  # perf annotate --stdio2 ObjectInstance::weak_pointer_was_finalized 2> /dev/null
+  Samples: 1  of event 'cycles', 4000 Hz, Event count (approx.): 830873, [percent: local period]
+  ObjectInstance::weak_pointer_was_finalized() /usr/lib64/libgjs.so.0.0.0
+  Samples       endbr64
+                cmpq    $0x0,0x20(%rdi)
+              ↓ je      10
+                xor     %eax,%eax
+              ← retq
+                xchg    %ax,%ax
+       1  10:   push    %rbp
+                cmpq    $0x0,0x18(%rdi)
+                mov     %rdi,%rbp
+              ↓ jne     20
+          1b:   xor     %eax,%eax
+                pop     %rbp
+              ← retq
+                nop
+          20:   lea     0x18(%rdi),%rdi
+              → callq   JS_UpdateWeakPointerAfterGC(JS::Heap<JSObject*
+                cmpq    $0x0,0x18(%rbp)
+              ↑ jne     1b
+                mov     %rbp,%rdi
+              → callq   ObjectBase::jsobj_addr() const@plt
+                mov     $0x1,%eax
+                pop     %rbp
+              ← retq
+  #
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -114,75 +236,174 @@ Cc: Song Liu <songliubraving@fb.com>
 Cc: Taeung Song <treeze.taeung@gmail.com>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Yisheng Xie <xieyisheng1@huawei.com>
-Link: http://lore.kernel.org/lkml/20200213064306.160480-3-ravi.bangoria@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200213064306.160480-6-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 6 +++---
- tools/perf/util/annotate.c        | 5 ++---
- tools/perf/util/annotate.h        | 2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/builtin-annotate.c |  2 +-
+ tools/perf/builtin-report.c   |  2 +-
+ tools/perf/builtin-top.c      |  2 +-
+ tools/perf/util/annotate.c    | 78 ++++++++++++----------------------
+ tools/perf/util/annotate.h    |  4 +--
+ 5 files changed, 33 insertions(+), 55 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 0dbbf35..7e5b44b 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -833,13 +833,13 @@ show_sup_ins:
- 			map_symbol__annotation_dump(ms, evsel, browser->opts);
- 			continue;
- 		case 't':
--			if (notes->options->show_total_period) {
--				notes->options->show_total_period = false;
-+			if (symbol_conf.show_total_period) {
-+				symbol_conf.show_total_period = false;
- 				notes->options->show_nr_samples = true;
- 			} else if (notes->options->show_nr_samples)
- 				notes->options->show_nr_samples = false;
- 			else
--				notes->options->show_total_period = true;
-+				symbol_conf.show_total_period = true;
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case 'c':
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index ff61795..ea89077 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -605,7 +605,7 @@ int cmd_annotate(int argc, const char **argv)
+ 	if (ret < 0)
+ 		goto out_delete;
+ 
+-	annotation_config__init();
++	annotation_config__init(&annotate.opts);
+ 
+ 	symbol_conf.try_vmlinux_path = true;
+ 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 9483b3f..72a12b6 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1507,7 +1507,7 @@ repeat:
+ 			symbol_conf.priv_size += sizeof(u32);
+ 			symbol_conf.sort_by_name = true;
+ 		}
+-		annotation_config__init();
++		annotation_config__init(&report.annotation_opts);
+ 	}
+ 
+ 	if (symbol__init(&session->header.env) < 0)
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 8affcab..cc26aea 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1683,7 +1683,7 @@ int cmd_top(int argc, const char **argv)
+ 	if (status < 0)
+ 		goto out_delete_evlist;
+ 
+-	annotation_config__init();
++	annotation_config__init(&top.annotation_opts);
+ 
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
+ 	status = symbol__init(NULL);
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ca73fb7..fe4b44d 100644
+index f0741da..3b79da5 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -2915,7 +2915,7 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 			percent = annotation_data__percent(&al->data[i], percent_type);
- 
- 			obj__set_percent_color(obj, percent, current_entry);
--			if (notes->options->show_total_period) {
-+			if (symbol_conf.show_total_period) {
- 				obj__printf(obj, "%11" PRIu64 " ", al->data[i].he.period);
- 			} else if (notes->options->show_nr_samples) {
- 				obj__printf(obj, "%6" PRIu64 " ",
-@@ -2931,7 +2931,7 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 			obj__printf(obj, "%-*s", pcnt_width, " ");
- 		else {
- 			obj__printf(obj, "%-*s", pcnt_width,
--					   notes->options->show_total_period ? "Period" :
-+					   symbol_conf.show_total_period ? "Period" :
- 					   notes->options->show_nr_samples ? "Samples" : "Percent");
- 		}
- 	}
-@@ -3155,7 +3155,6 @@ void annotation_config__init(void)
- {
- 	perf_config(annotation__config, NULL);
- 
--	annotation__default_options.show_total_period = symbol_conf.show_total_period;
- 	annotation__default_options.show_nr_samples   = symbol_conf.show_nr_samples;
+@@ -3094,66 +3094,46 @@ out_free_offsets:
+ 	return err;
  }
  
+-#define ANNOTATION__CFG(n) \
+-	{ .name = #n, .value = &annotation__default_options.n, }
+-
+-/*
+- * Keep the entries sorted, they are bsearch'ed
+- */
+-static struct annotation_config {
+-	const char *name;
+-	void *value;
+-} annotation__configs[] = {
+-	ANNOTATION__CFG(hide_src_code),
+-	ANNOTATION__CFG(jump_arrows),
+-	ANNOTATION__CFG(offset_level),
+-	ANNOTATION__CFG(show_linenr),
+-	ANNOTATION__CFG(show_nr_jumps),
+-	ANNOTATION__CFG(show_nr_samples),
+-	ANNOTATION__CFG(show_total_period),
+-	ANNOTATION__CFG(use_offset),
+-};
+-
+-#undef ANNOTATION__CFG
+-
+-static int annotation_config__cmp(const void *name, const void *cfgp)
++static int annotation__config(const char *var, const char *value, void *data)
+ {
+-	const struct annotation_config *cfg = cfgp;
+-
+-	return strcmp(name, cfg->name);
+-}
+-
+-static int annotation__config(const char *var, const char *value,
+-			    void *data __maybe_unused)
+-{
+-	struct annotation_config *cfg;
+-	const char *name;
++	struct annotation_options *opt = data;
+ 
+ 	if (!strstarts(var, "annotate."))
+ 		return 0;
+ 
+-	name = var + 9;
+-	cfg = bsearch(name, annotation__configs, ARRAY_SIZE(annotation__configs),
+-		      sizeof(struct annotation_config), annotation_config__cmp);
+-
+-	if (cfg == NULL)
+-		pr_debug("%s variable unknown, ignoring...", var);
+-	else if (strcmp(var, "annotate.offset_level") == 0) {
+-		perf_config_int(cfg->value, name, value);
+-
+-		if (*(int *)cfg->value > ANNOTATION__MAX_OFFSET_LEVEL)
+-			*(int *)cfg->value = ANNOTATION__MAX_OFFSET_LEVEL;
+-		else if (*(int *)cfg->value < ANNOTATION__MIN_OFFSET_LEVEL)
+-			*(int *)cfg->value = ANNOTATION__MIN_OFFSET_LEVEL;
++	if (!strcmp(var, "annotate.offset_level")) {
++		perf_config_u8(&opt->offset_level, "offset_level", value);
++
++		if (opt->offset_level > ANNOTATION__MAX_OFFSET_LEVEL)
++			opt->offset_level = ANNOTATION__MAX_OFFSET_LEVEL;
++		else if (opt->offset_level < ANNOTATION__MIN_OFFSET_LEVEL)
++			opt->offset_level = ANNOTATION__MIN_OFFSET_LEVEL;
++	} else if (!strcmp(var, "annotate.hide_src_code")) {
++		opt->hide_src_code = perf_config_bool("hide_src_code", value);
++	} else if (!strcmp(var, "annotate.jump_arrows")) {
++		opt->jump_arrows = perf_config_bool("jump_arrows", value);
++	} else if (!strcmp(var, "annotate.show_linenr")) {
++		opt->show_linenr = perf_config_bool("show_linenr", value);
++	} else if (!strcmp(var, "annotate.show_nr_jumps")) {
++		opt->show_nr_jumps = perf_config_bool("show_nr_jumps", value);
++	} else if (!strcmp(var, "annotate.show_nr_samples")) {
++		symbol_conf.show_nr_samples = perf_config_bool("show_nr_samples",
++								value);
++	} else if (!strcmp(var, "annotate.show_total_period")) {
++		symbol_conf.show_total_period = perf_config_bool("show_total_period",
++								value);
++	} else if (!strcmp(var, "annotate.use_offset")) {
++		opt->use_offset = perf_config_bool("use_offset", value);
+ 	} else {
+-		*(bool *)cfg->value = perf_config_bool(name, value);
++		pr_debug("%s variable unknown, ignoring...", var);
+ 	}
++
+ 	return 0;
+ }
+ 
+-void annotation_config__init(void)
++void annotation_config__init(struct annotation_options *opt)
+ {
+-	perf_config(annotation__config, NULL);
++	perf_config(annotation__config, opt);
+ }
+ 
+ static unsigned int parse_percent_type(char *str1, char *str2)
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 455403e..6237c2c 100644
+index 6237c2c..8e54184 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -309,7 +309,7 @@ static inline int annotation__cycles_width(struct annotation *notes)
- 
- static inline int annotation__pcnt_width(struct annotation *notes)
- {
--	return (notes->options->show_total_period ? 12 : 7) * notes->nr_events;
-+	return (symbol_conf.show_total_period ? 12 : 7) * notes->nr_events;
+@@ -83,8 +83,6 @@ struct annotation_options {
+ 	     full_path,
+ 	     show_linenr,
+ 	     show_nr_jumps,
+-	     show_nr_samples,
+-	     show_total_period,
+ 	     show_minmax_cycle,
+ 	     show_asm_raw,
+ 	     annotate_src;
+@@ -413,7 +411,7 @@ static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
  }
+ #endif
  
- static inline bool annotation_line__filter(struct annotation_line *al, struct annotation *notes)
+-void annotation_config__init(void);
++void annotation_config__init(struct annotation_options *opt);
+ 
+ int annotate_parse_percent_type(const struct option *opt, const char *_str,
+ 				int unset);
