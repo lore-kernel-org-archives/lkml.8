@@ -2,146 +2,84 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901BDC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000E2C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C12246C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7DB2468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ADV34/l4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YEZrilU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB2AuS (ORCPT
+        id S1726798AbgB2Avi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:50:18 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.163]:33573 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgB2AuR (ORCPT
+        Fri, 28 Feb 2020 19:51:38 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37203 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgB2Avi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:50:17 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id F11FF65C55
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:50:16 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7qKejdGALAGTX7qKejm7RK; Fri, 28 Feb 2020 18:50:16 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=f8vhCCp3OOzlAffu+dZicuZhO8OF+Y4bPnu/LSD79Jo=; b=ADV34/l40VcoT5ws8TKqjwodLl
-        jVADoHzrLqvLxNu+pzKpcr9OBUQi/gFuEYxaIl1BzXp1R6k5EP2LkqgSd5J/uWYkWlzBd9sM29FbW
-        EKyzThtDRSpPRU6JFyXvGdHSiREvZkQs0t54pdLJpvA/5psSDGGu+/LuOf1zKvAzffvVTFER1VvsP
-        s/Zp6+PfEU0a51O9xoEVfxAooecit0Y+9+QKp/+2x/uRDzY/JHgiOt2LuPUCqfEX01Wgdf3ES/2bc
-        01c2Q3pRrVSCCzrABRGWCMz9fMzkEfw6bjFGWDYbpPNKDQhCUXqtS/PPDZpWdaDX3s9t4A7IGn5Xs
-        7vTj5xxg==;
-Received: from [200.39.15.57] (port=22066 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7qKd-002urX-07; Fri, 28 Feb 2020 18:50:15 -0600
-Date:   Fri, 28 Feb 2020 18:53:11 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ndisc: Replace zero-length array with flexible-array
- member
-Message-ID: <20200229005311.GA8953@embeddedor>
+        Fri, 28 Feb 2020 19:51:38 -0500
+Received: by mail-pj1-f66.google.com with SMTP id o2so41026pjp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 16:51:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M4tgEyFArklK0C2NkHJ4Ev1DbekboBTuLVXflJ8Bdmg=;
+        b=YEZrilU5Emz9Z8Ec+wHK4LiI7fQQzdfCcue2M/IsGBDlntu9mx1MWRLDNRF2DkbyzK
+         R2lwOWZhgB6mzNpT1Pu/aYGOixkKd67bWXduwxC7akBPX2iYuMwBeOQ5JBnJ3PoP/sm+
+         fwHlgE5NWc/QcaNpgQ1v36FCjFUNaQ0QzZjXLhJBB7HSyakmk/gogoPqwcbqcHALKGWF
+         LEwHUDu3Vt5k84kgM8atzhoarq3m2Hp+ubtvEsIOjJSEjTqa8HV47MN06DuHfs+WThz5
+         AS+PNvVOGiAiXvalk95ELB6qY6CzHUNlqNZ8cCZ8Kyzz7tO0GspqtRYJOBiBc4omlRU0
+         Jamg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M4tgEyFArklK0C2NkHJ4Ev1DbekboBTuLVXflJ8Bdmg=;
+        b=mMikz26WX439UJOxL8GlZZKaybee1Mf2FwjNpDfEiDy2/2lqMF6Di9Fg4rj2OYqPCG
+         kAX5g4vugA1A3wZ6N2ti5qN0xGC0Z3gFLnIvY+341Z1qQz1U+2vSY/9ly33QFDbHriUY
+         PZ5uVC7M1+3wRT0idIohh8Hur0sPy6kZYnAkOotYB7OLowy79Ha3iftL0mChAkZmguz4
+         0GXEgYMN1LF08V6yEfE6FXVNpVsVGR3UTSwdD8Su8l4rvgYhdqaxOD0ZrxV1WGCvdclE
+         DL8TDMy9qF953ESiP+TxfaNx4xUuUnrow54kbc+ubfpKbiPsCu2nh7gYqYy42IsP4JQQ
+         AdBQ==
+X-Gm-Message-State: APjAAAU7Uihf2Ft62YG09NyvAi/mqshfgwhDHbTwY0RjyIENq6nw5d4R
+        3RdohODdUi5aG9qDbcoCA4USiQ==
+X-Google-Smtp-Source: APXvYqy82naI/lVAZlOJvZdl3C/jjyr3KkWwvalv9/HybDbYSHFf9yfSUJEYY3U/VEuNZhjYcVENGg==
+X-Received: by 2002:a17:90a:8a8d:: with SMTP id x13mr7344279pjn.97.1582937496771;
+        Fri, 28 Feb 2020 16:51:36 -0800 (PST)
+Received: from google.com ([2620:15c:211:202:ae26:61fb:e2f3:92e7])
+        by smtp.gmail.com with ESMTPSA id y16sm12339385pfn.177.2020.02.28.16.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 16:51:36 -0800 (PST)
+Date:   Fri, 28 Feb 2020 16:51:31 -0800
+From:   Marco Ballesio <balejs@google.com>
+To:     tj@kernel.org, guro@fb.com, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, corbet@lwn.net, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com, linux-doc@vger.kernel.org,
+        linux-pm@vger.kernel.org, minchan@google.com, surenb@google.com,
+        dancol@google.com
+Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
+Message-ID: <20200229005131.GB9813@google.com>
+References: <20200219183231.50985-1-balejs@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.15.57
-X-Source-L: No
-X-Exim-ID: 1j7qKd-002urX-07
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:22066
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 35
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200219183231.50985-1-balejs@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi all,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+did anyone have time to look into my proposal and, in case, are there
+any suggestions, ideas or comments about it?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/net/ndisc.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/ndisc.h b/include/net/ndisc.h
-index b5ebeb3b0de0..1c61aeb3a1c0 100644
---- a/include/net/ndisc.h
-+++ b/include/net/ndisc.h
-@@ -80,12 +80,12 @@ extern struct neigh_table nd_tbl;
- struct nd_msg {
-         struct icmp6hdr	icmph;
-         struct in6_addr	target;
--	__u8		opt[0];
-+	__u8		opt[];
- };
- 
- struct rs_msg {
- 	struct icmp6hdr	icmph;
--	__u8		opt[0];
-+	__u8		opt[];
- };
- 
- struct ra_msg {
-@@ -98,7 +98,7 @@ struct rd_msg {
- 	struct icmp6hdr icmph;
- 	struct in6_addr	target;
- 	struct in6_addr	dest;
--	__u8		opt[0];
-+	__u8		opt[];
- };
- 
- struct nd_opt_hdr {
--- 
-2.25.0
-
+Marco
