@@ -2,119 +2,141 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B6FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271DC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811E32468E
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2B6246A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoAdX/XB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adMOLuCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgB2NPo (ORCPT
+        id S1727047AbgB2NPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 08:15:44 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33489 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726933AbgB2NPn (ORCPT
+        Sat, 29 Feb 2020 08:15:50 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50246 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgB2NPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 08:15:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582982142;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RCYWHBxLPOdlW57S3eZdORk1KAVBLC2yFlcjTiBScDs=;
-        b=GoAdX/XB8Bym80wHloXgCXnHBQii/jVIFOsFm48LQf/7D9UJhf3e2kG50cIrqu62b7fAnc
-        FF0+P8hpXQRbK7otyo7pbGX3Gebe6jBrQA3/0bCQd+FrmXYgDFl1YEFsEr0oqn34qXg62V
-        +6eyNQrIXCPyZGYRwQr/yrynz/CKUzU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-mKMc4NI0Mpi2LoTiS2PCRA-1; Sat, 29 Feb 2020 08:15:38 -0500
-X-MC-Unique: mKMc4NI0Mpi2LoTiS2PCRA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E547C801E5C;
-        Sat, 29 Feb 2020 13:15:36 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-120-211.rdu2.redhat.com [10.10.120.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2114187B08;
-        Sat, 29 Feb 2020 13:15:34 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        intel-gfx@lists.freedesktop.org
-Subject: [PATCH] bitops: Always inline sign extension helpers
-Date:   Sat, 29 Feb 2020 07:15:26 -0600
-Message-Id: <740179324b2b18b750b16295c48357f00b5fa9ed.1582982020.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+        Sat, 29 Feb 2020 08:15:50 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so6422475wmb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:15:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=StjHIE38vB9VkgRe5PBuA02+GIccOjh9WWY3dcYX1eA=;
+        b=adMOLuCh06HYJjXSThzhaz1rU+fuueacqGN6n9pXhCp5nvsESAVrSbFoBx/0UHeH3K
+         0SQ2yRT9USWF1odw949iBSRHEED2wf0BmydNR87cqP6eP5Bvw+LxtkpzvrNFiEEMv/u5
+         oB4CyYYrx0x64hZpgPOADZ0/erRjqiKWPyNgiVVhf+56z4iTSTeknJnZJG236n+9mP5t
+         lTjDCiBgq1+PWdOMkriAoASal+hWEan5YzTFGMC80Ov7CzKk5znRE32xqB/89xHK8dXL
+         cce8Ib3TGvsApG9WFJ+cw95QojcAFgbWHv6TT68EVDFiTpv3Gnxcaoo1I/x8f0hBU5ac
+         3Ryg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=StjHIE38vB9VkgRe5PBuA02+GIccOjh9WWY3dcYX1eA=;
+        b=BTned06rO0+urWoWVmNoV/RJTPIEYuIp8XvYoEBYDH+G5qvrM0DOHaEKwI+5pHek5f
+         VVruBBxhPUNlULk/aMFe+Le9SU89JEHOAcv98jeSOW7xeSxQbVLGcnMsJfIPOKvYppMQ
+         AaYbpgMfwtwAI68vL7acPCVqqydgxIm5Fr8mIuDPvrNuonhHCHdDvN7V8/66qhaKLYE0
+         dpXXXLTmpwdbUinS1lD0GLAhChurMG4+p7Dm6W2E79uShWaT3N46FZlRJmOLQFX9YVw7
+         uouCuSa69Jfezzb11xif/TL1i89xdEyJGvq7X5wXiiJtZnnDwB0tYsubWqjiMTDwqW4d
+         LbPw==
+X-Gm-Message-State: APjAAAUkNkRTzRXUOA2MIwYaazTGVXC4Xy8avI54BwYCcT1d32iWfrXj
+        ea9L+/UHQqTT2aZhvAzEig0=
+X-Google-Smtp-Source: APXvYqwid96ZnU/kQzW9Q6WbNv3G7eYYzbUuU01TLOjfXlMXmXHcKC0x2TQQy3YRbQbUsrZlRlpRnA==
+X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr9803679wmj.17.1582982147118;
+        Sat, 29 Feb 2020 05:15:47 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id t187sm6702694wmt.25.2020.02.29.05.15.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Feb 2020 05:15:46 -0800 (PST)
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: [PATCH] mm/swapfile.c: simplify the scan loop in scan_swap_map_slots()
+Date:   Sat, 29 Feb 2020 13:15:37 +0000
+Message-Id: <20200229131537.3475-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_CC_OPTIMIZE_FOR_SIZE, objtool reports:
+After commit c60aa176c6de8 ("swapfile: swap allocation cycle if
+nonrot"), swap allocation is cyclic. Current approach is done with two
+separate loop on the upper and lower half. This looks a little
+redundant.
 
-  drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_=
-gem_execbuffer2_ioctl()+0x5b7: call to gen8_canonical_addr() with UACCESS=
- enabled
+From another point of view, the loop iterates [lowest_bit, highest_bit]
+range starting with (offset + 1) but except scan_base. So we can
+simplify the loop with condition (next_offset() != scan_base) by
+introducing next_offset() which makes sure offset fit in that range
+with correct order.
 
-This means i915_gem_execbuffer2_ioctl() is calling gen8_canonical_addr()
-from the user_access_begin/end critical region (i.e, with SMAP
-disabled).
-
-While it's probably harmless in this case, in general we like to avoid
-extra function calls in SMAP-disabled regions because it can open up
-inadvertent security holes.
-
-Fix the warning by changing the sign extension helpers to
-__always_inline.  This convinces GCC to inline gen8_canonical_addr().
-
-The sign extension functions are trivial anyway, so it makes sense to
-always inline them.  With my test optimize-for-size-based config, this
-actually shrinks the text size of i915_gem_execbuffer.o by 45 bytes --
-and no change for vmlinux.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+CC: Hugh Dickins <hughd@google.com>
 ---
- include/linux/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/swapfile.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 47f54b459c26..9acf654f0b19 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -162,7 +162,7 @@ static inline __u8 ror8(__u8 word, unsigned int shift=
-)
-  *
-  * This is safe to use for 16- and 8-bit types as well.
-  */
--static inline __s32 sign_extend32(__u32 value, int index)
-+static __always_inline __s32 sign_extend32(__u32 value, int index)
- {
- 	__u8 shift =3D 31 - index;
- 	return (__s32)(value << shift) >> shift;
-@@ -173,7 +173,7 @@ static inline __s32 sign_extend32(__u32 value, int in=
-dex)
-  * @value: value to sign extend
-  * @index: 0 based bit index (0<=3Dindex<64) to sign bit
-  */
--static inline __s64 sign_extend64(__u64 value, int index)
-+static __always_inline __s64 sign_extend64(__u64 value, int index)
- {
- 	__u8 shift =3D 63 - index;
- 	return (__s64)(value << shift) >> shift;
---=20
-2.21.1
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 95024f9b691a..42c5c2010bfc 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -729,6 +729,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 	}
+ }
+ 
++static unsigned long next_offset(struct swap_info_struct *si,
++				 unsigned long *offset)
++{
++	if (++(*offset) > si->highest_bit)
++		*offset = si->lowest_bit;
++	return *offset;
++}
++
+ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 			       unsigned char usage, int nr,
+ 			       swp_entry_t slots[])
+@@ -883,7 +891,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 
+ scan:
+ 	spin_unlock(&si->lock);
+-	while (++offset <= si->highest_bit) {
++	while (next_offset(si, &offset) != scan_base) {
+ 		if (!si->swap_map[offset]) {
+ 			spin_lock(&si->lock);
+ 			goto checks;
+@@ -897,22 +905,6 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 			latency_ration = LATENCY_LIMIT;
+ 		}
+ 	}
+-	offset = si->lowest_bit;
+-	while (offset < scan_base) {
+-		if (!si->swap_map[offset]) {
+-			spin_lock(&si->lock);
+-			goto checks;
+-		}
+-		if (vm_swap_full() && si->swap_map[offset] == SWAP_HAS_CACHE) {
+-			spin_lock(&si->lock);
+-			goto checks;
+-		}
+-		if (unlikely(--latency_ration < 0)) {
+-			cond_resched();
+-			latency_ration = LATENCY_LIMIT;
+-		}
+-		offset++;
+-	}
+ 	spin_lock(&si->lock);
+ 
+ no_page:
+-- 
+2.23.0
 
