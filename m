@@ -2,113 +2,147 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B69FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAC2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C5A2468E
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qafUWy3q"
+	by mail.kernel.org (Postfix) with ESMTP id C3AA82468E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgB2Q0Y (ORCPT
+        id S1727254AbgB2Q2Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:26:24 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:44780 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgB2Q0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:26:24 -0500
-Received: by mail-wr1-f73.google.com with SMTP id u18so3032100wrn.11
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 08:26:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=8BHXIrZSo7ztwvDixAus2JEWbAlyG62J4LvSOy7NOlw=;
-        b=qafUWy3q/1azkDlmbfWYWObCnOL4k2oL8OWI9/bFjri3ropOCRD3HCjzXYb0gU+Zgd
-         nrhUc8WdAdlO+1lF3lwHymlT6ej/pMR1ylxmNyFTWnahfltWmtlwg/gWmKgX6OeYB7wU
-         F8wJb8cE/BX2O19BLOfCKgz/52OlHXRFJBhbVsIcOEfCrFJ7gxV2gNOg0bZDy8dCgP6s
-         IVeAANhjUub6Qp9hwis0Iz7hE7oLE8s6Hx0aS7+Sit67j7DbPjmWOq7zwHnKtllywG+m
-         4eT/OYKF6vYFDm/lj/acKx3CFL8y74Q+AUhnCqMPeIRfcQmGqLIAqy5sCnOTWa6GUBUO
-         Ka2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=8BHXIrZSo7ztwvDixAus2JEWbAlyG62J4LvSOy7NOlw=;
-        b=m+k88O1lcAjqlRFhegsNmtkdttbw5q1ciJ68664LXZx6lHbd/GufD2bvd5bpChCZni
-         kQv/dHbPwBbyNFbAB2dbfN7aX+9ZaK7uCqiLlnVfrYMbMe+yYRIred1heaI/W9w2iFZH
-         qm/hXjpYpg0XNeIiSKPhRk71EkoomNbhezCvkQXm8f2BYvJ/GX/Oj/IRBcnlCIxZuRl3
-         ex2fFdsAFiBPj1rSNTxhGt1BKpEUuQVRl+9UZ2jiiQv81scbU78/BUj5f2aj5DiZTanN
-         vN5WylBzMnHysXUHZJNWWCEHpSGMDBj9WFyp/RxMMRK7RDQmgO047/g52Q8cLmPVG+Zy
-         FUIw==
-X-Gm-Message-State: APjAAAUCSX1gi++lZmZs9edNleZeVRI5gz5R+hvex+7LiX2STBYexD7F
-        7lOLorB1aExOsRZoWKKIJp8LPVF1vw==
-X-Google-Smtp-Source: APXvYqz5zp3w/yIYkoRFmWDN6+R/VNNJ6KBztADaNjM2Md9pBxdoFrUExKKcmUSlpX99QxDIj9Fa04QCXw==
-X-Received: by 2002:adf:d4d2:: with SMTP id w18mr11942681wrk.180.1582993582002;
- Sat, 29 Feb 2020 08:26:22 -0800 (PST)
-Date:   Sat, 29 Feb 2020 17:26:07 +0100
-Message-Id: <20200229162607.6000-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] tools: Fix realloc() use in fdarray__grow()
-From:   Jann Horn <jannh@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 29 Feb 2020 11:28:16 -0500
+Received: from mga02.intel.com ([134.134.136.20]:31496 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727119AbgB2Q2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 11:28:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Feb 2020 08:28:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,500,1574150400"; 
+   d="scan'208";a="437751103"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Feb 2020 08:28:13 -0800
+Received: from hasmsx603.ger.corp.intel.com (10.184.107.143) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 29 Feb 2020 08:28:13 -0800
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ HASMSX603.ger.corp.intel.com (10.184.107.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 29 Feb 2020 18:28:11 +0200
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Sat, 29 Feb 2020 18:28:11 +0200
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] mei: Don't encourage to use kernel internal types in
+ user code
+Thread-Topic: [PATCH v1] mei: Don't encourage to use kernel internal types in
+ user code
+Thread-Index: AQHV7kmoHRGWq8a92EO3ikJkF4xQsagyWSTQ
+Date:   Sat, 29 Feb 2020 16:28:11 +0000
+Message-ID: <3bb5abe91919458aa6166eb60d9451ff@intel.com>
+References: <20200228151328.45062-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200228151328.45062-1-andriy.shevchenko@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If `entries != NULL`, then `fda->entries` has been freed, so whatever
-happens afterwards, we must store `entries` in `fda->entries`.
-If we bail out at the second realloc(), the new allocation will be bigger
-than what fda->nr_alloc says, but that's fine.
 
-Fixes: 2171a9256862 ("tools lib fd array: Allow associating an integer cookie with each entry")
-Signed-off-by: Jann Horn <jannh@google.com>
----
-To the maintainer:
-I'm not sure about the etiquette for using CC stable in
-patches for somewhat theoretical issues in userland tools;
-feel free to tack a CC stable onto this if you think it
-should go into stable.
+> 
+> uuid_le is internal kernel type which shall not be exposed to the user in the first
+> place. 
+Why, these types are exported via include/uapi/linux/uuid.h
 
- tools/lib/api/fd/array.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+In order to mitigate the (wrong) distribution of the use of that type,
+> switch MEI AMT sample to plain unsigned char array.
 
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 58d44d5eee31..acf8eca1a94a 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -27,15 +27,13 @@ int fdarray__grow(struct fdarray *fda, int nr)
- 
- 	if (entries == NULL)
- 		return -ENOMEM;
-+	fda->entries = entries;
- 
- 	priv = realloc(fda->priv, psize);
--	if (priv == NULL) {
--		free(entries);
-+	if (priv == NULL)
- 		return -ENOMEM;
--	}
- 
- 	fda->nr_alloc = nr_alloc;
--	fda->entries  = entries;
- 	fda->priv     = priv;
- 	return 0;
- }
--- 
-2.25.0
+There was a change to guid_t from uuild_le, anyhow there is much more code
+ except this sample that uses those types. 
+
+Nack so far.
+Tomas
+
+> 
+> Note, there is no ABI change involved.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  samples/mei/mei-amt-version.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
+> index 32234481ad7d..458cb6db57c6 100644
+> --- a/samples/mei/mei-amt-version.c
+> +++ b/samples/mei/mei-amt-version.c
+> @@ -90,7 +90,7 @@
+>  } while (0)
+> 
+>  struct mei {
+> -	uuid_le guid;
+> +	unsigned char guid[16];
+>  	bool initialized;
+>  	bool verbose;
+>  	unsigned int buf_size;
+> @@ -108,7 +108,7 @@ static void mei_deinit(struct mei *cl)
+>  	cl->initialized = false;
+>  }
+> 
+> -static bool mei_init(struct mei *me, const uuid_le *guid,
+> +static bool mei_init(struct mei *me, const unsigned char *guid,
+>  		unsigned char req_protocol_version, bool verbose)  {
+>  	int result;
+> @@ -126,7 +126,7 @@ static bool mei_init(struct mei *me, const uuid_le
+> *guid,
+>  	memset(&data, 0, sizeof(data));
+>  	me->initialized = true;
+> 
+> -	memcpy(&data.in_client_uuid, &me->guid, sizeof(me->guid));
+> +	memcpy(&data.in_client_uuid, me->guid, sizeof(me->guid));
+>  	result = ioctl(me->fd, IOCTL_MEI_CONNECT_CLIENT, &data);
+>  	if (result) {
+>  		mei_err(me, "IOCTL_MEI_CONNECT_CLIENT receive message.
+> err=%d\n", result); @@ -270,8 +270,11 @@ struct amt_host_if_resp_header {
+>  	unsigned char data[0];
+>  } __attribute__((packed));
+> 
+> -const uuid_le MEI_IAMTHIF = UUID_LE(0x12f80028, 0xb4b7, 0x4b2d,  \
+> -				0xac, 0xa8, 0x46, 0xe0, 0xff, 0x65, 0x81,
+> 0x4c);
+> +/* MEI AMT Interface GUID: 12f80028-b4b7-4b2d-aca8-46e0ff65814c */
+> +const unsigned char mei_iamthif[16] = {
+> +	0x28, 0x00, 0xf8, 0x12, 0xb7, 0xb4, 0x2d, 0x4b,
+> +	0xac, 0xa8, 0x46, 0xe0, 0xff, 0x65, 0x81, 0x4c, };
+> 
+>  #define AMT_HOST_IF_CODE_VERSIONS_REQUEST  0x0400001A  #define
+> AMT_HOST_IF_CODE_VERSIONS_RESPONSE 0x0480001A @@ -295,7 +298,7
+> @@ static bool amt_host_if_init(struct amt_host_if *acmd,
+>  		      unsigned long send_timeout, bool verbose)  {
+>  	acmd->send_timeout = (send_timeout) ? send_timeout : 20000;
+> -	acmd->initialized = mei_init(&acmd->mei_cl, &MEI_IAMTHIF, 0,
+> verbose);
+> +	acmd->initialized = mei_init(&acmd->mei_cl, mei_iamthif, 0, verbose);
+>  	return acmd->initialized;
+>  }
+> 
+> --
+> 2.25.0
 
