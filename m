@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0DBC3F2C6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F6FC3F2D4
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167EC24672
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C2124672
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7j93h5+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwswjIcV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbgB2W31 (ORCPT
+        id S1727517AbgB2W33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 17:29:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33750 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgB2W30 (ORCPT
+        Sat, 29 Feb 2020 17:29:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51463 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbgB2W32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 17:29:26 -0500
-Received: by mail-wr1-f68.google.com with SMTP id x7so7826141wrr.0;
-        Sat, 29 Feb 2020 14:29:24 -0800 (PST)
+        Sat, 29 Feb 2020 17:29:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 9so1046947wmo.1;
+        Sat, 29 Feb 2020 14:29:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JUcStTd1OYnX+4/KTZoNwT3pKFBsMhYYxXgdxB6jewU=;
-        b=W7j93h5+gAXFNx9VjTexyPvITCCvM44iEc9yXZLJWWLzai9hpbYKLIPlAjzD61SKGy
-         NfQCBuAYb0M6t5HyCnmkWvzu7e2kJCxUa4lL6GfIm/8nsgALkayLXcSQ11KNVgoLfUjp
-         dR0iUK1MWrbED6doNC+8a6LcjaYZFtw3nXLG+cFCzYIxbc+hP4gbGiFJwSNSsRcn6YMr
-         qFs/0sr/K6WqfQWm5OIzt53tNNbyEvKJwTYttGysoXUJsPjCgOr/MGIqHHnYDIWbv59W
-         hyWN/KajLBnQF369IgqPkFZh42HTTMAMuKgC8rd8PEA5J3DYEqz0H3mowyc8mOvAPslA
-         cHjg==
+        bh=myR4RAc//3dCnqTEQ8pVmIEQ+AFWBKpyKIszlN9NwYU=;
+        b=TwswjIcVZfUuOsVFnI9BtvkCoHfapq371Mt/CK9szBaoH6IFLmYziO8L+680Rg92ED
+         +Vm6sjrJouR9p+j0N5dHKxzO40ggdAk3Kr5NN5d0ziTbRBZLBLl1KppyAqib1Um/0KqF
+         ze4il5mlV+BBZzqXnVweEiTSXNUncqab8lzYeEqCzIyFtdT83qm8mXoxLG700dedhDIi
+         umHEytNJVYXGykkrSnpqbAmPEkOk0tLmG70U8i8RsXoSL/lTEJNzUoqucXTw8KO2N5Og
+         79sqct9fphheiXzt9xZF6upl8dU/M7Pbkz4uYhe44K21rDVF+ZR33uQ53qMEWhxkGn6L
+         wXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=JUcStTd1OYnX+4/KTZoNwT3pKFBsMhYYxXgdxB6jewU=;
-        b=F5XBMskfak5fPZRHhESnq1g5wOxKemBsYzT7oUbXgB4MGhNNDbteQRf0FrpQ0cNtNN
-         RCQODVVUpV7sfd8vs6auLnnyPW70sFAF8g285yFbF2zdeS5X1LCuxVIo5hQpLuoD7vcj
-         CWKH9ligM8l2vOzNRNBWJ1yqKemwRfTS3GOO7zGWzfz08ebxv2RnoARmQRdmP4UI/yZx
-         d+wTObP4+2wCHIN1/PnpT8ysn7E/Jlq/HXcFuDjAf9ViBZPkhZQminXldZTZCza5RR18
-         fDuvnl0zsKekcwrQAoyfJ3uWONWgcwVxPdrGyiN0OK2knOKRss56j29E45ufgdQ0SmjR
-         L9Sg==
-X-Gm-Message-State: APjAAAUiWy9+MWg4Ay+GP7yjhIAH/yLsrpNmPVA7R4+qiLA1x3J3UkKc
-        nFpyyK6D+X/byctufsxMtI4a0RX5
-X-Google-Smtp-Source: APXvYqxDK8DmyGmZovFQT4NhCchWjRPiRjKFyOka2xlPwNfL3r2zy7c1fFhpYk0IV1YBKCtG+HsPdQ==
-X-Received: by 2002:a5d:424c:: with SMTP id s12mr12210642wrr.244.1583015364175;
-        Sat, 29 Feb 2020 14:29:24 -0800 (PST)
+        bh=myR4RAc//3dCnqTEQ8pVmIEQ+AFWBKpyKIszlN9NwYU=;
+        b=WJ7f+fv33mPyz00lm6E2l/C1WhYMuAupKF38I5Kj+T4xgmhFpjL1Y6tO+YrydMwht2
+         Y2GOx818AE+3BGh/hhx+ro06cLklrj0SHscGvOzn/S8bfbPnjlGhSYh30GYFO2qyahww
+         5gTVz1Kes/BQObfiWdIxNUrWmBzMYT+QiE+QQ/6vTtQ5y71NF9bvSUjiLKjZO2np+xXN
+         33VOpSwevMYWDLk0posHQxfRQhSvckbbIxxIQ+FEbCCvhWC3Bwinb+UPBhRBVbYinjhL
+         ivs1PHLvcyv1OnFHjI8yNBMn5d/8KEyLMQ1p26yKAPqMUx2liJomWC1wGxpWRUI+kWa6
+         sJZA==
+X-Gm-Message-State: APjAAAUwQS3JtbUk2IupxqAyzQrZZzVrdx2nu8YD4oXFwZlKVcCLDO6I
+        h8Bgjkj+4sQMQbBHB8hiEPg=
+X-Google-Smtp-Source: APXvYqwzs7Zoc9nr2q/NPXFPCKZAB5tA8lu9Kr/BNlJwkZDymFknQXHa2NV02VZ/jB3jqQPfR4jxSQ==
+X-Received: by 2002:a1c:a70a:: with SMTP id q10mr6956306wme.88.1583015366430;
+        Sat, 29 Feb 2020 14:29:26 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:7150:76fe:91ca:7ab5? (p200300EA8F296000715076FE91CA7AB5.dip0.t-ipconnect.de. [2003:ea:8f29:6000:7150:76fe:91ca:7ab5])
-        by smtp.googlemail.com with ESMTPSA id q3sm7781235wmj.38.2020.02.29.14.29.23
+        by smtp.googlemail.com with ESMTPSA id c9sm7873948wmc.47.2020.02.29.14.29.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Feb 2020 14:29:23 -0800 (PST)
-Subject: [PATCH v4 01/10] net: marvell: add PCI_STATUS_SIG_TARGET_ABORT to PCI
- status error bits
+        Sat, 29 Feb 2020 14:29:26 -0800 (PST)
+Subject: [PATCH v4 03/10] r8169: add PCI_STATUS_PARITY to PCI status error
+ bits
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
@@ -73,8 +73,8 @@ Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         alsa-devel@alsa-project.org
 References: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
-Message-ID: <497952d4-de09-e268-0e2a-511a473198d7@gmail.com>
-Date:   Sat, 29 Feb 2020 23:20:32 +0100
+Message-ID: <94e0dca7-859d-12f6-9316-55fc107dd49d@gmail.com>
+Date:   Sat, 29 Feb 2020 23:22:55 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -89,39 +89,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 In preparation of factoring out PCI_STATUS error bit handling let drivers
 use the same collection of error bits. To facilitate bisecting we do this
-in a separate patch per affected driver. For the Marvell drivers we have
-to add PCI_STATUS_SIG_TARGET_ABORT to the error bits.
+in a separate patch per affected driver. For the r8169 driver we have to
+add PCI_STATUS_PARITY to the error bits.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/marvell/skge.h | 1 +
- drivers/net/ethernet/marvell/sky2.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ethernet/realtek/r8169_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
-index 6fa7b6a34..e76c03c87 100644
---- a/drivers/net/ethernet/marvell/skge.h
-+++ b/drivers/net/ethernet/marvell/skge.h
-@@ -19,6 +19,7 @@
- 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
- 			       PCI_STATUS_REC_MASTER_ABORT | \
- 			       PCI_STATUS_REC_TARGET_ABORT | \
-+			       PCI_STATUS_SIG_TARGET_ABORT | \
- 			       PCI_STATUS_PARITY)
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index f081007a2..7c9892a16 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -4381,7 +4381,7 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
  
- enum csr_regs {
-diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
-index b02b65230..aee87f838 100644
---- a/drivers/net/ethernet/marvell/sky2.h
-+++ b/drivers/net/ethernet/marvell/sky2.h
-@@ -256,6 +256,7 @@ enum {
- 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
- 			       PCI_STATUS_REC_MASTER_ABORT | \
- 			       PCI_STATUS_REC_TARGET_ABORT | \
-+			       PCI_STATUS_SIG_TARGET_ABORT | \
- 			       PCI_STATUS_PARITY)
+ 	pci_write_config_word(pdev, PCI_STATUS,
+-		pci_status & (PCI_STATUS_DETECTED_PARITY |
++		pci_status & (PCI_STATUS_DETECTED_PARITY | PCI_STATUS_PARITY |
+ 		PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT |
+ 		PCI_STATUS_REC_TARGET_ABORT | PCI_STATUS_SIG_TARGET_ABORT));
  
- enum csr_regs {
 -- 
 2.25.1
 
