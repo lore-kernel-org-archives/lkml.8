@@ -2,150 +2,420 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4A3C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 07:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87022C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 07:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0922824695
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 07:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A962469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 07:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgB2H13 (ORCPT
+        id S1726785AbgB2HmR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 02:27:29 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33292 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgB2H13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 02:27:29 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B1E09537301830FD26E2;
-        Sat, 29 Feb 2020 15:27:24 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 29 Feb 2020
- 15:27:15 +0800
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-To:     Scott Wood <oss@buserror.net>, Daniel Axtens <dja@axtens.net>,
-        <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
- <87tv3drf79.fsf@dja-thinkpad.axtens.net>
- <8171d326-5138-4f5c-cff6-ad3ee606f0c2@huawei.com>
- <e8cd8f287934954cfa07dcf76ac73492e2d49a5b.camel@buserror.net>
- <dd8db870-b607-3f74-d3bc-a8d9f33f9852@huawei.com>
- <4c0e7fec63dbc7b91fa6c24692c73c256c131f51.camel@buserror.net>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <188971ed-f1c4-39b3-c07e-89cc593d88d7@huawei.com>
-Date:   Sat, 29 Feb 2020 15:27:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Sat, 29 Feb 2020 02:42:17 -0500
+Received: from mailoutvs10.siol.net ([185.57.226.201]:54964 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725747AbgB2HmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 02:42:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id CE99052215B;
+        Sat, 29 Feb 2020 08:42:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wQHFwAuTRgmc; Sat, 29 Feb 2020 08:42:09 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 007665220C7;
+        Sat, 29 Feb 2020 08:42:08 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 96A51521765;
+        Sat, 29 Feb 2020 08:42:07 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, boris.brezillon@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format negociation
+Date:   Sat, 29 Feb 2020 08:42:06 +0100
+Message-ID: <5330543.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20200206191834.6125-5-narmstrong@baylibre.com>
+References: <20200206191834.6125-1-narmstrong@baylibre.com> <20200206191834.6125-5-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <4c0e7fec63dbc7b91fa6c24692c73c256c131f51.camel@buserror.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Neil!
+
+Dne četrtek, 06. februar 2020 ob 20:18:27 CET je Neil Armstrong napisal(a):
+> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to negociate
+> the possible output and input formats for the current mode and monitor,
+> and use the negotiated formats in a basic atomic_check callback.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
+>  1 file changed, 268 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> fec4a4bcd1fe..15048ad694bc 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> struct drm_display_mode *mode)
+> hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
+>  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
+> 
+> -	/* TOFIX: Get input format from plat data or fallback to RGB888 */
+>  	if (hdmi->plat_data->input_bus_format)
+>  		hdmi->hdmi_data.enc_in_bus_format =
+>  			hdmi->plat_data->input_bus_format;
+> -	else
+> +	else if (hdmi->hdmi_data.enc_in_bus_format == MEDIA_BUS_FMT_FIXED)
+>  		hdmi->hdmi_data.enc_in_bus_format = 
+MEDIA_BUS_FMT_RGB888_1X24;
+> 
+>  	/* TOFIX: Get input encoding from plat data or fallback to none */
+> @@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct
+> drm_display_mode *mode) else
+>  		hdmi->hdmi_data.enc_in_encoding = 
+V4L2_YCBCR_ENC_DEFAULT;
+> 
+> -	/* TOFIX: Default to RGB888 output format */
+> -	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> +	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
+> +		hdmi->hdmi_data.enc_out_bus_format = 
+MEDIA_BUS_FMT_RGB888_1X24;
+> 
+>  	hdmi->hdmi_data.pix_repet_factor = 0;
+>  	hdmi->hdmi_data.hdcp_enable = 0;
+> @@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs
+> dw_hdmi_connector_helper_funcs = .atomic_check =
+> dw_hdmi_connector_atomic_check,
+>  };
+> 
+> +/*
+> + * Possible output formats :
+> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48,
+> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
+> + * - MEDIA_BUS_FMT_YUV16_1X48,
+> + * - MEDIA_BUS_FMT_RGB161616_1X48,
+> + * - MEDIA_BUS_FMT_UYVY12_1X24,
+> + * - MEDIA_BUS_FMT_YUV12_1X36,
+> + * - MEDIA_BUS_FMT_RGB121212_1X36,
+> + * - MEDIA_BUS_FMT_UYVY10_1X20,
+> + * - MEDIA_BUS_FMT_YUV10_1X30,
+> + * - MEDIA_BUS_FMT_RGB101010_1X30,
+> + * - MEDIA_BUS_FMT_UYVY8_1X16,
+> + * - MEDIA_BUS_FMT_YUV8_1X24,
+> + * - MEDIA_BUS_FMT_RGB888_1X24,
+> + */
+> +
+> +/* Can return a maximum of 12 possible output formats for a mode/connector
+> */ +#define MAX_OUTPUT_SEL_FORMATS	12
+> +
+> +static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge
+> *bridge, +					struct 
+drm_bridge_state *bridge_state,
+> +					struct drm_crtc_state 
+*crtc_state,
+> +					struct 
+drm_connector_state *conn_state,
+> +					unsigned int 
+*num_output_fmts)
+> +{
+> +	struct drm_connector *conn = conn_state->connector;
+> +	struct drm_display_info *info = &conn->display_info;
+> +	struct drm_display_mode *mode = &crtc_state->mode;
+> +	u8 max_bpc = conn_state->max_requested_bpc;
+> +	bool is_hdmi2_sink = info->hdmi.scdc.supported ||
+> +			     (info->color_formats & 
+DRM_COLOR_FORMAT_YCRCB420);
+> +	u32 *output_fmts;
+> +	int i = 0;
+> +
+> +	*num_output_fmts = 0;
+> +
+> +	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS, sizeof(*output_fmts),
+> +			      GFP_KERNEL);
+> +	if (!output_fmts)
+> +		return NULL;
+> +
+> +	/*
+> +	 * If the current mode enforces 4:2:0, force the output but format
+> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+> +	 */
+> +	if (conn->ycbcr_420_allowed &&
+> +	    (drm_mode_is_420_only(info, mode) ||
+> +	     ())) {
+> +
+> +		/* Order bus formats from 16bit to 8bit if supported */
+> +		if (max_bpc >= 16 && info->bpc == 16 &&
+> +		    (info->hdmi.y420_dc_modes & 
+DRM_EDID_YCBCR420_DC_48))
+> +			output_fmts[i++] = 
+MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+> +
+> +		if (max_bpc >= 12 && info->bpc >= 12 &&
+> +		    (info->hdmi.y420_dc_modes & 
+DRM_EDID_YCBCR420_DC_36))
+> +			output_fmts[i++] = 
+MEDIA_BUS_FMT_UYYVYY12_0_5X36;
+> +
+> +		if (max_bpc >= 10 && info->bpc >= 10 &&
+> +		    (info->hdmi.y420_dc_modes & 
+DRM_EDID_YCBCR420_DC_30))
+> +			output_fmts[i++] = 
+MEDIA_BUS_FMT_UYYVYY10_0_5X30;
+> +
+> +		/* Default 8bit fallback */
+> +		output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+> +
+> +		*num_output_fmts = i;
+> +
+> +		return output_fmts;
+
+Driver shouldn't return just yet for case "is_hdmi2_sink && 
+drm_mode_is_420_also(info, mode)", because monitor/TV also supports YCbCr 
+4:4:4 in that case. IMO YCbCr 4:4:4 should be even prefered. What do you 
+think?
+
+Best regards,
+Jernej
+
+> +	}
+> +
+> +	/*
+> +	 * Order bus formats from 16bit to 8bit and from YUV422 to RGB
+> +	 * if supported. In any case the default RGB888 format is added
+> +	 */
+> +
+> +	if (max_bpc >= 16 && info->bpc == 16) {
+> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> +
+> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> +	}
+> +
+> +	if (max_bpc >= 12 && info->bpc >= 12) {
+> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +
+> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +
+> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +	}
+> +
+> +	if (max_bpc >= 10 && info->bpc >= 10) {
+> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +
+> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +
+> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +	}
+> +
+> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> +		output_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +
+> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> +		output_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +
+> +	/* Default 8bit RGB fallback */
+> +	output_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +
+> +	*num_output_fmts = i;
+> +
+> +	return output_fmts;
+> +}
+> +
+> +/*
+> + * Possible input formats :
+> + * - MEDIA_BUS_FMT_RGB888_1X24
+> + * - MEDIA_BUS_FMT_YUV8_1X24
+> + * - MEDIA_BUS_FMT_UYVY8_1X16
+> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24
+> + * - MEDIA_BUS_FMT_RGB101010_1X30
+> + * - MEDIA_BUS_FMT_YUV10_1X30
+> + * - MEDIA_BUS_FMT_UYVY10_1X20
+> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30
+> + * - MEDIA_BUS_FMT_RGB121212_1X36
+> + * - MEDIA_BUS_FMT_YUV12_1X36
+> + * - MEDIA_BUS_FMT_UYVY12_1X24
+> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36
+> + * - MEDIA_BUS_FMT_RGB161616_1X48
+> + * - MEDIA_BUS_FMT_YUV16_1X48
+> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48
+> + */
+> +
+> +/* Can return a maximum of 4 possible input formats for an output format */
+> +#define MAX_INPUT_SEL_FORMATS	4
+> +
+> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge
+> *bridge, +					struct 
+drm_bridge_state *bridge_state,
+> +					struct drm_crtc_state 
+*crtc_state,
+> +					struct 
+drm_connector_state *conn_state,
+> +					u32 output_fmt,
+> +					unsigned int 
+*num_input_fmts)
+> +{
+> +	u32 *input_fmts;
+> +	int i = 0;
+> +
+> +	*num_input_fmts = 0;
+> +
+> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+> +			     GFP_KERNEL);
+> +	if (!input_fmts)
+> +		return NULL;
+> +
+> +	switch (output_fmt) {
+> +	/* 8bit */
+> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		break;
+> +
+> +	/* 10bit */
+> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		break;
+> +
+> +	/* 12bit */
+> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV12_1X36:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		break;
+> +
+> +	/* 16bit */
+> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV16_1X48:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> +		break;
+> +
+> +	/* 420 */
+> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+> +		input_fmts[i++] = output_fmt;
+> +		break;
+> +	}
+> +
+> +	*num_input_fmts = i;
+> +
+> +	if (*num_input_fmts == 0) {
+> +		kfree(input_fmts);
+> +		input_fmts = NULL;
+> +	}
+> +
+> +	return input_fmts;
+> +}
+> +
+> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+> +				       struct drm_bridge_state 
+*bridge_state,
+> +				       struct drm_crtc_state 
+*crtc_state,
+> +				       struct drm_connector_state 
+*conn_state)
+> +{
+> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> +
+> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+> +			bridge_state->output_bus_cfg.format);
+> +
+> +	hdmi->hdmi_data.enc_out_bus_format =
+> +			bridge_state->output_bus_cfg.format;
+> +
+> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+> +			bridge_state->input_bus_cfg.format);
+> +
+> +	hdmi->hdmi_data.enc_in_bus_format =
+> +			bridge_state->input_bus_cfg.format;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>  {
+>  	struct dw_hdmi *hdmi = bridge->driver_private;
+> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs
+> dw_hdmi_bridge_funcs = { .atomic_reset = drm_atomic_helper_bridge_reset,
+>  	.attach = dw_hdmi_bridge_attach,
+>  	.detach = dw_hdmi_bridge_detach,
+> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+> +	.atomic_get_output_bus_fmts = 
+dw_hdmi_bridge_atomic_get_output_bus_fmts,
+> +	.atomic_get_input_bus_fmts = 
+dw_hdmi_bridge_atomic_get_input_bus_fmts,
+>  	.enable = dw_hdmi_bridge_enable,
+>  	.disable = dw_hdmi_bridge_disable,
+>  	.mode_set = dw_hdmi_bridge_mode_set,
+> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> 
+>  	hdmi->bridge.driver_private = hdmi;
+>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+> +
+>  #ifdef CONFIG_OF
+>  	hdmi->bridge.of_node = pdev->dev.of_node;
+>  #endif
 
 
-在 2020/2/29 12:28, Scott Wood 写道:
-> On Fri, 2020-02-28 at 14:47 +0800, Jason Yan wrote:
->>
->> 在 2020/2/28 13:53, Scott Wood 写道:
->>> On Wed, 2020-02-26 at 16:18 +0800, Jason Yan wrote:
->>>> Hi Daniel,
->>>>
->>>> 在 2020/2/26 15:16, Daniel Axtens 写道:
->>>>> Maybe replacing the REG format string in KASLR mode would be
->>>>> sufficient?
->>>>>
->>>>
->>>> Most archs have removed the address printing when dumping stack. Do we
->>>> really have to print this?
->>>>
->>>> If we have to do this, maybe we can use "%pK" so that they will be
->>>> hidden from unprivileged users.
->>>
->>> I've found the addresses to be useful, especially if I had a way to dump
->>> the
->>> stack data itself.  Wouldn't the register dump also be likely to give away
->>> the
->>> addresses?
->>
->> If we have to print the address, then kptr_restrict and dmesg_restrict
->> must be set properly so that unprivileged users cannot see them.
-> 
-> And how does that work with crash dumps that could be from any context?
-> 
-> dmesg_restrict is irrelevant as it just controls who can see the dmesg, not
-> what goes into it.  kptr_restrict=1 will only get the value if you're not in
-> any sort of IRQ, *and* if the crashing context happened to have CAP_SYSLOG.
-> No other value of kptr_restrict will ever get you the raw value.
->
->>>
->>> I don't see any debug setting for %pK (or %p) to always print the actual
->>> address (closest is kptr_restrict=1 but that only works in certain
->>> contexts)... from looking at the code it seems it hashes even if kaslr is
->>> entirely disabled?  Or am I missing something?
->>>
->>
->> Yes, %pK (or %p) always hashes whether kaslr is disabled or not. So if
->> we want the real value of the address, we cannot use it. But if you only
->> want to distinguish if two pointers are the same, it's ok.
-> 
-> Am I the only one that finds this a bit crazy?  If you want to lock a system
-> down then fine, but why wage war on debugging even when there's no
-> randomization going on?  Comparing two pointers for equality is not always
-> adequate.
-> 
 
-AFAIK, %p hashing is only exist because of many legacy address printings
-and force who really want the raw values to switch to %px or even %lx.
-It's not the opposite of debugging. Raw address printing is not
-forbidden, only people need to estimate the risk of adrdress leaks.
-
-Turnning to %p may not be a good idea in this situation. So
-for the REG logs printed when dumping stack, we can disable it when
-KASLR is open. For the REG logs in other places like show_regs(), only
-privileged can trigger it, and they are not combind with a symbol, so
-I think it's ok to keep them.
-
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index fad50db9dcf2..659c51f0739a 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -2068,7 +2068,10 @@ void show_stack(struct task_struct *tsk, unsigned 
-long *stack)
-                 newsp = stack[0];
-                 ip = stack[STACK_FRAME_LR_SAVE];
-                 if (!firstframe || ip != lr) {
--                       printk("["REG"] ["REG"] %pS", sp, ip, (void *)ip);
-+                       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
-+                               printk("%pS", (void *)ip);
-+                       else
-+                               printk("["REG"] ["REG"] %pS", sp, ip, 
-(void *)ip);
-  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-                         ret_addr = ftrace_graph_ret_addr(current,
-                                                 &ftrace_idx, ip, stack);
-
-
-Thanks,
-Jason
-
-> -Scott
-> 
-> 
-> 
-> .
-> 
 
