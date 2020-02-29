@@ -2,150 +2,125 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DECC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D865FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E83B21556
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6BD2073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkF9xsc3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZDfEfSIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgB2Qus (ORCPT
+        id S1727393AbgB2Qzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:50:48 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33670 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgB2Qur (ORCPT
+        Sat, 29 Feb 2020 11:55:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32857 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgB2Qzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:50:47 -0500
-Received: by mail-qt1-f195.google.com with SMTP id x8so2316941qts.0;
-        Sat, 29 Feb 2020 08:50:47 -0800 (PST)
+        Sat, 29 Feb 2020 11:55:44 -0500
+Received: by mail-wr1-f66.google.com with SMTP id x7so7197678wrr.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 08:55:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qukwWikGcINxLygrM52wRnkiMQepoX66/gICPazqEbw=;
-        b=WkF9xsc3RCvW89Rdb8UnqX8NATmcWDcQuHsevc3f8UW2bQ2qH2s4ST7k/39ipav6BI
-         uDdY3u28Wtabsn4tY6ES19oG19ZlmrmSayYFwpOF0X1C6tpnQQJqMkPCTi/jJew3a5re
-         AQdh5fTJIvJSVX3d3fRq524/awTsKbVnEcXUux3vaVLi9ZjyBKEOTygGDY8d9IExqLOE
-         BY8RmArtKcsvkWeMy33BrPnGHjkWdyAsOc7JRwCWoo5xkfm221BUOuX1zd7aVZp0ca2h
-         5/PL9PJ0tjv620D4I7o+naYWpb0bgdjHeV4BvvIfFT1TsCetY68Ce9vHfPKFI00HvY1B
-         IA7w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d/eDOfaq0VJ/SLOUD8o7N9AIT3f4AtWAyVbS0HbmA+Y=;
+        b=ZDfEfSIbwFOP6KOSjbayNzj2YbEZkQX6Z41YrmSJXwXfIh4gcrTrC0ucxSb/UYemLq
+         9j5cCBJkMzkTvxX433AP/ieV1mdL1BQJEccbZjHRV5QkQrVpE500qmNZgFUHIJ/wRWJO
+         X6SQfLREWXeMkvz104rKMdxzDeIup0/o0ASv3tTmCBoWnqWrqyT5vrf9a21vuMGfldQt
+         Ge9ByOggpCLLbHQ5ykfL+5aivVBTM0k8ro5eOMSpz7qA9F5MiWXKn5MY6N5W8crsCrDn
+         pQDEBa+Fto/kFy+CaM2qOroDjpISsdzWG3vtB9T5Igz5ZbFx/lG5P6a66rKemJ0IFjd7
+         gJ3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qukwWikGcINxLygrM52wRnkiMQepoX66/gICPazqEbw=;
-        b=gAxwbnzgP1216aWvkfn8eOQUskqaMUO6U/FGYlz1sA7MwVDYP7TuYlG4tNcL8k4cgR
-         PkQwxgWtdoNdYOTJbssKrGIzMDLIEJ8OOyLWU42F/EfbJLJhrYwI+83wBOCouLj3rQwF
-         jRuFwPf0e5zTkH74nc6+wHsOsAjikMJCC8XPtGiFyYDfJzsjfE/nbI1YaDkem9YpDsS1
-         P+Zpnl7Q8uzLtULp/YAJZjd25eOAm6lDYHvz09pj3R6PWo0p7s1RyyIxcIRXqirS2IGr
-         J7BAbE8CYfBLRWjAzzlu8oYTm6xjJ3odFfz1y7hWIiDRkgf4oOTI5s5wy770s2qKnsSL
-         kxOw==
-X-Gm-Message-State: APjAAAX6EGPPox+ljfDVQnEeTsdx98Sx/x8aMSzaL4gfYb0vJ7CiOGOm
-        llrRagnrsqCKgDkuMw66rALPxXdI2Fw=
-X-Google-Smtp-Source: APXvYqy8G8TCNGPr1To3wkltVQhap17PH7rYo9xy6m1uhA/V3fEZkrNsvoYRyCBfWU3W0Zmdy/RdlA==
-X-Received: by 2002:aed:24b2:: with SMTP id t47mr8856120qtc.337.1582995046272;
-        Sat, 29 Feb 2020 08:50:46 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x34sm2776166qta.82.2020.02.29.08.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 08:50:45 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 29 Feb 2020 11:50:44 -0500
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
- post-relocation
-Message-ID: <20200229165043.GA703247@rani.riverdale.lan>
-References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
- <20200226230031.3011645-2-nivedita@alum.mit.edu>
- <20200227081229.GA29411@gmail.com>
- <20200227151643.GA3498170@rani.riverdale.lan>
- <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
- <20200227155421.GA3507597@rani.riverdale.lan>
- <CAKv+Gu-k0c8GzKysv4Z9tYzEvfhJUzuiKx5nfwD0JU8ys=LZdg@mail.gmail.com>
- <20200227180305.GA3598722@rani.riverdale.lan>
- <20200229092425.GB92847@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=d/eDOfaq0VJ/SLOUD8o7N9AIT3f4AtWAyVbS0HbmA+Y=;
+        b=Dy0rh52KiFWNff30IXzt4KwQXMFxKZbmPOCbiM158+Ab0bNlwHvsWFW9SXCpQJtI4x
+         CFVL2IaAB11nZGlk/W0LkNCcOhNuqiqnFJPMTHyh+L+iexitUBtrQTmAqA7NTXCyOAbe
+         NbwaJ2DTiqdyptS0UhW51ePJfzt8rlyMkN5cKeUvLWCtE14R9nUxfQ7OPkWsR1iLR9XO
+         RAnG2sSNJWdxP5hBrpjepYUJ32vPvfFkPyN+AD/Wp5llNxRuNG1v6buidE01oz1cQ/0Q
+         aJWGEAuDrUSi4NgGnRaYkLxmD1B7+zxAC1N2F5kCpiXVEQ21iGAT/O15b8oWrEqqoX/L
+         ilRQ==
+X-Gm-Message-State: APjAAAXb6LkHeRIk948REWggjMcbYsac1+tA7taC6OjQOHiSPm3gBrJu
+        KU1BBAk7dfZUq6waIpO3f9CDh0LS4zOM7w==
+X-Google-Smtp-Source: APXvYqwKHZ29xYaYamtjaiSWnMeUqe2YZDrHRDyBGKpmsUJX9UY0hoeQvKhbYqqayRN0+5Hv35ysoQ==
+X-Received: by 2002:adf:f58c:: with SMTP id f12mr10964595wro.22.1582995334791;
+        Sat, 29 Feb 2020 08:55:34 -0800 (PST)
+Received: from localhost (229.3.136.88.rev.sfr.net. [88.136.3.229])
+        by smtp.gmail.com with ESMTPSA id d63sm6703261wmd.44.2020.02.29.08.55.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Feb 2020 08:55:34 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Carlo Caione <carlo@caione.org>
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "Neil Armstrong" <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        "Jian Hu" <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH] soc: amlogic: fix compile failure with MESON_SECURE_PM_DOMAINS & !MESON_SM
+In-Reply-To: <20200224101654.530f1837@canb.auug.org.au>
+References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com> <20200218080743.07e58c6e@canb.auug.org.au> <20200218092229.0448d266@canb.auug.org.au> <20200224101654.530f1837@canb.auug.org.au>
+Date:   Sat, 29 Feb 2020 17:55:32 +0100
+Message-ID: <7hzhd19vuj.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200229092425.GB92847@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 10:24:25AM +0100, Ingo Molnar wrote:
-> 
-> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> 
-> > On Thu, Feb 27, 2020 at 06:47:55PM +0100, Ard Biesheuvel wrote:
-> > > 
-> > > Interesting. I am going to rip most of the EFI handover protocol stuff
-> > > out of OVMF, since it is mostly unnecessary, and having the PE/COFF
-> > > loader put the image in the correct place right away is a nice
-> > > complimentary improvement to that. (Note that the OVMF implementation
-> > > of the EFI handover protocol does not currently honor the preferred
-> > > address from the setup header anyway)
-> > 
-> > Yeah, for my testing I'm running the image from the EFI shell, which
-> > enters via PE entry point and honors the pref address.
-> 
-> So with KASLR, which is the distro default on most x86 distros, we'll 
-> relocate the kernel to another address anyway, right?
-> 
-> But telling the bootloader the preferred address would avoid any 
-> relocation overhead even in this case, right?
-> 
-> Thanks,
-> 
-> 	Ingo
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-If I understand correctly, pref_address was added to try to avoid having
-to apply the relocations (vmlinux.relocs) by loading at the link-time
-address if possible, and you're saying that with KASLR, we have to do
-relocations anyway; and without KASLR the bootloader knows the preferred
-address from the setup header already?
+> Hi all,
+>
+> On Tue, 18 Feb 2020 09:22:29 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> On Tue, 18 Feb 2020 08:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>> >
+>> > On Tue, 18 Feb 2020 00:12:13 +0800 Jianxin Pan <jianxin.pan@amlogic.com> wrote:  
+>> > >
+>> > > When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
+>> > > .../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
+>> > > .../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
+>> > > 
+>> > > Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+>> > > 
+>> > > Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domains controller")
+>> > > 
+>> > > Reported-by: kbuild test robot <lkp@intel.com>
+>> > > Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@kernel.org>
+>> > > Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
+>> > > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> > > ---
+>> > >  drivers/soc/amlogic/Kconfig | 2 +-
+>> > >  1 file changed, 1 insertion(+), 1 deletion(-)    
+>> > 
+>> > I will apply that patch to linux-next today.  
+>> 
+>> This fixes the build for me.
+>> 
+>> Tested-by: Stephen Rothwell<sfr@canb.auug.org.au>
+>> 
+>> Also, please keep the commit message tags together at the end of the
+>> commit message i.e. remove the blank line after the Fixes: tag above.
+>> (see "git interpret-trailers ")
+>
+> I am still applying this patch ...
 
-The patch I'm working on is meant to address the case when we are loaded
-via the EFI LoadImage service, which is a generic PE loader, and hence
-doesn't look at the pref_address in the setup header. We currently will
-end up with at least 2 copies of the kernel, with 1 additional copy if
-KASLR is enabled. The loader puts us somewhere, the EFI stub then makes
-a copy trying to move us to pref_address, and then KASLR will allocate
-an additional copy (not really a copy, but a buffer of the same size to
-decompress into). By telling the PE loader what the preferred address is
-I'm trying to avoid the EFI stub creating an additional copy, so we'll
-have 1 copy, or 2 with KASLR.
+I've fixed up the trailer whitespace an queued this up now, so should
+show up in linux next shortly.
 
-That was the original motivation for the patch. As I've been working on
-it, I'm thinking that the copy in the EFI stub can be avoided in more
-cases.
-
-AFAICT, pref_address is completely irrelevant on 64-bit, which will have
-relocations applied only if KASLR is enabled and changes the virtual
-address, but it never cares what physical address it's running out of.
-It only requires being above LOAD_PHYSICAL_ADDR and below 2^46 or 2^52.
-All we need to do is align the decompression buffer correctly.
-
-For 32-bit, loading at pref_address can avoid relocations being applied,
-but if we're not already loaded there in the first place, trying to
-allocate a new buffer and copying the whole image is probably not worth
-it. It does have more restrictions on physical addresses in that it
-can't run at too high a physical address, so it may still be necessary
-to relocate to avoid that.
-
-Thanks.
+Kevin
