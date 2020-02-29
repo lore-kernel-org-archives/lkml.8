@@ -2,144 +2,154 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ECC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6042468A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8F1214DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ABuxQ+uf";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VdDY/5xK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwYUEalb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgB2SoM (ORCPT
+        id S1727491AbgB2Spd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:44:12 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56516 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727194AbgB2SoM (ORCPT
+        Sat, 29 Feb 2020 13:45:33 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44918 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727194AbgB2Spc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 13:44:12 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01TIVHSZ028405;
-        Sat, 29 Feb 2020 10:43:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
- b=ABuxQ+ufv/wrth11Ybfr9N459riaiArs7qbRmlBZmo2Y9jyUDSo+AJmyORpPxhS5YtbF
- oIQS+u1F/12RCXKBybvPpc2rCKxj2YrRhQsFFPJJjGSJf5tGrg2MwIFTtyJdRr8RdeSj
- yDvnOk7ldBC5UO7gvZVBrWoX6CeQYlqabDE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yfphj152q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 29 Feb 2020 10:43:09 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 29 Feb 2020 10:43:07 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ALMnziPoNZW3Ks3MteEpf35A/SLNz3TYFCd961C9eWoqNtDIAcew+q+F9jFahGKbdpXOvQI/MHrljeaZY+tBNcbYeB+TGAIBeq8JJ+NbwcEx8iXAMJIwMjGmhM92YZBqtbsz0zh5QXxioLAYjuJXi/5CDxTih2aOgkjRC6Bwmq+4GTW1KEXQX4P+6PNJNfhf5OOgomYY1FmzlLV976BtOBWTykBy+cEq0brAi+YJLpfZxbqpD3bxMVRX4vSn8wjDeTXE1CPncu06SPl9ytAeaamnu+4sSl2QTT0roJGWt3civGsbqLPTSQcUF6GW+QOudnMHN+6O1po1ds8qFZAxYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
- b=eR6y/pbPyrMMY448Y7V0pkwOWQIQqn22zTlLN0Mwf1acZuY7jxcxqQ9B7VTB29SXAxNX+dwW1x/eik4TSMsvwkAU3zPGulUyn5soOqbFnAGxZVfRdg2ZbSNAUISGX3FJgHGGPHFIdHjsjT0uoEDS6Fgwa3KGhXbG+PCZUw/ozPrQAp1G7ILToVa6EEiqB3PzCx0AHR/cGedXwKIXNChn6Z0sI7KfDT795G36r8d/hQqKr0MdyWUtmzACc/0lREeFrXM01Fl2aNEnHZTe6xTLaUh2CU0j5n+MSWaqcbiC8dozRJJzjKmU86tWjBAeuWok58ovdTFH463x9553Jngo5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
- b=VdDY/5xKVbkOKEC1zoDii2KijFNCoAcYl9qqW4D9c+PSiiTcpjcfwEOr5Hsjz+u+JKqfEdTn5ldFKSLoDuj2pJRPXQPr7eK18g/s7zfzWxtzoYHmJ1OeWErcZCJWhl/Od5pZaJwWE1uHhflMxo/BQDSOHCChqZ3nugfiTd/4eoM=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:150::19)
- by BYAPR15MB3509.namprd15.prod.outlook.com (2603:10b6:a03:108::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Sat, 29 Feb
- 2020 18:43:05 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2772.018; Sat, 29 Feb 2020
- 18:43:05 +0000
-Date:   Sat, 29 Feb 2020 10:43:00 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Marco Ballesio <balejs@google.com>
-CC:     <tj@kernel.org>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizefan@huawei.com>,
-        <hannes@cmpxchg.org>, <corbet@lwn.net>, <rjw@rjwysocki.net>,
-        <pavel@ucw.cz>, <len.brown@intel.com>, <linux-doc@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <minchan@google.com>,
-        <surenb@google.com>, <dancol@google.com>
-Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
-Message-ID: <20200229184300.GA484762@carbon.DHCP.thefacebook.com>
-References: <20200219183231.50985-1-balejs@google.com>
- <20200229005131.GB9813@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229005131.GB9813@google.com>
-X-ClientProxiedBy: MW2PR16CA0041.namprd16.prod.outlook.com
- (2603:10b6:907:1::18) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
+        Sat, 29 Feb 2020 13:45:32 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so7347919wrx.11;
+        Sat, 29 Feb 2020 10:45:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:references:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=auQlWCi9XQ9349h8I1xX8KVOY9L64kEM87K/dn2SiSE=;
+        b=FwYUEalbD2ammMYRBI1jjiRKyyZCn0Bwr31cquXUNxwYpbzpYgbf7wPRdTDFGMCFHQ
+         8JaZV7PAASx+M37lMusq6KFZzxDTGfqW00k4XdEkUwCnOxV0b1RgiVlsraNeaDrX27lM
+         tnTLLZMXAl9LMVUFiElaoar3/f1HNsOrzWT1OHrDfUeFU2PL0qaEd2guISHxl5pIhpAd
+         36reuZ3/nUro12cN7vA10ZurUnQv92xiygguAefyrqxtxeimTFkmEtEbs3eOw7CAl+NL
+         A9X/JTaZp+pSWofhCG/wwOw0KY/DxDoksb+UyekHCH4jZsqUrnd/1a6ctZw0rRDi6SoM
+         POBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=auQlWCi9XQ9349h8I1xX8KVOY9L64kEM87K/dn2SiSE=;
+        b=aosXBFvXWNyv+g+YFsgHMrf/U8aAHK7pnZYVnFXRIFlxRauTyrZCyCq33X6z23WP0Y
+         Yx5z2oWqFUv12sjNI1wOSRYGbkhVysj+RjaKMWVO+l+wWKNqO4cdPu3C+v0ScH8PQimQ
+         y5bo94KDndhPgXhstMB011Qgf+9f8TPo6pBioPMMEvZ1z4wTrW+V8vtoyfFJguSbDSgF
+         qAsQxaY9/si6wcdgGnUW6GLjeawsrMfPZVrwPQLjLJ861Rt6O0NEg4ZOsD+miQ/HJtbB
+         LkcdIctLH8EajRMwfXZ04jQtATDGthu70pWUZiDTi1jgEHY1EVa/JxRWz2Uy9NKnKPrQ
+         HbcQ==
+X-Gm-Message-State: APjAAAUgZm5VN/lc11OcN0UYBzVOp4E8//gM0wZSVayn7euJt9TMKdYm
+        agSKGP9KaFsjEb4QovnsdnjerdBf
+X-Google-Smtp-Source: APXvYqy2JcMRDyZXJGuZPNTq89D0R12ds3dmd0hofmfL/ZAhkGeX5ROtzaKVKVYct7ToTnjd3R7KcQ==
+X-Received: by 2002:a5d:488c:: with SMTP id g12mr11902208wrq.67.1583001929921;
+        Sat, 29 Feb 2020 10:45:29 -0800 (PST)
+Received: from [192.168.43.21] ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id x12sm7563738wmc.20.2020.02.29.10.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Feb 2020 10:45:29 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1582932860.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH REBASE v2 0/5] return nxt propagation within io-wq ctx
+Message-ID: <fc951f93-9d46-d94d-35af-4c91a2326a0b@gmail.com>
+Date:   Sat, 29 Feb 2020 21:44:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:2b89) by MW2PR16CA0041.namprd16.prod.outlook.com (2603:10b6:907:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Sat, 29 Feb 2020 18:43:03 +0000
-X-Originating-IP: [2620:10d:c090:400::5:2b89]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4287a62a-0737-4e79-7ee2-08d7bd473666
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3509:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB35097F1A0D43C50E1E986DDFBEE90@BYAPR15MB3509.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 03283976A6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(366004)(39860400002)(376002)(346002)(136003)(199004)(189003)(316002)(4326008)(8676002)(7416002)(478600001)(186003)(16526019)(81156014)(81166006)(2906002)(9686003)(33656002)(55016002)(6916009)(8936002)(1076003)(66946007)(86362001)(5660300002)(4744005)(6506007)(66476007)(52116002)(66556008)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3509;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EUOS7l0wXNG1Z9uA06INk7DTBziP5Pv3o2OJ0WyBlRGRLK8/oWcDn6rnduD7GjsZ2ZYDEBZzwpcELGMjd8IAltUA/KOJaG/zo+JnNfIaU1rNrNNGuV9tpPELegv/OBk38PUeTAnpBNnBDCrFybok9+XtmuDZvCEiNcvf2WWzgiHBkGqkY2kprRMiAG53oZo4UyOMhU9vEXepF40UhL/cUZtbjr4q6EqqljOvb11plxMXQOYzrFX5uVwn7VravB8jk+xdrTvkEsdAuxu4yxoWN4dPKlpGrXqWwWpneaquZLwwlkrMTl42zDtTq+OoJjUnlLoEwo/YteRyfbjjEnFI3u6itO3fMJbYUxTkj9op7+dS5lKLYLa5UHgnt7wHQjMod7GY5jzFdL+MuScaeuRlhNu6cZg1XmkDiiheoY/F+evmQpz48l51EvKflt7joCIm
-X-MS-Exchange-AntiSpam-MessageData: /M1hrd69eo5H+5QsAmZSx2/E8RN1zu3eN+gZqrWH13z4fbIBHf8c7fgy7FFKl5AHztXOBFyHOt3qOXPo0FR5Jri34IEgaI81GX2LcWVFAQwyPaBIOJC9YtUMZLcPTNoGYdZbdHxO7yJlPJHIhp41840/SyoJ0egc2C3tBDWvHoRvlYqpNSkYfKhDytkWuknP
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4287a62a-0737-4e79-7ee2-08d7bd473666
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2020 18:43:05.3046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ze0IWvUkv1YL/z6NrjOyKm45ZdtljHg7FG+bzfWLMQdn0yZgpop5ZuQN5Xhz+5pH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3509
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-29_06:2020-02-28,2020-02-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=1 mlxscore=0 malwarescore=0 adultscore=0
- spamscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002290143
-X-FB-Internal: deliver
+In-Reply-To: <cover.1582932860.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 04:51:31PM -0800, Marco Ballesio wrote:
-> Hi all,
+On 29/02/2020 02:37, Pavel Begunkov wrote:
+> After io_put_req_find_next() was patched, handlers no more return
+> next work, but enqueue them through io_queue_async_work() (mostly
+> by io_put_work() -> io_put_req()). The patchset fixes that.
 > 
-> did anyone have time to look into my proposal and, in case, are there
-> any suggestions, ideas or comments about it?
+> Patches 1-2 clean up and removes all futile attempts to get nxt from
+> the opcode handlers. The 3rd one moves all this propagation idea into
+> work->put_work(). And the rest ones are small clean up on top.
 
-Hello, Marco!
+And now I'm hesitant about the approach. It works fine, but I want to remove a
+lot of excessive locking from io-wq, and it'll be in the way. Ignore this, I'll
+try something else
 
-I'm sorry, somehow I missed the original letter.
+The question is whether there was a problem with io_req_find_next() in the first
+place... It was stealing @nxt, when it already completed a request and were
+synchronous to the submission ref holder, thus it should have been fine.
 
-In general the cgroup v1 interface is considered frozen. Are there any particular
-reasons why you want to extend the v1 freezer rather than use the v2 version of it?
+> v2: rebase on top of poll changes
+> 
+> Pavel Begunkov (5):
+>   io_uring: remove @nxt from the handlers
+>   io_uring/io-wq: pass *work instead of **workptr
+>   io_uring/io-wq: allow put_work return next work
+>   io_uring: remove extra nxt check after punt
+>   io_uring: remove io_prep_next_work()
+> 
+>  fs/io-wq.c    |  28 ++---
+>  fs/io-wq.h    |   4 +-
+>  fs/io_uring.c | 320 ++++++++++++++++++++------------------------------
+>  3 files changed, 141 insertions(+), 211 deletions(-)
+> 
 
-You don't even need to fully convert to cgroup v2 in order to do it, some v1
-controllers can still be used.
-
-Thanks!
-
-Roman
+-- 
+Pavel Begunkov
