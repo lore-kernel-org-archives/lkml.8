@@ -2,119 +2,55 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C325C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74383C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FE824688
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E172467D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="CTHuxgay"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MpnmtrMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgB2S6h (ORCPT
+        id S1727543AbgB2S71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:58:37 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:26536 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgB2S6h (ORCPT
+        Sat, 29 Feb 2020 13:59:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39724 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbgB2S71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 13:58:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583002712;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=RWt0DnFLtT3Zn2kRM3ZW1ioOA87GUG1MQf6oAoJiwzU=;
-        b=CTHuxgaynO5jfFNz2LNhgJYCJeks7SuMzcY0rO2EgTwnhXwTib5OVQFV9ydkis+UHW
-        4bQxFmVuZwtYQ7n/+waWJYFnqbJVql2WuMJ54koiA6nUa7L3sATXAw4+DmRYCBjs9zmN
-        EgBONQuATI5QsDU7OOxYEc7WcbpIZSn8GSALVB7NR2NDxs9YCUjIob5mVa44VJqfzZXz
-        h8OnJo9AHfhqlvWRY5vMwT6zyM+coGPS9VVARGbu3dc4j4qG9D2+pKUW4ZIlt4XR9P4E
-        AUNHaEXX5bfqLpZ5lybrQKf/bo1JmPUdZ+ro7l3QKZ1zpXkUFaxaB+Zii7ZMwo8agzih
-        kRiQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAwF5A=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1TIwM6hG
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 29 Feb 2020 19:58:22 +0100 (CET)
-Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1582992575.3.2@crapouillou.net>
-Date:   Sat, 29 Feb 2020 19:58:21 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
-References: <cover.1582912972.git.hns@goldelico.com> <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com> <1582992575.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 29 Feb 2020 13:59:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jJUh2GqpXTNC2Cq0Arr6LghZS9AaJa9DrC51W6/D/bY=; b=MpnmtrMRpxh4FGvhWIIZy8sBvy
+        AD+sibh1VmorY9qkg75kVPTeCJEyAyo/hHbr2OY1lKO0KKyXSmz52e4UAXeYpONSCeKuEiRG6VT4g
+        xFjEhUJ6r09o4HLQwlb0B1f0a+KPmnnAv6SpFqUQF40hsh8aKd++4bDOqJAVcLw0+bUrOSrseBwER
+        9MyrNprswgX75oNvH1O6vvlfyYJNcaoiZWIilJFi98epRU8phtZTxiy2BRHv8hxy69cUeuxqTK+cn
+        XmTQaanIbDL+rXErQtHco4kBlBp7UC3IiMvlppgZRMMvmdzTltHcjuuZlITul9U2qA70xMkdQjup+
+        zkow7mFQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j87KV-0001tG-W7; Sat, 29 Feb 2020 18:59:15 +0000
+Date:   Sat, 29 Feb 2020 10:59:15 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     masahiro31.yamada@kioxia.com
+Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: fix NVME_IOCTL_SUBMIT_IO for compat_ioctl
+Message-ID: <20200229185915.GB5698@infradead.org>
+References: <2caa4c913579464bbfdf06b36001ffc9@TGXML281.toshiba.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2caa4c913579464bbfdf06b36001ffc9@TGXML281.toshiba.local>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-> Am 29.02.2020 um 17:09 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> There is a ACT8600 on the CI20 board and the bindings of the
->> ACT8865 driver have changed without updating the CI20 device
->> tree. Therefore the PMU can not be probed successfully and
->> is running in power-on reset state.
->> Fix DT to match the latest act8865-regulator bindings.
->> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/mips/boot/dts/ingenic/ci20.dts | 48 =
-++++++++++++++++++++---------
->> 1 file changed, 33 insertions(+), 15 deletions(-)
->> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
-b/arch/mips/boot/dts/ingenic/ci20.dts
->> index 59c104289ece..44741e927d2b 100644
->> --- a/arch/mips/boot/dts/ingenic/ci20.dts
->> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
->> @@ -4,6 +4,8 @@
->> #include "jz4780.dtsi"
->> #include <dt-bindings/clock/ingenic,tcu.h>
->> #include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->=20
-> This include should be in patch 3/5 where it's first used.
-
-Yes. That is much better.
-
->=20
-> With that fixed:
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->=20
-> for the whole series.
-
-What is easier: that you fix it during applying somewhere
-or should I send a v5?
-
-BR,
-Nikolaus
-
+We can't just change the existing structure, instead we'll need
+a compat handler for the 32-bit x86 case.
