@@ -2,206 +2,88 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99727C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B15C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A892469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72A4246A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgB2Cmd (ORCPT
+        id S1726764AbgB2CvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 21:42:33 -0500
-Received: from mga12.intel.com ([192.55.52.136]:12075 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB2Cmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 21:42:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 18:42:31 -0800
-X-IronPort-AV: E=Sophos;i="5.70,498,1574150400"; 
-   d="scan'208";a="232442560"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.149]) ([10.249.169.149])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 28 Feb 2020 18:42:28 -0800
-Subject: Re: [PATCH] KVM: x86: Remove superfluous brackets in
- kvm_arch_dev_ioctl()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200228052527.148384-1-xiaoyao.li@intel.com>
- <20200228154453.GC2329@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <026f7e03-313a-dafd-e7c2-08c45db6681b@intel.com>
-Date:   Sat, 29 Feb 2020 10:42:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 21:51:13 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50588 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbgB2CvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 21:51:13 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B90E63DB0D87F8AAB135;
+        Sat, 29 Feb 2020 10:51:08 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.66) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 29 Feb 2020
+ 10:50:58 +0800
+Subject: Re: [PATCH V2] block: rename 'q->debugfs_dir' and 'q->blk_trace->dir'
+ in blk_unregister_queue()
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <axboe@kernel.dk>, <chaitanya.kulkarni@wdc.com>,
+        <damien.lemoal@wdc.com>, <bvanassche@acm.org>,
+        <dhowells@redhat.com>, <asml.silence@gmail.com>,
+        <ajay.joshi@wdc.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+        <zhangxiaoxu5@huawei.com>, <luoshijie1@huawei.com>
+References: <20200213081252.32395-1-yukuai3@huawei.com>
+ <20200228231557.GA18123@ming.t460p>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <96287511-a121-02f5-c5e0-24873fd30179@huawei.com>
+Date:   Sat, 29 Feb 2020 10:50:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200228154453.GC2329@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200228231557.GA18123@ming.t460p>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.220.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/2020 11:44 PM, Sean Christopherson wrote:
-> On Fri, Feb 28, 2020 at 01:25:27PM +0800, Xiaoyao Li wrote:
->> Remove unnecessary brackets from the case statements in
+On 2020/2/29 7:15, Ming Lei wrote:
+> If blk_trace->dir isn't same with .debugfs_dir, you will just rename
+> blk_trace->dir, this way can't avoid the failure in step3, can it?
+Thank you for your response!
+It's true that the problem still exist if they are not the same£¨I
+thougt they can't both exist£©. Perhaps I can do the renaming for both.
 > 
-> They aren't unnecessary, e.g. simply taking away brackets without
-> refactoring the code will break the build.
+> I understand that we just need to rename .debugfs_dir, meantime making
+> sure blktrace code removes correct debugfs dir, is that enough for fixing
+> this issue?
 > 
->> kvm_arch_dev_ioctl().
->>
->> The brackets are visually confusing and error-prone, e.g., brackets of
+>> +	if (old == NULL)
+>> +		return;
+>> +	while (new == NULL) {
+>> +		sprintf(name, "ready_to_remove_%s_%d",
+>> +				kobject_name(q->kobj.parent), i++);
+>> +		new = debugfs_rename(blk_debugfs_root, *old,
+>> +				     blk_debugfs_root, name);
+>> +	}
+> The above code can be run concurrently with blktrace shutdown, so race might
+> exit between the two code paths, then bt->dir may has been renamed or being
+> renamed in debugfs_remove(bt->dir), can this function work as expected or
+> correct?
+To avoid the race, I think we can take the lock 'blk_trace_mutex' while
+renaming 'bt->dir'.
 > 
-> They're confusing when they're broken, but IMO they're a non-issue when
-> used correctly, which is the vast majority of the time.  I wouldn't say I
-> love brackets, but for me it's preferrable to having a big pile of
-> variables at the top of the function.  I also find having the struct type
-> in the case helpful, e.g. it's easy to figure out which struct corresponds
-> to which ioctl in the API.
-> 
-> And despite this being the second instance of this style of bug in KVM in
-> the last few months, I don't think it's fair to call brackets error-prone.
-> These are literally the only two times I've ever seen this class of bug.
+> And there is dead loop risk, so suggest to not rename this way.
+The deap loop will exist if 'debugfs_rename' keep failing for some
+reason. I thougt about setting a limit for max loop count, however, It's
+probably not a good solution.
 
-Fair enough.
-
-> Regardless, using brackets to create a new scope in a case statement is a
-> widely used pattern:
+Thanks!
+Yu Kuai
 > 
->    $ git grep case | grep ": {" | wc -l
->    1954
-> 
-> Eliminating all current and future uses isn't realistic.
-> 
-> A better way to help prevent these type of bugs from being introduced
-> would be to teach checkpatch to issue a warning if a set of brackets
-> encapsulates a case statement.
-> 
-> Fixing this particular bug is then a small patch, and maybe throw in an
-> opportunistic cleanup to add a "break" in the default path.
-
-OK. I'll go this way.
-
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 2103101eca78..f059697bf61e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3485,6 +3485,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
->                          goto out;
->                  r = 0;
->                  break;
-> +       }
->          case KVM_GET_MSR_FEATURE_INDEX_LIST: {
->                  struct kvm_msr_list __user *user_msr_list = argp;
->                  struct kvm_msr_list msr_list;
-> @@ -3510,9 +3511,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
->          case KVM_GET_MSRS:
->                  r = msr_io(NULL, argp, do_get_msr_feature, 1);
->                  break;
-> -       }
->          default:
->                  r = -EINVAL;
-> +               break;
->          }
->   out:
->          return r;
-> 
->> case KVM_X86_GET_MCE_CAP_SUPPORTED accidently includes case
->> KVM_GET_MSR_FEATURE_INDEX_LIST and KVM_GET_MSRS.
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/kvm/x86.c | 33 ++++++++++++++-------------------
->>   1 file changed, 14 insertions(+), 19 deletions(-)
->>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index ddd1d296bd20..9efd693189df 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -3412,14 +3412,16 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->>   long kvm_arch_dev_ioctl(struct file *filp,
->>   			unsigned int ioctl, unsigned long arg)
->>   {
->> -	void __user *argp = (void __user *)arg;
->> +	struct kvm_msr_list __user *user_msr_list;
->> +	struct kvm_cpuid2 __user *cpuid_arg;
->> +	struct kvm_msr_list msr_list;
->> +	struct kvm_cpuid2 cpuid;
->> +	unsigned int n;
->>   	long r;
->>   
->>   	switch (ioctl) {
->> -	case KVM_GET_MSR_INDEX_LIST: {
->> -		struct kvm_msr_list __user *user_msr_list = argp;
->> -		struct kvm_msr_list msr_list;
->> -		unsigned n;
->> +	case KVM_GET_MSR_INDEX_LIST:
->> +		user_msr_list = (void __user *)arg;
->>   
->>   		r = -EFAULT;
->>   		if (copy_from_user(&msr_list, user_msr_list, sizeof(msr_list)))
->> @@ -3441,11 +3443,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
->>   			goto out;
->>   		r = 0;
->>   		break;
->> -	}
->>   	case KVM_GET_SUPPORTED_CPUID:
->> -	case KVM_GET_EMULATED_CPUID: {
->> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
->> -		struct kvm_cpuid2 cpuid;
->> +	case KVM_GET_EMULATED_CPUID:
->> +		cpuid_arg = (void __user *)arg;
->>   
->>   		r = -EFAULT;
->>   		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
->> @@ -3461,18 +3461,15 @@ long kvm_arch_dev_ioctl(struct file *filp,
->>   			goto out;
->>   		r = 0;
->>   		break;
->> -	}
->> -	case KVM_X86_GET_MCE_CAP_SUPPORTED: {
->> +	case KVM_X86_GET_MCE_CAP_SUPPORTED:
->>   		r = -EFAULT;
->> -		if (copy_to_user(argp, &kvm_mce_cap_supported,
->> +		if (copy_to_user((void __user *)arg, &kvm_mce_cap_supported,
->>   				 sizeof(kvm_mce_cap_supported)))
->>   			goto out;
->>   		r = 0;
->>   		break;
->> -	case KVM_GET_MSR_FEATURE_INDEX_LIST: {
->> -		struct kvm_msr_list __user *user_msr_list = argp;
->> -		struct kvm_msr_list msr_list;
->> -		unsigned int n;
->> +	case KVM_GET_MSR_FEATURE_INDEX_LIST:
->> +		user_msr_list = (void __user *)arg;
->>   
->>   		r = -EFAULT;
->>   		if (copy_from_user(&msr_list, user_msr_list, sizeof(msr_list)))
->> @@ -3490,11 +3487,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
->>   			goto out;
->>   		r = 0;
->>   		break;
->> -	}
->>   	case KVM_GET_MSRS:
->> -		r = msr_io(NULL, argp, do_get_msr_feature, 1);
->> +		r = msr_io(NULL, (void __user *)arg, do_get_msr_feature, 1);
->>   		break;
->> -	}
->>   	default:
->>   		r = -EINVAL;
->>   	}
->> -- 
->> 2.19.1
->>
 
