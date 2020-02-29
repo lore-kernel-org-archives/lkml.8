@@ -2,64 +2,98 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF49CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 21:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEBAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 21:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4C8222C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 21:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B2021D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 21:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ei3+4eUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbgB2VSm (ORCPT
+        id S1727431AbgB2VlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 16:18:42 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:54116 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgB2VSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 16:18:42 -0500
-Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j89VI-0004ON-0U; Sat, 29 Feb 2020 22:18:32 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] input: joystick: Add ADC attached joystick driver.
-Date:   Sat, 29 Feb 2020 22:18:31 +0100
-Message-ID: <8358368.BJ5kSsQai2@phil>
-In-Reply-To: <20200126161236.63631-5-contact@artur-rojek.eu>
-References: <20200126161236.63631-1-contact@artur-rojek.eu> <20200126161236.63631-5-contact@artur-rojek.eu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Sat, 29 Feb 2020 16:41:18 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40632 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgB2VlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 16:41:17 -0500
+Received: by mail-lf1-f68.google.com with SMTP id c23so4801510lfi.7
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 13:41:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6uy93UxgHpUDpR9Xr7xOhmfEHcxRhT77RQRFOSS/Ayo=;
+        b=ei3+4eUi1I/cTlQjIc27NVqUqXgeWkP9L6Jta5Z5va+asPyUqRNa95neDp7GXeB1Ep
+         /upc7Kq3R0CGgZJfTGh46fQhWWWAZY1VrIy74ViGrjQ5e0ivM4j8Dw9Q4qX/caIuGAXT
+         Pr9Y0lUBXj7nduyUqCuEAKm3U081Mj62nrRh4WvXQmcV/DdeedgbdBNyifFuAleagq7s
+         4yKzf5RC2D42gHRt0WuUsze0PT3w44ZHgUwXMhsnHtMh5+1YtBMS8332soUMByTJfxFq
+         woa1qxesG0HdH4SdfEPyMnjMVCrUI1IaXZX7sanyRt6aWYRh8GpGdkhycgKZHBSI8HYu
+         BhTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6uy93UxgHpUDpR9Xr7xOhmfEHcxRhT77RQRFOSS/Ayo=;
+        b=B9aRyPPby7zlsUWalrWQ7cJexcOTMInFxJiO4PbgAupV0p0ifPEizzku1VA7esutjk
+         MorH/jlXkxONl5Kq6M17wOLtqMxccFfWQkQWobTgXhfve9GQeuAu6Tr+ACOEmlfEab9r
+         zQHsoLbzQzf5uf1wMQrZ9uMiN/LxVxSJanXz4lgW43C+fnFgUSyn7edPElGW6glBywsV
+         XFWxBYKL8X7dJAXzI2r1mRn1tdeZgzeNh1OZhnWwZo87Lbdu98AU12aflA/VzPoFU6aa
+         PrmcBLbadRqDHd+YfeHM/E9WVfE+V7LCWmFg9ByZS6Lnw1ZtJ8YUvnY60r63uiti2Gkv
+         DZhw==
+X-Gm-Message-State: ANhLgQ0Z7z4iRFPpAJ+Q1cXdj6h1oecjzoblKnH9p0oZbjZ3PSfWx2TE
+        UqzNzsv2sM1vYAK17p5YIws+wvKSUPw=
+X-Google-Smtp-Source: ADFU+vvbPTQ7oOlwmxID5YGVvq1OYiYYJSvhJQexKefXGy2lg1QXrlfSUNGVmoVc/cx+MBGi9C2oCw==
+X-Received: by 2002:ac2:4307:: with SMTP id l7mr6033407lfh.37.1583012475035;
+        Sat, 29 Feb 2020 13:41:15 -0800 (PST)
+Received: from localhost.localdomain (188.146.100.83.nat.umts.dynamic.t-mobile.pl. [188.146.100.83])
+        by smtp.gmail.com with ESMTPSA id i67sm7976242lfd.38.2020.02.29.13.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 13:41:14 -0800 (PST)
+From:   mateusznosek0@gmail.com
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, akpm@linux-foundation.org
+Subject: [PATCH] mm/vmscan.c: Clean code by removing unnecessary assignment
+Date:   Sat, 29 Feb 2020 22:40:22 +0100
+Message-Id: <20200229214022.11853-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 26. Januar 2020, 17:12:36 CET schrieb Artur Rojek:
-> Add a driver for joystick devices connected to ADC controllers
-> supporting the Industrial I/O subsystem.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-On a rk3326-based Odroid Go Advance
-Tested-by: Heiko Stuebner <heiko@sntech.de>
+Previously 0 was assigned to variable 'lruvec_size',
+but the variable was never read later.
+So the assignment can be removed.
 
-would be cool to get this merged ;-)
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+---
+ mm/vmscan.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks
-Heiko
-
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f14c8c6069a6..a605ff36f126 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2427,10 +2427,8 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 		case SCAN_FILE:
+ 		case SCAN_ANON:
+ 			/* Scan one type exclusively */
+-			if ((scan_balance == SCAN_FILE) != file) {
+-				lruvec_size = 0;
++			if ((scan_balance == SCAN_FILE) != file)
+ 				scan = 0;
+-			}
+ 			break;
+ 		default:
+ 			/* Look ma, no brain */
+-- 
+2.17.1
 
