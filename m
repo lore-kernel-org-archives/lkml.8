@@ -2,97 +2,97 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F024FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1ACC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AD424672
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945E524672
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QVtbZxL4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gUciDOtk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgB2Rba (ORCPT
+        id S1727468AbgB2Rf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 12:31:30 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35551 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgB2Rba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 12:31:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id r7so7266585wro.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 09:31:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=gIWhpXkGhBdD7D4tCRq8IhuPOVGlHh8cgQBYQ6BUTQw=;
-        b=QVtbZxL4BTuOxWG9U7zurT8eoEW0kIhCosDTS6Y/48DrOg8qUH0kOS2rvyykW/zWZ2
-         QAetKLAw6hJCoqsbII4eHjnCCELiBOm8pnZHs5QmpKLTYHmaznrsrb0tpJfDJQ7Hs/Nj
-         0ZPNxzQbF4rk1Sj9k/DmNS31m/LZqXrk0EIj7fYomlSssHR8jjFRqQSPryvnxMlj/oQu
-         e/RBcwAWRFuX9r2qRrOUtVvjXY4ZpPBEBmUnslSZCpUfeM0YGsJxaR5J44dkxv3FpuIi
-         U72YHyQ2VfOMmJCXEJ0BK1vXYd0KJ/e2RDZtfmu3gEjfZDfZogCJegkZgt9q1ce4AJLj
-         JAVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gIWhpXkGhBdD7D4tCRq8IhuPOVGlHh8cgQBYQ6BUTQw=;
-        b=E7zFpHOMWmXTd9DS+L9gw1EiKq3DjqdoRxCzjtKY0I7VU7wV54XZ8qzPXE1q/GPGMb
-         R0GxIfmZ6/b92PiNTn5aQ6qFYBnSR7AZhLoJDPjr6rHKEshHAdqYv/G2kXv8+Bwjo6Qc
-         3T+JSDB+lwqfrwU7bDiVHf8YlAKEibeuhnpSCrqG7NyG6d8ZVvjersBoE3gc2W4UmH78
-         tU9vWimXNyawFsEcLX01LdmDgrFINf8+1jUIvgWsXF7RoRK4LR/FPuilZEHr1gR2/+jw
-         Bw2nIOg+QYnYnjxdW6/ON6lI+RYhQhAUv207NAYY+rzB4jFEf1WRFrj0e/L+fOeAj7Ym
-         99Qg==
-X-Gm-Message-State: APjAAAWaTL7q/G5NwQW495VsNAcxDvhoWFN6K505ByZNviO66beiqqvZ
-        PM3xIFRClvkkgQ9zcubfJaE6iQ==
-X-Google-Smtp-Source: APXvYqxT81ciYzv3VRN7D5AK2cO0SiOZFOz6Hky5+PclfU1bKhrwyZ6y65WbJRRZN9RDot83f+FhcA==
-X-Received: by 2002:adf:eb51:: with SMTP id u17mr12129653wrn.29.1582997488817;
-        Sat, 29 Feb 2020 09:31:28 -0800 (PST)
-Received: from localhost (229.3.136.88.rev.sfr.net. [88.136.3.229])
-        by smtp.gmail.com with ESMTPSA id 19sm8213197wma.3.2020.02.29.09.31.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 09:31:28 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, balbi@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>, Tim <elatllat@gmail.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: g12-common: add parkmode_disable_ss_quirk on DWC3 controller
-In-Reply-To: <20200221091532.8142-4-narmstrong@baylibre.com>
-References: <20200221091532.8142-1-narmstrong@baylibre.com> <20200221091532.8142-4-narmstrong@baylibre.com>
-Date:   Sat, 29 Feb 2020 18:31:27 +0100
-Message-ID: <7hwo859u6o.fsf@baylibre.com>
+        Sat, 29 Feb 2020 12:35:26 -0500
+Received: from mout.gmx.net ([212.227.15.19]:35961 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727349AbgB2RfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 12:35:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582997719;
+        bh=DxLAd7mt4KmJoGtBNn1zpKqDgvSYCuYU+rP2rIgAIT4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=gUciDOtk8DFlHDY45oFg43sdithQ9B+vD8CPckVRmOqADJ3bjE83u1hQA+w8StL5U
+         1Q1OXRCuLfq+PQChYY7i6a4DyUn5VtMhkrN+D+6BldppL4+epYuGA00Nd1JXF6rc6J
+         BaZzSmFk+SARSIs6eYeidwDQq0rM9j01DHY6dUAo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.5]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLiCo-1iqZ8R2Z7I-00HjWP; Sat, 29
+ Feb 2020 18:35:19 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: dev-tools: gcov: Remove a stray single-quote
+Date:   Sat, 29 Feb 2020 18:35:14 +0100
+Message-Id: <20200229173515.13868-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lraD7w8GoxlJIdEqXU4KAIWcRm0HS+laVwaF6uxNDSiaFluwidS
+ JKTej1J589NiIs8nEyhdzSnMbycnLo5fXpL7Xp6ksu5vc11cjmCUg3KivchN7PEY29/Sxxx
+ jVONIqLECcPNP2LqBpHcX6IiWuYh0GpFWfqr3ZpDGJAYU0hP3QUzgC9O1d7mZZXasGgUCNU
+ TZHM+sTx6C3XDQzKTnbzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uhUbtcozoe0=:62UvAPlRj7h50TxtdeEvvD
+ k6apzpQKn3MTG5W91C/g6g83RqK5S0lNkVNqm1zcIG0njYAlEiSM18Ypux1EGkg3TDUBDUZ2g
+ Cd+Un6UfPfX+kEbLa781ip904pxjTmTKbCac21XM+1wOYUdyOolPNafSISyF5tydguu3XTUjH
+ o94SiZMNwHTMjbf5XO8Vd2PeC5ISRMn4Supfbwm0MX8ev0PX2JNgyZOJOtJRyOWGifKx7P6pj
+ VWUO1cl/kuWCd3lGSZmlAqKE5UJ1fHLP+SIDt6qotKWN8wxImEb5DBFdcxpIfy7xdAFVeUx0Y
+ CUxa/qP/Veefweu7XD9GvcwvcA/9s2+xbBg1fUB4K95Cc5QKmhpwuY6tbQdE+3zLNVPuViExg
+ OG0zA1rVxxAdl0HHDuOPkNhYVXrcQZ/Jnp6cBTxIMw7POVDJcH7b8yay5FmwVK9ImUW9MojA/
+ kk+0FddSFb9Kh5qsH841gQRLRkpfeYTpcbPiamkzKscyBbdqQhnS2b9kc5sQK/s92HSz0p1nD
+ FE2uOrtbscumM4mhZ3CpaPuPfTx4yeET6kGMpNAPv8ELnS6m6n2IPdC1w+g+0LAbZniWpD/u1
+ W2ysewDUrL7IKdo7nP+2MNd6DZs5MbHU2JwY8CcHsqSwhmPwjMnb/aMdwpOcci/SNLtJ/0Hbl
+ 4ZNh1/+H+xR/h+cYAtjA2tbw+O12qYLYP2MPi2sDjAK76eOre2AfvUOh5tmAOxzOQr2+Q2FVk
+ UPwAEr7TOXiIhnfghZpOr6rOwKKc7WULmDdd7RG2OsDHJlWFL/JqdsBwMWfR7KQjguyVJ1Xrl
+ SrpSrX9W9jORPzoRwtIFh0ogsquqWYhUsC1cimU4z/2xJTCbbHNGm1jRg12tO+K+337raJDC/
+ zEp6P9jvZo9iMfh+xkaXbBy7YD4dvCp2xrUX6WUaXJBNlXccdlVtUOUJV4AISjZrpDjqJet8g
+ DmwU5TvcPxBd+dsA7K/167GHaQ9LJR2KVP5Ldb2+QyC9YEU+MMgZiUljBxCKQG8pa24XmsPvI
+ nCGhFTpUx9kHmfsBEpmw7hkEPwWCS1tK5ZMVkZmsj+1++KUmZNeXi60H1I93nXyykXkGssntv
+ /xPpJLod4B3B76Zowa6gtNN1ykVX0ajWMLyM0YQBXiSpwutGpS/UzhMiLityZR8Q2C2EBqDoB
+ 1LzZVg/pbok3i2qPGGDXhw8TeUqc2VjAcJ4eDM/rSt5o5BLBdGgkQi6J4+wsdWgqMBltx+LBY
+ Z2x+ilQUXU3X3rb8Q
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/dev-tools/gcov.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> When high load on the DWC3 SuperSpeed port, the controller crashes with:
-> [  221.141621] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-> [  221.157631] xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
-> [  221.157635] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
-> [  221.159901] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-> [  221.159961] hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
-> [  221.160076] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
-> [  221.165946] usb 2-1.1-port1: cannot reset (err = -22)
->
-> Setting the parkmode_disable_ss_quirk quirk fixes the issue.
->
-> CC: Dongjin Kim <tobetter@gmail.com>
-> Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-> Reported-by: Tim <elatllat@gmail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+diff --git a/Documentation/dev-tools/gcov.rst b/Documentation/dev-tools/gc=
+ov.rst
+index 46aae52a41d0..7bd013596217 100644
+=2D-- a/Documentation/dev-tools/gcov.rst
++++ b/Documentation/dev-tools/gcov.rst
+@@ -203,7 +203,7 @@ Cause
+     may not correctly copy files from sysfs.
 
-With the bindings reviewed/acked, I'll queue this DT patch for v5.7.
-The binding and driver patches will need to go via the USB tree.
+ Solution
+-    Use ``cat``' to read ``.gcda`` files and ``cp -d`` to copy links.
++    Use ``cat`` to read ``.gcda`` files and ``cp -d`` to copy links.
+     Alternatively use the mechanism shown in Appendix B.
 
-Kevin
+
+=2D-
+2.20.1
+
