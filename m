@@ -2,154 +2,119 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C325C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8F1214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FE824688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwYUEalb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="CTHuxgay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgB2Spd (ORCPT
+        id S1727515AbgB2S6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:45:33 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44918 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgB2Spc (ORCPT
+        Sat, 29 Feb 2020 13:58:37 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:26536 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgB2S6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 13:45:32 -0500
-Received: by mail-wr1-f68.google.com with SMTP id m16so7347919wrx.11;
-        Sat, 29 Feb 2020 10:45:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:references:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=auQlWCi9XQ9349h8I1xX8KVOY9L64kEM87K/dn2SiSE=;
-        b=FwYUEalbD2ammMYRBI1jjiRKyyZCn0Bwr31cquXUNxwYpbzpYgbf7wPRdTDFGMCFHQ
-         8JaZV7PAASx+M37lMusq6KFZzxDTGfqW00k4XdEkUwCnOxV0b1RgiVlsraNeaDrX27lM
-         tnTLLZMXAl9LMVUFiElaoar3/f1HNsOrzWT1OHrDfUeFU2PL0qaEd2guISHxl5pIhpAd
-         36reuZ3/nUro12cN7vA10ZurUnQv92xiygguAefyrqxtxeimTFkmEtEbs3eOw7CAl+NL
-         A9X/JTaZp+pSWofhCG/wwOw0KY/DxDoksb+UyekHCH4jZsqUrnd/1a6ctZw0rRDi6SoM
-         POBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=auQlWCi9XQ9349h8I1xX8KVOY9L64kEM87K/dn2SiSE=;
-        b=aosXBFvXWNyv+g+YFsgHMrf/U8aAHK7pnZYVnFXRIFlxRauTyrZCyCq33X6z23WP0Y
-         Yx5z2oWqFUv12sjNI1wOSRYGbkhVysj+RjaKMWVO+l+wWKNqO4cdPu3C+v0ScH8PQimQ
-         y5bo94KDndhPgXhstMB011Qgf+9f8TPo6pBioPMMEvZ1z4wTrW+V8vtoyfFJguSbDSgF
-         qAsQxaY9/si6wcdgGnUW6GLjeawsrMfPZVrwPQLjLJ861Rt6O0NEg4ZOsD+miQ/HJtbB
-         LkcdIctLH8EajRMwfXZ04jQtATDGthu70pWUZiDTi1jgEHY1EVa/JxRWz2Uy9NKnKPrQ
-         HbcQ==
-X-Gm-Message-State: APjAAAUgZm5VN/lc11OcN0UYBzVOp4E8//gM0wZSVayn7euJt9TMKdYm
-        agSKGP9KaFsjEb4QovnsdnjerdBf
-X-Google-Smtp-Source: APXvYqy2JcMRDyZXJGuZPNTq89D0R12ds3dmd0hofmfL/ZAhkGeX5ROtzaKVKVYct7ToTnjd3R7KcQ==
-X-Received: by 2002:a5d:488c:: with SMTP id g12mr11902208wrq.67.1583001929921;
-        Sat, 29 Feb 2020 10:45:29 -0800 (PST)
-Received: from [192.168.43.21] ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id x12sm7563738wmc.20.2020.02.29.10.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Feb 2020 10:45:29 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1582932860.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
- bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
- 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
- +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
- W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
- CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
- Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
- EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
- jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
- NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
- bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
- PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
- Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
- Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
- xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
- aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
- HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
- 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
- 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
- 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
- M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
- reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
- IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
- dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
- Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
- jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
- Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
- dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
- xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
- DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
- F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
- 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
- aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
- 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
- LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
- uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
- rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
- 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
- JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
- UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
- m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
- OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Subject: Re: [PATCH REBASE v2 0/5] return nxt propagation within io-wq ctx
-Message-ID: <fc951f93-9d46-d94d-35af-4c91a2326a0b@gmail.com>
-Date:   Sat, 29 Feb 2020 21:44:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <cover.1582932860.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 29 Feb 2020 13:58:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583002712;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=RWt0DnFLtT3Zn2kRM3ZW1ioOA87GUG1MQf6oAoJiwzU=;
+        b=CTHuxgaynO5jfFNz2LNhgJYCJeks7SuMzcY0rO2EgTwnhXwTib5OVQFV9ydkis+UHW
+        4bQxFmVuZwtYQ7n/+waWJYFnqbJVql2WuMJ54koiA6nUa7L3sATXAw4+DmRYCBjs9zmN
+        EgBONQuATI5QsDU7OOxYEc7WcbpIZSn8GSALVB7NR2NDxs9YCUjIob5mVa44VJqfzZXz
+        h8OnJo9AHfhqlvWRY5vMwT6zyM+coGPS9VVARGbu3dc4j4qG9D2+pKUW4ZIlt4XR9P4E
+        AUNHaEXX5bfqLpZ5lybrQKf/bo1JmPUdZ+ro7l3QKZ1zpXkUFaxaB+Zii7ZMwo8agzih
+        kRiQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAwF5A=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1TIwM6hG
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 29 Feb 2020 19:58:22 +0100 (CET)
+Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582992575.3.2@crapouillou.net>
+Date:   Sat, 29 Feb 2020 19:58:21 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F5AAAD52-2C1D-4B14-AA7E-590D026C7DBE@goldelico.com>
+References: <cover.1582912972.git.hns@goldelico.com> <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com> <1582992575.3.2@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/02/2020 02:37, Pavel Begunkov wrote:
-> After io_put_req_find_next() was patched, handlers no more return
-> next work, but enqueue them through io_queue_async_work() (mostly
-> by io_put_work() -> io_put_req()). The patchset fixes that.
-> 
-> Patches 1-2 clean up and removes all futile attempts to get nxt from
-> the opcode handlers. The 3rd one moves all this propagation idea into
-> work->put_work(). And the rest ones are small clean up on top.
+Hi Paul,
 
-And now I'm hesitant about the approach. It works fine, but I want to remove a
-lot of excessive locking from io-wq, and it'll be in the way. Ignore this, I'll
-try something else
+> Am 29.02.2020 um 17:09 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> There is a ACT8600 on the CI20 board and the bindings of the
+>> ACT8865 driver have changed without updating the CI20 device
+>> tree. Therefore the PMU can not be probed successfully and
+>> is running in power-on reset state.
+>> Fix DT to match the latest act8865-regulator bindings.
+>> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/mips/boot/dts/ingenic/ci20.dts | 48 =
+++++++++++++++++++++---------
+>> 1 file changed, 33 insertions(+), 15 deletions(-)
+>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
+b/arch/mips/boot/dts/ingenic/ci20.dts
+>> index 59c104289ece..44741e927d2b 100644
+>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>> @@ -4,6 +4,8 @@
+>> #include "jz4780.dtsi"
+>> #include <dt-bindings/clock/ingenic,tcu.h>
+>> #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>=20
+> This include should be in patch 3/5 where it's first used.
 
-The question is whether there was a problem with io_req_find_next() in the first
-place... It was stealing @nxt, when it already completed a request and were
-synchronous to the submission ref holder, thus it should have been fine.
+Yes. That is much better.
 
-> v2: rebase on top of poll changes
-> 
-> Pavel Begunkov (5):
->   io_uring: remove @nxt from the handlers
->   io_uring/io-wq: pass *work instead of **workptr
->   io_uring/io-wq: allow put_work return next work
->   io_uring: remove extra nxt check after punt
->   io_uring: remove io_prep_next_work()
-> 
->  fs/io-wq.c    |  28 ++---
->  fs/io-wq.h    |   4 +-
->  fs/io_uring.c | 320 ++++++++++++++++++++------------------------------
->  3 files changed, 141 insertions(+), 211 deletions(-)
-> 
+>=20
+> With that fixed:
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>=20
+> for the whole series.
 
--- 
-Pavel Begunkov
+What is easier: that you fix it during applying somewhere
+or should I send a v5?
+
+BR,
+Nikolaus
+
