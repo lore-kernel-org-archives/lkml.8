@@ -2,97 +2,108 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6504C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF47CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F352087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TYpFojaF"
+	by mail.kernel.org (Postfix) with ESMTP id 9D94221D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgB2Uop (ORCPT
+        id S1727451AbgB2Uty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:44:45 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33531 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbgB2Uop (ORCPT
+        Sat, 29 Feb 2020 15:49:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39471 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgB2Uty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:44:45 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w6so6004914otk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
-        b=TYpFojaFQdUqaHBll6wgyaBq0JuxhRQyFCiHl2aCihv5uMBc1KFDLDDeMczLWyt8tD
-         qnLbcLplw+2WoNzbCgJnxTLzJUgibDfZbhT9vNbt0/enEuXTff8alC+u6o+URMJGyNJ6
-         ou1NISRDvkqJtex7bh+3kcVgLSIao7pALFZD+un2PFXr3PJS3k+VeI1R+qVg2jI4wJXw
-         L5hTOFFVEbsKWNM3uV0YKQ+t9u+eM/SZ1W/MR2NG+K24z72IjJI5pZ4CTLDqOY2K4PT1
-         nii7SoL/cAdaHD/p50gusTVN3y7GcODdwr9wZ2TLWb8bhxiKX9kOGosaY8MhItMZJRCE
-         nAQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
-        b=gc7QIra1gEZWNtP0lJ+H7Atvd7sWSj/7X52k9KHLxMXK+FRLoCpVktRbjHxLoQA7fC
-         Umfe2duIuzZrpNE09qPejC2cJ9z1YBk2O4+FKQd/PwubRBP4Vsms7C6TiAqygivdGQ3H
-         eXznVmoD80fDWtMdlFWzlgX1M/kiF/mPfZ2fVuzq/zVEaEPUJqfJ0UYOpL2l8kPU/0wP
-         F84VCey4Ajp7tYOBGvrR8PPmZkSBx+1caXi8tVLHxaWO15thqcjkyCLkYwl2wHbXIDt7
-         mxwqDx+gUzDWIyGO5pMcbYLGtCEo54qVLVo2u5nvgTBU5B1ptVWxW5cqt9rRkirGywyR
-         XWig==
-X-Gm-Message-State: APjAAAUVQ4C10CTfZbNFPg3yxJQm9/o+YApv9yMJ7PqnH8IeHweEBu7s
-        2IIP58x5ed8Fe3sYLpdQGC/Cusr/57+4FVJJSvktbiKI
-X-Google-Smtp-Source: APXvYqwuD7hXgqDuHa7bNKr2aGN5ZsRtxcfrMKKpE5k3aRoSjSLBCzEO28z30FjlnmPqDSMCgEWPc3EsieveZxFwGeE=
-X-Received: by 2002:a05:6830:134c:: with SMTP id r12mr7849308otq.126.1583009084306;
- Sat, 29 Feb 2020 12:44:44 -0800 (PST)
+        Sat, 29 Feb 2020 15:49:54 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j893Y-0004iJ-7H; Sat, 29 Feb 2020 21:49:52 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6DFF41C21A2;
+        Sat, 29 Feb 2020 21:49:51 +0100 (CET)
+Date:   Sat, 29 Feb 2020 20:49:51 -0000
+From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] posix-cpu-timers: Stop disabling timers on mt-exec
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-3-logang@deltatee.com>
-In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 29 Feb 2020 12:44:29 -0800
-Message-ID: <CAPcyv4hLvciwxSnsQRye9SuB-sy9fm+_6CwZSuHifkmbWQs-+g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to mhp_params
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158300939113.28353.1023964272199586302.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->
-> The mhp_restrictions struct really doesn't specify anything resembling
-> a restriction anymore so rename it to be mhp_params as it is a list
-> of extended parameters.
->
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+The following commit has been merged into the timers/core branch of tip:
 
-Tests ok, and looks good to me:
+Commit-ID:     d51692f23fc0249a9c4e32c81d32aef734a02daf
+Gitweb:        https://git.kernel.org/tip/d51692f23fc0249a9c4e32c81d32aef734a02daf
+Author:        Eric W. Biederman <ebiederm@xmission.com>
+AuthorDate:    Fri, 28 Feb 2020 11:15:03 -06:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 29 Feb 2020 21:44:47 +01:00
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+posix-cpu-timers: Stop disabling timers on mt-exec
+
+The reasons why the extra posix_cpu_timers_exit_group() invocation has been
+added are not entirely clear from the commit message.  Today all that
+posix_cpu_timers_exit_group() does is stop timers that are tracking the
+task from firing.  Every other operation on those timers is still allowed.
+
+The practical implication of this is posix_cpu_timer_del() which could
+not get the siglock after the thread group leader has exited (because
+sighand == NULL) would be able to run successfully because the timer
+was already dequeued.
+
+With that locking issue fixed there is no point in disabling all of the
+timers.  So remove this ``tempoary'' hack.
+
+Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+---
+ kernel/exit.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 2833ffb..df54631 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -103,17 +103,8 @@ static void __exit_signal(struct task_struct *tsk)
+ 
+ #ifdef CONFIG_POSIX_TIMERS
+ 	posix_cpu_timers_exit(tsk);
+-	if (group_dead) {
++	if (group_dead)
+ 		posix_cpu_timers_exit_group(tsk);
+-	} else {
+-		/*
+-		 * This can only happen if the caller is de_thread().
+-		 * FIXME: this is the temporary hack, we should teach
+-		 * posix-cpu-timers to handle this case correctly.
+-		 */
+-		if (unlikely(has_group_leader_pid(tsk)))
+-			posix_cpu_timers_exit_group(tsk);
+-	}
+ #endif
+ 
+ 	if (group_dead) {
