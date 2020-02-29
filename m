@@ -2,132 +2,185 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81588C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D48C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5269D246AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66CC246AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y8Dn6Bzy"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IcA9q2sZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgB2AMy (ORCPT
+        id S1726671AbgB2AOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:12:54 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.252]:47547 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbgB2AMx (ORCPT
+        Fri, 28 Feb 2020 19:14:40 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25034 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726046AbgB2AOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:12:53 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 6959B2C4B5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:11:17 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7pivjX4LpRP4z7pivjvOQa; Fri, 28 Feb 2020 18:11:17 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5b/2M8suuafk8OeTPNdtw9kguzC0VV2KliEDV8H4iH0=; b=y8Dn6BzyXZs47uWtFFyTX03RMH
-        azDCmEAktwjGR/0Dhtif3bovuvGmHyrrBuPp+L3/e3vV30/b11fIBWloQ9uP+RkUAom+NRS27KQk7
-        4glYaXzsWF47Otdm3tqGcfKFa9yWMmQau48ru/o8k0/7GEEYkUgdmKmALKDPKFeHptIt8BuOT3td0
-        VTANAshuvEdzITPxkRAv9fIreRD3F2FTSUsPppfnCyPs/8sNQkg+YFkwDFIxl5ehHCE5upWaFrQPx
-        oeXU6LCVL/Oq42QIkm/VmAh7T0rpvD0P/LBUbQ9E+s1kEXimn9bKP3fWNxsSVT1/skF1veiE1Mi0t
-        PrZcK8aA==;
-Received: from [200.39.15.57] (port=32151 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7pit-002eIL-I1; Fri, 28 Feb 2020 18:11:15 -0600
-Date:   Fri, 28 Feb 2020 18:14:11 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: nexthop: Replace zero-length array with
- flexible-array member
-Message-ID: <20200229001411.GA7580@embeddedor>
+        Fri, 28 Feb 2020 19:14:40 -0500
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01T0Ebp0021806
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 16:14:39 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=54qrPCjj2xg1JSMPnr0yRA36FAicW6ZVn6PlvT5gTU0=;
+ b=IcA9q2sZ0zV84z6i/Ul3t/w4uXwDZzbVtSIsRp+DmuXwht+h/ezymNUFI1fWfUOf6T9J
+ dk+sD8eMnhtKvAL699qJD0rScSNYXgWYzzht9PqEJYDugRZQJ/XFO3lIP27iBpNdncZl
+ CUOxKnqW3p0DqqCWmqwbtlYqzXBIeNDhl9k= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yepv6pa7t-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 16:14:38 -0800
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 28 Feb 2020 16:14:26 -0800
+Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
+        id 33081739F065; Fri, 28 Feb 2020 16:14:19 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
+To:     <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Perepechko <andrew.perepechko@seagate.com>,
+        Theodore Ts'o <tytso@mit.edu>, Gioh Kim <gioh.kim@lge.com>,
+        Jan Kara <jack@suse.cz>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2] ext4: use non-movable memory for superblock readahead
+Date:   Fri, 28 Feb 2020 16:14:11 -0800
+Message-ID: <20200229001411.128010-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.15.57
-X-Source-L: No
-X-Exim-ID: 1j7pit-002eIL-I1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:32151
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_09:2020-02-28,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=871 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002290000
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+v2: found a similar issue in __ext4_get_inode_loc()
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Andrew Perepechko <andrew.perepechko@seagate.com>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Gioh Kim <gioh.kim@lge.com>
+Cc: Jan Kara <jack@suse.cz>
 ---
- include/net/nexthop.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/buffer.c                 | 11 +++++++++++
+ fs/ext4/inode.c             |  2 +-
+ fs/ext4/super.c             |  2 +-
+ include/linux/buffer_head.h |  8 ++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/nexthop.h b/include/net/nexthop.h
-index 331ebbc94fe7..c440ccc861fc 100644
---- a/include/net/nexthop.h
-+++ b/include/net/nexthop.h
-@@ -73,7 +73,7 @@ struct nh_group {
- 	u16			num_nh;
- 	bool			mpath;
- 	bool			has_v4;
--	struct nh_grp_entry	nh_entries[0];
-+	struct nh_grp_entry	nh_entries[];
- };
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 4299e100a05b..25462edd920e 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1414,6 +1414,17 @@ void __breadahead(struct block_device *bdev, sector_t block, unsigned size)
+ }
+ EXPORT_SYMBOL(__breadahead);
  
- struct nexthop {
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index fa0ff78dc033..b131fedc6b77 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4348,7 +4348,7 @@ static int __ext4_get_inode_loc(struct inode *inode,
+ 			if (end > table)
+ 				end = table;
+ 			while (b <= end)
+-				sb_breadahead(sb, b++);
++				sb_breadahead_unmovable(sb, b++);
+ 		}
+ 
+ 		/*
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index ff1b764b0c0e..fb2338a5220e 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4331,7 +4331,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
+ 	}
+ 
+ 	for (i = 0; i < db_count; i++) {
+diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+index 7b73ef7f902d..b56cc825f64d 100644
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -189,6 +189,8 @@ struct buffer_head *__getblk_gfp(struct block_device *bdev, sector_t block,
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, sector_t block)
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
+ 
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
++
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
 -- 
-2.25.0
+2.24.1
 
