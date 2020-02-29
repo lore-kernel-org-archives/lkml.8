@@ -2,121 +2,117 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71517C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A589C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410CB24677
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 19:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2852A24688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2DDU3+h"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IEDvST0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgB2T5F (ORCPT
+        id S1727421AbgB2UHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 14:57:05 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33493 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgB2T5F (ORCPT
+        Sat, 29 Feb 2020 15:07:03 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5035 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgB2UHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 14:57:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id x7so7573449wrr.0;
-        Sat, 29 Feb 2020 11:57:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=vvkDjAk4ndVLVwI1Z85PO4wShGWFE753uje7rnBIzBg=;
-        b=t2DDU3+hkN8w194qqvWUopVfWP6u0sKq3Z19CzBXahiRvO7xABcJJau8w10RTTkA0M
-         lxL8kCgpuWA8U0gL+svruQ9DgmOMuCA/RQzwozxbOhxdOVEaCfMNyYIj22bKk2LMkzcN
-         TP8l0emC/VhIOxO1h/xUPAoM5IG35668eoiIRtdF4OvwG1MwcTZK097OeE5VZc00rCWE
-         +i6Djpi3yXFAAR9/tpala0OkFAToxPbS0cLrtWDbmkekPFbGxs3hTf2xrD4JhPHXN2jq
-         xjrk7BZI4QVR4CKsfhFch2A+fHFvuzA1dGUJpyX+2qXXjOzTf2CI3rB0fioKtmbklj9N
-         uhLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vvkDjAk4ndVLVwI1Z85PO4wShGWFE753uje7rnBIzBg=;
-        b=nNur+r/57QjJAWbJsz9VYemqRDwlQ6AJ8cQtnmfF4myJamh1X5NKjEZm8vJQxiDesG
-         y9Llw7b26PPcB/DsBevUBQGKdB0wDSREuQMTRQAL3/tDPNmJnQwUUNbLSggWft5O69iN
-         L+Z9PfN55VbPHUkb0zMYsClLdOEAE3xGFvvXSFNpBmmMr6Btme24hhtqt4MtO7l6nke0
-         tPNLCaLgYtXpBUF4frPXdOaSqGOMLNXbeSGlN37vKqjyVOoD/Zlk2e3EKGzLA0rV+s9j
-         UHlQJKwhOrIeOaQ9wXlxC7/k48G6YkFKcvWjn1srf7xrGWHTO/9ZRNUwtYoseTrYN6e1
-         58aQ==
-X-Gm-Message-State: APjAAAW9OtVytIz5qvOiwIy2L/necWN9Y8gJlfL2I97ApPbZwG5Le4p/
-        SWTQ9csID8CozznwEPc+01QN/EC8
-X-Google-Smtp-Source: APXvYqxryE7Rk5zddXt9LGFByBc1I2MYRMoiGnlh9NTKNJeG9V7EA89QCMdLrnpj6epKJ2gU2TH4dA==
-X-Received: by 2002:adf:f052:: with SMTP id t18mr11411182wro.192.1583006222335;
-        Sat, 29 Feb 2020 11:57:02 -0800 (PST)
-Received: from localhost.localdomain ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id k16sm19171386wrd.17.2020.02.29.11.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 11:57:01 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] io_uring: remove io_prep_next_work()
-Date:   Sat, 29 Feb 2020 22:56:10 +0300
-Message-Id: <b97698208e565be70ae0afae1851e0964260c3f8.1583006078.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <d5893319c019695321a357cb1f09e76ed40715d1.1583005556.git.asml.silence@gmail.com>
-References: <d5893319c019695321a357cb1f09e76ed40715d1.1583005556.git.asml.silence@gmail.com>
+        Sat, 29 Feb 2020 15:07:02 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5ac4580000>; Sat, 29 Feb 2020 12:06:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 29 Feb 2020 12:07:02 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 29 Feb 2020 12:07:02 -0800
+Received: from ngvpn01-175-70.dyn.scz.us.nvidia.com (10.124.1.5) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Sat, 29 Feb 2020 20:07:02 +0000
+Subject: Re: [RFC v1 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+CC:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
+        <david@redhat.com>, <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+ <20200228154322.329228-4-imbrenda@linux.ibm.com>
+ <2e3bf1a2-b672-68e0-97b6-42f08133e077@de.ibm.com>
+ <ff35804f-81ef-a245-01d9-1f9b525e3410@nvidia.com>
+ <20200229114919.1abcacc4@p-imbrenda>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <cc2e1664-cff1-de1e-2087-475ec7c6aa56@nvidia.com>
+Date:   Sat, 29 Feb 2020 12:07:01 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200229114919.1abcacc4@p-imbrenda>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583006808; bh=Wmoswp92q0ncm0Ak5aD4Ct5WPC9Xr+W7Or+k/XZL7Is=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IEDvST0Qu3TviUS7V12sJ4TOu7edmLi+/7WRbx9igEIGIOaNGTA3kjoWTIFKQmsyD
+         gLt++MWZMnlo7FVlceSiyCTdzqR51twboBlnGmtaOAilyPW8I3RA4sX2CwU6biC1c+
+         p2QswktYWRuYLOdte9iX3FCaFfoEZASsJ5uCVBaCBes73UZT6CeGTexPBB8uZiDQz7
+         cXba/nhb9u7YuXj5uerkShAuVS2wlOPUDPK2DYAWdDO+vf6Ht0EYKeU1m3vbskR2JI
+         v+7IdMQ4lSHdbUyj1TrA2xm2/RlKXH/uj6RuEehCR8klC/bZsUabtZQyGEsWGHzk1A
+         zesSNT3fxEn7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-io-wq cares about IO_WQ_WORK_UNBOUND flag only while enqueueing, so
-it's useless setting it for a next req of a link. Thus, removed it
-from io_prep_linked_timeout(), and inline the function.
+On 2/29/20 2:49 AM, Claudio Imbrenda wrote:
+>> ...
+>>>> @@ -458,7 +457,6 @@ static struct page *follow_page_pte(struct
+>>>> vm_area_struct *vma, }
+>>>>   
+>>>>   	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
+>>>> -		int ret;
+>>>>   		get_page(page);
+>>>>   		pte_unmap_unlock(ptep, ptl);
+>>>>   		lock_page(page);
+>>>> @@ -475,6 +473,14 @@ static struct page *follow_page_pte(struct
+>>>> vm_area_struct *vma, page = ERR_PTR(-ENOMEM);
+>>>>   		goto out;
+>>>>   	}
+>>>> +	if (flags & FOLL_PIN) {
+>>
+>>
+>> What about FOLL_GET? Unless your calling code has some sort of
+>> BUG_ON(flags & FOLL_GET), I'm not sure it's a good idea to leave that
+>> case unhandled.
+> 
+> if I understood the semantics of FOLL_PIN correctly, then we don't need
+> to make the page accessible for FOLL_GET. FOLL_PIN indicates intent to
+> access the content of the page, whereas FOLL_GET is only for the struct
+> page.
+> 
+> if we are not touching the content of the page, there is no need to
+> make it accessible
+> 
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
 
-v2: fix unfortunate cherry-pick
+OK, I hope I'm not overlooking anything, but that sounds correct to me.
 
- fs/io_uring.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 74498c9cd023..768cf18cf912 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -999,17 +999,6 @@ static inline void io_req_work_drop_env(struct io_kiocb *req)
- 	}
- }
- 
--static inline void io_prep_next_work(struct io_kiocb *req,
--				     struct io_kiocb **link)
--{
--	const struct io_op_def *def = &io_op_defs[req->opcode];
--
--	if (!(req->flags & REQ_F_ISREG) && def->unbound_nonreg_file)
--		req->work.flags |= IO_WQ_WORK_UNBOUND;
--
--	*link = io_prep_linked_timeout(req);
--}
--
- static inline bool io_prep_async_work(struct io_kiocb *req,
- 				      struct io_kiocb **link)
- {
-@@ -2581,8 +2570,8 @@ static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
- {
- 	struct io_kiocb *link;
- 
--	io_prep_next_work(nxt, &link);
- 	*workptr = &nxt->work;
-+	link = io_prep_linked_timeout(nxt);
- 	if (link) {
- 		nxt->work.func = io_link_work_cb;
- 		nxt->work.data = link;
+thanks,
 -- 
-2.24.0
-
+John Hubbard
+NVIDIA
