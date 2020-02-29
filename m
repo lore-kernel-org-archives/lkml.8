@@ -6,53 +6,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F422CC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6F2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95342468A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7662468A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="p7TgclhQ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gCrDiaW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgB2GIi (ORCPT
+        id S1726901AbgB2GJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 01:08:38 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:62147 "EHLO
+        Sat, 29 Feb 2020 01:09:17 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:63134 "EHLO
         conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgB2GIh (ORCPT
+        with ESMTP id S1726219AbgB2GJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 01:08:37 -0500
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 01T68NIM027166;
-        Sat, 29 Feb 2020 15:08:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01T68NIM027166
+        Sat, 29 Feb 2020 01:09:16 -0500
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 01T69Cqo027532;
+        Sat, 29 Feb 2020 15:09:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01T69Cqo027532
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582956503;
-        bh=95vNS0xn/eFKDybsHRSqqk5phkc9D+D3QFZNdZ879ek=;
+        s=dec2015msa; t=1582956553;
+        bh=FDOn710v7y7+ihVj2jblA+fctMmPwnjIEd1Ea49dLC0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=p7TgclhQ+8fSOvUZ5hHOL4QrYI4+LN7TQdECQR4jAFZMdd7nimJJApm9Sb0BWnijA
-         Qx/N56OqAbDFqR6P61LJ76q998HRWy7Q6hCMGg/VkfzRMRFClBxdyxoN8BqL4qN+hZ
-         mK3wLWpF4T8MPD8HvZ6Xe37Ix3ZqL4agdtB3huEVVmCo7cq9ULmJP9T3E9NP1lj4gg
-         U0y/WWCqrsuFMUWWeY/M/FWsVpQVEzpfpEZaTQyiv0GZZ5zGcTzG7Akw+Iy1Hx5Bo9
-         7hN6RlIMysi5N7hG8vc7nk8YCvsTpN+dYl92tmGQamEh0hRfi3qoON/rWz3mRC+Zts
-         3kHMP2Uf0GIKQ==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id h5so2434959vsc.4;
-        Fri, 28 Feb 2020 22:08:23 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3KQ1Fqq0FraK7M8LHBwTiXMIgcXagjz87REwRMV3yifih/K+Ln
-        5ISrndclprIKxWGX4D8zukRjEDn8B2XCeaF7vdI=
-X-Google-Smtp-Source: ADFU+vvxW8SJz2gH69lHFxo7XkMiEDpyKKnR/h+JhkIcmJrnuvfSEvmzW8wve+//6tnaLVoygUEpD2rAg1urn6bq0s4=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr4335852vsh.179.1582956502271;
- Fri, 28 Feb 2020 22:08:22 -0800 (PST)
+        b=gCrDiaW46tABUNq60rflRlhsWX10fRekkRTzE8ubR0T4pbNKLlcSNKCg1okjYCVKE
+         t2EY3wK5AtiTJKkonEmStcPPLl/dKmZIOgxHtRjO8Z4IPgvm2YWPrwPR/DuYM4N4VG
+         8JZhY1ydVOuJKUjHCTpAVL8MZ4jFvgUYAGEqh++JULndT98gjk7cEg9TG8NCDz8lud
+         iiDBmJpq9D/nIZBpkNKsXIyQ/2pqBdy+34HmCZLi+J9ekcixRjKaNB1GEQa4+YigX+
+         t3vFKVxU//0qtaG1jQCko5qo59cHfX6g2t7wcCk6O/Gm8NMquzgUQH9+iafNZhgEjG
+         NjDG3J2drHsFw==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id a33so1792338uad.11;
+        Fri, 28 Feb 2020 22:09:13 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3V5/wBieBsQU/bXJJVyQP19PmE4djnbEfy4Y16S5VNYmWRe4l4
+        5V/fWpnrXc1mB2heVHqsis/7glS7vtaMte5Fbt4=
+X-Google-Smtp-Source: ADFU+vvd2S7Ste0Zn/eGxDN/NNdK6s5ZpfeCHP0r5Cao2Sh6KWRfQ2UxnVFAabBiDACbWhnKN3OXiVkeb8whOGEovwU=
+X-Received: by 2002:ab0:2414:: with SMTP id f20mr3763217uan.121.1582956552146;
+ Fri, 28 Feb 2020 22:09:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228122055.17008-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20200228122055.17008-1-yamada.masahiro@socionext.com>
+References: <20200226035914.23582-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200226035914.23582-1-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 29 Feb 2020 15:07:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQzXD55UxOpVPhu=m24oPbG6gwLgq5g23Nxu=zGJLyNRA@mail.gmail.com>
-Message-ID: <CAK7LNAQzXD55UxOpVPhu=m24oPbG6gwLgq5g23Nxu=zGJLyNRA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: uniphier: Add one more generic compatible
- string for I2C EEPROM
+Date:   Sat, 29 Feb 2020 15:08:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATchD=T_V5Z489FqHB5VkLX4x=gMoq6azMQGk-Q2wQG_Q@mail.gmail.com>
+Message-ID: <CAK7LNATchD=T_V5Z489FqHB5VkLX4x=gMoq6azMQGk-Q2wQG_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: uniphier: rename NAND node names to follow json-schema
 To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         DTML <devicetree@vger.kernel.org>,
@@ -65,39 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 9:21 PM Masahiro Yamada
+On Wed, Feb 26, 2020 at 1:00 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> Commit 73f9de0c7f5d ("ARM: dts: uniphier: Add generic compatible string
-> for I2C EEPROM") did not touch this node.
+> Follow the standard nodename pattern "^nand-controller(@.*)?" defined
+> in Documentation/devicetree/bindings/mtd/nand-controller.yaml
 >
-> Add the compatible string prefixed "atmel," so that this matches to the
-> OF table.
+> Otherwise, after the dt-binding is converted to json-schema,
+> 'make ARCH=arm dtbs_check' will show a warning like this:
+>
+>   nand@68000000: $nodename:0: 'nand@68000000' does not match '^nand-controller(@.*)?'
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
 
 Applied to linux-uniphier.
 
 
-> ---
+
+>  arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 +-
+>  arch/arm/boot/dts/uniphier-pro4.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-pro5.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-sld8.dtsi | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 >
->  arch/arm/boot/dts/uniphier-ref-daughter.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> index 23b8fd627c00..197bee7d8b7f 100644
+> --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> @@ -398,7 +398,7 @@
+>                         };
+>                 };
 >
-> diff --git a/arch/arm/boot/dts/uniphier-ref-daughter.dtsi b/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-> index 04e60c295319..a11897669c26 100644
-> --- a/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-> @@ -7,7 +7,7 @@
+> -               nand: nand@68000000 {
+> +               nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5a";
+>                         status = "disabled";
+>                         reg-names = "nand_data", "denali_reg";
+> diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> index eb06c353970f..b02bc8a6346b 100644
+> --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> @@ -588,7 +588,7 @@
+>                         };
+>                 };
 >
->  &i2c0 {
->         eeprom@50 {
-> -               compatible = "microchip,24lc128";
-> +               compatible = "microchip,24lc128", "atmel,24c128";
->                 reg = <0x50>;
->                 pagesize = <64>;
->         };
+> -               nand: nand@68000000 {
+> +               nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5a";
+>                         status = "disabled";
+>                         reg-names = "nand_data", "denali_reg";
+> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> index c95eb44c816d..f84a43a10f38 100644
+> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> @@ -453,7 +453,7 @@
+>                         };
+>                 };
+>
+> -               nand: nand@68000000 {
+> +               nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5b";
+>                         status = "disabled";
+>                         reg-names = "nand_data", "denali_reg";
+> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> index c054d0175df9..989b2a241822 100644
+> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> @@ -761,7 +761,7 @@
+>                         };
+>                 };
+>
+> -               nand: nand@68000000 {
+> +               nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5b";
+>                         status = "disabled";
+>                         reg-names = "nand_data", "denali_reg";
+> diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> index a05061038e78..fbfd25050a04 100644
+> --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> @@ -402,7 +402,7 @@
+>                         };
+>                 };
+>
+> -               nand: nand@68000000 {
+> +               nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5a";
+>                         status = "disabled";
+>                         reg-names = "nand_data", "denali_reg";
 > --
 > 2.17.1
 >
