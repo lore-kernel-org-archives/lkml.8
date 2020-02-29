@@ -2,181 +2,155 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF69C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE302C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA3324680
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C33024680
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DRuRlxoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgB2P1M (ORCPT
+        id S1727145AbgB2Pac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 10:27:12 -0500
-Received: from mout-p-103.mailbox.org ([80.241.56.161]:9386 "EHLO
-        mout-p-103.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgB2P1M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 10:27:12 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 48V9Hw62W7zKmhC;
-        Sat, 29 Feb 2020 16:27:08 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id 7xLatdWfY05q; Sat, 29 Feb 2020 16:27:05 +0100 (CET)
-Date:   Sun, 1 Mar 2020 02:26:56 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fweimer@redhat.com
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-Message-ID: <20200229152656.gwu7wbqd32liwjye@yavin>
-References: <96563.1582901612@warthog.procyon.org.uk>
- <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+        Sat, 29 Feb 2020 10:30:32 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:39766 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbgB2Pab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 10:30:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=sBHWhVSh3klJN5kcIPaPKiA9b5bvnaJ4b7vpHAEeB84=; b=DRuRlxoe4uR69CzfbpF+lthW4G
+        Xp2/YO/kT2EVT0tfpEhaOJ9ms4+a10KOGpDgPYwgYA3e/pmlSGzZbR8tLrM5KvqPsCs15Pui60LCv
+        cw1+3XubTYqESQ1t4KlLtgm+l+6lB4YMLOq2G2fWkMumPjFip4qIMmyEQq7Ykicppdrk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j844N-0001kg-Ss; Sat, 29 Feb 2020 16:30:23 +0100
+Date:   Sat, 29 Feb 2020 16:30:23 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pengcheng Xu <i@jsteward.moe>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: macb: add support for fixed-link
+Message-ID: <20200229153023.GC6305@lunn.ch>
+References: <20200229070902.1294280-1-i@jsteward.moe>
+ <CADuippAvUXHH2Mjuxyz+9JFf-SR5j8itmRi5YvUJowmbVXR9Og@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gi6jozpeqmazgrpn"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADuippAvUXHH2Mjuxyz+9JFf-SR5j8itmRi5YvUJowmbVXR9Og@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Feb 29, 2020 at 03:19:15PM +0800, Pengcheng Xu wrote:
+> Sorry for forgetting to CC the mailing lists.  Adding them now.
+> 
+> 2020年2月29日(土) 15:09 Pengcheng Xu <i@jsteward.moe>:
+> >
+> > The Cadence macb driver did not support fixed-link PHYs.  This patch
+> > adds support for fixed-link PHYs to the driver.
+> >
+> > The driver only checks if there's a valid PHY over MDIO, which is either
+> > present as a device tree node, or (if absent) searched on the MDIO bus.
+> > This patch detects if there is a `fixed-link` PHY instead of a regular
+> > MDIO-attached PHY.  The device tree node of the MAC is checked for a
+> > fixed-link PHY via `of_phy_is_fixed_link`, and, if so, the normal MDIO
+> > register routine is skipped, and `of_phy_register_fixed_link` is
+> > performed instead.
+> >
+> > The changes were borrowed from
+> > drivers/net/ethernet/altera/altera_tse_main.c and tested to work on a
+> > Xilinx Zynq UltraScale+ device.
+> >
+> > Signed-off-by: Pengcheng Xu <i@jsteward.moe>
+> > ---
+> >  drivers/net/ethernet/cadence/macb_main.c | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> > index 2c28da1737fe..fb359ce90ae4 100644
+> > --- a/drivers/net/ethernet/cadence/macb_main.c
+> > +++ b/drivers/net/ethernet/cadence/macb_main.c
+> > @@ -744,6 +744,7 @@ static int macb_mdiobus_register(struct macb *bp)
+> >
+> >  static int macb_mii_init(struct macb *bp)
+> >  {
+> > +       struct device_node *np = bp->pdev->dev.of_node;
+> >         int err = -ENXIO;
+> >
+> >         /* Enable management port */
+> > @@ -765,9 +766,17 @@ static int macb_mii_init(struct macb *bp)
+> >
+> >         dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+> >
+> > -       err = macb_mdiobus_register(bp);
+> > -       if (err)
+> > -               goto err_out_free_mdiobus;
+> > +       if (of_phy_is_fixed_link(np)) {
+> > +               err = of_phy_register_fixed_link(np);
+> > +               if (err) {
+> > +                       netdev_err(bp->dev, "cannot register fixed-link PHY\n");
+> > +                       goto err_out_free_mdiobus;
+> > +               }
+> > +       } else {
+> > +               err = macb_mdiobus_register(bp);
+> > +               if (err)
+> > +                       goto err_out_free_mdiobus;
+> > +       }
+> >
+> >         err = macb_mii_probe(bp->dev);
+> >         if (err)
 
---gi6jozpeqmazgrpn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Pengcheng
 
-On 2020-02-28, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> [Cc Florian since that ends up on libc's table sooner or later...]
->=20
-> On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
-> > =09
-> > I've been told that RESOLVE_* flags, which can be found in linux/openat=
-2.h,
-> > should be used instead of the equivalent AT_* flags for new system call=
-s.  Is
-> > this the case?
->=20
-> Imho, it would make sense to use RESOLVE_* flags for new system calls
-> and afair this was the original intention.
+Fixed link and an mdio bus are not mutually exclusive. When the MAC is
+connected to an Ethernet switch, you often see a fixed link, and the
+ethernet switch on the MDIO bus. As an example,
 
-Yes, RESOLVE_ flags would ideally be usable with all new system calls
-(though only where it makes sense, obviously). This would make it much
-easier for userspace to safely resolve paths without having to go
-through several levels of O_PATH fuckery.
+arch/arm/boot/dts/vf610-zii-cfu1.dts
 
-The "openat2.h" name was honestly a completely arbitrary decision.
+&fec1 {
+        phy-mode = "rmii";
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_fec1>;
+        status = "okay";
 
-> So we either end up adding new AT_* flags mirroring the new RESOLVE_*
-> flags or we end up adding new RESOLVE_* flags mirroring parts of AT_*
-> flags. And if that's a possibility I vote for RESOLVE_* flags going
-> forward. The have better naming too imho.
+        fixed-link {
+                speed = <100>;
+                full-duplex;
+        };
 
-I can see the argument for merging AT_ flags into RESOLVE_ flags (fewer
-flag arguments for syscalls is usually a good thing) ... but I don't
-really like it. There are a couple of problems right off the bat:
+        mdio1: mdio {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                status = "okay";
 
- * The prefix RESOLVE_ implies that the flag is specifically about path
-   resolution. While you could argue that AT_EMPTY_PATH is at least
-   *related* to path resolution, flags like AT_REMOVEDIR and
-   AT_RECURSIVE aren't.
+                switch0: switch0@0 {
+                        compatible = "marvell,mv88e6085";
+                        pinctrl-names = "default";
+                        pinctrl-0 = <&pinctrl_switch>;
+                        reg = <0>;
+                        eeprom-length = <512>;
+                        interrupt-parent = <&gpio3>;
+                        interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+                        interrupt-controller;
+                        #interrupt-cells = <2>;
+                        reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
 
- * That point touches on something I see as a more fundamental problem
-   in the AT_ flags -- they were intended to be generic flags for all of
-   the ...at(2) syscalls. But then AT_ grew things like AT_STATX_ and
-   AT_REMOVEDIR (both of which are necessary features to have for their
-   respective syscalls, but now those flag bits are dead for other
-   syscalls -- not to mention the whole AT_SYMLINK_{NO,}FOLLOW thing).
+...
 
- * While the above might be seen as minor quibbles, the really big
-   issue is that even the flags which are "similar" (AT_SYMLINK_NOFOLLOW
-   and RESOLVE_NO_SYMLINKS) have different semantics (by design -- in my
-   view, AT_SYMLINK_{NO,}FOLLOW / O_NOFOLLOW / lstat(2) has always had
-   the wrong semantics if the intention was to be a way to safely avoid
-   resolving symlinks).
+So if you find a fixed-phy, you should register it. And if you find an
+mdio bus, you should also register it.
 
-But maybe I'm just overthinking what a merge of AT_ and RESOLVE_ would
-look like -- would it on.
-
-> An argument against this could be that we might end up causing more
-> confusion for userspace due to yet another set of flags. But maybe this
-> isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
-> When we introduce a new syscall userspace will have to add support for
-> it anyway.
->=20
-> >=20
-> > If so, should we comment them as being deprecated in the header file?  =
-And
-> > should they be in linux/fcntl.h rather than linux/openat2.h?
-> >=20
-> > Also:
-> >=20
-> >  (*) It should be noted that the RESOLVE_* flags are not a superset of =
-the
-> >      AT_* flags (there's no equivalent of AT_NO_AUTOMOUNT for example).
->=20
-> That's true but it seems we could just add e.g. RESOLVE_NO_AUTOMOUNT as
-> soon as we have a new syscall showing up that needs it or we have an
-> existing syscall (e.g. openat2()) that already uses RESOLVE_* flags and
-> needs it?
-
-RESOLVE_NO_AUTOMOUNT is on the roadmap for openat2() -- I mentioned it
-as future work in the cover letter. :P
-
-But see my above concerns about merging AT_ and RESOLVE_ flags. The
-semantic disconnect between AT_ and RESOLVE_ (which is most obvious with
-AT_SYMLINK_NOFOLLOW) also exists for AT_NO_AUTOMOUNT.
-
-> >  (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the defau=
-lt, but
-> >      only RESOLVE_NO_SYMLINKS exists.
->=20
-> I'd be very much in favor of not following symlinks being the default.
-> That's usually a source of a lot of security issues.
-> And since no kernel with openat2() has been released there's still time
-> to switch it and with openat2() being a new syscall it won't hurt if it
-> has new semantics; I mean it deviates from openat() - intentionally -
-> already.
-
-I agree in principle, but the problem is that if we want to add new
-RESOLVE_ flags you end up with half (or fewer) of the flags being opt-in
-with the rest necessarily being opt-out (since the flag not being set
-needs to be the old behaviour).
-
-There's also a slight ugliness with RESOLVE_SYMLINKS|RESOLVE_MAGICLINKS
--- should you have to specify both or should RESOLVE_MAGICLINKS imply
-RESOLVE_SYMLINKS but only for magic-links. (Is allowing magic-links but
-not symlinks even a sane thing to do?)
-
-Also I have a very strong feeling people won't like RESOLVE_XDEV nor
-RESOLVE_SYMLINKS being opt-in -- lots of systems use bind-mounts and
-symlinks in system paths and developers might not be aware of this.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---gi6jozpeqmazgrpn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlqCvAAKCRCdlLljIbnQ
-ErrpAPwIkNOWRinI5EBkvqXe0r+BbAw2sFvTtGTQrk63ajZnQgEApZxmCMgpgmIG
-Wd3LkExra2n+a0rpN3oWf8JXcgVNOgk=
-=diwc
------END PGP SIGNATURE-----
-
---gi6jozpeqmazgrpn--
+     Andrew
