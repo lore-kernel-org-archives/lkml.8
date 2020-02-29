@@ -4,87 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A72C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA726C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB4E24697
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C96246A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 02:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgB2Cwh (ORCPT
+        id S1726751AbgB2C7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 21:52:37 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:40481 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB2Cwg (ORCPT
+        Fri, 28 Feb 2020 21:59:54 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43794 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB2C7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 21:52:36 -0500
-Received: from localhost (c-71-238-64-75.hsd1.or.comcast.net [71.238.64.75])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3EC1F200007;
-        Sat, 29 Feb 2020 02:52:30 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 18:52:28 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nvme: Check for readiness more quickly, to speed up boot time
-Message-ID: <20200229025228.GA203607@localhost>
+        Fri, 28 Feb 2020 21:59:54 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j7sM1-0000Wh-Pt; Sat, 29 Feb 2020 02:59:49 +0000
+Date:   Sat, 29 Feb 2020 03:59:48 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: Re: [PATCH 4/3] pid: Improve the comment about waiting in
+ zap_pid_ns_processes
+Message-ID: <20200229025948.mfla2guxzvo7mdwg@wittgenstein>
+References: <20200212203833.GQ23230@ZenIV.linux.org.uk>
+ <20200212204124.GR23230@ZenIV.linux.org.uk>
+ <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+ <87lfp7h422.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+ <87pnejf6fz.fsf@x220.int.ebiederm.org>
+ <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+ <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
+ <878skmsbyy.fsf_-_@x220.int.ebiederm.org>
+ <878skmpcib.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <878skmpcib.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After initialization, nvme_wait_ready checks for readiness every 100ms,
-even though the drive may be ready far sooner than that. This delays
-system boot by hundreds of milliseconds. Reduce the delay, checking for
-readiness every millisecond instead.
+On Fri, Feb 28, 2020 at 04:34:20PM -0600, Eric W. Biederman wrote:
+> 
+> Oleg wrote a very informative comment, but with the removal of
+> proc_cleanup_work it is no longer accurate.
+> 
+> Rewrite the comment so that it only talks about the details
+> that are still relevant, and hopefully is a little clearer.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  kernel/pid_namespace.c | 31 +++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+> index 318fcc6ba301..01f8ba32cc0c 100644
+> --- a/kernel/pid_namespace.c
+> +++ b/kernel/pid_namespace.c
+> @@ -224,20 +224,27 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
+>  	} while (rc != -ECHILD);
+>  
+>  	/*
+> -	 * kernel_wait4() above can't reap the EXIT_DEAD children but we do not
+> -	 * really care, we could reparent them to the global init. We could
+> -	 * exit and reap ->child_reaper even if it is not the last thread in
+> -	 * this pid_ns, free_pid(pid_allocated == 0) calls proc_cleanup_work(),
+> -	 * pid_ns can not go away until proc_kill_sb() drops the reference.
+> +	 * kernel_wait4() misses EXIT_DEAD children, and EXIT_ZOMBIE
+> +	 * process whose parents processes are outside of the pid
+> +	 * namespace.  Such processes are created with setns()+fork().
+>  	 *
+> -	 * But this ns can also have other tasks injected by setns()+fork().
+> -	 * Again, ignoring the user visible semantics we do not really need
+> -	 * to wait until they are all reaped, but they can be reparented to
+> -	 * us and thus we need to ensure that pid->child_reaper stays valid
+> -	 * until they all go away. See free_pid()->wake_up_process().
+> +	 * If those EXIT_ZOMBIE processes are not reaped by their
+> +	 * parents before their parents exit, they will be reparented
+> +	 * to pid_ns->child_reaper.  Thus pidns->child_reaper needs to
+> +	 * stay valid until they all go away.
+>  	 *
+> -	 * We rely on ignored SIGCHLD, an injected zombie must be autoreaped
+> -	 * if reparented.
+> +	 * The code relies on the the pid_ns->child_reaper ignoring
 
-Boot-time tests on an AWS c5.12xlarge:
+s/the the/the/
 
-Before:
-[    0.546936] initcall nvme_init+0x0/0x5b returned 0 after 37 usecs
-...
-[    0.764178] nvme nvme0: 2/0/0 default/read/poll queues
-[    0.768424]  nvme0n1: p1
-[    0.774132] EXT4-fs (nvme0n1p1): mounted filesystem with ordered data mode. Opts: (null)
-[    0.774146] VFS: Mounted root (ext4 filesystem) on device 259:1.
-...
-[    0.788141] Run /sbin/init as init process
+Hm, can we maybe reformulate this to:
 
-After:
-[    0.537088] initcall nvme_init+0x0/0x5b returned 0 after 37 usecs
-...
-[    0.543457] nvme nvme0: 2/0/0 default/read/poll queues
-[    0.548473]  nvme0n1: p1
-[    0.554339] EXT4-fs (nvme0n1p1): mounted filesystem with ordered data mode. Opts: (null)
-[    0.554344] VFS: Mounted root (ext4 filesystem) on device 259:1.
-...
-[    0.567931] Run /sbin/init as init process
+"The code relies on having made pid_ns->child_reaper ignore SIGCHLD above
+causing EXIT_ZOMBIE processes to be autoreaped if reparented."
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Which imho makes it clearer that it was us ensuring that SIGCHLD is
+ignored. Someone not too familiar with the exit codepaths might be
+looking at zap_pid_ns_processes() not knowing that it is only called
+when namespace init is exiting.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index a4d8c90ee7cc..04174a40b9b0 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2074,7 +2074,7 @@ static int nvme_wait_ready(struct nvme_ctrl *ctrl, u64 cap, bool enabled)
- 		if ((csts & NVME_CSTS_RDY) == bit)
- 			break;
- 
--		msleep(100);
-+		usleep_range(1000, 2000);
- 		if (fatal_signal_pending(current))
- 			return -EINTR;
- 		if (time_after(jiffies, timeout)) {
--- 
-2.25.1
+Otherwise
 
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
