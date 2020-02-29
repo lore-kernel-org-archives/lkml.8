@@ -2,89 +2,110 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DF6C3F2D4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1DAC3F2D8
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7743E246B0
+	by mail.kernel.org (Postfix) with ESMTP id A0BDB246B6
 	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582951795;
-	bh=DS3NNAGzQXXPBL6dUXkJQXtASwW/7FOFjDPGY+oNzvw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=R/l+wW4u0uRL/nmvMN7EjIpNqGp3oBpchHGLnWHwN5lUQI/xDIBMaYaqvPLjE4sEa
-	 Vz/VG+08Qv0sgxDB02Bv8GbmFBQrxPkzmgCohFThSGLNtvI3bnA6q5Nst9/D6cLzQP
-	 UnjGjnRjb9xTJTcgi4fdoA2rN2Pn+V8wlSiarfsU=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sQsrTyp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgB2Etx (ORCPT
+        id S1726860AbgB2Ety (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 23:49:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgB2Etx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 23:49:53 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB45E246AE;
-        Sat, 29 Feb 2020 04:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582951792;
-        bh=DS3NNAGzQXXPBL6dUXkJQXtASwW/7FOFjDPGY+oNzvw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YdpZavzk/Y3olsp8VBNE8OWwrBOZZFKxShVq4DfJ6JhiPPxoPKo8SnZYNzREHoU1H
-         jTA8o1m+SopT3xxVdb+OyQ2VYwULR+K1UbzUCp1wP443MgQDMK+vo/n7AAJXprh9UT
-         mihI3g9tpciq6JMG9Crsr9P6xwWYaLHnFnBvgWLw=
-Date:   Sat, 29 Feb 2020 13:49:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 03/13] kprobes: Add symbols for kprobe insn pages
-Message-Id: <20200229134947.839096dbc8321cfdca980edb@kernel.org>
-In-Reply-To: <20200228172004.GI5451@krava>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
-        <20200228135125.567-4-adrian.hunter@intel.com>
-        <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
-        <20200228172004.GI5451@krava>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Feb 2020 23:49:54 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53282 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB2Ety (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 23:49:54 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01T4nSa0034340;
+        Sat, 29 Feb 2020 04:49:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=kzR9CGwA8QkKF16UH73eDglqPnsxYFUS7yPTFc3wG+Q=;
+ b=sQsrTyp0UNryUPYAH0iLRkB3zVXKd7jPvMwzMVe36OFfS3fsDIZ+xOBrl+WYdVYp51Wh
+ y1QEFQsQKduAvIvwJMr98eRx669obe6EB/hTtBE0ohnZMMYASxaVYzI0PAh16VbjV0P7
+ csbeDl3dD7+ZcEKi+ZhCo3v3h8aKVeqmdvi0JXipoqK6HX2WYrEcHP9mW72Hps9osHfR
+ foVgPY99mteM6Ewzcm25KOoc0fJh+1NCrWcDGc6eJ+smX55mxgRiDrFMxEr4d2984wA5
+ OjcpgBysDn/TA5dLsa2zlFIF99b7saDyvFQHX+qrOALUZv7+mjYHlWx/clW0C5oHq+V3 Fw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yffwq8404-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Feb 2020 04:49:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01T4lhd2010921;
+        Sat, 29 Feb 2020 04:49:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2yfe0d9c8n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Feb 2020 04:49:27 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01T4nPYo013441;
+        Sat, 29 Feb 2020 04:49:25 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Feb 2020 20:49:24 -0800
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Satish Kharat <satishkh@cisco.com>,
+        Sesidhar Baddela <sebaddel@cisco.com>,
+        Karan Tilak Kumar <kartilak@cisco.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Brian King <brking@us.ibm.com>,
+        Intel SCU Linux support <intel-linux-scu@intel.com>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com, open-iscsi@googlegroups.com,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH] scsi: Replace zero-length array with flexible-array member
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200224161406.GA21454@embeddedor>
+Date:   Fri, 28 Feb 2020 23:49:21 -0500
+In-Reply-To: <20200224161406.GA21454@embeddedor> (Gustavo A. R. Silva's
+        message of "Mon, 24 Feb 2020 10:14:06 -0600")
+Message-ID: <yq1eeue5772.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 spamscore=0 mlxlogscore=619 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002290033
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=685 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002290033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 18:20:04 +0100
-Jiri Olsa <jolsa@redhat.com> wrote:
 
-> > BTW, it seems to pretend to be a module, but is there no concern of
-> > confusing users? Shouldn't it be [*kprobes] so that it is non-exist
-> > module name?
-> 
-> note we already have bpf symbols as [bpf] module
+Gustavo,
 
-Yeah, and this series adds [kprobe(s)] and [ftrace] too.
-I simply concern that the those module names implicitly become
-special word (rule) and embedded in the code. If such module names
-are not exposed to users, it is OK (but I hope to have some comments).
-However, it is under /proc, which means users can notice it.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array
+> member[1][2], introduced in C99:
 
-Thank you,
+Applied to 5.7/scsi-queue, thanks.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Martin K. Petersen	Oracle Linux Engineering
