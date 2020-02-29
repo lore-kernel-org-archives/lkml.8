@@ -2,67 +2,177 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F72C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48950246A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC00246A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgB2KtV (ORCPT
+        id S1726925AbgB2Ktc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:49:21 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11123 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgB2KtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 05:49:21 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 378EF698CDA89C8DF401;
-        Sat, 29 Feb 2020 18:49:17 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 29 Feb 2020 18:49:10 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: remove redundant compress inode check
-Date:   Sat, 29 Feb 2020 18:49:06 +0800
-Message-ID: <20200229104906.12061-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Sat, 29 Feb 2020 05:49:32 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10310 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726752AbgB2Ktc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 05:49:32 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01TAnRYB010567
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:49:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmwt9rkh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:49:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Sat, 29 Feb 2020 10:49:28 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 29 Feb 2020 10:49:23 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01TAmOsG38470056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Feb 2020 10:48:24 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18C2CA4054;
+        Sat, 29 Feb 2020 10:49:22 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83C4EA405B;
+        Sat, 29 Feb 2020 10:49:21 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.2.1])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 29 Feb 2020 10:49:21 +0000 (GMT)
+Date:   Sat, 29 Feb 2020 11:49:19 +0100
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
+        <david@redhat.com>, <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC v1 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <ff35804f-81ef-a245-01d9-1f9b525e3410@nvidia.com>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+        <20200228154322.329228-4-imbrenda@linux.ibm.com>
+        <2e3bf1a2-b672-68e0-97b6-42f08133e077@de.ibm.com>
+        <ff35804f-81ef-a245-01d9-1f9b525e3410@nvidia.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022910-0012-0000-0000-0000038B67DA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022910-0013-0000-0000-000021C8169C
+Message-Id: <20200229114919.1abcacc4@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-29_03:2020-02-28,2020-02-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=463
+ clxscore=1015 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002290084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-due to f2fs_post_read_required() has did that.
+On Fri, 28 Feb 2020 16:08:23 -0800
+John Hubbard <jhubbard@nvidia.com> wrote:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/f2fs.h | 2 --
- 1 file changed, 2 deletions(-)
+> On 2/28/20 8:08 AM, Christian Borntraeger wrote:
+> > Andrew,
+> > 
+> > while patch 1 is a fixup for the FOLL_PIN work in your patch queue,
+> > I would really love to see this patch in 5.7. The exploitation code
+> > of kvm/s390 is in Linux next also scheduled for 5.7.
+> > 
+> > Christian
+> > 
+> > On 28.02.20 16:43, Claudio Imbrenda wrote:  
+> >> With the introduction of protected KVM guests on s390 there is now
+> >> a concept of inaccessible pages. These pages need to be made
+> >> accessible before the host can access them.
+> >>
+> >> While cpu accesses will trigger a fault that can be resolved, I/O
+> >> accesses will just fail.  We need to add a callback into
+> >> architecture code for places that will do I/O, namely when
+> >> writeback is started or when a page reference is taken.
+> >>
+> >> This is not only to enable paging, file backing etc, it is also
+> >> necessary to protect the host against a malicious user space. For
+> >> example a bad QEMU could simply start direct I/O on such protected
+> >> memory.  We do not want userspace to be able to trigger I/O errors
+> >> and thus we the logic is "whenever somebody accesses that page
+> >> (gup) or  
+> 
+> 
+> I actually kind of like the sound of that: "We the logic of the
+> kernel, in order to form a more perfect computer..." :)
+> 
+> Probably this wording is what you want, though:
+> 
+> "thus the logic is "whenever somebody (gup) accesses that page or"
+> 
+> 
+> ...
+> >> @@ -458,7 +457,6 @@ static struct page *follow_page_pte(struct
+> >> vm_area_struct *vma, }
+> >>  
+> >>  	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
+> >> -		int ret;
+> >>  		get_page(page);
+> >>  		pte_unmap_unlock(ptep, ptl);
+> >>  		lock_page(page);
+> >> @@ -475,6 +473,14 @@ static struct page *follow_page_pte(struct
+> >> vm_area_struct *vma, page = ERR_PTR(-ENOMEM);
+> >>  		goto out;
+> >>  	}
+> >> +	if (flags & FOLL_PIN) {  
+> 
+> 
+> What about FOLL_GET? Unless your calling code has some sort of
+> BUG_ON(flags & FOLL_GET), I'm not sure it's a good idea to leave that
+> case unhandled.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f4bcbbd5e9ed..882f9ad3445b 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4006,8 +4006,6 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
- 		return true;
- 	if (f2fs_is_multi_device(sbi))
- 		return true;
--	if (f2fs_compressed_file(inode))
--		return true;
- 	/*
- 	 * for blkzoned device, fallback direct IO to buffered IO, so
- 	 * all IOs can be serialized by log-structured write.
--- 
-2.18.0.rc1
+if I understood the semantics of FOLL_PIN correctly, then we don't need
+to make the page accessible for FOLL_GET. FOLL_PIN indicates intent to
+access the content of the page, whereas FOLL_GET is only for the struct
+page. 
+
+if we are not touching the content of the page, there is no need to
+make it accessible 
+
+> >> +		ret = arch_make_page_accessible(page);
+> >> +		if (ret) {
+> >> +			unpin_user_page(page);
+> >> +			page = ERR_PTR(ret);
+> >> +			goto out;
+> >> +		}
+> >> +	}
+> >>  	if (flags & FOLL_TOUCH) {
+> >>  		if ((flags & FOLL_WRITE) &&
+> >>  		    !pte_dirty(pte) && !PageDirty(page))
+> >> @@ -2143,6 +2149,13 @@ static int gup_pte_range(pmd_t pmd,
+> >> unsigned long addr, unsigned long end, 
+> >>  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+> >>  
+> >> +		if (flags & FOLL_PIN) {
+> >> +			ret = arch_make_page_accessible(page);
+> >> +			if (ret) {
+> >> +				unpin_user_page(page);  
+> 
+> 
+> Same concern as above, about leaving FOLL_GET unhandled.
+
+and same answer as above :)
 
