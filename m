@@ -2,84 +2,71 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000E2C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FF4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7DB2468D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YEZrilU5"
+	by mail.kernel.org (Postfix) with ESMTP id 607492468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgB2Avi (ORCPT
+        id S1726720AbgB2AxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:51:38 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37203 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgB2Avi (ORCPT
+        Fri, 28 Feb 2020 19:53:13 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42155 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgB2AxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:51:38 -0500
-Received: by mail-pj1-f66.google.com with SMTP id o2so41026pjp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 16:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M4tgEyFArklK0C2NkHJ4Ev1DbekboBTuLVXflJ8Bdmg=;
-        b=YEZrilU5Emz9Z8Ec+wHK4LiI7fQQzdfCcue2M/IsGBDlntu9mx1MWRLDNRF2DkbyzK
-         R2lwOWZhgB6mzNpT1Pu/aYGOixkKd67bWXduwxC7akBPX2iYuMwBeOQ5JBnJ3PoP/sm+
-         fwHlgE5NWc/QcaNpgQ1v36FCjFUNaQ0QzZjXLhJBB7HSyakmk/gogoPqwcbqcHALKGWF
-         LEwHUDu3Vt5k84kgM8atzhoarq3m2Hp+ubtvEsIOjJSEjTqa8HV47MN06DuHfs+WThz5
-         AS+PNvVOGiAiXvalk95ELB6qY6CzHUNlqNZ8cCZ8Kyzz7tO0GspqtRYJOBiBc4omlRU0
-         Jamg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M4tgEyFArklK0C2NkHJ4Ev1DbekboBTuLVXflJ8Bdmg=;
-        b=mMikz26WX439UJOxL8GlZZKaybee1Mf2FwjNpDfEiDy2/2lqMF6Di9Fg4rj2OYqPCG
-         kAX5g4vugA1A3wZ6N2ti5qN0xGC0Z3gFLnIvY+341Z1qQz1U+2vSY/9ly33QFDbHriUY
-         PZ5uVC7M1+3wRT0idIohh8Hur0sPy6kZYnAkOotYB7OLowy79Ha3iftL0mChAkZmguz4
-         0GXEgYMN1LF08V6yEfE6FXVNpVsVGR3UTSwdD8Su8l4rvgYhdqaxOD0ZrxV1WGCvdclE
-         DL8TDMy9qF953ESiP+TxfaNx4xUuUnrow54kbc+ubfpKbiPsCu2nh7gYqYy42IsP4JQQ
-         AdBQ==
-X-Gm-Message-State: APjAAAU7Uihf2Ft62YG09NyvAi/mqshfgwhDHbTwY0RjyIENq6nw5d4R
-        3RdohODdUi5aG9qDbcoCA4USiQ==
-X-Google-Smtp-Source: APXvYqy82naI/lVAZlOJvZdl3C/jjyr3KkWwvalv9/HybDbYSHFf9yfSUJEYY3U/VEuNZhjYcVENGg==
-X-Received: by 2002:a17:90a:8a8d:: with SMTP id x13mr7344279pjn.97.1582937496771;
-        Fri, 28 Feb 2020 16:51:36 -0800 (PST)
-Received: from google.com ([2620:15c:211:202:ae26:61fb:e2f3:92e7])
-        by smtp.gmail.com with ESMTPSA id y16sm12339385pfn.177.2020.02.28.16.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 16:51:36 -0800 (PST)
-Date:   Fri, 28 Feb 2020 16:51:31 -0800
-From:   Marco Ballesio <balejs@google.com>
-To:     tj@kernel.org, guro@fb.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, corbet@lwn.net, rjw@rjwysocki.net,
-        pavel@ucw.cz, len.brown@intel.com, linux-doc@vger.kernel.org,
-        linux-pm@vger.kernel.org, minchan@google.com, surenb@google.com,
-        dancol@google.com
-Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
-Message-ID: <20200229005131.GB9813@google.com>
-References: <20200219183231.50985-1-balejs@google.com>
+        Fri, 28 Feb 2020 19:53:12 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j7qNQ-0002Qh-4r; Sat, 29 Feb 2020 00:53:08 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/nouveau/core/memory: remove redundant assignments to variable ret
+Date:   Sat, 29 Feb 2020 00:53:07 +0000
+Message-Id: <20200229005307.114264-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219183231.50985-1-balejs@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: Colin Ian King <colin.king@canonical.com>
 
-did anyone have time to look into my proposal and, in case, are there
-any suggestions, ideas or comments about it?
+The variable ret is being initialized with a value that is never
+read and it is being updated later with a new value. The initialization
+is redundant and can be removed.
 
-Marco
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/core/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/core/memory.c b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+index 4cc186262d34..38130ef272d6 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/core/memory.c
++++ b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+@@ -140,7 +140,7 @@ nvkm_memory_new(struct nvkm_device *device, enum nvkm_memory_target target,
+ {
+ 	struct nvkm_instmem *imem = device->imem;
+ 	struct nvkm_memory *memory;
+-	int ret = -ENOSYS;
++	int ret;
+ 
+ 	if (unlikely(target != NVKM_MEM_TARGET_INST || !imem))
+ 		return -ENOSYS;
+-- 
+2.25.0
+
