@@ -2,85 +2,59 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B340C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B4EC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCE024672
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F3F24672
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgB2XLY (ORCPT
+        id S1727647AbgB2XME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 18:11:24 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39265 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgB2XLY (ORCPT
+        Sat, 29 Feb 2020 18:12:04 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:50622 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727563AbgB2XMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 18:11:24 -0500
-Received: by mail-qk1-f194.google.com with SMTP id e16so6680077qkl.6
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 15:11:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T5ZPrIWUcFdZz+VY7vEnX2GwkgxMVshMmglqEI63Hd0=;
-        b=OfEhwIp2aEf74LXz0/vdWIhFbllJJsJX+MqH8i7jEkHx7XNH5G16bvty+PoCLOq2l/
-         nAla9HuLJbgYSupCz/O4nekjpJkITWzeOAeIe9pSUZBR6lRRF2iXSw5+RcxxkCTrSxqT
-         o8AfjVTq9AoaPI1IJ5/0uGVj/cCGCZhATxCr3jSQ7SqPsffYiPziHCtEhD96d4gmh+Jl
-         Qq29jArCX01E7wJJYE442Lz51z0yKe7ZjHjCjxpd8LrsMhFWvbsbsYxeVrneLV1Fey0M
-         C4qg8B5Z2B8U2Mc3f5gOyj8oaF6ssFlMsfOinrLauUzY7aJcLNbb9MVy5P4c1fsqgnFE
-         T0xg==
-X-Gm-Message-State: APjAAAUcJlgJPMlHTsZkBtjBTJgvlWWYm3Ya0Aou6ZIT9UOFX33CbDAT
-        InUMdtcuBy8DppzmogEaQBY=
-X-Google-Smtp-Source: APXvYqzJ+SJfesoEXBu07OvOjzBqsP/jFC5ZXJWFZcSGrzC5jVvdiMCeSRFshxY0nR3wLP/Z04f2Wg==
-X-Received: by 2002:a05:620a:146c:: with SMTP id j12mr10863660qkl.373.1583017881241;
-        Sat, 29 Feb 2020 15:11:21 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z6sm7588644qto.86.2020.02.29.15.11.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 15:11:20 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>
-Cc:     kernel-hardening@lists.openwall.com,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mm/init: Stop printing pgt_buf addresses
-Date:   Sat, 29 Feb 2020 18:11:20 -0500
-Message-Id: <20200229231120.1147527-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
+        Sat, 29 Feb 2020 18:12:03 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 2A1B729C9F;
+        Sat, 29 Feb 2020 18:11:59 -0500 (EST)
+Date:   Sun, 1 Mar 2020 10:11:51 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+In-Reply-To: <20200229131553.GA4985@afzalpc>
+Message-ID: <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <20200229131553.GA4985@afzalpc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This currently leaks kernel physical addresses into userspace.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+On Sat, 29 Feb 2020, afzal mohammed wrote:
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index e7bb483557c9..dc4711f09cdc 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -121,8 +121,6 @@ __ref void *alloc_low_pages(unsigned int num)
- 	} else {
- 		pfn = pgt_buf_end;
- 		pgt_buf_end += num;
--		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
--			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
- 	}
- 
- 	for (i = 0; i < num; i++) {
--- 
-2.24.1
+> [...] 
+> Specific to m68k, following changes has been made based on m68 family
+> ;) feedback,
+> 
 
+None of my comments were specific to any architecture.
+
+Also, I am not the maintainer for the affected m68k code. Greg is.
+
+> 3. s/pr_err/pr_debug
+> 
+
+Please just ignore my opinion on that, since it contradicts the 
+maintainer's guidance/preference.
