@@ -2,154 +2,285 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3234EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C67C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131252468E
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C633246A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 11:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q9p5W+6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgB2Kvd (ORCPT
+        id S1726860AbgB2LF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:51:33 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbgB2Kvc (ORCPT
+        Sat, 29 Feb 2020 06:05:29 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41630 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgB2LF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 05:51:32 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01TApQin030420
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:51:31 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmu1t2xs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:51:30 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Sat, 29 Feb 2020 10:51:28 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 29 Feb 2020 10:51:24 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01TApMq732833554
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Feb 2020 10:51:22 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A57D5204E;
-        Sat, 29 Feb 2020 10:51:22 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.2.1])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E264D52051;
-        Sat, 29 Feb 2020 10:51:21 +0000 (GMT)
-Date:   Sat, 29 Feb 2020 11:51:19 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
-        <borntraeger@de.ibm.com>, <david@redhat.com>,
-        <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
- FOLL_PIN pages"
-In-Reply-To: <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
-        <20200228154322.329228-3-imbrenda@linux.ibm.com>
-        <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 29 Feb 2020 06:05:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wuUpV5SHCRJYUop9hRbOcq6qSohuXXb7u+JkS37PiYg=; b=q9p5W+6pavIOD//8IHWCpzjOr
+        Y1ZEJ6TqSVwIynLiC+KJHBAHMaeqDY/LgdnHCNHWMrgtdgESsKNSQ3EpwHAXRVP7rcde5/+qjZ9W8
+        Wx2O1L2n9Db9cVyUP2wNsKltIux+pwQt87Ik7WK8+Aij8lC2Lui5Ps2lt6gA3NWMVunL3G0T2VdcH
+        xYagoaVexzJ73H91KgiMTXRVFTVcmY6xNd7j5vp02lxnhOz/85PNJ8/7AYa0Nye+1ZVMK9YIfUyqW
+        PtmfW8M4N/5xaCKCttbAWsYLQdwwyTW3Sg/tUcGPpq1qidsjw4IrrU6QizNZssXLYmE08eHQDHEdo
+        +PKLeQkdA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58468)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j7zvh-00015K-76; Sat, 29 Feb 2020 11:05:09 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j7zvU-0002uI-JD; Sat, 29 Feb 2020 11:04:56 +0000
+Date:   Sat, 29 Feb 2020 11:04:56 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200229110456.GY25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <20200229095550.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022910-4275-0000-0000-000003A69892
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022910-4276-0000-0000-000038BB352E
-Message-Id: <20200229115119.3562c73e@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-29_03:2020-02-28,2020-02-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- bulkscore=0 mlxscore=0 impostorscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002290084
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229095550.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 15:08:35 -0800
-John Hubbard <jhubbard@nvidia.com> wrote:
-
-> On 2/28/20 7:43 AM, Claudio Imbrenda wrote:
-> > In case pin fails, we need to unpin, a simple put_page will not be
-> > enough
+On Sat, Feb 29, 2020 at 09:55:50AM +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Feb 10, 2020 at 03:22:57PM +0000, Russell King - ARM Linux admin wrote:
+> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > >
+> > > > Hi Olof,
+> > > >
+> > > > Thanks a lot for your comments!
+> > > > And sorry for my delay respond!
+> > > 
+> > > Actually, they apply with only minor conflicts on top of current -next.
+> > > 
+> > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > enable full use of a promising ARM developer system, the SolidRun
+> > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > use with mainline or -next without any additional patches applied --
+> > > which this patchset achieves.
+> > > 
+> > > I know there are pending revisions based on feedback. I'll leave it up
+> > > to you and others to determine if that can be done with incremental
+> > > patches on top, or if it should be fixed before the initial patchset
+> > > is applied. But all in all, it's holding up adaption by me and surely
+> > > others of a very interesting platform -- I'm looking to replace my
+> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > before I do.
 > > 
-> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> > ---
-> >  mm/gup.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > If you're going to be using NVMe, make sure you use a power-fail safe
+> > version; I've already had one instance where ext4 failed to mount
+> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > Serror'd, and then I powered it down after a few hours before later
+> > booting it back up.
 > > 
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index f589299b0d4a..0b9a806898f3 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2134,7 +2134,10 @@ static int gup_pte_range(pmd_t pmd, unsigned
-> > long addr, unsigned long end, goto pte_unmap;
-> >  
-> >  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-> > -			put_page(head);
-> > +			if (flags & FOLL_GET)
-> > +				put_page(head);
-> > +			else if (flags & FOLL_PIN)
-> > +				unpin_user_page(head);  
+> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > EXT4-fs (nvme0n1p2): error loading journal
 > 
-> Hi Claudio,
+> ... and last night, I just got more ext4fs errors on the NVMe, without
+> any unclean power cycles:
 > 
-> Instead, I think that should actually be:
+> [73729.556544] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
+> [73729.565354] Aborting journal on device nvme0n1p2-8.
+> [73729.568995] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
+> [73729.569077] EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:61: Detected aborted journal
+> [73729.573741] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
+> [73729.593330] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm mv: iget: checksum invalid
 > 
-> 		put_compound_head(page, 1, flags);
+> The affected file is /var/backups/dpkg.status.6.gz
+> 
+> It was cleanly shut down and powered off on the 22nd February, booted
+> yesterday morning followed by another reboot a few minutes later.
+> 
+> What worries me is the fact that corruption has happened - and if that
+> happens to a file rather than an inode, it will likely go unnoticed
+> for a considerably longer time.
+> 
+> I think I'm getting to the point of deciding NVMe or the LX2160A to be
+> just too unreliable for serious use.  I hadn't noticed any issues when
+> using the rootfs on the eMMC, so it suggests either the NVMe is
+> unreliable, or there's a problem with PCIe on this platform (which we
+> kind of know about with Jon's GPU rendering issues.)
 
-that makes sense, yes :)
+Adding Ted and Andreas...
 
-I'll fix it in the next iteration
+Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
+and probably a similar size):
 
-> 
-> which does a bit more (bug checks and /proc/vmstat instrumentation)
-> than your diff, but has the same basic idea: call the right "put"
-> function.  
-> 
-> ...oh, actually, I see you have the commit hash in the subject line.
-> Instead, it should be in the commit description. Let's maybe change
-> the subject line to approx:
-> 
->     mm/gup: Fix a missing put_compound_head() call in gup_pte_range()
-> 
-> And the write up...how about something like this, if you like it:
-> 
-> 
-> try_grab_compound_head() must be undone via put_compound_head(), not
-> put_page(). This was missed in the original implementation of the
-> gup/dma tracking patch, so fix it now.
-> 
-> Fixes: 0ea2781c3de4 ("mm/gup: track FOLL_PIN pages")
-> 
-> 
->     
-> (Aside: I'm using the linux-next commit hash. How does one get the
-> correct hash before it goes to mainline? I guess maintainer scripts
-> fix all those up?)
+debugfs:  id <917527>
+0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
+0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
+0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
+0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
+0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
+0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
+0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
+0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
 
-my idea was that my patch should be used as fix-up, so the actual
-content of the commit message is not relevant
+and for the affected inode:
+debugfs:  id <917524>
+0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
+0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
+0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
+0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
+0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
+0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
+0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
+0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
 
-> It's also good to Cc some reviewers in case I'm overlooking
-> something, so I'm adding Jan and Kirill.
-> 
-> thanks,
+and "stat" output:
+debugfs:  stat <917527>
+Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
+Generation: 172755908    Version: 0x00000000:00000001
+User:     0   Group:     0   Project:     0   Size: 261936
+File ACL: 0
+Links: 1   Blockcount: 512
+Fragment:  Address: 0    Number: 0    Size: 0
+ ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
+ atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
+ mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
+crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
+Size of extra inode fields: 32
+Inode checksum: 0xf2958438
+EXTENTS:
+(0-63):3704704-3704767
+debugfs:  stat <917524>
+Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
+Generation: 3033515103    Version: 0x00000000:00000001
+User:     0   Group:     0   Project:     0   Size: 261936
+File ACL: 0
+Links: 1   Blockcount: 512
+Fragment:  Address: 0    Number: 0    Size: 0
+ ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
+ atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
+ mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
+crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
+Size of extra inode fields: 32
+Inode checksum: 0xc31c23af
+EXTENTS:
+(0-63):3705024-3705087
 
+When using sif (set_inode_info) to re-set the UID to 0 on this (so
+provoke the checksum to be updated):
+
+debugfs:  id <917524>
+0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
+0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
+0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
+0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
+0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
+                                    ^^^^
+0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
+           ^^^^
+0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
+0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+*
+
+The values with "^^^^" are the checksum, which are the only values
+that have changed here - the checksum is now 0x15aa1fb6 rather than
+0xc31c23af.
+
+With that changed, running e2fsck -n on the filesystem results in a
+pass:
+
+root@cex7:~# e2fsck -n /dev/nvme0n1p2
+e2fsck 1.44.5 (15-Dec-2018)
+Warning: skipping journal recovery because doing a read-only filesystem check.
+/dev/nvme0n1p2 contains a file system with errors, check forced.
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
+
+and the file now appears to be intact (being a gzip file, gzip verifies
+that the contents are now as it expects.)
+
+So, it looks like the _only_ issue is that the checksum on the inode
+became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
+issue.
+
+I wonder whether the journal would contain anything useful, but I don't
+know how to use debugfs to find that out - while I can dump the journal,
+I'd need to know which block contains the inode, and then work out where
+in the journal that block was going to be written.  If that would help,
+let me know ASAP as I'll hold off rebooting the platform for a while
+(which means the filesystem will remain as-is - and yes, I have the
+debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
+the block number out of the e2undo file?
+
+tune2fs says:
+
+Checksum type:            crc32c
+Checksum:                 0x682f91b9
+
+I guess this is what is used to checksum the inodes?  If so, it's using
+the kernel's crc32c-generic driver (according to /proc/crypto).
+
+Could it be a race condition, or some problem that's specific to the
+ARM64 kernel that's provoking this corruption?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
