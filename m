@@ -2,146 +2,135 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1400BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1417DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9ECC24699
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80C324699
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="efrLuhQP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pim9Ezl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgB2Ass (ORCPT
+        id S1726733AbgB2AuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:48:48 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.40]:17909 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbgB2Ass (ORCPT
+        Fri, 28 Feb 2020 19:50:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41443 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgB2AuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:48:48 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 8C6FB5796
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:48:47 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7qJDj9J4mSl8q7qJDjnBkC; Fri, 28 Feb 2020 18:48:47 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rkgKkwh+Uy7zbmDqvHdqXDUel6G9tCsRpBolNnwM8dI=; b=efrLuhQPWVnz12w0pxW8O9tDfX
-        YgxeX0EVNDJtNTJEb2XROl3trqu3klTXskiynIlVuifHQgq/31YmmcshPBDTuIqEtaGrNuSLvVgoT
-        2pltiZpQGgZ5PcPW3syE+hy9m3Eq/By106w/TYiT1Rp+I3kBbg3YSFfs1k0iOAEM4kexRv0zKWEZb
-        VXCyEdvvXVlhcIEQNW6LlYEte5wiNiHaTxVD8Nu7L2NyHDWl1Gh1ZqdSktf1QHxN7NuB2Qs/26RY+
-        D0/ZKWdPjFyiEL+2ZmGsO+XBo2H0MLxx2SbftJizxannL3DmkNgmclUgJSAmBYKV3EXnLugcCmTSX
-        rkZ3wBhA==;
-Received: from [200.39.15.57] (port=18879 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7qJB-002uCH-20; Fri, 28 Feb 2020 18:48:45 -0600
-Date:   Fri, 28 Feb 2020 18:51:41 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: ipv6: mld: Replace zero-length array with
- flexible-array member
-Message-ID: <20200229005141.GA8807@embeddedor>
+        Fri, 28 Feb 2020 19:50:07 -0500
+Received: by mail-wr1-f67.google.com with SMTP id v4so5225348wrs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 16:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0fc83ZqAA6+83fPnMS4lxXssttTpf+l85Fw1w82L0QU=;
+        b=Pim9Ezl7Ogaq4+QBBsebEB02RdWCvqDSk5e+uOiY+5RXQ1V+C68fvK9QsIWdvHkN/f
+         OBPsP/JpzLaEhAtXXWhzuc9drpsT0f4y43v8vWquIfwSgzxpHoq7I5yL+lTiwe9mx5ae
+         j7L0hjOzXyGaorIc4fJACvVGBXhCcTVOG0v4J8cxjYYxiqItAeSsciXciS62jlbKuyLV
+         tTwg9fe2wrOHf5ERg1Bzi5sn0YPgUYPwtPeKHCpnx276D0/neLh271s7V77wR37so6kC
+         QkzO9hz8kFZp+zNYV4iSE+1YzINAdq9N3jbU6U6nluZs/kvA9DyKYT9YrKY5Wl2FPvQD
+         Nw6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0fc83ZqAA6+83fPnMS4lxXssttTpf+l85Fw1w82L0QU=;
+        b=hwcF7RMEApWPJXw6wYfNGNQ0r6+77spt68+1pKLquYYboLiiZ/+/ydmXG+u5F491mV
+         3b5BSiHGb7N3nsM380qoV+hZkxEC3rLkead8RE3oPX35/fCdoYG9PpQ3O0ulB/4yiVZK
+         ooYEF709hEGXe5v8jnWPTP80AOd0rcz8pd0v8VLGwUKX7CxaMiczVljb0RIDH9YzfdLn
+         m3vQ3zfzntSdtpDDocN8njBtvZvBFwy1Pl8tNa9YQOxwfnXiN7np5D+H4bmUynnyy05U
+         HaGb9Ytfx7BJL6xkLqDm4/VQsFdWKtY1G7FGitiLP+GFhdqHbAn1SKfCqnyaJ1TdpQY/
+         tmQA==
+X-Gm-Message-State: APjAAAUB7Poa+he2HGQ2N2qB/AkcY6zGxi+eUrYw/H4FlVEBSaCESkpx
+        Qryev+/gRl0Iy8Bj2VmJZvg6pW5W1Fg/z4tHVqFZow==
+X-Google-Smtp-Source: APXvYqxWGTtiwUL9PxLOYIePXDdM4+bHkwvOLmQq+Uy1p1lTrTCmmm7EHolfnlQp1sTZeAHX4qJocD0WQucx+d4aaME=
+X-Received: by 2002:adf:e38d:: with SMTP id e13mr6955293wrm.133.1582937403580;
+ Fri, 28 Feb 2020 16:50:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.15.57
-X-Source-L: No
-X-Exim-ID: 1j7qJB-002uCH-20
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:18879
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 31
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+b0LHp15GNchK_TPxaqX8zscqgBw-Jm2Y3yq8Bn=dRbeQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+b0LHp15GNchK_TPxaqX8zscqgBw-Jm2Y3yq8Bn=dRbeQ@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Fri, 28 Feb 2020 16:49:52 -0800
+Message-ID: <CAKFsvUJhbk6cOXKgQ1+9=eDRDES1AB0rSTM+zid-yfk2U-qhYw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>, vincent.guittot@linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, Feb 27, 2020 at 6:45 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> >
+> > Integrate KASAN into KUnit testing framework.
+> >  - Fail tests when KASAN reports an error that is not expected
+> >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+> >  - KUnit struct added to current task to keep track of the current test
+> > from KASAN code
+> >  - Booleans representing if a KASAN report is expected and if a KASAN
+> >  report is found added to kunit struct
+> >  - This prints "line# has passed" or "line# has failed"
+> >
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+>
+> This does not build for me:
+>
+> $ make
+> scripts/kconfig/conf  --syncconfig Kconfig
+>   CC      arch/x86/kernel/asm-offsets.s
+>   UPD     include/generated/asm-offsets.h
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+>   CC      init/main.o
+> In file included from ./include/linux/uaccess.h:11,
+>                  from ./arch/x86/include/asm/fpu/xstate.h:5,
+>                  from ./arch/x86/include/asm/pgtable.h:26,
+>                  from ./include/linux/kasan.h:15,
+>                  from ./include/linux/slab.h:136,
+>                  from ./include/kunit/test.h:16,
+>                  from ./include/linux/sched.h:35,
+>                  from ./include/linux/ioprio.h:5,
+>                  from ./include/linux/fs.h:39,
+>                  from ./include/linux/proc_fs.h:9,
+>                  from init/main.c:18:
+> ./arch/x86/include/asm/uaccess.h: In function =E2=80=98set_fs=E2=80=99:
+> ./arch/x86/include/asm/uaccess.h:31:9: error: dereferencing pointer to
+> incomplete type =E2=80=98struct task_struct=E2=80=99
+>    31 |  current->thread.addr_limit =3D fs;
+>       |         ^~
+> make[1]: *** [scripts/Makefile.build:268: init/main.o] Error 1
+> make: *** [Makefile:1681: init] Error 2
+>
+>
+> On bfdc6d91a25f4545bcd1b12e3219af4838142ef1 config:
+> https://pastebin.com/raw/nwnL2N9w
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+I'm sorry. It seems I only ever tested locally on UML. As Alan
+suggested, removing "#include <kunit/test.h>" from
+include/linux/sched.h seems to fix this problem.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/net/mld.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/mld.h b/include/net/mld.h
-index b0f5b3105ef0..496bddb59942 100644
---- a/include/net/mld.h
-+++ b/include/net/mld.h
-@@ -24,12 +24,12 @@ struct mld2_grec {
- 	__u8		grec_auxwords;
- 	__be16		grec_nsrcs;
- 	struct in6_addr	grec_mca;
--	struct in6_addr	grec_src[0];
-+	struct in6_addr	grec_src[];
- };
- 
- struct mld2_report {
- 	struct icmp6hdr		mld2r_hdr;
--	struct mld2_grec	mld2r_grec[0];
-+	struct mld2_grec	mld2r_grec[];
- };
- 
- #define mld2r_type		mld2r_hdr.icmp6_type
-@@ -55,7 +55,7 @@ struct mld2_query {
- #endif
- 	__u8			mld2q_qqic;
- 	__be16			mld2q_nsrcs;
--	struct in6_addr		mld2q_srcs[0];
-+	struct in6_addr		mld2q_srcs[];
- };
- 
- #define mld2q_type		mld2q_hdr.icmp6_type
--- 
-2.25.0
-
+--=20
+Best,
+Patricia Alfonso
