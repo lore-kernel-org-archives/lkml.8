@@ -2,160 +2,211 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B9AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4242AC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF8D24688
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1234424688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xa25qD+C"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SuGPJR7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgB2QHt (ORCPT
+        id S1727252AbgB2QKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:07:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45651 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgB2QHs (ORCPT
+        Sat, 29 Feb 2020 11:10:00 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:36326 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbgB2QKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:07:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v2so6986529wrp.12
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 08:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=48DSmx7US8n6WMlcgOvxvjVcQ+g4+Ibx6G+UETF629w=;
-        b=xa25qD+ChpBdxQ6RLpkaOU3kV4mB4htgdPT4qxKmKIDt6/v7diTH14/6azdEsOmotU
-         YlSzesmn0W2vrpAJYfNTOG5i4/9dEezxs6nbGrEqwxR00x2uQ9Rpa30xHj2PP1MvYPBq
-         X2ZA6j/TuOPXQAPDoV2Cf5DvIkd7HO8a63Ug5TXJ3ThCOgBDxvXCfiDwFcuNnVYMCCII
-         3/b4pubDwFnr+uFDWau33mwv6RfuAp8FHTLepmiGdysMll8c2EOzAndsn4OEIzS4R7eW
-         MSMeqHgl1FFiSVwEclEMJybOcwSRrfsJRrQgz9xp06khN9IEyxbLSTCHqNt3a3IKQ9ZP
-         2ThQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=48DSmx7US8n6WMlcgOvxvjVcQ+g4+Ibx6G+UETF629w=;
-        b=ILrknYBYNcLv+L+sTX5LjFeKpNBrV8298q19gy09DNqc9TtC8hZ9qxvq9y+LqrhEW/
-         4TXONCKzMF5qRcNzVToi8pTXeALBA8HpuDtqGiabTtAqmmAKcjbGugC445RxVUFA350+
-         vo+y4IZZmxetzarTE+DozTQfaiuCMTt6F5dN886ZpI48uqvGg4RiYb9vDwa/sOYnnTKx
-         rpNEA17SMpErfVa7SsdvC4tCzu13H5BmTleXK9ojkgD93Q7LFGCfOhg19Tk1lPzViBPA
-         QDe/4TnSqfD8x/dEMYp8C5zjskEl3AoGk1+V4F1o7kw5INyZA3f0UKBQ/Tn0C+5Cotjz
-         JMdw==
-X-Gm-Message-State: APjAAAVui3DWKMgbv8zkjmeqnBPhdHT4hVjcw3lWLS//miLUi8mSwo8x
-        ONJC5gIvO+BICr3CwneOtYOHyg==
-X-Google-Smtp-Source: APXvYqxUgytqyvDZW+WcxWi1g8HE+C1vnsLjI/U/K70R4QGytxpW9GY+14iyGD3A2pOx2tsCrhjOmQ==
-X-Received: by 2002:a5d:4610:: with SMTP id t16mr10996895wrq.408.1582992466554;
-        Sat, 29 Feb 2020 08:07:46 -0800 (PST)
-Received: from localhost (229.3.136.88.rev.sfr.net. [88.136.3.229])
-        by smtp.gmail.com with ESMTPSA id q9sm10518220wrn.8.2020.02.29.08.07.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 08:07:45 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG platforms
-In-Reply-To: <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt> <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
-Date:   Sat, 29 Feb 2020 17:07:43 +0100
-Message-ID: <7h8sklbcmo.fsf@baylibre.com>
+        Sat, 29 Feb 2020 11:10:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582992596; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q7mF5atke8Ap8hRErefVt8fGumK0zb1yGxaNC+9qAy0=;
+        b=SuGPJR7okTC7LXBeeCaWdPsNYWDgT/MdrEz4hknnQcTSsvTGUCoNLuYy6UHuZOH37NrCyA
+        CaUC8XMQ1Obzj8u011QtYf/NkiAktAdN8INTDSn7R9Vn1QnmvP8WSoLhAyQ5kNpFgeNEnA
+        y3AFO/cxHpPBAHFfSp8kc3hVj1Dx2kM=
+Date:   Sat, 29 Feb 2020 13:09:35 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Message-Id: <1582992575.3.2@crapouillou.net>
+In-Reply-To: <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
+References: <cover.1582912972.git.hns@goldelico.com>
+        <af70bb34d95746cdbc468e91e531c4576a1855a6.1582912972.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+Hi Nikolaus,
 
-> On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
->> PCIe device probing failures have been seen on AXG platforms and were
->> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
->> in MIPI's PHY registers solved the problem. This bit controls band gap
->> reference.
->> 
->> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
->> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
->> a PHY driver to control this bit instead, as well as setting the band
->> gap one in order to get reliable PCIE communication.
->> 
->> While at it add another PHY driver to control PCIE only PHY registers,
->> making AXG code more similar to G12A platform thus allowing to remove
->> some specific platform handling in pci-meson driver.
->> 
->> Please note that CLKID_MIPI_ENABLE removable will be done in a different
->> serie.
->> 
->> Changes since v5:
->>  - Add additionalProperties in device tree binding documentation
->>  - Make analog PHY required
->> 
->> Changes since v4:
->>  - Rename the shared MIPI/PCIe PHY to analog
->>  - Chain the MIPI/PCIe PHY to the PCIe one
->> 
->> Changes since v3:
->>  - Go back to the shared MIPI/PCIe phy driver solution from v2
->>  - Remove syscon usage
->>  - Add all dt-bindings documentation
->> 
->> Changes since v2:
->>  - Remove shared MIPI/PCIE device driver and use syscon to access register
->>    in PCIE only driver instead
->>  - Include devicetree documentation
->> 
->> Changes sinve v1:
->>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
->>  - Add a PHY driver for PCIE_PHY registers
->>  - Modify pci-meson.c to make use of both PHYs and remove specific
->>    handling for AXG and G12A
->> 
->> [1] https://lkml.org/lkml/2019/12/16/119
->> 
->> Remi Pommarel (7):
->>   dt-bindings: Add AXG PCIE PHY bindings
->>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
->>   dt-bindings: PCI: meson: Update PCIE bindings documentation
->>   arm64: dts: meson-axg: Add PCIE PHY nodes
->>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
->>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
->>   PCI: amlogic: Use AXG PCIE
->> 
->>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
->>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
->>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
->>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
->>  drivers/phy/amlogic/Kconfig                   |  22 ++
->>  drivers/phy/amlogic/Makefile                  |  12 +-
->>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
->>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
->>  9 files changed, 543 insertions(+), 112 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
->>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
->>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
->>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
->
-> Hi Remi,
->
-> I am ready to pull this series in, do you want me to ? Or you prefer
-> it to go via a different tree upstream ?
 
-To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
-amlogic tree, but feel free to take the rest.
+Le ven., f=E9vr. 28, 2020 at 19:02, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> There is a ACT8600 on the CI20 board and the bindings of the
+> ACT8865 driver have changed without updating the CI20 device
+> tree. Therefore the PMU can not be probed successfully and
+> is running in power-on reset state.
+>=20
+> Fix DT to match the latest act8865-regulator bindings.
+>=20
+> Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/ci20.dts | 48=20
+> ++++++++++++++++++++---------
+>  1 file changed, 33 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
+> b/arch/mips/boot/dts/ingenic/ci20.dts
+> index 59c104289ece..44741e927d2b 100644
+> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+> @@ -4,6 +4,8 @@
+>  #include "jz4780.dtsi"
+>  #include <dt-bindings/clock/ingenic,tcu.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
 
-Kevin
+This include should be in patch 3/5 where it's first used.
+
+With that fixed:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+
+for the whole series.
+
+Cheers,
+-Paul
+
+> +#include <dt-bindings/regulator/active-semi,8865-regulator.h>
+>=20
+>  / {
+>  	compatible =3D "img,ci20", "ingenic,jz4780";
+> @@ -166,65 +168,81 @@
+>  		reg =3D <0x5a>;
+>  		status =3D "okay";
+>=20
+> +/*
+> +Optional input supply properties:
+> +- for act8600:
+> +  - vp1-supply: The input supply for DCDC_REG1
+> +  - vp2-supply: The input supply for DCDC_REG2
+> +  - vp3-supply: The input supply for DCDC_REG3
+> +  - inl-supply: The input supply for LDO_REG5, LDO_REG6, LDO_REG7=20
+> and LDO_REG8
+> +  SUDCDC_REG4, LDO_REG9 and LDO_REG10 do not have separate supplies.
+> +*/
+> +
+>  		regulators {
+>  			vddcore: SUDCDC1 {
+> -				regulator-name =3D "VDDCORE";
+> +				regulator-name =3D "DCDC_REG1";
+>  				regulator-min-microvolt =3D <1100000>;
+>  				regulator-max-microvolt =3D <1100000>;
+>  				regulator-always-on;
+>  			};
+>  			vddmem: SUDCDC2 {
+> -				regulator-name =3D "VDDMEM";
+> +				regulator-name =3D "DCDC_REG2";
+>  				regulator-min-microvolt =3D <1500000>;
+>  				regulator-max-microvolt =3D <1500000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_33: SUDCDC3 {
+> -				regulator-name =3D "VCC33";
+> +				regulator-name =3D "DCDC_REG3";
+>  				regulator-min-microvolt =3D <3300000>;
+>  				regulator-max-microvolt =3D <3300000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_50: SUDCDC4 {
+> -				regulator-name =3D "VCC50";
+> +				regulator-name =3D "SUDCDC_REG4";
+>  				regulator-min-microvolt =3D <5000000>;
+>  				regulator-max-microvolt =3D <5000000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_25: LDO_REG5 {
+> -				regulator-name =3D "VCC25";
+> +				regulator-name =3D "LDO_REG5";
+>  				regulator-min-microvolt =3D <2500000>;
+>  				regulator-max-microvolt =3D <2500000>;
+>  				regulator-always-on;
+>  			};
+>  			wifi_io: LDO_REG6 {
+> -				regulator-name =3D "WIFIIO";
+> +				regulator-name =3D "LDO_REG6";
+>  				regulator-min-microvolt =3D <2500000>;
+>  				regulator-max-microvolt =3D <2500000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_28: LDO_REG7 {
+> -				regulator-name =3D "VCC28";
+> +				regulator-name =3D "LDO_REG7";
+>  				regulator-min-microvolt =3D <2800000>;
+>  				regulator-max-microvolt =3D <2800000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_15: LDO_REG8 {
+> -				regulator-name =3D "VCC15";
+> +				regulator-name =3D "LDO_REG8";
+>  				regulator-min-microvolt =3D <1500000>;
+>  				regulator-max-microvolt =3D <1500000>;
+>  				regulator-always-on;
+>  			};
+> -			vcc_18: LDO_REG9 {
+> -				regulator-name =3D "VCC18";
+> -				regulator-min-microvolt =3D <1800000>;
+> -				regulator-max-microvolt =3D <1800000>;
+> +			vrtc_18: LDO_REG9 {
+> +				regulator-name =3D "LDO_REG9";
+> +				/* Despite the datasheet stating 3.3V for REG9 and
+> +				   driver expecting that, REG9 outputs 1.8V.
+> +				   Likely the CI20 uses a chip variant.
+> +				   Since it is a simple on/off LDO the exact values
+> +				   do not matter.
+> +				*/
+> +				regulator-min-microvolt =3D <3300000>;
+> +				regulator-max-microvolt =3D <3300000>;
+>  				regulator-always-on;
+>  			};
+>  			vcc_11: LDO_REG10 {
+> -				regulator-name =3D "VCC11";
+> -				regulator-min-microvolt =3D <1100000>;
+> -				regulator-max-microvolt =3D <1100000>;
+> +				regulator-name =3D "LDO_REG10";
+> +				regulator-min-microvolt =3D <1200000>;
+> +				regulator-max-microvolt =3D <1200000>;
+>  				regulator-always-on;
+>  			};
+>  		};
+> --
+> 2.23.0
+>=20
+
+=
 
