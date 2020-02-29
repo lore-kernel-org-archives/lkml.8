@@ -2,115 +2,159 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD71C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A367C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28A824677
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582968273;
-	bh=cGBBMVSgNEa2yMATVwA8/LRDx3d3/mLF9cUosPH04Dg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dpNf/qK4SweYbYPOImGxcJM7NSSj4asDYwZTwlV0yuY78sxZYF3DcZMmeQ0rUlP9c
-	 hZN64f7JQbqC2Axd63HJXhsmDiQXRtGAEC7BtvHQr7Z0bVRY9sX1tDQsLQusxWaQhR
-	 3supIlyEDbvdUoFoVM2juYwlrjtPY0mJfgP3TqLs=
+	by mail.kernel.org (Postfix) with ESMTP id D0FD0246D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgB2JYb (ORCPT
+        id S1726824AbgB2Jme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 04:24:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42820 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgB2JYb (ORCPT
+        Sat, 29 Feb 2020 04:42:34 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726671AbgB2Jme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 04:24:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id p18so6075200wre.9;
-        Sat, 29 Feb 2020 01:24:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RgPJE0orJQVDrDLEaPJ8R2RxW8F5htMBVkLJo9I+3vI=;
-        b=o9rkUgC3sZYDJqLH0G98KAbq5NAH7w8L5tbrS2uN5TzpAoyRCzhVio6e2iwYrB13dY
-         xHsrTSzVBewKcPJcBcLzDrgOToNImEQeZ9joKizsBvGASOzPAiW8/NWryBSUuGRig3Gu
-         NW2y73yAVN4drVh9it/+OBI0+f7gcI7ZM4Y/oiyKjLMWsAYlrMTv+XgxrdYFQ+fxT9tr
-         n0aG94hIH5s6TkVWYbIlamSVDTv2ES+8PkP3zujOXMJ38DcbXtkIt4HCcpsjUcajFbY4
-         JjFcnwg7F8iJT1AT8g6lvnSohzgu6kTK9M6zQqr40j1ST8e7grDp2i6htBLXaxgQH9Wv
-         x1nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RgPJE0orJQVDrDLEaPJ8R2RxW8F5htMBVkLJo9I+3vI=;
-        b=jOPr61QL0QiUaEzpPuWwmFKstJ1f+Ll3dj4VA+os+ppsN85rOuOX6Gz0g0Fd+NN54r
-         QK6rC/kUOsZaBa9WPWh6GLlrVufwT6BvaJf2qisGvWis/E/rGZ3f9Z+XUKRD2+iMD1Ha
-         I9oBDq9e8f0PCykDzzkyR34qslLkLUEv8z8YRdCJ5tuJUqW2SvM6QeFbHAw8qCbhjhuC
-         VK6OfPIdhiGk8x2YDYMhOHyXU3/58h6jVsDFl4mteSzQBqPM0Q4GL9S9QBbc3zIDiw5N
-         jRBKj8dYeq2RsxH18GU8WvTNiQ3Jm4hmi7nGMp95dj1/uQ7nRVi2oj4YUSdXd/65mEwv
-         h67A==
-X-Gm-Message-State: APjAAAWcZemcRXjr2pvPCdzjycZslsa9ABUJyFbXZRc0kS58NRLxcgCw
-        qRRG34f9ht9c/BC0bT4vIf4=
-X-Google-Smtp-Source: APXvYqypQZFf++sh1JdwJcb+KL95+X3s+ht196vQUdpvCNcMCeFhfMHU9OUnkaQTMr1064b6VZ1vPA==
-X-Received: by 2002:a5d:4384:: with SMTP id i4mr5183282wrq.396.1582968268971;
-        Sat, 29 Feb 2020 01:24:28 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id p17sm14011569wre.89.2020.02.29.01.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 01:24:27 -0800 (PST)
-Date:   Sat, 29 Feb 2020 10:24:25 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
- post-relocation
-Message-ID: <20200229092425.GB92847@gmail.com>
-References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
- <20200226230031.3011645-2-nivedita@alum.mit.edu>
- <20200227081229.GA29411@gmail.com>
- <20200227151643.GA3498170@rani.riverdale.lan>
- <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
- <20200227155421.GA3507597@rani.riverdale.lan>
- <CAKv+Gu-k0c8GzKysv4Z9tYzEvfhJUzuiKx5nfwD0JU8ys=LZdg@mail.gmail.com>
- <20200227180305.GA3598722@rani.riverdale.lan>
+        Sat, 29 Feb 2020 04:42:34 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01T9ckSc130778
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 04:42:32 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfn140mg8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 04:42:32 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Sat, 29 Feb 2020 09:42:30 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 29 Feb 2020 09:42:24 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01T9gMVN57082062
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Feb 2020 09:42:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D465F4C04E;
+        Sat, 29 Feb 2020 09:42:22 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F10054C046;
+        Sat, 29 Feb 2020 09:42:13 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.53.249])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 29 Feb 2020 09:42:13 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, kjain@linux.ibm.com
+Subject: [PATCH v3 0/8] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date:   Sat, 29 Feb 2020 15:11:51 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227180305.GA3598722@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022909-0028-0000-0000-000003DF1B27
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022909-0029-0000-0000-000024A43FF9
+Message-Id: <20200229094159.25573-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-29_02:2020-02-28,2020-02-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002290074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+First patch of the patchset fix inconsistent results we are getting when
+we run multiple 24x7 events.
 
-* Arvind Sankar <nivedita@alum.mit.edu> wrote:
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-> On Thu, Feb 27, 2020 at 06:47:55PM +0100, Ard Biesheuvel wrote:
-> > 
-> > Interesting. I am going to rip most of the EFI handover protocol stuff
-> > out of OVMF, since it is mostly unnecessary, and having the PE/COFF
-> > loader put the image in the correct place right away is a nice
-> > complimentary improvement to that. (Note that the OVMF implementation
-> > of the EFI handover protocol does not currently honor the preferred
-> > address from the setup header anyway)
-> 
-> Yeah, for my testing I'm running the image from the EFI shell, which
-> enters via PE entry point and honors the pref address.
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
 
-So with KASLR, which is the distro default on most x86 distros, we'll 
-relocate the kernel to another address anyway, right?
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
 
-But telling the bootloader the preferred address would avoid any 
-relocation overhead even in this case, right?
+Patch 6 & 8 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
 
-Thanks,
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
 
-	Ingo
+Applied and tested all these patches cleanly on top of jiri's flex changes
+patchset and made required changes.
+
+Changelog:
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
+
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
+
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
+
+Kajol Jain (8):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
+
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
+ arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++++--
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |  47 ++++++++
+ .../arch/powerpc/power9/nest_metrics.json     |  19 +++
+ tools/perf/util/expr.h                        |   1 +
+ tools/perf/util/expr.l                        |  18 ++-
+ tools/perf/util/expr.y                        |   2 +
+ tools/perf/util/metricgroup.c                 | 112 +++++++++++-------
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |   6 +
+ 13 files changed, 286 insertions(+), 55 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+
+-- 
+2.21.0
+
