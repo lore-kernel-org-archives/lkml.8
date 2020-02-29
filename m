@@ -2,75 +2,165 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C977FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBADCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A143824672
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8F424672
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgB2XJa (ORCPT
+        id S1727559AbgB2XLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 18:09:30 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:54288 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgB2XJa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 18:09:30 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1j8BEZ-0002KT-PB; Sat, 29 Feb 2020 17:09:24 -0600
-Message-ID: <498ce16efb7784d95569d000bfab33ae25b823bd.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>
-Cc:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Sat, 29 Feb 2020 17:09:22 -0600
-In-Reply-To: <20200123111914.2565-1-laurentiu.tudor@nxp.com>
-References: <20200123111914.2565-1-laurentiu.tudor@nxp.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: laurentiu.tudor@nxp.com, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, christophe.leroy@c-s.fr, linux-kernel@vger.kernel.org, diana.craciun@nxp.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH] powerpc/fsl_booke: avoid creating duplicate tlb1 entry
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Sat, 29 Feb 2020 18:11:25 -0500
+Received: from mga17.intel.com ([192.55.52.151]:39468 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727467AbgB2XLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 18:11:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Feb 2020 15:11:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,501,1574150400"; 
+   d="scan'208";a="411789041"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 29 Feb 2020 15:11:23 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/mmu: Fix MMU role calculation to not drop level
+Date:   Sat, 29 Feb 2020 15:11:22 -0800
+Message-Id: <20200229231122.2076-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-23 at 11:19 +0000, Laurentiu Tudor wrote:
-> In the current implementation, the call to loadcam_multi() is wrapped
-> between switch_to_as1() and restore_to_as0() calls so, when it tries
-> to create its own temporary AS=1 TLB1 entry, it ends up duplicating the
-> existing one created by switch_to_as1(). Add a check to skip creating
-> the temporary entry if already running in AS=1.
-> 
-> Fixes: d9e1831a4202 ("powerpc/85xx: Load all early TLB entries at once")
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> Cc: stable@vger.kernel.org
-> ---
->  arch/powerpc/mm/nohash/tlb_low.S | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+Use the calculated role as-is when propagating it to kvm_mmu.mmu_role,
+i.e. stop masking off meaningful fields.  The concept of masking off
+fields came from kvm_mmu_pte_write(), which (correctly) ignores certain
+fields when comparing kvm_mmu_page.role against kvm_mmu.mmu_role, e.g.
+the current mmu's access and level have no relation to a shadow page's
+access and level.
 
-Assuming you've tested this on all combinations of 32/64 relocatable and not:
+This fixes a bug where KVM will fail to reset shadow_root_level and
+root_level when L1 switches from running L2 with 5-level to running L2
+with 4-level.
 
-Acked-by: Scott Wood <oss@buserror.net>
+Opportunistically rework the mask for kvm_mmu_pte_write() to define the
+fields that should be ignored as opposed to the fields that should be
+checked, i.e. make it opt-out instead of opt-in so that new fields are
+automatically picked up.  While doing so, stop ignoring "direct".  The
+field is effectively ignored anyways because kvm_mmu_pte_write() is only
+reached with an indirect mmu and the loop only walks indirect shadow
+pages, but double checking "direct" literally costs nothing.
 
--Scott
+Fixes: 9fa72119b24d ("kvm: x86: Introduce kvm_mmu_calc_root_page_role()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index c4e0b97f82ac..80b21b7cf092 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -215,17 +215,6 @@ struct kvm_shadow_walk_iterator {
+ 	unsigned index;
+ };
+ 
+-static const union kvm_mmu_page_role mmu_base_role_mask = {
+-	.cr0_wp = 1,
+-	.gpte_is_8_bytes = 1,
+-	.nxe = 1,
+-	.smep_andnot_wp = 1,
+-	.smap_andnot_wp = 1,
+-	.smm = 1,
+-	.guest_mode = 1,
+-	.ad_disabled = 1,
+-};
+-
+ #define for_each_shadow_entry_using_root(_vcpu, _root, _addr, _walker)     \
+ 	for (shadow_walk_init_using_root(&(_walker), (_vcpu),              \
+ 					 (_root), (_addr));                \
+@@ -4919,7 +4908,6 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_tdp_mmu_root_page_role(vcpu, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -4991,7 +4979,6 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5048,7 +5035,6 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+ 
+ 	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5089,7 +5075,6 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role = kvm_calc_mmu_role_common(vcpu, false);
+ 	struct kvm_mmu *g_context = &vcpu->arch.nested_mmu;
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == g_context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5328,6 +5313,22 @@ static u64 *get_written_sptes(struct kvm_mmu_page *sp, gpa_t gpa, int *nspte)
+ 	return spte;
+ }
+ 
++/*
++ * Ignore various flags when determining if a SPTE can be immediately
++ * overwritten for the current MMU.
++ *  - level: explicitly checked in mmu_pte_write_new_pte(), and will never
++ *    match the current MMU role, as MMU's level tracks the root level.
++ *  - access: updated based on the new guest PTE
++ *  - quadrant: handled by get_written_sptes()
++ *  - invalid: always false (loop only walks valid shadow pages)
++ */
++static const union kvm_mmu_page_role role_ign = {
++	.level = 0xf,
++	.access = 0x7,
++	.quadrant = 0x3,
++	.invalid = 0x1,
++};
++
+ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			      const u8 *new, int bytes,
+ 			      struct kvm_page_track_notifier_node *node)
+@@ -5383,8 +5384,8 @@ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			entry = *spte;
+ 			mmu_page_zap_pte(vcpu->kvm, sp, spte);
+ 			if (gentry &&
+-			      !((sp->role.word ^ base_role)
+-			      & mmu_base_role_mask.word) && rmap_can_add(vcpu))
++			    !((sp->role.word ^ base_role) & ~role_ign.word) &&
++			    rmap_can_add(vcpu))
+ 				mmu_pte_write_new_pte(vcpu, sp, spte, &gentry);
+ 			if (need_remote_flush(entry, *spte))
+ 				remote_flush = true;
+-- 
+2.24.1
 
