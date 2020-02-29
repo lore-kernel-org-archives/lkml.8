@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84325C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23D4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E7A24691
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAD624699
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgB2Dun (ORCPT
+        id S1726906AbgB2Duq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 22:50:43 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:41226 "EHLO inva020.nxp.com"
+        Fri, 28 Feb 2020 22:50:46 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:35406 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgB2Dum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:50:42 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40B881A04DD;
-        Sat, 29 Feb 2020 04:50:40 +0100 (CET)
+        id S1726857AbgB2Dup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 22:50:45 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EB6ED2004F3;
+        Sat, 29 Feb 2020 04:50:43 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39F401A04E7;
-        Sat, 29 Feb 2020 04:50:24 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 79B502004ED;
+        Sat, 29 Feb 2020 04:50:27 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 820A2402CB;
-        Sat, 29 Feb 2020 11:50:10 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AB07940246;
+        Sat, 29 Feb 2020 11:50:14 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         amit.kucheria@verdurent.com, robh+dt@kernel.org,
@@ -41,48 +41,40 @@ To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 RESEND 1/4] dt-bindings: thermal: imx8mm-thermal: Add binding doc for i.MX8MM
-Date:   Sat, 29 Feb 2020 11:44:19 +0800
-Message-Id: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 RESEND 3/4] arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module
+Date:   Sat, 29 Feb 2020 11:44:21 +0800
+Message-Id: <1582947862-11073-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
+References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add thermal binding doc for Freescale's i.MX8MM Thermal Monitoring Unit.
+Enable CONFIG_IMX8MM_THERMAL as module to support i.MX8MM
+thermal driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 No change.
 ---
- .../devicetree/bindings/thermal/imx8mm-thermal.txt        | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-new file mode 100644
-index 0000000..d09ae82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-@@ -0,0 +1,15 @@
-+* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
-+
-+Required properties:
-+- compatible : Must be "fsl,imx8mm-tmu".
-+- reg : Address range of TMU registers.
-+- clocks : TMU's clock source.
-+- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
-+
-+Example:
-+tmu: tmu@30260000 {
-+	compatible = "fsl,imx8mm-tmu";
-+	reg = <0x30260000 0x10000>;
-+	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-+	#thermal-sensor-cells = <0>;
-+};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 31d0984..75c46b1 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -455,6 +455,7 @@ CONFIG_CPU_THERMAL=y
+ CONFIG_THERMAL_EMULATION=y
+ CONFIG_QORIQ_THERMAL=m
+ CONFIG_IMX_SC_THERMAL=m
++CONFIG_IMX8MM_THERMAL=m
+ CONFIG_ROCKCHIP_THERMAL=m
+ CONFIG_RCAR_THERMAL=y
+ CONFIG_RCAR_GEN3_THERMAL=y
 -- 
 2.7.4
 
