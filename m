@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D2C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682A52073D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0F12073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 16:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jsgOkQwk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lb16h5oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgB2Q7T (ORCPT
+        id S1727517AbgB2Q7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 11:59:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48506 "EHLO
+        Sat, 29 Feb 2020 11:59:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48524 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbgB2Q7R (ORCPT
+        with ESMTP id S1727220AbgB2Q7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 11:59:17 -0500
+        Sat, 29 Feb 2020 11:59:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bZU1QGPbEb9lwYcRay9rnLUfHS7hKzLwsMAyIzDNWkg=; b=jsgOkQwkkT0KHcR2nj2716cdst
-        kY/O8yozEfzK2cv3PDhivghxWgCESjlG6c0b9uPY7Vbtky3sDuDq6anEmRqCaDMqTDCw+7Kf/J5Cs
-        vjt/XdMPHLFEYm8V4vz2TqYKRABy6tPxizBABYp2nW7P7FIYIGpFcGp35sSn0QdmCfQ5x+nkhOwW3
-        i0BfctIPjehI1wqagGKf5LyX7ng3lYAb3noc+egM8zukMKYPtQjob3QHoaa/ZHJ1+R+JZ6EkvgQcb
-        yL1b8E2tZqNCyNmwScJ9yjGc5OwSB2vlgPr/5bAVwShrAo7DHlmcEgbpr4rkBvNyb+kyGYi186Py1
-        TpXB8JEg==;
+        bh=R4/efYX2AMUxkzLNczQj9yHiCvePBGSNY4rfiNOEknk=; b=lb16h5oP6116M+XhI68IkvOiz/
+        njG2n2wRWHSzWWkZ+UFcI/NlRZYDd8mQ41bFNK7IR5cw1bG0tUy5MAYxbInQWkQzRSvBVfevmpTep
+        TkkMddzT75x3ndhW0+2HDc7bMVihG3kTnqYDsnxiUqM3ifSnd+62W157a7WGiSH2kcladV7JtS9cZ
+        RjeJp0HX2tmfNHqmxyg3t2sDMhaUXtxFa75OWnPkFe9in45HUFFAL6DpGtLaB5NVI0Vdft4mOJL1X
+        Y/uIqYkAwei+5veOWXv8PLyCsnyu5ZnuGAsAISr7eQaashJ4lB3QbkKHlUYLwQ8rd7QoEyi1BdNyf
+        ZVBd4MKQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j85SJ-0006Pl-Bu; Sat, 29 Feb 2020 16:59:11 +0000
+        id 1j85SJ-0006Pd-9t; Sat, 29 Feb 2020 16:59:11 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org,
         Alexey Dobriyan <adobriyan@gmail.com>
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] proc: Use ppos instead of m->version
-Date:   Sat, 29 Feb 2020 08:59:08 -0800
-Message-Id: <20200229165910.24605-4-willy@infradead.org>
+Subject: [PATCH 1/5] proc: Inline vma_stop into m_stop
+Date:   Sat, 29 Feb 2020 08:59:06 -0800
+Message-Id: <20200229165910.24605-2-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200229165910.24605-1-willy@infradead.org>
 References: <20200229165910.24605-1-willy@infradead.org>
@@ -55,44 +55,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-The ppos is a private cursor, just like m->version.  Use the canonical
-cursor, not a special one.
+Instead of calling vma_stop() from m_start() and m_next(), do its work
+in m_stop().
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/proc/task_mmu.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/proc/task_mmu.c | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index ff40d5d79f24..9f10ef72b839 100644
+index 9442631fd4af..41f63df4789d 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -134,7 +134,7 @@ m_next_vma(struct proc_maps_private *priv, struct vm_area_struct *vma)
- static void *m_start(struct seq_file *m, loff_t *ppos)
- {
- 	struct proc_maps_private *priv = m->private;
--	unsigned long last_addr = m->version;
-+	unsigned long last_addr = *ppos;
- 	struct mm_struct *mm;
- 	struct vm_area_struct *vma;
+@@ -123,15 +123,6 @@ static void release_task_mempolicy(struct proc_maps_private *priv)
+ }
+ #endif
  
-@@ -170,14 +170,13 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
- 	return priv->tail_vma;
+-static void vma_stop(struct proc_maps_private *priv)
+-{
+-	struct mm_struct *mm = priv->mm;
+-
+-	release_task_mempolicy(priv);
+-	up_read(&mm->mmap_sem);
+-	mmput(mm);
+-}
+-
+ static struct vm_area_struct *
+ m_next_vma(struct proc_maps_private *priv, struct vm_area_struct *vma)
+ {
+@@ -163,11 +154,16 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
+ 		return ERR_PTR(-ESRCH);
+ 
+ 	mm = priv->mm;
+-	if (!mm || !mmget_not_zero(mm))
++	if (!mm || !mmget_not_zero(mm)) {
++		put_task_struct(priv->task);
++		priv->task = NULL;
+ 		return NULL;
++	}
+ 
+ 	if (down_read_killable(&mm->mmap_sem)) {
+ 		mmput(mm);
++		put_task_struct(priv->task);
++		priv->task = NULL;
+ 		return ERR_PTR(-EINTR);
+ 	}
+ 
+@@ -195,7 +191,6 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
+ 	if (pos == mm->map_count && priv->tail_vma)
+ 		return priv->tail_vma;
+ 
+-	vma_stop(priv);
+ 	return NULL;
  }
  
--static void *m_next(struct seq_file *m, void *v, loff_t *pos)
-+static void *m_next(struct seq_file *m, void *v, loff_t *ppos)
- {
- 	struct proc_maps_private *priv = m->private;
- 	struct vm_area_struct *next;
+@@ -206,21 +201,22 @@ static void *m_next(struct seq_file *m, void *v, loff_t *pos)
  
--	(*pos)++;
+ 	(*pos)++;
  	next = m_next_vma(priv, v);
--	m->version = next ? next->vm_start : -1UL;
-+	*ppos = next ? next->vm_start : -1UL;
- 
+-	if (!next)
+-		vma_stop(priv);
  	return next;
  }
+ 
+ static void m_stop(struct seq_file *m, void *v)
+ {
+ 	struct proc_maps_private *priv = m->private;
++	struct mm_struct *mm = priv->mm;
+ 
+-	if (!IS_ERR_OR_NULL(v))
+-		vma_stop(priv);
+-	if (priv->task) {
+-		put_task_struct(priv->task);
+-		priv->task = NULL;
+-	}
++	if (!priv->task)
++		return;
++
++	release_task_mempolicy(priv);
++	up_read(&mm->mmap_sem);
++	mmput(mm);
++	put_task_struct(priv->task);
++	priv->task = NULL;
+ }
+ 
+ static int proc_maps_open(struct inode *inode, struct file *file,
 -- 
 2.25.0
 
