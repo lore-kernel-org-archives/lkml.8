@@ -1,111 +1,132 @@
-Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA71C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62809C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109D7246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582934226;
-	bh=dkYKagcsSoeod0Wak+oWXNlsvhP3pNGkAlKGBk3qjZ0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=d+veDmGkDFyR4FM4RxqM8snTg9VT8UgqmfrkyFEmUoJvaBQQAUV0r//6KZQtqFVRh
-	 lHz3BZTZUz7z/caP1VN4booVAHaTLIhA0/msyySyiMEmP0/mMT4O8WT4QEcWSbYGlZ
-	 TZ/NMcD3FaGA9lKasqWyplcfez4rsetiAYlPjBh0=
+	by mail.kernel.org (Postfix) with ESMTP id 291DB246A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tRctQ/gt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1X5F (ORCPT
+        id S1726658AbgB2AIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:57:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgB1X5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:57:04 -0500
-Received: from [10.92.140.22] (unknown [167.220.148.22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAB72469F;
-        Fri, 28 Feb 2020 23:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582934223;
-        bh=dkYKagcsSoeod0Wak+oWXNlsvhP3pNGkAlKGBk3qjZ0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bJjAMkQNm76eKzmefp3WXLalyyiyl5sFAB6+/yzr46y24Ix/eUnbkwaBynnjGF+gq
-         kjSiyjgWJR+sGnkP7T1CRHuOQe8OkHCEkNRpR1NuoB2AcptNYQGFB/YisCljg4bXm6
-         y0A/wn4ip8pFwfA7VcwuHR1e4bo/yA0foTExmJSE=
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     John Garry <john.garry@huawei.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
-Date:   Fri, 28 Feb 2020 18:57:01 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 19:08:10 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.221]:24084 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725957AbgB2AIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 19:08:09 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 2CC00187B7E
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:08:08 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7pfsjR3Cy8vkB7pfsjLkIa; Fri, 28 Feb 2020 18:08:08 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zfaaTppUw/YMS2SHvO7uOLQjxhi/2WNpD6bDMsCd+WU=; b=tRctQ/gtfM+yfdtCBct6yCTOYK
+        p4IaMOXmC3ve32NhJZ5OGIAXtY8Du6SqDiPoCaO4MCsPxCjqHlSQvLq2KxkRQoQP7NfzbzBU16C/Y
+        LSkGzGx3gnCbAqLJ3X/S9Yh7v0H0XGES3WKVDY2VpDvBKiGY0OBU1d011I79L2AfWqG3GiQW/Rzhr
+        D6UtIcV+E1Y5hWpJZsVy8DgmvLns4z5o1fbt76O/pju18PsjbrxGm33lTdYUXFzxHAQeIqDW7JaiE
+        QAV+pIbY/BOMnWHW1mbtPy6420c3fGB9Hgy2VwOUyfO/45hX69U1X0LB+rDK6jnyjvsMHPfJ2eSZw
+        F0MRS4hw==;
+Received: from [200.39.15.57] (port=9598 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7pfq-002cpS-Bo; Fri, 28 Feb 2020 18:08:06 -0600
+Date:   Fri, 28 Feb 2020 18:11:02 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: sock_reuseport: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200229001102.GA6418@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.39.15.57
+X-Source-L: No
+X-Exim-ID: 1j7pfq-002cpS-Bo
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.39.15.57]:9598
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-On 2/28/2020 4:52 AM, John Garry wrote:
-> About the commit in the $subject 87fe2d543f81, would there be any
-> specific reason why the logic pio versions of these functions did not
-> get the same treatment or should not? I'm talking about lib/logic_pio.c
-> here - commit 031e3601869c ("lib: Add generic PIO mapping method")
-> introduced this.
-> 
-> In fact, logic pio will override these for arm64 with the vanilla
-> defconfig these days.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-We only looked at inX()/inY() and readX()/writeX() API because the
-semantics of these API are defined in the kernel documentation.
-We looked at how to generalize this so that there is a uniform
-behavior across different architectures.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Is logic PIO subject to ordering issues?
-How is the behavior on different architectures?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-As long as the expectations are set, I see no reason why it shouldn't
-but, I'll let Arnd comment on it too.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Sinan
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/net/sock_reuseport.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
+index 3ecaa15d1850..505f1e18e9bf 100644
+--- a/include/net/sock_reuseport.h
++++ b/include/net/sock_reuseport.h
+@@ -24,7 +24,7 @@ struct sock_reuseport {
+ 	unsigned int		bind_inany:1;
+ 	unsigned int		has_conns:1;
+ 	struct bpf_prog __rcu	*prog;		/* optional BPF sock selector */
+-	struct sock		*socks[0];	/* array of sock pointers */
++	struct sock		*socks[];	/* array of sock pointers */
+ };
+ 
+ extern int reuseport_alloc(struct sock *sk, bool bind_inany);
+-- 
+2.25.0
+
