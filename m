@@ -2,101 +2,114 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE184C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4818DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85C62469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1D32469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fABkRQRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgB2Ooc convert rfc822-to-8bit (ORCPT
+        id S1727118AbgB2OsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:44:32 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39158 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgB2Ooc (ORCPT
+        Sat, 29 Feb 2020 09:48:22 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42430 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgB2OsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:44:32 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j83Lg-0001NN-S8; Sat, 29 Feb 2020 15:44:13 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E0FCF1012C4; Sat, 29 Feb 2020 15:44:10 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
-In-Reply-To: <87sgixb00q.fsf@nanos.tec.linutronix.de>
-References: <20200226081726.GQ18400@hirez.programming.kicks-ass.net> <83D8A083-792A-4A82-985C-CAC33BC702DB@amacapital.net> <87sgixb00q.fsf@nanos.tec.linutronix.de>
-Date:   Sat, 29 Feb 2020 15:44:10 +0100
-Message-ID: <87lfolfo79.fsf@nanos.tec.linutronix.de>
+        Sat, 29 Feb 2020 09:48:22 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h8so3067577pgs.9;
+        Sat, 29 Feb 2020 06:48:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N93FcR1e1Xrf9bS1tDR8+5hXN9E83pgSbSMAJjjKr5U=;
+        b=fABkRQRSeICZGWi8MEu3w9UC+36p4GsIOd4+ng5HOrUIbDvS2zQQdGwqvUHQNB1YWy
+         LJ9KMXFE/HYWaCtgIFgLQdjWI0Ul8vchJ5vKOSiByJNovD0gb0x9HD4uZQwzBFG5Yv7d
+         53T3qLQfdDDcyd7aqaxk9DtNRlBrPCbQH6Au6Ch1794QKCOgHS/8iywdERT6E/d00fr8
+         VHAFRstnKGNQXaFOkBjdq1uDD2OqCaBGitkcgdNsEMrTv1cZ6fDMmFbBiWZor06Jow1+
+         D9hZwFm9rOQ9EftSvVCX4UbTfk2s4v02wOcetJgg6sNQL82NANWkrg53ZVbWfOI6ysXz
+         57aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N93FcR1e1Xrf9bS1tDR8+5hXN9E83pgSbSMAJjjKr5U=;
+        b=YMderoopgB6oqwlSPX8wa3CS6TA1BQvdm6HQzAh123ipQNe55PNN9P0VH+MUzoLayR
+         Q0ZhCIjpLyRkjHo0cn/XpHhujcDmDKQPxGJroFumalTLetGiZj5CJ4y2ud0KKWXecFF0
+         DFHLRgwXkIACudNtLl+baHr9R1zQIxTBFxL2fgnTx6DSZiWtRX1cxfnQF78W0GaexACG
+         DTFm0L/Bo9Q8XZj97IR7OHutARDFR3JSbD0GDbdILtZ93oJ4ikZtUbHoikkHovRGVGM7
+         YrcIN0hXgZFTThytKIKhCTM+XCR/LwUCeUn1wChYSefJkKhJXEmq26kuO2QbNxEY3/WY
+         cLrw==
+X-Gm-Message-State: APjAAAU82tEuKV5rBcriF/8GZife3bMWkhjOuIA/6fZQkz3F6rpnMeZZ
+        pH53HMXif8FmGy+/OUxP8is=
+X-Google-Smtp-Source: APXvYqxDr4iOlP8VHkMJLlIfs5S8blp/jBrVQfHMHLC8lFxKFV5OnqtGEqeebHPdZ2zuyQSX0ma47A==
+X-Received: by 2002:a63:d94d:: with SMTP id e13mr9738712pgj.240.1582987701399;
+        Sat, 29 Feb 2020 06:48:21 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id d14sm15909405pfq.117.2020.02.29.06.48.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 06:48:20 -0800 (PST)
+Date:   Sat, 29 Feb 2020 06:48:18 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH v2 0/2] AT8031 PHY timestamping support
+Message-ID: <20200229144818.GB25147@localhost>
+References: <20200228180226.22986-1-michael@walle.cc>
+ <20200228181507.GA4744@localhost>
+ <979b0b89b2610c105310e733e98cd862@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <979b0b89b2610c105310e733e98cd862@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Andy Lutomirski <luto@amacapital.net> writes:
->>> On Feb 26, 2020, at 12:17 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->>> ﻿On Tue, Feb 25, 2020 at 09:43:46PM -0800, Andy Lutomirski wrote:
->>>> Your earlier patches suggest quite strongly that tracing isn't safe
->>>> until enter_from_user_mode().  But trace_hardirqs_off() calls
->>>> trace_irq_disable_rcuidle(), which looks [0] like a tracepoint.
->>>> 
->>>> Did you perhaps mean to do this *after* enter_from_user_mode()?
->>> 
->>> aside from the fact that enter_from_user_mode() itself also has a
->>> tracepoint, the crucial detail is that we must not trace/kprobe the
->>> function calling this.
->>> 
->>> Specifically for #PF, because we need read_cr2() before this. See later
->>> patches.
->>
->> Indeed. I’m fine with this patch, but I still don’t understand what
->> the changelog is about.
->
-> Yeah, the changelog is not really helpful. Let me fix that.
->
->> And I’m still rather baffled by most of the notrace annotations in the
->> series.
->
-> As discussed on IRC, this might be too broad, but then I rather have the
-> actual C-entry points neither traceable nor probable in general and
-> relax this by calling functions which can be traced and probed.
->
-> My rationale for this decision was that enter_from_user_mode() is marked
-> notrace/noprobe as well, so I kept the protection scope the same as we
-> had in the ASM maze which is marked noprobe already.
+On Fri, Feb 28, 2020 at 08:43:05PM +0100, Michael Walle wrote:
+> 
+> Yeah, I know. And actually I don't think I'll pursue this further. Like I
+> said, I just wanted to my current work. Maybe it will be useful in the
+> future who knows.
 
-I have second thoughts vs. tracing in this context.
+I appreciate your publishing this work.  It is a good starting place.
+Maybe the vendor will wake up and help this along.  One can always hope.
+ 
+> Like I said, our FAE is pretty unresponsive. But I'll at least try to find
+> out if my guess is correct (that it only works with RGMII). But even then,
+> how should the outgoing timestamping work. There are two possibilities:
+> 
+>  (1) According to the datasheet, the PHY will attach the TX timestamp to
+>      the corresponding RX packet; whatever that means. Lets assume there
+>      is such a "corresponding packet", then we would be at the mercy of the
+>      peer to actually send such a packet, let alone in a timely manner.
 
-While the tracer itself seems to handle this correctly, what about
-things like BPF programs which can be attached to tracepoints and
-function trace entries?
+I see.  Mysterious.  For a Sync frame, I can't think of any
+"corresponding RX packet".
 
-Is that really safe _before_ context tracking has updated RCU state?
+>  (2) Mixing both methods. Use attached timestamps for RX packets, read the
+>      timestamp via PHY registers for TX packets. Theoretically, we could
+>      control how the packets are send and make sure, we fetch the TX
+>      timestamp before sending another PTP packet. But well.. sounds really
+>      hacky to me.
+
+It would not be that bad.  Some of the MAC cards can only buffer one
+Tx time stamp, and for this reason, the ptp4l program always fetches
+the time stamp immediately after sending.
 
 Thanks,
-
-        tglx
-
-
+Richard
