@@ -2,145 +2,143 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47969C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D0EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2326C246AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866512469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 09:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qIf790cu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgB2I7J (ORCPT
+        id S1726942AbgB2JBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 03:59:09 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26336 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbgB2I7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 03:59:09 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01T8wmnu143009
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:59:07 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepwk13k6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 03:59:07 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Sat, 29 Feb 2020 08:59:05 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 29 Feb 2020 08:59:02 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01T8w3S240763844
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 29 Feb 2020 08:58:03 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DEEDA405B;
-        Sat, 29 Feb 2020 08:59:00 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E02F3A4054;
-        Sat, 29 Feb 2020 08:58:58 +0000 (GMT)
-Received: from [9.199.55.146] (unknown [9.199.55.146])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat, 29 Feb 2020 08:58:58 +0000 (GMT)
-Subject: Re: [RFC 0/1] Weighted approach to gather and use history in TEO
- governor
-To:     Doug Smythies <dsmythies@telus.net>, ego@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        peterz@infradead.org, daniel.lezcano@linaro.org,
-        svaidy@linux.ibm.com, pratik.sampat@in.ibm.com,
-        pratik.r.sampat@gmail.com
-References: <20200222070002.12897-1-psampat@linux.ibm.com>
- <20200225051306.GG12846@in.ibm.com> <000001d5ed89$0b711340$225339c0$@net>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Date:   Sat, 29 Feb 2020 14:28:58 +0530
+        Sat, 29 Feb 2020 04:01:09 -0500
+Received: from mout.web.de ([212.227.15.14]:38683 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgB2JBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 04:01:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1582966824;
+        bh=bPWE0ezg0cWx6lsgw9ojhULt1+4nlJRreHsEyTPw1dM=;
+        h=X-UI-Sender-Class:From:Subject:To:Cc:References:Date:In-Reply-To;
+        b=qIf790cuY+Aly+XEFnn0Cp+xeXAwmLVO4NU8QHeyhS5AHuE8nbkRF2sCTzyTZ6G2Y
+         LDYlIm+XA3QFeKzsuxsAHKZTOrACxahoaefLDzdzTa/7vj0+T+UWiaaksjdHNcnAjR
+         oANDPfX2bmjNv9JL+63D3DU5FYXSI9zPUeAOmTqE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.172.177]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MOlTq-1j48li1XyI-0068e8; Sat, 29
+ Feb 2020 10:00:24 +0100
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH 2/2] Documentation: bootconfig: Add EBNF syntax file
+To:     Masami Hiramatsu <mhiramat@kernel.org>, linux-doc@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <158278834245.14966.6179457011671073018.stgit@devnote2>
+ <158278836196.14966.3881489301852781521.stgit@devnote2>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c3ea656f-7520-2cb4-7f39-92612343d7bf@web.de>
+Date:   Sat, 29 Feb 2020 10:00:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <000001d5ed89$0b711340$225339c0$@net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <158278836196.14966.3881489301852781521.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 20022908-0020-0000-0000-000003AEB286
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022908-0021-0000-0000-00002206D86E
-Message-Id: <204c27ed-9993-2809-3b78-8ac8ea8c1713@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-29_02:2020-02-28,2020-02-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002290068
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aqAiZM/TUMuLvCzo0rRbEBXzeZIQOCBm6VAzx4tAe6/7/ZwKk9a
+ zWdgH/ajI0topB4kEW37k+ujB9oRSIHTWVBDIQkO0TLa99sq+IErTtb2tYn1j9MQfmeqFUW
+ 7/pVN8BspUOWg9T1MLRmtnEa76imJSDsBOriKLyrKsPkx7mTvZ0J5Pvg3aQgh82sGD9+4vz
+ TYX5npke24ox/ZhPJXUpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0V/2tfrsDRA=:b9ZNN3/C/jUkVx6BIV8bpN
+ LsUhz9a2kkD+C5iiguFhMC95cxDQ5pHutHYX/eXWDqycSe6tcFlrkWSwh/L18FNVjh1DwomNV
+ 7x+Wp4lVrjfpdwYaEWLEzRP1GfJ/kHe6sFLSY0+aq9rHw1mDm9p6fgYr17grkiGNGwPFTgB0X
+ ezArbvc52awJ9AGeZQ19dHAxS3bzDmdUaKPJtvi4RwFXhKu28d+qIMfs/bSr6aAPErid3AwQQ
+ v2dZA8AR2Kja49p+qQePNW+4F/1Y25QN6heLi3Xk/osvHPvMznQOCeSgnyn9JHYpDG5upzjaT
+ 9oi8vekLRWwigZhzCOhYb+m2nu+Eh8hvcdtr9svp1ow90H5YRIHfkYSyHARlwtMUwFAFnjI7c
+ ljRPpc93pUGcV5CPg/FYV6uIgSh/6vOeSmSvd2RQjGtmgCupajm2cgVUaT/K1l5A4kX4vnRWU
+ Lrp+g2ytTK/JKvvgodt0RIC44C2uUPFwG4BhhmXjz3NS4Sp+WGmPGnQU8NiXqf2vxTvXuWqQU
+ 4JhWi9+msv49GkRqEkWO2Ce4Bl+RIXaCCZOV1NTohYwldkHbfROFLW7xRIIBQ2+n3QYzauXJs
+ 7vlnpESET4nLsewmZ8jkFJX7Md9geRElR1SBEGEKxe9eEzlmWBE0Qdvi3MY24hxacgJKXqnBM
+ gN81XRiNXfcm4S5t/zzTY2Gv7HegAH5rbeM5Ryc/0Yv3A2s9zzXYAT3llRKzz6PZEBSXkiQ5X
+ 8tQazOHO5mElnc1nid+y5k+pbZSGKm5uzw+DEDLL6+a4Pgsn09mVO3SuPGx5lAippvZuZGW16
+ L39hyqHAw4x6t/ndoF3R0WUhvmUHZlLddxG1F7Hs7s9Y4Y09ZB3KJQhtb55LFqJMsv5l9mHuL
+ Hge8kk87D5DTUTSTRSX33ggrGZQ1TEZuMLNXDKF+I0I2aGcaj9oq9QX5H2YdZS7Lcn7dPPNRH
+ TxBLZfj4R4lkSDHytzTluRPd7UMpWP656iXom/g0unPlcE/VYe6jckiwewshzcX6SnbKX83Bd
+ 64i7VA+4nccGUg6rA9mBbhdazrFjMGJI8Rns6TI1lZJxbvzs044po55qQHNwrX1xyeDKqiezZ
+ RUrkUq+MiXvf/McSMnkNiXrWnTk+I8drMD0e/EGrZI265a2oTcXq3qMShr8/N7hlZevpERCFN
+ EDFxjKXoZRJH0dExsh7j3OeT3PWgOwU9OWTG2sNZOB2Rj8ZnD8xUEs0Wso3Zu/bMYLmaTd1s2
+ Uwx5rpyxGkmOARwqt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Doug,
+=E2=80=A6
+> +++ b/Documentation/admin-guide/bootconfig.rst
+=E2=80=A6
+> +Syntax in EBNF
+> +--------------
+> +
+> +Here is the boot configuration file syntax written in EBNF.
+> +
+> +.. include:: bootconfig.ebnf
+> +   :literal:
 
-Thanks for running these numbers for me.
+How do you think about to move the content for this section into another R=
+ST file
+so that it can be used as a text module?
 
-On 27/02/20 9:44 pm, Doug Smythies wrote:
-> On 2020.02.24 21:13 Gautham R Shenoy wrote:
->
-> ...
->
->> Could you also provide power measurements for the duration when the
->> system is completely idle for each of the variants of TEO governor ?
->> Is it the case that the benefits that we are seeing above are only due
->> to Wt. TEO being more conservative than TEO governor by always
->> choosing a shallower state ?
+Would you like to improve the outline and corresponding reuse
+for such information any further?
 
-For system idle I see similar power statistics for both the TEO and the wtteo.
-
-> For what it's worth:
->
-> CPU: Intel: i7-2600K
-> Kernel: 5.6-rc2 (teo) and + this patch set (wtteo)
-> Note: in general, "idle" on this system is considerably more "idle" than most systems.
-> Sample period: 5 minutes.
-> CPU scaling driver: intel_cpufreq
-> Governor: performance
-> Deepest idle state: 4 (C6)
->
-> teo:
-> Test duration 740 minutes (12.33 hours).
-> Average processor package power: 3.84 watts
-> Idle state 0:    4.19 / minute
-> Idle state 1:   29.26 / minute
-> Idle state 2:   46.71 / minute
-> Idle state 3:    7.42 / minute
-> Idle state 4: 1124.55 / minute
-> Total: 2.525 idle entries per cpu per second
->
-> wtteo:
-> Test duration 1095 minutes (18.25 hours).
-> Average processor package power: 3.84 watts
-> Idle state 0:    7.98 / minute
-> Idle state 1:   30.49 / minute
-> Idle state 2:   52.51 / minute
-> Idle state 3:    8.65 / minute
-> Idle state 4: 1125.33 / minute
-> Total: 2.552 idle entries per cpu per second
->
-> The above/below data for this test is incomplete because my program
-> doesn't process it if there are not enough state entries per sample period.
-> (I need to fix that for this type of test.)
->
-> I have done a couple of other tests with this patch set,
-> but nothing to report yet, as the differences have been minor so far.
->
-> ... Doug
->
->
----
-
-Pratik
-
+Regards,
+Markus
