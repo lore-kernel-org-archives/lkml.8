@@ -2,145 +2,140 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEBDC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9195C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A682469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07E7222C2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b="cQI5iljc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgB2A2V (ORCPT
+        id S1726627AbgB2AfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:28:21 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57987 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB2A2U (ORCPT
+        Fri, 28 Feb 2020 19:35:10 -0500
+Received: from us-smtp-delivery-172.mimecast.com ([216.205.24.172]:47900 "EHLO
+        us-smtp-delivery-172.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726046AbgB2AfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:28:20 -0500
-X-Originating-IP: 71.238.64.75
-Received: from localhost (c-71-238-64-75.hsd1.or.comcast.net [71.238.64.75])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 265AFC0009;
-        Sat, 29 Feb 2020 00:28:15 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 16:28:13 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ena: Speed up initialization 90x by reducing poll delays
-Message-ID: <20200229002813.GA177044@localhost>
+        Fri, 28 Feb 2020 19:35:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valvesoftware.com;
+        s=mc20150811; t=1582936507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ufSd4liXEtenLWhEiDRwdDyH9pGFym23PUH1iGN1T4E=;
+        b=cQI5iljcNDqyC/rfM7AUnqOqLGxP4NpKtHI6brXcIJNb/xegFr/heFrY9f2+dDTEg09ZoQ
+        UovkbFP2EXMecXWm3DkR2X0r1PsjbdQwF7ypdVIfSxVmupVvwV2Be8giQAJ+J6myUH9TAu
+        efD0VQer93L00647Dh2wAgNKNg20JLQ=
+Received: from smtp02.valvesoftware.com (smtp02.valvesoftware.com
+ [208.64.203.182]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-hPciQZ--OhuhdebqPrhmXQ-1; Fri, 28 Feb 2020 19:28:59 -0500
+X-MC-Unique: hPciQZ--OhuhdebqPrhmXQ-1
+Received: from [172.16.1.107] (helo=antispam.valve.org)
+        by smtp02.valvesoftware.com with esmtp (Exim 4.86_2)
+        (envelope-from <pgriffais@valvesoftware.com>)
+        id 1j7q02-0001t0-5N; Fri, 28 Feb 2020 16:28:58 -0800
+Received: from antispam.valve.org (127.0.0.1) id hb6o4k0171sf; Fri, 28 Feb 2020 16:28:58 -0800 (envelope-from <pgriffais@valvesoftware.com>)
+Received: from mail1.valvemail.org ([172.16.144.22])
+        by antispam.valve.org ([172.16.1.107]) (SonicWALL 9.0.5.2081 )
+        with ESMTP id o202002290028580002852-5; Fri, 28 Feb 2020 16:28:58 -0800
+Received: from [172.18.21.27] (172.18.21.27) by mail1.valvemail.org
+ (172.16.144.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Feb
+ 2020 16:28:57 -0800
+Subject: Re: [PATCH v3 1/4] futex: Implement mechanism to wait on any of
+ several futexes
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+CC:     <linux-kernel@vger.kernel.org>, <kernel@collabora.com>,
+        <krisman@collabora.com>, <shuah@kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <rostedt@goodmis.org>,
+        <ryao@gentoo.org>, <dvhart@infradead.org>, <mingo@redhat.com>,
+        <z.figura12@gmail.com>, <steven@valvesoftware.com>,
+        <steven@liquorix.net>, <malteskarupke@web.de>
+References: <20200213214525.183689-1-andrealmeid@collabora.com>
+ <20200213214525.183689-2-andrealmeid@collabora.com>
+ <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+ <20200228194958.GO14946@hirez.programming.kicks-ass.net>
+ <87tv3aflqm.fsf@nanos.tec.linutronix.de>
+From:   "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>
+Message-ID: <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
+Date:   Fri, 28 Feb 2020 16:29:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <87tv3aflqm.fsf@nanos.tec.linutronix.de>
+Content-Language: en-US
+X-ClientProxiedBy: mail1.valvemail.org (172.16.144.22) To mail1.valvemail.org
+ (172.16.144.22)
+X-EXCLAIMER-MD-CONFIG: fe5cb8ea-1338-4c54-81e0-ad323678e037
+X-C2ProcessedOrg: d7674bc1-f4dc-4fad-9e9e-e896f8a3f31b
+X-Mlf-CnxnMgmt-Allow: 172.16.144.22
+X-Mlf-Version: 9.0.5.2081
+X-Mlf-License: BSVKCAP__
+X-Mlf-UniqueId: o202002290028580002852
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: valvesoftware.com
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before initializing completion queue interrupts, the ena driver uses
-polling to wait for responses on the admin command queue. The ena driver
-waits 5ms between polls, but the hardware has generally finished long
-before that. Reduce the poll time to 10us.
 
-On a c5.12xlarge, this improves ena initialization time from 173.6ms to
-1.920ms, an improvement of more than 90x. This improves server boot time
-and time to network bringup.
 
-Before:
-[    0.531722] calling  ena_init+0x0/0x63 @ 1
-[    0.531722] ena: Elastic Network Adapter (ENA) v2.1.0K
-[    0.531751] ena 0000:00:05.0: Elastic Network Adapter (ENA) v2.1.0K
-[    0.531946] PCI Interrupt Link [LNKD] enabled at IRQ 11
-[    0.547425] ena: ena device version: 0.10
-[    0.547427] ena: ena controller version: 0.0.1 implementation version 1
-[    0.709497] ena 0000:00:05.0: Elastic Network Adapter (ENA) found at mem febf4000, mac addr 06:c4:22:0e:dc:da, Placement policy: Low Latency
-[    0.709508] initcall ena_init+0x0/0x63 returned 0 after 173616 usecs
+On 2/28/20 1:25 PM, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+>> On Fri, Feb 28, 2020 at 08:07:17PM +0100, Peter Zijlstra wrote:
+>>> So I have a problem with this vector layout, it doesn't allow for
+>>> per-futex flags, and esp. with that multi-size futex support that
+>>> becomes important, but also with the already extand private/shared and
+>>> wait_bitset flags this means you cannot have a vector with mixed wait
+>>> types.
+>>
+>> Alternatively, we throw the entire single-syscall futex interface under
+>> the bus and design a bunch of new syscalls that are natively vectored or
+>> something.
+>>
+>> Thomas mentioned something like that, the problem is, ofcourse, that we
+>> then want to fix a whole bunch of historical ills, and the probmem
+>> becomes much bigger.
+>=20
+> We keep piling features on top of an interface and mechanism which is
+> fragile as hell and horrible to maintain. Adding vectoring, multi size
+> and whatever is not making it any better.
+>=20
+> There is also the long standing issue with NUMA, which we can't address
+> with the current pile at all.
+>=20
+> So I'm really advocating that all involved parties sit down ASAP and
+> hash out a new and less convoluted mechanism where all the magic new
+> features can be addressed in a sane way so that the 'F' in Futex really
+> only means Fast and not some other word starting with 'F'.
 
-After:
-[    0.526965] calling  ena_init+0x0/0x63 @ 1
-[    0.526966] ena: Elastic Network Adapter (ENA) v2.1.0K
-[    0.527056] ena 0000:00:05.0: Elastic Network Adapter (ENA) v2.1.0K
-[    0.527196] PCI Interrupt Link [LNKD] enabled at IRQ 11
-[    0.527211] ena: ena device version: 0.10
-[    0.527212] ena: ena controller version: 0.0.1 implementation version 1
-[    0.528925] ena 0000:00:05.0: Elastic Network Adapter (ENA) found at mem febf4000, mac addr 06:c4:22:0e:dc:da, Placement policy: Low Latency
-[    0.528934] initcall ena_init+0x0/0x63 returned 0 after 1920 usecs
+Are you specifically talking about the interface, or the mechanism=20
+itself? Would you be OK with a new syscall that calls into the same code=20
+as this patch? It does seem like that's what we want, so if we rewrote a=20
+mechanism I'm not convinced it would come out any different. But, the=20
+interface itself seems fair-game to rewrite, as the current futex=20
+syscall is turning into an ioctl of sorts.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
----
- drivers/net/ethernet/amazon/ena/ena_com.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+This solves a real problem with a real usecase; so I'd like to stay=20
+practical and not go into deeper issues like solving NUMA support for=20
+all of futex in the interest of users waiting at the other end. Can you=20
+point us to your preferred approach just for the scope of what we're=20
+trying to accomplish?
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 1fb58f9ad80b..203b2130d707 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -62,7 +62,7 @@
- 
- #define ENA_REGS_ADMIN_INTR_MASK 1
- 
--#define ENA_POLL_MS	5
-+#define ENA_POLL_US	10
- 
- /*****************************************************************************/
- /*****************************************************************************/
-@@ -572,7 +572,7 @@ static int ena_com_wait_and_process_admin_cq_polling(struct ena_comp_ctx *comp_c
- 			goto err;
- 		}
- 
--		msleep(ENA_POLL_MS);
-+		usleep_range(ENA_POLL_US, 2 * ENA_POLL_US);
- 	}
- 
- 	if (unlikely(comp_ctx->status == ENA_CMD_ABORTED)) {
-@@ -943,12 +943,13 @@ static void ena_com_io_queue_free(struct ena_com_dev *ena_dev,
- static int wait_for_reset_state(struct ena_com_dev *ena_dev, u32 timeout,
- 				u16 exp_state)
- {
--	u32 val, i;
-+	u32 val;
-+	unsigned long timeout_jiffies;
- 
--	/* Convert timeout from resolution of 100ms to ENA_POLL_MS */
--	timeout = (timeout * 100) / ENA_POLL_MS;
-+	/* Convert timeout from resolution of 100ms */
-+	timeout_jiffies = jiffies + msecs_to_jiffies(timeout * 100);
- 
--	for (i = 0; i < timeout; i++) {
-+	while (1) {
- 		val = ena_com_reg_bar_read32(ena_dev, ENA_REGS_DEV_STS_OFF);
- 
- 		if (unlikely(val == ENA_MMIO_READ_TIMEOUT)) {
-@@ -960,10 +961,11 @@ static int wait_for_reset_state(struct ena_com_dev *ena_dev, u32 timeout,
- 			exp_state)
- 			return 0;
- 
--		msleep(ENA_POLL_MS);
--	}
-+		if (time_is_before_jiffies(timeout_jiffies))
-+			return -ETIME;
- 
--	return -ETIME;
-+		usleep_range(ENA_POLL_US, 2 * ENA_POLL_US);
-+	}
- }
- 
- static bool ena_com_check_supported_feature_id(struct ena_com_dev *ena_dev,
-@@ -1458,7 +1460,7 @@ void ena_com_wait_for_abort_completion(struct ena_com_dev *ena_dev)
- 	spin_lock_irqsave(&admin_queue->q_lock, flags);
- 	while (atomic_read(&admin_queue->outstanding_cmds) != 0) {
- 		spin_unlock_irqrestore(&admin_queue->q_lock, flags);
--		msleep(ENA_POLL_MS);
-+		usleep_range(ENA_POLL_US, 2 * ENA_POLL_US);
- 		spin_lock_irqsave(&admin_queue->q_lock, flags);
- 	}
- 	spin_unlock_irqrestore(&admin_queue->q_lock, flags);
--- 
-2.25.1
+>=20
+> Thanks,
+>=20
+>          tglx
+>=20
 
