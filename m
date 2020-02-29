@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA68C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7525CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A6E2468D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7222468A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 01:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TsGPF8Ib"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="H4Rj1Bri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgB2BAB (ORCPT
+        id S1726758AbgB2BCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 20:00:01 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.18]:36775 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726046AbgB2BAA (ORCPT
+        Fri, 28 Feb 2020 20:02:09 -0500
+Received: from gateway30.websitewelcome.com ([192.185.149.4]:43175 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726627AbgB2BCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 20:00:00 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 594481DF0F
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:59:59 -0600 (CST)
+        Fri, 28 Feb 2020 20:02:09 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 1C29E10F43D
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 19:02:08 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 7qU3jXjwaRP4z7qU3jw3gh; Fri, 28 Feb 2020 18:59:59 -0600
+        id 7qW8j4OOcEfyq7qW8j9b0f; Fri, 28 Feb 2020 19:02:08 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=09qBJCuV/qfG9uVAPQck4bm+6ufBYKRI0cgJkKY3QlE=; b=TsGPF8Ib7thdSZ5hUAKHUjEtl1
-        7G/Y+oqHWJBnFwf7tiD7GazelZ/06uaJjjdPxiNCQWF0mab4VIWCrDaG2YMuJcDkZewT2CoQwRZRA
-        Y7k5RQOLAru1+DyYYfYWW8kQoEGOAX4VhT2FmVQFWSJaZtwD5I261dwJ8PWDOrq8GyhJ+VTBc4Vsr
-        7Ig0jxIRUNkdESYJ6ej/VU2nBUyRg/8Ke3TfFGQld1ZgBhYiVFdc69Qo+vkbZZWhQVefhnooDfsel
-        OFO+RVFGV1+scG3Vo8G4rG8i8wjI9s+cMQ2kNnfVdr728IwYeFJLJly8YQl3uPbNAXFj2FuScIR5Z
-        wcJV1Ajg==;
-Received: from [200.39.15.57] (port=20013 helo=embeddedor)
+        bh=tpLXELsQaxpX0/VqzzlvqdJ28qTl7PIEEz9QaGMyq4s=; b=H4Rj1Bri9W7Vbb7yJHG2RqKj2N
+        HeTKCmx078YDSmMZNBRJyd2NN+Chwoyqogzu65/jrTPF0vhComTf8KeYq5J97XPKnnfuIY8Ohn/Kj
+        4J/28sezBusfif5N4RrXPOBnu5hxvYdqcOhxSggnHNQR2zJL1tSN39WiXsI5PgqRJU2qSIvfO46hA
+        R2D9tuIDRtn2GQ7KWj4JWmDdMBy8DlojazOTw2zz5YFnOoteMrR3xLpxHt2mVuzfggPOojM95vnW/
+        6ZAj4eRlr/Im9ShUS30OV0lUYWPQtMG4YyQr46om2XSA06ya6lEF1qLTjn4SUEKtNhzrId6lM37Ap
+        R9UpIMPw==;
+Received: from [200.39.15.57] (port=3055 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j7qU1-002yoq-Gw; Fri, 28 Feb 2020 18:59:57 -0600
-Date:   Fri, 28 Feb 2020 19:02:54 -0600
+        id 1j7qW6-0031FV-GI; Fri, 28 Feb 2020 19:02:06 -0600
+Date:   Fri, 28 Feb 2020 19:05:02 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: flow_offload: Replace zero-length array with
+Subject: [PATCH][next] neighbour: Replace zero-length array with
  flexible-array member
-Message-ID: <20200229010254.GA9547@embeddedor>
+Message-ID: <20200229010502.GA9706@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.39.15.57
 X-Source-L: No
-X-Exim-ID: 1j7qU1-002yoq-Gw
+X-Exim-ID: 1j7qW6-0031FV-GI
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.15.57]:20013
+X-Source-Sender: (embeddedor) [200.39.15.57]:3055
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 43
+X-Email-Count: 4
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- include/net/flow_offload.h | 2 +-
+ include/net/neighbour.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-index 4e864c34a1b0..cd3510ac66b0 100644
---- a/include/net/flow_offload.h
-+++ b/include/net/flow_offload.h
-@@ -229,7 +229,7 @@ struct flow_action_entry {
- 
- struct flow_action {
- 	unsigned int			num_entries;
--	struct flow_action_entry 	entries[0];
-+	struct flow_action_entry	entries[];
+diff --git a/include/net/neighbour.h b/include/net/neighbour.h
+index 8ec77bfdc1a4..e1476775769c 100644
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -174,7 +174,7 @@ struct pneigh_entry {
+ 	struct net_device	*dev;
+ 	u8			flags;
+ 	u8			protocol;
+-	u8			key[0];
++	u8			key[];
  };
  
- static inline bool flow_action_has_entries(const struct flow_action *action)
+ /*
 -- 
 2.25.0
 
