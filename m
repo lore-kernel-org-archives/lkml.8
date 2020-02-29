@@ -2,138 +2,131 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF39C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8823C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A836F2469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7312469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="r/hOCw/d"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CAa8qCMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgB2Ogv (ORCPT
+        id S1727124AbgB2Ohq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:36:51 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:39600 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbgB2Ogv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:36:51 -0500
-Received: from zn.tnic (p200300EC2F1D580074FEC020E389DD32.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:5800:74fe:c020:e389:dd32])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 976921EC0C9D;
-        Sat, 29 Feb 2020 15:36:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582987009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=l/xIGwTtnSO9nmCEizm7Hm3VTAwFUx4IN8eQJwkGvM0=;
-        b=r/hOCw/dys8HCW+V26Y7NtUc0mCpAWfj3q68cI0pJ0c8PUE90EIrI00PkoI5fbFCwjbHNJ
-        C6lKMNY79y9IkvfHEPWFKHjOoMYL7TsCip2dQnG8bdQKq+dn7PhK4q9Sm08xWksQN/LUaf
-        Zqt+UOjvK5JwuHnO2xw1fzSuaPj7Sa4=
-Date:   Sat, 29 Feb 2020 15:36:44 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-Message-ID: <20200229143644.GA1129@zn.tnic>
-References: <20200228121724.GA25261@zn.tnic>
- <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
- <20200228162359.GC25261@zn.tnic>
- <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
- <20200228172202.GD25261@zn.tnic>
- <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
- <20200228183131.GE25261@zn.tnic>
- <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
- <20200228214742.GF25261@zn.tnic>
- <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+        Sat, 29 Feb 2020 09:37:46 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:64607 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726308AbgB2Ohp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 09:37:45 -0500
+X-UUID: 89f67a14a8264cb58726f652872fb23f-20200229
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xQp3WRgKEp5tZlL+HV4rSlO/znTkeJUSxq/TzrB4xVA=;
+        b=CAa8qCMDc3E2m//OdnZWoBS1Dr0/VgXjUghrflPtNw/6kAfYc/iMb7t0rJmvhBovX2/4ujKNzGqVCjhZDhLhjj5WKnBneve6DDbWI5K2jygoJwfH2xvMpFqpPPYKUUoz42cGqMLA2+ahns1Oci7KQYJs08ObiD9SFN93WOrMKXM=;
+X-UUID: 89f67a14a8264cb58726f652872fb23f-20200229
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2070284286; Sat, 29 Feb 2020 22:37:38 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 29 Feb 2020 22:36:38 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 29 Feb 2020 22:37:14 +0800
+Message-ID: <1582987056.13875.0.camel@mtkswgap22>
+Subject: Re: [PATCH v3 12/13] soc: mediatek: cmdq: add clear option in
+ cmdq_pkt_wfe api
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Sat, 29 Feb 2020 22:37:36 +0800
+In-Reply-To: <1582900369.14824.2.camel@mtksdaap41>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-14-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582900369.14824.2.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 02:13:29PM -0800, Yu-cheng Yu wrote:
-> If the XSAVES buffer already has current data (i.e. TIF_NEED_FPU_LOAD is
-> set), then skip copy_xregs_to_kernel().  This happens when the task was
-> context-switched out and has not returned to user-mode.
+SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91IGNvbW1lbnQuDQoNCk9uIEZyaSwgMjAyMC0wMi0yOCBh
+dCAyMjozMiArMDgwMCwgQ0sgSHUgd3JvdGU6DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBGcmks
+IDIwMjAtMDItMjggYXQgMjE6NDQgKzA4MDAsIERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBB
+ZGQgY2xlYXIgcGFyYW1ldGVyIHRvIGxldCBjbGllbnQgZGVjaWRlIGlmDQo+ID4gZXZlbnQgc2hv
+dWxkIGJlIGNsZWFyIHRvIDAgYWZ0ZXIgR0NFIHJlY2VpdmUgaXQuDQo+ID4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwg
+NSArKystLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwg
+MyArLS0NCj4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8IDUg
+KysrLS0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25z
+KC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRx
+LWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiBp
+bmRleCBiYmM2OGE3YzgxZTkuLjQwNmUxZDM0ZDIzNCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTI5NSwxNSArMjk1LDE2IEBAIGludCBj
+bWRxX3BrdF93cml0ZV9zX3ZhbHVlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRy
+X3JlZ19pZHgsDQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3Zh
+bHVlKTsNCj4gPiAgDQo+ID4gLWludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3Qs
+IHUxNiBldmVudCkNCj4gPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
+dTE2IGV2ZW50LCBib29sIGNsZWFyKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgY21kcV9pbnN0cnVj
+dGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiArCXUzMiBjbGVhcl9vcHRpb24gPSBjbGVhciA/IENN
+RFFfV0ZFX1VQREFURSA6IDA7DQo+ID4gIA0KPiA+ICAJaWYgKGV2ZW50ID49IENNRFFfTUFYX0VW
+RU5UKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICANCj4gPiAgCWluc3Qub3AgPSBDTURR
+X0NPREVfV0ZFOw0KPiA+IC0JaW5zdC52YWx1ZSA9IENNRFFfV0ZFX09QVElPTjsNCj4gPiArCWlu
+c3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT04gfCBjbGVhcl9vcHRpb247DQo+ID4gIAlpbnN0LmV2
+ZW50ID0gZXZlbnQ7DQo+ID4gIA0KPiA+ICAJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5k
+KHBrdCwgaW5zdCk7DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGst
+Y21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
+DQo+ID4gaW5kZXggM2Y2YmMwZGZkNWRhLi40MmQyYTMwZTZhNzAgMTAwNjQ0DQo+ID4gLS0tIGEv
+aW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+ICsrKyBiL2luY2x1
+ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiBAQCAtMjcsOCArMjcsNyBA
+QA0KPiA+ICAgKiBiaXQgMTYtMjc6IHVwZGF0ZSB2YWx1ZQ0KPiA+ICAgKiBiaXQgMzE6IDEgLSB1
+cGRhdGUsIDAgLSBubyB1cGRhdGUNCj4gPiAgICovDQo+ID4gLSNkZWZpbmUgQ01EUV9XRkVfT1BU
+SU9OCQkJKENNRFFfV0ZFX1VQREFURSB8IENNRFFfV0ZFX1dBSVQgfCBcDQo+ID4gLQkJCQkJQ01E
+UV9XRkVfV0FJVF9WQUxVRSkNCj4gPiArI2RlZmluZSBDTURRX1dGRV9PUFRJT04JCQkoQ01EUV9X
+RkVfV0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ID4gIA0KPiA+ICAvKiogY21kcSBldmVu
+dCBtYXhpbXVtICovDQo+ID4gICNkZWZpbmUgQ01EUV9NQVhfRVZFTlQJCQkweDNmZg0KPiA+IGRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5jbHVk
+ZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+IGluZGV4IDFhNmM1NmYzYmVjMS4u
+ZDYzNzQ5NDQwNjk3IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
+L210ay1jbWRxLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21k
+cS5oDQo+ID4gQEAgLTE1MiwxMSArMTUyLDEyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zX3ZhbHVl
+KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ID4gIC8qKg0K
+PiA+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBldmVudCBjb21tYW5kIHRv
+IHRoZSBDTURRIHBhY2tldA0KPiA+ICAgKiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCj4gPiAtICog
+QGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvICJ3YWl0IGFuZCBDTEVBUiINCj4gPiAr
+ICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvIHdhaXQNCj4gPiArICogQGNsZWFy
+OgljbGVhciBldmVudCBvciBub3QgYWZ0ZXIgZXZlbnQgYXJyaXZlDQo+ID4gICAqDQo+ID4gICAq
+IFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0K
+PiA+ICAgKi8NCj4gPiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2
+IGV2ZW50KTsNCj4gPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2
+IGV2ZW50LCBib29sIGNsZWFyKTsNCj4gDQo+IEkgdGhpbmsgeW91IHNob3VsZCBtb2RpZnkgY2xp
+ZW50IGRyaXZlciBbMV0gYXMgd2VsbCBpbiB0aGlzIHBhdGNoLg0KPiBDaGFuZ2UgaXQgdG8NCj4g
+DQo+IGNtZHFfcGt0X3dmZShjbWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQsIGZhbHNl
+KTsNCj4gDQo+IFsxXQ0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9jcnRjLmM/aD12NS42LXJjMyNuNDkxDQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KDQpv
+aywgd2lsbCBkbw0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KDQo+IA0KPiA+ICANCj4gPiAgLyoq
+DQo+ID4gICAqIGNtZHFfcGt0X2NsZWFyX2V2ZW50KCkgLSBhcHBlbmQgY2xlYXIgZXZlbnQgY29t
+bWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gDQo+IA0KDQo=
 
-So I got tired of this peacemeal game back'n'forth and went and did your
-work for ya.
-
-First of all, on my fairly new KBL test box, the context size is almost
-a kB:
-
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
-[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-[    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
-[    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
-[    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
-
-Then, I added this ontop of your patchset:
-
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 0d3e06a772b0..2e57b8d79c0e 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -337,6 +337,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
-         */
-        fpregs_lock();
-        if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
-+               trace_printk("!NEED_FPU_LOAD, size: %d, supervisor: 0x%llx\n",
-+                            size, xfeatures_mask_supervisor());
-                if (xfeatures_mask_supervisor())
-                        copy_xregs_to_kernel(&fpu->state.xsave);
-                set_thread_flag(TIF_NEED_FPU_LOAD);
-
-and traced a fairly boring kernel build workload where the kernel
-.config is not even a distro one but a tailored for this machine.
-
-Which means, it took 3m35.058s to build and the trace buffer had 53973
-entries like this one:
-
-bash-1211  [002] ...1   648.238585: __fpu__restore_sig: !NEED_FPU_LOAD, size: 1092, supervisor: 0x0
-
-which means I have
-
-53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
-
-And this only during this single workload - I don't even wanna imagine
-what that number would be if it were a huge, overloaded box with a
-signal heavy workload.
-
-And all this overhead to save 16 + 24 bytes supervisor states and throw
-away the rest up to 960 bytes each time.
-
-Err, I don't think so.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
