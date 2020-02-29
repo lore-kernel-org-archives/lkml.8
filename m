@@ -2,286 +2,89 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8653C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A29C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94996222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9502082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ClhsKX9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbgB2UuE (ORCPT
+        id S1727265AbgB2Uzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:50:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39474 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbgB2Utz (ORCPT
+        Sat, 29 Feb 2020 15:55:47 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53823 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgB2Uzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:49:55 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j893Y-0004iL-5T; Sat, 29 Feb 2020 21:49:52 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C27731C21A3;
-        Sat, 29 Feb 2020 21:49:51 +0100 (CET)
-Date:   Sat, 29 Feb 2020 20:49:51 -0000
-From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Store a reference to a pid not a task
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sat, 29 Feb 2020 15:55:47 -0500
+Received: by mail-pj1-f65.google.com with SMTP id i11so2672371pju.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:55:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=LfAey+bVZC63MZcRaKrf1wf+n/7HqfzMlziFP/uZ5DA=;
+        b=ClhsKX9DW5hTIMiI6HHZ0GUWCxU6QbmOxwbUME6SC+2H4MgVlbEAMmNzWoVHCxtZz4
+         jODg4Y20/kt8t5Hi9NP9dV8oxmZ2Grr06rBhEjhVTLCofOWwzlM35aosLDpdH9p0TRrz
+         6y2ZA41P832B+JG3r42ZaWntowDOl24cID7FT913bB+SVyj+BbKUgJ+BGzUC0cPibOb0
+         Fe60zjQFVT9K3JoX6WnKmFcQXwGtRsM8IgIXy8FOHwuaWTp06Ai01R9BScmI2EfR3InQ
+         EK3K2M6kE9dTDpLZj3jvEScnQimKWv1kHMOimtSd/wFbmHFBsKjBTghpKnbJDLCx2QMg
+         sZ2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LfAey+bVZC63MZcRaKrf1wf+n/7HqfzMlziFP/uZ5DA=;
+        b=q7OtmbSTqC468fffI8fncd5GrhKzy/v5yi/y5lgR1VDkScdD7ULJIOgqCaX/hRDlnH
+         1zSZ3fbxeiqFDH0bb3n3Tp46cDZ4fnNlO8rozVqDyaujBgFk2uwXqwNElqgYjNgOXtbp
+         qJWMEP1AAwQaqO4skcgQxqgHZglrNRLA17ZgyX0UMJMMUsbjlzHN15/33petupJPFRw1
+         YJpKBMoZuUveNB1p711RPPmChdWuhZLSMgCcrvJI28NLly49ZKju16MjFikriiC0dkHR
+         y4luCXlR4uDxsuZF8hgxnFUAmIJej74O+sDdiEUnVELuwa5MTvlhz7qwlwbGnLiZHt80
+         IlvQ==
+X-Gm-Message-State: APjAAAXSOY4tpUBgdbTZHri24LdDpnlIMs/c/MA4s+tM3IyHFHHBRUE+
+        1ex0bpLmaPeFJpYxWGARbacXVOMrM4w=
+X-Google-Smtp-Source: APXvYqwOVZngKIRetVCWvncT1J21YRIi0aP5gheYzkQNimZI2jAECzbYCrcgakD8LcCfMLaRbWsjuw==
+X-Received: by 2002:a17:90a:9ee:: with SMTP id 101mr11994638pjo.74.1583009745793;
+        Sat, 29 Feb 2020 12:55:45 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id x4sm10554330pgi.76.2020.02.29.12.55.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Feb 2020 12:55:45 -0800 (PST)
+Subject: Re: [PATCH 1/1] io_uring: remove extra nxt check after punt
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <29e9f945f8aa6646186065469ba00c0a4ef5b210.1583005578.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <08e7732a-4a31-424f-ec3f-eba4d753456a@kernel.dk>
+Date:   Sat, 29 Feb 2020 13:55:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158300939154.28353.8948341933371920103.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <29e9f945f8aa6646186065469ba00c0a4ef5b210.1583005578.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On 2/29/20 12:48 PM, Pavel Begunkov wrote:
+> After __io_queue_sqe() ended up in io_queue_async_work(), it's already
+> known that there is no @nxt req, so skip the check and return from the
+> function.
+> 
+> Also, @nxt initialisation now can be done just before
+> io_put_req_find_next(), as there is no jumping until it's checked.
 
-Commit-ID:     105c4222e7ccb647382180de9584b3cf1e2a1510
-Gitweb:        https://git.kernel.org/tip/105c4222e7ccb647382180de9584b3cf1e2a1510
-Author:        Eric W. Biederman <ebiederm@xmission.com>
-AuthorDate:    Fri, 28 Feb 2020 11:11:06 -06:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 29 Feb 2020 21:44:46 +01:00
+Applied, thanks.
 
-posix-cpu-timers: Store a reference to a pid not a task
+-- 
+Jens Axboe
 
-posix cpu timers do not handle the death of a process well.
-
-This is most clearly seen when a multi-threaded process calls exec from a
-thread that is not the leader of the thread group.  The posix cpu timer code
-continues to pin the old thread group leader and is unable to find the
-siglock from there.
-
-This results in posix_cpu_timer_del being unable to delete a timer,
-posix_cpu_timer_set being unable to set a timer.  Further to compensate for
-the problems in posix_cpu_timer_del on a multi-threaded exec all timers
-that point at the multi-threaded task are stopped.
-
-The code for the timers fundamentally needs to check if the target
-process/thread is alive.  This needs an extra level of indirection. This
-level of indirection is already available in struct pid.
-
-So replace cpu.task with cpu.pid to get the needed extra layer of
-indirection.
-
-In addition to handling things more cleanly this reduces the amount of
-memory a timer can pin when a process exits and then is reaped from
-a task_struct to the vastly smaller struct pid.
-
-Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
----
- include/linux/posix-timers.h   |  2 +-
- kernel/time/posix-cpu-timers.c | 68 ++++++++++++++++++++++++---------
- 2 files changed, 51 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index 3d10c84..e3f0f85 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -69,7 +69,7 @@ static inline int clockid_to_fd(const clockid_t clk)
- struct cpu_timer {
- 	struct timerqueue_node	node;
- 	struct timerqueue_head	*head;
--	struct task_struct	*task;
-+	struct pid		*pid;
- 	struct list_head	elist;
- 	int			firing;
- };
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index ef936c5..afd1e95 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -118,6 +118,16 @@ static inline int validate_clock_permissions(const clockid_t clock)
- 	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
- }
- 
-+static inline enum pid_type cpu_timer_pid_type(struct k_itimer *timer)
-+{
-+	return CPUCLOCK_PERTHREAD(timer->it_clock) ? PIDTYPE_PID : PIDTYPE_TGID;
-+}
-+
-+static inline struct task_struct *cpu_timer_task_rcu(struct k_itimer *timer)
-+{
-+	return pid_task(timer->it.cpu.pid, cpu_timer_pid_type(timer));
-+}
-+
- /*
-  * Update expiry time from increment, and increase overrun count,
-  * given the current clock sample.
-@@ -391,7 +401,7 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- 
- 	new_timer->kclock = &clock_posix_cpu;
- 	timerqueue_init(&new_timer->it.cpu.node);
--	new_timer->it.cpu.task = p;
-+	new_timer->it.cpu.pid = get_task_pid(p, cpu_timer_pid_type(new_timer));
- 	return 0;
- }
- 
-@@ -404,13 +414,15 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- static int posix_cpu_timer_del(struct k_itimer *timer)
- {
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
- 	struct sighand_struct *sighand;
-+	struct task_struct *p;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Protect against sighand release/switch in exit/exec and process/
-@@ -432,8 +444,10 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 		unlock_task_sighand(p, &flags);
- 	}
- 
-+out:
-+	rcu_read_unlock();
- 	if (!ret)
--		put_task_struct(p);
-+		put_pid(ctmr->pid);
- 
- 	return ret;
- }
-@@ -561,13 +575,21 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	u64 old_expires, new_expires, old_incr, val;
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
- 	struct sighand_struct *sighand;
-+	struct task_struct *p;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p) {
-+		/*
-+		 * If p has just been reaped, we can no
-+		 * longer get any information about it at all.
-+		 */
-+		rcu_read_unlock();
-+		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Use the to_ktime conversion because that clamps the maximum
-@@ -584,8 +606,10 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	 * If p has just been reaped, we can no
- 	 * longer get any information about it at all.
- 	 */
--	if (unlikely(sighand == NULL))
-+	if (unlikely(sighand == NULL)) {
-+		rcu_read_unlock();
- 		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Disarm any old timer after extracting its expiry time.
-@@ -690,6 +714,7 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 
- 	ret = 0;
-  out:
-+	rcu_read_unlock();
- 	if (old)
- 		old->it_interval = ns_to_timespec64(old_incr);
- 
-@@ -701,10 +726,12 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	struct cpu_timer *ctmr = &timer->it.cpu;
- 	u64 now, expires = cpu_timer_getexpires(ctmr);
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Easy part: convert the reload time.
-@@ -712,7 +739,7 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	itp->it_interval = ktime_to_timespec64(timer->it_interval);
- 
- 	if (!expires)
--		return;
-+		goto out;
- 
- 	/*
- 	 * Sample the clock to take the difference with the expiry time.
-@@ -732,6 +759,8 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 		itp->it_value.tv_nsec = 1;
- 		itp->it_value.tv_sec = 0;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- #define MAX_COLLECTED	20
-@@ -952,14 +981,15 @@ static void check_process_timers(struct task_struct *tsk,
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
- {
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
--	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
- 	u64 now;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Fetch the current sample and update the timer's expiry time.
-@@ -974,13 +1004,15 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
- 	/* Protect timer list r/w in arm_timer() */
- 	sighand = lock_task_sighand(p, &flags);
- 	if (unlikely(sighand == NULL))
--		return;
-+		goto out;
- 
- 	/*
- 	 * Now re-arm for the new expiry time.
- 	 */
- 	arm_timer(timer, p);
- 	unlock_task_sighand(p, &flags);
-+out:
-+	rcu_read_unlock();
- }
- 
- /**
