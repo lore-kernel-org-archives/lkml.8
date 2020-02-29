@@ -2,115 +2,99 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E12C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B33BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262B72468A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6270D246B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582991913;
+	bh=iu22HjzvtCZYDPv+CtkxRKwYp+sLiJKEC2BWNXNvLCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E8np4S1cDeSiUjl3vHsQsFYMR1/im4LXeTBoXwjixK/KNPaHRHIvkag4MHJYgqU2w
+	 wMgMbFUUMpgr9uXkj2OM9izjjTSqApZDVACkTEHhgxHKGY4A1iwKBJ72jEpEw2Kqga
+	 YyRkvuf8UYNwZVRxDkPjA5cPoAJVCEOAVcRfVBjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgB2Py0 (ORCPT
+        id S1727213AbgB2P6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 10:54:26 -0500
-Received: from mout-p-103.mailbox.org ([80.241.56.161]:9834 "EHLO
-        mout-p-103.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgB2PyZ (ORCPT
+        Sat, 29 Feb 2020 10:58:32 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46176 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgB2P6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 10:54:25 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 48V9vL6ZhszKmVM;
-        Sat, 29 Feb 2020 16:54:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id pgmRCAv08B0a; Sat, 29 Feb 2020 16:54:19 +0100 (CET)
-Date:   Sun, 1 Mar 2020 02:54:11 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fweimer@redhat.com
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-Message-ID: <20200229155411.3xn7szvqso4uxwuy@yavin>
-References: <96563.1582901612@warthog.procyon.org.uk>
- <20200228152427.rv3crd7akwdhta2r@wittgenstein>
- <20200229152656.gwu7wbqd32liwjye@yavin>
+        Sat, 29 Feb 2020 10:58:31 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h18so6603331ljl.13
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 07:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6cMfsy81kHnm1ci8XSZPZeZCFxF3rUOuMFeIL9RyjNQ=;
+        b=Nvzi4dIUW38oxwa8h6Q/ImOrapuHG3joT7hNsPpnJcUScDEv12qWwONvOxZ0jk1dn+
+         FirQzUBoNCex3HxiW4NQp8LHld3xt/JFJ68qDTsscjma9STzwP5DmgnJsyHGZXgNpUVR
+         Jw0FGDFewUZ5e4dtt5w1Jx0iatHjuEkaM5Xgs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6cMfsy81kHnm1ci8XSZPZeZCFxF3rUOuMFeIL9RyjNQ=;
+        b=r9qmwBGPJErFjqMzdtR9tx4VwQhaxzgMUPb/H4E6bdJUZn7laTgoW3WIoO1Bg9WcAe
+         skQ91pNOiujt46yqa1p07KKOylwNiup/V1Focpf+RKx8l+Mts91gifwRv31vQUyz0vQX
+         oOnz7U2G+CmZQLU0wejP+bgoefbCQb7CQLJubGWZ4doIRBG0zNLg5X82TvgThJe2HXRT
+         bc+P+V042DiAOwtmau9v8J1WBaif2LVuModTCOzIrvtjEbnmlcvwvevLmigaVxUQ6jUQ
+         IFo6K3mYfq6t2X575U3PrAOo8UHKzus2ih9eq6qWOTJ0XesdmLx+a/F/EG/d4/Is3qmj
+         z6fA==
+X-Gm-Message-State: ANhLgQ2Ir+vvohrZ9Ln/aiiNbcd7om12wuG2781bUuY6MbOpLYhOEaug
+        Kb6Cv1vOHW2dMCFhdWvZyd4FW9glPNI=
+X-Google-Smtp-Source: ADFU+vvX2FELb6dBvYCPM6h2jWXdHHbcnv7kF+oRQbhxnOi64eam9+Fm3BnAkBl2OMUnjGMCvbdZvw==
+X-Received: by 2002:a2e:8591:: with SMTP id b17mr6336272lji.249.1582991909638;
+        Sat, 29 Feb 2020 07:58:29 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id f16sm8129789ljn.17.2020.02.29.07.58.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Feb 2020 07:58:28 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id s23so4359294lfs.10
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 07:58:28 -0800 (PST)
+X-Received: by 2002:a19:6144:: with SMTP id m4mr5453322lfk.192.1582991907916;
+ Sat, 29 Feb 2020 07:58:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="puaedjuyrav2qu65"
-Content-Disposition: inline
-In-Reply-To: <20200229152656.gwu7wbqd32liwjye@yavin>
+References: <20200224212352.8640-1-w@1wt.eu> <0f5effb1-b228-dd00-05bc-de5801ce4626@linux.com>
+ <CAHk-=whd_Wpi1-TGcooUTE+z-Z-f32n2vFQANszvAou_Fopvzw@mail.gmail.com> <20200229141354.GA23095@1wt.eu>
+In-Reply-To: <20200229141354.GA23095@1wt.eu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 29 Feb 2020 09:58:11 -0600
+X-Gmail-Original-Message-ID: <CAHk-=whFAAV_TOLFNnj=wu4mD2L9OvgB6n2sKDdmd8buMKFv8A@mail.gmail.com>
+Message-ID: <CAHk-=whFAAV_TOLFNnj=wu4mD2L9OvgB6n2sKDdmd8buMKFv8A@mail.gmail.com>
+Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Feb 29, 2020 at 8:14 AM Willy Tarreau <w@1wt.eu> wrote:
+>
+> So if you or Denis think there's some value in me continuing to explore
+> one of these areas, I can continue, otherwise I can simply resend the
+> last part of my series with the few missing Cc and be done with it.
 
---puaedjuyrav2qu65
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's fine - this driver isn't worth spending a ton of effort on.
 
-On 2020-03-01, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-02-28, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > So we either end up adding new AT_* flags mirroring the new RESOLVE_*
-> > flags or we end up adding new RESOLVE_* flags mirroring parts of AT_*
-> > flags. And if that's a possibility I vote for RESOLVE_* flags going
-> > forward. The have better naming too imho.
->=20
-> I can see the argument for merging AT_ flags into RESOLVE_ flags (fewer
-> flag arguments for syscalls is usually a good thing) ... but I don't
-> really like it. There are a couple of problems right off the bat:
->=20
->  * The prefix RESOLVE_ implies that the flag is specifically about path
->    resolution. While you could argue that AT_EMPTY_PATH is at least
->    *related* to path resolution, flags like AT_REMOVEDIR and
->    AT_RECURSIVE aren't.
->=20
->  * That point touches on something I see as a more fundamental problem
->    in the AT_ flags -- they were intended to be generic flags for all of
->    the ...at(2) syscalls. But then AT_ grew things like AT_STATX_ and
->    AT_REMOVEDIR (both of which are necessary features to have for their
->    respective syscalls, but now those flag bits are dead for other
->    syscalls -- not to mention the whole AT_SYMLINK_{NO,}FOLLOW thing).
->=20
->  * While the above might be seen as minor quibbles, the really big
->    issue is that even the flags which are "similar" (AT_SYMLINK_NOFOLLOW
->    and RESOLVE_NO_SYMLINKS) have different semantics (by design -- in my
->    view, AT_SYMLINK_{NO,}FOLLOW / O_NOFOLLOW / lstat(2) has always had
->    the wrong semantics if the intention was to be a way to safely avoid
->    resolving symlinks).
->=20
-> But maybe I'm just overthinking what a merge of AT_ and RESOLVE_ would
-> look like -- would it on.
+The only users are virtualization, and even they are going away
+because floppies are so small, and other things have become more
+standard anyway (ie USB disk) or easier to emulate (NVMe or whatever).
 
-Eugh, dropped the rest of that sentence:
+So I suspect the only reason floppy is used even in that area is just
+legacy "we haven't bothered updating to anything better and we have
+old scripts and images that work".
 
-=2E.. would it only be the few AT_ flags which are strictly related to
-path resolution (such as AT_EMPTY_PATH)? If so wouldn't that just mean
-we end up with two flag arguments for new syscalls?
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---puaedjuyrav2qu65
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlqJIAAKCRCdlLljIbnQ
-EsRRAPwMoYtBmLhTjNkZ7AC3d/2Ja7NkrsotEk6myIJwokoCygEAnedimnFrzQ37
-VxkzpMA8mSpBBJP7I7YmJa2XRkDeTAk=
-=evjZ
------END PGP SIGNATURE-----
-
---puaedjuyrav2qu65--
+              Linus
