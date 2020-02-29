@@ -2,159 +2,135 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33F8C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967E0222C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B4224691
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 22:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXd6sjDe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgJE8xO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgB2WGR (ORCPT
+        id S1727309AbgB2WTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 17:06:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54373 "EHLO
+        Sat, 29 Feb 2020 17:19:21 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37135 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbgB2WGR (ORCPT
+        with ESMTP id S1727181AbgB2WTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 17:06:17 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z12so7271323wmi.4
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 14:06:16 -0800 (PST)
+        Sat, 29 Feb 2020 17:19:21 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a141so7171295wme.2;
+        Sat, 29 Feb 2020 14:19:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zEk8G7Cl/+5CWZ371T9rRGys+VePLgRQkSGZWONW6/U=;
-        b=lXd6sjDe5VKrBvndMtfMSg1AEc0IqixzU5D2hAKtPrWEwfxJN5CRMtUYLXGhMvL5RA
-         OAPbSmTnL2mYRJ6fJAPE49aYzbiVOdsxkvsPsmGFeP2djSI6UKHaObg+ZOca9cYdjuKb
-         2rwt+3UkpNHcebaSPDtVNwdnRQlCZKp1W11RjGC3hHmfzGfeZy9HXuN485ulXubFWV11
-         h7O14LsfLcjz94gCcymsYt2vAOc7KL0L46seJojDXKaoBlOKAaylJG9D69TUdvOILUd2
-         N72Q8sxwj3mxMQ8CP1WBzdUuG7i7goZV/Zg2jj8ewSp7X605YyEqj0nVX60eA1F7gosU
-         wMtA==
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=Rq6vkQgTaOQDotxYomeOOqqSCicKb0gWij/0lXcfMPs=;
+        b=CgJE8xO/dLhkcoI8oDJycGzTipj/BjsRi8gPl7dxzATB+E11EFGNPqwjARxZDBWPAX
+         16X1rDAZ9yb/Z6NFnor2DsJL00bxBBrGN7rkUeAIPCFRm+o1S+0vOVECfv8GW2VZUIZm
+         sEyWeNrlkocUdU8TF9Wjvjg9sHHxgGGhhWxtH5eIbUeHN19k7BIrPIFhqPU9wvD986P3
+         fk5MM0AwaTqi7PjI/JO8EW7cZ5B2CwZRiixWKWCB4TnXarse20/5Io2MWR8+zkrRMEBT
+         HCav4h+AdvfB/UywRqHQiJHKyRzntakvLfAc22Sst+kYvS9tBRplDOFHsvRFEZF7ywoN
+         uaAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zEk8G7Cl/+5CWZ371T9rRGys+VePLgRQkSGZWONW6/U=;
-        b=ki2KALkCk+220KsNanZlWZE/EsZmJAfYZcBfThqZoCd9mEF8dBjzPG19ZAlML4tZDX
-         pQ92weviiJH56qaBn2+9X9Ngs0hTYq4U/1w+aJvHtzLncA1oY3ur3eGUeKNwkAu3oZK3
-         gzvKjGZPjN26cR1wZr648XGmd3YkSJHX4zM40kj/SL3Irwt8egQLZXL5SiN83lMfITAn
-         AIY9k0bvca8IjG33IIMnJxFBslUC+NxsdV2sUsD/WYhTHQD+ayig6laU72P6ZLA+7O6W
-         yUJU/DIj9ZG8PlknUXy84UinyGmlXlaFBspprU5ewTqOcygnvWrX9DdfVP4nZ820/oRp
-         1ZhA==
-X-Gm-Message-State: APjAAAUw2fydmd1oIDhb24QVXTyzK2ift5heIzapKzKtw/tGVHFDDzTC
-        lZK9C2auPIAHmJs5m634MOM=
-X-Google-Smtp-Source: APXvYqyWhDKoU0+UsWjoPJ3HY1TPyKuSZG26Z/oTeAwLb7pSHDFlRqbenAnPvCmi73erWq5DGxiZJA==
-X-Received: by 2002:a1c:e0d6:: with SMTP id x205mr10597236wmg.29.1583013975664;
-        Sat, 29 Feb 2020 14:06:15 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id j15sm19740498wrp.9.2020.02.29.14.06.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 14:06:14 -0800 (PST)
-Date:   Sat, 29 Feb 2020 22:06:13 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm/swapfile.c: simplify the scan loop in
- scan_swap_map_slots()
-Message-ID: <20200229220613.oyryopfshe6juvro@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200229131537.3475-1-richard.weiyang@gmail.com>
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=Rq6vkQgTaOQDotxYomeOOqqSCicKb0gWij/0lXcfMPs=;
+        b=gGnHu4APny8GVRkCvhxh8TZwDdgfNc9BfycINpnTh18h6aSicmhU3MWNwdcwZkdcZx
+         chGGD/2dbYaaFQa+nZjsHZ/4dGFHtXu0IJugEKkiG9C1DbfoKwFBEZJGgjRf8Pn1b+S2
+         89kJGYk8KdhpRHeGxqD2AsV61LSG0yvN7pFplF/yinJ6Xygc8RYbLFY8jKr/3t8jWT/p
+         q0xMMTmlsnOxYZOKkFBdw2mdJvoMCHFPQs/SDuW6cbTPi39W+b+rDNVAPMeuJ/xyG57m
+         3SlF6H0lVVlLDBbACt2OJ/epQDVPSX/YBKzlX834b1Hwks0o9WiYodNEMAFfQcCvKB4t
+         x0lw==
+X-Gm-Message-State: APjAAAUzKLSwDU2B+svkPXD57Zw7/cOAyWH2+hI0GOUYdGitF0RMM2/+
+        tC1Mz3OMwM6LJ5EIv0tPZ6o=
+X-Google-Smtp-Source: APXvYqw67IGoTwJ8NzM3XM89iPMypR15cLOYPYs07JIUP1A0ezQRFsrvQbuM+HTJimit4msBKUXa4w==
+X-Received: by 2002:a1c:9a88:: with SMTP id c130mr10592334wme.73.1583014759103;
+        Sat, 29 Feb 2020 14:19:19 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:7150:76fe:91ca:7ab5? (p200300EA8F296000715076FE91CA7AB5.dip0.t-ipconnect.de. [2003:ea:8f29:6000:7150:76fe:91ca:7ab5])
+        by smtp.googlemail.com with ESMTPSA id v2sm18217864wme.2.2020.02.29.14.19.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Feb 2020 14:19:18 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v4 00/10] PCI: Add and use constant PCI_STATUS_ERROR_BITS and
+ helper pci_status_get_and_clear_errors
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Message-ID: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
+Date:   Sat, 29 Feb 2020 23:19:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229131537.3475-1-richard.weiyang@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 01:15:37PM +0000, Wei Yang wrote:
->After commit c60aa176c6de8 ("swapfile: swap allocation cycle if
->nonrot"), swap allocation is cyclic. Current approach is done with two
->separate loop on the upper and lower half. This looks a little
->redundant.
->
->>From another point of view, the loop iterates [lowest_bit, highest_bit]
->range starting with (offset + 1) but except scan_base. So we can
->simplify the loop with condition (next_offset() != scan_base) by
->introducing next_offset() which makes sure offset fit in that range
->with correct order.
->
->Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->CC: Hugh Dickins <hughd@google.com>
->---
-> mm/swapfile.c | 26 +++++++++-----------------
-> 1 file changed, 9 insertions(+), 17 deletions(-)
->
->diff --git a/mm/swapfile.c b/mm/swapfile.c
->index 95024f9b691a..42c5c2010bfc 100644
->--- a/mm/swapfile.c
->+++ b/mm/swapfile.c
->@@ -729,6 +729,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
-> 	}
-> }
-> 
->+static unsigned long next_offset(struct swap_info_struct *si,
->+				 unsigned long *offset)
->+{
->+	if (++(*offset) > si->highest_bit)
->+		*offset = si->lowest_bit;
+Several drivers have own definitions for this constant, so move it
+to the PCI core. In addition in multiple places the following code
+sequence is used:
+1. Read PCI_STATUS
+2. Mask out non-error bits
+3. Action based on set error bits
+4. Write back set error bits to clear them
 
-Hmm... I found one potential problem here. If someone has eaten the lower
-part, (si->lowest_bit > scan_base), we would fall into infinite loop.
+As this is a repeated pattern, add a helper to the PCI core.
 
-Will wait for some comment before sending v2.
+Most affected drivers are network drivers. But as it's about core
+PCI functionality, I suppose the series should go through the PCI
+tree.
 
->+	return *offset;
->+}
->+
-> static int scan_swap_map_slots(struct swap_info_struct *si,
-> 			       unsigned char usage, int nr,
-> 			       swp_entry_t slots[])
->@@ -883,7 +891,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
-> 
-> scan:
-> 	spin_unlock(&si->lock);
->-	while (++offset <= si->highest_bit) {
->+	while (next_offset(si, &offset) != scan_base) {
-> 		if (!si->swap_map[offset]) {
-> 			spin_lock(&si->lock);
-> 			goto checks;
->@@ -897,22 +905,6 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
-> 			latency_ration = LATENCY_LIMIT;
-> 		}
-> 	}
->-	offset = si->lowest_bit;
->-	while (offset < scan_base) {
->-		if (!si->swap_map[offset]) {
->-			spin_lock(&si->lock);
->-			goto checks;
->-		}
->-		if (vm_swap_full() && si->swap_map[offset] == SWAP_HAS_CACHE) {
->-			spin_lock(&si->lock);
->-			goto checks;
->-		}
->-		if (unlikely(--latency_ration < 0)) {
->-			cond_resched();
->-			latency_ration = LATENCY_LIMIT;
->-		}
->-		offset++;
->-	}
-> 	spin_lock(&si->lock);
-> 
-> no_page:
->-- 
->2.23.0
+v2:
+- fix formal issue with cover letter
+v3:
+- fix dumb typo in patch 7
+v4:
+- add patches 1-3
+- move new constant PCI_STATUS_ERROR_BITS to include/linux/pci.h
+- small improvements in commit messages
+
+Heiner Kallweit (10):
+  net: marvell: add PCI_STATUS_SIG_TARGET_ABORT to PCI status error bits
+  net: skfp: add PCI_STATUS_REC_TARGET_ABORT to PCI status error bits
+  r8169: add PCI_STATUS_PARITY to PCI status error bits
+  PCI: Add constant PCI_STATUS_ERROR_BITS
+  PCI: Add pci_status_get_and_clear_errors
+  r8169: use pci_status_get_and_clear_errors
+  net: sun: use pci_status_get_and_clear_errors
+  net: skfp: use new constant PCI_STATUS_ERROR_BITS
+  PCI: pci-bridge-emul: Use new constant PCI_STATUS_ERROR_BITS
+  sound: bt87x: use pci_status_get_and_clear_errors
+
+ drivers/net/ethernet/marvell/skge.h       |  6 -----
+ drivers/net/ethernet/marvell/sky2.h       |  6 -----
+ drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
+ drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
+ drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
+ drivers/net/fddi/skfp/drvfbi.c            |  4 +--
+ drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
+ drivers/pci/pci-bridge-emul.c             | 14 ++---------
+ drivers/pci/pci.c                         | 23 +++++++++++++++++
+ include/linux/pci.h                       |  8 ++++++
+ sound/pci/bt87x.c                         |  7 +-----
+ 11 files changed, 61 insertions(+), 85 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.25.1
+
