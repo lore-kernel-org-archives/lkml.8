@@ -2,121 +2,144 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ECC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87EFA214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6042468A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ABuxQ+uf";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VdDY/5xK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgB2Sko (ORCPT
+        id S1727459AbgB2SoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 13:40:44 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53000 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727194AbgB2Skn (ORCPT
+        Sat, 29 Feb 2020 13:44:12 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56516 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727194AbgB2SoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 13:40:43 -0500
-Received: from callcc.thunk.org (75-104-88-164.mobility.exede.net [75.104.88.164] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01TIeOgp027765
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 29 Feb 2020 13:40:31 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 7F1D242045B; Sat, 29 Feb 2020 13:40:23 -0500 (EST)
-Date:   Sat, 29 Feb 2020 13:40:23 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Qian Cai <cai@lca.pw>, jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/jbd2: fix data races at struct journal_head
-Message-ID: <20200229184023.GE7378@mit.edu>
-References: <20200222043111.2227-1-cai@lca.pw>
- <20200224091051.GC27857@quack2.suse.cz>
-MIME-Version: 1.0
+        Sat, 29 Feb 2020 13:44:12 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01TIVHSZ028405;
+        Sat, 29 Feb 2020 10:43:09 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
+ b=ABuxQ+ufv/wrth11Ybfr9N459riaiArs7qbRmlBZmo2Y9jyUDSo+AJmyORpPxhS5YtbF
+ oIQS+u1F/12RCXKBybvPpc2rCKxj2YrRhQsFFPJJjGSJf5tGrg2MwIFTtyJdRr8RdeSj
+ yDvnOk7ldBC5UO7gvZVBrWoX6CeQYlqabDE= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yfphj152q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 29 Feb 2020 10:43:09 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 29 Feb 2020 10:43:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ALMnziPoNZW3Ks3MteEpf35A/SLNz3TYFCd961C9eWoqNtDIAcew+q+F9jFahGKbdpXOvQI/MHrljeaZY+tBNcbYeB+TGAIBeq8JJ+NbwcEx8iXAMJIwMjGmhM92YZBqtbsz0zh5QXxioLAYjuJXi/5CDxTih2aOgkjRC6Bwmq+4GTW1KEXQX4P+6PNJNfhf5OOgomYY1FmzlLV976BtOBWTykBy+cEq0brAi+YJLpfZxbqpD3bxMVRX4vSn8wjDeTXE1CPncu06SPl9ytAeaamnu+4sSl2QTT0roJGWt3civGsbqLPTSQcUF6GW+QOudnMHN+6O1po1ds8qFZAxYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
+ b=eR6y/pbPyrMMY448Y7V0pkwOWQIQqn22zTlLN0Mwf1acZuY7jxcxqQ9B7VTB29SXAxNX+dwW1x/eik4TSMsvwkAU3zPGulUyn5soOqbFnAGxZVfRdg2ZbSNAUISGX3FJgHGGPHFIdHjsjT0uoEDS6Fgwa3KGhXbG+PCZUw/ozPrQAp1G7ILToVa6EEiqB3PzCx0AHR/cGedXwKIXNChn6Z0sI7KfDT795G36r8d/hQqKr0MdyWUtmzACc/0lREeFrXM01Fl2aNEnHZTe6xTLaUh2CU0j5n+MSWaqcbiC8dozRJJzjKmU86tWjBAeuWok58ovdTFH463x9553Jngo5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J+jPrk2kzt4C/MV7AgapNv9fM22p36mZR7nGr6Zb0rw=;
+ b=VdDY/5xKVbkOKEC1zoDii2KijFNCoAcYl9qqW4D9c+PSiiTcpjcfwEOr5Hsjz+u+JKqfEdTn5ldFKSLoDuj2pJRPXQPr7eK18g/s7zfzWxtzoYHmJ1OeWErcZCJWhl/Od5pZaJwWE1uHhflMxo/BQDSOHCChqZ3nugfiTd/4eoM=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:150::19)
+ by BYAPR15MB3509.namprd15.prod.outlook.com (2603:10b6:a03:108::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Sat, 29 Feb
+ 2020 18:43:05 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2772.018; Sat, 29 Feb 2020
+ 18:43:05 +0000
+Date:   Sat, 29 Feb 2020 10:43:00 -0800
+From:   Roman Gushchin <guro@fb.com>
+To:     Marco Ballesio <balejs@google.com>
+CC:     <tj@kernel.org>, <cgroups@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizefan@huawei.com>,
+        <hannes@cmpxchg.org>, <corbet@lwn.net>, <rjw@rjwysocki.net>,
+        <pavel@ucw.cz>, <len.brown@intel.com>, <linux-doc@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <minchan@google.com>,
+        <surenb@google.com>, <dancol@google.com>
+Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
+Message-ID: <20200229184300.GA484762@carbon.DHCP.thefacebook.com>
+References: <20200219183231.50985-1-balejs@google.com>
+ <20200229005131.GB9813@google.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224091051.GC27857@quack2.suse.cz>
+In-Reply-To: <20200229005131.GB9813@google.com>
+X-ClientProxiedBy: MW2PR16CA0041.namprd16.prod.outlook.com
+ (2603:10b6:907:1::18) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:150::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:2b89) by MW2PR16CA0041.namprd16.prod.outlook.com (2603:10b6:907:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Sat, 29 Feb 2020 18:43:03 +0000
+X-Originating-IP: [2620:10d:c090:400::5:2b89]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4287a62a-0737-4e79-7ee2-08d7bd473666
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3509:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB35097F1A0D43C50E1E986DDFBEE90@BYAPR15MB3509.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03283976A6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(366004)(39860400002)(376002)(346002)(136003)(199004)(189003)(316002)(4326008)(8676002)(7416002)(478600001)(186003)(16526019)(81156014)(81166006)(2906002)(9686003)(33656002)(55016002)(6916009)(8936002)(1076003)(66946007)(86362001)(5660300002)(4744005)(6506007)(66476007)(52116002)(66556008)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3509;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EUOS7l0wXNG1Z9uA06INk7DTBziP5Pv3o2OJ0WyBlRGRLK8/oWcDn6rnduD7GjsZ2ZYDEBZzwpcELGMjd8IAltUA/KOJaG/zo+JnNfIaU1rNrNNGuV9tpPELegv/OBk38PUeTAnpBNnBDCrFybok9+XtmuDZvCEiNcvf2WWzgiHBkGqkY2kprRMiAG53oZo4UyOMhU9vEXepF40UhL/cUZtbjr4q6EqqljOvb11plxMXQOYzrFX5uVwn7VravB8jk+xdrTvkEsdAuxu4yxoWN4dPKlpGrXqWwWpneaquZLwwlkrMTl42zDtTq+OoJjUnlLoEwo/YteRyfbjjEnFI3u6itO3fMJbYUxTkj9op7+dS5lKLYLa5UHgnt7wHQjMod7GY5jzFdL+MuScaeuRlhNu6cZg1XmkDiiheoY/F+evmQpz48l51EvKflt7joCIm
+X-MS-Exchange-AntiSpam-MessageData: /M1hrd69eo5H+5QsAmZSx2/E8RN1zu3eN+gZqrWH13z4fbIBHf8c7fgy7FFKl5AHztXOBFyHOt3qOXPo0FR5Jri34IEgaI81GX2LcWVFAQwyPaBIOJC9YtUMZLcPTNoGYdZbdHxO7yJlPJHIhp41840/SyoJ0egc2C3tBDWvHoRvlYqpNSkYfKhDytkWuknP
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4287a62a-0737-4e79-7ee2-08d7bd473666
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2020 18:43:05.3046
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ze0IWvUkv1YL/z6NrjOyKm45ZdtljHg7FG+bzfWLMQdn0yZgpop5ZuQN5Xhz+5pH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3509
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-29_06:2020-02-28,2020-02-29 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=1 mlxscore=0 malwarescore=0 adultscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002290143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:10:51AM +0100, Jan Kara wrote:
-> On Fri 21-02-20 23:31:11, Qian Cai wrote:
-> > journal_head::b_transaction and journal_head::b_next_transaction could
-> > be accessed concurrently as noticed by KCSAN,
-> > 
-> >  LTP: starting fsync04
-> >  /dev/zero: Can't open blockdev
-> >  EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
-> >  EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
-> >  ==================================================================
-> >  BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
-> > 
-> >  write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
-> >   __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
-> >   __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
-> >   jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
-> >   (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
-> >   kjournald2+0x13b/0x450 [jbd2]
-> >   kthread+0x1cd/0x1f0
-> >   ret_from_fork+0x27/0x50
-> > 
-> >  read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
-> >   jbd2_write_access_granted+0x1b2/0x250 [jbd2]
-> >   jbd2_write_access_granted at fs/jbd2/transaction.c:1155
-> >   jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
-> >   __ext4_journal_get_write_access+0x50/0x90 [ext4]
-> >   ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
-> >   ext4_mb_new_blocks+0x54f/0xca0 [ext4]
-> >   ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
-> >   ext4_map_blocks+0x3b4/0x950 [ext4]
-> >   _ext4_get_block+0xfc/0x270 [ext4]
-> >   ext4_get_block+0x3b/0x50 [ext4]
-> >   __block_write_begin_int+0x22e/0xae0
-> >   __block_write_begin+0x39/0x50
-> >   ext4_write_begin+0x388/0xb50 [ext4]
-> >   generic_perform_write+0x15d/0x290
-> >   ext4_buffered_write_iter+0x11f/0x210 [ext4]
-> >   ext4_file_write_iter+0xce/0x9e0 [ext4]
-> >   new_sync_write+0x29c/0x3b0
-> >   __vfs_write+0x92/0xa0
-> >   vfs_write+0x103/0x260
-> >   ksys_write+0x9d/0x130
-> >   __x64_sys_write+0x4c/0x60
-> >   do_syscall_64+0x91/0xb05
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > 
-> >  5 locks held by fsync04/25724:
-> >   #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
-> >   #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
-> >   #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-> >   #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
-> >   #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
-> >  irq event stamp: 1407125
-> >  hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
-> >  hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
-> >  softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
-> >  softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-> > 
-> >  Reported by Kernel Concurrency Sanitizer on:
-> >  CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
-> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> > 
-> > The plain reads are outside of jh->b_state_lock critical section which result
-> > in data races. Fix them by adding pairs of READ|WRITE_ONCE().
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
+On Fri, Feb 28, 2020 at 04:51:31PM -0800, Marco Ballesio wrote:
+> Hi all,
 > 
-> Yeah, makes sense. You can add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
+> did anyone have time to look into my proposal and, in case, are there
+> any suggestions, ideas or comments about it?
 
-Thanks, applied.
+Hello, Marco!
 
-				- Ted
+I'm sorry, somehow I missed the original letter.
+
+In general the cgroup v1 interface is considered frozen. Are there any particular
+reasons why you want to extend the v1 freezer rather than use the v2 version of it?
+
+You don't even need to fully convert to cgroup v2 in order to do it, some v1
+controllers can still be used.
+
+Thanks!
+
+Roman
