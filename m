@@ -2,116 +2,81 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5FFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDCBC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF9E246B4
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knGE8OUZ"
+	by mail.kernel.org (Postfix) with ESMTP id 81A642468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583007429;
+	bh=bI6Kadk+Bdf2+EtRrnxOqRex3gc9Gu+/T3sPTnMdPZk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FLlYwwT50aYm6x1qDxOWmQRpVIl5VK3rYqgsySAs2cOdGMF1wfny6cIAjV0T0403d
+	 fwZ4fT+U5OQq8tYNsiZQ/UpJ+IkufHLzzH/Xvkjmt9mrAIbsg4nDlNMQeH/CChJnBQ
+	 vOyhznJMvWq/NLhyMeqH8q2SnQrM6KPdqgNr311A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbgB2UPt (ORCPT
+        id S1727490AbgB2URI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:15:49 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36740 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbgB2UPs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:15:48 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j17so7992897edp.3;
-        Sat, 29 Feb 2020 12:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=83XtZRDQEhO36ly5ioPaY5jSK1t+1NHljrwvavBmBqk=;
-        b=knGE8OUZrqbIrAlsvseI4k0JeRr28D7mmyGHwcyFZzDltOtCXXFxTfAweyG9NsW65X
-         8pZ6hC1+B13MUGVuP4L5lAfFb/TK1ZONQdWyY0l9xeVKCUbPwPshJET2ajfXhEtng3C3
-         gE0SH98RQJZVnfEe0Ev7YCr3ctlf5PMQOuetBixYP51XAlhC0oSVVZyd+IpnlsjtP0d1
-         bJLnIzCRhx2VSbdgVIMjkE2EgpiaAEM0D0tgc72pjQ5e3Bw2nW3mcKwqTCxaJHwjgdq9
-         k570l1V5Tu3L/fCKau/yJPc+Skld3ukzrLQxE53vt74mexx/oF3E/WJlzEhdA1WEkOUx
-         tAWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=83XtZRDQEhO36ly5ioPaY5jSK1t+1NHljrwvavBmBqk=;
-        b=o3LWsJZ0PkioYoy3aNB8ay8xrR6jSDXhkvIs0oXcDDGywtmQoiDggPTHDg3LiXkob3
-         6NAIf4gw4AZbu7VNPAxsNx0+lNhRMsoVwDN1AW3E419G7BNZnpEdAKoV6mkKrGwARGTz
-         ADhWs6xn+Yabr/aPYcuPKRMNu4WbEIo7D2KhmN/xLxax5AYgskskWWXlw56b1aBhDqcS
-         yBsEyihU9EhIANSNLZmb932dVcpFXBoQVAoeqGdmi/6KFrF7sf/kaVO8P3bGs9SWc8kF
-         gP0rM64aCKR78sfRac8mwO7Jnxu3ns8hRidD9RowVm4F/lL8qe5qLMuDRUl3lmTWUTgM
-         O0Sg==
-X-Gm-Message-State: APjAAAU3+/rVEPnwDOZmCoIBYwPoQBy1w15FLboAg1/ZtWzC0+JP1ql9
-        QrQ3Y8IdauOA2Do7IXmaIoHD9dUJ
-X-Google-Smtp-Source: APXvYqz4yLC+5Ur+o/5CkW8wsb2ZlX9ZntbPvBZjbeSmbeHoBSDcRQpX/pk56dgeahMl290dTlFD9A==
-X-Received: by 2002:aa7:d1d8:: with SMTP id g24mr10282059edp.39.1583007346914;
-        Sat, 29 Feb 2020 12:15:46 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2db9:dd00:6db6:cde:1055:4fb5])
-        by smtp.gmail.com with ESMTPSA id d2sm531156edr.97.2020.02.29.12.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 12:15:46 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     linux-media@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust entry to refactoring smiapp.h
-Date:   Sat, 29 Feb 2020 21:15:31 +0100
-Message-Id: <20200229201531.6004-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 29 Feb 2020 15:17:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727314AbgB2URI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 15:17:08 -0500
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D81E24688;
+        Sat, 29 Feb 2020 20:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583007427;
+        bh=bI6Kadk+Bdf2+EtRrnxOqRex3gc9Gu+/T3sPTnMdPZk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1Rl4VzndwL25YEuRq2WetFDyJfsOmdZzmnB8WEUel2VzfoDNMmrzMkmYdWyIf07Zd
+         g2gMXhK2VyKrENRBGrXA06mYhbpT93SN/yiIjrVwaUFnTH0hF0olUMHLDfNqcmCyLY
+         usfwxBMA8MVY/vTOvsRLQWlmoOjDGHjn13d6HAEI=
+Date:   Sat, 29 Feb 2020 12:17:05 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Alex Elder <elder@linaro.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
+Message-ID: <20200229121705.5e29c886@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <be229ebb-53a5-e048-9c68-1b4c7cc2ab9d@linaro.org>
+References: <20200228165343.8272-1-elder@linaro.org>
+        <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
+        <be229ebb-53a5-e048-9c68-1b4c7cc2ab9d@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7cbeb2e1bf0c ("media: smiapp: Move definitions under driver
-directory") moved the definitions in include/media/i2c/smiapp.h into other
-files and removed include/media/i2c/smiapp.h.
+On Sat, 29 Feb 2020 07:10:45 -0600 Alex Elder wrote:
+> I should have actually checked my code before I sent this.  Yes
+> I am using the macro as I described, to see if something fits.
+> But I'm also using it this way:
+> 
+> 	foo = u32_get_bits(register, FOO_COUNT_FMASK);
+> 	if (foo == field_max(FOO_COUNT_MASK))
+> 		;	/* This has special meaning */
+> 
+> And another way:
+> 
+> 	size_limit = field_max(FOO_COUNT_MASK) * sizeof(struct foo);
+> 
+> So field_max() is really what I need here. 
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Makes sense, in that case:
 
-  warning: no file matches F: include/media/i2c/smiapp.h
-
-Remove MAINTAINER file entry to this removed file and while at it, update
-Sakari's email address in this section.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Sakari, please ack this patch.
-Mauro, please pick this patch on your branch for linux-next.
-applies cleanly on next-20200228
-
-Sakari, I did not find an entry in mailmap to map your iki.fi mail address
-to your latest mail address. There are also three further entries with
-your iki.fi mail address in MAINTAINERS, that you could change to your
-intel address.
-
- MAINTAINERS | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b04505e7c3..33c8932a6756 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15392,11 +15392,10 @@ S:	Odd Fixes
- F:	drivers/net/ethernet/smsc/smc91x.*
- 
- SMIA AND SMIA++ IMAGE SENSOR DRIVER
--M:	Sakari Ailus <sakari.ailus@iki.fi>
-+M:	Sakari Ailus <sakari.ailus@linux.intel.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	drivers/media/i2c/smiapp/
--F:	include/media/i2c/smiapp.h
- F:	drivers/media/i2c/smiapp-pll.c
- F:	drivers/media/i2c/smiapp-pll.h
- F:	include/uapi/linux/smiapp.h
--- 
-2.17.1
-
+Acked-by: Jakub Kicinski <kuba@kernel.org>
