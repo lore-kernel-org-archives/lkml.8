@@ -2,131 +2,630 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8823C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63625C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7312469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CAa8qCMD"
+	by mail.kernel.org (Postfix) with ESMTP id 243F42469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgB2Ohq (ORCPT
+        id S1727103AbgB2Omf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:37:46 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64607 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726308AbgB2Ohp (ORCPT
+        Sat, 29 Feb 2020 09:42:35 -0500
+Received: from mailoutvs53.siol.net ([185.57.226.244]:52179 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726308AbgB2Omf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:37:45 -0500
-X-UUID: 89f67a14a8264cb58726f652872fb23f-20200229
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xQp3WRgKEp5tZlL+HV4rSlO/znTkeJUSxq/TzrB4xVA=;
-        b=CAa8qCMDc3E2m//OdnZWoBS1Dr0/VgXjUghrflPtNw/6kAfYc/iMb7t0rJmvhBovX2/4ujKNzGqVCjhZDhLhjj5WKnBneve6DDbWI5K2jygoJwfH2xvMpFqpPPYKUUoz42cGqMLA2+ahns1Oci7KQYJs08ObiD9SFN93WOrMKXM=;
-X-UUID: 89f67a14a8264cb58726f652872fb23f-20200229
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2070284286; Sat, 29 Feb 2020 22:37:38 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 29 Feb 2020 22:36:38 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 29 Feb 2020 22:37:14 +0800
-Message-ID: <1582987056.13875.0.camel@mtkswgap22>
-Subject: Re: [PATCH v3 12/13] soc: mediatek: cmdq: add clear option in
- cmdq_pkt_wfe api
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
-Date:   Sat, 29 Feb 2020 22:37:36 +0800
-In-Reply-To: <1582900369.14824.2.camel@mtksdaap41>
-References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1582897461-15105-14-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1582900369.14824.2.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sat, 29 Feb 2020 09:42:35 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 005B252143B;
+        Sat, 29 Feb 2020 15:42:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kYSbecqOzKhu; Sat, 29 Feb 2020 15:42:28 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id B8B6E5235DA;
+        Sat, 29 Feb 2020 15:42:28 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id C571252143B;
+        Sat, 29 Feb 2020 15:42:27 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        boris.brezillon@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>
+Cc:     linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format negociation
+Date:   Sat, 29 Feb 2020 15:42:27 +0100
+Message-ID: <105533194.nniJfEyVGO@jernej-laptop>
+In-Reply-To: <b2941530-b97b-9fbd-66a6-2e2092babf4f@kwiboo.se>
+References: <20200206191834.6125-1-narmstrong@baylibre.com> <2970638.5fSG56mABF@jernej-laptop> <b2941530-b97b-9fbd-66a6-2e2092babf4f@kwiboo.se>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91IGNvbW1lbnQuDQoNCk9uIEZyaSwgMjAyMC0wMi0yOCBh
-dCAyMjozMiArMDgwMCwgQ0sgSHUgd3JvdGU6DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBGcmks
-IDIwMjAtMDItMjggYXQgMjE6NDQgKzA4MDAsIERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBB
-ZGQgY2xlYXIgcGFyYW1ldGVyIHRvIGxldCBjbGllbnQgZGVjaWRlIGlmDQo+ID4gZXZlbnQgc2hv
-dWxkIGJlIGNsZWFyIHRvIDAgYWZ0ZXIgR0NFIHJlY2VpdmUgaXQuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwg
-NSArKystLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwg
-MyArLS0NCj4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8IDUg
-KysrLS0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25z
-KC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRx
-LWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiBp
-bmRleCBiYmM2OGE3YzgxZTkuLjQwNmUxZDM0ZDIzNCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL21l
-ZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gQEAgLTI5NSwxNSArMjk1LDE2IEBAIGludCBj
-bWRxX3BrdF93cml0ZV9zX3ZhbHVlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRy
-X3JlZ19pZHgsDQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3Zh
-bHVlKTsNCj4gPiAgDQo+ID4gLWludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3Qs
-IHUxNiBldmVudCkNCj4gPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
-dTE2IGV2ZW50LCBib29sIGNsZWFyKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgY21kcV9pbnN0cnVj
-dGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiArCXUzMiBjbGVhcl9vcHRpb24gPSBjbGVhciA/IENN
-RFFfV0ZFX1VQREFURSA6IDA7DQo+ID4gIA0KPiA+ICAJaWYgKGV2ZW50ID49IENNRFFfTUFYX0VW
-RU5UKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICANCj4gPiAgCWluc3Qub3AgPSBDTURR
-X0NPREVfV0ZFOw0KPiA+IC0JaW5zdC52YWx1ZSA9IENNRFFfV0ZFX09QVElPTjsNCj4gPiArCWlu
-c3QudmFsdWUgPSBDTURRX1dGRV9PUFRJT04gfCBjbGVhcl9vcHRpb247DQo+ID4gIAlpbnN0LmV2
-ZW50ID0gZXZlbnQ7DQo+ID4gIA0KPiA+ICAJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5k
-KHBrdCwgaW5zdCk7DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGst
-Y21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
-DQo+ID4gaW5kZXggM2Y2YmMwZGZkNWRhLi40MmQyYTMwZTZhNzAgMTAwNjQ0DQo+ID4gLS0tIGEv
-aW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+ICsrKyBiL2luY2x1
-ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiBAQCAtMjcsOCArMjcsNyBA
-QA0KPiA+ICAgKiBiaXQgMTYtMjc6IHVwZGF0ZSB2YWx1ZQ0KPiA+ICAgKiBiaXQgMzE6IDEgLSB1
-cGRhdGUsIDAgLSBubyB1cGRhdGUNCj4gPiAgICovDQo+ID4gLSNkZWZpbmUgQ01EUV9XRkVfT1BU
-SU9OCQkJKENNRFFfV0ZFX1VQREFURSB8IENNRFFfV0ZFX1dBSVQgfCBcDQo+ID4gLQkJCQkJQ01E
-UV9XRkVfV0FJVF9WQUxVRSkNCj4gPiArI2RlZmluZSBDTURRX1dGRV9PUFRJT04JCQkoQ01EUV9X
-RkVfV0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUUpDQo+ID4gIA0KPiA+ICAvKiogY21kcSBldmVu
-dCBtYXhpbXVtICovDQo+ID4gICNkZWZpbmUgQ01EUV9NQVhfRVZFTlQJCQkweDNmZg0KPiA+IGRp
-ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5jbHVk
-ZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+IGluZGV4IDFhNmM1NmYzYmVjMS4u
-ZDYzNzQ5NDQwNjk3IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
-L210ay1jbWRxLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21k
-cS5oDQo+ID4gQEAgLTE1MiwxMSArMTUyLDEyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zX3ZhbHVl
-KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ID4gIC8qKg0K
-PiA+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBldmVudCBjb21tYW5kIHRv
-IHRoZSBDTURRIHBhY2tldA0KPiA+ICAgKiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCj4gPiAtICog
-QGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvICJ3YWl0IGFuZCBDTEVBUiINCj4gPiAr
-ICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBlIHRvIHdhaXQNCj4gPiArICogQGNsZWFy
-OgljbGVhciBldmVudCBvciBub3QgYWZ0ZXIgZXZlbnQgYXJyaXZlDQo+ID4gICAqDQo+ID4gICAq
-IFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0K
-PiA+ICAgKi8NCj4gPiAtaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2
-IGV2ZW50KTsNCj4gPiAraW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2
-IGV2ZW50LCBib29sIGNsZWFyKTsNCj4gDQo+IEkgdGhpbmsgeW91IHNob3VsZCBtb2RpZnkgY2xp
-ZW50IGRyaXZlciBbMV0gYXMgd2VsbCBpbiB0aGlzIHBhdGNoLg0KPiBDaGFuZ2UgaXQgdG8NCj4g
-DQo+IGNtZHFfcGt0X3dmZShjbWRxX2hhbmRsZSwgbXRrX2NydGMtPmNtZHFfZXZlbnQsIGZhbHNl
-KTsNCj4gDQo+IFsxXQ0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
-bmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9jcnRjLmM/aD12NS42LXJjMyNuNDkxDQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KDQpv
-aywgd2lsbCBkbw0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KDQo+IA0KPiA+ICANCj4gPiAgLyoq
-DQo+ID4gICAqIGNtZHFfcGt0X2NsZWFyX2V2ZW50KCkgLSBhcHBlbmQgY2xlYXIgZXZlbnQgY29t
-bWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gDQo+IA0KDQo=
+Dne sobota, 29. februar 2020 ob 13:15:26 CET je Jonas Karlman napisal(a):
+> On 2020-02-29 12:07, Jernej Škrabec wrote:
+> > Dne sobota, 29. februar 2020 ob 11:09:14 CET je Jonas Karlman napisal(a):
+> >> Hi Jernej,
+> >> 
+> >> On 2020-02-29 08:42, Jernej Škrabec wrote:
+> >>> Hi Neil!
+> >>> 
+> >>> Dne četrtek, 06. februar 2020 ob 20:18:27 CET je Neil Armstrong
+> > 
+> > napisal(a):
+> >>>> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to
+> >>>> negociate
+> >>>> the possible output and input formats for the current mode and monitor,
+> >>>> and use the negotiated formats in a basic atomic_check callback.
+> >>>> 
+> >>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >>>> ---
+> >>>> 
+> >>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
+> >>>>  1 file changed, 268 insertions(+), 4 deletions(-)
+> >>>> 
+> >>>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >>>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> >>>> fec4a4bcd1fe..15048ad694bc 100644
+> >>>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> >>>> @@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> >>>> struct drm_display_mode *mode)
+> >>>> hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
+> >>>> 
+> >>>>  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
+> >>>> 
+> >>>> -	/* TOFIX: Get input format from plat data or fallback to RGB888 */
+> >>>> 
+> >>>>  	if (hdmi->plat_data->input_bus_format)
+> >>>>  	
+> >>>>  		hdmi->hdmi_data.enc_in_bus_format =
+> >>>>  		
+> >>>>  			hdmi->plat_data->input_bus_format;
+> >>>> 
+> >>>> -	else
+> >>>> +	else if (hdmi->hdmi_data.enc_in_bus_format == MEDIA_BUS_FMT_FIXED)
+> >>>> 
+> >>>>  		hdmi->hdmi_data.enc_in_bus_format =
+> >>> 
+> >>> MEDIA_BUS_FMT_RGB888_1X24;
+> >>> 
+> >>>>  	/* TOFIX: Get input encoding from plat data or fallback to none */
+> >>>> 
+> >>>> @@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> >>>> struct
+> >>>> drm_display_mode *mode) else
+> >>>> 
+> >>>>  		hdmi->hdmi_data.enc_in_encoding =
+> >>> 
+> >>> V4L2_YCBCR_ENC_DEFAULT;
+> >>> 
+> >>>> -	/* TOFIX: Default to RGB888 output format */
+> >>>> -	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> >>>> +	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
+> >>>> +		hdmi->hdmi_data.enc_out_bus_format =
+> >>> 
+> >>> MEDIA_BUS_FMT_RGB888_1X24;
+> >>> 
+> >>>>  	hdmi->hdmi_data.pix_repet_factor = 0;
+> >>>>  	hdmi->hdmi_data.hdcp_enable = 0;
+> >>>> 
+> >>>> @@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs
+> >>>> dw_hdmi_connector_helper_funcs = .atomic_check =
+> >>>> dw_hdmi_connector_atomic_check,
+> >>>> 
+> >>>>  };
+> >>>> 
+> >>>> +/*
+> >>>> + * Possible output formats :
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48,
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
+> >>>> + * - MEDIA_BUS_FMT_YUV16_1X48,
+> >>>> + * - MEDIA_BUS_FMT_RGB161616_1X48,
+> >>>> + * - MEDIA_BUS_FMT_UYVY12_1X24,
+> >>>> + * - MEDIA_BUS_FMT_YUV12_1X36,
+> >>>> + * - MEDIA_BUS_FMT_RGB121212_1X36,
+> >>>> + * - MEDIA_BUS_FMT_UYVY10_1X20,
+> >>>> + * - MEDIA_BUS_FMT_YUV10_1X30,
+> >>>> + * - MEDIA_BUS_FMT_RGB101010_1X30,
+> >>>> + * - MEDIA_BUS_FMT_UYVY8_1X16,
+> >>>> + * - MEDIA_BUS_FMT_YUV8_1X24,
+> >>>> + * - MEDIA_BUS_FMT_RGB888_1X24,
+> >>>> + */
+> >>>> +
+> >>>> +/* Can return a maximum of 12 possible output formats for a
+> >>>> mode/connector
+> >>>> */ +#define MAX_OUTPUT_SEL_FORMATS	12
+> >>>> +
+> >>>> +static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct
+> >>>> drm_bridge
+> >>>> *bridge, +					struct
+> >>> 
+> >>> drm_bridge_state *bridge_state,
+> >>> 
+> >>>> +					struct drm_crtc_state
+> >>> 
+> >>> *crtc_state,
+> >>> 
+> >>>> +					struct
+> >>> 
+> >>> drm_connector_state *conn_state,
+> >>> 
+> >>>> +					unsigned int
+> >>> 
+> >>> *num_output_fmts)
+> >>> 
+> >>>> +{
+> >>>> +	struct drm_connector *conn = conn_state->connector;
+> >>>> +	struct drm_display_info *info = &conn->display_info;
+> >>>> +	struct drm_display_mode *mode = &crtc_state->mode;
+> >>>> +	u8 max_bpc = conn_state->max_requested_bpc;
+> >>>> +	bool is_hdmi2_sink = info->hdmi.scdc.supported ||
+> >>>> +			     (info->color_formats &
+> >>> 
+> >>> DRM_COLOR_FORMAT_YCRCB420);
+> >>> 
+> >>>> +	u32 *output_fmts;
+> >>>> +	int i = 0;
+> >>>> +
+> >>>> +	*num_output_fmts = 0;
+> >>>> +
+> >>>> +	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS,
+> > 
+> > sizeof(*output_fmts),
+> > 
+> >>>> +			      GFP_KERNEL);
+> >>>> +	if (!output_fmts)
+> >>>> +		return NULL;
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * If the current mode enforces 4:2:0, force the output but format
+> >>>> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+> >>>> +	 */
+> >>>> +	if (conn->ycbcr_420_allowed &&
+> >>>> +	    (drm_mode_is_420_only(info, mode) ||
+> >>>> +	     ())) {
+> >>>> +
+> >>>> +		/* Order bus formats from 16bit to 8bit if supported */
+> >>>> +		if (max_bpc >= 16 && info->bpc == 16 &&
+> >>>> +		    (info->hdmi.y420_dc_modes &
+> >>> 
+> >>> DRM_EDID_YCBCR420_DC_48))
+> >>> 
+> >>>> +			output_fmts[i++] =
+> >>> 
+> >>> MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+> >>> 
+> >>>> +
+> >>>> +		if (max_bpc >= 12 && info->bpc >= 12 &&
+> >>>> +		    (info->hdmi.y420_dc_modes &
+> >>> 
+> >>> DRM_EDID_YCBCR420_DC_36))
+> >>> 
+> >>>> +			output_fmts[i++] =
+> >>> 
+> >>> MEDIA_BUS_FMT_UYYVYY12_0_5X36;
+> >>> 
+> >>>> +
+> >>>> +		if (max_bpc >= 10 && info->bpc >= 10 &&
+> >>>> +		    (info->hdmi.y420_dc_modes &
+> >>> 
+> >>> DRM_EDID_YCBCR420_DC_30))
+> >>> 
+> >>>> +			output_fmts[i++] =
+> >>> 
+> >>> MEDIA_BUS_FMT_UYYVYY10_0_5X30;
+> >>> 
+> >>>> +
+> >>>> +		/* Default 8bit fallback */
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+> >>>> +
+> >>>> +		*num_output_fmts = i;
+> >>>> +
+> >>>> +		return output_fmts;
+> >>> 
+> >>> Driver shouldn't return just yet for case "is_hdmi2_sink &&
+> >>> drm_mode_is_420_also(info, mode)", because monitor/TV also supports
+> >>> YCbCr
+> >>> 4:4:4 in that case. IMO YCbCr 4:4:4 should be even prefered. What do you
+> >>> think?
+> >> 
+> >> I think we need to have some way for controller driver and userspace to
+> >> control what hdmi output format gets selected. I know for a fact that
+> >> some
+> >> Samsung TV have issues with 444 YCbCr modes at 4k 50/60hz but have no
+> >> problems with 420 modes. The Samsung TV edid lie and/or the TV is not
+> >> fully
+> >> following HDMI specs
+> > 
+> > Interesting, maybe just some bandwith issues? I guess we should have a
+> > blacklist for such cases. I know that at least Allwinner BSP driver for DW
+> > HDMI has a blacklist, in this case for 2 monitors which claim to support
+> > YCbCr 4:4:4 mode but they not.
+> > 
+> >> From a personal and mediaplayer userspace perspective I would like to
+> >> prefer 420/444 YCbCr mode as soon as any yuv drm plane is active and rgb
+> >> 444 anytime else.
+> > 
+> > I would argue that YCbCr is always prefered:
+> > - CEA 861 prefers it for all CEA modes
+> > - avoid dealing with quantization range - it's always limited range for <
+> > hdmi 2.0 and selectable on some hdmi 2.0 capable sinks
+> 
+> This is probably true if your sink is a TV, for monitors with HDMI
+> connections I would expect or at least like to have an option to use rgb444
+> full range mode for any desktop or gaming or similar use-case.
+
+Well, thing is that CEA 861 clearly states that for CEA modes (720p, 1080p, 
+2160p, etc.) limited range should be also used for RGB color space. With 
+implemented logic to detect if RGB limited range is needed or not and 
+indicating that in AVI frame, I finally get proper (better?) color reproduction 
+with PC monitor and TV at the same time. I'm not sure if there is any way to 
+detect "full range RGB" capable displays. However, we can always implement 
+connector property like Intel did in i915 driver "Broadcast RGB", which can 
+override RGB quantization mode.
+
+> 
+> > Anyway, there is no universal solution to avoid color space conversion in
+> > all cases. For example, due to design of Allwinner Display Engine 2, it
+> > can only work in RGB format internally, but it can convert final output
+> > to YCbCr right before it's feeded to DW HDMI. On the other hand, you have
+> > meson display pipeline which works in YCbCr format internally and relies
+> > on DW HDMI CSC unit to convert output to RGB. Fortunately, there are also
+> > display pipelines which can work in any colorspace internally, like
+> > Allwinner Display Engine 3. Not sure in which category Rockchip display
+> > pipeline falls into.
+> 
+> Agree, and for Rockchip to my knowledge RK3288 VOP (Video Output Processor)
+> can only output 8/10-bit rgb (full range) to DW-HDMI.
+> And the VOP in RK322x/RK3328/RK3399 can output 8/10-bit rgb and 444/420 yuv.
+> I do not know how the VOP handles internal color conversion.
+> 
+> >> On Rockchip SoCs the display controller cannot output yuv422 to dw-hdmi
+> >> block, the optimal output format selection in such case should put yuv422
+> >> last.
+> > 
+> > Note that DW HDMI has decimation support which converts 444 to 422. This
+> > is
+> > part of CSC unit.
+> 
+> This works as it should (after a patch to disable color conversion for 444
+> to 422), 
+
+Yeah, I noticed that too, I plan to send a patch for that soon.
+
+> the issue I see is that the format negotiation code will currently
+> favor 444 to 422 decimation over using 444 output.
+> Note: 422 will not be selected over 444 currently in case sink report deep
+> color support due to drm edid parsing code following HDMI 1.3 spec, see
+> [1].
+> 
+> [1]
+> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/drm_edid.c#L4
+> 801-L4806
+> > Side note: CSC unit is optional feature of DW-HDMI and presence is
+> > indicated by config register. However, it seems that CSC support is
+> > broken in DW HDMI controller on 40nm Allwinner SoCs. If it is enabled, TV
+> > loses signal. I have to investigate if only CSC is broken or decimation
+> > also don't work.> 
+
+Scratch above, DW HDMI CSC unit works ok on Allwinner SoCs, I just forgot to 
+enable CSC clock.
+
+> >> Maybe dw-hdmi can call a dw-hdmi glue driver callback to get the
+> >> preferred
+> >> output format order?
+> >> 
+> >> On a side note but related issue, the dw-hdmi format negotiation code
+> >> should probably also filter modes on tmds rate, something like [1].
+> >> It is needed to filter out deep color modes that is not supported by the
+> >> sink or hdmi spec.
+> > 
+> > Ah, you mean on TMDS rates supported by the sink. Could this avoid Samsung
+> > deep color issues? If so, we don't need blacklist then.
+> 
+> I do not think so, the initial issue was reported with intel graphics but
+> looking at the edid and comparing to the manual of supported modes they do
+> not fully match. See manual info at [2] and edid when UHD mode is off at
+> [3] and when on at [4].
+
+Which part doesn't match? I don't see any issue.
+
+Best regards,
+Jernej
+
+> 
+> [2]
+> https://gitlab.freedesktop.org/drm/intel/uploads/36630c8a727bf8c66a53fd7470
+> c88383/MU7000_manual_-_UHD_colour_modes.PNG [3] http://ix.io/1H25
+> [4] http://ix.io/1H2e
+> 
+> > Best regards,
+> > Jernej
+> > 
+> >> [1]
+> >> https://github.com/Kwiboo/linux-rockchip/commit/fc3df6903384e764ab6ac5987
+> >> 9c
+> >> 489cbef55fcbe
+> >> 
+> >> Best regards,
+> >> Jonas
+> >> 
+> >>> Best regards,
+> >>> Jernej
+> >>> 
+> >>>> +	}
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * Order bus formats from 16bit to 8bit and from YUV422 to RGB
+> >>>> +	 * if supported. In any case the default RGB888 format is added
+> >>>> +	 */
+> >>>> +
+> >>>> +	if (max_bpc >= 16 && info->bpc == 16) {
+> >>>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >>>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >>>> +
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >>>> +	}
+> >>>> +
+> >>>> +	if (max_bpc >= 12 && info->bpc >= 12) {
+> >>>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >>>> +			output_fmts[i++] =
+> > 
+> > MEDIA_BUS_FMT_UYVY12_1X24;
+> > 
+> >>>> +
+> >>>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >>>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >>>> +
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >>>> +	}
+> >>>> +
+> >>>> +	if (max_bpc >= 10 && info->bpc >= 10) {
+> >>>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >>>> +			output_fmts[i++] =
+> > 
+> > MEDIA_BUS_FMT_UYVY10_1X20;
+> > 
+> >>>> +
+> >>>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >>>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >>>> +
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >>>> +	}
+> >>>> +
+> >>>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >>>> +
+> >>>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+> >>>> +		output_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >>>> +
+> >>>> +	/* Default 8bit RGB fallback */
+> >>>> +	output_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >>>> +
+> >>>> +	*num_output_fmts = i;
+> >>>> +
+> >>>> +	return output_fmts;
+> >>>> +}
+> >>>> +
+> >>>> +/*
+> >>>> + * Possible input formats :
+> >>>> + * - MEDIA_BUS_FMT_RGB888_1X24
+> >>>> + * - MEDIA_BUS_FMT_YUV8_1X24
+> >>>> + * - MEDIA_BUS_FMT_UYVY8_1X16
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24
+> >>>> + * - MEDIA_BUS_FMT_RGB101010_1X30
+> >>>> + * - MEDIA_BUS_FMT_YUV10_1X30
+> >>>> + * - MEDIA_BUS_FMT_UYVY10_1X20
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30
+> >>>> + * - MEDIA_BUS_FMT_RGB121212_1X36
+> >>>> + * - MEDIA_BUS_FMT_YUV12_1X36
+> >>>> + * - MEDIA_BUS_FMT_UYVY12_1X24
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36
+> >>>> + * - MEDIA_BUS_FMT_RGB161616_1X48
+> >>>> + * - MEDIA_BUS_FMT_YUV16_1X48
+> >>>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48
+> >>>> + */
+> >>>> +
+> >>>> +/* Can return a maximum of 4 possible input formats for an output
+> >>>> format
+> >>>> */ +#define MAX_INPUT_SEL_FORMATS	4
+> >>>> +
+> >>>> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge
+> >>>> *bridge, +					struct
+> >>> 
+> >>> drm_bridge_state *bridge_state,
+> >>> 
+> >>>> +					struct drm_crtc_state
+> >>> 
+> >>> *crtc_state,
+> >>> 
+> >>>> +					struct
+> >>> 
+> >>> drm_connector_state *conn_state,
+> >>> 
+> >>>> +					u32 output_fmt,
+> >>>> +					unsigned int
+> >>> 
+> >>> *num_input_fmts)
+> >>> 
+> >>>> +{
+> >>>> +	u32 *input_fmts;
+> >>>> +	int i = 0;
+> >>>> +
+> >>>> +	*num_input_fmts = 0;
+> >>>> +
+> >>>> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+> >>>> +			     GFP_KERNEL);
+> >>>> +	if (!input_fmts)
+> >>>> +		return NULL;
+> >>>> +
+> >>>> +	switch (output_fmt) {
+> >>>> +	/* 8bit */
+> >>>> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> >>>> +		break;
+> >>>> +
+> >>>> +	/* 10bit */
+> >>>> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> >>>> +		break;
+> >>>> +
+> >>>> +	/* 12bit */
+> >>>> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_YUV12_1X36:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> >>>> +		break;
+> >>>> +
+> >>>> +	/* 16bit */
+> >>>> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >>>> +		break;
+> >>>> +	case MEDIA_BUS_FMT_YUV16_1X48:
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> >>>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> >>>> +		break;
+> >>>> +
+> >>>> +	/* 420 */
+> >>>> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> >>>> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> >>>> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+> >>>> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+> >>>> +		input_fmts[i++] = output_fmt;
+> >>>> +		break;
+> >>>> +	}
+> >>>> +
+> >>>> +	*num_input_fmts = i;
+> >>>> +
+> >>>> +	if (*num_input_fmts == 0) {
+> >>>> +		kfree(input_fmts);
+> >>>> +		input_fmts = NULL;
+> >>>> +	}
+> >>>> +
+> >>>> +	return input_fmts;
+> >>>> +}
+> >>>> +
+> >>>> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+> >>>> +				       struct drm_bridge_state
+> >>> 
+> >>> *bridge_state,
+> >>> 
+> >>>> +				       struct drm_crtc_state
+> >>> 
+> >>> *crtc_state,
+> >>> 
+> >>>> +				       struct drm_connector_state
+> >>> 
+> >>> *conn_state)
+> >>> 
+> >>>> +{
+> >>>> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> >>>> +
+> >>>> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+> >>>> +			bridge_state->output_bus_cfg.format);
+> >>>> +
+> >>>> +	hdmi->hdmi_data.enc_out_bus_format =
+> >>>> +			bridge_state->output_bus_cfg.format;
+> >>>> +
+> >>>> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+> >>>> +			bridge_state->input_bus_cfg.format);
+> >>>> +
+> >>>> +	hdmi->hdmi_data.enc_in_bus_format =
+> >>>> +			bridge_state->input_bus_cfg.format;
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> 
+> >>>>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+> >>>>  {
+> >>>>  
+> >>>>  	struct dw_hdmi *hdmi = bridge->driver_private;
+> >>>> 
+> >>>> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs
+> >>>> dw_hdmi_bridge_funcs = { .atomic_reset =
+> >>>> drm_atomic_helper_bridge_reset,
+> >>>> 
+> >>>>  	.attach = dw_hdmi_bridge_attach,
+> >>>>  	.detach = dw_hdmi_bridge_detach,
+> >>>> 
+> >>>> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+> >>>> +	.atomic_get_output_bus_fmts =
+> >>> 
+> >>> dw_hdmi_bridge_atomic_get_output_bus_fmts,
+> >>> 
+> >>>> +	.atomic_get_input_bus_fmts =
+> >>> 
+> >>> dw_hdmi_bridge_atomic_get_input_bus_fmts,
+> >>> 
+> >>>>  	.enable = dw_hdmi_bridge_enable,
+> >>>>  	.disable = dw_hdmi_bridge_disable,
+> >>>>  	.mode_set = dw_hdmi_bridge_mode_set,
+> >>>> 
+> >>>> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >>>> 
+> >>>>  	hdmi->bridge.driver_private = hdmi;
+> >>>>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+> >>>> 
+> >>>> +
+> >>>> 
+> >>>>  #ifdef CONFIG_OF
+> >>>>  
+> >>>>  	hdmi->bridge.of_node = pdev->dev.of_node;
+> >>>>  
+> >>>>  #endif
+
+
+
 
