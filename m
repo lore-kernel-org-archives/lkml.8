@@ -2,195 +2,461 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7548AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12852C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF8221556
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97512468E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 10:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HFS58xlp"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="SZALlPK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgB2KGI (ORCPT
+        id S1726857AbgB2KOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 05:06:08 -0500
-Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:22245
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726671AbgB2KGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 05:06:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=In2FjCUDxC0fwNsVipQOHQ3Y5MTw1ba+aueAzZk3o0NJkSFF8biBpCtSUZLddkPeRNxRRZOAA2QtwvFHABfFDFgq6zEhW9xIkZejs19xuGm5Cs0tZMVtztUZCeqqIgnUEZMERO/xBpFivzliL5wVMGf16nbPuBFPaakx1r6GhrvaMwczrHV4WiriS4aLKMdQOu4kZm4WeEvTs4/OCY3J7BJdB+nIv4vPWAxszwA6Y4Ph+bDlhlLoVyfHVYaxA7vLWHPXMvmivJNg42eSZ1guPt9oE+j0GhMwlMS2Y1MCwoTIshpzAJZNvjjtuA/7OqassZRD0RQbehPxqlSj/e9KcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Sjj24lln6SpAnJtssR0IKE4VaigrM/pQ/xe3Ef8W2Q=;
- b=Bh14TKrySwyhM90a+bNAOsJXpS8F+lrGuK1qggKKaAiIN6TLIVlhpHsKUC10LkXp545OgVVVHlwP+yGLYYOeZsDSZ8EO7J+emHPSBhDtLfQDpQXcRuzGgsA257FfLCdIn9MCAhRktSUsT1fiqOZ4mRV2frQoHzAZPrMjotLbL11xGZtUJvggtj/qI9vQ1q5YNnMZXEIWP3wwyI6o7wIWxOY7i9Naqzg1HzkVZ61N3xDBmFWhIaGtsWWNxsveLBxO4z4ztAVhSf6xr5NgUI3xIWxMl/y9oyACWRz5TDGKFPWep85FeGqfB1l3GrGWuPUgzEUMMsW+Lr+8mp/UJtVJUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Sjj24lln6SpAnJtssR0IKE4VaigrM/pQ/xe3Ef8W2Q=;
- b=HFS58xlp3IZS8SOJLrne0qaIG/VfVcsT7HY5jqJXRJNdBVkZW8drqVUB9vfjIHA5pJOE1g8gBpDgmHmN56gbqVZof6k7pSmWd+yTLqA0GwtTLM8ojgtEp4zFlQbmukf2XpgempqGgT56I2cXUseM8ROiQmj2pjaVwLbRxFH3pbg=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6527.eurprd04.prod.outlook.com (20.179.233.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Sat, 29 Feb 2020 10:05:59 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2772.018; Sat, 29 Feb 2020
- 10:05:58 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     =?utf-8?B?QW5kcsOpIERyYXN6aWs=?= <git@andred.net>
-CC:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-Thread-Topic: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-Thread-Index: AQHV6/ZVtFBmLLNhAkqJunTqxVUTUqgsqtgAgAEQHYCAArI9kA==
-Date:   Sat, 29 Feb 2020 10:05:58 +0000
-Message-ID: <VE1PR04MB66385D4CA35122C3D043B86789E90@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20200225161201.1975-1-git@andred.net>
-         <20200225161201.1975-6-git@andred.net>
-         <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <f3c4f7791c86235683541a3d51ed02631b784bf6.camel@andred.net>
-In-Reply-To: <f3c4f7791c86235683541a3d51ed02631b784bf6.camel@andred.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [183.192.236.243]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4831792f-b984-41a4-84bf-08d7bcfef96e
-x-ms-traffictypediagnostic: VE1PR04MB6527:|VE1PR04MB6527:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB652729D60017A2D58032E7CF89E90@VE1PR04MB6527.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03283976A6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(189003)(199004)(316002)(6506007)(71200400001)(2906002)(9686003)(26005)(86362001)(55016002)(186003)(478600001)(52536014)(7696005)(76116006)(6916009)(5660300002)(7416002)(33656002)(66556008)(8676002)(54906003)(66476007)(81156014)(66946007)(4326008)(81166006)(66446008)(8936002)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6527;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9sfSsEBG/bzzpwgo/JGjd+7JITQXdlVoZL1NfxR5QeWP/jn4oVYu1yo+KnVdxfULE73OB+EHcXkp3kSASklYwwdPHxsUHcprFUHoopILkWzIZpAiWy/eaWy905zcpEblScxyY1L1HOO3/1F+Evm087ePI1nN4bXAc6n7pEhi+5VD2N9oFnc9dHMYsvW+idpl4XtjuiyOa0xW4p09OrtFGSKF1WS17wwZb3ahYFSN6gp8tbWvZz23a3Z5kk5lJRFfkYQuhZzWPd3JmetsvFcGxRXwRGC5vwyNS/cuOQ+Prbcf5VnRqhsUW8ovr+42y4RGeu8+iA+925ltZ492MRKDExC9jDG1OacYi0b8s3GuSyB5wihIsgR1dfANkFB0VxE7+S4afBrkDuFM684WFgiwCBDVWLUrD99VrHoWgIWFbI5kOTqut3G4yvKS2MfUJsFt
-x-ms-exchange-antispam-messagedata: SM00gFr8L5yjmv24jCH51iRxEb5pm36kfB3oCJSgYTCnIc8v5vxcf16z9zUWXBnJIbTTkBVmz3jh2rabXUGUTTimHhKUoCvg9Ix+RODzbGzHfqGznfAeEYg3IGhe8v8TiJa7uq/D64Q8w8YEfbWflQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 29 Feb 2020 05:14:20 -0500
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:2740 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgB2KOT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 05:14:19 -0500
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Sat, 29 Feb 2020 05:14:18 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=I5KakeKa3fDbyDI6+KHFFZdQT3lXSpUAyAoIa7r04Qo=;
+        b=SZALlPK6sMrRuDNBrCZu99vbu5X1xHPk0dhzc6MuFIu2gSkgwZq1l9QvRpbdxcInkRJ9
+        nEnxfuvaHZg0vZP3h9v9edWGYAx8qCqI66o0BQGU0Qr6eEvMedpW5+B2bkzDs3roNHGHs4
+        zTlDmiPYMY7b0tuNKXAljnjvYdaXF4WEE=
+Received: by filterdrecv-p3las1-9564bb6d7-rdd6m with SMTP id filterdrecv-p3las1-9564bb6d7-rdd6m-18-5E5A3849-2C
+        2020-02-29 10:09:13.973227294 +0000 UTC m=+1956412.834445182
+Received: from [192.168.1.14] (unknown [98.128.173.80])
+        by ismtpd0002p1lon1.sendgrid.net (SG) with ESMTP id suFZazrLTxKfiCcjv-TsvA
+        Sat, 29 Feb 2020 10:09:13.496 +0000 (UTC)
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format
+ negociation
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-5-narmstrong@baylibre.com>
+ <5330543.DvuYhMxLoT@jernej-laptop>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <64b6ef10-b2e2-02f3-56dd-14dd0782a7aa@kwiboo.se>
+Date:   Sat, 29 Feb 2020 10:09:14 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4831792f-b984-41a4-84bf-08d7bcfef96e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2020 10:05:58.6510
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fPNbShsl/s6SA8ys5+80HRj3g0Cx8UycSWw3xQovbU6UWZoDz8DLNIrN/E21qk29YlZxinMegtcOQpIKagyS4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6527
+In-Reply-To: <5330543.DvuYhMxLoT@jernej-laptop>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hy98vFa07aQayK3Gq?=
+ =?us-ascii?Q?C7cRqQVentfxwaF6auGQt66uxwzAU8K7+sEoVev?=
+ =?us-ascii?Q?1w5oqoPhhXC34LL+Z37etj9Pc9AEG4UPJTGNLmh?=
+ =?us-ascii?Q?1LJp0X=2F+d0mHHWe7x1Lz6wrnH3GKoPMfYJMcHL0?=
+ =?us-ascii?Q?bIevVnpgfXIfrFv+fF9tljU9d5pMaIfyHY3es6I?=
+ =?us-ascii?Q?9RVZSAveY79R8FsM43clg=3D=3D?=
+To:     Jernej =?iso-8859-2?q?=A9krabec?= <jernej.skrabec@siol.net>,
+        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        boris.brezillon@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: sv
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAyMC8wMi8yNyBBbmRyw6kgRHJhc3ppayA8Z2l0QGFuZHJlZC5uZXQ+IHdyb3RlOg0KPiBP
-biBXZWQsIDIwMjAtMDItMjYgYXQgMDE6MTUgKzAwMDAsIFJvYmluIEdvbmcgd3JvdGU6DQo+ID4g
-T24gMjAyMC8wMi8yNiBBbmRyw6kgRHJhc3ppayA8Z2l0QGFuZHJlZC5uZXQ+IHdyb3RlOg0KPiA+
-ID4gVGhlIHNudnNfcHdya2V5IHNoYXJlcyB0aGUgU05WUyBMUFNSIHN0YXR1cyByZWdpc3RlciB3
-aXRoIHRoZSBzbnZzX3J0Yy4NCj4gPiA+DQo+ID4gPiBUaGlzIGRyaXZlciBoZXJlIHNob3VsZCBv
-bmx5IHJldHVybiBJUlFfSEFORExFRCBpZiB0aGUgc3RhdHVzDQo+ID4gPiByZWdpc3RlciBpbmRp
-Y2F0ZXMgdGhhdCB0aGUgZXZlbnQgd2UncmUgaGFuZGxpbmcgaW4gdGhlIGlycSBoYW5kbGVyDQo+
-ID4gPiB3YXMgZ2VudWluZWx5IGludGVuZGVkIGZvciB0aGlzIGRyaXZlci4gT3RoZXJpd3NlIHRo
-ZSBpbnRlcnJ1cHQNCj4gPiA+IHN1YnN5c3RlbSB3aWxsIGFzc3VtZSB0aGUgaW50ZXJydXB0IHdh
-cyBoYW5kbGVkIHN1Y2Nlc3NmdWxseSBldmVuIHRob3VnaA0KPiBpdCB3YXNuJ3QgYXQgYWxsLg0K
-PiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFuZHLDqSBEcmFzemlrIDxnaXRAYW5kcmVkLm5l
-dD4NCj4gPiA+IENjOiAiSG9yaWEgR2VhbnTEgyIgPGhvcmlhLmdlYW50YUBueHAuY29tPg0KPiA+
-ID4gQ2M6IEF5bWVuIFNnaGFpZXIgPGF5bWVuLnNnaGFpZXJAbnhwLmNvbT4NCj4gPiA+IENjOiBI
-ZXJiZXJ0IFh1IDxoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+DQo+ID4gPiBDYzogIkRhdmlk
-IFMuIE1pbGxlciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQo+ID4gPiBDYzogUm9iIEhlcnJpbmcg
-PHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gPiA+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFu
-ZEBhcm0uY29tPg0KPiA+ID4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4g
-PiA+IENjOiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+DQo+ID4gPiBDYzog
-UGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCj4gPiA+IENj
-OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+ID4gPiBDYzogTlhQIExpbnV4
-IFRlYW0gPGxpbnV4LWlteEBueHAuY29tPg0KPiA+ID4gQ2M6IERtaXRyeSBUb3Jva2hvdiA8ZG1p
-dHJ5LnRvcm9raG92QGdtYWlsLmNvbT4NCj4gPiA+IENjOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4NCj4gPiA+IENjOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+
-ID4gPiBDYzogbGludXgtY3J5cHRvQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gQ2M6IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+ID4gPiBDYzogbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnDQo+ID4gPg0K
-PiA+ID4gLS0tDQo+ID4gPiB2MjoNCj4gPiA+ICogbm8gY2hhbmdlcw0KPiA+ID4gLS0tDQo+ID4g
-PiAgZHJpdmVycy9pbnB1dC9rZXlib2FyZC9zbnZzX3B3cmtleS5jIHwgMTIgKysrKysrKy0tLS0t
-DQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkN
-Cj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9zbnZzX3B3
-cmtleS5jDQo+ID4gPiBiL2RyaXZlcnMvaW5wdXQva2V5Ym9hcmQvc252c19wd3JrZXkuYw0KPiA+
-ID4gaW5kZXggMzgyZDJhZTgyYzliLi45ODA4Njc4ODZiMzQgMTAwNjQ0DQo+ID4gPiAtLS0gYS9k
-cml2ZXJzL2lucHV0L2tleWJvYXJkL3NudnNfcHdya2V5LmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMv
-aW5wdXQva2V5Ym9hcmQvc252c19wd3JrZXkuYw0KPiA+ID4gQEAgLTgyLDcgKzgyLDkgQEAgc3Rh
-dGljIGlycXJldHVybl90IGlteF9zbnZzX3B3cmtleV9pbnRlcnJ1cHQoaW50DQo+ID4gPiBpcnEs
-IHZvaWQNCj4gPiA+ICpkZXZfaWQpDQo+ID4gPiAgCWNsa19lbmFibGUocGRhdGEtPmNsayk7DQo+
-ID4gPg0KPiA+ID4gIAlyZWdtYXBfcmVhZChwZGF0YS0+c252cywgU05WU19MUFNSX1JFRywgJmxw
-X3N0YXR1cyk7DQo+ID4gPiAtCWlmIChscF9zdGF0dXMgJiBTTlZTX0xQU1JfU1BPKSB7DQo+ID4g
-PiArCWxwX3N0YXR1cyAmPSBTTlZTX0xQU1JfU1BPOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAobHBf
-c3RhdHVzKSB7DQo+ID4gPiAgCQlpZiAocGRhdGEtPm1pbm9yX3JldiA9PSAwKSB7DQo+ID4gPiAg
-CQkJLyoNCj4gPiA+ICAJCQkgKiBUaGUgZmlyc3QgZ2VuZXJhdGlvbiBpLk1YWzZ8N10gU29DcyBv
-bmx5IHNlbmQgYW4gQEANCj4gLTk4LDE0DQo+ID4gPiArMTAwLDE0IEBAIHN0YXRpYyBpcnFyZXR1
-cm5fdCBpbXhfc252c19wd3JrZXlfaW50ZXJydXB0KGludCBpcnEsDQo+ID4gPiArdm9pZA0KPiA+
-ID4gKmRldl9pZCkNCj4gPiA+ICAJCQltb2RfdGltZXIoJnBkYXRhLT5jaGVja190aW1lciwNCj4g
-PiA+ICAJCQkgICAgICAgICAgamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXMoREVCT1VOQ0VfVElN
-RSkpOw0KPiA+ID4gIAkJfQ0KPiA+ID4gLQl9DQo+ID4gPg0KPiA+ID4gLQkvKiBjbGVhciBTUE8g
-c3RhdHVzICovDQo+ID4gPiAtCXJlZ21hcF93cml0ZShwZGF0YS0+c252cywgU05WU19MUFNSX1JF
-RywgU05WU19MUFNSX1NQTyk7DQo+ID4gPiArCQkvKiBjbGVhciBTUE8gc3RhdHVzICovDQo+ID4g
-PiArCQlyZWdtYXBfd3JpdGUocGRhdGEtPnNudnMsIFNOVlNfTFBTUl9SRUcsIFNOVlNfTFBTUl9T
-UE8pOw0KPiA+IEJ1dCBpcnEgc3Rvcm0gd2lsbCBjb21lIGluIG9uY2UgdGhlcmUgaXMgb3RoZXIg
-aW50ZXJydXB0IHRyaWdnZXJlZCBhcw0KPiA+IHVuZXhwZWN0ZWQsIGFsdGhvdWdoIEkgbmV2ZXIg
-bWV0IGl0IGJlZm9yZS4gQ291bGQgd2UgZHJvcCB0aGlzIHBhdGNoIG5vdz8NCj4gT3RoZXJzIGFy
-ZSBvayBmb3IgbWUuDQo+IA0KPiBJIGRvbid0IGhhdmUgc3Ryb25nIGZlZWxpbmdzIGFib3V0IHRo
-aXMgcGF0Y2gsIGJ1dCB0aGlzIGJpdCBtZXJlbHkgY2hhbmdlcw0KPiBiZWhhdmlvdXIgdG8gY2xl
-YXIgU1AwIGlmIFNQMCB3YXMgaW4gZmFjdCAhPSAwIGluIHRoZSBmaXJzdCBwbGFjZSwgd2hlcmVh
-cyBiZWZvcmUNCj4gU1AwIHdhcyBhbHdheXMgY2xlYXJlZCwgZXZlbiBpZiBpdCB3YXMgPT0gMCBh
-bnl3YXkuIFNlZW1zIG1vcmUgbG9naWNhbCBpbiBteQ0KPiBleWVzLg0KU2VlbXMgd2UgY2FyZSBz
-b21ldGhpbmcgbmV2ZXIgaGFwcGVuOikgSSdtIG9rYXkgaWYgeW91IHJlYWxseSB3YW50IHRvIGRv
-IHRoYXQuDQo+IA0KPiANCj4gPiBSZXZpZXdlZC1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0Bu
-eHA+DQo+ID4gPiArCX0NCj4gPiA+DQo+ID4gPiAgCWNsa19kaXNhYmxlKHBkYXRhLT5jbGspOw0K
-PiA+ID4NCj4gPiA+IC0JcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ID4gKwlyZXR1cm4gbHBfc3Rh
-dHVzID8gSVJRX0hBTkRMRUQgOiBJUlFfTk9ORTsNCj4gDQo+IElmIHlvdSdyZSB0YWxraW5nIGFi
-b3V0IHRoaXMgcGFydCwgdGhlIHJ0Yy1zbnZzIGRyaXZlciBkb2VzIHRoZSBzYW1lIGluIGl0cw0K
-PiBpbnRlcnJ1cHQgaGFuZGxlci4NCj4gSW4gb3RoZXIgd29yZHMsIHRoaXMgZHJpdmVyIGhlcmUg
-Y291bGQgcHJldmVudCB0aGUgcnRjLXNudnMgZHJpdmVyIGZyb20gc2VlaW5nIGl0cw0KPiBldmVu
-dHMNCkJ1dCBydGMgZHJpdmVyIGhhcyBhbm90aGVyIGludGVycnVwdCBudW1iZXIsIGFuZCBzbnZz
-X3B3cmtleSBkcml2ZXIganVzdCB0b3VjaCBTUE8gYml0DQphcyBiZWxvdzoNCnJlZ21hcF93cml0
-ZShwZGF0YS0+c252cywgU05WU19MUFNSX1JFRywgU05WU19MUFNSX1NQTyk7DQpTbyBJIGRvbid0
-IHRoaW5rIGl0IGNvdWxkIGltcGFjdCBydGMtc252cyBkcml2ZXIuIEJ1dCB5b3UgcmVtaW5kIG1l
-IHJ0Yy1zbnZzIGRyaXZlciBtYXkgY2xlYXIgU1BPIHN0YXR1cywgYmVjYXVzZSBscHNyIGlzIHJl
-YWQgZnJvbSBTTlZTX0xQU1Igd2hpY2ggbWF5IFNQTyBoYXMgYWxyZWFkeSBiZWVuIHNldC4NCnJl
-Z21hcF93cml0ZShkYXRhLT5yZWdtYXAsIGRhdGEtPm9mZnNldCArIFNOVlNfTFBTUiwgbHBzcik7
-DQpJJ2xsIHNlbmQgYSBwYXRjaCBmb3IgZml4IHRoYXQgcG90ZW50aWFsIGlzc3VlLiBCZXNpZGVz
-LCBpZiB5b3UgcmVhbGx5IHdhbnQgdG8gZm9sbG93IHJ0YyBkcml2ZXIgcGxlYXNlIGluaXRpYWxp
-emUgbHBfc3RhdHVzIHdpdGggMC4gIA0KPiANCj4gDQo+IA0KPiBDaGVlcnMsDQo+IEFuZHJlJw0K
-PiANCj4gDQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgdm9pZCBpbXhfc252c19wd3Jr
-ZXlfYWN0KHZvaWQgKnBkYXRhKQ0KPiA+ID4gLS0NCj4gPiA+IDIuMjMuMC5yYzENCg0K
+Hi Jernej,
+
+On 2020-02-29 08:42, Jernej Škrabec wrote:
+> Hi Neil!
+> 
+> Dne četrtek, 06. februar 2020 ob 20:18:27 CET je Neil Armstrong napisal(a):
+>> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to negociate
+>> the possible output and input formats for the current mode and monitor,
+>> and use the negotiated formats in a basic atomic_check callback.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
+>>  1 file changed, 268 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+>> fec4a4bcd1fe..15048ad694bc 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+>> struct drm_display_mode *mode)
+>> hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
+>>  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
+>>
+>> -	/* TOFIX: Get input format from plat data or fallback to RGB888 */
+>>  	if (hdmi->plat_data->input_bus_format)
+>>  		hdmi->hdmi_data.enc_in_bus_format =
+>>  			hdmi->plat_data->input_bus_format;
+>> -	else
+>> +	else if (hdmi->hdmi_data.enc_in_bus_format == MEDIA_BUS_FMT_FIXED)
+>>  		hdmi->hdmi_data.enc_in_bus_format = 
+> MEDIA_BUS_FMT_RGB888_1X24;
+>>
+>>  	/* TOFIX: Get input encoding from plat data or fallback to none */
+>> @@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct
+>> drm_display_mode *mode) else
+>>  		hdmi->hdmi_data.enc_in_encoding = 
+> V4L2_YCBCR_ENC_DEFAULT;
+>>
+>> -	/* TOFIX: Default to RGB888 output format */
+>> -	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>> +	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
+>> +		hdmi->hdmi_data.enc_out_bus_format = 
+> MEDIA_BUS_FMT_RGB888_1X24;
+>>
+>>  	hdmi->hdmi_data.pix_repet_factor = 0;
+>>  	hdmi->hdmi_data.hdcp_enable = 0;
+>> @@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs
+>> dw_hdmi_connector_helper_funcs = .atomic_check =
+>> dw_hdmi_connector_atomic_check,
+>>  };
+>>
+>> +/*
+>> + * Possible output formats :
+>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48,
+>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
+>> + * - MEDIA_BUS_FMT_YUV16_1X48,
+>> + * - MEDIA_BUS_FMT_RGB161616_1X48,
+>> + * - MEDIA_BUS_FMT_UYVY12_1X24,
+>> + * - MEDIA_BUS_FMT_YUV12_1X36,
+>> + * - MEDIA_BUS_FMT_RGB121212_1X36,
+>> + * - MEDIA_BUS_FMT_UYVY10_1X20,
+>> + * - MEDIA_BUS_FMT_YUV10_1X30,
+>> + * - MEDIA_BUS_FMT_RGB101010_1X30,
+>> + * - MEDIA_BUS_FMT_UYVY8_1X16,
+>> + * - MEDIA_BUS_FMT_YUV8_1X24,
+>> + * - MEDIA_BUS_FMT_RGB888_1X24,
+>> + */
+>> +
+>> +/* Can return a maximum of 12 possible output formats for a mode/connector
+>> */ +#define MAX_OUTPUT_SEL_FORMATS	12
+>> +
+>> +static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge
+>> *bridge, +					struct 
+> drm_bridge_state *bridge_state,
+>> +					struct drm_crtc_state 
+> *crtc_state,
+>> +					struct 
+> drm_connector_state *conn_state,
+>> +					unsigned int 
+> *num_output_fmts)
+>> +{
+>> +	struct drm_connector *conn = conn_state->connector;
+>> +	struct drm_display_info *info = &conn->display_info;
+>> +	struct drm_display_mode *mode = &crtc_state->mode;
+>> +	u8 max_bpc = conn_state->max_requested_bpc;
+>> +	bool is_hdmi2_sink = info->hdmi.scdc.supported ||
+>> +			     (info->color_formats & 
+> DRM_COLOR_FORMAT_YCRCB420);
+>> +	u32 *output_fmts;
+>> +	int i = 0;
+>> +
+>> +	*num_output_fmts = 0;
+>> +
+>> +	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS, sizeof(*output_fmts),
+>> +			      GFP_KERNEL);
+>> +	if (!output_fmts)
+>> +		return NULL;
+>> +
+>> +	/*
+>> +	 * If the current mode enforces 4:2:0, force the output but format
+>> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+>> +	 */
+>> +	if (conn->ycbcr_420_allowed &&
+>> +	    (drm_mode_is_420_only(info, mode) ||
+>> +	     ())) {
+>> +
+>> +		/* Order bus formats from 16bit to 8bit if supported */
+>> +		if (max_bpc >= 16 && info->bpc == 16 &&
+>> +		    (info->hdmi.y420_dc_modes & 
+> DRM_EDID_YCBCR420_DC_48))
+>> +			output_fmts[i++] = 
+> MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+>> +
+>> +		if (max_bpc >= 12 && info->bpc >= 12 &&
+>> +		    (info->hdmi.y420_dc_modes & 
+> DRM_EDID_YCBCR420_DC_36))
+>> +			output_fmts[i++] = 
+> MEDIA_BUS_FMT_UYYVYY12_0_5X36;
+>> +
+>> +		if (max_bpc >= 10 && info->bpc >= 10 &&
+>> +		    (info->hdmi.y420_dc_modes & 
+> DRM_EDID_YCBCR420_DC_30))
+>> +			output_fmts[i++] = 
+> MEDIA_BUS_FMT_UYYVYY10_0_5X30;
+>> +
+>> +		/* Default 8bit fallback */
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+>> +
+>> +		*num_output_fmts = i;
+>> +
+>> +		return output_fmts;
+> 
+> Driver shouldn't return just yet for case "is_hdmi2_sink && 
+> drm_mode_is_420_also(info, mode)", because monitor/TV also supports YCbCr 
+> 4:4:4 in that case. IMO YCbCr 4:4:4 should be even prefered. What do you 
+> think?
+
+I think we need to have some way for controller driver and userspace to control what
+hdmi output format gets selected. I know for a fact that some Samsung TV have issues
+with 444 YCbCr modes at 4k 50/60hz but have no problems with 420 modes.
+The Samsung TV edid lie and/or the TV is not fully following HDMI specs.
+
+From a personal and mediaplayer userspace perspective I would like to prefer
+420/444 YCbCr mode as soon as any yuv drm plane is active and rgb 444 anytime else.
+
+On Rockchip SoCs the display controller cannot output yuv422 to dw-hdmi block,
+the optimal output format selection in such case should put yuv422 last.
+
+Maybe dw-hdmi can call a dw-hdmi glue driver callback to get the preferred output format order?
+
+On a side note but related issue, the dw-hdmi format negotiation code should 
+probably also filter modes on tmds rate, something like [1].
+It is needed to filter out deep color modes that is not supported by the sink or hdmi spec.
+
+[1] https://github.com/Kwiboo/linux-rockchip/commit/fc3df6903384e764ab6ac59879c489cbef55fcbe
+
+Best regards,
+Jonas
+
+> 
+> Best regards,
+> Jernej
+> 
+>> +	}
+>> +
+>> +	/*
+>> +	 * Order bus formats from 16bit to 8bit and from YUV422 to RGB
+>> +	 * if supported. In any case the default RGB888 format is added
+>> +	 */
+>> +
+>> +	if (max_bpc >= 16 && info->bpc == 16) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +	}
+>> +
+>> +	if (max_bpc >= 12 && info->bpc >= 12) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +	}
+>> +
+>> +	if (max_bpc >= 10 && info->bpc >= 10) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +	}
+>> +
+>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +
+>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +
+>> +	/* Default 8bit RGB fallback */
+>> +	output_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +
+>> +	*num_output_fmts = i;
+>> +
+>> +	return output_fmts;
+>> +}
+>> +
+>> +/*
+>> + * Possible input formats :
+>> + * - MEDIA_BUS_FMT_RGB888_1X24
+>> + * - MEDIA_BUS_FMT_YUV8_1X24
+>> + * - MEDIA_BUS_FMT_UYVY8_1X16
+>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24
+>> + * - MEDIA_BUS_FMT_RGB101010_1X30
+>> + * - MEDIA_BUS_FMT_YUV10_1X30
+>> + * - MEDIA_BUS_FMT_UYVY10_1X20
+>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30
+>> + * - MEDIA_BUS_FMT_RGB121212_1X36
+>> + * - MEDIA_BUS_FMT_YUV12_1X36
+>> + * - MEDIA_BUS_FMT_UYVY12_1X24
+>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36
+>> + * - MEDIA_BUS_FMT_RGB161616_1X48
+>> + * - MEDIA_BUS_FMT_YUV16_1X48
+>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48
+>> + */
+>> +
+>> +/* Can return a maximum of 4 possible input formats for an output format */
+>> +#define MAX_INPUT_SEL_FORMATS	4
+>> +
+>> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge
+>> *bridge, +					struct 
+> drm_bridge_state *bridge_state,
+>> +					struct drm_crtc_state 
+> *crtc_state,
+>> +					struct 
+> drm_connector_state *conn_state,
+>> +					u32 output_fmt,
+>> +					unsigned int 
+> *num_input_fmts)
+>> +{
+>> +	u32 *input_fmts;
+>> +	int i = 0;
+>> +
+>> +	*num_input_fmts = 0;
+>> +
+>> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+>> +			     GFP_KERNEL);
+>> +	if (!input_fmts)
+>> +		return NULL;
+>> +
+>> +	switch (output_fmt) {
+>> +	/* 8bit */
+>> +	case MEDIA_BUS_FMT_RGB888_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV8_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		break;
+>> +
+>> +	/* 10bit */
+>> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV10_1X30:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		break;
+>> +
+>> +	/* 12bit */
+>> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV12_1X36:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		break;
+>> +
+>> +	/* 16bit */
+>> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV16_1X48:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +		break;
+>> +
+>> +	/* 420 */
+>> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+>> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+>> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+>> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+>> +		input_fmts[i++] = output_fmt;
+>> +		break;
+>> +	}
+>> +
+>> +	*num_input_fmts = i;
+>> +
+>> +	if (*num_input_fmts == 0) {
+>> +		kfree(input_fmts);
+>> +		input_fmts = NULL;
+>> +	}
+>> +
+>> +	return input_fmts;
+>> +}
+>> +
+>> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+>> +				       struct drm_bridge_state 
+> *bridge_state,
+>> +				       struct drm_crtc_state 
+> *crtc_state,
+>> +				       struct drm_connector_state 
+> *conn_state)
+>> +{
+>> +	struct dw_hdmi *hdmi = bridge->driver_private;
+>> +
+>> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+>> +			bridge_state->output_bus_cfg.format);
+>> +
+>> +	hdmi->hdmi_data.enc_out_bus_format =
+>> +			bridge_state->output_bus_cfg.format;
+>> +
+>> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+>> +			bridge_state->input_bus_cfg.format);
+>> +
+>> +	hdmi->hdmi_data.enc_in_bus_format =
+>> +			bridge_state->input_bus_cfg.format;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>>  {
+>>  	struct dw_hdmi *hdmi = bridge->driver_private;
+>> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs
+>> dw_hdmi_bridge_funcs = { .atomic_reset = drm_atomic_helper_bridge_reset,
+>>  	.attach = dw_hdmi_bridge_attach,
+>>  	.detach = dw_hdmi_bridge_detach,
+>> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+>> +	.atomic_get_output_bus_fmts = 
+> dw_hdmi_bridge_atomic_get_output_bus_fmts,
+>> +	.atomic_get_input_bus_fmts = 
+> dw_hdmi_bridge_atomic_get_input_bus_fmts,
+>>  	.enable = dw_hdmi_bridge_enable,
+>>  	.disable = dw_hdmi_bridge_disable,
+>>  	.mode_set = dw_hdmi_bridge_mode_set,
+>> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>>
+>>  	hdmi->bridge.driver_private = hdmi;
+>>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+>> +
+>>  #ifdef CONFIG_OF
+>>  	hdmi->bridge.of_node = pdev->dev.of_node;
+>>  #endif
+> 
+> 
+> 
+> 
