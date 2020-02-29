@@ -6,75 +6,68 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5613AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABBAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249D02468A
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD5E2468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 06:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="a6JQ1jn+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yWRSOmix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgB2GJr (ORCPT
+        id S1726880AbgB2GKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 01:09:47 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:52994 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgB2GJq (ORCPT
+        Sat, 29 Feb 2020 01:10:50 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:61132 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgB2GKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 01:09:46 -0500
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 01T69VoD008222;
-        Sat, 29 Feb 2020 15:09:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01T69VoD008222
+        Sat, 29 Feb 2020 01:10:50 -0500
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01T6AfHB000449;
+        Sat, 29 Feb 2020 15:10:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01T6AfHB000449
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582956572;
-        bh=T4mYF9PdGCCx51/8tVnGLpffkqtEkPRbg0ZE1yEu3Y4=;
+        s=dec2015msa; t=1582956641;
+        bh=dz9GOcgjTtA6sfdBaVeug5DwkkY3/2n7C5+Ih/6zEtQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a6JQ1jn+SkINLjt7ka4hUO0gyE6mJjW8w8OnpOBaf7xBexOx5lszzunIF+RIHIiuA
-         IbL0jzmT5xrFxvk+yW0OW/TxspNz5E94KtI7Q0yLXyge68JlD9NAMYSawd6uhApdQS
-         z5j3gYbz7WjDj0kbELA/MCUSm9R1wFbfAQISzVdP91rGqHPQr6KSZgEQrnaoFSDJtP
-         P7VEgy8GkrA5WAVkU3IfmR+4+jqUV8Qcj5kqPQ0YY9isnoZ23MkJletch+RUtHEjcp
-         ZZ7oZ8fiq6EBdD2YQm/Au57QY8bGyzKn7IUPfrlcjuKGwcL663g5Y/9F8zsLW3/0JN
-         5OnxJlEUVFS2g==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id a19so3216565vsp.6;
-        Fri, 28 Feb 2020 22:09:32 -0800 (PST)
-X-Gm-Message-State: ANhLgQ34XxJDxCgfuB4FYOLCRbzGl1CX0VqOOZq8D3HicT0maX67NAc6
-        hhUkIpusX/y2L9ct3rQZrgzH2HBvt7eE+dimVYA=
-X-Google-Smtp-Source: ADFU+vsR9iQ5EQp9E08EzMVqnnAyJbA3o2T746m95TMOkWDqb0XZcmG/9wqU7G7zK2SepSJ2NLe8WJ7qnxEt63Cbwek=
-X-Received: by 2002:a67:fa4b:: with SMTP id j11mr4500806vsq.155.1582956571084;
- Fri, 28 Feb 2020 22:09:31 -0800 (PST)
+        b=yWRSOmixwjfWLtjn3x6iL5ab8PtdvUkxQT84knbAIUBlJaqlxintQsnD4/59LFGTt
+         qzyMP0hfTJxZlYGp/QFMgwGAUsaXVKSrm2+kwUNs+rvCEO91BD32rK5ItK3hi8Kdoy
+         uHuH2777Z3EHMnkVt69qhITG0MLklG2swUBx5olYXoqOfDgDCgWMMCtkxCOUuI1IPB
+         3RSsOTYCOxk810SAVFqnBdmvy8ryyKmU+fD7KbCyPbbY/MXb73JXbxp3Hl839cKibW
+         SK0HFsDDQpQgqqX/1Rt0DgtlGpUzQeJGMF80u9sicE2M0lgG1jzTqBgv3FcHHNfsux
+         EaaXi9d3v4awg==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id t20so1805525uao.7;
+        Fri, 28 Feb 2020 22:10:41 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3XabD59D3dCfpHm/I6lyfz2N9SMCK3cOqHRoNSjwykq4nQxso/
+        c15MREWWgWKDfry8MaoH/Mmg0bnQOcCl3R7As/I=
+X-Google-Smtp-Source: ADFU+vtvCaDbHB526SMqgQeaBzfiO1W0aKK0d8VUeVEZJh1KdtKMLUpM7kuHsqh57iAV4ijET8E6PHExl9SuksLyfxg=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr3673324uar.109.1582956640386;
+ Fri, 28 Feb 2020 22:10:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226035914.23582-1-yamada.masahiro@socionext.com> <20200226035914.23582-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20200226035914.23582-2-yamada.masahiro@socionext.com>
+References: <20200222064445.14903-1-yamada.masahiro@socionext.com> <20200222064445.14903-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222064445.14903-3-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 29 Feb 2020 15:08:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQzYMbZwyt75yWbrVgj-4cOHC20RFLVz7kqnx8vUa-baA@mail.gmail.com>
-Message-ID: <CAK7LNAQzYMbZwyt75yWbrVgj-4cOHC20RFLVz7kqnx8vUa-baA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: uniphier: rename NAND node names to
- follow json-schema
+Date:   Sat, 29 Feb 2020 15:10:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQtoPMckm2mgjABX0eHccR0nYM4=gGkdGRv1QVu-Ws=mw@mail.gmail.com>
+Message-ID: <CAK7LNAQtoPMckm2mgjABX0eHccR0nYM4=gGkdGRv1QVu-Ws=mw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: uniphier: rename aidet node names to follow json-schema
 To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 1:00 PM Masahiro Yamada
+On Sat, Feb 22, 2020 at 3:45 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> Follow the standard nodename pattern "^nand-controller(@.*)?" defined
-> in Documentation/devicetree/bindings/mtd/nand-controller.yaml
->
-> Otherwise, after the dt-binding is converted to json-schema,
-> 'make ARCH=arm64 dtbs_check' will show a warning like this:
->
->   nand@68000000: $nodename:0: 'nand@68000000' does not match '^nand-controller(@.*)?'
+> Follow the standard nodename pattern "^interrupt-controller(@[0-9a-f,]+)*$"
+> defined in schemas/interrupt-controller.yaml of dt-schema.
 >
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
@@ -83,55 +76,83 @@ On Wed, Feb 26, 2020 at 1:00 PM Masahiro Yamada
 Applied to linux-uniphier.
 
 
+
+
+>  arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 +-
+>  arch/arm/boot/dts/uniphier-pro4.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-pro5.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 +-
+>  arch/arm/boot/dts/uniphier-sld8.dtsi | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 >
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
->  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> index f3a20dc0b22b..23b8fd627c00 100644
+> --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> @@ -375,7 +375,7 @@
+>                         interrupt-controller;
+>                 };
 >
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> index 2e53daca9f5c..d61da3a62712 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-> @@ -621,7 +621,7 @@
+> -               aidet: aidet@61830000 {
+> +               aidet: interrupt-controller@61830000 {
+>                         compatible = "socionext,uniphier-ld4-aidet";
+>                         reg = <0x61830000 0x200>;
+>                         interrupt-controller;
+> diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> index e96b5796f0f8..eb06c353970f 100644
+> --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> @@ -426,7 +426,7 @@
 >                         };
 >                 };
 >
-> -               nand: nand@68000000 {
-> +               nand: nand-controller@68000000 {
->                         compatible = "socionext,uniphier-denali-nand-v5b";
->                         status = "disabled";
->                         reg-names = "nand_data", "denali_reg";
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> index be984200a70e..98f0f4eb0649 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> @@ -925,7 +925,7 @@
->                         socionext,syscon = <&soc_glue>;
+> -               aidet: aidet@5fc20000 {
+> +               aidet: interrupt-controller@5fc20000 {
+>                         compatible = "socionext,uniphier-pro4-aidet";
+>                         reg = <0x5fc20000 0x200>;
+>                         interrupt-controller;
+> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> index f794a0676760..c95eb44c816d 100644
+> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> @@ -408,7 +408,7 @@
+>                         };
 >                 };
 >
-> -               nand: nand@68000000 {
-> +               nand: nand-controller@68000000 {
->                         compatible = "socionext,uniphier-denali-nand-v5b";
->                         status = "disabled";
->                         reg-names = "nand_data", "denali_reg";
-> diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> index 994fea7b12c1..4c6cd3ec541d 100644
-> --- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> +++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-> @@ -783,7 +783,7 @@
->                         socionext,syscon = <&soc_glue>;
+> -               aidet: aidet@5fc20000 {
+> +               aidet: interrupt-controller@5fc20000 {
+>                         compatible = "socionext,uniphier-pro5-aidet";
+>                         reg = <0x5fc20000 0x200>;
+>                         interrupt-controller;
+> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> index 04d6bef3a00f..c054d0175df9 100644
+> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> @@ -508,7 +508,7 @@
+>                         };
 >                 };
 >
-> -               nand: nand@68000000 {
-> +               nand: nand-controller@68000000 {
->                         compatible = "socionext,uniphier-denali-nand-v5b";
->                         status = "disabled";
->                         reg-names = "nand_data", "denali_reg";
+> -               aidet: aidet@5fc20000 {
+> +               aidet: interrupt-controller@5fc20000 {
+>                         compatible = "socionext,uniphier-pxs2-aidet";
+>                         reg = <0x5fc20000 0x200>;
+>                         interrupt-controller;
+> diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> index beb1eac85436..a05061038e78 100644
+> --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> @@ -379,7 +379,7 @@
+>                         interrupt-controller;
+>                 };
+>
+> -               aidet: aidet@61830000 {
+> +               aidet: interrupt-controller@61830000 {
+>                         compatible = "socionext,uniphier-sld8-aidet";
+>                         reg = <0x61830000 0x200>;
+>                         interrupt-controller;
 > --
 > 2.17.1
 >
-
 
 -- 
 Best Regards
