@@ -2,75 +2,89 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B00246B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582945724;
-	bh=hOyEpxPRQGrilqK673TIYfny8ywUcM8JlVlW3ODrXDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mAsTrBWtjSCPJK+tMsGW+GzX+Iiy9p1Wj1xMyZuyAcGRxe4sYRCVc+4AGO5zvCGU4
-	 VrmWyC5Y6l6ylmhqUubzVH7JmCXjQOtWdVdfIpprBOjzIOyVIo4XtBDeFWYEEiFChM
-	 uMgVTqfsxznhgYE5kxK+dIR6xDJDaA9fCdUD9LwY=
+	by mail.kernel.org (Postfix) with ESMTP id D7E272467B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 03:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgB2DIl (ORCPT
+        id S1726890AbgB2DJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 22:08:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54576 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 22:09:29 -0500
+Received: from mga06.intel.com ([134.134.136.31]:7144 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgB2DIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 22:08:40 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF6C92467B;
-        Sat, 29 Feb 2020 03:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582945720;
-        bh=hOyEpxPRQGrilqK673TIYfny8ywUcM8JlVlW3ODrXDY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wHfvRTUkcmnmEdSeEYFMkUvL5GfRYvFCdgi5Lh1HBXY6YzspfFScWxMmhJ+G8yqfb
-         AjC5U41ZNOXq+ctIYim6cvFTRrAOGBWire96+9p84G8tRtl5jx+ZOCCaiE4jGS+wfq
-         jyF4AADlIW1N5dMCFLT4wInT7c4tsV8D1a8X1KMY=
-Date:   Fri, 28 Feb 2020 22:08:38 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
-        joe@perches.com, tglx@linutronix.de, Marc Zyngier <maz@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Request to backport "irqchip/gic-v3-its: Fix misuse of GENMASK
- macro"
-Message-ID: <20200229030838.GE21491@sasha-vm>
-References: <47617046-53ba-ed7f-ccbb-5c7c09426552@huawei.com>
+        id S1726798AbgB2DJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 22:09:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 19:09:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,498,1574150400"; 
+   d="scan'208";a="232447150"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.60])
+  by orsmga008.jf.intel.com with ESMTP; 28 Feb 2020 19:09:25 -0800
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] KVM: x86: Remove unnecessary brackets in kvm_arch_dev_ioctl()
+Date:   Sat, 29 Feb 2020 10:52:12 +0800
+Message-Id: <20200229025212.156388-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <47617046-53ba-ed7f-ccbb-5c7c09426552@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 02:50:51PM +0800, Zenghui Yu wrote:
->Hi Greg, Sasha,
->
->Could you please help to backport the upstream commit
->20faba848752901de23a4d45a1174d64d2069dde ("irqchip/gic-v3-its: Fix
->misuse of GENMASK macro") to the stable linux-4.19 tree since it's
->definitely a fix for 4.19. Note that it's not needed for other stable
->trees.
->
->I've tried and it can be applied to 4.19.106 cleanly.
+In kvm_arch_dev_ioctl(), the brackets of case KVM_X86_GET_MCE_CAP_SUPPORTED
+accidently encapsulates case KVM_GET_MSR_FEATURE_INDEX_LIST and case
+KVM_GET_MSRS. It doesn't affect functionality but it's misleading.
 
-Queued up, thanks!
+Remove unnecessary brackets and opportunistically add a "break" in the
+default path.
 
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/kvm/x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de200663f51..e49f3e735f77 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3464,7 +3464,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 		r = 0;
+ 		break;
+ 	}
+-	case KVM_X86_GET_MCE_CAP_SUPPORTED: {
++	case KVM_X86_GET_MCE_CAP_SUPPORTED:
+ 		r = -EFAULT;
+ 		if (copy_to_user(argp, &kvm_mce_cap_supported,
+ 				 sizeof(kvm_mce_cap_supported)))
+@@ -3496,9 +3496,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 	case KVM_GET_MSRS:
+ 		r = msr_io(NULL, argp, do_get_msr_feature, 1);
+ 		break;
+-	}
+ 	default:
+ 		r = -EINVAL;
++		break;
+ 	}
+ out:
+ 	return r;
 -- 
-Thanks,
-Sasha
+2.19.1
+
