@@ -2,421 +2,372 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F67C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D1C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1909224699
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9381246B0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 13:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Lwz1EJsF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0RHo2Z06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgB2Nb6 (ORCPT
+        id S1727093AbgB2Ncx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 08:31:58 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38972 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgB2Nb5 (ORCPT
+        Sat, 29 Feb 2020 08:32:53 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:43344 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgB2Ncx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 08:31:57 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so6692750wrn.6
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 05:31:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CE9aFfpApAFVlSFBYBDEJYtuwrgVB6eyYMUjWGBuC/w=;
-        b=Lwz1EJsFZ9Lk7VKmUgzWqiMHcQFCAzkOhViiS1HdECbEzoOtB2QWeYhddcIG9C0QKz
-         XuWqk85/k7fENLfJWiu7YLUM6RolaL0XqJ+FOWXElgLlqf4tp7L191zzBz8qtnxeWiVK
-         vDGiHtaHrPux95HNYaAawFqgfV39rmEgBX3YW+vfHrJReDrB211mHBxW+sWIiTecNbtp
-         5AxHEUhg7Ggv1UIe+rWGtqnHv3iT0EqFm5NRFMXDp+NwWQBVjCzQDng9HVIk/lsx5LJg
-         o3QWovhi2MV06RyTzWoB2o3vVjAx7fHZIMPSA6L9eGHyBwQ1BM15crrfC2G1Iy8PV84v
-         kh+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CE9aFfpApAFVlSFBYBDEJYtuwrgVB6eyYMUjWGBuC/w=;
-        b=D7KHYC3f4CjLLZw1O4ihdSDljfsbsFmGSRvYJM2cw9ZPUGy20lmqDu0qvaS8zp+Z7/
-         4sNSxNHAsAvLs6NZ527z3Yy8WDtfKre85RdfsOUQFW+9Biz+NjoFmsjNcbMMIm5ocHzU
-         Gh4dT2/d8JAm4Qmmm+ySfNcLvnjuERwe0HPepJ862fvl8HbaLkOVWPYCpj91f2qDubKN
-         l4VeAlnAQhD6VXQGq5jfzG7Gk/Eh9YKxHu1pYQ5+ROukeuOXH1HnjcWdbReKEAZDaKjP
-         P//eX5fqsjduGJhMQc/QNRU4sWqaRlnCbvR1MoEWvASe+pk0ahMTV4e+7AsnfA/yRdws
-         MCpw==
-X-Gm-Message-State: APjAAAWJAvl6zSrPsftLNQI6WFTCXvDTrDbSzB6nbepiAg4iZtTeNbYN
-        gIvE90Z10H6n+JctjuEcvD0st8zuPkjn09oELrsEww==
-X-Google-Smtp-Source: APXvYqwxVx5wghY0fHNC9PMV7GnNKvHdhDAfBAYO4HSOUmKTvC2E8QzCsuRjBXjpIu5vWTReJet/MWx+Vgz0Qr4LI7g=
-X-Received: by 2002:a5d:4b50:: with SMTP id w16mr10701497wrs.230.1582983112454;
- Sat, 29 Feb 2020 05:31:52 -0800 (PST)
+        Sat, 29 Feb 2020 08:32:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=y7GPcpbrEFsg3Kfwu1RdbSFuSbDIImcUEIM8ir32cq0=; b=0RHo2Z068fLncnGlNSzCml0t2
+        vKfV3ubrdoLQe3t8E5L0nxBR5M5wtrLRCFAkXPT4kPi0CGQFb2uOH6/U84qmagvwM9z0akVc38hOq
+        ciNkhRXebZZNQWtULP0CjwVrX8OY9x5yT9gKbYQICiYyP7RBE58UzLG/0es7ZNK6/qBVtDLILcXry
+        QBGo+Ck0fU0nc+qDSUzyDKJtFjqcKMZyuqpI/BIczfFjB6crLu4ImuZKroHHBD6MifhEXUfUB+WzA
+        C6YSSUkUxKX0G31q26xdHWIQeTa7L3thd3wqR5YLshfyDrX0a0LZ+rDYeJuiGsO7acZgq2dLkqzVL
+        1/HyYb10g==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46862)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j82ER-0001iZ-72; Sat, 29 Feb 2020 13:32:39 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j82EM-000306-En; Sat, 29 Feb 2020 13:32:34 +0000
+Date:   Sat, 29 Feb 2020 13:32:34 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200229133234.GA25745@shell.armlinux.org.uk>
+References: <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <20200229095550.GX25745@shell.armlinux.org.uk>
+ <20200229110456.GY25745@shell.armlinux.org.uk>
+ <20200229120828.GZ25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20200229124449.22797-1-alex@ghiti.fr>
-In-Reply-To: <20200229124449.22797-1-alex@ghiti.fr>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sat, 29 Feb 2020 19:01:39 +0530
-Message-ID: <CAAhSdy3pfLkoNefEu_jKB29TRLOLyifMUNU1fbXyvzWaY0kjeA@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Introduce CONFIG_RELOCATABLE
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229120828.GZ25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 6:14 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->
-> This config allows to compile the kernel as PIE and to relocate it at any
-> virtual address at runtime: this paves the way to KASLR and to 4-level
-> page table folding at runtime. Runtime relocation is possible since
-> relocation metadata are embedded into the kernel.
->
-> Note that relocating at runtime introduces an overhead even if the kernel
-> is loaded at the same address it was linked at and that the compiler
-> options are those used in arm64 which uses the same RELA relocation format.
->
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Reviewed-by: Zong Li <zong.li@sifive.com>
-> Tested-by: Zong Li <zong.li@sifive.com>
+On Sat, Feb 29, 2020 at 12:08:28PM +0000, Russell King - ARM Linux admin wrote:
+> On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
+> > On Sat, Feb 29, 2020 at 09:55:50AM +0000, Russell King - ARM Linux admin wrote:
+> > > On Mon, Feb 10, 2020 at 03:22:57PM +0000, Russell King - ARM Linux admin wrote:
+> > > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > > > >
+> > > > > > Hi Olof,
+> > > > > >
+> > > > > > Thanks a lot for your comments!
+> > > > > > And sorry for my delay respond!
+> > > > > 
+> > > > > Actually, they apply with only minor conflicts on top of current -next.
+> > > > > 
+> > > > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > > > enable full use of a promising ARM developer system, the SolidRun
+> > > > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > > > use with mainline or -next without any additional patches applied --
+> > > > > which this patchset achieves.
+> > > > > 
+> > > > > I know there are pending revisions based on feedback. I'll leave it up
+> > > > > to you and others to determine if that can be done with incremental
+> > > > > patches on top, or if it should be fixed before the initial patchset
+> > > > > is applied. But all in all, it's holding up adaption by me and surely
+> > > > > others of a very interesting platform -- I'm looking to replace my
+> > > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > > > before I do.
+> > > > 
+> > > > If you're going to be using NVMe, make sure you use a power-fail safe
+> > > > version; I've already had one instance where ext4 failed to mount
+> > > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > > > Serror'd, and then I powered it down after a few hours before later
+> > > > booting it back up.
+> > > > 
+> > > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > > > EXT4-fs (nvme0n1p2): error loading journal
+> > > 
+> > > ... and last night, I just got more ext4fs errors on the NVMe, without
+> > > any unclean power cycles:
+> > > 
+> > > [73729.556544] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
+> > > [73729.565354] Aborting journal on device nvme0n1p2-8.
+> > > [73729.568995] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
+> > > [73729.569077] EXT4-fs error (device nvme0n1p2): ext4_journal_check_start:61: Detected aborted journal
+> > > [73729.573741] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm rm: iget: checksum invalid
+> > > [73729.593330] EXT4-fs error (device nvme0n1p2): ext4_lookup:1700: inode #917524: comm mv: iget: checksum invalid
+> > > 
+> > > The affected file is /var/backups/dpkg.status.6.gz
+> > > 
+> > > It was cleanly shut down and powered off on the 22nd February, booted
+> > > yesterday morning followed by another reboot a few minutes later.
+> > > 
+> > > What worries me is the fact that corruption has happened - and if that
+> > > happens to a file rather than an inode, it will likely go unnoticed
+> > > for a considerably longer time.
+> > > 
+> > > I think I'm getting to the point of deciding NVMe or the LX2160A to be
+> > > just too unreliable for serious use.  I hadn't noticed any issues when
+> > > using the rootfs on the eMMC, so it suggests either the NVMe is
+> > > unreliable, or there's a problem with PCIe on this platform (which we
+> > > kind of know about with Jon's GPU rendering issues.)
+> > 
+> > Adding Ted and Andreas...
+> > 
+> > Here's the debugfs -n "id" output for dpkg.status.5.gz (which is fine,
+> > and probably a similar size):
+> > 
+> > debugfs:  id <917527>
+> > 0000  a481 0000 30ff 0300 bd8e 475e bd77 4f5e  ....0.....G^.wO^
+> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+> > 0060  0000 0000 0000 0000 4000 0000 8087 3800  ........@.....8.
+> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 0140  0000 0000 c40b 4c0a 0000 0000 0000 0000  ......L.........
+> > 0160  0000 0000 0000 0000 0000 0000 3884 0000  ............8...
+> > 0200  2000 95f2 44b8 bdc9 a4d2 9883 c861 dc92   ...D........a..
+> > 0220  bd31 4a5e ecc5 260c 0000 0000 0000 0000  .1J^..&.........
+> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 
+> > and for the affected inode:
+> > debugfs:  id <917524>
+> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
+> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
+> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
+> > 0160  0000 0000 0000 0000 0000 0000 af23 0000  .............#..
+> > 0200  2000 1cc3 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
+> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
+> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 
+> > and "stat" output:
+> > debugfs:  stat <917527>
+> > Inode: 917527   Type: regular    Mode:  0644   Flags: 0x80000
+> > Generation: 172755908    Version: 0x00000000:00000001
+> > User:     0   Group:     0   Project:     0   Size: 261936
+> > File ACL: 0
+> > Links: 1   Blockcount: 512
+> > Fragment:  Address: 0    Number: 0    Size: 0
+> >  ctime: 0x5e4f77bd:c9bdb844 -- Fri Feb 21 06:25:01 2020
+> >  atime: 0x5e478ebd:92dc61c8 -- Sat Feb 15 06:25:01 2020
+> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
+> > crtime: 0x5e4a31bd:0c26c5ec -- Mon Feb 17 06:25:01 2020
+> > Size of extra inode fields: 32
+> > Inode checksum: 0xf2958438
+> > EXTENTS:
+> > (0-63):3704704-3704767
+> > debugfs:  stat <917524>
+> > Inode: 917524   Type: regular    Mode:  0644   Flags: 0x80000
+> > Generation: 3033515103    Version: 0x00000000:00000001
+> > User:     0   Group:     0   Project:     0   Size: 261936
+> > File ACL: 0
+> > Links: 1   Blockcount: 512
+> > Fragment:  Address: 0    Number: 0    Size: 0
+> >  ctime: 0x5e4f77bd:c8c995ac -- Fri Feb 21 06:25:01 2020
+> >  atime: 0x5e463d3d:dfad3e58 -- Fri Feb 14 06:25:01 2020
+> >  mtime: 0x5e34ca29:8398d2a4 -- Sat Feb  1 00:45:29 2020
+> > crtime: 0x5e48e03d:51714db0 -- Sun Feb 16 06:25:01 2020
+> > Size of extra inode fields: 32
+> > Inode checksum: 0xc31c23af
+> > EXTENTS:
+> > (0-63):3705024-3705087
+> > 
+> > When using sif (set_inode_info) to re-set the UID to 0 on this (so
+> > provoke the checksum to be updated):
+> > 
+> > debugfs:  id <917524>
+> > 0000  a481 0000 30ff 0300 3d3d 465e bd77 4f5e  ....0...==F^.wO^
+> > 0020  29ca 345e 0000 0000 0000 0100 0002 0000  ).4^............
+> > 0040  0000 0800 0100 0000 0af3 0100 0400 0000  ................
+> > 0060  0000 0000 0000 0000 4000 0000 c088 3800  ........@.....8.
+> > 0100  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 0140  0000 0000 5fc4 cfb4 0000 0000 0000 0000  ...._...........
+> > 0160  0000 0000 0000 0000 0000 0000 b61f 0000  ................
+> >                                     ^^^^
+> > 0200  2000 aa15 ac95 c9c8 a4d2 9883 583e addf   ...........X>..
+> >            ^^^^
+> > 0220  3de0 485e b04d 7151 0000 0000 0000 0000  =.H^.MqQ........
+> > 0240  0000 0000 0000 0000 0000 0000 0000 0000  ................
+> > *
+> > 
+> > The values with "^^^^" are the checksum, which are the only values
+> > that have changed here - the checksum is now 0x15aa1fb6 rather than
+> > 0xc31c23af.
+> > 
+> > With that changed, running e2fsck -n on the filesystem results in a
+> > pass:
+> > 
+> > root@cex7:~# e2fsck -n /dev/nvme0n1p2
+> > e2fsck 1.44.5 (15-Dec-2018)
+> > Warning: skipping journal recovery because doing a read-only filesystem check.
+> > /dev/nvme0n1p2 contains a file system with errors, check forced.
+> > Pass 1: Checking inodes, blocks, and sizes
+> > Pass 2: Checking directory structure
+> > Pass 3: Checking directory connectivity
+> > Pass 4: Checking reference counts
+> > Pass 5: Checking group summary information
+> > /dev/nvme0n1p2: 121163/2097152 files (0.1% non-contiguous), 1349227/8388608 blocks
+> > 
+> > and the file now appears to be intact (being a gzip file, gzip verifies
+> > that the contents are now as it expects.)
+> > 
+> > So, it looks like the _only_ issue is that the checksum on the inode
+> > became invalid, which seems to suggest that it *isn't* a NVMe nor PCIe
+> > issue.
+> > 
+> > I wonder whether the journal would contain anything useful, but I don't
+> > know how to use debugfs to find that out - while I can dump the journal,
+> > I'd need to know which block contains the inode, and then work out where
+> > in the journal that block was going to be written.  If that would help,
+> > let me know ASAP as I'll hold off rebooting the platform for a while
+> > (which means the filesystem will remain as-is - and yes, I have the
+> > debugfs file for e2undo to put stuff back.)  Maybe it's possible to pull
+> > the block number out of the e2undo file?
+> 
+> Okay, the inode was stored in block 3670049, and the journal appears
+> to contains no entries for that block.
+> 
+> > tune2fs says:
+> > 
+> > Checksum type:            crc32c
+> > Checksum:                 0x682f91b9
+> > 
+> > I guess this is what is used to checksum the inodes?  If so, it's using
+> > the kernel's crc32c-generic driver (according to /proc/crypto).
+> > 
+> > Could it be a race condition, or some problem that's specific to the
+> > ARM64 kernel that's provoking this corruption?
+> 
+> Something else occurs to me:
+> 
+> root@cex7:~# ls -li --time=ctime --full-time /var/backups/dpkg.status*
+> 917622 -rw-r--r-- 1 root root 999052 2020-02-29 06:25:01.852231277 +0000 /var/backups/dpkg.status
+> 917583 -rw-r--r-- 1 root root 999052 2020-02-21 06:25:01.958160960 +0000 /var/backups/dpkg.status.0
+> 917520 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.954161050 +0000 /var/backups/dpkg.status.1.gz
+> 917531 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.854163293 +0000 /var/backups/dpkg.status.2.gz
+> 917532 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.3.gz
+> 917509 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.850163383 +0000 /var/backups/dpkg.status.4.gz
+> 917527 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.846163473 +0000 /var/backups/dpkg.status.5.gz
+> 917524 -rw-r--r-- 1 root root 261936 2020-02-21 06:25:01.842163563 +0000 /var/backups/dpkg.status.6.gz
+> 
+> So the last time that the kernel changed inode 917524 was on the 21th
+> of February, probably when it was last renamed by logrotate, and like
+> several other files stored in the same inode block.  Yet, _only_ the
+> checksum for 917524 was corrupted, the rest were fine.
+> 
+> I would guess that logrotate behaves as follows:
+> - remove /var/backups/dpkg.status.6.gz
+> - rename /var/backups/dpkg.status.5.gz to /var/backups/dpkg.status.6.gz
+> - repeat for other dpkg.status.*.gz files
+> - gzip /var/backups/dpkg.status.0 to /var/backups/dpkg.status.1.gz
+> - rename /var/backups/dpkg.status to /var/backups/dpkg.status.0
+> - create new /var/backups/dpkg.status
+> 
+> Looking at the inode block in the e2undo file, inode 917524 is at
+> offset 0x300 into the block, which means the first inode in the
+> block is 917521 and the last is 917536, which means we have several
+> of the dpkg.status.* files that are stored in this inode block.
+> 
+> That would've meant that the inode for /var/backups/dpkg.status.6.gz
+> would have been updated just before the inode for
+> /var/backups/dpkg.status.5.gz.  I wonder if the inode block was
+> written out somehow out of order, with the ctime for
+> /var/backups/dpkg.status.6.gz having been updated but not the checksum
+> as a result of the later changes - maybe as a result of having
+> executed on a different CPU?  That would suggest a weakness in the
+> ARM64 locking implementation, coherency issues, or interconnect issues.
 
-LGTM.
+Looking at the errata configuration, I have:
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+# ARM errata workarounds via the alternatives framework
+#
+CONFIG_ARM64_WORKAROUND_CLEAN_CACHE=y
+CONFIG_ARM64_ERRATUM_826319=y
+CONFIG_ARM64_ERRATUM_827319=y
+CONFIG_ARM64_ERRATUM_824069=y
+CONFIG_ARM64_ERRATUM_819472=y
+CONFIG_ARM64_ERRATUM_832075=y
+CONFIG_ARM64_ERRATUM_834220=y
+CONFIG_ARM64_ERRATUM_845719=y
+CONFIG_ARM64_ERRATUM_843419=y
+CONFIG_ARM64_ERRATUM_1024718=y
+CONFIG_ARM64_ERRATUM_1418040=y
+CONFIG_ARM64_ERRATUM_1165522=y
+CONFIG_ARM64_ERRATUM_1286807=y
+CONFIG_ARM64_ERRATUM_1319367=y
+CONFIG_ARM64_ERRATUM_1463225=y
+# CONFIG_ARM64_ERRATUM_1542419 is not set
+# CONFIG_CAVIUM_ERRATUM_22375 is not set
+# CONFIG_CAVIUM_ERRATUM_23154 is not set
+# CONFIG_CAVIUM_ERRATUM_27456 is not set
+# CONFIG_CAVIUM_ERRATUM_30115 is not set
+# CONFIG_CAVIUM_TX2_ERRATUM_219 is not set
+CONFIG_QCOM_FALKOR_ERRATUM_1003=y
+CONFIG_ARM64_WORKAROUND_REPEAT_TLBI=y
+CONFIG_QCOM_FALKOR_ERRATUM_1009=y
+CONFIG_QCOM_QDF2400_ERRATUM_0065=y
+# CONFIG_SOCIONEXT_SYNQUACER_PREITS is not set
+# CONFIG_HISILICON_ERRATUM_161600802 is not set
+CONFIG_QCOM_FALKOR_ERRATUM_E1041=y
+# CONFIG_FUJITSU_ERRATUM_010001 is not set
+# end of ARM errata workarounds via the alternatives framework
+...
+CONFIG_FSL_ERRATUM_A008585=y
+CONFIG_HISILICON_ERRATUM_161010101=y
+CONFIG_ARM64_ERRATUM_858921=y
 
-Regards,
-Anup
+so I don't think it's a missing errata kconfig setting, unless there's
+an erratum that isn't in v5.5 that's necessary.
 
-> ---
-> Changes in v2:
-> - Make RELOCATABLE depend on MMU as suggested by Anup
-> - Rename kernel_load_addr into kernel_virt_addr as suggested by Anup
-> - Use __pa_symbol instead of __pa, as suggested by Zong
-> - Rebased on top of v5.6-rc3
-> - Tested with sv48 patchset
-> - Add Reviewed/Tested-by from Zong
->
->  arch/riscv/Kconfig              | 12 +++++
->  arch/riscv/Makefile             |  5 +-
->  arch/riscv/boot/loader.lds.S    |  2 +-
->  arch/riscv/include/asm/page.h   |  5 +-
->  arch/riscv/kernel/head.S        |  3 +-
->  arch/riscv/kernel/vmlinux.lds.S | 10 ++--
->  arch/riscv/mm/Makefile          |  4 ++
->  arch/riscv/mm/init.c            | 92 ++++++++++++++++++++++++++++-----
->  8 files changed, 111 insertions(+), 22 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 73f029eae0cc..f5f3d474504d 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -163,6 +163,18 @@ config PGTABLE_LEVELS
->         default 3 if 64BIT
->         default 2
->
-> +config RELOCATABLE
-> +       bool
-> +       depends on MMU
-> +       help
-> +          This builds a kernel as a Position Independent Executable (PIE),
-> +          which retains all relocation metadata required to relocate the
-> +          kernel binary at runtime to a different virtual address than the
-> +          address it was linked at.
-> +          Since RISCV uses the RELA relocation format, this requires a
-> +          relocation pass at runtime even if the kernel is loaded at the
-> +          same address it was linked at.
-> +
->  source "arch/riscv/Kconfig.socs"
->
->  menu "Platform type"
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index b9009a2fbaf5..5a115cf6a9c1 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -9,7 +9,10 @@
->  #
->
->  OBJCOPYFLAGS    := -O binary
-> -LDFLAGS_vmlinux :=
-> +ifeq ($(CONFIG_RELOCATABLE),y)
-> +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
-> +KBUILD_CFLAGS += -fPIE
-> +endif
->  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
->         LDFLAGS_vmlinux := --no-relax
->  endif
-> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
-> index 47a5003c2e28..a9ed218171aa 100644
-> --- a/arch/riscv/boot/loader.lds.S
-> +++ b/arch/riscv/boot/loader.lds.S
-> @@ -7,7 +7,7 @@ ENTRY(_start)
->
->  SECTIONS
->  {
-> -       . = PAGE_OFFSET;
-> +       . = CONFIG_PAGE_OFFSET;
->
->         .payload : {
->                 *(.payload)
-> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-> index 8ca1930caa44..af5810f9aebd 100644
-> --- a/arch/riscv/include/asm/page.h
-> +++ b/arch/riscv/include/asm/page.h
-> @@ -31,9 +31,9 @@
->   * When not using MMU this corresponds to the first free page in
->   * physical memory (aligned on a page boundary).
->   */
-> -#define PAGE_OFFSET            _AC(CONFIG_PAGE_OFFSET, UL)
-> +#define PAGE_OFFSET            kernel_virt_addr
->
-> -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
-> +#define KERN_VIRT_SIZE         (-_AC(CONFIG_PAGE_OFFSET, UL))
->
->  #ifndef __ASSEMBLY__
->
-> @@ -97,6 +97,7 @@ extern unsigned long pfn_base;
->  #define ARCH_PFN_OFFSET                (PAGE_OFFSET >> PAGE_SHIFT)
->  #endif /* CONFIG_MMU */
->
-> +extern unsigned long kernel_virt_addr;
->  extern unsigned long max_low_pfn;
->  extern unsigned long min_low_pfn;
->
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 271860fc2c3f..d792912c2da3 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -131,7 +131,8 @@ clear_bss_done:
->  #ifdef CONFIG_MMU
->  relocate:
->         /* Relocate return address */
-> -       li a1, PAGE_OFFSET
-> +       la a1, kernel_virt_addr
-> +       REG_L a1, 0(a1)
->         la a2, _start
->         sub a1, a1, a2
->         add ra, ra, a1
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index 1e0193ded420..5bf69e9b91e6 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -4,7 +4,7 @@
->   * Copyright (C) 2017 SiFive
->   */
->
-> -#define LOAD_OFFSET PAGE_OFFSET
-> +#define LOAD_OFFSET CONFIG_PAGE_OFFSET
->  #include <asm/vmlinux.lds.h>
->  #include <asm/page.h>
->  #include <asm/cache.h>
-> @@ -71,9 +71,11 @@ SECTIONS
->
->         EXCEPTION_TABLE(0x10)
->
-> -       .rel.dyn : {
-> -               *(.rel.dyn*)
-> -       }
-> +        .rela.dyn : ALIGN(8) {
-> +               __rela_dyn_start = .;
-> +                *(.rela .rela*)
-> +               __rela_dyn_end = .;
-> +        }
->
->         _end = .;
->
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index 50b7af58c566..27593d362248 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -1,6 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->
->  CFLAGS_init.o := -mcmodel=medany
-> +ifdef CONFIG_RELOCATABLE
-> +CFLAGS_init.o += -fno-pie
-> +endif
-> +
->  ifdef CONFIG_FTRACE
->  CFLAGS_REMOVE_init.o = -pg
->  endif
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 965a8cf4829c..428aee2669aa 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -12,6 +12,9 @@
->  #include <linux/sizes.h>
->  #include <linux/of_fdt.h>
->  #include <linux/libfdt.h>
-> +#ifdef CONFIG_RELOCATABLE
-> +#include <linux/elf.h>
-> +#endif
->
->  #include <asm/fixmap.h>
->  #include <asm/tlbflush.h>
-> @@ -28,6 +31,9 @@ EXPORT_SYMBOL(empty_zero_page);
->  extern char _start[];
->  void *dtb_early_va;
->
-> +unsigned long kernel_virt_addr = _AC(CONFIG_PAGE_OFFSET, UL);
-> +EXPORT_SYMBOL(kernel_virt_addr);
-> +
->  static void __init zone_sizes_init(void)
->  {
->         unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -132,7 +138,8 @@ void __init setup_bootmem(void)
->                 phys_addr_t end = reg->base + reg->size;
->
->                 if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-> -                       mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-> +                       mem_size = min(reg->size,
-> +                                      (phys_addr_t)-kernel_virt_addr);
->
->                         /*
->                          * Remove memblock from the end of usable area to the
-> @@ -269,7 +276,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
->         if (mmu_enabled)
->                 return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->
-> -       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
-> +       pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
->         BUG_ON(pmd_num >= NUM_EARLY_PMDS);
->         return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
->  }
-> @@ -370,6 +377,54 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
->  #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
->  #endif
->
-> +#ifdef CONFIG_RELOCATABLE
-> +extern unsigned long __rela_dyn_start, __rela_dyn_end;
-> +
-> +#ifdef CONFIG_64BIT
-> +#define Elf_Rela Elf64_Rela
-> +#define Elf_Addr Elf64_Addr
-> +#else
-> +#define Elf_Rela Elf32_Rela
-> +#define Elf_Addr Elf32_Addr
-> +#endif
-> +
-> +void __init relocate_kernel(uintptr_t load_pa)
-> +{
-> +       Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
-> +       uintptr_t link_addr = _AC(CONFIG_PAGE_OFFSET, UL);
-> +       /*
-> +        * This holds the offset between the linked virtual address and the
-> +        * relocated virtual address.
-> +        */
-> +       uintptr_t reloc_offset = kernel_virt_addr - link_addr;
-> +       /*
-> +        * This holds the offset between linked virtual address and physical
-> +        * address whereas va_pa_offset holds the offset between relocated
-> +        * virtual address and physical address.
-> +        */
-> +       uintptr_t va_link_pa_offset = link_addr - load_pa;
-> +
-> +       for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
-> +               Elf_Addr addr = (rela->r_offset - va_link_pa_offset);
-> +               Elf_Addr relocated_addr = rela->r_addend;
-> +
-> +               if (rela->r_info != R_RISCV_RELATIVE)
-> +                       continue;
-> +
-> +               /*
-> +                * Make sure to not relocate vdso symbols like rt_sigreturn
-> +                * which are linked from the address 0 in vmlinux since
-> +                * vdso symbol addresses are actually used as an offset from
-> +                * mm->context.vdso in VDSO_OFFSET macro.
-> +                */
-> +               if (relocated_addr >= link_addr)
-> +                       relocated_addr += reloc_offset;
-> +
-> +               *(Elf_Addr *)addr = relocated_addr;
-> +       }
-> +}
-> +#endif
-> +
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->  {
->         uintptr_t va, end_va;
-> @@ -377,9 +432,20 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->         uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
->         uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
->
-> -       va_pa_offset = PAGE_OFFSET - load_pa;
-> +       va_pa_offset = kernel_virt_addr - load_pa;
->         pfn_base = PFN_DOWN(load_pa);
->
-> +#ifdef CONFIG_RELOCATABLE
-> +       /*
-> +        * Early page table uses only one PGDIR, which makes it possible
-> +        * to map 1GB aligned on 1GB: if the relocation offset makes the kernel
-> +        * cross over a 1G boundary, raise a bug since a part of the kernel
-> +        * would not get mapped.
-> +        */
-> +       BUG_ON(SZ_1G - (kernel_virt_addr & (SZ_1G - 1)) < load_sz);
-> +       relocate_kernel(load_pa);
-> +#endif
-> +
->         /*
->          * Enforce boot alignment requirements of RV32 and
->          * RV64 by only allowing PMD or PGD mappings.
-> @@ -387,7 +453,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->         BUG_ON(map_size == PAGE_SIZE);
->
->         /* Sanity check alignment and size */
-> -       BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
-> +       BUILD_BUG_ON((_AC(CONFIG_PAGE_OFFSET, UL) % PGDIR_SIZE) != 0);
->         BUG_ON((load_pa % map_size) != 0);
->         BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
->
-> @@ -400,13 +466,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->         create_pmd_mapping(fixmap_pmd, FIXADDR_START,
->                            (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
->         /* Setup trampoline PGD and PMD */
-> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
-> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
->                            (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
-> -       create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
-> +       create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
->                            load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
->  #else
->         /* Setup trampoline PGD */
-> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
-> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
->                            load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
->  #endif
->
-> @@ -415,10 +481,10 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->          * us to reach paging_init(). We map all memory banks later
->          * in setup_vm_final() below.
->          */
-> -       end_va = PAGE_OFFSET + load_sz;
-> -       for (va = PAGE_OFFSET; va < end_va; va += map_size)
-> +       end_va = kernel_virt_addr + load_sz;
-> +       for (va = kernel_virt_addr; va < end_va; va += map_size)
->                 create_pgd_mapping(early_pg_dir, va,
-> -                                  load_pa + (va - PAGE_OFFSET),
-> +                                  load_pa + (va - kernel_virt_addr),
->                                    map_size, PAGE_KERNEL_EXEC);
->
->         /* Create fixed mapping for early FDT parsing */
-> @@ -457,9 +523,9 @@ static void __init setup_vm_final(void)
->                         break;
->                 if (memblock_is_nomap(reg))
->                         continue;
-> -               if (start <= __pa(PAGE_OFFSET) &&
-> -                   __pa(PAGE_OFFSET) < end)
-> -                       start = __pa(PAGE_OFFSET);
-> +               if (start <= __pa_symbol(kernel_virt_addr) &&
-> +                   __pa(kernel_virt_addr) < end)
-> +                       start = __pa_symbol(kernel_virt_addr);
->
->                 map_size = best_map_size(start, end - start);
->                 for (pa = start; pa < end; pa += map_size) {
-> --
-> 2.20.1
->
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
