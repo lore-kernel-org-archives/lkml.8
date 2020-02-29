@@ -2,93 +2,218 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB42C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC35EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4A924688
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E34124688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JSI3aFQg"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="r7EXfM5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgB2UJR (ORCPT
+        id S1727467AbgB2UM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:09:17 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1756 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgB2UJR (ORCPT
+        Sat, 29 Feb 2020 15:12:59 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40866 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbgB2UM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:09:17 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5ac49b0000>; Sat, 29 Feb 2020 12:07:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 29 Feb 2020 12:09:16 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 29 Feb 2020 12:09:16 -0800
-Received: from ngvpn01-175-70.dyn.scz.us.nvidia.com (10.124.1.5) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Sat, 29 Feb 2020 20:09:16 +0000
-Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
- FOLL_PIN pages"
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-CC:     <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
-        <borntraeger@de.ibm.com>, <david@redhat.com>,
-        <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
- <20200228154322.329228-3-imbrenda@linux.ibm.com>
- <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
- <20200229115119.3562c73e@p-imbrenda>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a48a6fee-babe-45fd-5ff5-881fbdabf79b@nvidia.com>
-Date:   Sat, 29 Feb 2020 12:09:15 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200229115119.3562c73e@p-imbrenda>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583006875; bh=WYN4LBwZnbCVylzszIAE5BmxzjTnkAdGTg75EzquRoE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JSI3aFQgZbVSOB3uJJewzN/4XIcaXLXuDKnWsTB9acmpJZ0pf3zdF3PHxzxVQIbDJ
-         nw0ONXApu4MoL/0WQUqvEEkkfzZFCU/d8+HLXWqdaE5cAPiI3pVGJh9a0pgvllNgj6
-         3nqRRr1oRtHQxOcAbzef1VqrFd1rQvOGC816uUKjvr7YzKPWiS6KyccU09K7ZjEiQb
-         u4IQpFX2zoRSCl5oNCAdBWc06cElblIYN6rohCGnfbSJ9O3b6/1uYn7p8r0QBOuD07
-         JbKn64MyhRp31i44QV60wHcWEFLMZ8xNUAIHjLHErHx6bQ3MypiliSvu/gk7E/p2n8
-         a5hrdo7TKjZDQ==
+        Sat, 29 Feb 2020 15:12:59 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y1so2594848plp.7
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:12:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=0G4OUp8C4Ql/B1PTKhqRXXsr2EA2E7yf/lAnvlcFoiI=;
+        b=r7EXfM5jDZUHCTHSEoKMH49CUhBE27hnSQQfOZpsuoxVpMy0qD05f7M49I4XOYLAaz
+         PLxlMPX5L1MKabAF/t2ovlm82r4Nuq5scgbGO6vQfAR1ujFzH8ZxGtyukSYQgRvHrZUD
+         vlEMRDw0OfkUT2xA26YVCN7clwyWnXycDTR5Z7RfTCX4BxbOcd5dqWvi9UqzpkT+lcYU
+         uRL1tOH2bDUGLh6N422Q2/y9Or3Ce9zlWv+SReSlRP9Axc0tAQ7XhyoIQkT1Nz0Pc5Ds
+         TuTksO7gKtY/pIxHj1QU3EuLIYmz0Qnq9pRYgCKSniVhB5WPk8Hs6infNE59lT82vz2Z
+         esqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=0G4OUp8C4Ql/B1PTKhqRXXsr2EA2E7yf/lAnvlcFoiI=;
+        b=bhbXgfVlXYZ0OddzluYn4wCIsK7Tsxq+hgVX7dxZuCUsnzbGPyMQ8BH70OaljQkpHS
+         LdcNuHZ8AQCq7XPVzAp0O4ZYZLvr5mOc5pQ91ZKolccetU+Up8gYHTdrequyMMs4cfWx
+         6N87n8XBaKRh8krO/+vIkr8eXIF90COF5wQzNOnR8pk3BMPA3RzdnI/DIsmffwZtlpEk
+         SY28H4tQHn2f+Sw22/izm7zUXPnYmXYmwrfuD2lh1XfoIQ16HvxTnDGmMSptJV3Pg2bN
+         X4PPSng3Sujzv2HLydwI+QJrMT5bZZC9yEAXh3TcRZrKmn80tsjI2LCkeAd2+qu3WH+a
+         5EVw==
+X-Gm-Message-State: APjAAAXINosHZmkO1QHUtEAWadQ5BUydDn7kd0Q3JbnvRutx1ZyFrYAW
+        6h48D7R2C9v26lTU58fa2AHhqg==
+X-Google-Smtp-Source: APXvYqxff7tvINHICD/n4zqu2Ch1Mjo4Yf2ZnTbxn4PSHwFGNKZnYz4QOnC70GwR0rQwOuhXQFuLWA==
+X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr10526775plp.6.1583007177660;
+        Sat, 29 Feb 2020 12:12:57 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id l8sm6763724pjy.24.2020.02.29.12.12.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Feb 2020 12:12:56 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <F2CA6010-F7E5-4891-A337-FA1FEB32B935@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+Date:   Sat, 29 Feb 2020 13:12:52 -0700
+In-Reply-To: <20200228211610.GQ10737@dread.disaster.area>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
+        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
+        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
+        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+ <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
+ <eda406cc-8ce3-e67a-37be-3e525b58d5a1@virtuozzo.com>
+ <4933D88C-2A2D-4ACA-823E-BDFEE0CE143F@dilger.ca>
+ <20200228211610.GQ10737@dread.disaster.area>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/29/20 2:51 AM, Claudio Imbrenda wrote:
 
-> my idea was that my patch should be used as fix-up, so the actual
-> content of the commit message is not relevant
+--Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+On Feb 28, 2020, at 2:16 PM, Dave Chinner <david@fromorbit.com> wrote:
 > 
+> On Fri, Feb 28, 2020 at 08:35:19AM -0700, Andreas Dilger wrote:
+>> On Feb 27, 2020, at 5:24 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>> 
+>>> So, this interface is 3-in-1:
+>>> 
+>>> 1)finds a placement for inodes extents;
+>> 
+>> The target allocation size would be sum(size of inodes), which should
+>> be relatively small in your case).
+>> 
+>>> 2)assigns this space to some temporary donor inode;
+>> 
+>> Maybe yes, or just reserves that space from being allocated by anyone.
+>> 
+>>> 3)calls ext4_move_extents() for each of them.
+>> 
+>> ... using the target space that was reserved earlier
+>> 
+>>> Do I understand you right?
+>> 
+>> Correct.  That is my "5 minutes thinking about an interface for grouping
+>> small files together without exposing kernel internals" proposal for this.
+> 
+> You don't need any special kernel interface with XFS for this. It is
+> simply:
+> 
+> 	mkdir tmpdir
+> 	create O_TMPFILEs in tmpdir
+> 
+> Now all the tmpfiles you create and their data will be co-located
+> around the location of the tmpdir inode. This is the natural
+> placement policy of the filesystem. i..e the filesystem assumes that
+> files in the same directory are all related, so will be accessed
+> together and so should be located in relatively close proximity to
+> each other.
+
+Sure, this will likely get inodes allocate _close_ to each other on
+ext4 as well (the new directory will preferentially be located in a
+group that has free space), but it doesn't necessarily result in
+all of the files being packed densely.  For 1MB+4KB and 1MB-4KB files
+they will still prefer to be aligned on 1MB boundaries rather than
+packed together.
+
+>>> Can we introduce a flag, that some of inode is unmovable?
+>> 
+>> There are very few flags left in the ext4_inode->i_flags for use.
+>> You could use "IMMUTABLE" or "APPEND_ONLY" to mean that, but they
+>> also have other semantics.  The EXT4_NOTAIL_FL is for not merging the
+>> tail of a file, but ext4 doesn't have tails (that was in Reiserfs),
+>> so we might consider it a generic "do not merge" flag if set?
+> 
+> Indeed, thanks to XFS, ext4 already has an interface that can be
+> used to set/clear a "no defrag" flag such as you are asking for.
+> It's the FS_XFLAG_NODEFRAG bit in the FS_IOC_FS[GS]ETXATTR ioctl.
+> In XFS, that manages the XFS_DIFLAG_NODEFRAG on-disk inode flag,
+> and it has special meaning for directories. From the 'man 3 xfsctl'
+> man page where this interface came from:
+> 
+>      Bit 13 (0x2000) - XFS_XFLAG_NODEFRAG
+> 	No defragment file bit - the file should be skipped during a
+> 	defragmentation operation. When applied to  a directory,
+> 	new files and directories created will inherit the no-defrag
+> 	bit.
+
+The interface is not the limiting factor here, but rather the number
+of flags available in the inode.  Since chattr/lsattr from e2fsprogs
+was used as "common ground" for a few years, there are a number of
+flags in the namespace that don't actually have any meaning for ext4.
+
+One of those flags is:
+
+#define EXT4_NOTAIL_FL    0x00008000 /* file tail should not be merged */
+
+This was added for Reiserfs, but it is not used by any other filesystem,
+so generalizing it slightly to mean "no migrate" is reasonable.  That
+doesn't affect Reiserfs in any way, and it would still be possible to
+also wire up the XFS_XFLAG_NODEFRAG bit to be stored as that flag.
+
+It wouldn't be any issue at all to chose an arbitrary unused flag to
+store this in ext4 inode internally, except that chattr/lsattr are used
+by a variety of different filesystems, so whatever flag is chosen will
+immediately also apply to any other filesystem that users use those
+tools on.
+
+Cheers, Andreas
 
 
-aha, OK. Yes, a fixup would be nice.
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+
+
+--Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIyBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5axcQACgkQcqXauRfM
+H+BrEw/4/xX6/kAej+OjkMhA17Rp8GyQjqkGTwu4jrUcDGCjtl8uPxDAt3zZuXPF
+KducnBKDK4eFnBHBMVelWFYL0EjD5qON3aPjth+Zn+SjgPVtpuPHBAFhwNuLt4KT
+EGsvqABmyxZE0pTtfAcx5z54JaU99+9B/XB8iPN3is8gLvnEjo8v6RPOC4t8SyHz
+e0hnJoRdv/mikO53be3L4kt+k1mSthu+1jqEwT9t3uHVqtpDZYVdFaMirYmCRsId
+wabocrWrqoxCbOXeMTQtuUmZL/pTD7hWxKpUdpmBSqSaFA7mbxt/9VpxZbLGD03f
+/SDcGlKSUj5j6NzVD3IwiIluJ4LROf4F+jIq8dtWHLk7QenMAnZK7H6Y+pGOr5K8
+SN+YkjaSgqC3aAs3wTuOe49duET5zc3k7nF+uaJO/zAI5rwtXsAg7u1mBjYnaUgQ
+criV7ldi5m4nkN4iAPgAOhndn+dyW210nZRALd0bhH22JPgt+LLQZ1fueED2RbZa
+I1+Tplu9kQBU0mYsrosQROsiGNdoKzhDwrwngOKHGTwAefMMO8yPW7N9kkFV5VLc
+MjOEpq/u6II2oVbzy2xtPibhCo4G1hQgU3sEzeoh9J/UsWZ6lwlEYXEt+77ajZWW
+RsZ+BnYWK1Ajx3OWqYGubarK3WjSDwQxxGqeig9SdHjs4JiJWA==
+=woXX
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_62B17B5E-9866-4EB5-96FE-CA8E93030FD2--
