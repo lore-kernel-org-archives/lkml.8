@@ -2,170 +2,150 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB1EC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8905EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCD924690
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C096246AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 04:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582949620;
-	bh=XF/dQCOkZ/Aeisc5nBCupbeELUvBhb6/8IWy5oLfGTM=;
+	s=default; t=1582949854;
+	bh=FlKWNUtEeWw0jSRYnuZvjjC4pnRarLZ2NG0cSdnSN1k=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XcJh+TJwiP7iK/X1SqL4dnx5K0Ra9YuoSh4Z9WteZ5D05mFFZpqtvqV+gF8Nv+bhj
-	 dKYHJPRxZSgxkF2982EBkaoTEUyzOHMa4rO+UbhjgB2P94f3vqk83CrSOQm6s1NmMm
-	 gB289kFoy363ah3MPMwKO4kE//7oeDEdpfizGbAQ=
+	b=M1uk3/Er+Zok8l5fWUnHp2NKwLOrFuAWQFuRyatX2o610t2tCa4qKaUyQ1XeKULNq
+	 cIN/D99spxG22m7yerTFBSfuQV9LPDJPcxT9Y6Ea6KYLxcdST1W3kjtJIH52gF9ofq
+	 ojvDzzyDf+XwQlTO2MwhlHNln1IQlOmS0GyfxiLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB2ENZ (ORCPT
+        id S1726796AbgB2ERV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 23:13:25 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:48703 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB2ENY (ORCPT
+        Fri, 28 Feb 2020 23:17:21 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:37137 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgB2ERV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 23:13:24 -0500
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01T4D41A025071;
-        Sat, 29 Feb 2020 13:13:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01T4D41A025071
+        Fri, 28 Feb 2020 23:17:21 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01T4H5gh014497;
+        Sat, 29 Feb 2020 13:17:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01T4H5gh014497
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582949585;
-        bh=a0pOxn4yBaf/CY6aaFvzsHrraptkGWxpAnq3v9ZlKRY=;
+        s=dec2015msa; t=1582949826;
+        bh=ozwqPj1PB8R+TkXvQLc4SA7la0S/SMRrpEdge2Jd6EE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fOA7El3gUZ+0vookKfso5oCJGJGXdyvfax5sR2I/8GpIokf76DL8pZ24WAfMfeSsr
-         U7g4VUlvoWMwe1QlKJpl07c3DuxJ/MGi0QDqFrqw6n0JpWMNuoLETbC07BHzdeAItd
-         MTQLLRf2TjHMAKc/3tbB7Meg8Bk2AHfj+eeqIC3P+Qr4p1rWTzJ8zuBuapk70KdDKh
-         UM/w7Twnn9o3Ak63xkR61NljF9Zv95d9dv0KWFD3oEATkysMmFDXXO2EO88kCU9Hmv
-         qfPybMSMqk+vbkeDzepC1vTHr+Byx7sq7FNW+a9XY6bWhiE2oUUqJNYSbl3XJmHi+E
-         +zHW1cnleh1kw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id a19so3132715vsp.6;
-        Fri, 28 Feb 2020 20:13:05 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2esNiX7087hKcGA+ocLH9MW4dfAtWIvmgEEqlDDnSe/eIOFREJ
-        B1qYzWTkhdM7wvHgVRKSHSbnergQsoseF/+f8F8=
-X-Google-Smtp-Source: ADFU+vvxO1CRnyMOWLQZldeIlAa6RWJEku0VkeJX/ZGM7zhqt+hXfohIi/gRZqN4pvVQXSryjtSgwIaIwyqYdEqkVts=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr4205619vsh.179.1582949583909;
- Fri, 28 Feb 2020 20:13:03 -0800 (PST)
+        b=C0f+gqaIYxm/M4FDVvtxabgINNq2ru4vGIdrQS87Bw+C1EFl1L5pJQEgq2D1xPIgQ
+         ySE9fJzNowhf01v9FDOEQQjaxpzrYGvEnA1EK/EbnlOdYHL0mBET2XpHkb2pKSZqIA
+         HTdPCldAnbXgGB48ZcTX28KpMKlvwDIXNv37uhos1P8Px3LOy7uPPb1v0hpI/XocQj
+         jS9pZeDmExUsRVvyeMOft6cPgqJr/I5GLVqILQCgSJMmJ3096HXBBf1ukjp8gCkZiF
+         JHICZiK9Amsldkt4zLrRpkLpIGC9btsgeWCTC9D7WenYvrYcfJrXRuo/RgJGTOlLKa
+         SeXbbI7BA0VUQ==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id 7so3291745vsr.10;
+        Fri, 28 Feb 2020 20:17:06 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1BxaRSZVts7r5502XmUUC9cBE++oACMqqvGpJFyfqV7ejqVBLm
+        JqwwgbkqiqqNrJIQomlLJ91IkZChl+OUIXFkAAA=
+X-Google-Smtp-Source: ADFU+vsRHPSCrxOxF68PVThJanUZMU17UddC9LE+Qr2pjcyoxlmDlBY/PGEML7CKt5w5N7u4kIj9uhEGoEx/82zjNv4=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr4366136vsq.155.1582949825234;
+ Fri, 28 Feb 2020 20:17:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-3-yamada.masahiro@socionext.com> <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
-In-Reply-To: <CACRpkdbrowXC-Awy_N1gq+LxuEMhgLNf81cCZ=bwZwFdJXLWDA@mail.gmail.com>
+References: <20200228172015.44369-1-qperret@google.com>
+In-Reply-To: <20200228172015.44369-1-qperret@google.com>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 29 Feb 2020 13:12:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASMn_xMtBa8sCj0AW2LTpSEMpv=haDhWrfkZrrKbwSeug@mail.gmail.com>
-Message-ID: <CAK7LNASMn_xMtBa8sCj0AW2LTpSEMpv=haDhWrfkZrrKbwSeug@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller
- to json-schema
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sat, 29 Feb 2020 13:16:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQniztgAbF8N_OK+BJmaVUTVzhYmnY0-u1R_VsfEdOkTA@mail.gmail.com>
+Message-ID: <CAK7LNAQniztgAbF8N_OK+BJmaVUTVzhYmnY0-u1R_VsfEdOkTA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYM
+To:     Quentin Perret <qperret@google.com>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-On Sat, Feb 29, 2020 at 7:13 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Sat, Feb 29, 2020 at 2:20 AM Quentin Perret <qperret@google.com> wrote:
 >
-> On Fri, Feb 21, 2020 at 3:10 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
+> The current norm on Android and many other systems is for vendors to
+> introduce significant changes to their downstream kernels, and to
+> contribute very little (if any) code back upstream. The Generic Kernel
+> Image (GKI) project in Android attempts to improve the status-quo by
+> having a unique kernel for all android devices of the same architecture,
+> regardless of the SoC vendor. The key idea is to make all interested
+> parties agree on a common solution, and contribute their code upstream
+> to make it available to use by the wider community.
 >
-> > Convert the UniPhier pin controller binding to DT schema format.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> The kernel-to-drivers ABI on Android devices varies significantly from
+> one vendor kernel to another today because of changes to exported
+> symbols, dependencies on vendor symbols, and surely other things. The
+> first step for GKI is to try and put some order into this by agreeing on
+> one version of the ABI that works for everybody.
 >
-> Nice!
+> For practical reasons, we need to reduce the ABI surface to a subset of
+> the exported symbols, simply to make the problem realistically solvable,
+> but there is currently no upstream support for this use-case.
 >
-> > In the original .txt file, there is a description:
-> > The UniPhier pinctrl should be a subnode of a "syscon" compatible node
-> >
-> > I did not figure out how to represent (or check) it in dt-schema.
-> > I just moved it to a comment line in 'examples'.
-> > If there is a better way, please let me know.
->
-> There is no way to do that AFAICT, we are checking nodes from
-> one node and downwards, never upwards. The syscon needs to
-> have its own binding file: if it has another specific compatible
-> such as compatible = "foo", "syscon"; then for the DT bindings
-> for foo, make sure to add this subnode as optional/compulsory
-> if you want to tie up the whole thing.
+> As such, this series attempts to improve the situation by enabling users
+> to specify a symbol 'whitelist' at compile time. Any symbol specified in
+> this whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is
+> set, even if it has no in-tree user. The whitelist is defined as a
+> simple text file, listing symbols, one per line.
 
 
-Thanks for your advice.
-
-
-Documentation/devicetree/bindings/mfd/syscon.yaml
-
-already contains sunxi-specific compatibles, but
-I hesitate to add more and more platform-specific stuff
-in this file.
-
-Maybe, I can add
-
-Documentation/devicetree/bindings/mfd/socionext,uniphier-soc-glue.yaml
-
-and then, check 'reg' and compulsory sub-nodes.
-
-
-
-> > -Required properties:
-> > -- compatible: should be one of the following:
-> > -    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
-> > -    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
-> > -    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
-> > -    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
-> > -    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
-> > -    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
-> > -    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
-> > -    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
-> > -    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
->
-> But:
->
-> > +    soc-glue@5f800000 {
-> > +        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
-> > +        reg = <0x5f800000 0x2000>;
-> > +
-> > +        pinctrl: pinctrl {
-> > +            compatible = "socionext,uniphier-pro4-pinctrl";
-> > +        };
-> > +    };
->
-> It looks like you want to check also for "simple-mfd" and "syscon"
-> following after the enum (two consts)
->
-> It seems you want to check that reg is there.
-
-
-Documentation/devicetree/bindings/mfd/syscon.yaml
-
-already checks the 'reg' by the 'contains syscon' pattern,
-but I can repeat it in my yaml file.
+Series, applied to linux-kbuild.
 
 Thanks.
 
 
-> It seems the subnode pinctrl is also compulsory.
+> v6:
+>  - made permission checks on the whitelist file more robust (Masahiro)
+>  - better style/identation in Makefile (Masahiro)
 >
-> All of this have examples in example-schema.yaml IIRC.
+> v5:
+>  - made sure to be POSIX-compliant (+ tested with dash and posh)
+>  - added failure path if the whitelist path is incorrect (Matthias,
+>    Nicolas)
+>  - collected Acked-By (and other) tags from Nicolas and Matthias
 >
-> Yours,
-> Linus Walleij
-
+> v4:
+>  - removed [[]] bash-specific pattern from the scripts (Nicolas)
+>  - use $CONFIG_SHELL consistently in all patches (Masahiro)
+>  - added shortlog for initial generation of autoksyms.h (Masahiro)
+>  - added comment on how 'eval' expands the whitelist path (Masahiro)
+>
+> v3:
+>  - added a cover letter to explain why this is in fact an attempt to
+>    help upstream in the long term (Christoph)
+>  - made path relative to the kernel source tree (Matthias)
+>  - made the Kconfig help text less confusing (Jessica)
+>  - added patch 02 and 03 to optimize build time when a whitelist is
+>    provided
+>
+> v2:
+>  - make sure to quote the whitelist path properly (Nicolas)
+>
+> Quentin Perret (3):
+>   kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
+>   kbuild: split adjust_autoksyms.sh in two parts
+>   kbuild: generate autoksyms.h early
+>
+>  Makefile                    |  7 +++--
+>  init/Kconfig                | 13 ++++++++++
+>  scripts/adjust_autoksyms.sh | 24 +++--------------
+>  scripts/gen_autoksyms.sh    | 52 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 74 insertions(+), 22 deletions(-)
+>  create mode 100755 scripts/gen_autoksyms.sh
+>
+> --
+> 2.25.1.481.gfbce0eb801-goog
+>
 
 
 -- 
