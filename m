@@ -2,168 +2,115 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EBEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEACEC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E5D2467D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582936660;
-	bh=DFfEvWB755pS1UEIERm9yRvErlBRMkC7dtr1xkwB3gc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XeMKCiavb+E59zAm1Rmm6C4Efbr5F2rfjd48Oghn13TT3L9WcbmkxoiPucULvdTsO
-	 5QwtC4/i0w3q9UySPqb9ZcC3Sw0WsbHkpXzdIQ4RDJU0Q0v8TOwaI5VNVIxsrfQfAx
-	 SuGtDeLeMY4vtX4Q1LdvwWA/xsi/jH145Wf9N8J4=
+	by mail.kernel.org (Postfix) with ESMTP id C27C32467D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 00:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgB2Ahi (ORCPT
+        id S1726631AbgB2Aji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 19:37:38 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40804 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgB2Ahf (ORCPT
+        Fri, 28 Feb 2020 19:39:38 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41976 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB2Aji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 19:37:35 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a36so4316620otb.7;
-        Fri, 28 Feb 2020 16:37:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CQl42sI6/G4yLl+ObzR/HUl9MX01F+RW6KokpYPjBTo=;
-        b=Upf2/7ZALQAPxZ0mVoQh2LDtXHy/9bHTFmS4wUaBJEdDy+qE5D90QGb0Ba3PJiFGr4
-         zuZMleOMTUZtC8Z2ZkrquSIhEKmHxB2WFrM/FOFbuxFjzNj7Th113zdF5f23thEzk6Xl
-         cH4SwyBMG+KNueK0yLUrUt//rJyt12v2mm3IeZeeZU0J/M2A7AwaH0FH37c/YRoncQyP
-         BchPaS4cMl56NGHUlH2O8lZN2MyEzpuj8ycgUl3g2PDQ76EFHMogAWOdtFRuX3c30oV1
-         BpgSmgD93n85l94Hzb/2DUVhCoxsnK3IRQSczpAeSPA1EWoUqki5EeRv+Gk1YeTCXqkf
-         EGXg==
-X-Gm-Message-State: APjAAAUZqSEbbkrWZDfkjtgayy0TVrNnSPVTzmRTiIOwZ3PphYnVQuY6
-        OtIQLMd6rt6+C3JBFq6l6JnnyLw=
-X-Google-Smtp-Source: APXvYqyQ7MI4s/YK5RnOZwQdIn1huoadrYKVYdBfu7/r5YUcJNFn6Bgo+CJOwHykk57mCByJOeDQXQ==
-X-Received: by 2002:a9d:61cc:: with SMTP id h12mr4652537otk.154.1582936652744;
-        Fri, 28 Feb 2020 16:37:32 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t23sm3713619oic.28.2020.02.28.16.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 16:37:32 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH v2 1/2] kbuild: Always validate DT binding examples 
-Date:   Fri, 28 Feb 2020 18:37:30 -0600
-Message-Id: <20200229003731.2728-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Feb 2020 19:39:38 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j7qAJ-0000sT-58; Sat, 29 Feb 2020 00:39:35 +0000
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: ext4: convert file system to meta_bg if needed during resizing
+Message-ID: <633e75c4-acdc-1b88-ab47-4e922aac93d7@canonical.com>
+Date:   Sat, 29 Feb 2020 00:39:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most folks only run dt_binding_check on the single schema they care about
-by setting DT_SCHEMA_FILES. That means example is only checked against
-that one schema which is not always sufficient.
+Hi,
 
-Let's address this by splitting processed-schema.yaml into 2 files: one
-that's always all schemas for the examples and one that's just the schema
-in DT_SCHEMA_FILES for dtbs.
+static analysis with Coverity has found an issue in function
+ext4_convert_meta_bg() with the following commit
 
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kbuild@vger.kernel.org
-Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Masahiro, given you pretty much re-wrote this, I added you as 
-Co-developed-by.
+commit 1c6bd7173d66b3dfdefcedb38cabc1fb03997509
+Author: Theodore Ts'o <tytso@mit.edu>
+Date:   Thu Sep 13 10:19:24 2012 -0400
 
-Based on next/master
+    ext4: convert file system to meta_bg if needed during resizing
 
- Documentation/devicetree/bindings/.gitignore |  2 +-
- Documentation/devicetree/bindings/Makefile   | 22 +++++++++++++-------
- scripts/Makefile.lib                         |  3 ++-
- 3 files changed, 17 insertions(+), 10 deletions(-)
+The analysis is as follows:
 
-diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
-index ef82fcfcccab..57afa1533a5f 100644
---- a/Documentation/devicetree/bindings/.gitignore
-+++ b/Documentation/devicetree/bindings/.gitignore
-@@ -1,2 +1,2 @@
- *.example.dts
--processed-schema.yaml
-+processed-schema*.yaml
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 646cb3525373..7c40d5ba1b51 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -2,7 +2,6 @@
- DT_DOC_CHECKER ?= dt-doc-validate
- DT_EXTRACT_EX ?= dt-extract-example
- DT_MK_SCHEMA ?= dt-mk-schema
--DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
- 
- quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
-       cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
-@@ -11,26 +10,33 @@ quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
- $(obj)/%.example.dts: $(src)/%.yaml FORCE
- 	$(call if_changed,chk_binding)
- 
--DT_TMP_SCHEMA := processed-schema.yaml
-+# Use full schemas when checking %.example.dts
-+DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
- 
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
- 
--DT_DOCS = $(shell \
-+DT_DOCS = $(addprefix $(src)/, \
-+	$(shell \
- 	cd $(srctree)/$(src) && \
- 	find * \( -name '*.yaml' ! \
--		-name $(DT_TMP_SCHEMA) ! \
-+		-name 'processed-schema*' ! \
- 		-name '*.example.dt.yaml' \) \
--	)
-+	))
- 
--DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
-+DT_SCHEMA_FILES ?= $(DT_DOCS)
- 
- ifeq ($(CHECK_DTBS),)
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
- extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+extra-y += processed-schema-examples.yaml
-+
-+$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
-+	$(call if_changed,mk_schema)
- endif
- 
--$(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
-+$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
-+$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
- 	$(call if_changed,mk_schema)
- 
--extra-y += $(DT_TMP_SCHEMA)
-+extra-y += processed-schema.yaml
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index f5ff506e4a24..b12dd5ba4896 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -307,7 +307,8 @@ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
- 
- DT_CHECKER ?= dt-validate
- DT_BINDING_DIR := Documentation/devicetree/bindings
--DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
-+# DT_TMP_SCHEMA may be overridden from Documentation/devicetree/bindings/Makefile
-+DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
--- 
-2.20.1
+1898
+1899 errout:
+1900        ret = ext4_journal_stop(handle);
+1901        if (!err)
 
+Unused value (UNUSED_VALUE)assigned_value: Assigning value from ret to
+err here, but that stored value is not used.
+
+1902                err = ret;
+1903        return ret;
+
+I'm not entirely sure why !err is being checked and then err is being
+re-assigned and then is not used.
+
+Colin
