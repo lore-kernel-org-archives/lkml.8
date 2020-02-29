@@ -2,79 +2,106 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B30C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46582C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948C8246AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226C52468A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 15:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgB2O4z (ORCPT
+        id S1727145AbgB2PTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 09:56:55 -0500
-Received: from ms.lwn.net ([45.79.88.28]:42098 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbgB2O4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 09:56:55 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 47EE7537;
-        Sat, 29 Feb 2020 14:56:54 +0000 (UTC)
-Date:   Sat, 29 Feb 2020 07:56:53 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Aman Sharma <amanharitsh123@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] doc: Convert
- rculist_nulls.txt to rculist_nulls.rst
-Message-ID: <20200229075653.2fd7ae3e@lwn.net>
-In-Reply-To: <20200227180656.15187-1-amanharitsh123@gmail.com>
-References: <20200227180656.15187-1-amanharitsh123@gmail.com>
-Organization: LWN.net
+        Sat, 29 Feb 2020 10:19:45 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:60393 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727085AbgB2PTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 10:19:45 -0500
+Received: from callcc.thunk.org ([156.39.10.47])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01TFJ95N008890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Feb 2020 10:19:11 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id B8D2742045B; Sat, 29 Feb 2020 10:19:07 -0500 (EST)
+Date:   Sat, 29 Feb 2020 10:19:07 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Olof Johansson <olof@lixom.net>, Jon Nettleton <jon@solid-run.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200229151907.GA7378@mit.edu>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk>
+ <20200229095550.GX25745@shell.armlinux.org.uk>
+ <20200229110456.GY25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229110456.GY25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 23:36:53 +0530
-Aman Sharma <amanharitsh123@gmail.com> wrote:
-
-> This patch converts rculist_nulls from .txt to .rst format, and also adds
-> it to the index.rst file.
+On Sat, Feb 29, 2020 at 11:04:56AM +0000, Russell King - ARM Linux admin wrote:
 > 
-> Major changes includes:
-> 1) Addition of section headers and subsection headers.
-> 2) Addition of literal blocks which contains all the codes.
-> 3) Making enumerated list item by changing X) to X. where X is number
->    like 1,2,3 etc.
-> 
-> Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
-> ---
->  Documentation/RCU/index.rst         |   1 +
->  Documentation/RCU/rculist_nulls.rst | 179 ++++++++++++++++++++++++++++
->  Documentation/RCU/rculist_nulls.txt | 172 --------------------------
->  3 files changed, 180 insertions(+), 172 deletions(-)
->  create mode 100644 Documentation/RCU/rculist_nulls.rst
->  delete mode 100644 Documentation/RCU/rculist_nulls.txt
+> Could it be a race condition, or some problem that's specific to the
+> ARM64 kernel that's provoking this corruption?
 
-When you put out multiple versions of a patch, it's always good to say
-what has changed; you can put that information right after the "---" line
-above.  That's even more true if you send two versions within minutes of
-each other; recipients will want to know what is going on.
+Since I got brought in mid-way through this discussion, can someone
+summarize the vital details of the bughunt?  What kernel version is
+involved, and is this a regression?  If so, what's the last version of
+the kernel where you didn't have a problem on this hardware?
 
-Thanks,
+Can you trigger this failure reliably?
 
-jon
+Unfortunately, while I'm regularly running xfstests on x86_64 on a
+Google Compute Engine VM, I'm not doing any runs on arm64.  I can
+certainly build an arm-64.
+
+There's a test-appliance designed to be run on ARM64 here[1].
+
+[1] https://kernel.org/pub/linux/kernel/people/tytso/kvm-xfstests/xfstests-amd64.tar.xz
+
+which is a Debian chroot, designed to be run via android-xfstests[2], but
+if you unpack it, it should be possible to enter the chroot and
+trigger the xfstests run manually on any arm64 system.
+
+[2] https://thunk.org/android-xfstests
+
+Does anyone know if kernel CI is running xfstests regularly?
+
+Cheers,
+
+							- Ted
