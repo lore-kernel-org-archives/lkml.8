@@ -2,129 +2,115 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFEEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56573C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FA0214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 17:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FCA24680
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 18:00:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qtAfRnJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgB2Rwe (ORCPT
+        id S1727452AbgB2SAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 12:52:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:32786 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgB2Rwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 12:52:34 -0500
-Received: from [82.43.126.140] (helo=[192.168.0.11])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j86Hv-0004tX-Ia; Sat, 29 Feb 2020 17:52:31 +0000
-Subject: Re: ext4: convert file system to meta_bg if needed during resizing
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <633e75c4-acdc-1b88-ab47-4e922aac93d7@canonical.com>
- <20200229174249.GB7378@mit.edu>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a91e536b-cf9f-4827-c059-28a745b65d9d@canonical.com>
-Date:   Sat, 29 Feb 2020 17:52:31 +0000
+        Sat, 29 Feb 2020 13:00:49 -0500
+Received: from mout.web.de ([212.227.15.14]:51241 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727255AbgB2SAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 13:00:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1582999243;
+        bh=7sBLw6YJEvp4YGnhVu8axUBel3768vmvW/3wio3Tvrs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=qtAfRnJKKspS0RHfhCt1E4WknokrnCYugfF33HbDAP0DLHvUoETMDuBDK6Cb/zoRL
+         wWfmVya3ho8O4nTwy0AaXNmuWRC2tTPd9eVA11G7176fnVgSMy9hE9oePrdluKOyd3
+         6kAx+NjUxGca715D9QiSdN6NlcJ7+VfFmAsJues0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.10] ([95.157.55.156]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M6mgu-1jMLS32aM0-00wYrh; Sat, 29
+ Feb 2020 19:00:43 +0100
+Subject: Re: [FYI PATCH 1/3] KVM: nVMX: Don't emulate instructions in guest
+ mode
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     oupton@google.com, stable@vger.kernel.org
+References: <1582570596-45387-1-git-send-email-pbonzini@redhat.com>
+ <1582570596-45387-2-git-send-email-pbonzini@redhat.com>
+From:   Jan Kiszka <jan.kiszka@web.de>
+Message-ID: <41d80479-7dbc-d912-ff0e-acd48746de0f@web.de>
+Date:   Sat, 29 Feb 2020 19:00:43 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200229174249.GB7378@mit.edu>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1582570596-45387-2-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:K/jHwtzw689mEoMzdHglVU2xe90FSO4aqZUuGdceM+yoNQP7fNF
+ yed36k5DnywHOyrqBSxOfXIkztyjxTbL060SNBKrYNCOTTfde9p56s2j3sWdDwR2zS+dJSV
+ W/WFaP1oIAMpmlisINKv80Id7lq5HLUHSqcZqlhmV2IpiyRGJLc1aJx/UV3jrUnP1tNNX8B
+ SC6K3wbZYtFCtoyHGd0qw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/hg5W+EoB70=:Dah3NSIkxbpBmnflbNMGTf
+ wp7W+/OMFWZA0ez5TXiOBfnx8nyK1yJFV7n021lJAcCJuGqpYzL18ln/uf+T2PdZd0BihNfxh
+ Mf0lxP1j1Gq0jAVy8/kNSALW9hw6iCIMGv133Ljf2AEtiQfb9Eo8nwLB6PLdlnYdqJ/CeiwCe
+ dvwafZbCpWr9j9iEpERgfsztq1PGMQmFhLLz96zGREvZcixfZbwS9rz/MgtZOPCjeBEntukJo
+ VvaMTfMk/dxiuFUYz71OykHxrLkIlny+Od1fC3A20WhuwpEn+PxyUhLxRPvU0HKKvTN/JcTbb
+ uidQtjTVgx9VbyyqvFtrVninzRZi0/ftu9CfPPee18G3kwOzLTff4L01f6Bh0uhtv8gkPayK3
+ hkKZ9GladgJbQCKgEj9iQ9nWRyve/LcvRXKu39ICV6AAKDRf4t5wcgmHD+sIoR5a7s8C13Kps
+ b+yb1qfT4M3u8gpausB2H9le09mc1yaSwkxLbrvP3E8jdjrTrsdALF7YDW7ECLaR73+1hiY/O
+ 8s9Ww8NMie/q8WgS/XSSI/Ovc2P0WQMEznUXpAJ1qWPzd7nKkAOStcLeuTYz3crWtPBtsF8eD
+ AEkPBfe0/ytsTAnxjq/YHw9sMTH/4GZ8Kj7nUgwVQoFpN9MsWCiIYj4zmbRa7SFDnVfaDtd5h
+ 2Wvbe5KQk2twmCqjIxu5S3etW7SwZDaZQzUkFAIi07Fy0OoS9ZLIZe+K+Blgqn5WPjkeQzQVV
+ aEfQwzlJfWI0DO1UPKtAh3tMMLMkmpSwuPgdhT9hnDfKR/SsR37WIDaGZ+n1dhFti3omB5Vn3
+ p5Dun7qD+j0I8ZQerWhl+GfraE193d9Qw4EMHyxn42maP52m344JreBoycDvdfy5RJf/x/VrC
+ YZKi4TW0mNqJjytzTtxkB2xMtryWrShAmT3MhLoMWEuPWBh5qp256Vtvd/exYB1tSL3R4h1Cn
+ uSsXUh4PHPgmYZtKFHAejoBUTJD/DMhlvG6Lo121gSD1xBSZ1GACZRt7H3mbQL8H4V2uMgJ4S
+ +zmKQef40FDOP67VtD7mIGqO1DLaR9pC5YoAT1X8dZCGdawlrsVYzb1WRftQB2slS2+mh9g8z
+ MLKVnbYgHy4o/cYhYrgKh2fXUgj5vet91ZbTBYN/SLwRw6MOn3hrmsikr+d+62WDVvE5oFg16
+ J5yWnYOODK+CUds6xLrM4H9xR6CPPoSYNGRN6U/fyjk+dgL0D2XlTIb8amssKKzgfxjItXQfG
+ szTfSpPOPeo3vTz7i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/02/2020 17:42, Theodore Y. Ts'o wrote:
-> On Sat, Feb 29, 2020 at 12:39:34AM +0000, Colin Ian King wrote:
->> Hi,
->>
->> static analysis with Coverity has found an issue in function
->> ext4_convert_meta_bg() with the following commit
->>
->> commit 1c6bd7173d66b3dfdefcedb38cabc1fb03997509
->> Author: Theodore Ts'o <tytso@mit.edu>
->> Date:   Thu Sep 13 10:19:24 2012 -0400
->>
->>     ext4: convert file system to meta_bg if needed during resizing
->>
->> The analysis is as follows:
->>
->> 1898
->> 1899 errout:
->> 1900        ret = ext4_journal_stop(handle);
->> 1901        if (!err)
->>
->> Unused value (UNUSED_VALUE)assigned_value: Assigning value from ret to
->> err here, but that stored value is not used.
->>
->> 1902                err = ret;
->> 1903        return ret;
-> 
-> Line 1903 should be "return err".
-> 
-> Want to send a patch, or shall I just commit the fix?
-> 
->      	       	      	       	      - Ted
-> 
-I don't mind if you commit the fix, I wasn't sure what the appropriate
-fix was, so I kudos to you Ted for that.
+On 24.02.20 19:56, Paolo Bonzini wrote:
+> vmx_check_intercept is not yet fully implemented. To avoid emulating
+> instructions disallowed by the L1 hypervisor, refuse to emulate
+> instructions by default.
+>
+> Cc: stable@vger.kernel.org
+> [Made commit, added commit msg - Oliver]
+> Signed-off-by: Oliver Upton <oupton@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/vmx/vmx.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index dcca514ffd42..5801a86f9c24 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7164,7 +7164,7 @@ static int vmx_check_intercept(struct kvm_vcpu *vc=
+pu,
+>   	}
+>
+>   	/* TODO: check more intercepts... */
+> -	return X86EMUL_CONTINUE;
+> +	return X86EMUL_UNHANDLEABLE;
+>   }
+>
+>   #ifdef CONFIG_X86_64
+>
 
-Colin
+Is this expected to cause regressions on less common workloads?
+Jailhouse as L1 now fails when Linux as L2 tries to boot a CPU: L2-Linux
+gets a triple fault on load_current_idt() in start_secondary(). Only
+bisected so far, didn't debug further.
 
-
-
+Jan
