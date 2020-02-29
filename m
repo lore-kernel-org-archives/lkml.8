@@ -2,81 +2,108 @@ Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDCBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72660C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A642468D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583007429;
-	bh=bI6Kadk+Bdf2+EtRrnxOqRex3gc9Gu+/T3sPTnMdPZk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FLlYwwT50aYm6x1qDxOWmQRpVIl5VK3rYqgsySAs2cOdGMF1wfny6cIAjV0T0403d
-	 fwZ4fT+U5OQq8tYNsiZQ/UpJ+IkufHLzzH/Xvkjmt9mrAIbsg4nDlNMQeH/CChJnBQ
-	 vOyhznJMvWq/NLhyMeqH8q2SnQrM6KPdqgNr311A=
+	by mail.kernel.org (Postfix) with ESMTP id 381DC24688
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 20:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wLO3hacN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgB2URI (ORCPT
+        id S1727522AbgB2URu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 15:17:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbgB2URI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 15:17:08 -0500
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D81E24688;
-        Sat, 29 Feb 2020 20:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583007427;
-        bh=bI6Kadk+Bdf2+EtRrnxOqRex3gc9Gu+/T3sPTnMdPZk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1Rl4VzndwL25YEuRq2WetFDyJfsOmdZzmnB8WEUel2VzfoDNMmrzMkmYdWyIf07Zd
-         g2gMXhK2VyKrENRBGrXA06mYhbpT93SN/yiIjrVwaUFnTH0hF0olUMHLDfNqcmCyLY
-         usfwxBMA8MVY/vTOvsRLQWlmoOjDGHjn13d6HAEI=
-Date:   Sat, 29 Feb 2020 12:17:05 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
-Message-ID: <20200229121705.5e29c886@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <be229ebb-53a5-e048-9c68-1b4c7cc2ab9d@linaro.org>
-References: <20200228165343.8272-1-elder@linaro.org>
-        <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
-        <be229ebb-53a5-e048-9c68-1b4c7cc2ab9d@linaro.org>
+        Sat, 29 Feb 2020 15:17:50 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39748 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgB2URt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 15:17:49 -0500
+Received: by mail-io1-f67.google.com with SMTP id h3so7370001ioj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 12:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wmpPmvsEIyrnQOguFJJRRPmk+nI9F2PZon3IZMblz1w=;
+        b=wLO3hacNd3AO+uNA1CnNg95qpWPAeIVIN8j5Qi8kcMlj0w/64vVB58E2UUwauDE13S
+         JWxSJf2cO+VtN1eX5PUa75e2ImrKlI9yfywbApSzce7XacU7yCTNVimHDh+2c/j4Isr8
+         bcaQsNDcIluValQQMdy8PtzZqMzrCKRIT7c2B8YfrBK5SrWi4dFUgKjLc9t0jrjuxxzU
+         y6GdV19Fg9H1Vuq71UeKMoFiX8RhHj/Ge+CF9GCNJVanHzRV7JvXYTyfrmHopclIEf+t
+         16gm3SPcyONEDIECix611Gguwbr9/B6LX+HvcU/Wa0ZwVnu8uj1G1R+TdzZ16t8fSi+I
+         ZWaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wmpPmvsEIyrnQOguFJJRRPmk+nI9F2PZon3IZMblz1w=;
+        b=bnZiIYtAX/QtgwycDOTSBHyLKRZfLBoez3lIPMcRcyZTQVAom1dUjZ+FguMkA7xsHQ
+         moSvnrQtqTptF0zNZ5TfQq1EG7AU8mPq3Xfy3mX1rtRuihBfiraaBQJZG6F72mKWKZF4
+         4xzx6TgQCJ5rXGG73/04+GxUlCx2+YiefxOD7Lk9s6UJUWv8rT23jgo3q24lumginzQI
+         vpy4nXa/SGJmQTq4ozgQQr0acSVfpnQbAYlV31EEAUZ3O31Uvl7yIIxugs6yACz1ClbZ
+         6gcO4us0HChzKHhpxMZytSwrq07Pajs2Rt1JggPXjALEQzc3SaWxAFQNWSBwFpUpTWdh
+         jLpQ==
+X-Gm-Message-State: APjAAAVhZ9nOuxCsg0z4OcAxXwRXix6ifBaiTG6EfcbArgQZkGyeb/FU
+        FfuPLADg4zeN6sNNLsyMI93WsLy2+LcLfBMzRswYwQ==
+X-Google-Smtp-Source: APXvYqx3dpUf2n7ik6bI7eu9iMF2etEOearvMVPaaE0Ih/aI/ITxpHjzDEm78SmGWjK9fgGtSnoWNixiYwPJYeSJKwc=
+X-Received: by 2002:a02:cc58:: with SMTP id i24mr8110735jaq.24.1583007468804;
+ Sat, 29 Feb 2020 12:17:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1582570596-45387-1-git-send-email-pbonzini@redhat.com>
+ <1582570596-45387-2-git-send-email-pbonzini@redhat.com> <41d80479-7dbc-d912-ff0e-acd48746de0f@web.de>
+ <CAOQ_QshE7SMX2cO7H+21Fkdpg53oE2D3xrHPJHR_MCfH4r9QCQ@mail.gmail.com>
+ <CALMp9eRETy1RLWHWKtFHqpcpFHbQKtPgJHDD_N+LPzaUPx-Jvg@mail.gmail.com> <e8fe4664-d948-f239-4ec9-82d9010b7d26@web.de>
+In-Reply-To: <e8fe4664-d948-f239-4ec9-82d9010b7d26@web.de>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Sat, 29 Feb 2020 12:17:37 -0800
+Message-ID: <CALMp9eR9zcXO64n7hDTzZHPkfV8qtuMHAbc=nLX8S8x7Crum+A@mail.gmail.com>
+Subject: Re: [FYI PATCH 1/3] KVM: nVMX: Don't emulate instructions in guest mode
+To:     Jan Kiszka <jan.kiszka@web.de>
+Cc:     Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Feb 2020 07:10:45 -0600 Alex Elder wrote:
-> I should have actually checked my code before I sent this.  Yes
-> I am using the macro as I described, to see if something fits.
-> But I'm also using it this way:
-> 
-> 	foo = u32_get_bits(register, FOO_COUNT_FMASK);
-> 	if (foo == field_max(FOO_COUNT_MASK))
-> 		;	/* This has special meaning */
-> 
-> And another way:
-> 
-> 	size_limit = field_max(FOO_COUNT_MASK) * sizeof(struct foo);
-> 
-> So field_max() is really what I need here. 
+Since UMIP emulation is broken, I'm not sure why anyone would use it.
+(Sorry, Paolo.)
 
-Makes sense, in that case:
-
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+On Sat, Feb 29, 2020 at 11:21 AM Jan Kiszka <jan.kiszka@web.de> wrote:
+>
+> On 29.02.20 20:00, Jim Mattson wrote:
+> > On Sat, Feb 29, 2020 at 10:33 AM Oliver Upton <oupton@google.com> wrote:
+> >>
+> >> Hi Jan,
+> >>
+> >> On Sat, Feb 29, 2020 at 10:00 AM Jan Kiszka <jan.kiszka@web.de> wrote:
+> >>> Is this expected to cause regressions on less common workloads?
+> >>> Jailhouse as L1 now fails when Linux as L2 tries to boot a CPU: L2-Linux
+> >>> gets a triple fault on load_current_idt() in start_secondary(). Only
+> >>> bisected so far, didn't debug further.
+> >>
+> >> I'm guessing that Jailhouse doesn't use 'descriptor table exiting', so
+> >> when KVM gets the corresponding exit from L2 the emulation burden is
+> >> on L0. We now refuse the emulation, which kicks a #UD back to L2. I
+> >> can get a patch out quickly to address this case (like the PIO exiting
+> >> one that came in this series) but the eventual solution is to map
+> >> emulator intercept checks into VM-exits + call into the
+> >> nested_vmx_exit_reflected() plumbing.
+> >
+> > If Jailhouse doesn't use descriptor table exiting, why is L0
+> > intercepting descriptor table instructions? Is this just so that L0
+> > can partially emulate UMIP on hardware that doesn't support it?
+> >
+>
+> That seems to be the case: My host lacks umip, L1 has it. So, KVM is
+> intercepting descriptor table load instructions to emulate umip.
+> Jailhouse never activates that interception.
+>
+> Jan
