@@ -2,159 +2,122 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD568C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05DAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E92D21775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E5D21775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:43:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JwLHxczl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgCAXm1 (ORCPT
+        id S1726744AbgCAXnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 18:42:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34906 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726562AbgCAXm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 18:42:27 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 021NYxCs059463
-        for <linux-kernel@vger.kernel.org>; Sun, 1 Mar 2020 18:42:25 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfn15agrg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 18:42:25 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Sun, 1 Mar 2020 23:42:23 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 1 Mar 2020 23:42:15 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 021NgECQ48037968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 1 Mar 2020 23:42:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8BBBA404D;
-        Sun,  1 Mar 2020 23:42:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52D62A4057;
-        Sun,  1 Mar 2020 23:42:14 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun,  1 Mar 2020 23:42:14 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        Sun, 1 Mar 2020 18:43:31 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51847 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgCAXna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 18:43:30 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3D5BCA00BE;
-        Mon,  2 Mar 2020 10:42:09 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Mon, 02 Mar 2020 10:42:12 +1100
-In-Reply-To: <20200228071520.GA2897773@kroah.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-26-alastair@au1.ibm.com>
-         <96687fbf-38ab-13ff-ca19-ccb67bbc4405@linux.ibm.com>
-         <20200228071520.GA2897773@kroah.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48W0G76Sfqz9sSQ;
+        Mon,  2 Mar 2020 10:43:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583106208;
+        bh=gIZXNiNPVslt627TKckA0B3yIPamJysGD6GIC0Ae2QI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JwLHxczlDseMQdo8piauim84SpJyz9o0/zXn+L9P1vjrw5erU6ycw3BrIZGNa98wS
+         yVYq9XU2UmIKMw4D0RZekbjiID4eieeqSdNoAcTkYlkmRUUY6c2ffrrtEtStkSMOM4
+         JAxgNloLTTTVqcnIXiIjGzWgmUvGV5qcQrfTomDCtyCEG5HApLJsqe64+ej6K0Lpe9
+         82+/gTpSC6scjci8AL36ArZboinHyaZXjBVxwf7rQx+jewFwKdGeHR9slbQRrBwImo
+         uakjvyIrOfzW+hsdwtUMO8n57qb4jrcyLRvcYZDdNXarHyqbpq5cgi7rjAtqDNrAW0
+         Z7rKKmPDs4YUg==
+Date:   Mon, 2 Mar 2020 10:43:21 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Gurchetan Singh <gurchetansingh@chromium.org>
+Subject: linux-next: manual merge of the drm tree with the drm-misc-fixes
+ tree
+Message-ID: <20200302104321.26803fb6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030123-0028-0000-0000-000003DFAB5C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030123-0029-0000-0000-000024A4D240
-Message-Id: <4075f48568fee61123579d4edea0e7939b4b2e6c.camel@au1.ibm.com>
-Subject: RE: [PATCH v3 25/27] powerpc/powernv/pmem: Expose the serial number in
- sysfs
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-01_09:2020-02-28,2020-03-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- mlxlogscore=869 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003010189
+Content-Type: multipart/signed; boundary="Sig_/wIzYF3MvTJ9821ko1+UV.eo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 08:15 +0100, Greg Kroah-Hartman wrote:
-> On Fri, Feb 28, 2020 at 05:25:31PM +1100, Andrew Donnellan wrote:
-> > On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > > +int ocxlpmem_sysfs_add(struct ocxlpmem *ocxlpmem)
-> > > +{
-> > > +	int i, rc;
-> > > +
-> > > +	for (i = 0; i < ARRAY_SIZE(attrs); i++) {
-> > > +		rc = device_create_file(&ocxlpmem->dev, &attrs[i]);
-> > > +		if (rc) {
-> > > +			for (; --i >= 0;)
-> > > +				device_remove_file(&ocxlpmem->dev,
-> > > &attrs[i]);
-> > 
-> > I'd rather avoid weird for loop constructs if possible.
-> > 
-> > Is it actually dangerous to call device_remove_file() on an attr
-> > that hasn't
-> > been added? If not then I'd rather define an err: label and loop
-> > over the
-> > whole array there.
-> 
-> None of this should be used at all, just use attribute groups
-> properly
-> and the driver core will handle this all for you.
-> 
-> device_create/remove_file should never be called by anyone anymore if
-> at all
-> possible.
-> 
-> thanks,
-> 
-> greg k-h
+--Sig_/wIzYF3MvTJ9821ko1+UV.eo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-Thanks, I'll rework it to use the .groups member of struct pci_driver.
+Today's linux-next merge of the drm tree got a conflict in:
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+  drivers/gpu/drm/virtio/virtgpu_object.c
 
+between commit:
+
+  6be7e0733548 ("drm/virtio: fix mmap page attributes")
+
+from the drm-misc-fixes tree and commit:
+
+  18b39fb975b7 ("drm/virtio: add virtio_gpu_is_shmem helper")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/virtio/virtgpu_object.c
+index 3af7ec80c7da,c5cad949eb8d..000000000000
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@@ -98,8 -123,7 +123,8 @@@ struct drm_gem_object *virtio_gpu_creat
+  	if (!bo)
+  		return NULL;
+ =20
+- 	bo->base.base.funcs =3D &virtio_gpu_gem_funcs;
++ 	bo->base.base.funcs =3D &virtio_gpu_shmem_funcs;
+ +	bo->base.map_cached =3D true;
+  	return &bo->base.base;
+  }
+ =20
+
+--Sig_/wIzYF3MvTJ9821ko1+UV.eo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5cSJkACgkQAVBC80lX
+0GwgUgf/YEcABNQy6d1hVxM974xgFj1/0taBQ0xWzG7FxL25ImmMacUZJFCjWWzh
+tON1pgmXeyxLS5tBJPtOJ0al6s4pWY05Rvb6pTcGi62QqIw+ptDLvznbkuEb2L52
+NznfnbqT9PaZJqp/fHP94u8Zx3gAvsLEAAnCxyPPaQm60CYiWxWUX3/biUp4KwgI
+eixKGPk0KydJgY9fnQDMHV14u3J99VMCm80a2uTbdJj6SIVuEP5rWJRRw1/HzCUh
+180Nv4uXRlRrXXjzowHbISyLYSSpP8ym3aBim9ORP0Y8RQkJaHWtaVpbgT959pqv
+ZSTHJHjjyW1w1ZvCAWSHDi4bmikYUA==
+=J+7D
+-----END PGP SIGNATURE-----
+
+--Sig_/wIzYF3MvTJ9821ko1+UV.eo--
