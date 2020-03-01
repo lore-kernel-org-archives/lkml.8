@@ -2,104 +2,94 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD17C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3E3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901A2214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69C320880
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dQm0rw8u"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ATXgwuZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgCALcg (ORCPT
+        id S1726642AbgCALgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 06:32:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50752 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725787AbgCALcg (ORCPT
+        Sun, 1 Mar 2020 06:36:39 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41198 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgCALgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 06:32:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583062355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zR/LdJJnupWbWl+mH1H8twhZv1I1NZI2NpfYhhtSOII=;
-        b=dQm0rw8u/fDD6/E1uULWdMzjlq+1WeznPLkrG6wZQJOeKhrWw0NkOLBCZ915DwRHyj5mso
-        9ktD8V/QL3imonbtkt5Y+V3/uyHLodyBL4NAj+PPFDqvPyceh5Ou7V2ov1pa9FXRof1UKf
-        +jkC815x5IReC2vPLSNZeBSGeHR8VdU=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-BfwoqQp7MASZL-SfoU-b7Q-1; Sun, 01 Mar 2020 06:32:31 -0500
-X-MC-Unique: BfwoqQp7MASZL-SfoU-b7Q-1
-Received: by mail-qv1-f72.google.com with SMTP id cn2so6668165qvb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 03:32:31 -0800 (PST)
+        Sun, 1 Mar 2020 06:36:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y17so5629522lfe.8
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 03:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/8HHbT56y06/N1CQ2ArO28lxgfkM21Fuvg5jrhOPedQ=;
+        b=ATXgwuZH2VDKS//DmttCnhs4pWquSMQE5U+U+aim54TxSinHVu4DXWERNKW+kkU2wY
+         RdgMKj6PdiHxxjpVs/D2qVl4POoCqW0f27aTIF0//7xZemZJxwdPw7N9zVkafZ9OUDpM
+         lQ2/JvljzOmblHmX+xEK6cSqaAHL0L8aLWA5PIEX6B3G7/6rF2e4gW5x0hQOxZDKh5A1
+         R0j8ppu+szvttqmGmMs+++bXBINUUEQ+DeUnZH7kaWhgE3xouEsqupi/xLy25aXwUBe5
+         xtzu+Ew4FZAjTprTDLaqvQ11SuHHpWOu2boOUqHtI2v+7GIIvlGtBscIdxUZ6wT+Fa7c
+         ryjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zR/LdJJnupWbWl+mH1H8twhZv1I1NZI2NpfYhhtSOII=;
-        b=YDJ3t/K9fpmYRzcx7WXLty95TUFrBBJn2u/X/81Mnm6MoYGctStSSkhHZQzZJp4Gis
-         49nSDzsda6TbdXbnPF23PrNjg6EuYHKPeR3vyz///gS7gO83pfnyzvMWmISi1uZdRAVL
-         HitlswXwjvRw+I8c9roQnSveXVeovN8xCE00RngO+LxQZa9P9BUr5YCjniJ+V2YJJ46t
-         ++D5ioS0HKNKI4VxXZRP1v5T+bs2o4qR8o9klHTaJFqSyKVJGx436IRAvkhsNXYQgRLJ
-         k1mgH6Don/dSutLookRb6rsKgXAyKIRwBhdHyajhHNDS40yJFLm04QH47uSDAr5LmG+T
-         IjmQ==
-X-Gm-Message-State: APjAAAV6wKJGRobWvX6eDDP9lHb8Skb3BqdcgQWV/RALjf7U9dbXnNTE
-        q22S5xwfqvTg08uQkxu2wIwrPxLj8ZfVO/r6WW/gIjup9XXNpTs2YYZm6lK19HRz0dVz4eThQUn
-        THfbhFedaP02z9sUqHQOwpTWH
-X-Received: by 2002:a37:a9c3:: with SMTP id s186mr11388264qke.118.1583062350999;
-        Sun, 01 Mar 2020 03:32:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwN2KD8vMG5Oz6ApHiiKMTGkLA+MN8pVictr/ay8FZqU16cVcRdz1BqNJooFZNymjo2uQiuXw==
-X-Received: by 2002:a37:a9c3:: with SMTP id s186mr11388257qke.118.1583062350805;
-        Sun, 01 Mar 2020 03:32:30 -0800 (PST)
-Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
-        by smtp.gmail.com with ESMTPSA id 17sm5675999qkc.81.2020.03.01.03.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 03:32:30 -0800 (PST)
-Date:   Sun, 1 Mar 2020 06:32:25 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Yuri Benditovich <yuri.benditovich@daynix.com>
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, yan@daynix.com
-Subject: Re: [PATCH v2 0/3] virtio-net: introduce features defined in the spec
-Message-ID: <20200301063121-mutt-send-email-mst@kernel.org>
-References: <20200301110733.20197-1-yuri.benditovich@daynix.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/8HHbT56y06/N1CQ2ArO28lxgfkM21Fuvg5jrhOPedQ=;
+        b=jY2s7yyw37Kah+5dkgAkuvkm05+zJxrVBgOm4wIRuTt6bqxx161mLn5S4l070uYDys
+         Zw1BCUCxIZbrKX/3QN3ntyWmFS3WWsOSg1rkLL+ReGT1V8vrMS6Dyxt2ZR1Py06EtLc+
+         NjtwKfYwSyG8EHceJ0llM+kRqrhyOZmVWcLkAXG9+XdchBLidjMI28wdrp0CqsWbnKto
+         gJyv4fEJaGnFFUlTFRb7RQGv2dHzAsvJwXJTa2iHoLwiSRP8c7wVFA6j2QeNHTIFHGmS
+         jYGfgS5nwcnX6bE3U8cgx+MIXyXJzry3xXLoqRW84Nb9rIEJUF4h2Bcd42ChgsG7GmGy
+         dERA==
+X-Gm-Message-State: ANhLgQ3jXS0+BmuajmCO660KQrPcODECzch33m1fnKM+NmJZIXwDDZPu
+        MCucsD1HrDDhjaTogdfHel58XiIgCMs=
+X-Google-Smtp-Source: ADFU+vsw36imBme+IXC8InTEQHv2zlJFuF8e7t/Zs+Jp5Kp2lmwBkCd+mDS1Fi1ibawRLq27Yj4s5Q==
+X-Received: by 2002:a19:750c:: with SMTP id y12mr7494621lfe.109.1583062596740;
+        Sun, 01 Mar 2020 03:36:36 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:631:be36:41f9:a0d4:22df:3c65? ([2a00:1fa0:631:be36:41f9:a0d4:22df:3c65])
+        by smtp.gmail.com with ESMTPSA id n13sm9700980lji.91.2020.03.01.03.36.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 03:36:36 -0800 (PST)
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: phy: mscc: document LOS
+ active low property
+To:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200227154033.1688498-1-antoine.tenart@bootlin.com>
+ <20200227154033.1688498-2-antoine.tenart@bootlin.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <43b3a101-9596-6476-8170-f09276311de7@cogentembedded.com>
+Date:   Sun, 1 Mar 2020 14:36:34 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200301110733.20197-1-yuri.benditovich@daynix.com>
+In-Reply-To: <20200227154033.1688498-2-antoine.tenart@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 01:07:30PM +0200, Yuri Benditovich wrote:
-> This series introduce virtio-net features VIRTIO_NET_F_RSC_EXT,
-> VIRTIO_NET_F_RSS and VIRTIO_NET_F_HASH_REPORT.
+Hello!
+
+On 27.02.2020 18:40, Antoine Tenart wrote:
+
+> This patch adds a "vsc8584,los-active-low" property to denote when the
+
+    The part before comma is supposed to be a vendor name, no?
+
+> LOS signal connected directly to the PHY is active low.
 > 
-> Changes from v1:
-> __virtio -> __le
-> maximal -> maximum
-> minor style fixes
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+[...]
 
-
-Looks good to me - sent a bit of consmetics.
-
-But as any virtio UAPI change, please CC virtio-dev as virtio TC maintains the
-interface. Thanks!
-
-> Yuri Benditovich (3):
->   virtio-net: Introduce extended RSC feature
->   virtio-net: Introduce RSS receive steering feature
->   virtio-net: Introduce hash report feature
-> 
->  include/uapi/linux/virtio_net.h | 90 +++++++++++++++++++++++++++++++--
->  1 file changed, 86 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.17.1
-
+MBR, Sergei
