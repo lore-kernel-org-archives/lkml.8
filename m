@@ -2,88 +2,42 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B362AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897DCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E26E24680
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583073904;
-	bh=kt741SrzGymR/U+kiWUmgrZjC78gpmkY1yf0gURzkCE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Acnnx/FYmvkXQPbczW+egvHTup4hpvYN/z+YgQ83c753MK3R6Zke/SW1kun1X8OdM
-	 KVmCr6WlO19tVLXofV5fL2NcWZKSgv+tfgx/R0xjTC9XKPKhgFmxzPWWrITmL2XfxE
-	 qGTU7d7xuiZkWnnya1TsQhk5rqtiBZVHO3iBF3KU=
+	by mail.kernel.org (Postfix) with ESMTP id 6B55A21D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCAOpC (ORCPT
+        id S1726602AbgCAPCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 09:45:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbgCAOpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 09:45:01 -0500
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 674A120880;
-        Sun,  1 Mar 2020 14:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583073901;
-        bh=kt741SrzGymR/U+kiWUmgrZjC78gpmkY1yf0gURzkCE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dOzzEBsJPve5MnjWSoDv41KxBMEx4EU9TJ/uQBkv5y0Kx0SbhxJJpfh/K4elLU0W6
-         DhoOKm0/eT5xUOpGtESCGzcNMHdIIb1VKe4TSdTMRWyb/xXSDlckPzugyZ4Wo1Z03+
-         Eq4V462zCZhyJn8cu0wifNqJ7GfungYAXs/gS/SU=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Ariel Elior <aelior@marvell.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Casey Leedom <leedom@chelsio.com>,
-        Christian Benvenuti <benve@cisco.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Derek Chickles <dchickles@marvell.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        GR-everest-linux-l2@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Li Yang <leoyang.li@nxp.com>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        netdev@vger.kernel.org,
-        Pantelis Antoniou <pantelis.antoniou@gmail.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Raghu Vatsavayi <rvatsavayi@caviumnetworks.com>,
-        Rasesh Mody <rmody@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Sathya Perla <sathya.perla@broadcom.com>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        Vishal Kulkarni <vishal@chelsio.com>
-Subject: [PATCH net-next 00/23] Clean driver, module and FW versions
-Date:   Sun,  1 Mar 2020 16:44:33 +0200
-Message-Id: <20200301144457.119795-1-leon@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Sun, 1 Mar 2020 10:02:17 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57351 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAPCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 10:02:16 -0500
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0DC28FF80E;
+        Sun,  1 Mar 2020 15:01:58 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v3 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Sun,  1 Mar 2020 16:09:16 +0100
+Message-Id: <20200301150920.55993-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,116 +45,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
-Hi,
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-This is second batch of the series which removes various static versions
-in favour of globaly defined Linux kernel version.
+ Changes:
 
-The first part with better cover letter can be found here
-https://lore.kernel.org/lkml/20200224085311.460338-1-leon@kernel.org
+ v2-v3: no change
 
-The code is based on
-68e2c37690b0 ("Merge branch 'hsr-several-code-cleanup-for-hsr-module'")
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-and WIP branch is
-https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=ethtool
-
-Thanks
-
-Leon Romanovsky (23):
-  net/broadcom: Clean broadcom code from driver versions
-  net/broadcom: Don't set N/A FW if it is not available
-  net/brocade: Delete driver version
-  net/liquidio: Delete driver version assignment
-  net/liquidio: Delete non-working LIQUIDIO_PACKAGE check
-  net/cavium: Clean driver versions
-  net/cavium: Delete N/A assignments for ethtool
-  net/chelsio: Delete drive and  module versions
-  net/chelsio: Don't set N/A for not available FW
-  net/cirrus: Delete driver version
-  net/cisco: Delete driver and module versions
-  net/cortina: Delete driver version from ethtool output
-  net/davicom: Delete ethtool version assignment
-  net/dec: Delete driver versions
-  net/dlink: Remove driver version and release date
-  net/dnet: Delete static version from the driver
-  net/emulex: Delete driver version
-  net/faraday: Delete driver version from the drivers
-  net/fealnx: Delete driver version
-  net/freescale: Clean drivers from static versions
-  net/freescale: Don't set zero if FW not-available in dpaa
-  net/freescale: Don't set zero if FW not-available in ucc_geth
-  net/freescale: Don't set zero if FW iand bus not-available in gianfar
-
- drivers/net/ethernet/broadcom/b44.c           |  5 ----
- drivers/net/ethernet/broadcom/bcm63xx_enet.c  | 10 ++-----
- drivers/net/ethernet/broadcom/bcmsysport.c    |  1 -
- drivers/net/ethernet/broadcom/bnx2.c          | 11 --------
- drivers/net/ethernet/broadcom/bnx2x/bnx2x.h   |  8 +++++-
- .../ethernet/broadcom/bnx2x/bnx2x_ethtool.c   |  7 -----
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  7 -----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  8 ------
- drivers/net/ethernet/broadcom/bnxt/bnxt.h     |  4 ++-
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c |  1 -
- drivers/net/ethernet/broadcom/bnxt/bnxt_vfr.c |  1 -
- .../net/ethernet/broadcom/genet/bcmgenet.c    |  1 -
- drivers/net/ethernet/broadcom/tg3.c           | 11 +-------
- drivers/net/ethernet/brocade/bna/bnad.c       |  4 ---
- drivers/net/ethernet/brocade/bna/bnad.h       |  2 --
- .../net/ethernet/brocade/bna/bnad_ethtool.c   |  1 -
- .../ethernet/cavium/liquidio/lio_ethtool.c    |  2 --
- .../net/ethernet/cavium/liquidio/lio_main.c   |  8 ------
- .../ethernet/cavium/liquidio/lio_vf_main.c    |  5 ++--
- .../cavium/liquidio/liquidio_common.h         |  6 -----
- .../ethernet/cavium/liquidio/octeon_console.c | 10 ++-----
- .../net/ethernet/cavium/octeon/octeon_mgmt.c  |  6 -----
- .../ethernet/cavium/thunder/nicvf_ethtool.c   |  2 --
- drivers/net/ethernet/chelsio/cxgb/common.h    |  1 -
- drivers/net/ethernet/chelsio/cxgb/cxgb2.c     |  3 ---
- .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   |  4 ---
- drivers/net/ethernet/chelsio/cxgb3/version.h  |  2 --
- drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |  3 +--
- .../ethernet/chelsio/cxgb4/cxgb4_ethtool.c    |  6 +----
- .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   | 10 -------
- .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |  9 -------
- .../ethernet/chelsio/libcxgb/libcxgb_ppm.c    |  2 --
- drivers/net/ethernet/cirrus/ep93xx_eth.c      |  2 --
- drivers/net/ethernet/cisco/enic/enic.h        |  2 --
- .../net/ethernet/cisco/enic/enic_ethtool.c    |  1 -
- drivers/net/ethernet/cisco/enic/enic_main.c   |  3 ---
- drivers/net/ethernet/cortina/gemini.c         |  2 --
- drivers/net/ethernet/davicom/dm9000.c         |  2 --
- drivers/net/ethernet/dec/tulip/de2104x.c      | 15 -----------
- drivers/net/ethernet/dec/tulip/dmfe.c         | 14 ----------
- drivers/net/ethernet/dec/tulip/tulip_core.c   | 26 ++-----------------
- drivers/net/ethernet/dec/tulip/uli526x.c      | 13 ----------
- drivers/net/ethernet/dec/tulip/winbond-840.c  | 12 ---------
- drivers/net/ethernet/dlink/dl2k.c             |  9 -------
- drivers/net/ethernet/dlink/sundance.c         | 20 --------------
- drivers/net/ethernet/dnet.c                   |  1 -
- drivers/net/ethernet/dnet.h                   |  1 -
- drivers/net/ethernet/emulex/benet/be.h        |  1 -
- .../net/ethernet/emulex/benet/be_ethtool.c    |  1 -
- drivers/net/ethernet/emulex/benet/be_main.c   |  5 +---
- drivers/net/ethernet/faraday/ftgmac100.c      |  2 --
- drivers/net/ethernet/faraday/ftmac100.c       |  3 ---
- drivers/net/ethernet/fealnx.c                 | 20 --------------
- .../ethernet/freescale/dpaa/dpaa_ethtool.c    | 11 --------
- .../net/ethernet/freescale/enetc/enetc_pf.c   | 13 ----------
- .../net/ethernet/freescale/enetc/enetc_vf.c   | 12 ---------
- drivers/net/ethernet/freescale/fec_main.c     |  1 -
- .../ethernet/freescale/fs_enet/fs_enet-main.c |  2 --
- .../net/ethernet/freescale/fs_enet/fs_enet.h  |  2 --
- drivers/net/ethernet/freescale/gianfar.c      |  2 --
- drivers/net/ethernet/freescale/gianfar.h      |  1 -
- .../net/ethernet/freescale/gianfar_ethtool.c  |  4 ---
- drivers/net/ethernet/freescale/ucc_geth.c     |  1 -
- drivers/net/ethernet/freescale/ucc_geth.h     |  1 -
- .../net/ethernet/freescale/ucc_geth_ethtool.c |  2 --
- 65 files changed, 22 insertions(+), 346 deletions(-)
-
---
-2.24.1
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
+ 
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
+-- 
+2.25.1
 
