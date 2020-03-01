@@ -2,108 +2,160 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04377C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C581C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD220214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583075391;
-	bh=L1d+AItbkkBXszkIwnSetgpZqP66VqdmSi0YX0Mk4EY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fq/WNq9KwpXVa7IinvC3qAHXiMhB52Zw5RKekXvyOSvXVkGDFzlZYULG43FiuXJTl
-	 grOHiL8zyCr0In91TcafN0JAc+3TiXckixNVUkiNibFbDPOnjhQ4eXl4gLVsswo6z9
-	 x1Y1FCxGBl3D0eIyDXgyI64CDpMbui8L4h975hd8=
+	by mail.kernel.org (Postfix) with ESMTP id 6F538214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgCAPJZ (ORCPT
+        id S1726579AbgCAPOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgCAPJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:09:25 -0500
-Received: from localhost (unknown [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 1 Mar 2020 10:14:01 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:45516 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAPOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 10:14:01 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00582214DB;
-        Sun,  1 Mar 2020 15:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583075364;
-        bh=L1d+AItbkkBXszkIwnSetgpZqP66VqdmSi0YX0Mk4EY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bZ59e6zO12/gehlMba0wC1AqoYskJYZ31aUz4qLL0ZrKxlDM8sc/4RI3soeWvuW6p
-         8e7qZxnQ0j/KSyqYcHl131c+J+qPMNcBVi9Rmf00PcoQCIc6z4VBPdhRk3Yv0deJBj
-         z7JsJOlgYSYYeEDeSQVfhNcc3svn+CQ9EoEtivds=
-Date:   Sun, 1 Mar 2020 16:09:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Forest Bond <forest@alittletooquiet.net>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH] staging: vt6656: Declare a few variables as __read_mostly
-Message-ID: <20200301150913.GA1470815@kroah.com>
-References: <20200301112620.7892-1-oscar.carter@gmx.com>
- <20200301122514.GA1461917@kroah.com>
- <20200301131701.GA7487@ubuntu>
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48VmyF5F3XzKm9t;
+        Sun,  1 Mar 2020 16:13:57 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id Rk-9Jz51Rj94; Sun,  1 Mar 2020 16:13:52 +0100 (CET)
+Date:   Mon, 2 Mar 2020 02:13:33 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
+Message-ID: <20200301151333.bsjfdjcjddsza2vn@yavin>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vg5uvlw455hqb7u3"
 Content-Disposition: inline
-In-Reply-To: <20200301131701.GA7487@ubuntu>
+In-Reply-To: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 02:17:01PM +0100, Oscar Carter wrote:
-> On Sun, Mar 01, 2020 at 01:25:14PM +0100, Greg Kroah-Hartman wrote:
-> > On Sun, Mar 01, 2020 at 12:26:20PM +0100, Oscar Carter wrote:
-> > > These include module parameters.
-> > >
-> > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > > ---
-> > >  drivers/staging/vt6656/main_usb.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-> > > index 5e48b3ddb94c..701300202b21 100644
-> > > --- a/drivers/staging/vt6656/main_usb.c
-> > > +++ b/drivers/staging/vt6656/main_usb.c
-> > > @@ -49,12 +49,12 @@ MODULE_LICENSE("GPL");
-> > >  MODULE_DESCRIPTION(DEVICE_FULL_DRV_NAM);
-> > >
-> > >  #define RX_DESC_DEF0 64
-> > > -static int vnt_rx_buffers = RX_DESC_DEF0;
-> > > +static int __read_mostly vnt_rx_buffers = RX_DESC_DEF0;
-> > >  module_param_named(rx_buffers, vnt_rx_buffers, int, 0644);
-> > >  MODULE_PARM_DESC(rx_buffers, "Number of receive usb rx buffers");
-> > >
-> > >  #define TX_DESC_DEF0 64
-> > > -static int vnt_tx_buffers = TX_DESC_DEF0;
-> > > +static int __read_mostly vnt_tx_buffers = TX_DESC_DEF0;
-> > >  module_param_named(tx_buffers, vnt_tx_buffers, int, 0644);
-> > >  MODULE_PARM_DESC(tx_buffers, "Number of receive usb tx buffers");
-> > >
-> >
-> > Why?  What does this help with?
-> 
-> If we declare these variables __read_mostly we can improve the performance. If
-> these variables are read many more times than written, each core of a multicore
-> system can maintain a copy in a local cache and the time to access is less than
-> if they use the shared-cache.
 
-This is a USB driver, performance is always limited to the hardware, not
-the CPU location of variables.
+--vg5uvlw455hqb7u3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please always benchmark things to see if it actually makes sense to make
-changes like this, before proposing them.
+On 2020-03-01, Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
+> This fixes a deadlock in the tracer when tracing a multi-threaded
+> application that calls execve while more than one thread are running.
+>=20
+> I observed that when running strace on the gcc test suite, it always
+> blocks after a while, when expect calls execve, because other threads
+> have to be terminated.  They send ptrace events, but the strace is no
+> longer able to respond, since it is blocked in vm_access.
+>=20
+> The deadlock is always happening when strace needs to access the
+> tracees process mmap, while another thread in the tracee starts to
+> execve a child process, but that cannot continue until the
+> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+>=20
+> strace          D    0 30614  30584 0x00000000
+> Call Trace:
+> __schedule+0x3ce/0x6e0
+> schedule+0x5c/0xd0
+> schedule_preempt_disabled+0x15/0x20
+> __mutex_lock.isra.13+0x1ec/0x520
+> __mutex_lock_killable_slowpath+0x13/0x20
+> mutex_lock_killable+0x28/0x30
+> mm_access+0x27/0xa0
+> process_vm_rw_core.isra.3+0xff/0x550
+> process_vm_rw+0xdd/0xf0
+> __x64_sys_process_vm_readv+0x31/0x40
+> do_syscall_64+0x64/0x220
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>=20
+> expect          D    0 31933  30876 0x80004003
+> Call Trace:
+> __schedule+0x3ce/0x6e0
+> schedule+0x5c/0xd0
+> flush_old_exec+0xc4/0x770
+> load_elf_binary+0x35a/0x16c0
+> search_binary_handler+0x97/0x1d0
+> __do_execve_file.isra.40+0x5d4/0x8a0
+> __x64_sys_execve+0x49/0x60
+> do_syscall_64+0x64/0x220
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>=20
+> The proposed solution is to have a second mutex that is
+> used in mm_access, so it is allowed to continue while the
+> dying threads are not yet terminated.
+>=20
+> I also took the opportunity to improve the documentation
+> of prepare_creds, which is obviously out of sync.
+>
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-thanks,
+I can't comment on the validity of the patch, but I also found and
+reported this issue in 2016[1] and the discussion quickly veered into
+the problem being more complicated (and uglier) than it seems at first
+glance.
 
-greg k-h
+You should probably also Cc stable, given this has been a long-standing
+issue and your patch doesn't look (too) invasive.
+
+[1]: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--vg5uvlw455hqb7u3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlvRGgAKCRCdlLljIbnQ
+EjRbAPwOWy8usv2Qm9fpwRZDJoGAGVji8JaOgbWjcOY+L7Oi0wEAqx+Ima9ZqQxy
+8D24v6MY2GXoi53rQW5HdUcLes0joQo=
+=LnSE
+-----END PGP SIGNATURE-----
+
+--vg5uvlw455hqb7u3--
