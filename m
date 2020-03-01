@@ -2,150 +2,84 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C49EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2087F246D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DC5246D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583087168;
-	bh=iGyDbZTZc2mTFtN+89VlucoGW+2KGQYnR0ya2KuoYGw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gFCavp/Qu9c74skLy/F0+LfYpRp9zqA99U7J+1MzINtyxjD6NfrTfIK55Htj8RVJN
-	 CFhVLy0mPla8KacsQJ96X1aXrhH9gthh0VXmGFDT1Wsuq48tsguvaknvjO/cy3pHsc
-	 6r5T5Z9njwwUHx8oHo0yNR6ouUvllUH7C+ooxDNU=
+	s=default; t=1583087556;
+	bh=GOHQ3umUBu5BEnrmOm6f0fS44zEn7yEiHI8nMTgJgTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ygg/RimtUWY94wgV23T4yRg7WPAuRtXG5W8roNWUTOxjenFAaFaPBErZl/ir8U43s
+	 KCkSuyli66b2NzDr5e7r6KlyAst3MAgei/sOrnan5Xu6WcUHX1WuA+LrW0qL5I5bdP
+	 aWyUFD4u0nZpE3KW7nduaAxxvWfImgmCf0ytbNQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCAS0G (ORCPT
+        id S1726690AbgCASce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 13:26:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37508 "EHLO mail.kernel.org"
+        Sun, 1 Mar 2020 13:32:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgCAS0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 13:26:06 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726418AbgCASce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 13:32:34 -0500
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878C5246B9;
-        Sun,  1 Mar 2020 18:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72AA3246D4;
+        Sun,  1 Mar 2020 18:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583087165;
-        bh=iGyDbZTZc2mTFtN+89VlucoGW+2KGQYnR0ya2KuoYGw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=AmJQkHihxDgTLHhdxB80KQTo8RnH4Ic2leol+BeqKLH+pYsV70r3olmQfqJ9JFMOa
-         tHxBKteuu+YYvkWCmi6011ovQ+tEZvMbgmNtgbN+tDsdj+KQZR3rOJPLilO9HjMsqL
-         CEtAkqJLoGaY+thdWNMy/Y8zlFL5sLEbSSXz66Tc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5D471352272F; Sun,  1 Mar 2020 10:26:05 -0800 (PST)
-Date:   Sun, 1 Mar 2020 10:26:05 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
-Message-ID: <20200301182605.GT2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87imjofkhx.fsf@nanos.tec.linutronix.de>
- <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net>
- <87d09wf6dw.fsf@nanos.tec.linutronix.de>
- <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
- <878skkeygm.fsf@nanos.tec.linutronix.de>
+        s=default; t=1583087553;
+        bh=GOHQ3umUBu5BEnrmOm6f0fS44zEn7yEiHI8nMTgJgTI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cUP/0V54kpu2sQ+h0/PxsiF63letvU+vcX8YvhJIhlLyFa44M9TTNaU0eSPy04KsB
+         vOXG+adWcdipgEah2OrN6uIa9hkSGlim5iSEBGIlROsvEgtZ3Ic3ebBol9Hgw33WNg
+         VsGjsZVBeKrIwLqE1QXLXo+7z8BpDrGlafKXZPkA=
+Date:   Sun, 1 Mar 2020 10:32:31 -0800
+From:   Keith Busch <kbusch@kernel.org>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: Check for readiness more quickly, to speed up boot
+ time
+Message-ID: <20200301183231.GA544682@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200229025228.GA203607@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878skkeygm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200229025228.GA203607@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:
-> Andy Lutomirski <luto@kernel.org> writes:
-> > On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> Andy Lutomirski <luto@amacapital.net> writes:
-> >> >> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> >> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
-> >> >> except trace_hardirq_off/on() as those trace functions do not allow to
-> >> >> attach anything AFAICT.
-> >> >
-> >> > Can you point to whatever makes those particular functions special?  I
-> >> > failed to follow the macro maze.
-> >>
-> >> Those are not tracepoints and not going through the macro maze. See
-> >> kernel/trace/trace_preemptirq.c
-> >
-> > That has:
-> >
-> > void trace_hardirqs_on(void)
-> > {
-> >         if (this_cpu_read(tracing_irq_cpu)) {
-> >                 if (!in_nmi())
-> >                         trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
-> >                 tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
-> >                 this_cpu_write(tracing_irq_cpu, 0);
-> >         }
-> >
-> >         lockdep_hardirqs_on(CALLER_ADDR0);
-> > }
-> > EXPORT_SYMBOL(trace_hardirqs_on);
-> > NOKPROBE_SYMBOL(trace_hardirqs_on);
-> >
-> > But this calls trace_irq_enable_rcuidle(), and that's the part of the
-> > macro maze I got lost in.  I found:
-> >
-> > #ifdef CONFIG_TRACE_IRQFLAGS
-> > DEFINE_EVENT(preemptirq_template, irq_disable,
-> >              TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> >              TP_ARGS(ip, parent_ip));
-> >
-> > DEFINE_EVENT(preemptirq_template, irq_enable,
-> >              TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> >              TP_ARGS(ip, parent_ip));
-> > #else
-> > #define trace_irq_enable(...)
-> > #define trace_irq_disable(...)
-> > #define trace_irq_enable_rcuidle(...)
-> > #define trace_irq_disable_rcuidle(...)
-> > #endif
-> >
-> > But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
-> > where I got lost in the macro maze.  I looked at the gcc asm output,
-> > and there is, indeed:
-> 
-> DEFINE_EVENT
->   DECLARE_TRACE
->     __DECLARE_TRACE
->        __DECLARE_TRACE_RCU
->          static inline void trace_##name##_rcuidle(proto)
->             __DO_TRACE
->                if (rcuidle)
->                   ....
-> 
-> > But I also don't see why this is any different from any other tracepoint.
-> 
-> Indeed. I took a wrong turn at some point in the macro jungle :)
-> 
-> So tracing itself is fine, but then if you have probes or bpf programs
-> attached to a tracepoint these use rcu_read_lock()/unlock() which is
-> obviosly wrong in rcuidle context.
+On Fri, Feb 28, 2020 at 06:52:28PM -0800, Josh Triplett wrote:
+> @@ -2074,7 +2074,7 @@ static int nvme_wait_ready(struct nvme_ctrl *ctrl, u64 cap, bool enabled)
+>  		if ((csts & NVME_CSTS_RDY) == bit)
+>  			break;
+>  
+> -		msleep(100);
+> +		usleep_range(1000, 2000);
+>  		if (fatal_signal_pending(current))
+>  			return -EINTR;
+>  		if (time_after(jiffies, timeout)) {
 
-Definitely, any such code needs to use tricks similar to that of the
-tracing code.  Or instead use something like SRCU, which is OK with
-readers from idle.  Or use something like Steve Rostedt's workqueue-based
-approach, though please be very careful with this latter, lest the
-battery-powered embedded guys come after you for waking up idle CPUs
-too often.  ;-)
+The key being this sleep schedules the task unlike udelay. It's neat
+you can boot where 100ms is considered a long time.
 
-							Thanx, Paul
+This clearly helps when you've one nvme that becomes ready quickly, but
+what happens with many nvme's that are slow to ready? This change will
+end up polling the status of those 1000's of times, I wonder if there's
+a point where this frequent sleep/wake cycle initializing a whole lot
+of nvme devices in parallel may interfere with other init tasks.
+
+I doubt there's really an issue there, but thought it's worth considering
+what happens at the other end of the specturm.
+
+Anyway, the patch looks fine to me.
+
+Reviewed-by: Keith Busch <kbusch@kernel.org>
