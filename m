@@ -2,77 +2,123 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26563C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73E4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E777521775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB321775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="WFURwnTZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnvEqWul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgCAKEO (ORCPT
+        id S1726418AbgCAKGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 05:04:14 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45162 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgCAKEO (ORCPT
+        Sun, 1 Mar 2020 05:06:03 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40390 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgCAKGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 05:04:14 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e18so8407212ljn.12
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 02:04:11 -0800 (PST)
+        Sun, 1 Mar 2020 05:06:02 -0500
+Received: by mail-pj1-f66.google.com with SMTP id 12so3154487pjb.5;
+        Sun, 01 Mar 2020 02:06:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gQOIXTEcnm6Zvy+v64CfP+Ch3mLFqBCQbXn3Tlz+cv4=;
-        b=WFURwnTZQb7t133i6Ra+Rtg1WBZedlcLlLHCZn4uC75JNmyONO8Bj0u4Tbnk83la/Z
-         qwMSzQBjsRNhGPCXMXUAlfenimSZGTMwJbTHXDTHnEHcUAb9hhWXtz8ELtd/1ktdMWHz
-         q9PsTs1FbNVOH++uTHZStEGLEkHWtJG6yvJcHUzPqY/HyLX3uYPY2X09CaaI9Kj9CfOy
-         Abw/ZiBYHclQfm2cpwWyKvV1NQNW35y+KW807sdzw0ylxlMrEH+nFUP++FVD/5RlJCfx
-         X3MUBzk4HezPioiqEd+JdKaHp+aXd8MCs36eJxwm01Fl/u6hPoy4TTpONB0X3aB6KwbC
-         oqNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gQOIXTEcnm6Zvy+v64CfP+Ch3mLFqBCQbXn3Tlz+cv4=;
-        b=Ko9NWDc64qUd0yl6RjpJUSiTtv41xtEnO469hQ3cTvosIaEi+HQ3RAKKtRCL3QpDBe
-         ST2Qe1+vgtRIBOz4zhpvOMsIXz6YLT5RcaQ5dbxmuPjUnqU5Qt1R1YJUol7KECWXJh4h
-         lJMTpD+fjSWLoGKSBCzU9r5O1h0xWy6xm4bCD0xUS4FcHsm2FvRGgh4GgLuvAPNgzeaV
-         odrnSbBBZzLdg3iYtyr0GEAdV4kgWbUoFSWO3Nk25j0kJTeXUxrG9kn7BrSEWyEEGrmP
-         jnbj3gxlGU5y6UxK7rHUr6iO0LR1DaI3sO0ODaijx29jkNTBRc/WJuhEPuoPbvBPYBpk
-         niTQ==
-X-Gm-Message-State: ANhLgQ3aQepphyaGGnVJNFvBHyMP58utEkiqe9W3HzNwCD8FkOpklL4y
-        AxiUtaTdTCu27+dh+5WxdDrTqw==
-X-Google-Smtp-Source: ADFU+vvqjg4oqW6Uft9xNiaGvdKNChYfA3uFUApT5e92F7fDueZjTaYxnnQS6pWe+xILajfzC2Bmmg==
-X-Received: by 2002:a2e:884c:: with SMTP id z12mr8320982ljj.55.1583057050588;
-        Sun, 01 Mar 2020 02:04:10 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:631:be36:41f9:a0d4:22df:3c65? ([2a00:1fa0:631:be36:41f9:a0d4:22df:3c65])
-        by smtp.gmail.com with ESMTPSA id i1sm9597287lji.71.2020.03.01.02.04.08
+        bh=DLOrqo7GTQEIze4XEf2f91ocTASE1gzbIlbF34p0mw0=;
+        b=ZnvEqWulAKwt54aFHxTDZn/mbCrSvMKGpWRsGo/VSdXxVsFuKzWjFz2IePudWiS15t
+         T+zajbi7gZfcY1zMrEBSyZk34/ZgAIXnjPW20A/nmff9ePdLnDsLdKD/3KQD34wlIs8E
+         TOWWVXFcX0Yrw+wb6n4BkRp/AxBoNbL7i9QvkmsZv0yds8/CiwMjvkcgNN63No+u0G7W
+         T77cvsvnYFCRMf5lK5llPMHnikoP8rWRC6NLIdtErcxmMLNPvppAyW11SdXK2rjjshFQ
+         zSrmwV2aZHwRS8VEfkN191ZqmQWqZY2Wl7FzhjPdQ1xx1r5xCrR2rlNT+d1d99o0jTH6
+         if+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DLOrqo7GTQEIze4XEf2f91ocTASE1gzbIlbF34p0mw0=;
+        b=cHuQbvP6GBMemREO6kh4FStylDmDSlytVqiP86SakQiUFvLZTsnnEZgM/mxTpYlE+U
+         eP667g47HAno+Kf22DPROgsoxRqMeCtKqv4mi70gAMMQXD3BpjbBeVvPE5zd1oEg6z5F
+         m0IdLKGkifqNUziXqeRzl2tt6ze4DYem3USrIL8x3JQYr0fs2XvmAN1xtwPm/ZMfnWH0
+         pfkTtXV9cVrwYGa0Ko33hGzvCVUlESug+KMW/7GfC4eoFktHmw1SX64cEf9Vji5zlN+L
+         OD8eoBx5N2WVWMcZpcUbU/o7Y0z9PJLxxn1jET+ZDo6h4oqnoKrue9Q6q5KXWseHKx4E
+         18IQ==
+X-Gm-Message-State: APjAAAW27KVFstazjLmYMKoyjwCqLo9rSqKG3EQ8wsvNWaCFu731aMif
+        /+np13n3Z4VgLqCaGjeIcPA=
+X-Google-Smtp-Source: APXvYqzwh3kmMN5UVnwebCICqh6IFRAy8g0IILKdDQcIwxt91UODgIc8NynyqUvZ0YLgzoo6THgHog==
+X-Received: by 2002:a17:90a:102:: with SMTP id b2mr14832651pjb.64.1583057161402;
+        Sun, 01 Mar 2020 02:06:01 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h7sm17981304pfq.36.2020.03.01.02.05.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 02:04:09 -0800 (PST)
-Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
- buswidth
-To:     John Garry <john.garry@huawei.com>, broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linuxarm@huawei.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        andriy.shevchenko@linux.intel.com
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
- <1582903131-160033-2-git-send-email-john.garry@huawei.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
-Date:   Sun, 1 Mar 2020 13:04:07 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 01 Mar 2020 02:06:00 -0800 (PST)
+Subject: Re: [PATCH v1 1/4] dt-binding: watchdog: add restart priority
+ documentation
+To:     Tomer Maimon <tmaimon77@gmail.com>, wim@linux-watchdog.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        avifishman70@gmail.com, tali.perry1@gmail.com, yuenn@google.com,
+        benjaminfair@google.com
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20200301094040.123189-1-tmaimon77@gmail.com>
+ <20200301094040.123189-2-tmaimon77@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <6ecf9a6b-8fca-1e7a-10d0-ee518e6ecf64@roeck-us.net>
+Date:   Sun, 1 Mar 2020 02:05:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1582903131-160033-2-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200301094040.123189-2-tmaimon77@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,59 +126,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On 3/1/20 1:40 AM, Tomer Maimon wrote:
+> Add device tree restart priority documentation.
+> 
 
-On 28.02.2020 18:18, John Garry wrote:
+I think this warrants an explanation _why_ this is needed.
+What is the use case ? Not just theory, please.
 
-> Currently ACPI firmware description for a SPI device does not have any
-> method to describe the data buswidth on the board.
-> 
-> So even through the controller and device may support higher modes than
-           ^^^^^^^
-    Though?
+Guenter
 
-> standard SPI, it cannot be assumed that the board does - as such, that
-> device is limited to standard SPI in such a circumstance.
-> 
-> As a workaround, allow the controller driver supply buswidth override bits,
-> which are used inform the core code that the controller driver knows the
-> buswidth supported on that board for that device.
-> 
-> A host controller driver might know this info from DMI tables, for example.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->   drivers/spi/spi.c       | 4 +++-
->   include/linux/spi/spi.h | 3 +++
->   2 files changed, 6 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 38b4c78df506..292f26807b41 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
->   	spi->dev.bus = &spi_bus_type;
->   	spi->dev.release = spidev_release;
->   	spi->cs_gpio = -ENOENT;
-> +	spi->mode = ctlr->buswidth_override_bits;
->   
->   	spin_lock_init(&spi->statistics.lock);
->   
-> @@ -2181,9 +2182,10 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
->   		return AE_NO_MEMORY;
->   	}
->   
-> +
+> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> index 6d593003c933..0a0f86a25eb0 100644
+> --- a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> @@ -17,6 +17,7 @@ Required clocking property, have to be one of:
+>  
+>  Optional properties:
+>  - timeout-sec : Contains the watchdog timeout in seconds
+> +- nuvoton,restart-priority : Contains the card restart priority.
+>  
+>  Example:
+>  
+> @@ -25,4 +26,5 @@ timer@f000801c {
+>      interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+>      reg = <0xf000801c 0x4>;
+>      clocks = <&clk NPCM7XX_CLK_TIMER>;
+> +	nuvoton,restart-priority = <155>;
+>  };
+> 
 
-    What for?
-
->   	ACPI_COMPANION_SET(&spi->dev, adev);
->   	spi->max_speed_hz	= lookup.max_speed_hz;
-> -	spi->mode		= lookup.mode;
-> +	spi->mode		|= lookup.mode;
->   	spi->irq		= lookup.irq;
->   	spi->bits_per_word	= lookup.bits_per_word;
->   	spi->chip_select	= lookup.chip_select;
-[...]
-
-MBR, Sergei
