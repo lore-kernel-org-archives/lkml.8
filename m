@@ -2,129 +2,137 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CBC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26563C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F2A21775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E777521775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="WFURwnTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgCAJw3 (ORCPT
+        id S1726103AbgCAKEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 04:52:29 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46456 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCAJw3 (ORCPT
+        Sun, 1 Mar 2020 05:04:14 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45162 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgCAKEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 04:52:29 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a22so7369940oid.13;
-        Sun, 01 Mar 2020 01:52:28 -0800 (PST)
+        Sun, 1 Mar 2020 05:04:14 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so8407212ljn.12
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 02:04:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gQOIXTEcnm6Zvy+v64CfP+Ch3mLFqBCQbXn3Tlz+cv4=;
+        b=WFURwnTZQb7t133i6Ra+Rtg1WBZedlcLlLHCZn4uC75JNmyONO8Bj0u4Tbnk83la/Z
+         qwMSzQBjsRNhGPCXMXUAlfenimSZGTMwJbTHXDTHnEHcUAb9hhWXtz8ELtd/1ktdMWHz
+         q9PsTs1FbNVOH++uTHZStEGLEkHWtJG6yvJcHUzPqY/HyLX3uYPY2X09CaaI9Kj9CfOy
+         Abw/ZiBYHclQfm2cpwWyKvV1NQNW35y+KW807sdzw0ylxlMrEH+nFUP++FVD/5RlJCfx
+         X3MUBzk4HezPioiqEd+JdKaHp+aXd8MCs36eJxwm01Fl/u6hPoy4TTpONB0X3aB6KwbC
+         oqNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zjw8utMkTnRlYhlmZOuTGDe+t7BCqfBiZYv0axgOoNI=;
-        b=gU8MUgwCzB4a+tUG9pdlF2FLO/EloMEy87qDBnVoyxaVc/cFd5cEP/w2aFcXS0Hn7W
-         7n1RPwk9ludNwlCFPrsA3uFZXAUvAAFHgnIIF/m1Nkwfshhk24YzQot3py3k6FpVIfsD
-         ELHH7eDgjw0+9NtIT5sjZARw0amc39uXIJZpM6IXJR80OKO0cMmw71ACzKJmWVIBHJd0
-         X0g9Npukf8a25oHPt3ccDRRRHzCwPdEnFHMOyplQYZXfq2GrWPcBNhBCy6L4m/+6ZDKj
-         yTlr0gB7mGrgx1CyErPykmTDR8tJ3BbnkyWANtnqRxizuMnbtyaXSwHXcE+DPc3VkovQ
-         wMCA==
-X-Gm-Message-State: ANhLgQ1F0+s19h8N3R5TDQ09Z4sboQ+XGR0rw/u08zMHFp24KhX1WVdi
-        AiIH3YWVttY8ro+RrmeEJ8dFjzbHC+SJsVxAXjLylgTq
-X-Google-Smtp-Source: ADFU+vthZhblfiZa+LuLUUmlTiqLi9wLPhjMt0o6dEXKq0lSzk/OYnfu/dCKmbVO05gFQvUW1EFsVTHvPA30Z96QUY8=
-X-Received: by 2002:aca:ac4c:: with SMTP id v73mr1955671oie.102.1583056348137;
- Sun, 01 Mar 2020 01:52:28 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gQOIXTEcnm6Zvy+v64CfP+Ch3mLFqBCQbXn3Tlz+cv4=;
+        b=Ko9NWDc64qUd0yl6RjpJUSiTtv41xtEnO469hQ3cTvosIaEi+HQ3RAKKtRCL3QpDBe
+         ST2Qe1+vgtRIBOz4zhpvOMsIXz6YLT5RcaQ5dbxmuPjUnqU5Qt1R1YJUol7KECWXJh4h
+         lJMTpD+fjSWLoGKSBCzU9r5O1h0xWy6xm4bCD0xUS4FcHsm2FvRGgh4GgLuvAPNgzeaV
+         odrnSbBBZzLdg3iYtyr0GEAdV4kgWbUoFSWO3Nk25j0kJTeXUxrG9kn7BrSEWyEEGrmP
+         jnbj3gxlGU5y6UxK7rHUr6iO0LR1DaI3sO0ODaijx29jkNTBRc/WJuhEPuoPbvBPYBpk
+         niTQ==
+X-Gm-Message-State: ANhLgQ3aQepphyaGGnVJNFvBHyMP58utEkiqe9W3HzNwCD8FkOpklL4y
+        AxiUtaTdTCu27+dh+5WxdDrTqw==
+X-Google-Smtp-Source: ADFU+vvqjg4oqW6Uft9xNiaGvdKNChYfA3uFUApT5e92F7fDueZjTaYxnnQS6pWe+xILajfzC2Bmmg==
+X-Received: by 2002:a2e:884c:: with SMTP id z12mr8320982ljj.55.1583057050588;
+        Sun, 01 Mar 2020 02:04:10 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:631:be36:41f9:a0d4:22df:3c65? ([2a00:1fa0:631:be36:41f9:a0d4:22df:3c65])
+        by smtp.gmail.com with ESMTPSA id i1sm9597287lji.71.2020.03.01.02.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 02:04:09 -0800 (PST)
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
+ buswidth
+To:     John Garry <john.garry@huawei.com>, broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linuxarm@huawei.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        andriy.shevchenko@linux.intel.com
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
+ <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
+Date:   Sun, 1 Mar 2020 13:04:07 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200227132255.285644406@linuxfoundation.org> <CAMuHMdXPzqmhj1E0AywSiThMQK1AfR4Rp19DV7W8uSp=8p_Zgg@mail.gmail.com>
- <20200301094243.GA1027353@kroah.com>
-In-Reply-To: <20200301094243.GA1027353@kroah.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 1 Mar 2020 10:52:17 +0100
-Message-ID: <CAMuHMdUwgqcMYAUeWuWKoCqEEf=LvjX2fA_Bn4OuHYtOyvqrxA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/237] 4.14.172-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hello!
 
-On Sun, Mar 1, 2020 at 10:42 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Sun, Mar 01, 2020 at 10:38:18AM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Feb 27, 2020 at 2:55 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > This is the start of the stable review cycle for the 4.14.172 release.
-> > > There are 237 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.172-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> > >
-> > > -------------
-> > > Pseudo-Shortlog of commits:
-> >
-> > Given you do have a git branch containing these commits, is there any
-> > chance you can update your scripts to insert a real (sorted) shortlog
-> > here?
-> > That would make it easier for us contributors to track what has been
-> > backported.
->
-> How would a real shortlog help any better, except to have things sorted
-> a tad easier?
+On 28.02.2020 18:18, John Garry wrote:
 
-One reason is that it is easier to search in a sorted list.
-A second reason is that contributions by the same person would be grouped
-together.
+> Currently ACPI firmware description for a SPI device does not have any
+> method to describe the data buswidth on the board.
+> 
+> So even through the controller and device may support higher modes than
+           ^^^^^^^
+    Though?
 
-> I can't remember why I do it this way, but for some reason, many many
-> years ago, this was a better solution than a "traditional" shortlog.
+> standard SPI, it cannot be assumed that the board does - as such, that
+> device is limited to standard SPI in such a circumstance.
+> 
+> As a workaround, allow the controller driver supply buswidth override bits,
+> which are used inform the core code that the controller driver knows the
+> buswidth supported on that board for that device.
+> 
+> A host controller driver might know this info from DMI tables, for example.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>   drivers/spi/spi.c       | 4 +++-
+>   include/linux/spi/spi.h | 3 +++
+>   2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 38b4c78df506..292f26807b41 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+>   	spi->dev.bus = &spi_bus_type;
+>   	spi->dev.release = spidev_release;
+>   	spi->cs_gpio = -ENOENT;
+> +	spi->mode = ctlr->buswidth_override_bits;
+>   
+>   	spin_lock_init(&spi->statistics.lock);
+>   
+> @@ -2181,9 +2182,10 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
+>   		return AE_NO_MEMORY;
+>   	}
+>   
+> +
 
-IIRC,  because you started with quilt ;-)
+    What for?
 
-> Here's the shortlog for this release for comparison:
->
-> Aditya Pakki (3):
->       fore200e: Fix incorrect checks of NULL pointer dereference
->       orinoco: avoid assertion in case of NULL pointer
->       ecryptfs: replace BUG_ON with error handling code
+>   	ACPI_COMPANION_SET(&spi->dev, adev);
+>   	spi->max_speed_hz	= lookup.max_speed_hz;
+> -	spi->mode		= lookup.mode;
+> +	spi->mode		|= lookup.mode;
+>   	spi->irq		= lookup.irq;
+>   	spi->bits_per_word	= lookup.bits_per_word;
+>   	spi->chip_select	= lookup.chip_select;
+[...]
 
-See, the above are all commits by Aditya Pakki. No reason to continue
-looking below ;-)
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+MBR, Sergei
