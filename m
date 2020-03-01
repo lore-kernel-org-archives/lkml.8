@@ -2,126 +2,73 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ECAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C550C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BC4246CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4E9246C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCASMo (ORCPT
+        id S1726536AbgCASST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 13:12:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40390 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCASMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 13:12:43 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j8T4k-0006sF-B9; Sun, 01 Mar 2020 19:12:26 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 23F3E100EA2; Sun,  1 Mar 2020 19:12:25 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
-In-Reply-To: <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
-References: <87imjofkhx.fsf@nanos.tec.linutronix.de> <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net> <87d09wf6dw.fsf@nanos.tec.linutronix.de> <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
-Date:   Sun, 01 Mar 2020 19:12:25 +0100
-Message-ID: <878skkeygm.fsf@nanos.tec.linutronix.de>
+        Sun, 1 Mar 2020 13:18:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgCASSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 13:18:18 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8586246C8;
+        Sun,  1 Mar 2020 18:18:17 +0000 (UTC)
+Date:   Sun, 1 Mar 2020 13:18:16 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] trace: Export anonymous tracing
+Message-ID: <20200301131816.277dd398@oasis.local.home>
+In-Reply-To: <20200301155248.4132645-1-chris@chris-wilson.co.uk>
+References: <20200301155248.4132645-1-chris@chris-wilson.co.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Andy Lutomirski <luto@amacapital.net> writes:
->> >> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->> >> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
->> >> except trace_hardirq_off/on() as those trace functions do not allow to
->> >> attach anything AFAICT.
->> >
->> > Can you point to whatever makes those particular functions special?  I
->> > failed to follow the macro maze.
->>
->> Those are not tracepoints and not going through the macro maze. See
->> kernel/trace/trace_preemptirq.c
->
-> That has:
->
-> void trace_hardirqs_on(void)
-> {
->         if (this_cpu_read(tracing_irq_cpu)) {
->                 if (!in_nmi())
->                         trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
->                 tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->                 this_cpu_write(tracing_irq_cpu, 0);
->         }
->
->         lockdep_hardirqs_on(CALLER_ADDR0);
-> }
-> EXPORT_SYMBOL(trace_hardirqs_on);
-> NOKPROBE_SYMBOL(trace_hardirqs_on);
->
-> But this calls trace_irq_enable_rcuidle(), and that's the part of the
-> macro maze I got lost in.  I found:
->
-> #ifdef CONFIG_TRACE_IRQFLAGS
-> DEFINE_EVENT(preemptirq_template, irq_disable,
->              TP_PROTO(unsigned long ip, unsigned long parent_ip),
->              TP_ARGS(ip, parent_ip));
->
-> DEFINE_EVENT(preemptirq_template, irq_enable,
->              TP_PROTO(unsigned long ip, unsigned long parent_ip),
->              TP_ARGS(ip, parent_ip));
-> #else
-> #define trace_irq_enable(...)
-> #define trace_irq_disable(...)
-> #define trace_irq_enable_rcuidle(...)
-> #define trace_irq_disable_rcuidle(...)
-> #endif
->
-> But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
-> where I got lost in the macro maze.  I looked at the gcc asm output,
-> and there is, indeed:
+On Sun,  1 Mar 2020 15:52:47 +0000
+Chris Wilson <chris@chris-wilson.co.uk> wrote:
 
-DEFINE_EVENT
-  DECLARE_TRACE
-    __DECLARE_TRACE
-       __DECLARE_TRACE_RCU
-         static inline void trace_##name##_rcuidle(proto)
-            __DO_TRACE
-               if (rcuidle)
-                  ....
+> To facilitate construction of per-client event ringbuffers, in
+> particular for a per-client debug and error report log, it would be
+> extremely useful to create an anonymous file that can be handed to
+> userspace so that it can see its and only its events. trace already
+> provides a means of encapsulating the trace ringbuffer into a struct
+> file that can be opened via the tracefs, and so with a couple of minor
+> tweaks can provide the same access via an anonymous inode.
 
-> But I also don't see why this is any different from any other tracepoint.
+I'm curious to why we need it to be anonymous. Why not allow them to be
+visible from the tracing directory. This could allow for easier
+debugging. Note, the trace instances have ref counters thus they can't
+be removed if something has a reference to it.
 
-Indeed. I took a wrong turn at some point in the macro jungle :)
+Also, all the global functions require kernel doc comments to explain
+how they work and what they are for.
 
-So tracing itself is fine, but then if you have probes or bpf programs
-attached to a tracepoint these use rcu_read_lock()/unlock() which is
-obviosly wrong in rcuidle context.
+-- Steve
 
-Thanks,
 
-        tglx
+> 
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  include/linux/trace.h |   4 ++
+>  kernel/trace/trace.c  | 142 ++++++++++++++++++++++++++++++------------
+>  2 files changed, 105 insertions(+), 41 deletions(-)
+>
