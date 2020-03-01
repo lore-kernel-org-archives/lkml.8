@@ -2,147 +2,212 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545DAC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBA6C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15349214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm++Sacg"
+	by mail.kernel.org (Postfix) with ESMTP id 65492214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCAMHO (ORCPT
+        id S1726738AbgCAMHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 07:07:14 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37906 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCAMHO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 07:07:14 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u9so2144299wml.3;
-        Sun, 01 Mar 2020 04:07:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g2L1+KgmlL2UuREJ51pRnap9NUM12a+0vrG5ju6s47k=;
-        b=cm++SacgY/WsKGaPbcOuT0Uwowg2582zZnNETSWcg7edGvMYVSSMxWSHsyWIHFhGge
-         EsjQHldCUqk8Csufplp/EdsNhunbc782WqkC2xOvj556FWgINUyipxApg6A4RwkcDrVk
-         pfsxvvw6TCDDM9O4gw/ARz71Vm+0QLYI6lFLQxHfJ4KEfyJU1fn07pr5L7wOxgidcPlJ
-         VGKed0Luc1UifI0XW+2kPGClgdke6ZMePUCgpREl7hoXXbZGDI2zt8uEy9kltORrzi6S
-         NypIzMkLgdTe+7dJvrvgxAFbeig7XYsHVmvW7MgQ2KcUsLwTlFBVxuZxVjJIvN6CUe1y
-         /6dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g2L1+KgmlL2UuREJ51pRnap9NUM12a+0vrG5ju6s47k=;
-        b=jyelyGe1ZIdf4KmiooVlQ2rbKM/IMCM/AXBtJLAVn8FmZWuSmO5HblCyPNQPDDV/JG
-         6dAqMDyuZDWB1htgJ/sy9akq0IMSmJloSjcvQJKq/Vt28tjj9pzUY9cNpHAI98ePCpEE
-         iSjNUixbuE2kJbUvJMoJF6OCvU9pcjZ1+Za8QUgdgBy0PdzQQj+qESC87Rfr+F2TShUc
-         a+DKaDjo7ptDrB7SNSmWhXqbvzZ3ARALDUb5FPt6h3iyi9tvIe/6gsSLaqM39rPBuj6w
-         qTaP3+KU6o5Qt35rjdqWKmNcgdIY1/LyyWOFALLiigTLX92xFJqKwe0toaB7y2f80zYV
-         J1gQ==
-X-Gm-Message-State: APjAAAVv/ZK+jAJlzC7SaK4YhrluQvMDVWNdbMI0VJghQPEDAM00D5VR
-        DamDQHJDgPbEUsxPw3OlFis=
-X-Google-Smtp-Source: APXvYqy0flgkNWK99Sh4Q9TC6qt7uHB70U67xM9RkQ7KeAdzHLtey5dLusC0mHMn/2ouDgJTx5PauA==
-X-Received: by 2002:a05:600c:149:: with SMTP id w9mr13676684wmm.132.1583064432518;
-        Sun, 01 Mar 2020 04:07:12 -0800 (PST)
-Received: from pc636 ([80.122.78.78])
-        by smtp.gmail.com with ESMTPSA id x8sm9727390wro.55.2020.03.01.04.07.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 04:07:11 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Sun, 1 Mar 2020 13:07:02 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200301120702.GA9762@pc636>
-References: <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636>
- <20200225020705.GA253171@google.com>
- <20200225185400.GA27919@pc636>
- <20200227133700.GC161459@google.com>
- <20200301110843.GA8725@pc636>
+        Sun, 1 Mar 2020 07:07:45 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:60354 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgCAMHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 07:07:45 -0500
+Received: from p508fc8e5.dip0.t-ipconnect.de ([80.143.200.229] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j8NNf-0006xB-Fx; Sun, 01 Mar 2020 13:07:35 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] dt-bindings: input: Add docs for ADC driven joystick.
+Date:   Sun, 01 Mar 2020 13:07:34 +0100
+Message-ID: <1918609.63UDFxFJt6@phil>
+In-Reply-To: <20200126161236.63631-4-contact@artur-rojek.eu>
+References: <20200126161236.63631-1-contact@artur-rojek.eu> <20200126161236.63631-4-contact@artur-rojek.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200301110843.GA8725@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
-> > > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
-> > > then we skip it and consider as atomic. Something like:
-> > > 
-> > > <snip>
-> > > static bool is_current_in_atomic()
-> > 
-> > Would be good to change this to is_current_in_rcu_reader() since
-> > rcu_preempt_depth() does not imply atomicity.
-> >
-> can_current_synchronize_rcu()? If can we just call:
+Hi,
+
+Am Sonntag, 26. Januar 2020, 17:12:35 CET schrieb Artur Rojek:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
 > 
-> <snip>
->     synchronize_rcu() or synchronize_rcu_expedited();
->     kvfree();
-> <snip>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+
+this seems to be stuck for a month now.
+And it would be really cool to get this landed, as the Odroid Go Advance
+also profits a lot from it ;-)
+
+As for the reported syntax error due to the missing header, maybe you
+can just replace the constants in the example with numbers, as they don't
+really matter for the example anyway - maybe that will make everyone
+happy ;-) .
+
+E.g. on the Go Advance the joystick is just connected to two generic
+saradc channels.
+
+
+Thanks
+Heiko
+
+> ---
 > 
-> > > {
-> > > #ifdef CONFIG_PREEMPT_RCU
-> > >     if (!rcu_preempt_depth() && !in_atomic())
-> > >         return false;
-> > 
-> > I think use if (!rcu_preempt_depth() && preemptible()) here.
-> > 
-> > preemptible() checks for IRQ disabled section as well.
-> > 
-> Yes but in_atomic() does it as well, it also checks other atomic
-> contexts like softirq handlers and NMI ones. So calling there
-> synchronize_rcu() is not allowed.
+>  Changes:
 > 
-Ahh. Right you are. We also have to check if irqs are disabled
-or not. preemptible() has to be added as well.
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  .../bindings/input/adc-joystick.yaml          | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> new file mode 100644
+> index 000000000000..91fc87dcbddb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: ADC attached joystick
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: |
+> +  Bindings for joystick devices connected to ADC controllers supporting
+> +  the Industrial I/O subsystem.
+> +
+> +properties:
+> +  compatible:
+> +    const: adc-joystick
+> +
+> +  io-channels:
+> +    description: |
+> +      List of phandle and IIO specifier pairs.
+> +      Each pair defines one ADC channel to which a joystick axis is connected.
+> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - io-channels
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^axis@([0-9])$":
+> +    type: object
+> +    description: |
+> +      Represents a joystick axis bound to the given ADC channel.
+> +      For each entry in the io-channels list, one axis subnode with a matching
+> +      reg property must be specified.
+> +
+> +    properties:
+> +      reg:
+> +        items:
+> +          description: Index of an io-channels list entry bound to this axis.
+> +
+> +      linux,code:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: EV_ABS specific event code generated by the axis.
+> +
+> +      abs-range:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: minimum value
+> +          - description: maximum value
+> +        description: |
+> +          Minimum and maximum values produced by the axis.
+> +          For an ABS_X axis this will be the left-most and right-most
+> +          inclination of the joystick. If min > max, it is left to userspace to
+> +          treat the axis as inverted.
+> +          This property is interpreted as two signed 32 bit values.
+> +
+> +      abs-fuzz:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Amount of noise in the input value.
+> +          Omitting this property indicates the axis is precise.
+> +
+> +      abs-flat:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Axial "deadzone", or area around the center position, where the axis
+> +          is considered to be at rest.
+> +          Omitting this property indicates the axis always returns to exactly
+> +          the center position.
+> +
+> +    required:
+> +      - reg
+> +      - linux,code
+> +      - abs-range
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +    #include <dt-bindings/input/input.h>
+> +
+> +    joystick: adc-joystick {
+> +      compatible = "adc-joystick";
+> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
+> +                    <&adc INGENIC_ADC_TOUCH_YP>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      axis@0 {
+> +              reg = <0>;
+> +              linux,code = <ABS_X>;
+> +              abs-range = <3300 0>;
+> +              abs-fuzz = <4>;
+> +              abs-flat = <200>;
+> +      };
+> +      axis@1 {
+> +              reg = <1>;
+> +              linux,code = <ABS_Y>;
+> +              abs-range = <0 3300>;
+> +              abs-fuzz = <4>;
+> +              abs-flat = <200>;
+> +      };
+> +    };
+> 
 
-<snip>
-can_current_synchronize_rcu()
-{
-    if (IS_ENABLED(CONFIG_PREEMPT_RCU)) {
-        if (!rcu_preempt_depth() && !in_atomic() && preemptible()) {
-            might_sleep();
-            return true;
-	}
-    }
 
-    return false;
-}
-<snip>
 
-if we can synchronize:
-    - we can directly inline kvfree() to current context;
-    - we can attached the head using GFP_KERNEL | __GFP_RETRY_MAYFAIL.
-    
-Otherwise attached the rcu_head under atomic or as we are in RCU reader section.
 
-Thoughts?
-
---
-Vlad Rezki
