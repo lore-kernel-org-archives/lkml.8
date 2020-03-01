@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9A1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8FFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683AB246BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75422246BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgCAVw4 (ORCPT
+        id S1727306AbgCAVxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:52:56 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41690 "EHLO
+        Sun, 1 Mar 2020 16:53:01 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41710 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgCAVws (ORCPT
+        with ESMTP id S1727146AbgCAVws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:48 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVy-003fPP-Fu; Sun, 01 Mar 2020 21:52:46 +0000
+        id 1j8WVz-003fPt-9D; Sun, 01 Mar 2020 21:52:47 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 38/55] split the lookup-related parts of do_last() into a separate helper
-Date:   Sun,  1 Mar 2020 21:52:23 +0000
-Message-Id: <20200301215240.873899-38-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 43/55] follow_dotdot{,_rcu}(): lift LOOKUP_BENEATH checks out of loop
+Date:   Sun,  1 Mar 2020 21:52:28 +0000
+Message-Id: <20200301215240.873899-43-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,122 +42,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+Behaviour change: LOOKUP_BENEATH lookup of .. in absolute root
+yields an error even if it's not the process' root.  That's
+possible only if you'd managed to escape chroot jail by way of
+procfs symlinks, but IMO the resulting behaviour is not worse -
+more consistent and easier to describe:
+	".." in root is "stay where you are", uness LOOKUP_BENEATH
+	has been given, in which case it's "fail with EXDEV".
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 51 +++++++++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 22 deletions(-)
+ fs/namei.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 66f236d5aee7..b73ff6dcca24 100644
+index c307bf7cbaa1..be756aa32240 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3117,19 +3117,12 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
- 	return ERR_PTR(error);
- }
- 
--/*
-- * Handle the last step of open()
-- */
--static const char *do_last(struct nameidata *nd,
-+static const char *open_last_lookups(struct nameidata *nd,
- 		   struct file *file, const struct open_flags *op)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = nd->inode->i_uid;
--	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
--	bool do_truncate;
- 	bool got_write = false;
--	int acc_mode;
+@@ -1370,11 +1370,8 @@ static int follow_dotdot_rcu(struct nameidata *nd)
  	unsigned seq;
- 	struct inode *inode;
- 	struct dentry *dentry;
-@@ -3141,9 +3134,9 @@ static const char *do_last(struct nameidata *nd,
  
- 	if (nd->last_type != LAST_NORM) {
- 		error = handle_dots(nd, nd->last_type);
--		if (unlikely(error))
--			return ERR_PTR(error);
--		goto finish_open;
-+		if (likely(!error))
-+			error = complete_walk(nd);
-+		return ERR_PTR(error);
+ 	while (1) {
+-		if (path_equal(&nd->path, &nd->root)) {
+-			if (unlikely(nd->flags & LOOKUP_BENEATH))
+-				return -ECHILD;
++		if (path_equal(&nd->path, &nd->root))
+ 			break;
+-		}
+ 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+ 			struct dentry *old = nd->path.dentry;
+ 
+@@ -1405,7 +1402,10 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+ 			nd->seq = seq;
+ 		}
  	}
- 
- 	if (!(open_flag & O_CREAT)) {
-@@ -3156,7 +3149,6 @@ static const char *do_last(struct nameidata *nd,
- 		if (likely(dentry))
- 			goto finish_lookup;
- 
--		BUG_ON(nd->inode != dir->d_inode);
- 		BUG_ON(nd->flags & LOOKUP_RCU);
- 	} else {
- 		/* create side of things */
-@@ -3166,7 +3158,7 @@ static const char *do_last(struct nameidata *nd,
- 		 * about to look up
- 		 */
- 		error = complete_walk(nd);
--		if (error)
-+		if (unlikely(error))
- 			return ERR_PTR(error);
- 
- 		audit_inode(nd->name, dir, AUDIT_INODE_PARENT);
-@@ -3195,10 +3187,8 @@ static const char *do_last(struct nameidata *nd,
- 	else
- 		inode_unlock_shared(dir->d_inode);
- 
--	if (got_write) {
-+	if (got_write)
- 		mnt_drop_write(nd->path.mnt);
--		got_write = false;
--	}
- 
- 	if (IS_ERR(dentry))
- 		return ERR_CAST(dentry);
-@@ -3206,7 +3196,7 @@ static const char *do_last(struct nameidata *nd,
- 	if (file->f_mode & (FMODE_OPENED | FMODE_CREATED)) {
+-	if (likely(parent)) {
++	if (unlikely(!parent)) {
++		if (unlikely(nd->flags & LOOKUP_BENEATH))
++			return -ECHILD;
++	} else {
+ 		nd->path.dentry = parent;
+ 		nd->seq = seq;
+ 	}
+@@ -1447,11 +1447,8 @@ static int follow_dotdot(struct nameidata *nd)
+ {
+ 	struct dentry *parent = NULL;
+ 	while (1) {
+-		if (path_equal(&nd->path, &nd->root)) {
+-			if (unlikely(nd->flags & LOOKUP_BENEATH))
+-				return -EXDEV;
++		if (path_equal(&nd->path, &nd->root))
+ 			break;
+-		}
+ 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+ 			/* rare case of legitimate dget_parent()... */
+ 			parent = dget_parent(nd->path.dentry);
+@@ -1466,7 +1463,10 @@ static int follow_dotdot(struct nameidata *nd)
+ 		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+ 			return -EXDEV;
+ 	}
+-	if (likely(parent)) {
++	if (unlikely(!parent)) {
++		if (unlikely(nd->flags & LOOKUP_BENEATH))
++			return -EXDEV;
++	} else {
  		dput(nd->path.dentry);
- 		nd->path.dentry = dentry;
--		goto finish_open_created;
-+		return NULL;
+ 		nd->path.dentry = parent;
  	}
- 
- finish_lookup:
-@@ -3221,12 +3211,29 @@ static const char *do_last(struct nameidata *nd,
- 		audit_inode(nd->name, nd->path.dentry, 0);
- 		return ERR_PTR(-EEXIST);
- 	}
--finish_open:
-+
- 	/* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
--	error = complete_walk(nd);
--	if (error)
--		return ERR_PTR(error);
--finish_open_created:
-+	return ERR_PTR(complete_walk(nd));
-+}
-+
-+/*
-+ * Handle the last step of open()
-+ */
-+static const char *do_last(struct nameidata *nd,
-+		   struct file *file, const struct open_flags *op)
-+{
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
-+	int open_flag = op->open_flag;
-+	bool do_truncate;
-+	int acc_mode;
-+	const char *link;
-+	int error;
-+
-+	link = open_last_lookups(nd, file, op);
-+	if (unlikely(link))
-+		return link;
-+
- 	if (!(file->f_mode & FMODE_CREATED))
- 		audit_inode(nd->name, nd->path.dentry, 0);
- 	if (open_flag & O_CREAT) {
 -- 
 2.11.0
 
