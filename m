@@ -2,113 +2,114 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D295C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D494CC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032BC24649
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583024667;
-	bh=KHCj+RVwIzZk+PytK17Qo6EX+BSi3P3+GEylzWTQP2I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2mGPN0vZUJjzXkOnhuZVyXz8xkZyx6SiebbA0irP3zk4K1f6e6c2Ev+WZ6EYf2who
-	 ivUEXZvXGf93cZUKPjiXwKBk+sAHok1INtUgcWGrc4MURzI8fmDtUe3pkdCgeFD6NN
-	 ROvZg3cgtAw6pY8wKDCFRcrHHpcr/eE/SLfcJZsk=
+	by mail.kernel.org (Postfix) with ESMTP id A877924649
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qG/zVHrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgCABEO (ORCPT
+        id S1727326AbgCABFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 20:04:14 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:58052 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCABEN (ORCPT
+        Sat, 29 Feb 2020 20:05:15 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35765 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCABFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 20:04:13 -0500
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 021145h9004480;
-        Sun, 1 Mar 2020 10:04:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 021145h9004480
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583024646;
-        bh=MSqFcgJbmSE08ec8AxyjPeQKskX4mRh+c7oBtzH2Vrc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PwCVGVXVEKTgsuG7D5/tlT7kyE+kkhRaLUXQ/HNnGGOz/mUNnuyRxYtFum+Wd3JEu
-         V4/N5HCxeCCBSUw93akdFXBmA5kPnYPC377woyYimpl6iCNiJlRV8/2bwPl0CSBrcw
-         iIG2LN2fLDhFkn2Wl2W1FfihbK2F9NB15dRy80hbDBRrYuts7o8O+dieZdQeQKJmP6
-         d/ZxHf1r9JEBxum87L1xHv2Js2jP3bPMY6MHXm9bvMZnxO+SbWqp0Y2zkBAxWdZJ+m
-         6jI5qVu3qmg4PDxmYHX4gATaJyKyriUrMqYD9Y0dLJZyXJjhf/qV0xQjVHKE2280lv
-         Kqn/L+EAn6ALQ==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id y201so2006501vky.8;
-        Sat, 29 Feb 2020 17:04:05 -0800 (PST)
-X-Gm-Message-State: ANhLgQ147jqvJwfhGvVPxK/vIcwsq2uW/Md/oY7Fc2YE1azxGTP/lHDM
-        VAwJhqLxtN15ds15BzTRr8bWPOb8m/o1sk1qnuE=
-X-Google-Smtp-Source: ADFU+vuztPG2oOUZNRaWd8YCFbE7NPYByA0CGxa4wwrfcTmULOMpQO1NoD0HZ00X8nVMR1R6+0leTaA2n/ylFtIz2W0=
-X-Received: by 2002:a1f:3f0d:: with SMTP id m13mr4014247vka.96.1583024644419;
- Sat, 29 Feb 2020 17:04:04 -0800 (PST)
+        Sat, 29 Feb 2020 20:05:15 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i19so3711888pfa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 17:05:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N6tdlRwhxnyZEWwuLH4PLixMPMWPMz9rGgac+7l9DrM=;
+        b=qG/zVHrJQGVqcWQhUH7nh59uCtgBcJWotapetD92scZrDfp5NpEPnnfe1TOsEHoknF
+         /Ir6XrlNTFFwhgXSIcNzWsGucYWKnceHv6HyyOjNvyf5Sg06bJqIwvwtOolxOTcvyUPC
+         OO6ysqI7RQ8ilEVPW8nVryKZzsllOm3i0oMpIeUgYx9j4bpMO4HMNSpSEeSJAgNZkU20
+         j/V8nT4dcADTSLORq/8tIAvKJdnIbvcXVR0SjlLBuNaikebiW6ZIxp/qFsZ+We8oUXc4
+         rwqJBK24mTK1ZmlGE2o6q9Y2I942ry4uZSlMoiEMyGMk0qd9eLa7uT5I4jQ2h+JA6v88
+         /obQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N6tdlRwhxnyZEWwuLH4PLixMPMWPMz9rGgac+7l9DrM=;
+        b=UPAoawnxZVDQdnHSqC16Utl2wBHfTQGxnd7DObPNutGObJ+zEH8H27Ofe/qX0pl2YB
+         kQiGIthfAfiNwJjYDAmyrvAFHqgoR6/0mp7aM98n5NucyYShvtJDWFZBptZIo4LS01Sn
+         qSNcAsFwXEoPFn/L2FAsxdbgh9f7dcz9tLbWC0PxhCW7udPncY6ShOoFX+CkOpEuI0En
+         AoDpwonF6pYkKiSDCrp+WoayWoYw37yd5wXkj3kmFMIbOHWQ7MZ30sM9sDYnsqHNnk21
+         6z72yrhcHEDjjmX0gHY7kdt1VxhG3/znBmcV9MbIhoqBuJskq1mMxHE0ENyUPwOlKg6I
+         nvqw==
+X-Gm-Message-State: APjAAAUmi+4ilho+7Q7jqhk4YijHxnr8x9a8pkzOOdSqdzYgm+j5X+kv
+        MIzmjI7BxbyX7r37VcOWewc=
+X-Google-Smtp-Source: APXvYqwyTmRZPdHolfsz0yBlZRCOjl2fjnRsxUF/EdNeWw3zOQeDLvwAl+vLtoXYoa06mUeEpS1p7A==
+X-Received: by 2002:a63:dc0d:: with SMTP id s13mr11607333pgg.129.1583024714106;
+        Sat, 29 Feb 2020 17:05:14 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id w17sm15581725pfi.56.2020.02.29.17.05.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 29 Feb 2020 17:05:13 -0800 (PST)
+Date:   Sun, 1 Mar 2020 06:35:11 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+Message-ID: <20200301010511.GA5195@afzalpc>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
+ <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com>
+ <20200229131553.GA4985@afzalpc>
+ <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet>
 MIME-Version: 1.0
-References: <20200229160959.871801-1-sz.lin@moxa.com>
-In-Reply-To: <20200229160959.871801-1-sz.lin@moxa.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 1 Mar 2020 10:03:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQf0L1BCaYKqHPAcWwGqcGJgpAdF-QU7_ZVy4H_ygCtRg@mail.gmail.com>
-Message-ID: <CAK7LNAQf0L1BCaYKqHPAcWwGqcGJgpAdF-QU7_ZVy4H_ygCtRg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Fix inconsistent comment
-To:     =?UTF-8?B?U1ogTGluICjmnpfkuIrmmbop?= <sz.lin@moxa.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Kaiden PK Yu <KaidenPK.Yu@moxa.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 1, 2020 at 1:10 AM SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <sz.lin=
-@moxa.com> wrote:
->
-> The commit 2042b5486bd3 ("kbuild: unset variables in top Makefile
-> instead of setting 0") renamed the variable from "config-targets"
-> to "config-build", the comment should be consistent accordingly.
->
-> Signed-off-by: Kaiden PK Yu (=E4=BD=99=E6=B3=8A=E9=8E=A7) <KaidenPK.Yu@mo=
-xa.com>
-> Signed-off-by: SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <sz.lin@moxa.com>
-> ---
+Hi,
 
+On Sun, Mar 01, 2020 at 10:11:51AM +1100, Finn Thain wrote:
+> On Sat, 29 Feb 2020, afzal mohammed wrote:
 
-Applied to linux-kbuild.
-Thanks.
+> > [...] 
+> > Specific to m68k, following changes has been made based on m68 family
+> > ;) feedback,
+> > 
+> 
+> None of my comments were specific to any architecture.
 
+One thing i had in my background, but realize now that didn't express
+anywhere in my mails, in essence what Geert mentioned, i.e. being
+legacy code, i did not give a treatment that would have been given to
+adding new code.
 
+But m68k subthread has been a very lively one and as not many changes,
+felt it was not fair from my side not to handle almost as though it is
+a new code addition.
 
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 90ee2a22e88b..01ac935f28bd 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1805,7 +1805,7 @@ existing-targets :=3D $(wildcard $(sort $(targets))=
-)
->
->  -include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
->
-> -endif # config-targets
-> +endif # config-build
->  endif # mixed-build
->  endif # need-sub-make
->
-> --
-> 2.25.1
->
+There has been conflicting opinions, so i had to take a call one way
+or other, including one against what i did not feel natural, mentioned
+below, please let me know if further changes are required.
 
+> > 3. s/pr_err/pr_debug
+> 
+> Please just ignore my opinion on that, since it contradicts the 
+> maintainer's guidance/preference.
 
---=20
-Best Regards
-Masahiro Yamada
+Yes, i will be remove this change.
+
+Regards
+afzal
