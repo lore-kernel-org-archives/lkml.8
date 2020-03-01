@@ -2,107 +2,76 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C22C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BECC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E8A214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uigv0uke"
+	by mail.kernel.org (Postfix) with ESMTP id 3D68821775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgCAGjf (ORCPT
+        id S1726167AbgCAGqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 01:39:35 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35451 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCAGjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 01:39:35 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 145so7156362qkl.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 22:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3vMiqgqrTzNOns9tPGStxdXw3VsNXtcnvGdYEqnF7WI=;
-        b=uigv0ukeQk6L1xGAaG9zsLq0Hf/aCjLtTWnwjAowPansSH38LcfJha2ytFwRFzHTBO
-         MORDKB0ahQBrsBDvQ1KDy6ECljLXB91prPacbqckjAI29pyPCMmHjUAZWs8H0yTLA3ky
-         9n8NUpjlefsvmZewQuKgMd+qLaTVXnKyMXDQ/gRfAy+X5g4IcHwjBTUalG9+RsCPwMbY
-         NjURC/jcepaMCeQXlEPQuxOEG6zn0VsA6ZidamhGP9OUqGfFAaq5dZfR6FnoQGX9ktN4
-         WtiaWF69csP/SNKZiqaYlzM6U+98R0Q/g8NkIEp3quS4QjGhk/3O3fwl/FsZkqLFaalO
-         dBuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3vMiqgqrTzNOns9tPGStxdXw3VsNXtcnvGdYEqnF7WI=;
-        b=OE9J+dujtqaK0PLuGt+cla72fgxlxUm7dw7L136ltdH2yM9DPHDRWrKF954hecHjcg
-         aGvZjmEnTRPcPOlnCqXvsVUu3WrF79jVf37PJABnBiuN3x28SqOKfgQBkXKxITM5Qi1U
-         5jn/uQcuDxa6PwAuB/bEUy7qJYJYYUXcpNZ5WGczkJx66dIrxYliclFWuq9/Zj8OR7vg
-         IN0vMZ8zjNKzIdvqtzUilQzre8TWF2oTAS34dpXZC5oDn+zETluPhUFxnY2/sHf4iO0C
-         uWTj4U6jhfrw4X4dSeNhT5B7XK5mKeUJPA7iZhM83akaAH7vkp0q5j6ysB5oZVp8aphF
-         ifCQ==
-X-Gm-Message-State: APjAAAVnvVbQnwVDNGFTLC4FEedyTQilEC+j2WP4j5tT+m64j+3ROCb9
-        HRj54nPH+Ivw/12XbjIGRoFYHwcWXReta/++cGl/5g==
-X-Google-Smtp-Source: APXvYqzJDtPI/Dw6AapENwdGNYeXdu95wuDXGOjoQGKY45dZnz92J1JJy/hetlHT1u0pcKpSQL8PLSWAC0j2AabNZrI=
-X-Received: by 2002:a37:7c47:: with SMTP id x68mr11627985qkc.8.1583044773747;
- Sat, 29 Feb 2020 22:39:33 -0800 (PST)
+        Sun, 1 Mar 2020 01:46:09 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31982 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCAGqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 01:46:09 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 0216k17C024045;
+        Sun, 1 Mar 2020 07:46:01 +0100
+Date:   Sun, 1 Mar 2020 07:46:01 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Denis Efremov <efremov@linux.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
+Message-ID: <20200301064601.GA24037@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200229141354.GA23095@1wt.eu>
+ <CAHk-=whFAAV_TOLFNnj=wu4mD2L9OvgB6n2sKDdmd8buMKFv8A@mail.gmail.com>
+ <202003010019.14391.linux@zary.sk>
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <CACT4Y+Z_fGz2zVpco4kuGOVeCK=jv4zH0q9Uj5Hv5TAFxY3yRg@mail.gmail.com> <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
-In-Reply-To: <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 1 Mar 2020 07:39:22 +0100
-Message-ID: <CACT4Y+YTNZRfKLH1=FibrtGj34MY=naDJY6GWVnpMvgShSLFhg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
-To:     Patricia Alfonso <trishalfonso@google.com>,
-        Kees Cook <keescook@google.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003010019.14391.linux@zary.sk>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 2:56 AM Patricia Alfonso
-<trishalfonso@google.com> wrote:
-> On Thu, Feb 27, 2020 at 6:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > .On Thu, Feb 27, 2020 at 3:44 AM Patricia Alfonso
-> > > -       pr_info("out-of-bounds in copy_from_user()\n");
-> > > -       unused = copy_from_user(kmem, usermem, size + 1);
-> >
-> > Why is all of this removed?
-> > Most of these tests are hard earned and test some special corner cases.
-> >
-> I just moved it inside IS_MODULE(CONFIG_TEST_KASAN) instead because I
-> don't think there is a way to rewrite this without it being a module.
+On Sun, Mar 01, 2020 at 12:19:14AM +0100, Ondrej Zary wrote:
+> On Saturday 29 February 2020 16:58:11 Linus Torvalds wrote:
+> > On Sat, Feb 29, 2020 at 8:14 AM Willy Tarreau <w@1wt.eu> wrote:
+> > >
+> > > So if you or Denis think there's some value in me continuing to explore
+> > > one of these areas, I can continue, otherwise I can simply resend the
+> > > last part of my series with the few missing Cc and be done with it.
+> > 
+> > It's fine - this driver isn't worth spending a ton of effort on.
+> > 
+> > The only users are virtualization, and even they are going away
+> > because floppies are so small, and other things have become more
+> > standard anyway (ie USB disk) or easier to emulate (NVMe or whatever).
+> > 
+> > So I suspect the only reason floppy is used even in that area is just
+> > legacy "we haven't bothered updating to anything better and we have
+> > old scripts and images that work".
+> > 
+> >               Linus
+> > 
+> 
+> There are real users with real floppy drives out there.
 
-You mean these are unconditionally crashing the machine? If yes,
-please add a comment about this.
+OK thanks for the feedback. Then I'll continue the minimum cleanups to
+try to focus on maintainability and on the principle of least surprise,
+and I'll have a quick look at the possible simplifications brought by
+the limitation to one FDC, in case that really helps.
 
-Theoretically we could have a notion of "death tests" similar to gunit:
-https://stackoverflow.com/questions/3698718/what-are-google-test-death-tests
-KUnit test runner wrapper would need to spawn a separete process per
-each such test. Under non-KUnit test runner these should probably be
-disabled by default and only run if specifically requested (a-la
---gunit_filter/--gunit_also_run_disabled_tests).
-Could also be used to test other things that unconditionally panic,
-e.g. +Kees may be happy for unit tests for some of the
-hardening/fortification features.
-I am not asking to bundle this with this change of course.
+Willy
