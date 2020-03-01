@@ -2,356 +2,107 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BBC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69437C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4A1214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AF2214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="YNfHlNzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgCAL13 convert rfc822-to-8bit (ORCPT
+        id S1726642AbgCAL2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 06:27:29 -0500
-Received: from mail-oln040092073096.outbound.protection.outlook.com ([40.92.73.96]:28485
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725787AbgCAL12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 06:27:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ixcmuX5hqtxt8d65hizu3O7ImsEA0pJ5ODvEeTjvTKwKRb9+Cv9skDCVWra2WS9O8O3TYpY7Dct3JKhVmAu6QH8gLyMG9+/XSYbax7mWv1z1PGowoQOMBCECcPSWAphvBDsBUmqZRfQ+m9/JIAekJZNwCXHGklF8yuWMXIbRcxjWa5p6vW/1xGBa8RL7DC4i2oUGuJr+ZgTMP9vak3CS0f3rTL310hodIdWEORErHdMQwtv56STuGe1BjaWssZJxnB3jrIG8+NkRp7jvhYptB2A2JlyoUtaEC2vJZkQLfHlJR0QzKNThvUiXK+4NyUqcAbFtIHETvhYu4FlNKr0VSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1yORDbcV5Lq6jDYNRZepgBEneqeE2wbwuz3ycRFaqus=;
- b=oer1KuTvv2UoF0MfCQS9Ex3gO50U3sUrTRlW3bUwHpxelnNFkpsX72fdy2irbDaowVrao05Y8y+2Z5KrE6/ZVSGqJRJ4qbeoXodbk+fAWtGtvG97k8rtK4Wiw2IIjhbYoJRW+3mIXRTSmj/CaKK03pz/CPg/E2IAcRs7k469rbwgdwycR1LSyfteq4yT0kUM/WkfJJr2o71wDqNucpt8p6N2OYCaxdPgoVWCNJJRIq6nx4RFl9aIUKxXxFihH8wAXQmY5CNQ8am8JkxHKkMkogGs8NmPzSWrhaZREXoqtrLJIoCRIHTZPZTbNuY/wZUC57v2Z8vktjfpiZeVz0PxUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB3EUR04FT043.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0c::35) by
- DB3EUR04HT053.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0c::326)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Sun, 1 Mar
- 2020 11:27:19 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.24.59) by
- DB3EUR04FT043.mail.protection.outlook.com (10.152.25.196) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15 via Frontend Transport; Sun, 1 Mar 2020 11:27:19 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Sun, 1 Mar 2020
- 11:27:19 +0000
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR05CA0055.eurprd05.prod.outlook.com (2603:10a6:208:be::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16 via Frontend Transport; Sun, 1 Mar 2020 11:27:16 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: [PATCH] exec: Fix a deadlock in ptrace
-Thread-Topic: [PATCH] exec: Fix a deadlock in ptrace
-Thread-Index: AQHV77xesuLGQPzl+kmhVsL8mVFkuw==
-Date:   Sun, 1 Mar 2020 11:27:18 +0000
-Message-ID: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR05CA0055.eurprd05.prod.outlook.com
- (2603:10a6:208:be::32) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:A599C26DD226E0EDED3C4092BF4CFBFD72E5EDE84A51D647B7B724D9A44DAE68;UpperCasedChecksum:1BD6262FD36A574130568C2C110984A874F2DE2A25EB494B48F7AA478A525256;SizeAsReceived:8660;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [PogcoD09EjsUiwiAWvD5co+pXpV8oyVk]
-x-microsoft-original-message-id: <7fc23f9e-e76c-34bb-6ad8-8bb40cab2a8a@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 428ddd92-4d6d-4bc3-74f1-08d7bdd38064
-x-ms-traffictypediagnostic: DB3EUR04HT053:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Po2iZl4Ny7dOQc80OUMo+tbZ2CkHkSKxPvduDFjBgJ6xMLX+DVkdLk91JzrekHCqTHAx9ZrFi6/yGrBPB0QfS7Q6QnT/GNwL5oWzc6V6HfcjV4DHY2hHsVDxAV84wVlYNpV0QfSUpqbYUQoJeFuyVmMnzYgVKPUcxzMTY6diA7bbuAT4jwdweVj9EHNgbPxX
-x-ms-exchange-antispam-messagedata: LyotnHtVpDGlj615zQAk//1+FlXkYyq9Pf7yob7l2mZqclWE3eGWs3po0AULOUgiNk+MszRJeQT94YQmwTMjoHjgTKpJ+igFCH63ghoP3LNbKarmxdyQxPvCcq3TF99g5VFgnyo4nV96G/RM6vawTA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <6B03745694A187438FC7C99F7614CE7C@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Sun, 1 Mar 2020 06:28:04 -0500
+Received: from mout.gmx.net ([212.227.15.18]:37991 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCAL2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 06:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583062077;
+        bh=V9x9/p4WG/rpKs5F6o0VBgzej0iOeoMBXQKJZLNIEZo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=YNfHlNzJqwlDO4gtQCByWENu6ln//dfNmwZKULYsz81QA9Mb2djvtPu42sM3MwHgL
+         OykMm6e3LIa5bIHCHvE+EUeuEI8nfzwW1i7ZX+tJkMbquY/98X5e8MPH8qH7F6vu6t
+         VVQZLSlbJqMWse9QUV098Pu1mc+Iw4UNTXtdiC8Y=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MhlKs-1jd0g91cGW-00dmcJ; Sun, 01 Mar 2020 12:27:57 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vt6656: Declare a few variables as __read_mostly
+Date:   Sun,  1 Mar 2020 12:26:20 +0100
+Message-Id: <20200301112620.7892-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 428ddd92-4d6d-4bc3-74f1-08d7bdd38064
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2020 11:27:18.9988
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3EUR04HT053
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6zcR7mN64S3xMLCbw+qN3jYVCShMX++6wg11VIG/bxYpBsi0lBJ
+ CpRu5JBo9VkU6u6WIZifE3HJAPY9Sw7f1jd3KbnUcFPZVxHkb8u8RCyN0gq+JpwUyPKa8R/
+ q6hoYIEc+zI8NlYjRXjFiuqgAh+CA/eH1BqCAgBJ0DQYoNIjIy7pgWwXp3ZJyFGRCcN6sAe
+ cBBYTv0g/rFV0bGBgpF/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:be5gT6ui9+A=:XF3Vb+ywqgWTD6t6G+DTrn
+ XJ7O1AkjNXAAEAotCiONIMKDdK+t3Fq8oSZJAcPfbGRmdaMVPFmIPtj0+M+m4t49h20rtBu8K
+ GY2BG70bDOq/RKuNnmypziUN9rDS2jQxEtvL8Xzek5BmtBcC3eqM4PZ4raIGi/ce9Xwt2erE1
+ iKkXWfcXjx/+nVLltIr4Eiv7mqYBpAJyQx2qnK1F0qoY9Vi5aLScsZg+Dd4TVlf2BtxP/c+D5
+ Qq0rf486n6l9IxbSsHvfhMxTg3Mjmd42wGMPit64HLPRt6ShqYM/VR88tvIFOMPOlIEtEFl3H
+ eiC1ilAvuV1KwyHGIT22BLJNZW49JqkjI5eyi2odJPZR/wSk+G/ICwrzGfqcoC7ULp5droYM9
+ 9oWKBaH3TgClNMVvgpylvI9/6efY/zyqj0XUymAjPB7FKQp3bhaLTF5yV5N5h91A3crkcM/xg
+ DvtGjyK5nFOILJySTZA7v76aZs+FcfNYGATfVbJM22MjSw0gpd1tokpHmla7lXxMIp3kqRyjw
+ qHiNAV+e2SxEY1JFAAb+h4hLqvOX6aVQeBugsSUmjDzS0B5OHUGeOWjKSkbunjJRUC1xNj8xz
+ LNiz5nVoIjcdSra4YVc/iKzFBYwwzMsum8ujHViwiFjbN0eaL95xOkxh2WCDkHXTgwWeA08DG
+ CM4KjUJEIiNCBupRQya++lUVlSLh/8KJQp1LPG/82DhbhAIMN98x1QvVygsfM5FEBMnDYi0Jo
+ iFNacHKq92n/7RKAjbQ7WGE9LdZrxyZ029uQ4pI4X8X/Et2Joefhvx6sxOJ/CAs9TwmmyQeGg
+ vNKxxyS+ecMA5HYBfl8G+2LyiGGLAVGHG37XQj2y1FvOFURllM5IUNY+xUx7xdBBLrjrl9aeS
+ piOTpK2i6onKAQZGc2NjPBP+77eBDz2gvfK1gLyJ8jcHTIv2jevYBUIsxI0cBXoGMB7N7BnMs
+ Wd/DafTbjZJM8auFPdeDHt9duBdBHQLozUZxKqCjWEDNr01Lu9ISYDXwVRzHrpQ7icT5wjbsR
+ cyrZNq94YZ3qmCQmK9vG3LZifxfAjDTcQ8Yh4ARaXHVU+6q+Bl3bfkjGHig5I84tOZWDgbjaq
+ C4rnHjEnpNSwbl0lT/XDbygQB9VA3igrJIBmbcjcafUBk12fpTGzwLWmj3U2yGuC9awz3NlJ/
+ ojeaPylbZ+MU4+4aE6T9BMAY1eJ2B1o/mtPNkMxuQwRRXJBzVnosdmXQeTRzND8D8yzi73o0b
+ cXKpGja6mYP7hcHDq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a deadlock in the tracer when tracing a multi-threaded
-application that calls execve while more than one thread are running.
+These include module parameters.
 
-I observed that when running strace on the gcc test suite, it always
-blocks after a while, when expect calls execve, because other threads
-have to be terminated.  They send ptrace events, but the strace is no
-longer able to respond, since it is blocked in vm_access.
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ drivers/staging/vt6656/main_usb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The deadlock is always happening when strace needs to access the
-tracees process mmap, while another thread in the tracee starts to
-execve a child process, but that cannot continue until the
-PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/ma=
+in_usb.c
+index 5e48b3ddb94c..701300202b21 100644
+=2D-- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -49,12 +49,12 @@ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION(DEVICE_FULL_DRV_NAM);
 
-strace          D    0 30614  30584 0x00000000
-Call Trace:
-__schedule+0x3ce/0x6e0
-schedule+0x5c/0xd0
-schedule_preempt_disabled+0x15/0x20
-__mutex_lock.isra.13+0x1ec/0x520
-__mutex_lock_killable_slowpath+0x13/0x20
-mutex_lock_killable+0x28/0x30
-mm_access+0x27/0xa0
-process_vm_rw_core.isra.3+0xff/0x550
-process_vm_rw+0xdd/0xf0
-__x64_sys_process_vm_readv+0x31/0x40
-do_syscall_64+0x64/0x220
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ #define RX_DESC_DEF0 64
+-static int vnt_rx_buffers =3D RX_DESC_DEF0;
++static int __read_mostly vnt_rx_buffers =3D RX_DESC_DEF0;
+ module_param_named(rx_buffers, vnt_rx_buffers, int, 0644);
+ MODULE_PARM_DESC(rx_buffers, "Number of receive usb rx buffers");
 
-expect          D    0 31933  30876 0x80004003
-Call Trace:
-__schedule+0x3ce/0x6e0
-schedule+0x5c/0xd0
-flush_old_exec+0xc4/0x770
-load_elf_binary+0x35a/0x16c0
-search_binary_handler+0x97/0x1d0
-__do_execve_file.isra.40+0x5d4/0x8a0
-__x64_sys_execve+0x49/0x60
-do_syscall_64+0x64/0x220
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ #define TX_DESC_DEF0 64
+-static int vnt_tx_buffers =3D TX_DESC_DEF0;
++static int __read_mostly vnt_tx_buffers =3D TX_DESC_DEF0;
+ module_param_named(tx_buffers, vnt_tx_buffers, int, 0644);
+ MODULE_PARM_DESC(tx_buffers, "Number of receive usb tx buffers");
 
-The proposed solution is to have a second mutex that is
-used in mm_access, so it is allowed to continue while the
-dying threads are not yet terminated.
+=2D-
+2.20.1
 
-I also took the opportunity to improve the documentation
-of prepare_creds, which is obviously out of sync.
-
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
----
- Documentation/security/credentials.rst | 18 ++++++++++--------
- fs/exec.c                              |  9 +++++++++
- include/linux/binfmts.h                |  6 +++++-
- include/linux/sched/signal.h           |  1 +
- init/init_task.c                       |  1 +
- kernel/cred.c                          |  2 +-
- kernel/fork.c                          |  5 +++--
- mm/process_vm_access.c                 |  2 +-
- 8 files changed, 31 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
-index 282e79f..c98e0a8 100644
---- a/Documentation/security/credentials.rst
-+++ b/Documentation/security/credentials.rst
-@@ -437,9 +437,13 @@ new set of credentials by calling::
- 
- 	struct cred *prepare_creds(void);
- 
--this locks current->cred_replace_mutex and then allocates and constructs a
--duplicate of the current process's credentials, returning with the mutex still
--held if successful.  It returns NULL if not successful (out of memory).
-+this allocates and constructs a duplicate of the current process's credentials.
-+It returns NULL if not successful (out of memory).
-+
-+If called from __do_execve_file, the mutex current->signal->cred_guard_mutex
-+is acquired before this function gets called, and the mutex
-+current->signal->cred_change_mutex is acquired later, while the credentials
-+and the process mmap are actually changed.
- 
- The mutex prevents ``ptrace()`` from altering the ptrace state of a process
- while security checks on credentials construction and changing is taking place
-@@ -466,9 +470,8 @@ by calling::
- 
- This will alter various aspects of the credentials and the process, giving the
- LSM a chance to do likewise, then it will use ``rcu_assign_pointer()`` to
--actually commit the new credentials to ``current->cred``, it will release
--``current->cred_replace_mutex`` to allow ``ptrace()`` to take place, and it
--will notify the scheduler and others of the changes.
-+actually commit the new credentials to ``current->cred``, and it will notify
-+the scheduler and others of the changes.
- 
- This function is guaranteed to return 0, so that it can be tail-called at the
- end of such functions as ``sys_setresuid()``.
-@@ -486,8 +489,7 @@ invoked::
- 
- 	void abort_creds(struct cred *new);
- 
--This releases the lock on ``current->cred_replace_mutex`` that
--``prepare_creds()`` got and then releases the new credentials.
-+This releases the new credentials.
- 
- 
- A typical credentials alteration function would look something like this::
-diff --git a/fs/exec.c b/fs/exec.c
-index 74d88da..a6884e4 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1266,6 +1266,12 @@ int flush_old_exec(struct linux_binprm * bprm)
- 	if (retval)
- 		goto out;
- 
-+	retval = mutex_lock_killable(&current->signal->cred_change_mutex);
-+	if (retval)
-+		goto out;
-+
-+	bprm->called_flush_old_exec = 1;
-+
- 	/*
- 	 * Must be called _before_ exec_mmap() as bprm->mm is
- 	 * not visibile until then. This also enables the update
-@@ -1420,6 +1426,8 @@ static void free_bprm(struct linux_binprm *bprm)
- {
- 	free_arg_pages(bprm);
- 	if (bprm->cred) {
-+		if (bprm->called_flush_old_exec)
-+			mutex_unlock(&current->signal->cred_change_mutex);
- 		mutex_unlock(&current->signal->cred_guard_mutex);
- 		abort_creds(bprm->cred);
- 	}
-@@ -1469,6 +1477,7 @@ void install_exec_creds(struct linux_binprm *bprm)
- 	 * credentials; any time after this it may be unlocked.
- 	 */
- 	security_bprm_committed_creds(bprm);
-+	mutex_unlock(&current->signal->cred_change_mutex);
- 	mutex_unlock(&current->signal->cred_guard_mutex);
- }
- EXPORT_SYMBOL(install_exec_creds);
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index b40fc63..2e1318b 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -44,7 +44,11 @@ struct linux_binprm {
- 		 * exec has happened. Used to sanitize execution environment
- 		 * and to set AT_SECURE auxv for glibc.
- 		 */
--		secureexec:1;
-+		secureexec:1,
-+		/*
-+		 * Set by flush_old_exec, when the cred_change_mutex is taken.
-+		 */
-+		called_flush_old_exec:1;
- #ifdef __alpha__
- 	unsigned int taso:1;
- #endif
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 8805025..37eeabe 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -225,6 +225,7 @@ struct signal_struct {
- 	struct mutex cred_guard_mutex;	/* guard against foreign influences on
- 					 * credential calculations
- 					 * (notably. ptrace) */
-+	struct mutex cred_change_mutex; /* guard against credentials change */
- } __randomize_layout;
- 
- /*
-diff --git a/init/init_task.c b/init/init_task.c
-index 9e5cbe5..6cd9a0f 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -26,6 +26,7 @@
- 	.multiprocess	= HLIST_HEAD_INIT,
- 	.rlim		= INIT_RLIMITS,
- 	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
-+	.cred_change_mutex = __MUTEX_INITIALIZER(init_signals.cred_change_mutex),
- #ifdef CONFIG_POSIX_TIMERS
- 	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
- 	.cputimer	= {
-diff --git a/kernel/cred.c b/kernel/cred.c
-index 809a985..e4c78de 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -676,7 +676,7 @@ void __init cred_init(void)
-  *
-  * Returns the new credentials or NULL if out of memory.
-  *
-- * Does not take, and does not return holding current->cred_replace_mutex.
-+ * Does not take, and does not return holding ->cred_guard_mutex.
-  */
- struct cred *prepare_kernel_cred(struct task_struct *daemon)
- {
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 0808095..0395154 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1224,7 +1224,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
- 	struct mm_struct *mm;
- 	int err;
- 
--	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
-+	err =  mutex_lock_killable(&task->signal->cred_change_mutex);
- 	if (err)
- 		return ERR_PTR(err);
- 
-@@ -1234,7 +1234,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
- 		mmput(mm);
- 		mm = ERR_PTR(-EACCES);
- 	}
--	mutex_unlock(&task->signal->cred_guard_mutex);
-+	mutex_unlock(&task->signal->cred_change_mutex);
- 
- 	return mm;
- }
-@@ -1594,6 +1594,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
- 	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
- 
- 	mutex_init(&sig->cred_guard_mutex);
-+	mutex_init(&sig->cred_change_mutex);
- 
- 	return 0;
- }
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index 357aa7b..b3e6eb5 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -204,7 +204,7 @@ static ssize_t process_vm_rw_core(pid_t pid, struct iov_iter *iter,
- 	if (!mm || IS_ERR(mm)) {
- 		rc = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
- 		/*
--		 * Explicitly map EACCES to EPERM as EPERM is a more a
-+		 * Explicitly map EACCES to EPERM as EPERM is a more
- 		 * appropriate error code for process_vw_readv/writev
- 		 */
- 		if (rc == -EACCES)
--- 
-1.9.1
