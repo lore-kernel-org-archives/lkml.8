@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FEAC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85FC3F2D6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6685F20CC7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F64246B4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCAVwr (ORCPT
+        id S1727201AbgCAVwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:52:47 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41622 "EHLO
+        Sun, 1 Mar 2020 16:52:49 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41682 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgCAVwp (ORCPT
+        with ESMTP id S1727112AbgCAVwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:45 -0500
+        Sun, 1 Mar 2020 16:52:47 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVv-003fNj-To; Sun, 01 Mar 2020 21:52:43 +0000
+        id 1j8WVy-003fPD-6x; Sun, 01 Mar 2020 21:52:46 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 21/55] merging pick_link() with get_link(), part 4
-Date:   Sun,  1 Mar 2020 21:52:06 +0000
-Message-Id: <20200301215240.873899-21-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 36/55] do_last(): simplify the liveness analysis past finish_open_created
+Date:   Sun,  1 Mar 2020 21:52:21 +0000
+Message-Id: <20200301215240.873899-36-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,128 +42,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Move the call of get_link() into walk_component().  Change the
-calling conventions for walk_component() to returning the link
-body to follow (if any).
+Don't mess with got_write there - it is guaranteed to be false on
+entry and it will be set true if and only if we decide to go for
+truncation and manage to get write access for that.
+
+Don't carry acc_mode through the entire thing - it's only used
+in that part.  And don't bother with gotos in there - compiler is
+quite capable of optimizing that.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 59 ++++++++++++++++++++++++++---------------------------------
- 1 file changed, 26 insertions(+), 33 deletions(-)
+ fs/namei.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 46cd3e5cb052..21bd4cebd71b 100644
+index 66c3e2df46b2..af2eb52c4a8d 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1868,7 +1868,7 @@ static int step_into(struct nameidata *nd, int flags,
- 	return pick_link(nd, &path, inode, seq);
- }
- 
--static int walk_component(struct nameidata *nd, int flags)
-+static const char *walk_component(struct nameidata *nd, int flags)
- {
- 	struct dentry *dentry;
+@@ -3127,9 +3127,9 @@ static const char *do_last(struct nameidata *nd,
+ 	kuid_t dir_uid = nd->inode->i_uid;
+ 	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+-	bool will_truncate = (open_flag & O_TRUNC) != 0;
++	bool do_truncate;
+ 	bool got_write = false;
+-	int acc_mode = op->acc_mode;
++	int acc_mode;
+ 	unsigned seq;
  	struct inode *inode;
-@@ -1883,17 +1883,22 @@ static int walk_component(struct nameidata *nd, int flags)
- 		err = handle_dots(nd, nd->last_type);
- 		if (!(flags & WALK_MORE) && nd->depth)
- 			put_link(nd);
--		return err;
-+		return ERR_PTR(err);
+ 	struct dentry *dentry;
+@@ -3246,36 +3246,30 @@ static const char *do_last(struct nameidata *nd,
+ 		return ERR_PTR(-ENOTDIR);
+ 
+ finish_open_created:
++	do_truncate = false;
++	acc_mode = op->acc_mode;
+ 	if (file->f_mode & FMODE_CREATED) {
+ 		/* Don't check for write permission, don't truncate */
+ 		open_flag &= ~O_TRUNC;
+-		will_truncate = false;
+ 		acc_mode = 0;
+-	} else if (!d_is_reg(nd->path.dentry)) {
+-		will_truncate = false;
+-	}
+-	if (will_truncate) {
++	} else if (d_is_reg(nd->path.dentry) && open_flag & O_TRUNC) {
+ 		error = mnt_want_write(nd->path.mnt);
+ 		if (error)
+ 			return ERR_PTR(error);
+-		got_write = true;
++		do_truncate = true;
  	}
- 	dentry = lookup_fast(nd, &inode, &seq);
- 	if (IS_ERR(dentry))
--		return PTR_ERR(dentry);
-+		return ERR_CAST(dentry);
- 	if (unlikely(!dentry)) {
- 		dentry = lookup_slow(&nd->last, nd->path.dentry, nd->flags);
- 		if (IS_ERR(dentry))
--			return PTR_ERR(dentry);
-+			return ERR_CAST(dentry);
+ 	error = may_open(&nd->path, acc_mode, open_flag);
+-	if (error)
+-		goto out;
+-	if (!(file->f_mode & FMODE_OPENED))
++	if (!error && !(file->f_mode & FMODE_OPENED))
+ 		error = vfs_open(&nd->path, file);
+-	if (error)
+-		goto out;
+-	error = ima_file_check(file, op->acc_mode);
+-	if (!error && will_truncate)
++	if (!error)
++		error = ima_file_check(file, op->acc_mode);
++	if (!error && do_truncate)
+ 		error = handle_truncate(file);
+-out:
+ 	if (unlikely(error > 0)) {
+ 		WARN_ON(1);
+ 		error = -EINVAL;
  	}
--	return step_into(nd, flags, dentry, inode, seq);
-+	err = step_into(nd, flags, dentry, inode, seq);
-+	if (!err)
-+		return NULL;
-+	if (err > 0)
-+		return get_link(nd);
-+	return ERR_PTR(err);
+-	if (got_write)
++	if (do_truncate)
+ 		mnt_drop_write(nd->path.mnt);
+ 	return ERR_PTR(error);
  }
- 
- /*
-@@ -2145,6 +2150,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 
- 	/* At this point we know we have a real path component. */
- 	for(;;) {
-+		const char *link;
- 		u64 hash_len;
- 		int type;
- 
-@@ -2202,24 +2208,18 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 			if (!name)
- 				return 0;
- 			/* last component of nested symlink */
--			err = walk_component(nd, WALK_FOLLOW);
-+			link = walk_component(nd, WALK_FOLLOW);
- 		} else {
- 			/* not the last component */
--			err = walk_component(nd, WALK_FOLLOW | WALK_MORE);
-+			link = walk_component(nd, WALK_FOLLOW | WALK_MORE);
- 		}
--		if (err < 0)
--			return err;
--
--		if (err) {
--			const char *s = get_link(nd);
--
--			if (IS_ERR(s))
--				return PTR_ERR(s);
--			if (likely(s)) {
--				nd->stack[nd->depth - 1].name = name;
--				name = s;
--				continue;
--			}
-+		if (unlikely(link)) {
-+			if (IS_ERR(link))
-+				return PTR_ERR(link);
-+			/* a symlink to follow */
-+			nd->stack[nd->depth - 1].name = name;
-+			name = link;
-+			continue;
- 		}
- 		if (unlikely(!d_can_lookup(nd->path.dentry))) {
- 			if (nd->flags & LOOKUP_RCU) {
-@@ -2335,24 +2335,17 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 
- static inline const char *lookup_last(struct nameidata *nd)
- {
--	int err;
-+	const char *link;
- 	if (nd->last_type == LAST_NORM && nd->last.name[nd->last.len])
- 		nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
- 
- 	nd->flags &= ~LOOKUP_PARENT;
--	err = walk_component(nd, 0);
--	if (unlikely(err)) {
--		const char *s;
--		if (err < 0)
--			return PTR_ERR(err);
--		s = get_link(nd);
--		if (s) {
--			nd->flags |= LOOKUP_PARENT;
--			nd->stack[0].name = NULL;
--			return s;
--		}
-+	link = walk_component(nd, 0);
-+	if (link) {
-+		nd->flags |= LOOKUP_PARENT;
-+		nd->stack[0].name = NULL;
- 	}
--	return NULL;
-+	return link;
- }
- 
- static int handle_lookup_down(struct nameidata *nd)
 -- 
 2.11.0
 
