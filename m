@@ -2,355 +2,174 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2C5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EFAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8C8246B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 18:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583089112;
-	bh=JYp0STCidVyHnwMyEeKYWrIye/iO86hiU5D3+Q8B0bY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HLmENpRPpPoI3JTuVGOcRKQZDJKpvpKOePeJo7sIzhNjE1LU9OQYR2MjFT+lZeAMu
-	 JorswM4u5m23ZDRZnNDTn7NmDspRRvPnqEAWmhU9C5jeUhaOneyF6qw4/bugSBQNAl
-	 5WEFvX/XSd8T+/V8l629c8fFwbTueX4IpOkpNbSE=
+	by mail.kernel.org (Postfix) with ESMTP id B6AA2246BA
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgCAS6U (ORCPT
+        id S1726674AbgCATA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 13:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgCAS6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 13:58:20 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 047E1246B6;
-        Sun,  1 Mar 2020 18:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583089099;
-        bh=JYp0STCidVyHnwMyEeKYWrIye/iO86hiU5D3+Q8B0bY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=j3FxICnEpHEDPJs0d9DG+rYgN4GJNaMlUooGbMhDKRLQdIU0h2aPBjaK6kqLdhlto
-         QLE2zv5I00b8hFH2K5jwd49eLSxiTMFrPooFkCZ5zIAMOmepGzFd8WlSE9Ty5FtsxA
-         sbfsT4Nu9ZU+h2L7x3Durb9t6snt/lmR2qO9lzQk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C9D94352272F; Sun,  1 Mar 2020 10:58:18 -0800 (PST)
-Date:   Sun, 1 Mar 2020 10:58:18 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH v3] kcsan: Add option for verbose reporting
-Message-ID: <20200301185818.GV2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200221231027.230147-1-elver@google.com>
- <20200222013642.GQ2935@paulmck-ThinkPad-P72>
- <CANpmjNMVczXfr98LTTd4hYBXakq1uGZ14Wfs66pDB=e4JPGjwA@mail.gmail.com>
+        Sun, 1 Mar 2020 14:00:29 -0500
+Received: from mail-db8eur05olkn2048.outbound.protection.outlook.com ([40.92.89.48]:33565
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726146AbgCATA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 14:00:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ErXz1CLTSWmr6CH979PGqCBv3/t3aCFYptdllyI9RXnRNbrmerN8tcp/9+0EOozTWEXtCl54gB6jelpf/20h08n+koBv4SDne6Bmnl+zugkchC6uEozmc6r4G4C4fp50Zwgnmx0KDRxmpFj28GiagIrzor9n4CoTmk6A/tspiNeDwofk+BPZYyr0HxunBI7INlFFF4r3ps5dx68o7qCfDamWRNfJpZyKnTVcjdYk1ROgvPLDkOOb2gD6VsudXoZOuKDJQEI4E5tGZ1oI1IKSy/y6BXbq7eGLozfdqFiAJ/w9zBYHiHptd4waR0xqSXueHDUzpmppP/q3rh35+7Nk4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kjfw80vTWBspu2fD+JA2L4tqWCiD737cuqITX91FYEM=;
+ b=MkH3wbORxVSwXzV5925ldtn8RTeUz4FMmMhyiyusknwVsRva/bHlaoImQvV8apMzVDMemJMG6vGLpjuzcxkcFRQPwXNkxYjy+qiDj7qZ95pcTH52iNzX7fhMBSKbUR05HT+ImhduoZf9ZhSXfYdyUeLYB/YYcNEv0g81MXpApWSKqH1y6ss3IrSSnPc9t00MLkA/Ht30ZSGQGiJj9EdUJc1MBFU/wiUHfvp8fad1gGcLDsaSZUufOvY2QUTBNAqo/g+qOvkGDRcB9CpWJUnT8T69MrCuKWqkcWGZfQNJ96vJxPI4eVJwkx5lCwlPcAnomBZAtKoICQJL336gZb5lhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM6EUR05FT011.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc11::33) by
+ AM6EUR05HT134.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc11::466)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Sun, 1 Mar
+ 2020 19:00:24 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.240.56) by
+ AM6EUR05FT011.mail.protection.outlook.com (10.233.241.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14 via Frontend Transport; Sun, 1 Mar 2020 19:00:24 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Sun, 1 Mar 2020
+ 19:00:24 +0000
+Received: from [192.168.1.101] (92.77.140.102) by FRYP281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16 via Frontend Transport; Sun, 1 Mar 2020 19:00:23 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
+Thread-Topic: [PATCH] exec: Fix a deadlock in ptrace
+Thread-Index: AQHV77xesuLGQPzl+kmhVsL8mVFku6g0DNyAgAAI2gCAAAIiAA==
+Date:   Sun, 1 Mar 2020 19:00:24 +0000
+Message-ID: <AM6PR03MB51702321B8A0E6A8C41ED3D5E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+ <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+In-Reply-To: <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: FRYP281CA0011.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::21)
+ To AM6PR03MB5170.eurprd03.prod.outlook.com (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:F1E2DADFB87F3E5722B26F1C8E16E40BA050D73CA5A67A78C902CDC7F799E52B;UpperCasedChecksum:5AC9037D1E48F3828D566279DEE5DFFDA1CD73C61C825375B7693AE6B2BC632A;SizeAsReceived:8943;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [tkmtNNocAgCyma2NjuY0yBEWMx7iLuzJ]
+x-microsoft-original-message-id: <1b9ef9e3-f422-b357-43ef-d4481659f324@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: a69af6b2-e90d-4adb-27b6-08d7be12cc77
+x-ms-traffictypediagnostic: AM6EUR05HT134:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TAPiAZlN9MbEuKYs6DCa/3ILLU+RrBD7Bt8oKgLzeMZ/8XRY0Bzc1S4tEv3070nQvfdeezqu8J0dkI9SG93miE/BLy3ee4fXGDK+jdeZBh4bNRKhA7WzmQwGwx4K0lqpI8HnnvglJip/YWLM0/tAM9CnnMEIoIjBuhZuKo8HoeIVpcnT4gP1zTLGS48qhjHjsF62Mj/NK2psJCB8YvE2XPPqzsKc2oUWycKreh4KTms=
+x-ms-exchange-antispam-messagedata: kGNfkcV/0ffinKf5m0MMgD5UrdapCGSTIxHVJ0t7JJqeKJWam1KghAfNnxDD3vLUwqensYGDv/nQ63lYL0+eLwhtasl/ZyI+JztnAOZzTjxM1dJjKASDC//8wC5Nwrmp/hdiamYTP1q3OEoV6G+YJA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B2F6AD92C6805149B9EE0D14384F6A76@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMVczXfr98LTTd4hYBXakq1uGZ14Wfs66pDB=e4JPGjwA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a69af6b2-e90d-4adb-27b6-08d7be12cc77
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2020 19:00:24.8472
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 08:16:47PM +0100, Marco Elver wrote:
-> On Sat, 22 Feb 2020 at 02:36, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Sat, Feb 22, 2020 at 12:10:27AM +0100, Marco Elver wrote:
-> > > Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-> > > Currently information about the reporting task's held locks and IRQ
-> > > trace events are shown, if they are enabled.
-> > >
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > > Suggested-by: Qian Cai <cai@lca.pw>
-> >
-> > Applied in place of v1, thank you!  Please check -rcu's "dev" branch
-> > to make sure that I have correct ordering and versions.
-> 
-> (Missed this.) Checked, and all looks good. Thank you!
-> 
-> I hope the new version of this patch now does what you'd expect.
-
-Indeed it does!  Please see below for one example from an rcutorture
-run.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-[    3.162466] ==================================================================
-[    3.162989] BUG: KCSAN: data-race in mutex_spin_on_owner+0xc6/0x2b0
-[    3.162989] 
-[    3.162989] race at unknown origin, with read to 0xffff8e91dde0d838 of 4 bytes by task 156 on cpu 3:
-[    3.162989]  mutex_spin_on_owner+0xc6/0x2b0
-[    3.162989]  __mutex_lock+0x252/0xc70
-[    3.162989]  mutex_lock_nested+0x27/0x30
-[    3.162989]  ata_eh_acquire+0x32/0x80
-[    3.162989]  ata_msleep+0x72/0xa0
-[    3.162989]  sata_link_debounce+0xed/0x1e0
-[    3.162989]  sata_link_resume+0x146/0x1b0
-[    3.162989]  sata_link_hardreset+0x16c/0x290
-[    3.162989]  ahci_do_hardreset+0x19b/0x220
-[    3.162989]  ahci_hardreset+0x3e/0x70
-[    3.168849] ata5: SATA link down (SStatus 0 SControl 300)
-[    3.162989]  ata_do_reset+0x35/0xa0
-[    3.162989]  ata_eh_reset+0x77b/0x1300
-[    3.162989]  ata_eh_recover+0x433/0x2090
-[    3.162989]  sata_pmp_error_handler+0x86a/0xef0
-[    3.162989]  ahci_error_handler+0x7c/0xd0
-[    3.162989]  ata_scsi_port_error_handler+0x3ef/0xb90
-[    3.162989]  ata_scsi_error+0x185/0x1d0
-[    3.162989]  scsi_error_handler+0x13f/0x710
-[    3.172310] ata3.00: ATAPI: QEMU DVD-ROM, 2.5+, max UDMA/100
-[    3.162989]  kthread+0x1c3/0x1e0
-[    3.162989]  ret_from_fork+0x3a/0x50
-[    3.162989] 
-[    3.162989] 2 locks held by scsi_eh_3/156:
-[    3.162989]  #0: ffff8e91ddef90d0 (&host->eh_mutex){+.+.}, at: ata_eh_acquire+0x32/0x80
-[    3.162989]  #1: ffffffff86067ba0 (rcu_read_lock){....}, at: mutex_spin_on_owner+0x0/0x2b0
-
-> Thanks,
-> -- Marco
-> 
-> >
-> > > ---
-> > > v3:
-> > > * Typos
-> > > v2:
-> > > * Rework obtaining 'current' for the "other thread" -- it now passes
-> > >   'current' and ensures that we stall until the report was printed, so
-> > >   that the lockdep information contained in 'current' is accurate. This
-> > >   was non-trivial but testing so far leads me to conclude this now
-> > >   reliably prints the held locks for the "other thread" (please test
-> > >   more!).
-> > > ---
-> > >  kernel/kcsan/core.c   |   4 +-
-> > >  kernel/kcsan/kcsan.h  |   3 ++
-> > >  kernel/kcsan/report.c | 103 +++++++++++++++++++++++++++++++++++++++++-
-> > >  lib/Kconfig.kcsan     |  13 ++++++
-> > >  4 files changed, 120 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> > > index e7387fec66795..065615df88eaa 100644
-> > > --- a/kernel/kcsan/core.c
-> > > +++ b/kernel/kcsan/core.c
-> > > @@ -18,8 +18,8 @@
-> > >  #include "kcsan.h"
-> > >
-> > >  static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
-> > > -static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
-> > > -static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
-> > > +unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
-> > > +unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
-> > >  static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
-> > >  static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
-> > >
-> > > diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-> > > index 892de5120c1b6..e282f8b5749e9 100644
-> > > --- a/kernel/kcsan/kcsan.h
-> > > +++ b/kernel/kcsan/kcsan.h
-> > > @@ -13,6 +13,9 @@
-> > >  /* The number of adjacent watchpoints to check. */
-> > >  #define KCSAN_CHECK_ADJACENT 1
-> > >
-> > > +extern unsigned int kcsan_udelay_task;
-> > > +extern unsigned int kcsan_udelay_interrupt;
-> > > +
-> > >  /*
-> > >   * Globally enable and disable KCSAN.
-> > >   */
-> > > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> > > index 11c791b886f3c..7bdb515e3662f 100644
-> > > --- a/kernel/kcsan/report.c
-> > > +++ b/kernel/kcsan/report.c
-> > > @@ -1,5 +1,7 @@
-> > >  // SPDX-License-Identifier: GPL-2.0
-> > >
-> > > +#include <linux/debug_locks.h>
-> > > +#include <linux/delay.h>
-> > >  #include <linux/jiffies.h>
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/lockdep.h>
-> > > @@ -31,7 +33,26 @@ static struct {
-> > >       int                     cpu_id;
-> > >       unsigned long           stack_entries[NUM_STACK_ENTRIES];
-> > >       int                     num_stack_entries;
-> > > -} other_info = { .ptr = NULL };
-> > > +
-> > > +     /*
-> > > +      * Optionally pass @current. Typically we do not need to pass @current
-> > > +      * via @other_info since just @task_pid is sufficient. Passing @current
-> > > +      * has additional overhead.
-> > > +      *
-> > > +      * To safely pass @current, we must either use get_task_struct/
-> > > +      * put_task_struct, or stall the thread that populated @other_info.
-> > > +      *
-> > > +      * We cannot rely on get_task_struct/put_task_struct in case
-> > > +      * release_report() races with a task being released, and would have to
-> > > +      * free it in release_report(). This may result in deadlock if we want
-> > > +      * to use KCSAN on the allocators.
-> > > +      *
-> > > +      * Since we also want to reliably print held locks for
-> > > +      * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
-> > > +      * that populated @other_info until it has been consumed.
-> > > +      */
-> > > +     struct task_struct      *task;
-> > > +} other_info;
-> > >
-> > >  /*
-> > >   * Information about reported races; used to rate limit reporting.
-> > > @@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
-> > >       return strncmp(buf1, buf2, sizeof(buf1));
-> > >  }
-> > >
-> > > +static void print_verbose_info(struct task_struct *task)
-> > > +{
-> > > +     if (!task)
-> > > +             return;
-> > > +
-> > > +     pr_err("\n");
-> > > +     debug_show_held_locks(task);
-> > > +     print_irqtrace_events(task);
-> > > +}
-> > > +
-> > >  /*
-> > >   * Returns true if a report was generated, false otherwise.
-> > >   */
-> > > @@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
-> > >                                 other_info.num_stack_entries - other_skipnr,
-> > >                                 0);
-> > >
-> > > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > > +                 print_verbose_info(other_info.task);
-> > > +
-> > >               pr_err("\n");
-> > >               pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
-> > >                      get_access_type(access_type), ptr, size,
-> > > @@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
-> > >       stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
-> > >                         0);
-> > >
-> > > +     if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > > +             print_verbose_info(current);
-> > > +
-> > >       /* Print report footer. */
-> > >       pr_err("\n");
-> > >       pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-> > > @@ -357,6 +394,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
-> > >       spin_unlock_irqrestore(&report_lock, *flags);
-> > >  }
-> > >
-> > > +/*
-> > > + * Sets @other_info.task and awaits consumption of @other_info.
-> > > + *
-> > > + * Precondition: report_lock is held.
-> > > + * Postcondition: report_lock is held.
-> > > + */
-> > > +static void
-> > > +set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
-> > > +{
-> > > +     /*
-> > > +      * We may be instrumenting a code-path where current->state is already
-> > > +      * something other than TASK_RUNNING.
-> > > +      */
-> > > +     const bool is_running = current->state == TASK_RUNNING;
-> > > +     /*
-> > > +      * To avoid deadlock in case we are in an interrupt here and this is a
-> > > +      * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
-> > > +      * timeout to ensure this works in all contexts.
-> > > +      *
-> > > +      * Await approximately the worst case delay of the reporting thread (if
-> > > +      * we are not interrupted).
-> > > +      */
-> > > +     int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
-> > > +
-> > > +     other_info.task = current;
-> > > +     do {
-> > > +             if (is_running) {
-> > > +                     /*
-> > > +                      * Let lockdep know the real task is sleeping, to print
-> > > +                      * the held locks (recall we turned lockdep off, so
-> > > +                      * locking/unlocking @report_lock won't be recorded).
-> > > +                      */
-> > > +                     set_current_state(TASK_UNINTERRUPTIBLE);
-> > > +             }
-> > > +             spin_unlock_irqrestore(&report_lock, *flags);
-> > > +             /*
-> > > +              * We cannot call schedule() since we also cannot reliably
-> > > +              * determine if sleeping here is permitted -- see in_atomic().
-> > > +              */
-> > > +
-> > > +             udelay(1);
-> > > +             spin_lock_irqsave(&report_lock, *flags);
-> > > +             if (timeout-- < 0) {
-> > > +                     /*
-> > > +                      * Abort. Reset other_info.task to NULL, since it
-> > > +                      * appears the other thread is still going to consume
-> > > +                      * it. It will result in no verbose info printed for
-> > > +                      * this task.
-> > > +                      */
-> > > +                     other_info.task = NULL;
-> > > +                     break;
-> > > +             }
-> > > +             /*
-> > > +              * If @ptr nor @current matches, then our information has been
-> > > +              * consumed and we may continue. If not, retry.
-> > > +              */
-> > > +     } while (other_info.ptr == ptr && other_info.task == current);
-> > > +     if (is_running)
-> > > +             set_current_state(TASK_RUNNING);
-> > > +}
-> > > +
-> > >  /*
-> > >   * Depending on the report type either sets other_info and returns false, or
-> > >   * acquires the matching other_info and returns true. If other_info is not
-> > > @@ -388,6 +486,9 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
-> > >               other_info.cpu_id               = cpu_id;
-> > >               other_info.num_stack_entries    = stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
-> > >
-> > > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > > +                     set_other_info_task_blocking(flags, ptr);
-> > > +
-> > >               spin_unlock_irqrestore(&report_lock, *flags);
-> > >
-> > >               /*
-> > > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > > index 081ed2e1bf7b1..0f1447ff8f558 100644
-> > > --- a/lib/Kconfig.kcsan
-> > > +++ b/lib/Kconfig.kcsan
-> > > @@ -20,6 +20,19 @@ menuconfig KCSAN
-> > >
-> > >  if KCSAN
-> > >
-> > > +config KCSAN_VERBOSE
-> > > +     bool "Show verbose reports with more information about system state"
-> > > +     depends on PROVE_LOCKING
-> > > +     help
-> > > +       If enabled, reports show more information about the system state that
-> > > +       may help better analyze and debug races. This includes held locks and
-> > > +       IRQ trace events.
-> > > +
-> > > +       While this option should generally be benign, we call into more
-> > > +       external functions on report generation; if a race report is
-> > > +       generated from any one of them, system stability may suffer due to
-> > > +       deadlocks or recursion.  If in doubt, say N.
-> > > +
-> > >  config KCSAN_DEBUG
-> > >       bool "Debugging of KCSAN internals"
-> > >
-> > > --
-> > > 2.25.0.265.gbab2e86ba0-goog
-> > >
+T24gMy8xLzIwIDc6NTIgUE0sIENocmlzdGlhbiBCcmF1bmVyIHdyb3RlOg0KPiBPbiBTdW4sIE1h
+ciAwMSwgMjAyMCBhdCAwNzoyMTowM1BNICswMTAwLCBKYW5uIEhvcm4gd3JvdGU6DQo+PiBPbiBT
+dW4sIE1hciAxLCAyMDIwIGF0IDEyOjI3IFBNIEJlcm5kIEVkbGluZ2VyDQo+PiA8YmVybmQuZWRs
+aW5nZXJAaG90bWFpbC5kZT4gd3JvdGU6DQo+Pj4gVGhlIHByb3Bvc2VkIHNvbHV0aW9uIGlzIHRv
+IGhhdmUgYSBzZWNvbmQgbXV0ZXggdGhhdCBpcw0KPj4+IHVzZWQgaW4gbW1fYWNjZXNzLCBzbyBp
+dCBpcyBhbGxvd2VkIHRvIGNvbnRpbnVlIHdoaWxlIHRoZQ0KPj4+IGR5aW5nIHRocmVhZHMgYXJl
+IG5vdCB5ZXQgdGVybWluYXRlZC4NCj4+DQo+PiBKdXN0IGZvciBjb250ZXh0OiBXaGVuIEkgcHJv
+cG9zZWQgc29tZXRoaW5nIHNpbWlsYXIgYmFjayBpbiAyMDE2LA0KPj4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvbGludXgtZnNkZXZlbC8yMDE2MTEwMjE4MTgwNi5HQjExMTJAcmVkaGF0LmNvbS8N
+Cj4+IHdhcyB0aGUgcmVzdWx0aW5nIGRpc2N1c3Npb24gdGhyZWFkLiBBdCBsZWFzdCBiYWNrIHRo
+ZW4sIEkgbG9va2VkDQo+PiB0aHJvdWdoIHRoZSB2YXJpb3VzIGV4aXN0aW5nIHVzZXJzIG9mIGNy
+ZWRfZ3VhcmRfbXV0ZXgsIGFuZCB0aGUgb25seQ0KPj4gcGxhY2VzIHRoYXQgY291bGRuJ3QgYmUg
+Y29udmVydGVkIHRvIHRoZSBuZXcgc2Vjb25kIG11dGV4IHdlcmUNCj4+IFBUUkFDRV9BVFRBQ0gg
+YW5kIFNFQ0NPTVBfRklMVEVSX0ZMQUdfVFNZTkMuDQo+Pg0KPj4NCj4+IFRoZSBpZGVhbCBzb2x1
+dGlvbiB3b3VsZCBJTU8gYmUgc29tZXRoaW5nIGxpa2UgdGhpczogRGVjaWRlIHdoYXQgdGhlDQo+
+PiBuZXcgdGFzaydzIGNyZWRlbnRpYWxzIHNob3VsZCBiZSAqYmVmb3JlKiByZWFjaGluZyBkZV90
+aHJlYWQoKSwNCj4+IGluc3RhbGwgdGhlbSBpbnRvIGEgc2Vjb25kIGNyZWQqIG9uIHRoZSB0YXNr
+ICh0b2dldGhlciB3aXRoIHRoZSBuZXcNCj4+IGR1bXBhYmlsaXR5KSwgZHJvcCB0aGUgY3JlZF9n
+dWFyZF9tdXRleCwgYW5kIGxldCBwdHJhY2VfbWF5X2FjY2VzcygpDQo+PiBjaGVjayBhZ2FpbnN0
+IGJvdGguIEFmdGVyIHRoYXQsIHNvbWUgZnVydGhlciByZXN0cnVjdHVyaW5nIG1pZ2h0IGV2ZW4N
+Cj4gDQo+IEhtLCBzbyBlc3NlbnRpYWxseSBhIHByaXZhdGUgcHRyYWNlX2FjY2Vzc19jcmVkIG1l
+bWJlciBpbiB0YXNrX3N0cnVjdD8NCj4gVGhhdCB3b3VsZCBwcmVzdW1hYmx5IGFsc28gaW52b2x2
+ZSBhbHRlcmluZyB2YXJpb3VzIExTTSBob29rcyB0byBsb29rIGF0DQo+IHB0cmFjZV9hY2Nlc3Nf
+Y3JlZC4NCj4gDQo+IChNaW5vciBzaWRlLW5vdGUsIGRlX3RocmVhZCgpIHRha2VzIGEgc3RydWN0
+IHRhc2tfc3RydWN0IGFyZ3VtZW50IGJ1dA0KPiAgb25seSBldmVyIGlzIHBhc3NlZCBjdXJyZW50
+LikNCj4gDQo+PiBhbGxvdyB0aGUgY3JlZF9ndWFyZF9tdXRleCB0byBub3QgYmUgaGVsZCBhY3Jv
+c3MgYWxsIG9mIHRoZSBWRlMNCj4+IG9wZXJhdGlvbnMgdGhhdCBoYXBwZW4gZWFybHkgb24gaW4g
+ZXhlY3ZlLCB3aGljaCBtYXkgYmxvY2sNCj4+IGluZGVmaW5pdGVseS4gQnV0IHRoYXQgd291bGQg
+YmUgcHJldHR5IGNvbXBsaWNhdGVkLCBzbyBJIHRoaW5rIHlvdXINCj4+IHByb3Bvc2VkIHNvbHV0
+aW9uIG1ha2VzIHNlbnNlIGZvciBub3csIGdpdmVuIHRoYXQgbm9ib2R5IGhhcyBtYW5hZ2VkDQo+
+PiB0byBpbXBsZW1lbnQgYW55dGhpbmcgYmV0dGVyIGluIHRoZSBsYXN0IGZldyB5ZWFycy4NCj4g
+DQo+IFJlYWRpbmcgdGhyb3VnaCB0aGUgb2xkIHRocmVhZHMgYW5kIGhvdyBvZnRlbiB0aGlzIGlz
+c3VlIGNhbWUgdXAsIEkgdGVuZA0KPiB0byBhZ3JlZS4NCj4gDQoNCk9rYXksIGZpbmUuDQoNCkkg
+bWFuYWdlZCB0byBjaGFuZ2UgT2xlZydzIHRlc3QgY2FzZSwgaW50byBvbmUgdGhhdCBzaG93cyB3
+aGF0IGV4YWN0bHkNCmlzIGNoYW5nZWQgd2l0aCB0aGlzIHBhdGNoOg0KDQoNCiQgY2F0IHQuYw0K
+I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8ZmNudGwuaD4NCiNpbmNsdWRlIDx1bmlzdGQu
+aD4NCiNpbmNsdWRlIDxwdGhyZWFkLmg+DQojaW5jbHVkZSA8c3lzL3NpZ25hbC5oPg0KI2luY2x1
+ZGUgPHN5cy9wdHJhY2UuaD4NCg0Kdm9pZCAqdGhyZWFkKHZvaWQgKmFyZykNCnsNCglwdHJhY2Uo
+UFRSQUNFX1RSQUNFTUUsIDAsMCwwKTsNCglyZXR1cm4gTlVMTDsNCn0NCg0KaW50IG1haW4odm9p
+ZCkNCnsNCglpbnQgZiwgcGlkID0gZm9yaygpOw0KCWNoYXIgbW1bNjRdOw0KDQoJaWYgKCFwaWQp
+IHsNCgkJcHRocmVhZF90IHB0Ow0KCQlwdGhyZWFkX2NyZWF0ZSgmcHQsIE5VTEwsIHRocmVhZCwg
+TlVMTCk7DQoJCXB0aHJlYWRfam9pbihwdCwgTlVMTCk7DQoJCWV4ZWNscCgiZWNobyIsICJlY2hv
+IiwgInBhc3NlZCIsIE5VTEwpOw0KCX0NCg0KCXNsZWVwKDEpOw0KCXNwcmludGYobW0sICIvcHJv
+Yy8lZC9tZW0iLCBwaWQpOw0KICAgICAgICBwcmludGYoIm9wZW4oJXMpXG4iLCBtbSk7DQoJZiA9
+IG9wZW4obW0sIE9fUkRPTkxZKTsNCiAgICAgICAgcHJpbnRmKCJmID0gJWRcbiIsIGYpOw0KCS8v
+IHRoaXMgaXMgbm90IGZpeGVkISBwdHJhY2UoUFRSQUNFX0FUVEFDSCwgcGlkLCAwLDApOw0KCWtp
+bGwocGlkLCBTSUdDT05UKTsNCglpZiAoZiA+PSAwKQ0KCQljbG9zZShmKTsNCglyZXR1cm4gMDsN
+Cn0NCiQgZ2NjIC1wdGhyZWFkIC1XYWxsIHQuYw0KJCAuL2Eub3V0IA0Kb3BlbigvcHJvYy8yODAy
+L21lbSkNCmYgPSAzDQokIHBhc3NlZA0KDQpwcmV2aW91c2x5IHRoaXMgZGlkIGJsb2NrLCBob3cg
+Y2FuIEkgbWFrZSBhIHRlc3QgY2FzZSBmb3IgdGhpcz8NCkkgYW0gbm90IHNvIGV4cGVyaWVuY2Vk
+IGluIHRoaXMgbWF0dGVyLg0KDQoNClRoYW5rcw0KQmVybmQuDQo=
