@@ -5,68 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7BEC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76CBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E669221D56
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A82A21D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DggX/rPB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYTmSmLm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgCAMTx (ORCPT
+        id S1726809AbgCAMVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 07:19:53 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50321 "EHLO
+        Sun, 1 Mar 2020 07:21:19 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35058 "EHLO
         mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgCAMTw (ORCPT
+        with ESMTP id S1725874AbgCAMVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 07:19:52 -0500
-Received: by mail-pj1-f68.google.com with SMTP id nm14so474641pjb.0;
-        Sun, 01 Mar 2020 04:19:51 -0800 (PST)
+        Sun, 1 Mar 2020 07:21:19 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s8so1422726pjq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 04:21:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=tZdH7MfE9a/k+w/TEEMFe9I/lJoqMfajnky1lKZSTb0=;
-        b=DggX/rPB3iRf92C0LCjl8pWjZ2lkGhxuHTfT8s7fKB3UN0TvjuV6GjN0DTyRZ/43tO
-         Ht9nZAtLml6F3Frefljkc+xJ4TwtFk6BP+wBGNuoXm4KeQxiQrIb/elJZUikpUpaE/xy
-         AXf7Fipb9Hh42a37Qa/Lj4KQSTPcIqhlFQ5UnGpLx0lAcwP73CzU2mZR+1Hgh9g+rGZN
-         7YNH+YqpyT9aTDM+ZkW+Na3XfLM/TTo+sa3Qi88Swl35a1MPcTQwWiX4zyQpYNNoOV4T
-         59tC3P4jr2qXcEEEPIghg5rJllWHwiugkLjo9gI1tVt0+Z3oxlJTTX2XnwyZyJKaq/sC
-         6bVQ==
+        bh=SeyPb7WMW17xLR/bm3Ntk537LqOC2X0/Y+QRTFUIpng=;
+        b=gYTmSmLm0AA3xBssbb96lsImcBDraglC9axNZh2y1xQlXQsekc+prcCDs7sG/v5n7V
+         wP1Wq6ae/TAp00TCaPwQYxFEF6uodaMyUfhvI8y7kFA+lAgeSJlaHvE4AOtkBRFDIuzC
+         LwGYnImY1c37asiv6eBOWXHwHZh2YtpGAuH86HNnk16Kasgd+oSUPbXPJU5hkngAvIBx
+         FvKcfwGOaawjZfuPL+trJFAW6nsJ44kIe2KBTjhTJsTDX4fY9wXFcd0XlKlA3pUyldnU
+         bGz+oLsFQkIaZgAtMu2PloaoWsfwlNTfIHn1biiFDBOL4G5pr7/xsH77w7vpr9akIP6J
+         ktIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tZdH7MfE9a/k+w/TEEMFe9I/lJoqMfajnky1lKZSTb0=;
-        b=Pj4DRpqssktc6juswiXs824qWE4m5CcwLH4pyU4DVeJ3rPTHS4LhRVlAgtyo92BE+C
-         aX2izB/bNev6FqX1OU/dk9HkhUtrNmccn6JcsNMvcndSNS8TuBrHezmYN5s56fkdzLf6
-         aOg8ZaunR2euU1xxedBzmWppIMILICgE9wlI0TWhE2mVX8SSBu+o0Lbugnmz/TZOldno
-         eiCaC7guAujWMmYRgNcyIcz7Yx2XMhy4mWn+0g4XMpR65oyccqvgeTNhUyq11IJ839z2
-         i9km0EOvQsryZR/DGUev26YbvPhX/OpFwCMdG5LbeZOKsn5BaLK7d8qZLQqq0QGp8IiX
-         TAtw==
-X-Gm-Message-State: APjAAAUm9cvwLupsHjTa0k/f0zghg2j6kJUgxzbU8uSEZ8QByAAx966P
-        bEQcSrHo0JYtPcXG1iwb7Dk=
-X-Google-Smtp-Source: APXvYqxgTeeH5joC/tE8y4pGhIvBgCPH5KJByfNVC8B4RWcLt+hPsmO1yrbwMAVmOtT966LWV2t3qQ==
-X-Received: by 2002:a17:90b:46c4:: with SMTP id jx4mr15335366pjb.32.1583065191086;
-        Sun, 01 Mar 2020 04:19:51 -0800 (PST)
+        bh=SeyPb7WMW17xLR/bm3Ntk537LqOC2X0/Y+QRTFUIpng=;
+        b=jasvHobnJpkozrT5VnlAPVoLBCEl6XGHgKg11vtV2vomnwYhO7NLimT99Y+HzBmhtv
+         8R4MRTKg5AI9LHOKJ7QgGz41/TEKI1gO6hwvuV3BxroVfTesJWL8ZVx+y3tWdWv6pwZQ
+         XHPnbZQUr4iRPaObQB4hH6+LFkWY0W4aMjYvzx7FwHKGCEtW43i5EsiPSo7oVnNObdj4
+         U4Y6E9syUj4gPKLzZhPJnToBweRhnQa1Rc9NKMj2GzkKxDc1Zq/XX6E5fDUy3I9R8sPP
+         tbKN9MVmnXIApuZpB0S+sk+jY9Bn3Q6JsMDtAyAEeMovCnj20+fvEAWUk/mJemWdhbKd
+         VaoA==
+X-Gm-Message-State: ANhLgQ0w5g37arDFj5TBfHKXw/0mcYCz02fj0B3/VGCvGEHzL98dCgCE
+        hDFc82EfBOmGASDK66Kbv5o=
+X-Google-Smtp-Source: ADFU+vtbfOxxW02DEXdbQIlTCcOsl0UNSCTpDU/wzpXXvmQ+19XZuiOceoT26cJh9xRGHzUzN7YlVQ==
+X-Received: by 2002:a17:90b:30c2:: with SMTP id hi2mr943595pjb.7.1583065277013;
+        Sun, 01 Mar 2020 04:21:17 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id u1sm17359636pfn.133.2020.03.01.04.19.48
+        by smtp.gmail.com with ESMTPSA id k9sm17943013pfh.153.2020.03.01.04.21.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 04:19:50 -0800 (PST)
+        Sun, 01 Mar 2020 04:21:16 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
 To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Subject: [PATCH v3] ARM: OMAP: replace setup_irq() by request_irq()
-Date:   Sun,  1 Mar 2020 17:49:44 +0530
-Message-Id: <20200301121945.3604-1-afzal.mohd.ma@gmail.com>
+Subject: [PATCH v3] ARM: ep93xx: Replace setup_irq() by request_irq()
+Date:   Sun,  1 Mar 2020 17:51:12 +0530
+Message-Id: <20200301122112.3847-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -104,126 +102,43 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/arm/mach-omap1/pm.c       | 13 ++++++-------
- arch/arm/mach-omap1/time.c     | 10 +++-------
- arch/arm/mach-omap1/timer32k.c | 10 +++-------
- arch/arm/mach-omap2/timer.c    | 11 +++--------
- 4 files changed, 15 insertions(+), 29 deletions(-)
+ arch/arm/mach-ep93xx/timer-ep93xx.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-omap1/pm.c b/arch/arm/mach-omap1/pm.c
-index d068958d6f8a..2c1e2b32b9b3 100644
---- a/arch/arm/mach-omap1/pm.c
-+++ b/arch/arm/mach-omap1/pm.c
-@@ -596,11 +596,6 @@ static irqreturn_t omap_wakeup_interrupt(int irq, void *dev)
+diff --git a/arch/arm/mach-ep93xx/timer-ep93xx.c b/arch/arm/mach-ep93xx/timer-ep93xx.c
+index de998830f534..dd4b164d1831 100644
+--- a/arch/arm/mach-ep93xx/timer-ep93xx.c
++++ b/arch/arm/mach-ep93xx/timer-ep93xx.c
+@@ -117,15 +117,11 @@ static irqreturn_t ep93xx_timer_interrupt(int irq, void *dev_id)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction omap_wakeup_irq = {
--	.name		= "peripheral wakeup",
--	.handler	= omap_wakeup_interrupt
--};
--
- 
- 
- static const struct platform_suspend_ops omap_pm_ops = {
-@@ -613,6 +608,7 @@ static const struct platform_suspend_ops omap_pm_ops = {
- static int __init omap_pm_init(void)
- {
- 	int error = 0;
-+	int irq;
- 
- 	if (!cpu_class_is_omap1())
- 		return -ENODEV;
-@@ -656,9 +652,12 @@ static int __init omap_pm_init(void)
- 	arm_pm_idle = omap1_pm_idle;
- 
- 	if (cpu_is_omap7xx())
--		setup_irq(INT_7XX_WAKE_UP_REQ, &omap_wakeup_irq);
-+		irq = INT_7XX_WAKE_UP_REQ;
- 	else if (cpu_is_omap16xx())
--		setup_irq(INT_1610_WAKE_UP_REQ, &omap_wakeup_irq);
-+		irq = INT_1610_WAKE_UP_REQ;
-+	if (request_irq(irq, omap_wakeup_interrupt, 0, "peripheral wakeup",
-+			NULL))
-+		pr_err("Failed to request irq %d (peripheral wakeup)\n", irq);
- 
- 	/* Program new power ramp-up time
- 	 * (0 for most boards since we don't lower voltage when in deep sleep)
-diff --git a/arch/arm/mach-omap1/time.c b/arch/arm/mach-omap1/time.c
-index 524977a31a49..de590a85a42b 100644
---- a/arch/arm/mach-omap1/time.c
-+++ b/arch/arm/mach-omap1/time.c
-@@ -155,15 +155,11 @@ static irqreturn_t omap_mpu_timer1_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction omap_mpu_timer1_irq = {
--	.name		= "mpu_timer1",
+-static struct irqaction ep93xx_timer_irq = {
+-	.name		= "ep93xx timer",
 -	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.handler	= omap_mpu_timer1_interrupt,
+-	.handler	= ep93xx_timer_interrupt,
+-	.dev_id		= &ep93xx_clockevent,
 -};
 -
- static __init void omap_init_mpu_timer(unsigned long rate)
+ void __init ep93xx_timer_init(void)
  {
--	setup_irq(INT_TIMER1, &omap_mpu_timer1_irq);
-+	if (request_irq(INT_TIMER1, omap_mpu_timer1_interrupt,
-+			IRQF_TIMER | IRQF_IRQPOLL, "mpu_timer1", NULL))
-+		pr_err("Failed to request irq %d (mpu_timer1)\n", INT_TIMER1);
- 	omap_mpu_timer_start(0, (rate / HZ) - 1, 1);
++	int irq = IRQ_EP93XX_TIMER3;
++	unsigned long flags = IRQF_TIMER | IRQF_IRQPOLL;
++
+ 	/* Enable and register clocksource and sched_clock on timer 4 */
+ 	writel(EP93XX_TIMER4_VALUE_HIGH_ENABLE,
+ 	       EP93XX_TIMER4_VALUE_HIGH);
+@@ -136,7 +132,9 @@ void __init ep93xx_timer_init(void)
+ 			     EP93XX_TIMER4_RATE);
  
- 	clockevent_mpu_timer1.cpumask = cpumask_of(0);
-diff --git a/arch/arm/mach-omap1/timer32k.c b/arch/arm/mach-omap1/timer32k.c
-index 0ae6c52a7d70..780fdf03c3ce 100644
---- a/arch/arm/mach-omap1/timer32k.c
-+++ b/arch/arm/mach-omap1/timer32k.c
-@@ -148,15 +148,11 @@ static irqreturn_t omap_32k_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction omap_32k_timer_irq = {
--	.name		= "32KHz timer",
--	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.handler	= omap_32k_timer_interrupt,
--};
--
- static __init void omap_init_32k_timer(void)
- {
--	setup_irq(INT_OS_TIMER, &omap_32k_timer_irq);
-+	if (request_irq(INT_OS_TIMER, omap_32k_timer_interrupt,
-+			IRQF_TIMER | IRQF_IRQPOLL, "32KHz timer", NULL))
-+		pr_err("Failed to request irq %d(32KHz timer)\n", INT_OS_TIMER);
- 
- 	clockevent_32k_timer.cpumask = cpumask_of(0);
- 	clockevents_config_and_register(&clockevent_32k_timer,
-diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-index 0d0a731cb476..8b09cdacc30d 100644
---- a/arch/arm/mach-omap2/timer.c
-+++ b/arch/arm/mach-omap2/timer.c
-@@ -91,12 +91,6 @@ static irqreturn_t omap2_gp_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction omap2_gp_timer_irq = {
--	.name		= "gp_timer",
--	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
--	.handler	= omap2_gp_timer_interrupt,
--};
--
- static int omap2_gp_timer_set_next_event(unsigned long cycles,
- 					 struct clock_event_device *evt)
- {
-@@ -382,8 +376,9 @@ static void __init omap2_gp_clockevent_init(int gptimer_id,
- 				     &clockevent_gpt.name, OMAP_TIMER_POSTED);
- 	BUG_ON(res);
- 
--	omap2_gp_timer_irq.dev_id = &clkev;
--	setup_irq(clkev.irq, &omap2_gp_timer_irq);
-+	if (request_irq(clkev.irq, omap2_gp_timer_interrupt,
-+			IRQF_TIMER | IRQF_IRQPOLL, "gp_timer", &clkev))
-+		pr_err("Failed to request irq %d (gp_timer)\n", clkev.irq);
- 
- 	__omap_dm_timer_int_enable(&clkev, OMAP_TIMER_INT_OVERFLOW);
- 
+ 	/* Set up clockevent on timer 3 */
+-	setup_irq(IRQ_EP93XX_TIMER3, &ep93xx_timer_irq);
++	if (request_irq(irq, ep93xx_timer_interrupt, flags, "ep93xx timer",
++			&ep93xx_clockevent))
++		pr_err("Failed to request irq %d (ep93xx timer)\n", irq);
+ 	clockevents_config_and_register(&ep93xx_clockevent,
+ 					EP93XX_TIMER123_RATE,
+ 					1,
 -- 
 2.25.1
 
