@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FA2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFFCC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F335214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09535214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="UvHfkOtD"
+	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="Owzs1Pfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgCAOdO (ORCPT
+        id S1726602AbgCAOdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 09:33:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46772 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgCAOdN (ORCPT
+        Sun, 1 Mar 2020 09:33:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43300 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgCAOdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 09:33:13 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j7so9127381wrp.13
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 06:33:11 -0800 (PST)
+Received: by mail-wr1-f66.google.com with SMTP id e10so7765742wrr.10
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 06:33:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=daynix-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=AkhjaV2U386xal/zszLDOfObdUkcke5EWewGOR3a+d0=;
-        b=UvHfkOtDekecdk3VJ2I7QAi9fjYkrUv4I17dIOSjDXGGEe1hycXWsiuiYCQk27rk88
-         WpHq5VNnOa3DknUvS+iMD0f8Qb4tnkNwWO1xAYEK6fjcEX2qXxc53CfxHDbobXuc4rcW
-         N7kPls2/dmiviJ4Jygx2BfuGW39rOhv6VpGwCLP7PzCHU1c75hzcG27WU76JVlmo2xyV
-         iMnuL+ZCB3926BLg0l49KcTQ8tbcuO6iPHFUlQlZO9t0h2DhSlF99cTAOqK3WbnxHc4A
-         iOJe71fd9tCn5WF47vWqt9KXtZdHhDEeREMTIOFbNGP0buwDKQLC/L/rrxfHsDhzuk1j
-         p22A==
+        bh=VaL51ACNGSwlIJlmeO4/TcbLfxPWGDpUsq2T8gnLheE=;
+        b=Owzs1PfiGqFtEWA+qEbDVP3PvPExSDErmmM7JwxWDaeuh1BdGGEeKdr6+sgf2utAZ6
+         ywQPsIfbBICiu7eSzxm8BUBr/SPFak+KuI0BfC1jHjJhRDMfLNDac8uWv0ghTbedREkA
+         8NY9A5s1G1wLctfdH4jk2WgZlNyhIL/oXmEWM/Mamx9a4eG3FyQskvsVklQQKtrU5g7F
+         qMHeuCPXm6H8tUAf+j1xomWq5L/CLZjmsKy2yDa/8RiyYczR0So15GaL8yqVTLvuSzne
+         6HfQx7fPe6mkAMU4ilqxYDdCj+34H55Nj098IU231mpR272VZJ288jVI2ub1q/9qqHE0
+         z/Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=AkhjaV2U386xal/zszLDOfObdUkcke5EWewGOR3a+d0=;
-        b=m7mEtfe9alrpXRpv2cRZW6wE7e4gp9a2A9wC+LT1oXd2ZlMbRwMUMjatgDDnx61o0d
-         JjkLpXSoJc/dsEusMUaSh7+qEhfmeBK3llprRMEwNHjAMkMIvV+75xa/QfFojkowHQZZ
-         r+HNlBODlr0HoicI1BlUXh+XRWXgo5ojylYUcOxZIrO3/Vteww+h1BUFw37IynVxq+Aj
-         IpRV1cylue5whora1NsrZkidC/2jtTp8tNJWJg3ZGw25HArOpt7xPCk8B2SdbvNRUJbT
-         oP0fjuUXRNRUAVANIxpCzfqiffhhqbdw5udpbxBmB+CnrB24GgQQ/cWXiL7hkiU84B35
-         NH1A==
-X-Gm-Message-State: ANhLgQ0s0ESr9GZ+2oW2D7c7uPsOWKmekNh/ibsnB4mBNP/SGChxUEcj
-        UkhgecqV8LLNvX+fDcIS5Vi82Q==
-X-Google-Smtp-Source: ADFU+vuAv02/b5EHJnyIlUzx4EDC9EjhCbPqKC+IElKUQwfRdUMU541qOT+J2y86saa3RAORVOneOg==
-X-Received: by 2002:adf:cf0d:: with SMTP id o13mr1476179wrj.74.1583073191242;
-        Sun, 01 Mar 2020 06:33:11 -0800 (PST)
-Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
-        by smtp.gmail.com with ESMTPSA id l4sm23617241wrv.22.2020.03.01.06.33.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        bh=VaL51ACNGSwlIJlmeO4/TcbLfxPWGDpUsq2T8gnLheE=;
+        b=oFS5P8cuZzclpinIlrD0KZOuGhcBo8iXBtIO9nhrdSS8Ych7wRVlTh24IASdYwtmzT
+         47CVx9dagD6TqU+tszBVws5/9xhMfukGik72p4/waM0SwqDUGPxa348OFDV92aruQLG6
+         Iaz9y19y8sC6BCLoDlRGGMakKVuiZJK0ZfHoXkqoadLpVyyMopMxCUzjrtlx4E8E6jTg
+         sbzM9inH9fZOmvIuXLrA78snWbCZyyaNIyX07WpuoFNT6P7ieGUk1cc622Otk1Kie2Ig
+         9K5DSofxwVUoiDuOZGCA9jUaO9nV2inU/OLwf7hWF0kAdm7G/LuqwP+LwfqJLBQuOxHK
+         Uvng==
+X-Gm-Message-State: APjAAAUAv4ig8mpVf89yo9931Yt7qKjvLAqmPk0ElGKAN0wMqukI6OG+
+        yJeLl5pkWjvwz0xnfIjGJG9lUA==
+X-Google-Smtp-Source: APXvYqwoPfjEL3QODyOTiNJPvlw/dctQVRNXDuzknTtlGtpMlT9v9siA5S3NzYIpnnoRu0AZcfE5jQ==
+X-Received: by 2002:adf:a4c4:: with SMTP id h4mr16495453wrb.112.1583073190013;
         Sun, 01 Mar 2020 06:33:10 -0800 (PST)
+Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
+        by smtp.gmail.com with ESMTPSA id l4sm23617241wrv.22.2020.03.01.06.33.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Mar 2020 06:33:09 -0800 (PST)
 From:   Yuri Benditovich <yuri.benditovich@daynix.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
 Cc:     yan@daynix.com, virtio-dev@lists.oasis-open.org
-Subject: [PATCH v3 2/3] virtio-net: Introduce RSS receive steering feature
-Date:   Sun,  1 Mar 2020 16:33:01 +0200
-Message-Id: <20200301143302.8556-3-yuri.benditovich@daynix.com>
+Subject: [PATCH v3 1/3] virtio-net: Introduce extended RSC feature
+Date:   Sun,  1 Mar 2020 16:33:00 +0200
+Message-Id: <20200301143302.8556-2-yuri.benditovich@daynix.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200301143302.8556-1-yuri.benditovich@daynix.com>
 References: <20200301143302.8556-1-yuri.benditovich@daynix.com>
@@ -71,104 +71,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RSS (Receive-side scaling) defines hash calculation
-rules and decision on receive virtqueue according to
-the calculated hash, provided mask to apply and
-provided indirection table containing indices of
-receive virqueues. The driver sends the control
-command to enable multiqueue and provide parameters
-for receive steering.
+VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
+is able to provide extended RSC information. When the feature
+is negotiatede and 'gso_type' field in received packet is not
+GSO_NONE, the device reports number of coalesced packets in
+'csum_start' field and number of duplicated acks in 'csum_offset'
+field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
 
 Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
 ---
- include/uapi/linux/virtio_net.h | 42 +++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ include/uapi/linux/virtio_net.h | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-index 19e76b3e3a64..188ad3eecdc8 100644
+index a3715a3224c1..19e76b3e3a64 100644
 --- a/include/uapi/linux/virtio_net.h
 +++ b/include/uapi/linux/virtio_net.h
 @@ -57,6 +57,7 @@
  					 * Steering */
  #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
  
-+#define VIRTIO_NET_F_RSS	  60	/* Supports RSS RX steering */
- #define VIRTIO_NET_F_RSC_EXT	  61	/* extended coalescing info */
++#define VIRTIO_NET_F_RSC_EXT	  61	/* extended coalescing info */
  #define VIRTIO_NET_F_STANDBY	  62	/* Act as standby for another device
  					 * with the same MAC.
-@@ -70,6 +71,17 @@
- #define VIRTIO_NET_S_LINK_UP	1	/* Link is up */
- #define VIRTIO_NET_S_ANNOUNCE	2	/* Announcement is needed */
- 
-+/* supported/enabled hash types */
-+#define VIRTIO_NET_RSS_HASH_TYPE_IPv4          (1 << 0)
-+#define VIRTIO_NET_RSS_HASH_TYPE_TCPv4         (1 << 1)
-+#define VIRTIO_NET_RSS_HASH_TYPE_UDPv4         (1 << 2)
-+#define VIRTIO_NET_RSS_HASH_TYPE_IPv6          (1 << 3)
-+#define VIRTIO_NET_RSS_HASH_TYPE_TCPv6         (1 << 4)
-+#define VIRTIO_NET_RSS_HASH_TYPE_UDPv6         (1 << 5)
-+#define VIRTIO_NET_RSS_HASH_TYPE_IP_EX         (1 << 6)
-+#define VIRTIO_NET_RSS_HASH_TYPE_TCP_EX        (1 << 7)
-+#define VIRTIO_NET_RSS_HASH_TYPE_UDP_EX        (1 << 8)
-+
- struct virtio_net_config {
- 	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
- 	__u8 mac[ETH_ALEN];
-@@ -93,6 +105,12 @@ struct virtio_net_config {
- 	 * Any other value stands for unknown.
- 	 */
- 	__u8 duplex;
-+	/* maximum size of RSS key */
-+	__u8 rss_max_key_size;
-+	/* maximum number of indirection table entries */
-+	__le16 rss_max_indirection_table_length;
-+	/* bitmask of supported VIRTIO_NET_RSS_HASH_ types */
-+	__le32 supported_hash_types;
- } __attribute__((packed));
- 
- /*
-@@ -246,7 +264,9 @@ struct virtio_net_ctrl_mac {
- 
- /*
-  * Control Receive Flow Steering
-- *
-+ */
-+#define VIRTIO_NET_CTRL_MQ   4
-+/*
-  * The command VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET
-  * enables Receive Flow Steering, specifying the number of the transmit and
-  * receive queues that will be used. After the command is consumed and acked by
-@@ -259,11 +279,29 @@ struct virtio_net_ctrl_mq {
- 	__virtio16 virtqueue_pairs;
+ 					 */
+@@ -104,6 +105,7 @@ struct virtio_net_config {
+ struct virtio_net_hdr_v1 {
+ #define VIRTIO_NET_HDR_F_NEEDS_CSUM	1	/* Use csum_start, csum_offset */
+ #define VIRTIO_NET_HDR_F_DATA_VALID	2	/* Csum is valid */
++#define VIRTIO_NET_HDR_F_RSC_INFO	4	/* rsc info in csum_ fields */
+ 	__u8 flags;
+ #define VIRTIO_NET_HDR_GSO_NONE		0	/* Not a GSO frame */
+ #define VIRTIO_NET_HDR_GSO_TCPV4	1	/* GSO frame, IPv4 TCP (TSO) */
+@@ -113,8 +115,24 @@ struct virtio_net_hdr_v1 {
+ 	__u8 gso_type;
+ 	__virtio16 hdr_len;	/* Ethernet + IP + tcp/udp hdrs */
+ 	__virtio16 gso_size;	/* Bytes to append to hdr_len per frame */
+-	__virtio16 csum_start;	/* Position to start checksumming from */
+-	__virtio16 csum_offset;	/* Offset after that to place checksum */
++	union {
++		struct {
++			__virtio16 csum_start;
++			__virtio16 csum_offset;
++		};
++		struct {
++			/* Position to start checksumming from */
++			__virtio16 start;
++			/* Offset after that to place checksum */
++			__virtio16 offset;
++		} csum;
++		struct {
++			/* num of coalesced packets */
++			__le16 packets;
++			/* num of duplicated acks */
++			__le16 dup_acks;
++		} rsc;
++	};
+ 	__virtio16 num_buffers;	/* Number of merged rx buffers */
  };
  
--#define VIRTIO_NET_CTRL_MQ   4
-  #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET        0
-  #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MIN        1
-  #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MAX        0x8000
- 
-+/*
-+ * The command VIRTIO_NET_CTRL_MQ_RSS_CONFIG has the same effect as
-+ * VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET does and additionally configures
-+ * the receive steering to use a hash calculated for incoming packet
-+ * to decide on receive virtqueue to place the packet. The command
-+ * also provides parameters to calculate a hash and receive virtqueue.
-+ */
-+struct virtio_net_rss_config {
-+	__le32 hash_types;
-+	__le16 indirection_table_mask;
-+	__le16 unclassified_queue;
-+	__le16 indirection_table[1/* + indirection_table_mask */];
-+	__le16 max_tx_vq;
-+	__u8 hash_key_length;
-+	__u8 hash_key_data[/* hash_key_length */];
-+};
-+
-+ #define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1
-+
- /*
-  * Control network offloads
-  *
 -- 
 2.17.1
 
