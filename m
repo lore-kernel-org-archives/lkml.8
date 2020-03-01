@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE4CC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37E8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D165206CC
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27BF246C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCAUsh (ORCPT
+        id S1726860AbgCAUsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:48:37 -0500
+        Sun, 1 Mar 2020 15:48:41 -0500
 Received: from mga09.intel.com ([134.134.136.24]:58737 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgCAUse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:48:34 -0500
+        id S1726859AbgCAUsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 15:48:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2020 12:48:33 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2020 12:48:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,505,1574150400"; 
-   d="scan'208";a="233094875"
+   d="scan'208";a="233094882"
 Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.171])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Mar 2020 12:48:33 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 01 Mar 2020 12:48:37 -0800
 From:   Gayatri Kammela <gayatri.kammela@intel.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
@@ -37,9 +37,9 @@ Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
         Chen Zhou <chenzhou10@huawei.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "David E . Box" <david.e.box@intel.com>
-Subject: [PATCH v3 3/5] platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back to tgl_reg_map
-Date:   Sun,  1 Mar 2020 12:44:24 -0800
-Message-Id: <d743f9dc7da3a41aa26ea0bd25671405b19273a8.1583093898.git.gayatri.kammela@intel.com>
+Subject: [PATCH v3 4/5] platform/x86: intel_pmc_core: Make pmc_core_substate_res_show() generic
+Date:   Sun,  1 Mar 2020 12:44:25 -0800
+Message-Id: <683f6e76eace905f570d496a3e6e21b5fd795229.1583093898.git.gayatri.kammela@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1583093898.git.gayatri.kammela@intel.com>
 References: <cover.1583093898.git.gayatri.kammela@intel.com>
@@ -50,35 +50,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If platforms such as Tiger Lake has sub-states of S0ix, then attributes
-such as slps0_dbg_offset become invalid. But slp_s0_offset is still
-valid as it is used to get the pmcdev_base_addr.
-
-Hence, add back slp_s0_offset and remove slps0_dbg_offset attributes.
+Currently pmc_core_substate_res_show() uses array of char pointers
+i.e., lpm_modes for Tiger Lake directly to iterate through and to get
+the number of low power modes which is hardcoded and cannot be re-used
+for future platforms that support sub-states. To maintain readability,
+make pmc_core_substate_res_show() generic, so that it can re-used for
+future platforms.
 
 Cc: Chen Zhou <chenzhou10@huawei.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: David E. Box <david.e.box@intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_pmc_core.c | 2 ++
+ drivers/platform/x86/intel_pmc_core.h | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index a36051c2a18c..986fe677d6fe 100644
+index 986fe677d6fe..04ac058b9871 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -556,9 +556,9 @@ static const struct pmc_bit_map *tgl_lpm_maps[] = {
+@@ -566,6 +566,7 @@ static const struct pmc_reg_map tgl_reg_map = {
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+ 	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
++	.lpm_modes = tgl_lpm_modes,
+ 	.lpm_en_offset = TGL_LPM_EN_OFFSET,
+ 	.lpm_residency_offset = TGL_LPM_RESIDENCY_OFFSET,
+ 	.lpm_sts = tgl_lpm_maps,
+@@ -991,6 +992,7 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
+ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
++	const char **lpm_modes = pmcdev->map->lpm_modes;
+ 	u32 offset = pmcdev->map->lpm_residency_offset;
+ 	u32 lpm_en;
+ 	int index;
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 1bbdffe80bde..0d50b2402abe 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -198,7 +198,7 @@ enum ppfear_regs {
+ #define TGL_LPM_STATUS_OFFSET			0x1C3C
+ #define TGL_LPM_LIVE_STATUS_OFFSET		0x1C5C
  
- static const struct pmc_reg_map tgl_reg_map = {
- 	.pfear_sts = ext_tgl_pfear_map,
-+	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
- 	.ltr_show_sts = cnp_ltr_show_map,
- 	.msr_sts = msr_map,
--	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
- 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
- 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
- 	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
+-const char *lpm_modes[] = {
++const char *tgl_lpm_modes[] = {
+ 	"S0i2.0",
+ 	"S0i2.1",
+ 	"S0i2.2",
+@@ -255,6 +255,7 @@ struct pmc_reg_map {
+ 	const u32 ltr_ignore_max;
+ 	const u32 pm_vric1_offset;
+ 	/* Low Power Mode registers */
++	const char **lpm_modes;
+ 	const u32 lpm_en_offset;
+ 	const u32 lpm_residency_offset;
+ 	const u32 lpm_status_offset;
 -- 
 2.17.1
 
