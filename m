@@ -2,115 +2,107 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D6AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C22C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA9124680
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E8A214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 06:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uigv0uke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbgCAGdZ (ORCPT
+        id S1725945AbgCAGjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 01:33:25 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21266 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgCAGdZ (ORCPT
+        Sun, 1 Mar 2020 01:39:35 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35451 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgCAGjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 01:33:25 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0216LHKb089105
-        for <linux-kernel@vger.kernel.org>; Sun, 1 Mar 2020 01:33:23 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbdetg4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 01:33:23 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 1 Mar 2020 06:33:21 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 1 Mar 2020 06:33:17 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0216WJJ246334418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 1 Mar 2020 06:32:19 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C5277AE051;
-        Sun,  1 Mar 2020 06:33:16 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 523D5AE04D;
-        Sun,  1 Mar 2020 06:33:16 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.81])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun,  1 Mar 2020 06:33:16 +0000 (GMT)
-Date:   Sun, 1 Mar 2020 08:33:14 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/memblock: remove redundant assignment to variable
- max_addr
-References: <20200228235003.112718-1-colin.king@canonical.com>
+        Sun, 1 Mar 2020 01:39:35 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 145so7156362qkl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 22:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3vMiqgqrTzNOns9tPGStxdXw3VsNXtcnvGdYEqnF7WI=;
+        b=uigv0ukeQk6L1xGAaG9zsLq0Hf/aCjLtTWnwjAowPansSH38LcfJha2ytFwRFzHTBO
+         MORDKB0ahQBrsBDvQ1KDy6ECljLXB91prPacbqckjAI29pyPCMmHjUAZWs8H0yTLA3ky
+         9n8NUpjlefsvmZewQuKgMd+qLaTVXnKyMXDQ/gRfAy+X5g4IcHwjBTUalG9+RsCPwMbY
+         NjURC/jcepaMCeQXlEPQuxOEG6zn0VsA6ZidamhGP9OUqGfFAaq5dZfR6FnoQGX9ktN4
+         WtiaWF69csP/SNKZiqaYlzM6U+98R0Q/g8NkIEp3quS4QjGhk/3O3fwl/FsZkqLFaalO
+         dBuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3vMiqgqrTzNOns9tPGStxdXw3VsNXtcnvGdYEqnF7WI=;
+        b=OE9J+dujtqaK0PLuGt+cla72fgxlxUm7dw7L136ltdH2yM9DPHDRWrKF954hecHjcg
+         aGvZjmEnTRPcPOlnCqXvsVUu3WrF79jVf37PJABnBiuN3x28SqOKfgQBkXKxITM5Qi1U
+         5jn/uQcuDxa6PwAuB/bEUy7qJYJYYUXcpNZ5WGczkJx66dIrxYliclFWuq9/Zj8OR7vg
+         IN0vMZ8zjNKzIdvqtzUilQzre8TWF2oTAS34dpXZC5oDn+zETluPhUFxnY2/sHf4iO0C
+         uWTj4U6jhfrw4X4dSeNhT5B7XK5mKeUJPA7iZhM83akaAH7vkp0q5j6ysB5oZVp8aphF
+         ifCQ==
+X-Gm-Message-State: APjAAAVnvVbQnwVDNGFTLC4FEedyTQilEC+j2WP4j5tT+m64j+3ROCb9
+        HRj54nPH+Ivw/12XbjIGRoFYHwcWXReta/++cGl/5g==
+X-Google-Smtp-Source: APXvYqzJDtPI/Dw6AapENwdGNYeXdu95wuDXGOjoQGKY45dZnz92J1JJy/hetlHT1u0pcKpSQL8PLSWAC0j2AabNZrI=
+X-Received: by 2002:a37:7c47:: with SMTP id x68mr11627985qkc.8.1583044773747;
+ Sat, 29 Feb 2020 22:39:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228235003.112718-1-colin.king@canonical.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20030106-0016-0000-0000-000002EBA91F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030106-0017-0000-0000-0000334EE6AB
-Message-Id: <20200301063314.GA6636@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-01_01:2020-02-28,2020-03-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 suspectscore=1 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003010050
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <CACT4Y+Z_fGz2zVpco4kuGOVeCK=jv4zH0q9Uj5Hv5TAFxY3yRg@mail.gmail.com> <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
+In-Reply-To: <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sun, 1 Mar 2020 07:39:22 +0100
+Message-ID: <CACT4Y+YTNZRfKLH1=FibrtGj34MY=naDJY6GWVnpMvgShSLFhg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
+To:     Patricia Alfonso <trishalfonso@google.com>,
+        Kees Cook <keescook@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:50:03PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable max_addr is being initialized with a value that is never
-> read and it is being updated later with a new value.  The initialization
-> is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Sat, Feb 29, 2020 at 2:56 AM Patricia Alfonso
+<trishalfonso@google.com> wrote:
+> On Thu, Feb 27, 2020 at 6:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > .On Thu, Feb 27, 2020 at 3:44 AM Patricia Alfonso
+> > > -       pr_info("out-of-bounds in copy_from_user()\n");
+> > > -       unused = copy_from_user(kmem, usermem, size + 1);
+> >
+> > Why is all of this removed?
+> > Most of these tests are hard earned and test some special corner cases.
+> >
+> I just moved it inside IS_MODULE(CONFIG_TEST_KASAN) instead because I
+> don't think there is a way to rewrite this without it being a module.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+You mean these are unconditionally crashing the machine? If yes,
+please add a comment about this.
 
-> ---
->  mm/memblock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index eba94ee3de0b..4d06bbaded0f 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1698,7 +1698,7 @@ static phys_addr_t __init_memblock __find_max_addr(phys_addr_t limit)
->  
->  void __init memblock_enforce_memory_limit(phys_addr_t limit)
->  {
-> -	phys_addr_t max_addr = PHYS_ADDR_MAX;
-> +	phys_addr_t max_addr;
->  
->  	if (!limit)
->  		return;
-> -- 
-> 2.25.0
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+Theoretically we could have a notion of "death tests" similar to gunit:
+https://stackoverflow.com/questions/3698718/what-are-google-test-death-tests
+KUnit test runner wrapper would need to spawn a separete process per
+each such test. Under non-KUnit test runner these should probably be
+disabled by default and only run if specifically requested (a-la
+--gunit_filter/--gunit_also_run_disabled_tests).
+Could also be used to test other things that unconditionally panic,
+e.g. +Kees may be happy for unit tests for some of the
+hardening/fortification features.
+I am not asking to bundle this with this change of course.
