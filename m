@@ -2,107 +2,113 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F49BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D295C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453FB24649
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VTqwlu9y"
+	by mail.kernel.org (Postfix) with ESMTP id 032BC24649
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583024667;
+	bh=KHCj+RVwIzZk+PytK17Qo6EX+BSi3P3+GEylzWTQP2I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2mGPN0vZUJjzXkOnhuZVyXz8xkZyx6SiebbA0irP3zk4K1f6e6c2Ev+WZ6EYf2who
+	 ivUEXZvXGf93cZUKPjiXwKBk+sAHok1INtUgcWGrc4MURzI8fmDtUe3pkdCgeFD6NN
+	 ROvZg3cgtAw6pY8wKDCFRcrHHpcr/eE/SLfcJZsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgCAAx6 (ORCPT
+        id S1727289AbgCABEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:53:58 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34527 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbgCAAx5 (ORCPT
+        Sat, 29 Feb 2020 20:04:14 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:58052 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCABEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:53:57 -0500
-Received: by mail-lf1-f67.google.com with SMTP id w27so5057408lfc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 16:53:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6dpJe4Mf6LX0NrQj7yUohcYZEvawc+wKB+azjehKaqA=;
-        b=VTqwlu9yhhH2qXRUpJcfB/cMCFBXe3gl/fPRS2SlZbeiJQHElM1P/XE0RbevL0Rr4l
-         SbcnvhJuczcZ0uIS/i9hNaS7/9g0FiHiYcgPKTcZL5EyIT/DA5AQNblDZkXYLQBfA/HP
-         z2cLzoxkYxywAj9HE1VOm88evNedEmU6mF8dJ82Cy5tBp+IIB2nMThpJptdcTExbc7IG
-         JUbwcQmm8YfBYAg6M5+e7ymMzXHsVozM4cL0+v8bMd95XeT06N2cnJ//xpz2xaCnEzZ9
-         wLJUx2HcwZfwQ/FcdeUF3jomWWi239AbgX3GOKbeBJKbaGFZAEzeWIzD9aaa0VjJQq+t
-         Ij2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6dpJe4Mf6LX0NrQj7yUohcYZEvawc+wKB+azjehKaqA=;
-        b=CgwuCLlfgfMzAz1laiptZc+rRgrLxVhQZyZMd+HGq1f+3cDMxCwB+YfakvngjMImwc
-         CRFa/xMNQS3m78/0vMQkg1ePm1sVOasbHxQOesUyXDGzhc4+nn6vjDTLDFWyLWEMElQT
-         3u1LBRKB0jqoNzy/RxwTBBn+GO/I0MHg09Lfkzt30kqp4CCay3fziGHJZPFRqMj9LrRu
-         0hVWk4Uy6rB+7oBhdI/fMNFvKBy/ibWw2aiM2xfB6Ems9tUoSssgxk+SJTxSnSPY/I3Q
-         iMwv0PgylX/guL3jzGGIWTQpudzZ9aOFvltT7sCBBRUaQlT3y4obO4vlbROHwqjekd1s
-         5aFQ==
-X-Gm-Message-State: ANhLgQ22gXA2/9RLd56SCFrzMPUzb1tv08qTANZsL6U8NRgRF8DxnFrZ
-        uj0JfUyKZ+VgLRtYq6So8H4Jy4rqeo92dyHEijcU
-X-Google-Smtp-Source: ADFU+vuyaDKwasGF4529bz/E0ATFDkNZPPHOsf1wAOCRsmrXQTGi8kdM7IQ7UEcgZQ25bxsDk4ILGp4Munwws2rf7Rw=
-X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr1007163lfb.69.1583024035644;
- Sat, 29 Feb 2020 16:53:55 -0800 (PST)
+        Sat, 29 Feb 2020 20:04:13 -0500
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 021145h9004480;
+        Sun, 1 Mar 2020 10:04:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 021145h9004480
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583024646;
+        bh=MSqFcgJbmSE08ec8AxyjPeQKskX4mRh+c7oBtzH2Vrc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PwCVGVXVEKTgsuG7D5/tlT7kyE+kkhRaLUXQ/HNnGGOz/mUNnuyRxYtFum+Wd3JEu
+         V4/N5HCxeCCBSUw93akdFXBmA5kPnYPC377woyYimpl6iCNiJlRV8/2bwPl0CSBrcw
+         iIG2LN2fLDhFkn2Wl2W1FfihbK2F9NB15dRy80hbDBRrYuts7o8O+dieZdQeQKJmP6
+         d/ZxHf1r9JEBxum87L1xHv2Js2jP3bPMY6MHXm9bvMZnxO+SbWqp0Y2zkBAxWdZJ+m
+         6jI5qVu3qmg4PDxmYHX4gATaJyKyriUrMqYD9Y0dLJZyXJjhf/qV0xQjVHKE2280lv
+         Kqn/L+EAn6ALQ==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id y201so2006501vky.8;
+        Sat, 29 Feb 2020 17:04:05 -0800 (PST)
+X-Gm-Message-State: ANhLgQ147jqvJwfhGvVPxK/vIcwsq2uW/Md/oY7Fc2YE1azxGTP/lHDM
+        VAwJhqLxtN15ds15BzTRr8bWPOb8m/o1sk1qnuE=
+X-Google-Smtp-Source: ADFU+vuztPG2oOUZNRaWd8YCFbE7NPYByA0CGxa4wwrfcTmULOMpQO1NoD0HZ00X8nVMR1R6+0leTaA2n/ylFtIz2W0=
+X-Received: by 2002:a1f:3f0d:: with SMTP id m13mr4014247vka.96.1583024644419;
+ Sat, 29 Feb 2020 17:04:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200212222922.5dfa9f36@oasis.local.home> <20200213042331.157606-1-zzyiwei@google.com>
- <20200213090308.223f3f20@gandalf.local.home> <CAKT=dDmB=TX++VeL=-NihDv5L4iBn_48=i7Lsnrkd+4e13QQsQ@mail.gmail.com>
- <CAKT=dDnt174adfWzSiNfheA5EVL32AG_2RQa0861V2Mjh-f51w@mail.gmail.com> <20200224113805.134f8b95@gandalf.local.home>
-In-Reply-To: <20200224113805.134f8b95@gandalf.local.home>
-From:   Yiwei Zhang <zzyiwei@google.com>
-Date:   Sat, 29 Feb 2020 16:53:44 -0800
-Message-ID: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
-Subject: Re: [PATCH v3] gpu/trace: add gpu memory tracepoints
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        yamada.masahiro@socionext.com, elder@kernel.org,
-        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>, tglx@linutronix.de,
-        paul.walmsley@sifive.com, linux-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
-        Prahlad Kilambi <prahladk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        android-kernel <android-kernel@google.com>
+References: <20200229160959.871801-1-sz.lin@moxa.com>
+In-Reply-To: <20200229160959.871801-1-sz.lin@moxa.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 1 Mar 2020 10:03:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQf0L1BCaYKqHPAcWwGqcGJgpAdF-QU7_ZVy4H_ygCtRg@mail.gmail.com>
+Message-ID: <CAK7LNAQf0L1BCaYKqHPAcWwGqcGJgpAdF-QU7_ZVy4H_ygCtRg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Fix inconsistent comment
+To:     =?UTF-8?B?U1ogTGluICjmnpfkuIrmmbop?= <sz.lin@moxa.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Kaiden PK Yu <KaidenPK.Yu@moxa.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 8:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sun, Mar 1, 2020 at 1:10 AM SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <sz.lin=
+@moxa.com> wrote:
 >
-> On Sun, 23 Feb 2020 22:31:11 -0800
-> Yiwei Zhang <zzyiwei@google.com> wrote:
+> The commit 2042b5486bd3 ("kbuild: unset variables in top Makefile
+> instead of setting 0") renamed the variable from "config-targets"
+> to "config-build", the comment should be consistent accordingly.
 >
-> > Dear gpu and tracing owners,
-> >
-> > It's been a while and this is just a gentle and friendly re-ping for
-> > review of this small patch.
+> Signed-off-by: Kaiden PK Yu (=E4=BD=99=E6=B3=8A=E9=8E=A7) <KaidenPK.Yu@mo=
+xa.com>
+> Signed-off-by: SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) <sz.lin@moxa.com>
+> ---
+
+
+Applied to linux-kbuild.
+Thanks.
+
+
+
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> I guess the question is what tree should this go through. I usually
-> only take tracing infrastructure changes and leave topic specific
-> tracing for those that maintain the topics.
+> diff --git a/Makefile b/Makefile
+> index 90ee2a22e88b..01ac935f28bd 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1805,7 +1805,7 @@ existing-targets :=3D $(wildcard $(sort $(targets))=
+)
 >
-> I'm fine with taking this through my tree if I get a bunch of
-> acked/reviewed by from other maintainers.
+>  -include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
 >
-> -- Steve
+> -endif # config-targets
+> +endif # config-build
+>  endif # mixed-build
+>  endif # need-sub-make
+>
+> --
+> 2.25.1
 >
 
-Hi GPU directory owners/maintainers,
 
-Given Steve's reply, could you guys help review and ack this tiny
-patch? This is a friendly re-ping since it's been more than 2 weeks
-without any response from gpu directory folks. The patchset v2 was
-ack'ed by Greg(gregkh@), and this v3 patch only has format updates.
-Please take another look. Many many thanks!
-
-Best regards,
-Yiwei
+--=20
+Best Regards
+Masahiro Yamada
