@@ -2,214 +2,106 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2FFC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB120C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7EF0222C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DCB222C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bQndGde9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCAArg convert rfc822-to-8bit (ORCPT
+        id S1727322AbgCAAs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:47:36 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33028 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCAArf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:47:35 -0500
-Received: by mail-qt1-f196.google.com with SMTP id x8so2819171qts.0;
-        Sat, 29 Feb 2020 16:47:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oH0ncHNV8XxAqVrlyEJMu+Cv/ThtQO/KP6auu0wc1lg=;
-        b=JBiw+nr5O2EgoGHCgthrjTdz7ghd30CabF2c+uundh7dsC4b7mbSbngjk96uxG/jvr
-         e5rRkJRQEGLQ0N+WskZsaKtdNjhtTYIJ9ebgFphHpkwOAIG/JahVu5TZUN1DdcbxT2lW
-         a5mfkrjUFlh3h28Jn7Oh/29PMlxVWDKV8+AIGxrxvr+8EHOwernqvVzetFBN6vl7R5iD
-         R6I6s7fQg+WBe7baqhfaO2AyHfwEum5sjtTiC3wzKC9dRfRSi03eSkBpEwddRxWTwHu9
-         ubAUriskyPyCgI4lZGA+G5gf2rm0F70MgIPmEy2KJnFtzt8qapgn2gQgSm30UvTW9ydw
-         +4pw==
-X-Gm-Message-State: APjAAAX0xrs0KF52khBJ24evfxBsulcYd0Miv0wdFBRXyTjIcgkKksrg
-        d3e97gko8B+0STC7jt5ialP5SVExXk1RNE13vWg=
-X-Google-Smtp-Source: APXvYqyyJpbm+wc92foVb2tgN6GdgD9tF3sjZIJHrWt8MtUjgy13G9NMtx15eXtf5uWPSkPa6budnFBYEhuAcp2cyqM=
-X-Received: by 2002:ac8:12c5:: with SMTP id b5mr10245689qtj.386.1583023654212;
- Sat, 29 Feb 2020 16:47:34 -0800 (PST)
+        Sat, 29 Feb 2020 19:48:28 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56275 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbgCAAs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:48:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48VPlW5nYLz9sPk;
+        Sun,  1 Mar 2020 11:48:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583023705;
+        bh=4nRI6rwZRJmJBCSa2D7NMwK+7ECxFcV3Jplu7f2M8vI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bQndGde94p9FyOTmTOsKt5AnSDdUQoxCwxy7l9+8ZpBXs+oyYGsT/USUpwwCYFUeB
+         OAs2OK8w6ainF6Hb1E0AJ3CtUFbC/Gb0BjAl8V8sCSxedVthQ/5mF0cXHyhWH3URuy
+         548JnLhcYrDjKtEwM62cZV7xhRlwqKtlLRSnogfOpYniYaEqqhZXM/iY1dM+4u/X/N
+         6kc5DIlzx4Xg9x6Gdes2FktrED8OwRU/yMDa6+PP8t50g89z4T4PxnCkpVeVv3S4db
+         oEtYHaxZc1SvKAmmMUypMuz3UqBveSsmjCegll5CS64Xsw+gfj6rEWt1n7xZ+786FC
+         OU6eoFzkoU47Q==
+Date:   Sun, 1 Mar 2020 11:47:50 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Carlo Caione <carlo@caione.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "Neil Armstrong" <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        "Jian Hu" <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH] soc: amlogic: fix compile failure with
+ MESON_SECURE_PM_DOMAINS & !MESON_SM
+Message-ID: <20200301114750.7d270124@canb.auug.org.au>
+In-Reply-To: <7hzhd19vuj.fsf@baylibre.com>
+References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
+        <20200218080743.07e58c6e@canb.auug.org.au>
+        <20200218092229.0448d266@canb.auug.org.au>
+        <20200224101654.530f1837@canb.auug.org.au>
+        <7hzhd19vuj.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20200128132539.782286-1-laurent@vivier.eu>
-In-Reply-To: <20200128132539.782286-1-laurent@vivier.eu>
-From:   YunQiang Su <syq@debian.org>
-Date:   Sun, 1 Mar 2020 08:47:23 +0800
-Message-ID: <CAKcpw6W8_a3LPMPTph1asU3dCfjXk-xh5_7+MCEFicwTph+EKg@mail.gmail.com>
-Subject: Re: [PATCH v3] binfmt_misc: pass binfmt_misc flags to the interpreter
-To:     Laurent Vivier <laurent@vivier.eu>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="Sig_/Kf1.E4dLddnNTqvZx6GlV0A";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Laurent Vivier <laurent@vivier.eu> 于2020年1月28日周二 下午9:25写道：
->
-> It can be useful to the interpreter to know which flags are in use.
->
-> For instance, knowing if the preserve-argv[0] is in use would
-> allow to skip the pathname argument.
->
-> This patch uses an unused auxiliary vector, AT_FLAGS, to add a
-> flag to inform interpreter if the preserve-argv[0] is enabled.
->
+--Sig_/Kf1.E4dLddnNTqvZx6GlV0A
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I am suggested to post linux-arch and/or linux-api.
+Hi Kevin,
 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-> ---
+On Sat, 29 Feb 2020 17:55:32 +0100 Kevin Hilman <khilman@baylibre.com> wrot=
+e:
 >
-> Notes:
->     This can be tested with QEMU from my branch:
->
->       https://github.com/vivier/qemu/commits/binfmt-argv0
->
->     With something like:
->
->       # cp ..../qemu-ppc /chroot/powerpc/jessie
->
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
->                             --persistent no --preserve-argv0 yes
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: POC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       sh
->
->       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
->                             --persistent no --preserve-argv0 no
->       # systemctl restart systemd-binfmt.service
->       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
->       enabled
->       interpreter //qemu-ppc
->       flags: OC
->       offset 0
->       magic 7f454c4601020100000000000000000000020014
->       mask ffffffffffffff00fffffffffffffffffffeffff
->       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
->       /bin/sh
->
->     v3: mix my patch with one from YunQiang Su and my comments on it
->         introduce a new flag in the uabi for the AT_FLAGS
->     v2: only pass special flags (remove Magic and Enabled flags)
->
->  fs/binfmt_elf.c              | 5 ++++-
->  fs/binfmt_elf_fdpic.c        | 5 ++++-
->  fs/binfmt_misc.c             | 4 +++-
->  include/linux/binfmts.h      | 4 ++++
->  include/uapi/linux/binfmts.h | 4 ++++
->  5 files changed, 19 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index ecd8d2698515..ff918042ceed 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -176,6 +176,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->         unsigned char k_rand_bytes[16];
->         int items;
->         elf_addr_t *elf_info;
-> +       elf_addr_t flags = 0;
->         int ei_index = 0;
->         const struct cred *cred = current_cred();
->         struct vm_area_struct *vma;
-> @@ -250,7 +251,9 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->         NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
->         NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
->         NEW_AUX_ENT(AT_BASE, interp_load_addr);
-> -       NEW_AUX_ENT(AT_FLAGS, 0);
-> +       if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +               flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +       NEW_AUX_ENT(AT_FLAGS, flags);
->         NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
->         NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
->         NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index 240f66663543..abb90d82aa58 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->         char __user *u_platform, *u_base_platform, *p;
->         int loop;
->         int nr; /* reset for each csp adjustment */
-> +       unsigned long flags = 0;
->
->  #ifdef CONFIG_MMU
->         /* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
-> @@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->         NEW_AUX_ENT(AT_PHENT,   sizeof(struct elf_phdr));
->         NEW_AUX_ENT(AT_PHNUM,   exec_params->hdr.e_phnum);
->         NEW_AUX_ENT(AT_BASE,    interp_params->elfhdr_addr);
-> -       NEW_AUX_ENT(AT_FLAGS,   0);
-> +       if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +               flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +       NEW_AUX_ENT(AT_FLAGS,   flags);
->         NEW_AUX_ENT(AT_ENTRY,   exec_params->entry_addr);
->         NEW_AUX_ENT(AT_UID,     (elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
->         NEW_AUX_ENT(AT_EUID,    (elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..b9acdd26a654 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
->         if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
->                 goto ret;
->
-> -       if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
-> +       if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
-> +               bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
-> +       } else {
->                 retval = remove_arg_zero(bprm);
->                 if (retval)
->                         goto ret;
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc633f3be..265b80d5fd6f 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -78,6 +78,10 @@ struct linux_binprm {
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
->
-> +/* if preserve the argv0 for the interpreter  */
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
-> +#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  /* Function parameter for binfmt->coredump */
->  struct coredump_params {
->         const kernel_siginfo_t *siginfo;
-> diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
-> index 689025d9c185..a70747416130 100644
-> --- a/include/uapi/linux/binfmts.h
-> +++ b/include/uapi/linux/binfmts.h
-> @@ -18,4 +18,8 @@ struct pt_regs;
->  /* sizeof(linux_binprm->buf) */
->  #define BINPRM_BUF_SIZE 256
->
-> +/* if preserve the argv0 for the interpreter  */
-> +#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-> +#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
-> +
->  #endif /* _UAPI_LINUX_BINFMTS_H */
-> --
-> 2.24.1
->
+> I've fixed up the trailer whitespace an queued this up now, so should
+> show up in linux next shortly.
+
+Thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Kf1.E4dLddnNTqvZx6GlV0A
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5bBjYACgkQAVBC80lX
+0Gw+KAgAhjy4Z4V15rVXk29DVizB7BmoTp0AHlbwyBOXdg1fqDDAgpSapQv/aaTF
+t/kpWrI8HPqJIV33mTw9Y4ihIwM3w3hurf1Z3fal9lem4IITW6hlcuXG8jm1I0Zh
+rMlvimE+P9nv7UYTDqgQx0+v7nw3Y0kxJTkkoRbtPMOBeX/mq3oEMqHmvyTRzjjf
++uqsMBh50kotDakasWPX47i7cULdhXg3BUd/lPYg7n1wJ179GLOl0F83CLmbeCtK
+D5PxpxIZmQEvgFModR81zi8NPz46WCa1WeSQ0edqS2AYBe8p6FWYyEeBCmU2b2ER
+xjSTCdXBgNDI8gD67V0Tx7Qs1++sjA==
+=V59f
+-----END PGP SIGNATURE-----
+
+--Sig_/Kf1.E4dLddnNTqvZx6GlV0A--
