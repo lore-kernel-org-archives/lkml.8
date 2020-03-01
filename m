@@ -2,99 +2,124 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842ACC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B80C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3A324680
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5C5206CC
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583097800;
+	bh=tWzpwSs3+T0TmgH38aKlT6EJLNraULipQkjfIIXFGEk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yyALbnudFwAxG3KaKNqGFL59xzXP2mJov3fY9P66FV70F+rs28GBeVQdg6SpoDeIW
+	 hSQ8nFUs7qf52zuooOrI15XE94xV5DLwOkdPk7OQtIpCQAEVIqGVgjwwpzE9d+IyJq
+	 5wGo09dVEVkitbWABfqoyirto6NJyhTTwNBPnRdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCAVUz (ORCPT
+        id S1726621AbgCAVXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:20:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48889 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgCAVUs (ORCPT
+        Sun, 1 Mar 2020 16:23:19 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44308 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgCAVXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:20:48 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8W0m-0005u8-3C; Sun, 01 Mar 2020 22:20:32 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8W0f-0005th-63; Sun, 01 Mar 2020 22:20:25 +0100
-Date:   Sun, 1 Mar 2020 22:20:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH V9 3/3] Input: new da7280 haptic driver
-Message-ID: <20200301212025.lw4f6uv453oulu22@pengutronix.de>
-References: <cover.1582270025.git.Roy.Im@diasemi.com>
- <1569958274d409298695cf86184c7b67aaf19bef.1582270025.git.Roy.Im@diasemi.com>
- <20200226161307.6tv5q2yh62cp7vk6@pengutronix.de>
- <VE1PR10MB30859CB04A6F9DB58D921F7485E90@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
+        Sun, 1 Mar 2020 16:23:18 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so8357570oia.11;
+        Sun, 01 Mar 2020 13:23:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g90Jsy31XrppfqU2qdwvAKX4AQi5k+8zFJzl7y6CTO8=;
+        b=hpqnu07zFA3Uke2RMN5J3KIoXQHeR5VtJcuge9sJYzpib0EgJmQMvA1lYUmqbK3FBI
+         kKif4O9kcKlAVsv3MOzdHiFQzi19/ON+4JYm3DBUD8gaSiNxvOoWYCc/ayZtkmlfnqAm
+         2GCHO9qnKohEpFb2Ez0H8s8oaaRhVNc4aA9ZvtFfk3fVno69l2JASjpAoVuIbS42eydb
+         wdBJT2fRMOWudKEMhfE3eSKqbLufyhoNbhkzq+PlAxToZMCfmGrg0gFpw6eHhb/OYgEL
+         Ewgc5+5rdfhDxhyVmvEWTcwppcYzSDvHmQevv2HXXlfWft9q37ydH2i3gQYOpmtFQ59A
+         1Fgw==
+X-Gm-Message-State: APjAAAXRDXWlXJV0uhoX9vtg7QM5r727EEzrod6M2vG4sPmIFZhRTmdn
+        HaCypxfZ+FCvoqfwVQghd9u+/S2Yhy7Q1KswxhM=
+X-Google-Smtp-Source: APXvYqzcg028OV6MOcUNz9riYTwG1HmNKNDoar9+w8ggrxYqXP3bcp5HMo1s3kEuWmpCdQOlzFaMz3PPlEVbBkxC6jQ=
+X-Received: by 2002:aca:ebcf:: with SMTP id j198mr8056491oih.115.1583097798061;
+ Sun, 01 Mar 2020 13:23:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VE1PR10MB30859CB04A6F9DB58D921F7485E90@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
+ <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com> <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org>
+In-Reply-To: <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 1 Mar 2020 22:23:07 +0100
+Message-ID: <CAJZ5v0jTSKd_23fJhM+XUmFX_yTjcD+c_s1Jvi3HA1EmXPkzZw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        madhuparnabhowmik10@gmail.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Roy,
+On Sun, Mar 1, 2020 at 9:53 PM <joel@joelfernandes.org> wrote:
+>
+>
+>
+> On March 1, 2020 3:12:53 PM EST, "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> >On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
+> >>
+> >> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >>
+> >> This patch passes the cond argument to list_for_each_entry_rcu()
+> >> to fix the following false-positive lockdep warnings:
+> >>
+> >> [  330.302784] =============================
+> >> [  330.302789] WARNING: suspicious RCU usage
+> >> [  330.302796] 5.6.0-rc1+ #5 Not tainted
+> >> [  330.302801] -----------------------------
+> >> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in
+> >non-reader section!!
+> >>
+> >> [  330.303303] =============================
+> >> [  330.303307] WARNING: suspicious RCU usage
+> >> [  330.303311] 5.6.0-rc1+ #5 Not tainted
+> >> [  330.303315] -----------------------------
+> >> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in
+> >non-reader section!!
+> >>
+> >> [  331.934969] =============================
+> >> [  331.934971] WARNING: suspicious RCU usage
+> >> [  331.934973] 5.6.0-rc1+ #5 Not tainted
+> >> [  331.934975] -----------------------------
+> >> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in
+> >non-reader section!!
+> >>
+> >> [  332.467772] WARNING: suspicious RCU usage
+> >> [  332.467775] 5.6.0-rc1+ #5 Not tainted
+> >> [  332.467775] -----------------------------
+> >> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in
+> >non-reader section!!
+> >
+> >I don't see these warnings in the kernels run locally here.
+> >
+> >What do you do to get them?
+> >
+> >Joel, any comments here?
+>
+> You have to enable lockdep in your config. Does your setup have that?
 
-On Sat, Feb 29, 2020 at 12:59:20AM +0000, Roy Im wrote:
-> Okay, thanks. I have tried to update that as below.
-> Could I get your comment if you still see anything on this?
-> 
-> 	/* Maximum gain is 0x7fff for PWM mode */
-> 	#define MAX_MAGNITUDE_SHIFT		15
->        [...]
-> 	period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
-> 
-> 	/* The interpretation of duty cycle depends on the acc_en,
-> 	* it should be from 50% to 100% for acc_en = 0.
-> 	* See datasheet 'PWM mode' section for more details.
-> 	*/
-> 	if (!haptics->acc_en) {
-> 		period_mag_multi += state.period;
-> 		period_mag_multi /= 2;
-> 	}
+CONFIG_LOCK_DEBUGGING_SUPPORT=y
+CONFIG_PROVE_LOCKING=y
+CONFIG_DEBUG_SPINLOCK=y
+CONFIG_DEBUG_LOCK_ALLOC=y
+CONFIG_LOCKDEP=y
 
-Much better. Extra points if you add a link to the datasheet at the
-top of the driver. I didn't look at the datasheet and assume that the
-reasoning is obvious then.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Anything else?
