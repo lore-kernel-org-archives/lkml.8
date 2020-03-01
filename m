@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3304FC3F2D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D518C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158D320828
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6C121775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgCALUR (ORCPT
+        id S1726788AbgCALVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 06:20:17 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42820 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgCALUO (ORCPT
+        Sun, 1 Mar 2020 06:21:13 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:45292 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgCALVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 06:20:14 -0500
-Received: by mail-io1-f72.google.com with SMTP id e7so6131301iog.9
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 03:20:12 -0800 (PST)
+        Sun, 1 Mar 2020 06:21:12 -0500
+Received: by mail-il1-f200.google.com with SMTP id w6so8218309ill.12
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 03:21:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Qx4YvZdSMNbsqVf6NVymsMcbS9Wpvdv4eBcWmfY1IYs=;
-        b=jL+g+XdXiC5ZxlbZCcavAe1y9TkJTNTvP0i3ITKHDLrfJrupajPNOODq/W+1uTa1Nx
-         mzIkFfz73TYaxORpfYg05Sxbx/E2/06bjwNeYTvj6aYFizzxscjlqfLBLlAs/7WoHdp4
-         b5ECNDZyk9GPSZTtFwHy0wSDzVREfQ2SMq9JzEs0LqDPXd2/Up3d+urmyRIWIydZcZbn
-         bY/yLi+3Q9TxzSxaaJtTUAWGRh4xsJLFcb+HJIWEfBPgyJoDrtEyQthTiiIbA6FyvFu6
-         KbrUD9HVwfE+MbM8VNGv9zeieaFuKgWEe3ik6t9U29WREhI5zLgm/c6OJyqFlRXuZCBF
-         I8fw==
-X-Gm-Message-State: APjAAAV/wbbkgQUpLcYRuuI9KHhzu5wunxbq+fyWErF+Y3hKmskHSfM0
-        xvg51Gao8i2DyftyLDZQf2C5EQyPPKtLIFbQOH6y+Jl0uDIX
-X-Google-Smtp-Source: APXvYqwe6poPv3x76uGWJe0AWoOr/g0M3D2qVW1z2jyo5Su21oATcfuvyBKiDuEFaC9WODsRAdjYwXTg8v+DQaxihkrl3p/1vlwe
+        bh=F2M/p9iF68HAFAzmluvJryCbsipnLPuxg09c4nmnAuI=;
+        b=O+6iEiUO0W3zw8I2Xy/sDiJeGI45iTf9brWPtFMvKIIjtuAIkOU2Mzsr7AE3RzsWfi
+         1clIDEQq2WnSgmjE5pXPZhWuFUdOtuG2m/JrUUEq1CiT0sE48Y04swBfrU5B0qRNFUB7
+         pd59+q+74Vxpw8p59nv5Z/tu0KvEQUlUt/B2VKng//2kDnYSV+MaDe591y4pPIqFcZNs
+         vMAt8fu3+l+t+ocSDogzTfgr2GgqGcOpLf5aZouGAvLrEmdE8Nk4rbMDs2q1OlushfXK
+         PGw9G48hJ37s8tpAYQ1FsB7GfYsIHcm/yICRrRc8rkEgxoTosnbLsodqecGp+j+aoB5E
+         UFaA==
+X-Gm-Message-State: APjAAAW6NrzYNXz23UaAqVz2FiWldejP/rF0qbZO07PBXjiUeXiyvaed
+        YDZSvAjjRxURBaNAIklk6CsNfmWtcLA1Ru+HLkE2c+Pj+i80
+X-Google-Smtp-Source: APXvYqzc36P+9OkIwWrhrSY9yuG0z4wTPj0erPw3RDrFfuNtqd2k44Y6NzB3pm4wA/M1s+BEwnpvEUV5WwNPdheKvnmauTIqqmHQ
 MIME-Version: 1.0
-X-Received: by 2002:a02:8809:: with SMTP id r9mr9877507jai.50.1583061612140;
- Sun, 01 Mar 2020 03:20:12 -0800 (PST)
-Date:   Sun, 01 Mar 2020 03:20:12 -0800
+X-Received: by 2002:a02:cc75:: with SMTP id j21mr9819265jaq.113.1583061672019;
+ Sun, 01 Mar 2020 03:21:12 -0800 (PST)
+Date:   Sun, 01 Mar 2020 03:21:12 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000c9e12059fc941ff@google.com>
-Subject: KASAN: use-after-free Read in rxe_query_port
-From:   syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, monis@mellanox.com,
+Message-ID: <0000000000009e504d059fc9447a@google.com>
+Subject: general protection fault in gc_worker
+From:   syzbot <syzbot+2a2fe383b2ce0e44b6ea@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,115 +61,56 @@ syzbot found the following crash on:
 
 HEAD commit:    f8788d86 Linux 5.6-rc3
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=132d3645e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=104263a1e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=e11efb687f5ab7f01f3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=2a2fe383b2ce0e44b6ea
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
+Reported-by: syzbot+2a2fe383b2ce0e44b6ea@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in rxe_query_port+0x294/0x2e0 drivers/infiniband/sw/rxe/rxe_verbs.c:71
-Read of size 4 at addr ffff8880881b4c20 by task kworker/1:194/2945
-
-CPU: 1 PID: 2945 Comm: kworker/1:194 Not tainted 5.6.0-rc3-syzkaller #0
+general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+CPU: 0 PID: 22524 Comm: kworker/0:10 Not tainted 5.6.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events smc_ib_port_event_work
+Workqueue: events_power_efficient gc_worker
+RIP: 0010:nf_ct_tuplehash_to_ctrack include/net/netfilter/nf_conntrack.h:113 [inline]
+RIP: 0010:gc_worker+0x3b1/0xdd0 net/netfilter/nf_conntrack_core.c:1390
+Code: e8 03 4c 01 f8 85 db 48 89 85 70 ff ff ff 0f 85 53 03 00 00 e8 10 9d 01 fb 49 8d 7e 37 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 38 38 d0 7f 08 84 c0 0f 85 c4 08 00 00 41 0f b6 46 37
+RSP: 0018:ffffc9000604fc40 EFLAGS: 00010202
+RAX: 0000000000000006 RBX: 0000000000000000 RCX: ffffffff8673ed86
+RDX: 0000000000000007 RSI: ffffffff8673ea40 RDI: 0000000000000037
+RBP: ffffc9000604fd20 R08: ffff8880a25f23c0 R09: ffffed1000025fb8
+R10: ffffed1000025fb7 R11: ffff88800012fdbb R12: ffff88800012fdb8
+R13: 0000000000010000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000005014d000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:134
- rxe_query_port+0x294/0x2e0 drivers/infiniband/sw/rxe/rxe_verbs.c:71
- __ib_query_port drivers/infiniband/core/device.c:2022 [inline]
- ib_query_port drivers/infiniband/core/device.c:2057 [inline]
- ib_query_port+0x523/0xac0 drivers/infiniband/core/device.c:2047
- smc_ib_remember_port_attr net/smc/smc_ib.c:219 [inline]
- smc_ib_port_event_work+0x12e/0x350 net/smc/smc_ib.c:244
  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
  kthread+0x361/0x430 kernel/kthread.c:255
  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 10530:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- smc_ib_add_dev net/smc/smc_ib.c:541 [inline]
- smc_ib_add_dev+0xae/0x5c0 net/smc/smc_ib.c:532
- add_client_context+0x3dd/0x550 drivers/infiniband/core/device.c:681
- enable_device_and_get+0x1df/0x3c0 drivers/infiniband/core/device.c:1316
- ib_register_device drivers/infiniband/core/device.c:1382 [inline]
- ib_register_device+0xa89/0xe40 drivers/infiniband/core/device.c:1343
- rxe_register_device+0x52e/0x655 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
- rxe_add+0x122b/0x1661 drivers/infiniband/sw/rxe/rxe.c:302
- rxe_net_add+0x91/0xf0 drivers/infiniband/sw/rxe/rxe_net.c:539
- rxe_newlink+0x39/0x90 drivers/infiniband/sw/rxe/rxe.c:318
- nldev_newlink+0x28a/0x430 drivers/infiniband/core/nldev.c:1538
- rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 83:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- smc_ib_remove_dev+0x1a9/0x2e0 net/smc/smc_ib.c:583
- remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
- disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
- ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1545
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8880881b4c00
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 32 bytes inside of
- 512-byte region [ffff8880881b4c00, ffff8880881b4e00)
-The buggy address belongs to the page:
-page:ffffea0002206d00 refcount:1 mapcount:0 mapping:ffff8880aa400a80 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00026a5208 ffffea00029ea608 ffff8880aa400a80
-raw: 0000000000000000 ffff8880881b4000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880881b4b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880881b4b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880881b4c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8880881b4c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880881b4d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Modules linked in:
+---[ end trace 3051a0fdf6c90610 ]---
+RIP: 0010:nf_ct_tuplehash_to_ctrack include/net/netfilter/nf_conntrack.h:113 [inline]
+RIP: 0010:gc_worker+0x3b1/0xdd0 net/netfilter/nf_conntrack_core.c:1390
+Code: e8 03 4c 01 f8 85 db 48 89 85 70 ff ff ff 0f 85 53 03 00 00 e8 10 9d 01 fb 49 8d 7e 37 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 38 38 d0 7f 08 84 c0 0f 85 c4 08 00 00 41 0f b6 46 37
+RSP: 0018:ffffc9000604fc40 EFLAGS: 00010202
+RAX: 0000000000000006 RBX: 0000000000000000 RCX: ffffffff8673ed86
+RDX: 0000000000000007 RSI: ffffffff8673ea40 RDI: 0000000000000037
+RBP: ffffc9000604fd20 R08: ffff8880a25f23c0 R09: ffffed1000025fb8
+R10: ffffed1000025fb7 R11: ffff88800012fdbb R12: ffff88800012fdb8
+R13: 0000000000010000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000928000 CR3: 0000000217f1b000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
