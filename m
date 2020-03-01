@@ -2,96 +2,214 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5FEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2FFC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED18222C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EF0222C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCAAmk (ORCPT
+        id S1727299AbgCAArg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:42:40 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:56122 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgCAAmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:42:40 -0500
-Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j8CgT-00052P-9b; Sun, 01 Mar 2020 01:42:17 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Xie <nick@khadas.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add doc for pine64 Pinebook Pro
-Date:   Sun, 01 Mar 2020 01:42:16 +0100
-Message-ID: <2852313.2ZqhBMtFLq@phil>
-In-Reply-To: <20200229144817.355678-2-t.schramm@manjaro.org>
-References: <20200229144817.355678-1-t.schramm@manjaro.org> <20200229144817.355678-2-t.schramm@manjaro.org>
+        Sat, 29 Feb 2020 19:47:36 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33028 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCAArf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:47:35 -0500
+Received: by mail-qt1-f196.google.com with SMTP id x8so2819171qts.0;
+        Sat, 29 Feb 2020 16:47:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oH0ncHNV8XxAqVrlyEJMu+Cv/ThtQO/KP6auu0wc1lg=;
+        b=JBiw+nr5O2EgoGHCgthrjTdz7ghd30CabF2c+uundh7dsC4b7mbSbngjk96uxG/jvr
+         e5rRkJRQEGLQ0N+WskZsaKtdNjhtTYIJ9ebgFphHpkwOAIG/JahVu5TZUN1DdcbxT2lW
+         a5mfkrjUFlh3h28Jn7Oh/29PMlxVWDKV8+AIGxrxvr+8EHOwernqvVzetFBN6vl7R5iD
+         R6I6s7fQg+WBe7baqhfaO2AyHfwEum5sjtTiC3wzKC9dRfRSi03eSkBpEwddRxWTwHu9
+         ubAUriskyPyCgI4lZGA+G5gf2rm0F70MgIPmEy2KJnFtzt8qapgn2gQgSm30UvTW9ydw
+         +4pw==
+X-Gm-Message-State: APjAAAX0xrs0KF52khBJ24evfxBsulcYd0Miv0wdFBRXyTjIcgkKksrg
+        d3e97gko8B+0STC7jt5ialP5SVExXk1RNE13vWg=
+X-Google-Smtp-Source: APXvYqyyJpbm+wc92foVb2tgN6GdgD9tF3sjZIJHrWt8MtUjgy13G9NMtx15eXtf5uWPSkPa6budnFBYEhuAcp2cyqM=
+X-Received: by 2002:ac8:12c5:: with SMTP id b5mr10245689qtj.386.1583023654212;
+ Sat, 29 Feb 2020 16:47:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200128132539.782286-1-laurent@vivier.eu>
+In-Reply-To: <20200128132539.782286-1-laurent@vivier.eu>
+From:   YunQiang Su <syq@debian.org>
+Date:   Sun, 1 Mar 2020 08:47:23 +0800
+Message-ID: <CAKcpw6W8_a3LPMPTph1asU3dCfjXk-xh5_7+MCEFicwTph+EKg@mail.gmail.com>
+Subject: Re: [PATCH v3] binfmt_misc: pass binfmt_misc flags to the interpreter
+To:     Laurent Vivier <laurent@vivier.eu>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 29. Februar 2020, 15:48:16 CET schrieb Tobias Schramm:
-> This commit adds a compatible for the Pinebook Pro.
-> 
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+Laurent Vivier <laurent@vivier.eu> 于2020年1月28日周二 下午9:25写道：
+>
+> It can be useful to the interpreter to know which flags are in use.
+>
+> For instance, knowing if the preserve-argv[0] is in use would
+> allow to skip the pathname argument.
+>
+> This patch uses an unused auxiliary vector, AT_FLAGS, to add a
+> flag to inform interpreter if the preserve-argv[0] is enabled.
+>
 
-The old patch from Emmanuel already got an
+I am suggested to post linux-arch and/or linux-api.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-and as this is the same binding, this should just be kept :-)
-
-[Mainly for me to remember as well]
-
-Heiko
-
+> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index 874b0eaa2a75..482a0cbfb18a 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -402,6 +402,11 @@ properties:
->            - const: phytec,rk3288-phycore-som
->            - const: rockchip,rk3288
->  
-> +      - description: Pine64 Pinebook Pro
-> +        items:
-> +          - const: pine64,pinebook-pro
-> +          - const: rockchip,rk3399
+>
+> Notes:
+>     This can be tested with QEMU from my branch:
+>
+>       https://github.com/vivier/qemu/commits/binfmt-argv0
+>
+>     With something like:
+>
+>       # cp ..../qemu-ppc /chroot/powerpc/jessie
+>
+>       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+>                             --persistent no --preserve-argv0 yes
+>       # systemctl restart systemd-binfmt.service
+>       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+>       enabled
+>       interpreter //qemu-ppc
+>       flags: POC
+>       offset 0
+>       magic 7f454c4601020100000000000000000000020014
+>       mask ffffffffffffff00fffffffffffffffffffeffff
+>       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+>       sh
+>
+>       # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+>                             --persistent no --preserve-argv0 no
+>       # systemctl restart systemd-binfmt.service
+>       # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+>       enabled
+>       interpreter //qemu-ppc
+>       flags: OC
+>       offset 0
+>       magic 7f454c4601020100000000000000000000020014
+>       mask ffffffffffffff00fffffffffffffffffffeffff
+>       # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+>       /bin/sh
+>
+>     v3: mix my patch with one from YunQiang Su and my comments on it
+>         introduce a new flag in the uabi for the AT_FLAGS
+>     v2: only pass special flags (remove Magic and Enabled flags)
+>
+>  fs/binfmt_elf.c              | 5 ++++-
+>  fs/binfmt_elf_fdpic.c        | 5 ++++-
+>  fs/binfmt_misc.c             | 4 +++-
+>  include/linux/binfmts.h      | 4 ++++
+>  include/uapi/linux/binfmts.h | 4 ++++
+>  5 files changed, 19 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index ecd8d2698515..ff918042ceed 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -176,6 +176,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+>         unsigned char k_rand_bytes[16];
+>         int items;
+>         elf_addr_t *elf_info;
+> +       elf_addr_t flags = 0;
+>         int ei_index = 0;
+>         const struct cred *cred = current_cred();
+>         struct vm_area_struct *vma;
+> @@ -250,7 +251,9 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+>         NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+>         NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+>         NEW_AUX_ENT(AT_BASE, interp_load_addr);
+> -       NEW_AUX_ENT(AT_FLAGS, 0);
+> +       if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
+> +               flags |= AT_FLAGS_PRESERVE_ARGV0;
+> +       NEW_AUX_ENT(AT_FLAGS, flags);
+>         NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
+>         NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+>         NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+> index 240f66663543..abb90d82aa58 100644
+> --- a/fs/binfmt_elf_fdpic.c
+> +++ b/fs/binfmt_elf_fdpic.c
+> @@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+>         char __user *u_platform, *u_base_platform, *p;
+>         int loop;
+>         int nr; /* reset for each csp adjustment */
+> +       unsigned long flags = 0;
+>
+>  #ifdef CONFIG_MMU
+>         /* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
+> @@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+>         NEW_AUX_ENT(AT_PHENT,   sizeof(struct elf_phdr));
+>         NEW_AUX_ENT(AT_PHNUM,   exec_params->hdr.e_phnum);
+>         NEW_AUX_ENT(AT_BASE,    interp_params->elfhdr_addr);
+> -       NEW_AUX_ENT(AT_FLAGS,   0);
+> +       if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
+> +               flags |= AT_FLAGS_PRESERVE_ARGV0;
+> +       NEW_AUX_ENT(AT_FLAGS,   flags);
+>         NEW_AUX_ENT(AT_ENTRY,   exec_params->entry_addr);
+>         NEW_AUX_ENT(AT_UID,     (elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
+>         NEW_AUX_ENT(AT_EUID,    (elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
+> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+> index cdb45829354d..b9acdd26a654 100644
+> --- a/fs/binfmt_misc.c
+> +++ b/fs/binfmt_misc.c
+> @@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
+>         if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+>                 goto ret;
+>
+> -       if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
+> +       if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
+> +               bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
+> +       } else {
+>                 retval = remove_arg_zero(bprm);
+>                 if (retval)
+>                         goto ret;
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index b40fc633f3be..265b80d5fd6f 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -78,6 +78,10 @@ struct linux_binprm {
+>  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
+>  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+>
+> +/* if preserve the argv0 for the interpreter  */
+> +#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
+> +#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
 > +
->        - description: Pine64 Rock64
->          items:
->            - const: pine64,rock64
-> 
-
-
-
-
+>  /* Function parameter for binfmt->coredump */
+>  struct coredump_params {
+>         const kernel_siginfo_t *siginfo;
+> diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
+> index 689025d9c185..a70747416130 100644
+> --- a/include/uapi/linux/binfmts.h
+> +++ b/include/uapi/linux/binfmts.h
+> @@ -18,4 +18,8 @@ struct pt_regs;
+>  /* sizeof(linux_binprm->buf) */
+>  #define BINPRM_BUF_SIZE 256
+>
+> +/* if preserve the argv0 for the interpreter  */
+> +#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
+> +#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
+> +
+>  #endif /* _UAPI_LINUX_BINFMTS_H */
+> --
+> 2.24.1
+>
