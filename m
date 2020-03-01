@@ -2,151 +2,132 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B4EC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D039C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6A421775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2193224695
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583078417;
+	bh=6efDZnmGDkJL77bmpEcO3rXxowZRDGagRBQHbPMJzkQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gwQ5q6rbMT8AZPke6kLIpwN9pyeHYCIyfVeEd3n7+oGLPlO705jys+SvayKV5HHC9
+	 5r9n5627UulyzJXqPlNp+1B/dZBgJrDtRe+haCi7UPlxUizqlLVNED93b3v4wKdU8M
+	 rzRXyFVkh64z1+T6RVtUb68fkT0JLrjGQNHiyT5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCAP7Q (ORCPT
+        id S1726752AbgCAQAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:59:16 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55079 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAP7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:59:15 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j8Qz8-0006pM-Le; Sun, 01 Mar 2020 15:58:30 +0000
-Date:   Sun, 1 Mar 2020 16:58:29 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Oleg Nesterov <oleg@redhat.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
-Message-ID: <20200301155829.iiupfihl6z4jkylh@wittgenstein>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <20200301151333.bsjfdjcjddsza2vn@yavin>
+        Sun, 1 Mar 2020 11:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgCAQAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 11:00:15 -0500
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90C0D24699
+        for <linux-kernel@vger.kernel.org>; Sun,  1 Mar 2020 16:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583078414;
+        bh=6efDZnmGDkJL77bmpEcO3rXxowZRDGagRBQHbPMJzkQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rkVGb1M0gWa9aItjisU6DZW23p/pFOObZSdHAA7CP3t2H2C8vgYED2qlRl5fiRyWk
+         jFufCtEArscTQyaWSBZYGY4V6Oz+1DZhcPtlWENncqPbt+B39FmkMnOx++4XBfRMzG
+         CV98dwGd1FkqWaFTpUP9yGyvw6GVTOVeMDMfbDPA=
+Received: by mail-wr1-f47.google.com with SMTP id z15so9418929wrl.1
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 08:00:14 -0800 (PST)
+X-Gm-Message-State: APjAAAVuZe0U+rGknjAvemQMy/p6icaj4CJhtpLY+OeUuPijlFXzv713
+        0aHPxBBA6yrFVCaoNpTLSpbYkfSb3+HeX7n8pl666Q==
+X-Google-Smtp-Source: APXvYqztrpI+89yhqZUt2L3rT48/Ijlnf78uBMShm928Pz/l01ZvUEf0d1qcB4iBzOAwH8/nx+2lc15sY408T35c+50=
+X-Received: by 2002:adf:df0c:: with SMTP id y12mr16702017wrl.257.1583078412945;
+ Sun, 01 Mar 2020 08:00:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200301151333.bsjfdjcjddsza2vn@yavin>
+References: <87imjofkhx.fsf@nanos.tec.linutronix.de> <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net>
+ <87d09wf6dw.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87d09wf6dw.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 1 Mar 2020 08:00:01 -0800
+X-Gmail-Original-Message-ID: <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
+Message-ID: <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
+Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <JGross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 02:13:33AM +1100, Aleksa Sarai wrote:
-> On 2020-03-01, Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
-> > This fixes a deadlock in the tracer when tracing a multi-threaded
-> > application that calls execve while more than one thread are running.
-> > 
-> > I observed that when running strace on the gcc test suite, it always
-> > blocks after a while, when expect calls execve, because other threads
-> > have to be terminated.  They send ptrace events, but the strace is no
-> > longer able to respond, since it is blocked in vm_access.
-> > 
-> > The deadlock is always happening when strace needs to access the
-> > tracees process mmap, while another thread in the tracee starts to
-> > execve a child process, but that cannot continue until the
-> > PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> > 
-> > strace          D    0 30614  30584 0x00000000
-> > Call Trace:
-> > __schedule+0x3ce/0x6e0
-> > schedule+0x5c/0xd0
-> > schedule_preempt_disabled+0x15/0x20
-> > __mutex_lock.isra.13+0x1ec/0x520
-> > __mutex_lock_killable_slowpath+0x13/0x20
-> > mutex_lock_killable+0x28/0x30
-> > mm_access+0x27/0xa0
-> > process_vm_rw_core.isra.3+0xff/0x550
-> > process_vm_rw+0xdd/0xf0
-> > __x64_sys_process_vm_readv+0x31/0x40
-> > do_syscall_64+0x64/0x220
-> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > expect          D    0 31933  30876 0x80004003
-> > Call Trace:
-> > __schedule+0x3ce/0x6e0
-> > schedule+0x5c/0xd0
-> > flush_old_exec+0xc4/0x770
-> > load_elf_binary+0x35a/0x16c0
-> > search_binary_handler+0x97/0x1d0
-> > __do_execve_file.isra.40+0x5d4/0x8a0
-> > __x64_sys_execve+0x49/0x60
-> > do_syscall_64+0x64/0x220
-> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > The proposed solution is to have a second mutex that is
-> > used in mm_access, so it is allowed to continue while the
-> > dying threads are not yet terminated.
-> > 
-> > I also took the opportunity to improve the documentation
-> > of prepare_creds, which is obviously out of sync.
+On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@amacapital.net> writes:
+> >> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
+> >> except trace_hardirq_off/on() as those trace functions do not allow to
+> >> attach anything AFAICT.
 > >
-> > Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-> 
-> I can't comment on the validity of the patch, but I also found and
-> reported this issue in 2016[1] and the discussion quickly veered into
-> the problem being more complicated (and uglier) than it seems at first
-> glance.
-> 
-> You should probably also Cc stable, given this has been a long-standing
-> issue and your patch doesn't look (too) invasive.
-> 
-> [1]: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+> > Can you point to whatever makes those particular functions special?  I
+> > failed to follow the macro maze.
+>
+> Those are not tracepoints and not going through the macro maze. See
+> kernel/trace/trace_preemptirq.c
 
-Yeah, I remember you mentioning this a while back.
+That has:
 
-Bernd, we really want a reproducer for this sent alongside with this
-patch added to:
-tools/testing/selftests/ptrace/
-Having a test for this bug irrespective of whether or not we go with
-this as fix seems really worth it.
+void trace_hardirqs_on(void)
+{
+        if (this_cpu_read(tracing_irq_cpu)) {
+                if (!in_nmi())
+                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+                tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+                this_cpu_write(tracing_irq_cpu, 0);
+        }
 
-Oleg seems to have suggested that a potential alternative fix is to wait
-in de_thread() until all other threads in the thread-group have passed
-exit_notiy(). Right now we only kill them but don't wait. Currently
-de_thread() only waits for the thread-group leader to pass exit_notify()
-whenever a non-thread-group leader thread execs (because the exec'ing
-thread becomes the new thread-group leader with the same pid as the
-former thread-group leader).
+        lockdep_hardirqs_on(CALLER_ADDR0);
+}
+EXPORT_SYMBOL(trace_hardirqs_on);
+NOKPROBE_SYMBOL(trace_hardirqs_on);
 
-Christian
+But this calls trace_irq_enable_rcuidle(), and that's the part of the
+macro maze I got lost in.  I found:
+
+#ifdef CONFIG_TRACE_IRQFLAGS
+DEFINE_EVENT(preemptirq_template, irq_disable,
+             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+             TP_ARGS(ip, parent_ip));
+
+DEFINE_EVENT(preemptirq_template, irq_enable,
+             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+             TP_ARGS(ip, parent_ip));
+#else
+#define trace_irq_enable(...)
+#define trace_irq_disable(...)
+#define trace_irq_enable_rcuidle(...)
+#define trace_irq_disable_rcuidle(...)
+#endif
+
+But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
+where I got lost in the macro maze.  I looked at the gcc asm output,
+and there is, indeed:
+
+# ./include/trace/events/preemptirq.h:40:
+DEFINE_EVENT(preemptirq_template, irq_enable,
+
+with a bunch of asm magic that looks like it's probably a tracepoint.
+I still don't quite see where the "_rcuidle" went.
+
+But I also don't see why this is any different from any other tracepoint.
+
+--Andy
