@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7684FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D21EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505CF246B4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A2920CC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgCAVyx (ORCPT
+        id S1727709AbgCAVyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:54:53 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41626 "EHLO
+        Sun, 1 Mar 2020 16:54:55 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41638 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbgCAVwp (ORCPT
+        with ESMTP id S1727052AbgCAVwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:45 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVw-003fNp-1V; Sun, 01 Mar 2020 21:52:44 +0000
+        id 1j8WVw-003fO8-H8; Sun, 01 Mar 2020 21:52:44 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 22/55] merging pick_link() with get_link(), part 5
-Date:   Sun,  1 Mar 2020 21:52:07 +0000
-Message-Id: <20200301215240.873899-22-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 25/55] sanitize handling of nd->last_type, kill LAST_BIND
+Date:   Sun,  1 Mar 2020 21:52:10 +0000
+Message-Id: <20200301215240.873899-25-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,113 +42,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-move get_link() call into step_into().
+->last_type values are set in 3 places: path_init() (sets to LAST_ROOT),
+link_path_walk (LAST_NORM/DOT/DOTDOT) and pick_link (LAST_BIND).
+
+The are checked in walk_component(), lookup_last() and do_last().
+They also get copied to the caller by filename_parentat().  In the last
+3 cases the value is what we had at the return from link_path_walk().
+In case of walk_component() it's either directly downstream from
+assignment in link_path_walk() or, when called by lookup_last(), the
+value we have at the return from link_path_walk().
+
+The value at the entry into link_path_walk() can survive to return only
+if the pathname contains nothing but slashes.  Note that pick_link()
+never returns such - pure jumps are handled directly.  So for the calls
+of link_path_walk() for trailing symlinks it does not matter what value
+had been there at the entry; the value at the return won't depend upon it.
+
+There are 3 call chains that might have pick_link() storing LAST_BIND:
+
+1) pick_link() from step_into() from walk_component() from
+link_path_walk().  In that case we will either be parsing the next
+component immediately after return into link_path_walk(), which will
+overwrite the ->last_type before anyone has a chance to look at it,
+or we'll fail, in which case nobody will be looking at ->last_type at all.
+
+2) pick_link() from step_into() from walk_component() from lookup_last().
+The value is never looked at due to the above; it won't affect the value
+seen at return from any link_path_walk().
+
+3) pick_link() from step_into() from do_last().  Ditto.
+
+In other words, assignemnt in pick_link() is pointless, and so is
+LAST_BIND itself; nothing ever looks at that value.  Kill it off.
+And make link_path_walk() _always_ assign ->last_type - in the only
+case when the value at the entry might survive to the return that value
+is always LAST_ROOT, inherited from path_init().  Move that assignment
+from path_init() into the beginning of link_path_walk(), to consolidate
+the things.
+
+Historical note: LAST_BIND used to be used for the kludge with trailing
+pure jump symlinks (extra iteration through the top-level loop).
+No point keeping it anymore...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 43 ++++++++++++++++++-------------------------
- 1 file changed, 18 insertions(+), 25 deletions(-)
+ Documentation/filesystems/path-lookup.rst | 7 ++-----
+ fs/namei.c                                | 3 +--
+ include/linux/namei.h                     | 2 +-
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/Documentation/filesystems/path-lookup.rst b/Documentation/filesystems/path-lookup.rst
+index a3216979298b..f46b05e9b96c 100644
+--- a/Documentation/filesystems/path-lookup.rst
++++ b/Documentation/filesystems/path-lookup.rst
+@@ -404,11 +404,8 @@ that is the "next" component in the pathname.
+ ``int last_type``
+ ~~~~~~~~~~~~~~~~~
+ 
+-This is one of ``LAST_NORM``, ``LAST_ROOT``, ``LAST_DOT``, ``LAST_DOTDOT``, or
+-``LAST_BIND``.  The ``last`` field is only valid if the type is
+-``LAST_NORM``.  ``LAST_BIND`` is used when following a symlink and no
+-components of the symlink have been processed yet.  Others should be
+-fairly self-explanatory.
++This is one of ``LAST_NORM``, ``LAST_ROOT``, ``LAST_DOT`` or ``LAST_DOTDOT``.
++The ``last`` field is only valid if the type is ``LAST_NORM``.
+ 
+ ``struct path root``
+ ~~~~~~~~~~~~~~~~~~~~
 diff --git a/fs/namei.c b/fs/namei.c
-index 21bd4cebd71b..3388958bb32f 100644
+index 9b6c3e3edd75..56d4adbf4da1 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1841,14 +1841,14 @@ enum {WALK_FOLLOW = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
-  * so we keep a cache of "no, this doesn't need follow_link"
-  * for the common case.
-  */
--static int step_into(struct nameidata *nd, int flags,
-+static const char *step_into(struct nameidata *nd, int flags,
- 		     struct dentry *dentry, struct inode *inode, unsigned seq)
+@@ -1785,7 +1785,6 @@ static const char *pick_link(struct nameidata *nd, struct path *link,
+ 	if (unlikely(error))
+ 		return ERR_PTR(error);
+ 
+-	nd->last_type = LAST_BIND;
+ 	res = READ_ONCE(inode->i_link);
+ 	if (!res) {
+ 		const char * (*get)(struct dentry *, struct inode *,
+@@ -2123,6 +2122,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
  {
- 	struct path path;
- 	int err = handle_mounts(nd, dentry, &path, &inode, &seq);
+ 	int err;
  
- 	if (err < 0)
--		return err;
-+		return ERR_PTR(err);
- 	if (!(flags & WALK_MORE) && nd->depth)
- 		put_link(nd);
- 	if (likely(!d_is_symlink(path.dentry)) ||
-@@ -1858,14 +1858,17 @@ static int step_into(struct nameidata *nd, int flags,
- 		path_to_nameidata(&path, nd);
- 		nd->inode = inode;
- 		nd->seq = seq;
--		return 0;
-+		return NULL;
- 	}
- 	/* make sure that d_is_symlink above matches inode */
- 	if (nd->flags & LOOKUP_RCU) {
- 		if (read_seqcount_retry(&path.dentry->d_seq, seq))
--			return -ECHILD;
-+			return ERR_PTR(-ECHILD);
- 	}
--	return pick_link(nd, &path, inode, seq);
-+	err = pick_link(nd, &path, inode, seq);
-+	if (err > 0)
-+		return get_link(nd);
-+	return ERR_PTR(err);
- }
++	nd->last_type = LAST_ROOT;
+ 	if (IS_ERR(name))
+ 		return PTR_ERR(name);
+ 	while (*name=='/')
+@@ -2224,7 +2224,6 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 	if (flags & LOOKUP_RCU)
+ 		rcu_read_lock();
  
- static const char *walk_component(struct nameidata *nd, int flags)
-@@ -1893,12 +1896,7 @@ static const char *walk_component(struct nameidata *nd, int flags)
- 		if (IS_ERR(dentry))
- 			return ERR_CAST(dentry);
- 	}
--	err = step_into(nd, flags, dentry, inode, seq);
--	if (!err)
--		return NULL;
--	if (err > 0)
--		return get_link(nd);
--	return ERR_PTR(err);
-+	return step_into(nd, flags, dentry, inode, seq);
- }
+-	nd->last_type = LAST_ROOT; /* if there are only slashes... */
+ 	nd->flags = flags | LOOKUP_JUMPED | LOOKUP_PARENT;
+ 	nd->depth = 0;
  
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index d9576a051808..a4bb992623c4 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -15,7 +15,7 @@ enum { MAX_NESTED_LINKS = 8 };
  /*
-@@ -2352,8 +2350,8 @@ static int handle_lookup_down(struct nameidata *nd)
- {
- 	if (!(nd->flags & LOOKUP_RCU))
- 		dget(nd->path.dentry);
--	return step_into(nd, WALK_NOFOLLOW,
--			nd->path.dentry, nd->inode, nd->seq);
-+	return PTR_ERR(step_into(nd, WALK_NOFOLLOW,
-+			nd->path.dentry, nd->inode, nd->seq));
- }
+  * Type of the last component on LOOKUP_PARENT
+  */
+-enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
++enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
  
- /* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
-@@ -3195,6 +3193,7 @@ static const char *do_last(struct nameidata *nd,
- 	unsigned seq;
- 	struct inode *inode;
- 	struct dentry *dentry;
-+	const char *link;
- 	int error;
- 
- 	nd->flags &= ~LOOKUP_PARENT;
-@@ -3292,18 +3291,12 @@ static const char *do_last(struct nameidata *nd,
- 	}
- 
- finish_lookup:
--	error = step_into(nd, 0, dentry, inode, seq);
--	if (unlikely(error)) {
--		const char *s;
--		if (error < 0)
--			return ERR_PTR(error);
--		s = get_link(nd);
--		if (s) {
--			nd->flags |= LOOKUP_PARENT;
--			nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
--			nd->stack[0].name = NULL;
--			return s;
--		}
-+	link = step_into(nd, 0, dentry, inode, seq);
-+	if (unlikely(link)) {
-+		nd->flags |= LOOKUP_PARENT;
-+		nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
-+		nd->stack[0].name = NULL;
-+		return link;
- 	}
- 
- 	if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
+ /* pathwalk mode */
+ #define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
 -- 
 2.11.0
 
