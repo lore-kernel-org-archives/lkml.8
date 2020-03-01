@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D81C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC2FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC68246BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B849D246BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCAVxN (ORCPT
+        id S1727420AbgCAVxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:53:13 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41760 "EHLO
+        Sun, 1 Mar 2020 16:53:22 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41748 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbgCAVwv (ORCPT
+        with ESMTP id S1727198AbgCAVwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:51 -0500
+        Sun, 1 Mar 2020 16:52:50 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WW1-003fR5-VM; Sun, 01 Mar 2020 21:52:50 +0000
+        id 1j8WW1-003fQm-83; Sun, 01 Mar 2020 21:52:49 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 55/55] fs/namei.c: kill follow_mount()
-Date:   Sun,  1 Mar 2020 21:52:40 +0000
-Message-Id: <20200301215240.873899-55-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 52/55] follow_dotdot(): be lazy about changing nd->path
+Date:   Sun,  1 Mar 2020 21:52:37 +0000
+Message-Id: <20200301215240.873899-52-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,49 +42,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-the only remaining caller should be using follow_down() anyway
+Change nd->path only after the loop is done and only in case we hadn't
+ended up finding ourselves in root.  Same for NO_XDEV check.
+
+That separates the "check how far back do we need to go through the
+mount stack" logics from the rest of .. traversal.
+
+NOTE: path_get/path_put introduced here are temporary.  They will
+go away later in the series.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ fs/namei.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index f247eca119f1..d9fd5fd43ca1 100644
+index fe49db1df8ae..ab17f7ea8c9f 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1414,22 +1414,6 @@ static bool choose_mountpoint(struct mount *m, const struct path *root,
- }
- 
- /*
-- * Skip to top of mountpoint pile in refwalk mode for follow_dotdot()
-- */
--static void follow_mount(struct path *path)
--{
--	while (d_mountpoint(path->dentry)) {
--		struct vfsmount *mounted = lookup_mnt(path);
--		if (!mounted)
--			break;
--		dput(path->dentry);
--		mntput(path->mnt);
--		path->mnt = mounted;
--		path->dentry = dget(mounted->mnt_root);
--	}
--}
--
--/*
-  * This looks up the name in dcache and possibly revalidates the found dentry.
-  * NULL is returned if the dentry does not exist in the cache.
-  */
-@@ -2668,7 +2652,7 @@ int path_pts(struct path *path)
- 
- 	path->dentry = child;
- 	dput(parent);
--	follow_mount(path);
-+	follow_down(path);
- 	return 0;
- }
- #endif
+@@ -1750,16 +1750,24 @@ static struct dentry *follow_dotdot(struct nameidata *nd,
+ 	if (path_equal(&nd->path, &nd->root))
+ 		goto in_root;
+ 	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
++		struct path path = nd->path;
++		path_get(&path);
+ 		while (1) {
+-			if (!follow_up(&nd->path))
++			if (!follow_up(&path)) {
++				path_put(&path);
+ 				goto in_root;
+-			if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+-				return ERR_PTR(-EXDEV);
+-			if (path_equal(&nd->path, &nd->root))
++			}
++			if (path_equal(&path, &nd->root)) {
++				path_put(&path);
+ 				goto in_root;
+-			if (nd->path.dentry != nd->path.mnt->mnt_root)
++			}
++			if (path.dentry != nd->path.mnt->mnt_root)
+ 				break;
+ 		}
++		path_put(&nd->path);
++		nd->path = path;
++		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
++			return ERR_PTR(-EXDEV);
+ 	}
+ 	/* rare case of legitimate dget_parent()... */
+ 	parent = dget_parent(nd->path.dentry);
 -- 
 2.11.0
 
