@@ -2,69 +2,93 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B718DC3F2CD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1849C3F2D4
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEA22468A
+	by mail.kernel.org (Postfix) with ESMTP id AEF502468D
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583076106;
+	bh=Zmxtyc2Ly2BT+MGlU2PSSqLEt0tOokrlUuZZn0yxQag=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hre2Iy/Ho8YHOoyPpixMQDDXNDKyFXcF+u+d85gsCOpv39aLLK3TCozIq0D+bFqjJ
+	 lgy8sYUtottB66Y0R2pck9hb+NZhyd2sm9uSdSvZiWRcWaXQ19Y5AHZhTaSq7q6Dz6
+	 1SVMYU5wkfC2XOtt+ECNDrsQkOco6I6x2YcRVMt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgCAPVk (ORCPT
+        id S1726700AbgCAPVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:21:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40246 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAPVk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:21:40 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j8QP6-0005Vy-Mw; Sun, 01 Mar 2020 16:21:16 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 9A1AE100EA2; Sun,  1 Mar 2020 16:21:15 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
-In-Reply-To: <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net>
-References: <87imjofkhx.fsf@nanos.tec.linutronix.de> <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net>
-Date:   Sun, 01 Mar 2020 16:21:15 +0100
-Message-ID: <87d09wf6dw.fsf@nanos.tec.linutronix.de>
+        Sun, 1 Mar 2020 10:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgCAPVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 10:21:45 -0500
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8016424672;
+        Sun,  1 Mar 2020 15:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583076104;
+        bh=Zmxtyc2Ly2BT+MGlU2PSSqLEt0tOokrlUuZZn0yxQag=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gvBpnDE5UHb1rV3Xfn1negz9pAcrja8axdigDTcmtPa089m7ingiy+0FWzZzrRxvL
+         H+d9JJv7id9aK94oKXQdlUhHpoup8ic/Fbl/rrIWZtVdOpiAmXfSZZFK8ArR2PCKus
+         zw8++5rQ9eETMSGaYXegJacYX6anMtBHt5cFKgG4=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] x86/kvm: Remove the rest of do_async_page_fault
+Date:   Sun,  1 Mar 2020 07:21:37 -0800
+Message-Id: <c42751308a39630e76fb0a159e59db230b384cce.1583076033.git.luto@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@amacapital.net> writes:
->> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
->> except trace_hardirq_off/on() as those trace functions do not allow to
->> attach anything AFAICT.
->
-> Can you point to whatever makes those particular functions special?  I
-> failed to follow the macro maze.
+I failed to remove the 32-bit asm stub, causing a build failure.  Remove
+it.
 
-Those are not tracepoints and not going through the macro maze. See
-kernel/trace/trace_preemptirq.c
+Fixes: "x86/kvm: Handle async page faults directly through do_page_fault()"
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
 
-Thanks,
+This should probably be folded in to avoid breaking bisection if that's
+still convenient.
 
-        tglx
+ arch/x86/entry/entry_32.S | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 7e0560442538..9b5288268aee 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1698,14 +1698,6 @@ SYM_CODE_START(general_protection)
+ 	jmp	common_exception
+ SYM_CODE_END(general_protection)
+ 
+-#ifdef CONFIG_KVM_GUEST
+-SYM_CODE_START(async_page_fault)
+-	ASM_CLAC
+-	pushl	$do_async_page_fault
+-	jmp	common_exception_read_cr2
+-SYM_CODE_END(async_page_fault)
+-#endif
+-
+ SYM_CODE_START(rewind_stack_do_exit)
+ 	/* Prevent any naive code from trying to unwind to our caller. */
+ 	xorl	%ebp, %ebp
+-- 
+2.24.1
+
