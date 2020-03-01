@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09485C3F2CD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98872C3F2D1
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E40246B4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F24246B7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgCAVyP (ORCPT
+        id S1727582AbgCAVyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:54:15 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41678 "EHLO
+        Sun, 1 Mar 2020 16:54:12 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41670 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgCAVwr (ORCPT
+        with ESMTP id S1727093AbgCAVwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:47 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVy-003fP7-1K; Sun, 01 Mar 2020 21:52:46 +0000
+        id 1j8WVx-003fOu-JH; Sun, 01 Mar 2020 21:52:45 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 35/55] do_last(): rejoing the common path earlier in FMODE_{OPENED,CREATED} case
-Date:   Sun,  1 Mar 2020 21:52:20 +0000
-Message-Id: <20200301215240.873899-35-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 33/55] do_last(): merge the may_open() calls
+Date:   Sun,  1 Mar 2020 21:52:18 +0000
+Message-Id: <20200301215240.873899-33-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,59 +42,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+have FMODE_OPENED case rejoin the main path at earlier point
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ fs/namei.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index b4de0994ccee..66c3e2df46b2 100644
+index 9fcb8f635e66..91346e5d8bd8 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3204,13 +3204,6 @@ static const char *do_last(struct nameidata *nd,
- 		return ERR_CAST(dentry);
- 
- 	if (file->f_mode & FMODE_OPENED) {
--		if (file->f_mode & FMODE_CREATED) {
--			open_flag &= ~O_TRUNC;
--			will_truncate = false;
--			acc_mode = 0;
--		} else if (!S_ISREG(file_inode(file)->i_mode))
--			will_truncate = false;
--
+@@ -3211,10 +3211,7 @@ static const char *do_last(struct nameidata *nd,
  		audit_inode(nd->name, file->f_path.dentry, 0);
  		dput(nd->path.dentry);
  		nd->path.dentry = dentry;
-@@ -3218,10 +3211,6 @@ static const char *do_last(struct nameidata *nd,
+-		error = may_open(&nd->path, acc_mode, open_flag);
+-		if (error)
+-			goto out;
+-		goto opened;
++		goto finish_open_created;
  	}
  
  	if (file->f_mode & FMODE_CREATED) {
--		/* Don't check for write permission, don't truncate */
--		open_flag &= ~O_TRUNC;
--		will_truncate = false;
--		acc_mode = 0;
- 		dput(nd->path.dentry);
- 		nd->path.dentry = dentry;
- 		goto finish_open_created;
-@@ -3255,10 +3244,16 @@ static const char *do_last(struct nameidata *nd,
- 	}
- 	if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
- 		return ERR_PTR(-ENOTDIR);
--	if (!d_is_reg(nd->path.dentry))
--		will_truncate = false;
- 
- finish_open_created:
-+	if (file->f_mode & FMODE_CREATED) {
-+		/* Don't check for write permission, don't truncate */
-+		open_flag &= ~O_TRUNC;
-+		will_truncate = false;
-+		acc_mode = 0;
-+	} else if (!d_is_reg(nd->path.dentry)) {
-+		will_truncate = false;
-+	}
- 	if (will_truncate) {
- 		error = mnt_want_write(nd->path.mnt);
- 		if (error)
+@@ -3280,11 +3277,10 @@ static const char *do_last(struct nameidata *nd,
+ 	error = may_open(&nd->path, acc_mode, open_flag);
+ 	if (error)
+ 		goto out;
+-	BUG_ON(file->f_mode & FMODE_OPENED); /* once it's opened, it's opened */
+-	error = vfs_open(&nd->path, file);
++	if (!(file->f_mode & FMODE_OPENED))
++		error = vfs_open(&nd->path, file);
+ 	if (error)
+ 		goto out;
+-opened:
+ 	error = ima_file_check(file, op->acc_mode);
+ 	if (!error && will_truncate)
+ 		error = handle_truncate(file);
 -- 
 2.11.0
 
