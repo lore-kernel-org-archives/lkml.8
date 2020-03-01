@@ -2,122 +2,89 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DBFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07811C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B41A246C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UKtFK4Ej"
+	by mail.kernel.org (Postfix) with ESMTP id D90BA214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCATOh (ORCPT
+        id S1726614AbgCATPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 14:14:37 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:32943 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgCATOg (ORCPT
+        Sun, 1 Mar 2020 14:15:44 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33535 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCATPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 14:14:36 -0500
-Received: by mail-pl1-f195.google.com with SMTP id ay11so3306053plb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 11:14:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=lnwCBfe1zZuQobxAOQZzSQec0D6ylnT+NKbdGoIZA+4=;
-        b=UKtFK4Ej05UmGNRtJ6At8dFluyaZwv3CO7nBIb2TVzN+c829X9sKd2865+VFlRo0tz
-         GsTO2f/vNLNkkk6W4Y1R121Pm5p3zKPQwpk7RU4Vo/swxo1FvHpdKQIPbx7AN00p14aU
-         P1/+83+JK+xABEM3FPHZnlSQTCpKzXZzu0MIaRMDJ4QlB09WS9+p74TnqzKi0l6+oe/V
-         26Csh5abjDfZfPasEKA6NFPu3f7gVqfZHQy6drTLZrVP/5dTw/2OKIuvBQhGX7Mj2lnn
-         /Tp2dnINxau6hBNrubIRyXxAigj0tdRJVzADCXZtbCavacjrfLnUT4eFs+lcIaRO6rF/
-         gemg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lnwCBfe1zZuQobxAOQZzSQec0D6ylnT+NKbdGoIZA+4=;
-        b=X7VZxPS4kXtZYRTOA91VDHKLqnZiR+qOZ9e66wCJ1JSOEnl7IbZGCl4/3q9KW2eGup
-         BIUeDtwOZ8NW/Apvul9+sQe+4d79FcYKB9pwWLs9R5q4BGUHyc2HsPlE/TcDGAopUmea
-         nygdcrpg/jr+1foZs0FK3eKyMoMiD22agqGa4FBEeuOHIeMJUBiAMtePZ4UzfyoPDRKX
-         ao+oyj/Mu1l3OSCnVWR7amJOmHtP2d9QxSQtcVj9Bzd/k0sj0FG9o100fDFSnX68r1kW
-         DY1vLGUL6ippbMcH+1MKoeM786NG2THit5tRMn1rr8lvHWiLJ885LxvgjTtQ7WYh3ORm
-         awpw==
-X-Gm-Message-State: APjAAAVLbwil8+cTOQ+oAL+wP05G3oz0RoCPM7D104KbpkSmCBfwYsh5
-        o2aCUIAqJmK9EOGJd+AdZq8voH8+b6M=
-X-Google-Smtp-Source: APXvYqyaB0VEGVMWT1FvewbtBlpm+NJxuPWHbtzlMBQvig84b1p0CLBzjmr2V6uvya1rQJKnJvDQqg==
-X-Received: by 2002:a17:90a:d081:: with SMTP id k1mr17440983pju.57.1583090075021;
-        Sun, 01 Mar 2020 11:14:35 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id x18sm6135837pfo.148.2020.03.01.11.14.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 11:14:33 -0800 (PST)
-Subject: Re: [PATCH RFC 0/9] nxt propagation + locking optimisation
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583078091.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d54ddeae-ad02-6232-36f3-86d09105c7a4@kernel.dk>
-Date:   Sun, 1 Mar 2020 12:14:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 1 Mar 2020 14:15:44 -0500
+X-Originating-IP: 71.238.64.75
+Received: from localhost (c-71-238-64-75.hsd1.or.comcast.net [71.238.64.75])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 8F863E000A;
+        Sun,  1 Mar 2020 19:15:02 +0000 (UTC)
+Date:   Sun, 1 Mar 2020 11:15:01 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: Check for readiness more quickly, to speed up boot
+ time
+Message-ID: <20200301191501.GA235404@localhost>
+References: <20200229025228.GA203607@localhost>
+ <20200301183231.GA544682@dhcp-10-100-145-180.wdl.wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1583078091.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200301183231.GA544682@dhcp-10-100-145-180.wdl.wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/20 9:18 AM, Pavel Begunkov wrote:
-> There are several independent parts in the patchset, but bundled
-> to make a point.
-> 1-2: random stuff, that implicitly used later.
-> 3-5: restore @nxt propagation
-> 6-8: optimise locking in io_worker_handle_work()
-> 9: optimise io_uring refcounting
+On Sun, Mar 01, 2020 at 10:32:31AM -0800, Keith Busch wrote:
+> On Fri, Feb 28, 2020 at 06:52:28PM -0800, Josh Triplett wrote:
+> > @@ -2074,7 +2074,7 @@ static int nvme_wait_ready(struct nvme_ctrl *ctrl, u64 cap, bool enabled)
+> >  		if ((csts & NVME_CSTS_RDY) == bit)
+> >  			break;
+> >  
+> > -		msleep(100);
+> > +		usleep_range(1000, 2000);
+> >  		if (fatal_signal_pending(current))
+> >  			return -EINTR;
+> >  		if (time_after(jiffies, timeout)) {
 > 
-> The next propagation bits are done similarly as it was before, but
-> - nxt stealing is now at top-level, but not hidden in handlers
-> - ensure there is no with REQ_F_DONT_STEAL_NEXT
+> The key being this sleep schedules the task unlike udelay.
+
+Right; I don't think it's reasonable to busyloop here, just sleep for
+less time.
+
+> It's neat you can boot where 100ms is considered a long time.
+
+It's been fun. This was one of the longest single delays in a ~1s boot.
+
+> This clearly helps when you've one nvme that becomes ready quickly, but
+> what happens with many nvme's that are slow to ready? This change will
+> end up polling the status of those 1000's of times, I wonder if there's
+> a point where this frequent sleep/wake cycle initializing a whole lot
+> of nvme devices in parallel may interfere with other init tasks.
+
+usleep_range allows the kernel to consolidate those wakeups, so if you
+have multiple NVMe devices, the kernel should in theory just wake up
+once, check them all for readiness, and go back to sleep.
+
+> I doubt there's really an issue there, but thought it's worth considering
+> what happens at the other end of the specturm.
 > 
-> [6-8] is the reason to dismiss the previous @nxt propagation appoach,
-> I didn't found a good way to do the same. Even though it looked
-> clearer and without new flag.
+> Anyway, the patch looks fine to me.
 > 
-> Performance tested it with link-of-nops + IOSQE_ASYNC:
-> 
-> link size: 100
-> orig:  501 (ns per nop)
-> 0-8:   446
-> 0-9:   416
-> 
-> link size: 10
-> orig:  826
-> 0-8:   776
-> 0-9:   756
+> Reviewed-by: Keith Busch <kbusch@kernel.org>
 
-This looks nice, I'll take a closer look tomorrow or later today. Seems
-that at least patch 2 should go into 5.6 however, so may make sense to
-order the series like that.
+Thank you!
 
-BTW, Andres brought up a good point, and that's hashed file write works.
-Generally they complete super fast (just copying into the page cache),
-which means that that worker will be hammering the wq lock a lot. Since
-work N+1 can't make any progress before N completes (since that's how
-hashed work works), we should pull a bigger batch of these work items
-instead of just one at the time. I think that'd potentially make a huge
-difference for the performance of buffered writes.
+Does this seem reasonable to enqueue for 5.7?
 
-Just throwing it out there, since you're working in that space anyway
-and the rewards will be much larger.
-
--- 
-Jens Axboe
-
+- Josh Triplett
