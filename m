@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A083C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0BEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAA4246B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B758246B6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgCAVyd (ORCPT
+        id S1727330AbgCAVym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:54:33 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41666 "EHLO
+        Sun, 1 Mar 2020 16:54:42 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41650 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbgCAVwq (ORCPT
+        with ESMTP id S1727070AbgCAVwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:46 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVx-003fOo-Gs; Sun, 01 Mar 2020 21:52:45 +0000
+        id 1j8WVw-003fOQ-SP; Sun, 01 Mar 2020 21:52:44 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 32/55] atomic_open(): lift the call of may_open() into do_last()
-Date:   Sun,  1 Mar 2020 21:52:17 +0000
-Message-Id: <20200301215240.873899-32-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 28/55] link_path_walk(): simplify stack handling
+Date:   Sun,  1 Mar 2020 21:52:13 +0000
+Message-Id: <20200301215240.873899-28-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,65 +42,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-there we'll be able to merge it with its counterparts in other
-cases, and there's no reason to do it before the parent has
-been unlocked
+We use nd->stack to store two things: pinning down the symlinks
+we are resolving and resuming the name traversal when a nested
+symlink is finished.
+
+Currently, nd->depth is used to keep track of both.  It's 0 when
+we call link_path_walk() for the first time (for the pathname
+itself) and 1 on all subsequent calls (for trailing symlinks,
+if any).  That's fine, as far as pinning symlinks goes - when
+handling a trailing symlink, the string we are interpreting
+is the body of symlink pinned down in nd->stack[0].  It's
+rather inconvenient with respect to handling nested symlinks,
+though - when we run out of a string we are currently interpreting,
+we need to decide whether it's a nested symlink (in which case
+we need to pick the string saved back when we started to interpret
+that nested symlink and resume its traversal) or not (in which
+case we are done with link_path_walk()).
+
+Current solution is a bit of a kludge - in handling of trailing symlink
+(in lookup_last() and open_last_lookups() we clear nd->stack[0].name.
+That allows link_path_walk() to use the following rules when
+running out of a string to interpret:
+	* if nd->depth is zero, we are at the end of pathname itself.
+	* if nd->depth is positive, check the saved string; for
+nested symlink it will be non-NULL, for trailing symlink - NULL.
+
+It works, but it's rather non-obvious.  Note that we have two sets:
+the set of symlinks currently being traversed and the set of postponed
+pathname tails.  The former is stored in nd->stack[0..nd->depth-1].link
+and it's valid throught the pathname resolution; the latter is valid only
+during an individual call of link_path_walk() and it occupies
+nd->stack[0..nd->depth-1].name for the first call of link_path_walk() and
+nd->stack[1..nd->depth-1].name for subsequent ones.  The kludge is basically
+a way to recognize the second set becoming empty.
+
+The things get simpler if we keep track of the second set's size
+explicitly and always store it in nd->stack[0..depth-1].name.
+We access the second set only inside link_path_walk(), so its
+size can live in a local variable; that way the check becomes
+trivial without the need of that kludge.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ fs/namei.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index bfd62fa3856c..9fcb8f635e66 100644
+index 56bbbb9c0c0d..5fe499399fcb 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -2952,23 +2952,12 @@ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
- 	d_lookup_done(dentry);
- 	if (!error) {
- 		if (file->f_mode & FMODE_OPENED) {
--			int acc_mode = op->acc_mode;
- 			if (unlikely(dentry != file->f_path.dentry)) {
- 				dput(dentry);
- 				dentry = dget(file->f_path.dentry);
- 			}
--			/*
--			 * We didn't have the inode before the open, so check open
--			 * permission here.
--			 */
--			if (file->f_mode & FMODE_CREATED) {
--				WARN_ON(!(open_flag & O_CREAT));
-+			if (file->f_mode & FMODE_CREATED)
- 				fsnotify_create(dir, dentry);
--				acc_mode = 0;
--			}
--			error = may_open(&file->f_path, acc_mode, open_flag);
--			if (WARN_ON(error > 0))
--				error = -EINVAL;
- 		} else if (WARN_ON(file->f_path.dentry == DENTRY_NOT_SET)) {
- 			error = -EIO;
+@@ -2120,6 +2120,7 @@ static inline u64 hash_name(const void *salt, const char *name)
+  */
+ static int link_path_walk(const char *name, struct nameidata *nd)
+ {
++	int depth = 0; // depth <= nd->depth
+ 	int err;
+ 
+ 	nd->last_type = LAST_ROOT;
+@@ -2182,14 +2183,11 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 		} while (unlikely(*name == '/'));
+ 		if (unlikely(!*name)) {
+ OK:
+-			/* pathname body, done */
+-			if (!nd->depth)
+-				return 0;
+-			name = nd->stack[nd->depth - 1].name;
+-			/* trailing symlink, done */
+-			if (!name)
++			/* pathname or trailing symlin, done */
++			if (!depth)
+ 				return 0;
+ 			/* last component of nested symlink */
++			name = nd->stack[--depth].name;
+ 			link = walk_component(nd, 0);
  		} else {
-@@ -3212,12 +3201,19 @@ static const char *do_last(struct nameidata *nd,
+ 			/* not the last component */
+@@ -2199,7 +2197,7 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 			if (IS_ERR(link))
+ 				return PTR_ERR(link);
+ 			/* a symlink to follow */
+-			nd->stack[nd->depth - 1].name = name;
++			nd->stack[depth++].name = name;
+ 			name = link;
+ 			continue;
+ 		}
+@@ -2324,7 +2322,6 @@ static inline const char *lookup_last(struct nameidata *nd)
+ 	link = walk_component(nd, WALK_TRAILING);
+ 	if (link) {
+ 		nd->flags |= LOOKUP_PARENT;
+-		nd->stack[0].name = NULL;
  	}
- 
- 	if (file->f_mode & FMODE_OPENED) {
--		if ((file->f_mode & FMODE_CREATED) ||
--		    !S_ISREG(file_inode(file)->i_mode))
-+		if (file->f_mode & FMODE_CREATED) {
-+			open_flag &= ~O_TRUNC;
-+			will_truncate = false;
-+			acc_mode = 0;
-+		} else if (!S_ISREG(file_inode(file)->i_mode))
- 			will_truncate = false;
- 
- 		audit_inode(nd->name, file->f_path.dentry, 0);
--		dput(dentry);
-+		dput(nd->path.dentry);
-+		nd->path.dentry = dentry;
-+		error = may_open(&nd->path, acc_mode, open_flag);
-+		if (error)
-+			goto out;
- 		goto opened;
+ 	return link;
+ }
+@@ -3278,7 +3275,6 @@ static const char *do_last(struct nameidata *nd,
+ 	if (unlikely(link)) {
+ 		nd->flags |= LOOKUP_PARENT;
+ 		nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
+-		nd->stack[0].name = NULL;
+ 		return link;
  	}
  
 -- 
