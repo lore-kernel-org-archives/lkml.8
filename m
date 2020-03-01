@@ -2,93 +2,103 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1849C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFF5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF502468D
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583076106;
-	bh=Zmxtyc2Ly2BT+MGlU2PSSqLEt0tOokrlUuZZn0yxQag=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hre2Iy/Ho8YHOoyPpixMQDDXNDKyFXcF+u+d85gsCOpv39aLLK3TCozIq0D+bFqjJ
-	 lgy8sYUtottB66Y0R2pck9hb+NZhyd2sm9uSdSvZiWRcWaXQ19Y5AHZhTaSq7q6Dz6
-	 1SVMYU5wkfC2XOtt+ECNDrsQkOco6I6x2YcRVMt8=
+	by mail.kernel.org (Postfix) with ESMTP id 9C8B921D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4niIOWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCAPVp (ORCPT
+        id S1726490AbgCAPaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:21:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgCAPVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:21:45 -0500
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8016424672;
-        Sun,  1 Mar 2020 15:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583076104;
-        bh=Zmxtyc2Ly2BT+MGlU2PSSqLEt0tOokrlUuZZn0yxQag=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gvBpnDE5UHb1rV3Xfn1negz9pAcrja8axdigDTcmtPa089m7ingiy+0FWzZzrRxvL
-         H+d9JJv7id9aK94oKXQdlUhHpoup8ic/Fbl/rrIWZtVdOpiAmXfSZZFK8ArR2PCKus
-         zw8++5rQ9eETMSGaYXegJacYX6anMtBHt5cFKgG4=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH] x86/kvm: Remove the rest of do_async_page_fault
-Date:   Sun,  1 Mar 2020 07:21:37 -0800
-Message-Id: <c42751308a39630e76fb0a159e59db230b384cce.1583076033.git.luto@kernel.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 1 Mar 2020 10:30:35 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44362 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgCAPaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 10:30:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id a10so763859ljp.11
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 07:30:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ubSe/iv847hRz3go2vcVkh5paHl2lJ7NU6C3tPrE1OQ=;
+        b=R4niIOWre5oK0ZblTbLQzhTKf17NjJYu1fAvKbO8W+aBE05PXMYfrEKaT0rSMHY7mP
+         A8Z1vGVG4MLqLJ+GohxngccxJQLR+wwr22XkTZJrQUEDLenEivFQFgcv7rNnkHLwchr5
+         AtX/ZC+8Bm1QhBzIK+3aUg/4R/HweizU3kms3QlY1/W2tpWdyenNe+2gS7R+1OelNGKV
+         X7g0gS3F9a8J775AiIRhDpBbPyoLHtlY9tC+a7xRAmHuhnTnSfp6N8elggF0mDL7kv5n
+         kBWj0cvjyRFtl4Bi5jfIhzwiBQgtlPumWEpdUNJQQEzgLbJnMZ+OnffdGrbObGQSJ66l
+         V5gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ubSe/iv847hRz3go2vcVkh5paHl2lJ7NU6C3tPrE1OQ=;
+        b=fbwizGrd99iXS+Ujt+98rxINwlbCu/Szt35kR1nZYaBlHPsnpkv+nlXDngVw/GKwRd
+         HVEcx/ZQl2x6k5Uve7wV9t4yQJQh1pelVE9bBadJSRd1oIqKQwncK8UWW3zgVX+JGPEe
+         xMC7N7smSccD/o60zRCxU9/IsKad+TSi9PWdI1RyxGnWF7nVR32pQfC6klWqzWAIS01P
+         jLzcBQi23943kpb2tr8zRJc1CRyCSpS5OSuqox0H4r/MKP5kXARo0dUEmVzjDcG0pq9S
+         RpOnvPvKOiWQKqQZSnoCGJEjCc8BoivEofyK7kp8nflh70bpCOySPBKnhdbJe8pc2t89
+         kOQA==
+X-Gm-Message-State: ANhLgQ0yz5K1wc6CT2huIJVGJEcVF1pTmJ3VyuKxtQWrotNxXqrnOVYU
+        K1ffyPNfHqS7e65g+iFg2Wk=
+X-Google-Smtp-Source: ADFU+vvxXRdE5Fwx+uniobYvAmhUEaO8QHObek2+depma7eZfhEd9ma0PDMBas/14gjCNSwz+8iJ8w==
+X-Received: by 2002:a2e:3214:: with SMTP id y20mr8735810ljy.69.1583076633263;
+        Sun, 01 Mar 2020 07:30:33 -0800 (PST)
+Received: from localhost.localdomain (188.146.100.83.nat.umts.dynamic.t-mobile.pl. [188.146.100.83])
+        by smtp.gmail.com with ESMTPSA id g21sm9876384ljj.53.2020.03.01.07.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 07:30:32 -0800 (PST)
+From:   mateusznosek0@gmail.com
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, hughd@google.com,
+        akpm@linux-foundation.org
+Subject: [PATCH] mm/shmem.c: Clean code by removing unnecessary assignment
+Date:   Sun,  1 Mar 2020 16:28:32 +0100
+Message-Id: <20200301152832.24595-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I failed to remove the 32-bit asm stub, causing a build failure.  Remove
-it.
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-Fixes: "x86/kvm: Handle async page faults directly through do_page_fault()"
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Previously 0 was assigned to variable 'error'
+but the variable was never read before reassignemnt later.
+So the assignment can be removed.
+
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
 ---
+ mm/shmem.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-This should probably be folded in to avoid breaking bisection if that's
-still convenient.
-
- arch/x86/entry/entry_32.S | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7e0560442538..9b5288268aee 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1698,14 +1698,6 @@ SYM_CODE_START(general_protection)
- 	jmp	common_exception
- SYM_CODE_END(general_protection)
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 31b4bcc95f17..84eb14f5509c 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3116,12 +3116,9 @@ static int shmem_symlink(struct inode *dir, struct dentry *dentry, const char *s
  
--#ifdef CONFIG_KVM_GUEST
--SYM_CODE_START(async_page_fault)
--	ASM_CLAC
--	pushl	$do_async_page_fault
--	jmp	common_exception_read_cr2
--SYM_CODE_END(async_page_fault)
--#endif
--
- SYM_CODE_START(rewind_stack_do_exit)
- 	/* Prevent any naive code from trying to unwind to our caller. */
- 	xorl	%ebp, %ebp
+ 	error = security_inode_init_security(inode, dir, &dentry->d_name,
+ 					     shmem_initxattrs, NULL);
+-	if (error) {
+-		if (error != -EOPNOTSUPP) {
+-			iput(inode);
+-			return error;
+-		}
+-		error = 0;
++	if (error && error != -EOPNOTSUPP) {
++		iput(inode);
++		return error;
+ 	}
+ 
+ 	inode->i_size = len-1;
 -- 
-2.24.1
+2.17.1
 
