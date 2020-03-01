@@ -2,106 +2,107 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB120C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F49BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DCB222C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453FB24649
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bQndGde9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VTqwlu9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgCAAs2 (ORCPT
+        id S1727242AbgCAAx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:48:28 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56275 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgCAAs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:48:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48VPlW5nYLz9sPk;
-        Sun,  1 Mar 2020 11:48:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583023705;
-        bh=4nRI6rwZRJmJBCSa2D7NMwK+7ECxFcV3Jplu7f2M8vI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bQndGde94p9FyOTmTOsKt5AnSDdUQoxCwxy7l9+8ZpBXs+oyYGsT/USUpwwCYFUeB
-         OAs2OK8w6ainF6Hb1E0AJ3CtUFbC/Gb0BjAl8V8sCSxedVthQ/5mF0cXHyhWH3URuy
-         548JnLhcYrDjKtEwM62cZV7xhRlwqKtlLRSnogfOpYniYaEqqhZXM/iY1dM+4u/X/N
-         6kc5DIlzx4Xg9x6Gdes2FktrED8OwRU/yMDa6+PP8t50g89z4T4PxnCkpVeVv3S4db
-         oEtYHaxZc1SvKAmmMUypMuz3UqBveSsmjCegll5CS64Xsw+gfj6rEWt1n7xZ+786FC
-         OU6eoFzkoU47Q==
-Date:   Sun, 1 Mar 2020 11:47:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Carlo Caione <carlo@caione.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "Neil Armstrong" <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        "Jian Hu" <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH] soc: amlogic: fix compile failure with
- MESON_SECURE_PM_DOMAINS & !MESON_SM
-Message-ID: <20200301114750.7d270124@canb.auug.org.au>
-In-Reply-To: <7hzhd19vuj.fsf@baylibre.com>
-References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
-        <20200218080743.07e58c6e@canb.auug.org.au>
-        <20200218092229.0448d266@canb.auug.org.au>
-        <20200224101654.530f1837@canb.auug.org.au>
-        <7hzhd19vuj.fsf@baylibre.com>
+        Sat, 29 Feb 2020 19:53:58 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34527 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgCAAx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:53:57 -0500
+Received: by mail-lf1-f67.google.com with SMTP id w27so5057408lfc.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 16:53:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6dpJe4Mf6LX0NrQj7yUohcYZEvawc+wKB+azjehKaqA=;
+        b=VTqwlu9yhhH2qXRUpJcfB/cMCFBXe3gl/fPRS2SlZbeiJQHElM1P/XE0RbevL0Rr4l
+         SbcnvhJuczcZ0uIS/i9hNaS7/9g0FiHiYcgPKTcZL5EyIT/DA5AQNblDZkXYLQBfA/HP
+         z2cLzoxkYxywAj9HE1VOm88evNedEmU6mF8dJ82Cy5tBp+IIB2nMThpJptdcTExbc7IG
+         JUbwcQmm8YfBYAg6M5+e7ymMzXHsVozM4cL0+v8bMd95XeT06N2cnJ//xpz2xaCnEzZ9
+         wLJUx2HcwZfwQ/FcdeUF3jomWWi239AbgX3GOKbeBJKbaGFZAEzeWIzD9aaa0VjJQq+t
+         Ij2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6dpJe4Mf6LX0NrQj7yUohcYZEvawc+wKB+azjehKaqA=;
+        b=CgwuCLlfgfMzAz1laiptZc+rRgrLxVhQZyZMd+HGq1f+3cDMxCwB+YfakvngjMImwc
+         CRFa/xMNQS3m78/0vMQkg1ePm1sVOasbHxQOesUyXDGzhc4+nn6vjDTLDFWyLWEMElQT
+         3u1LBRKB0jqoNzy/RxwTBBn+GO/I0MHg09Lfkzt30kqp4CCay3fziGHJZPFRqMj9LrRu
+         0hVWk4Uy6rB+7oBhdI/fMNFvKBy/ibWw2aiM2xfB6Ems9tUoSssgxk+SJTxSnSPY/I3Q
+         iMwv0PgylX/guL3jzGGIWTQpudzZ9aOFvltT7sCBBRUaQlT3y4obO4vlbROHwqjekd1s
+         5aFQ==
+X-Gm-Message-State: ANhLgQ22gXA2/9RLd56SCFrzMPUzb1tv08qTANZsL6U8NRgRF8DxnFrZ
+        uj0JfUyKZ+VgLRtYq6So8H4Jy4rqeo92dyHEijcU
+X-Google-Smtp-Source: ADFU+vuyaDKwasGF4529bz/E0ATFDkNZPPHOsf1wAOCRsmrXQTGi8kdM7IQ7UEcgZQ25bxsDk4ILGp4Munwws2rf7Rw=
+X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr1007163lfb.69.1583024035644;
+ Sat, 29 Feb 2020 16:53:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Kf1.E4dLddnNTqvZx6GlV0A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200212222922.5dfa9f36@oasis.local.home> <20200213042331.157606-1-zzyiwei@google.com>
+ <20200213090308.223f3f20@gandalf.local.home> <CAKT=dDmB=TX++VeL=-NihDv5L4iBn_48=i7Lsnrkd+4e13QQsQ@mail.gmail.com>
+ <CAKT=dDnt174adfWzSiNfheA5EVL32AG_2RQa0861V2Mjh-f51w@mail.gmail.com> <20200224113805.134f8b95@gandalf.local.home>
+In-Reply-To: <20200224113805.134f8b95@gandalf.local.home>
+From:   Yiwei Zhang <zzyiwei@google.com>
+Date:   Sat, 29 Feb 2020 16:53:44 -0800
+Message-ID: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
+Subject: Re: [PATCH v3] gpu/trace: add gpu memory tracepoints
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        yamada.masahiro@socionext.com, elder@kernel.org,
+        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>, tglx@linutronix.de,
+        paul.walmsley@sifive.com, linux-kernel@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
+        Prahlad Kilambi <prahladk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        android-kernel <android-kernel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Kevin,
-
-On Sat, 29 Feb 2020 17:55:32 +0100 Kevin Hilman <khilman@baylibre.com> wrot=
-e:
+On Mon, Feb 24, 2020 at 8:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> I've fixed up the trailer whitespace an queued this up now, so should
-> show up in linux next shortly.
+> On Sun, 23 Feb 2020 22:31:11 -0800
+> Yiwei Zhang <zzyiwei@google.com> wrote:
+>
+> > Dear gpu and tracing owners,
+> >
+> > It's been a while and this is just a gentle and friendly re-ping for
+> > review of this small patch.
+>
+> I guess the question is what tree should this go through. I usually
+> only take tracing infrastructure changes and leave topic specific
+> tracing for those that maintain the topics.
+>
+> I'm fine with taking this through my tree if I get a bunch of
+> acked/reviewed by from other maintainers.
+>
+> -- Steve
+>
 
-Thanks.
+Hi GPU directory owners/maintainers,
 
---=20
-Cheers,
-Stephen Rothwell
+Given Steve's reply, could you guys help review and ack this tiny
+patch? This is a friendly re-ping since it's been more than 2 weeks
+without any response from gpu directory folks. The patchset v2 was
+ack'ed by Greg(gregkh@), and this v3 patch only has format updates.
+Please take another look. Many many thanks!
 
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5bBjYACgkQAVBC80lX
-0Gw+KAgAhjy4Z4V15rVXk29DVizB7BmoTp0AHlbwyBOXdg1fqDDAgpSapQv/aaTF
-t/kpWrI8HPqJIV33mTw9Y4ihIwM3w3hurf1Z3fal9lem4IITW6hlcuXG8jm1I0Zh
-rMlvimE+P9nv7UYTDqgQx0+v7nw3Y0kxJTkkoRbtPMOBeX/mq3oEMqHmvyTRzjjf
-+uqsMBh50kotDakasWPX47i7cULdhXg3BUd/lPYg7n1wJ179GLOl0F83CLmbeCtK
-D5PxpxIZmQEvgFModR81zi8NPz46WCa1WeSQ0edqS2AYBe8p6FWYyEeBCmU2b2ER
-xjSTCdXBgNDI8gD67V0Tx7Qs1++sjA==
-=V59f
------END PGP SIGNATURE-----
-
---Sig_/Kf1.E4dLddnNTqvZx6GlV0A--
+Best regards,
+Yiwei
