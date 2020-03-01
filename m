@@ -2,185 +2,180 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35E1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6BBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D54246C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583093890;
-	bh=KzkSFo/GsGp5GsjGhDDykjWPGoPV/ln8s1shF/RLaEs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HziXPVJeBpLQ5OnlsM5PsCF3LNCthfmWYxUyN5pGJvPsgnuZcOfATsCrq7Md9QTB3
-	 VZknLHvkSjsksLKrj2WqNT21rJ+AFGZqoE/hPibUBUAi6ZNs2kJNCmwylx6VIwyPrv
-	 sR2EOdywTAbRH7+xHcqDtG3fu1z88r/s1UnPcR+Q=
+	by mail.kernel.org (Postfix) with ESMTP id DBEB8246BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:34:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="No9LAtV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCAUSJ (ORCPT
+        id S1726603AbgCAUd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:18:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgCAUSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:18:09 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE241246BF;
-        Sun,  1 Mar 2020 20:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583093887;
-        bh=KzkSFo/GsGp5GsjGhDDykjWPGoPV/ln8s1shF/RLaEs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=KgSpdzY6dkTXpUsm16sYLGn7BPAcfwJmrisL9EU/ZiQ1bLGFhDfhHk3tEjZ03YTMH
-         za7TMRiFh4zxlNI6zBegkbOowCKsCqTqMlAx4NNDhl4kfJFUk7uD4Isw/swPViu/wc
-         1U0977bq3kdjNnM91bVBghTmVgwaIIWwwYDiJNvw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A2E58352272F; Sun,  1 Mar 2020 12:18:07 -0800 (PST)
-Date:   Sun, 1 Mar 2020 12:18:07 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
-Message-ID: <20200301201807.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200301193034.GY2935@paulmck-ThinkPad-P72>
- <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
+        Sun, 1 Mar 2020 15:33:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53759 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAUd4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 15:33:56 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f15so8946619wml.3;
+        Sun, 01 Mar 2020 12:33:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QFjnXFL+93+jG81t0lP2dF6Miy5v15MOEbx0tXp+jSU=;
+        b=No9LAtV8ZtzU8MTfHfwBLf0zoPLMP8N97CTxsuQpG16JwQgxtxbTJA/4nCke4JuKWK
+         xDxH0gAjPENNGVw6x3XjvS8HTBxSZUnAykWvlkmp989YAuyPZdkurGnli13SJ9UsN375
+         kQteAsn/+7PYzPXEflCbTB3h9aIO58TN5IujmhZIOue+SolmQoMq8G+xfvNwYPlBA76F
+         pcau8q45wsnO7Bq1gA8o7qGRoE61S8/agKNL0H4FHLjTt1crRZ/HSdYO82TCzgUm+scT
+         1MfEjod4em/prZ+dACw8HqXTGrgHIpo8L4Rp9zgYaoaNvgn6qfyppRVcrHQ8eMTt1HIP
+         2OAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QFjnXFL+93+jG81t0lP2dF6Miy5v15MOEbx0tXp+jSU=;
+        b=NBfF+xLOPEt3+Qp6FtbpstT6A7fWcJwXQ++rNEhKwF9Lh747uLOo9htwMTJKSVWCNv
+         oqo/GTP6QauArqoEE7/f70fBQ47vpbqNROJoUdY6QB8ddRRd5XuWf+GGrLH2hjN1Nl1J
+         IVMU7aB87JYRWvRMEsk2Nuv+f3Ypk321/ktNE55hSBrR0RT08OR/WtrL61KxyREryYed
+         ddjkTbKMqOM2wW0Bl+b16I65ptw7vUi9P3l8/FTKRGN8RiIYwteNZ4h2yNx9nAuhFzSs
+         riAAt3D48LIgzDQpsWyZblqUXOZCjHyU5QFvwwUKmF1faoYu2jNhOyJCBZZBb9KPQVOl
+         ALNw==
+X-Gm-Message-State: APjAAAWbLNzQaIbThpzWbKYNkaXPWw1DbOkgeczFBQG1GodffMAxZLrh
+        1qw7c3EKWnO/eKBTEko/45579BAr
+X-Google-Smtp-Source: APXvYqxis0WXn+zIVWuPZg2gCj103k+sbss5epT0HIQn0JNLErzK8UEJOK4rTfBaNr4UZP49slcPcg==
+X-Received: by 2002:a1c:6a17:: with SMTP id f23mr15977199wmc.33.1583094834013;
+        Sun, 01 Mar 2020 12:33:54 -0800 (PST)
+Received: from [192.168.43.139] ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id u25sm4263546wml.17.2020.03.01.12.33.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 12:33:53 -0800 (PST)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583078091.git.asml.silence@gmail.com>
+ <d54ddeae-ad02-6232-36f3-86d09105c7a4@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH RFC 0/9] nxt propagation + locking optimisation
+Message-ID: <cab8e903-fb6f-eae5-68a6-2a467160997e@gmail.com>
+Date:   Sun, 1 Mar 2020 23:33:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <d54ddeae-ad02-6232-36f3-86d09105c7a4@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 11:39:42AM -0800, Andy Lutomirski wrote:
+On 01/03/2020 22:14, Jens Axboe wrote:
+> On 3/1/20 9:18 AM, Pavel Begunkov wrote:
+>> There are several independent parts in the patchset, but bundled
+>> to make a point.
+>> 1-2: random stuff, that implicitly used later.
+>> 3-5: restore @nxt propagation
+>> 6-8: optimise locking in io_worker_handle_work()
+>> 9: optimise io_uring refcounting
+>>
+>> The next propagation bits are done similarly as it was before, but
+>> - nxt stealing is now at top-level, but not hidden in handlers
+>> - ensure there is no with REQ_F_DONT_STEAL_NEXT
+>>
+>> [6-8] is the reason to dismiss the previous @nxt propagation appoach,
+>> I didn't found a good way to do the same. Even though it looked
+>> clearer and without new flag.
+>>
+>> Performance tested it with link-of-nops + IOSQE_ASYNC:
+>>
+>> link size: 100
+>> orig:  501 (ns per nop)
+>> 0-8:   446
+>> 0-9:   416
+>>
+>> link size: 10
+>> orig:  826
+>> 0-8:   776
+>> 0-9:   756
 > 
+> This looks nice, I'll take a closer look tomorrow or later today. Seems
+> that at least patch 2 should go into 5.6 however, so may make sense to
+> order the series like that.
+
+It's the first one modifying io-wq.c, so should be fine to pick from the middle
+as is.
+
 > 
-> > On Mar 1, 2020, at 11:30 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > ﻿On Sun, Mar 01, 2020 at 10:54:23AM -0800, Andy Lutomirski wrote:
-> >>> On Sun, Mar 1, 2020 at 10:26 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>> 
-> >>> On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:
-> >>>> Andy Lutomirski <luto@kernel.org> writes:
-> >>>>> On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>>>>> Andy Lutomirski <luto@amacapital.net> writes:
-> >>>>>>>> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>>>>>>> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
-> >>>>>>>> except trace_hardirq_off/on() as those trace functions do not allow to
-> >>>>>>>> attach anything AFAICT.
-> >>>>>>> 
-> >>>>>>> Can you point to whatever makes those particular functions special?  I
-> >>>>>>> failed to follow the macro maze.
-> >>>>>> 
-> >>>>>> Those are not tracepoints and not going through the macro maze. See
-> >>>>>> kernel/trace/trace_preemptirq.c
-> >>>>> 
-> >>>>> That has:
-> >>>>> 
-> >>>>> void trace_hardirqs_on(void)
-> >>>>> {
-> >>>>>        if (this_cpu_read(tracing_irq_cpu)) {
-> >>>>>                if (!in_nmi())
-> >>>>>                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
-> >>>>>                tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
-> >>>>>                this_cpu_write(tracing_irq_cpu, 0);
-> >>>>>        }
-> >>>>> 
-> >>>>>        lockdep_hardirqs_on(CALLER_ADDR0);
-> >>>>> }
-> >>>>> EXPORT_SYMBOL(trace_hardirqs_on);
-> >>>>> NOKPROBE_SYMBOL(trace_hardirqs_on);
-> >>>>> 
-> >>>>> But this calls trace_irq_enable_rcuidle(), and that's the part of the
-> >>>>> macro maze I got lost in.  I found:
-> >>>>> 
-> >>>>> #ifdef CONFIG_TRACE_IRQFLAGS
-> >>>>> DEFINE_EVENT(preemptirq_template, irq_disable,
-> >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> >>>>>             TP_ARGS(ip, parent_ip));
-> >>>>> 
-> >>>>> DEFINE_EVENT(preemptirq_template, irq_enable,
-> >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> >>>>>             TP_ARGS(ip, parent_ip));
-> >>>>> #else
-> >>>>> #define trace_irq_enable(...)
-> >>>>> #define trace_irq_disable(...)
-> >>>>> #define trace_irq_enable_rcuidle(...)
-> >>>>> #define trace_irq_disable_rcuidle(...)
-> >>>>> #endif
-> >>>>> 
-> >>>>> But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
-> >>>>> where I got lost in the macro maze.  I looked at the gcc asm output,
-> >>>>> and there is, indeed:
-> >>>> 
-> >>>> DEFINE_EVENT
-> >>>>  DECLARE_TRACE
-> >>>>    __DECLARE_TRACE
-> >>>>       __DECLARE_TRACE_RCU
-> >>>>         static inline void trace_##name##_rcuidle(proto)
-> >>>>            __DO_TRACE
-> >>>>               if (rcuidle)
-> >>>>                  ....
-> >>>> 
-> >>>>> But I also don't see why this is any different from any other tracepoint.
-> >>>> 
-> >>>> Indeed. I took a wrong turn at some point in the macro jungle :)
-> >>>> 
-> >>>> So tracing itself is fine, but then if you have probes or bpf programs
-> >>>> attached to a tracepoint these use rcu_read_lock()/unlock() which is
-> >>>> obviosly wrong in rcuidle context.
-> >>> 
-> >>> Definitely, any such code needs to use tricks similar to that of the
-> >>> tracing code.  Or instead use something like SRCU, which is OK with
-> >>> readers from idle.  Or use something like Steve Rostedt's workqueue-based
-> >>> approach, though please be very careful with this latter, lest the
-> >>> battery-powered embedded guys come after you for waking up idle CPUs
-> >>> too often.  ;-)
-> >> 
-> >> Are we okay if we somehow ensure that all the entry code before
-> >> enter_from_user_mode() only does rcuidle tracing variants and has
-> >> kprobes off?  Including for BPF use cases?
-> > 
-> > That would work, though if BPF used SRCU instead of RCU, this would
-> > be unnecessary.  Sadly, SRCU has full memory barriers in each of
-> > srcu_read_lock() and srcu_read_unlock(), but we are working on it.
-> > (As always, no promises!)
-> > 
-> >> It would be *really* nice if we could statically verify this, as has
-> >> been mentioned elsewhere in the thread.  It would also probably be
-> >> good enough if we could do it at runtime.  Maybe with lockdep on, we
-> >> verify rcu state in tracepoints even if the tracepoint isn't active?
-> >> And we could plausibly have some widget that could inject something
-> >> into *every* kprobeable function to check rcu state.
-> > 
-> > Or just have at least one testing step that activates all tracepoints,
-> > but with lockdep enabled?
+> BTW, Andres brought up a good point, and that's hashed file write works.
+> Generally they complete super fast (just copying into the page cache),
+> which means that that worker will be hammering the wq lock a lot. Since
+> work N+1 can't make any progress before N completes (since that's how
+> hashed work works), we should pull a bigger batch of these work items
+> instead of just one at the time. I think that'd potentially make a huge
+> difference for the performance of buffered writes.
+
+Flashed the same thought. It should be easy enough for hashed requests. Though,
+general batching would make us to think about fairness, work stealing, etc.
+
+BTW, what's the point of hashing only heads of a link? Sounds like it can lead
+to the write-write collisions, which it tries to avoid.
+
 > 
-> Also kprobe.
+> Just throwing it out there, since you're working in that space anyway
+> and the rewards will be much larger.
 
-I didn't realize we could test all kprobe points easily, but yes,
-that would also be good.
+I will take a look, but not sure when, I yet have some hunches myself.
 
-> I don’t suppose we could make notrace imply nokprobe.  Then all kprobeable functions would also have entry/exit tracepoints, right?
-
-On this, I must defer to the tracing and kprobes people.
-
-							Thanx, Paul
+-- 
+Pavel Begunkov
