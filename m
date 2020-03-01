@@ -2,93 +2,105 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E1C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F21C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 02:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A685F222C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 02:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxqEXM8L"
+	by mail.kernel.org (Postfix) with ESMTP id C079724650
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 02:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583028738;
+	bh=MRMvXCkL8RbzEVxNXMIWAO6JqQowOaG8ov5gVmOxNoc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U6jQcN7FLnE6Pui+7KmvJFi6IlT6JvRGUiVW3F0SF9K9QEPjDQjIvnKRGdyR2yT4k
+	 OqSXgukmhdm/xpS+g6O4ODWZCqEv1Se9ulcdJyC/nWdPePkEysDWNd5kQY7AcpPCMP
+	 Wjrf3naFpm989idAZZamdCnPM/5KkvQXg9Wkh9xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgCACHB (ORCPT
+        id S1727369AbgCACMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 21:07:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53708 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgCACHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 21:07:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f15so7525492wml.3;
-        Sat, 29 Feb 2020 18:06:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version;
-        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
-        b=WxqEXM8LNzUi/E7hr0gNTnCsdZ3nu91HgDePZERGtz3W9noXE+0ktjuMCq5ufbOiYq
-         T8rXIsM/gYs6Eb4CPv0RE7G7jyOzqpE9I6Do9tnbZ2b20Hj2l+5lkGdt17BCST/BU77Z
-         zpwE6Z5GZ9PaJk5ovCzdQ+H3SNzV1BOhOkVfpEwDUWJ5Ur2oweOKLRGGwXbEViHuamKX
-         mmT7nIeWRgad4+IfBfSvTjsEVj9AzZIEr1DpKrryRclGh9lWAq/Nx9pORGuiXjDl5b44
-         NKHzxUVU/75XqVjK2BZU/x5YbQcO/EFzmjmOvkAm6BbkihQCnwHRBj3+MUgvdcIbe2HK
-         R+xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version;
-        bh=mFMK4D+LnUKRd/F79nEwyUOb2aPeDQ33LhkUgHUmiGc=;
-        b=KXW4xcrmj3txOQChsA2Y3e3QR2xRYWgZ1cnsjJ5v6XoSeMUaog3TUW1l5TAJ2hJYIr
-         jsWcxJFjdcktEiR18oHIRLApsudmQ/wGtGfxiTgWaeTJnGNjg5Yn7PJ7Zlx1vdLLPggT
-         etzQA1hAx2WYy90ZFqxprRw+A55x8YmE89yIig2GQ9ioqHrLQga2sGv5GkuHOqoT/OYm
-         n5EJ3YGUdqoWp3kwmTepDII27fxGODwAD+//KBCaw8gh7we3Vvo/CLhKGmBkFiBP7ayk
-         Zj1N845/KPg578F9VAoSPmOkbniGdTlhybP6SMWJMV9QiJ/EfTe9ZXCe3F788HKoxrVJ
-         IuSA==
-X-Gm-Message-State: APjAAAWBGoy6WzsKz5ABmjT4ri1NYt4tAiJCdg79axXSUfO6MYdh0q18
-        3tKNpfeB3roB9RrzahhhT7g=
-X-Google-Smtp-Source: APXvYqzo/NeLjiWLx17CFDKlODf5uCGNKaEDGv01jvjeA8hCO8or8bNmA4KCjZe/q9m0WsEFjEbPaw==
-X-Received: by 2002:a1c:238d:: with SMTP id j135mr12374607wmj.165.1583028418492;
-        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
-Received: from [192.168.1.6] (ppp141237210022.access.hol.gr. [141.237.210.22])
-        by smtp.gmail.com with ESMTPSA id f195sm8614206wmf.17.2020.02.29.18.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 18:06:58 -0800 (PST)
-Date:   Sun, 01 Mar 2020 04:06:54 +0200
-From:   "Leonidas P." <papadakospan@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Carlos de Paula <me@carlosedp.com>, jose.abreu@synopsys.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <1583028414.33600.0@gmail.com>
-In-Reply-To: <6132615.msM8OCcsVu@phil>
-References: <20200218221040.10955-1-me@carlosedp.com>
-        <6132615.msM8OCcsVu@phil>
-X-Mailer: geary/3.34.2
+        Sat, 29 Feb 2020 21:12:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbgCACMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 21:12:17 -0500
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6882B222C4;
+        Sun,  1 Mar 2020 02:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583028736;
+        bh=MRMvXCkL8RbzEVxNXMIWAO6JqQowOaG8ov5gVmOxNoc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vlUFIq7pEn15C2MGxkQHG7UKZNEdWQTpvQlN6zT+ovieONrrBo/D7L4sZIUBko9e6
+         teLlaYar9FMZfp6ucMKAr3Jwl6eKDhmRNOjbC3pyUTbVz8N8ojVNgQh32IGcdn43Um
+         u0HrhQH3Ws/zPCjd6kCpn9Kcl9cLGUOm6sWeHc9k=
+Date:   Sat, 29 Feb 2020 18:12:14 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jiri Pirko <jiri@resnulli.us>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+Subject: Re: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
+ support
+Message-ID: <20200229181214.46c2a495@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200229075802.GO26061@nanopsycho>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+        <20200225163025.9430-3-vadym.kochan@plvision.eu>
+        <20200227110507.GE26061@nanopsycho>
+        <20200228165429.GB8409@plvision.eu>
+        <20200229075802.GO26061@nanopsycho>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 29 Feb 2020 08:58:02 +0100 Jiri Pirko wrote:
+> Fri, Feb 28, 2020 at 05:54:32PM CET, vadym.kochan@plvision.eu wrote:
+> >> >+
+> >> >+module_init(mvsw_pr_pci_init);
+> >> >+module_exit(mvsw_pr_pci_exit);
+> >> >+
+> >> >+MODULE_AUTHOR("Marvell Semi.");  
+> >> 
+> >> Again, wrong author.
+> >
+> >PLVision developing the driver for Marvell and upstreaming it on behalf
+> >of Marvell. This is a long term cooperation that aim to expose Marvell
+> >devices to the Linux community.  
+> 
+> Okay. If you grep the code, most of the time, the MODULE_AUTHOR is a
+> person. That was my point:
+> /*
+>  * Author(s), use "Name <email>" or just "Name", for multiple
+>  * authors use multiple MODULE_AUTHOR() statements/lines.
+>  */
+> #define MODULE_AUTHOR(_author) MODULE_INFO(author, _author)
 
-I am also in favor of this but I think we should remove the line that 
-specifies the txpbl in the rk3328-roc-cc.dts gmac2io since it will get 
-applied here in the .dtsi
++1
 
+> But I see that for example "Intel" uses the company name too. So I guess
+> it is fine.
 
+FWIW I agree with Jiri's original comment. Copyright != authorship.
+I'm not a lawyer, but at least in the European law I was exposed to -
+company can _own_ code, but it can never _author_ it.
+
+I think authorship as a moral right is inalienable, unlike material/
+economic rights (copyright).
+
+So to me company being an author makes no sense at all, Copyrights are
+on all your files, that's sufficient, put human names in MODULE_AUTHOR,
+or just skip using the macro..
