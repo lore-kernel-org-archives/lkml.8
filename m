@@ -6,63 +6,66 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C1CC3F2CD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6EDC3F2D1
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA752469C
+	by mail.kernel.org (Postfix) with ESMTP id 380E6246A1
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="G5lSflCj"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="ASBynYC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCAW4R (ORCPT
+        id S1726728AbgCAW4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 17:56:17 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34884 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAW4Q (ORCPT
+        Sun, 1 Mar 2020 17:56:32 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37802 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgCAW4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 17:56:16 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3432996plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 14:56:14 -0800 (PST)
+        Sun, 1 Mar 2020 17:56:31 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so4605661pfn.4
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 14:56:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
         h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=YxgOqpgbQcmMoGMYAVFOXMchSBvpYzdR5unDu3ePoFE=;
-        b=G5lSflCjBdUdrdAVY9fbc6OD3WvuAgAM3O//ZXOSIk3koNGb5/F3+h7lTdnklngQB2
-         8vAAAWwrSP24AnXWhbwuMXXvTr8Xin4WORfUKhVoJIRli4h4YyIhPh5vK+WkgPry5Hj7
-         rhcYjsLyZi1XwLChKgxt5P5EdSXliR+zUMXNE=
+        bh=se0IyZ7gHAr6eXWZqvCMUC+l5nOCWe5ipTBvljrrVTM=;
+        b=ASBynYC7447q00ZpeHqf2PKC8Nx2UdrkTwe0RQoPQwc2FGK20J4XhFfNTks5DS10lO
+         vnURyOuqYSmzCj85qCBYJVjYWqM4OixHSHzEFQIb1McW86yT5HgyWTmUt0nPjwDiF6xZ
+         NJGPec54E/F+jOz1aK2izc5qHceggkUAEf/kU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=YxgOqpgbQcmMoGMYAVFOXMchSBvpYzdR5unDu3ePoFE=;
-        b=ha+Q4QG8lt2M4WPD1A6oUtQbBbxOWY5iMRymeL26ZW2+q8uPRereHO2/hBLgxhqZdt
-         QCL+4OBwcVXhKItPgLdhD4AINkipEcFG2xJU85DpPVQ4X2mv5r0Qg16DqRKzrh2ltm4r
-         5w6Eh1W8ysjXHAx4VgbiaCOKyj56ua2tsQre7wuScux9EWv9zxk4jvcQWE8AM1PxMPQQ
-         cqeEPiSlcsEjnuqwLG8V8ibz8qari4NmiHjMefuAxUu2y7/CFXnnd2xxu9/8n8IJJzMI
-         tubuHmfhmrc9cL4gCm+MKKOJNrMPON0KPi7l+b/CyTGmlmp/YcNNbp1uLCTI2k0Rbf9w
-         Ozjg==
-X-Gm-Message-State: APjAAAUqaCsZjoqPxZID+f7HcVkaG0ZXjHXWXDyFI/q+Ov011m4KcMLK
-        NMONYVVj3yVeKEJPCMl/x28Lqw==
-X-Google-Smtp-Source: APXvYqyyBTU85xhidIp99iBInbf+ZsI59IZB1CB3kU2N4bl9kH0fYn/V3d4kOT6OoWV5pjrbZchZ8A==
-X-Received: by 2002:a17:90a:928c:: with SMTP id n12mr18452305pjo.45.1583103374143;
-        Sun, 01 Mar 2020 14:56:14 -0800 (PST)
+        bh=se0IyZ7gHAr6eXWZqvCMUC+l5nOCWe5ipTBvljrrVTM=;
+        b=ukot0clNrQ7LiGudoxQKgfUdOT9umBCgK7aUfjK5Wz2mO6jzmUQ6hka8lJ6RkD4EYK
+         bxlEprBM4KUJ/SPOJwv/hSa+8fOF7UtwXBPeIB7blxp1UWky43ApUVasCFT3icoKVxxh
+         WY0uftuWFPU2XAP4ezZGfWr8KrtJGouNkRSJLcdfTOnHNOynKNXKdnTJqcFFaDwbwu7H
+         zyGnwBV7unWA4QvKgZZ+v/qSEwkux+eBmnk0rc4nUQsuohflzDYHPUEXU0G/8Tf+ihlO
+         /DLLMY5/wZcGt0mCoNbj4sbN36+sVeOLBiUcKMBWc8IJWv8dlQa0DvJqOyG0ZWvzBAyw
+         KL4w==
+X-Gm-Message-State: APjAAAWIIU31cdNSvaphi18StkogitdfIu2pPva4l93bjMNGo8yfp4mN
+        Acc91sL+5WOlEfNTo55PzFl62A==
+X-Google-Smtp-Source: APXvYqxmGuJMAlljhCbvCHsl4IAdZQSDpFGJgzYvIy9a//apUKwSSQZyYDPoDXfkSqr3LbplqokxrA==
+X-Received: by 2002:a62:5bc7:: with SMTP id p190mr14926424pfb.16.1583103389485;
+        Sun, 01 Mar 2020 14:56:29 -0800 (PST)
 Received: from localhost (2001-44b8-1113-6700-591b-db3f-06cb-776f.static.ipv6.internode.on.net. [2001:44b8:1113:6700:591b:db3f:6cb:776f])
-        by smtp.gmail.com with ESMTPSA id h7sm19357775pfq.36.2020.03.01.14.56.12
+        by smtp.gmail.com with ESMTPSA id h2sm17797020pgv.40.2020.03.01.14.56.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 14:56:13 -0800 (PST)
+        Sun, 01 Mar 2020 14:56:28 -0800 (PST)
 From:   Daniel Axtens <dja@axtens.net>
-To:     syzbot <syzbot+6be2cbddaad2e32b47a0@syzkaller.appspotmail.com>,
-        allison.henderson@oracle.com, bfoster@redhat.com,
-        darrick.wong@oracle.com, dchinner@redhat.com, dvyukov@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel paging request in xfs_sb_read_verify
-In-Reply-To: <00000000000074eed3059f9e3d0a@google.com>
-References: <00000000000074eed3059f9e3d0a@google.com>
-Date:   Mon, 02 Mar 2020 09:56:10 +1100
-Message-ID: <87eeubr8fp.fsf@dja-thinkpad.axtens.net>
+To:     syzbot <syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com>,
+        arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, dvyukov@google.com,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        kasan-dev@googlegroups.com, labbott@redhat.com,
+        linaro-mm-sig-owner@lists.linaro.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        maco@android.com, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com, tkjos@android.com
+Subject: Re: BUG: unable to handle kernel paging request in ion_heap_clear_pages
+In-Reply-To: <0000000000003eeb63059f9e41d2@google.com>
+References: <0000000000003eeb63059f9e41d2@google.com>
+Date:   Mon, 02 Mar 2020 09:56:25 +1100
+Message-ID: <87blpfr8fa.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,7 +73,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+6be2cbddaad2e32b47a0@syzkaller.appspotmail.com> writes:
+syzbot <syzbot+be6ccf3081ce8afd1b56@syzkaller.appspotmail.com> writes:
 
 #syz fix: kasan: fix crashes on access to memory mapped by vm_map_ram()
 
