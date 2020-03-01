@@ -2,96 +2,146 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962DBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F65C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7881524697
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E9524697
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583092593;
+	bh=MacymB2vKUbAqcgzSJx30qCNGZQS5jp0BUtsCj6EcwU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=btNdhH/GeO2HQ9ltg5V3xLVT5fqQqj1mOr0fOt32o6oY9r02t5iD8Zm3wBtKj0hpk
+	 SCbJpD6wagSsyplbdxilkd6bHUyJ3YcTx+i8lo+G4wTaTYVPkZZUbIYruPxnQPAlbg
+	 VI9OWhPCQqwt4E5Iuom9AEFskz3UfmFVe+C9/4es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgCAT4O (ORCPT
+        id S1726775AbgCAT4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 14:56:14 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:32048 "EHLO 1wt.eu"
+        Sun, 1 Mar 2020 14:56:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgCAT4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 14:56:13 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 021Ju4b7011200;
-        Sun, 1 Mar 2020 20:56:04 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH v2 0/6] floppy: make use of the local/global fdc explicit
-Date:   Sun,  1 Mar 2020 20:55:49 +0100
-Message-Id: <20200301195555.11154-1-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
+        id S1726188AbgCAT4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 14:56:31 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D5F24697;
+        Sun,  1 Mar 2020 19:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583092591;
+        bh=MacymB2vKUbAqcgzSJx30qCNGZQS5jp0BUtsCj6EcwU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=C1B78bVGAhhxECX3MbAyYPNcMPoZFtHWnwp6S/D4yKlEFLltFuaFgQfvjwVGfUCys
+         byMNxjdeEa6ZpWnLF13dcvfyvyV4veSfJ8OyMnmeCl1Ery2CymqN46MGn1Xo4urSJg
+         NNw8jftF+BW1qVG0Bk0Kk+4+qzLdDPB5rQvmDMws=
+Date:   Sun, 1 Mar 2020 19:56:22 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v2] iio: industrialio-core: Fix debugfs read
+Message-ID: <20200301195622.0dfa31fc@archlinux>
+In-Reply-To: <20200221120655.20252-1-alexandru.tachici@analog.com>
+References: <20200221120655.20252-1-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an update to the first minimal cleanup of the floppy driver in
-order to make use of the FDC number explicit so as to avoid bugs like
-the one fixed by 2e90ca68 ("floppy: check FDC index for errors before
-assigning it").
+On Fri, 21 Feb 2020 14:06:55 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
-The purpose of this patchset is to rename the "fdc" global variable to
-"current_fdc" as Linus suggested and adjust the macros which rely on it
-depending on their context.
+> Currently iio_debugfs_read_reg calls debugfs_reg_access
+> every time it is ran. Reading the same hardware register
+> multiple times during the same reading of a debugfs file
+> can cause unintended effects.
+> 
+> For example for each: cat iio:device0/direct_reg_access
+> the file_operations.read function will be called at least
+> twice. First will return the full length of the string in
+> bytes  and the second will return 0.
+> 
+> This patch makes iio_debugfs_read_reg to call debugfs_reg_access
+> only when the user's buffer position (*ppos) is 0. (meaning
+> it is the beginning of a new reading of the debugfs file).
+> 
+> Fixes: e553f182d55b ("staging: iio: core: Introduce debugfs support, add support for direct register access")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 
-The most problematic part at this step are the FD_* macros derived
-from FD_IOPORT, itself referencing the fdc to get its base address.
-These are exclusively used by fd_outb() and fd_inb(). However on ARM
-FD_DOR is also used to compare the register based on the port, hence
-a small change in the ARM specific code to only check the register
-without relying on this hidden memory access.
+I'm going to take this one via the slow path to give it a bit of time
+to soak in linux-next.   I think we are fine for unexpected side effects
+but it's been there for a long time so we can take this slowly.
 
-In order to avoid touching the fd_outb() and fd_inb() macros/functions
-on all supported architectures, a new set of fdc_outb()/fdc_inb()
-functions was added to the driver to call the former after adding
-the register to the FDC's base address.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-There are still opportunities for more cleanup, though it's uncertain
-they're welcome in this old driver :
-  - the base address and register can be passed separately to fd_outb()
-    and fd_inb() in order to simplify register retrieval in some archs;
+Thanks,
 
-  - a dozen of functions in the driver implicitly depend on current_fdc
-    while passing it as an argument makes the driver a bit more readable
-    but that represents less than half of the code and doesn't address
-    all the readability concerns;
+Jonathan
 
-  - a test was done to limit support to a single FDC, but after these
-    cleanups it doesn't provide any significant benefit in terms of code
-    readability.
-
-These patches are to be applied on top of Denis' floppy-next branch.
-
-v2:
-  - CC arch maintainers in ARM patches
-  - fixed issues after Denis' review:
-      - extra braces in floppy.h in declaration of floppy_selects[]
-      - missing parenthesis in fd_outb() macro to silence a warning
-      - used the swap() macro in driveswap()
-
-Willy Tarreau (6):
-  floppy: remove dead code for drives scanning on ARM
-  floppy: remove incomplete support for second FDC from ARM code
-  floppy: prepare ARM code to simplify base address separation
-  floppy: introduce new functions fdc_inb() and fdc_outb()
-  floppy: separate the FDC's base address from its registers
-  floppy: rename the global "fdc" variable to "current_fdc"
-
- arch/arm/include/asm/floppy.h |  88 ++-----------
- drivers/block/floppy.c        | 284 ++++++++++++++++++++++--------------------
- include/uapi/linux/fdreg.h    |  18 +--
- 3 files changed, 168 insertions(+), 222 deletions(-)
-
--- 
-2.9.0
+> ---
+>  drivers/iio/industrialio-core.c | 15 +++++++++++----
+>  include/linux/iio/iio.h         |  2 ++
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 65ff0d067018..c4d5104934fc 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -301,11 +301,14 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+>  			      size_t count, loff_t *ppos)
+>  {
+>  	struct iio_dev *indio_dev = file->private_data;
+> -	char buf[20];
+>  	unsigned val = 0;
+> -	ssize_t len;
+>  	int ret;
+>  
+> +	if (*ppos > 0)
+> +		return simple_read_from_buffer(userbuf, count, ppos,
+> +					       indio_dev->read_buf,
+> +					       indio_dev->read_buf_len);
+> +
+>  	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+>  						  indio_dev->cached_reg_addr,
+>  						  0, &val);
+> @@ -314,9 +317,13 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+>  		return ret;
+>  	}
+>  
+> -	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
+> +	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
+> +					   sizeof(indio_dev->read_buf),
+> +					   "0x%X\n", val);
+>  
+> -	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+> +	return simple_read_from_buffer(userbuf, count, ppos,
+> +				       indio_dev->read_buf,
+> +				       indio_dev->read_buf_len);
+>  }
+>  
+>  static ssize_t iio_debugfs_write_reg(struct file *file,
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 862ce0019eba..eed58ed2f368 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -568,6 +568,8 @@ struct iio_dev {
+>  #if defined(CONFIG_DEBUG_FS)
+>  	struct dentry			*debugfs_dentry;
+>  	unsigned			cached_reg_addr;
+> +	char				read_buf[20];
+> +	unsigned int			read_buf_len;
+>  #endif
+>  };
+>  
 
