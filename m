@@ -2,150 +2,95 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C678AC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A304C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA0621D56
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FA22468A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXAqKmma"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O9J2j+ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgCAFkB (ORCPT
+        id S1726690AbgCAFqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 00:40:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46925 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725821AbgCAFkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 00:40:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583041200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3YIHlD0M+k+yxPJl/fAAm98gZtg1wXJwtbyuwCIFlGI=;
-        b=LXAqKmmabnWn/rHjPi9dKiV6bGPSUzNPn3IfeAy5s7YIidFuVzAhmKqz05QSH3YiUtUQlX
-        oOW8e08dsJ/fe13cUiKbUYq5q8HwE230oReJsicZyV0heUJZqTr+IuTtYA+vTjvwpb3BPS
-        xJdOOxW5j4vpN4mR01362dWX9UpHXnw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-f3ljMdhqNtu_2RzLzpQL9A-1; Sun, 01 Mar 2020 00:39:58 -0500
-X-MC-Unique: f3ljMdhqNtu_2RzLzpQL9A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 1 Mar 2020 00:46:07 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47627 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgCAFqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 00:46:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F082800D4E;
-        Sun,  1 Mar 2020 05:39:56 +0000 (UTC)
-Received: from localhost (ovpn-12-59.pek2.redhat.com [10.72.12.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C15605D9C9;
-        Sun,  1 Mar 2020 05:39:53 +0000 (UTC)
-Date:   Sun, 1 Mar 2020 13:39:50 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] mm/memory_hotplug: cleanup __add_pages()
-Message-ID: <20200301053950.GO24216@MiWiFi-R3L-srv>
-References: <20200228095819.10750-1-david@redhat.com>
- <20200228095819.10750-3-david@redhat.com>
- <20200228103442.GL24216@MiWiFi-R3L-srv>
- <65186cee-358a-5c23-49e0-5507730941ad@redhat.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48VXLz2scSz9sPR;
+        Sun,  1 Mar 2020 16:46:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583041563;
+        bh=/pXB+eLcTxLdMyzw/DPfjwnN01pePmwjNBZiT+yKci0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=O9J2j+ctd/9vmauwBsInQjq98gTONbPQulyu60jvAe7dSWdTMPnqlji192P5bTcMm
+         PwiviOKBkKWviP0+iYMqmjQ24O/s5XGPdl1Ny/yDSyt9atjl9IaUbqguEJcHz21GkR
+         4o2zk8p/ekOO2RBcr3A2IcwRyelS+juPx01DtWJWEgJMW+gVgrmRMuohO4fzgngn9t
+         WHGvant36f6wOWSMNZ0I8bPM1WS1GhQrUvTukhC4WzZxK1gQyOrjqZoaVBOtqA3drX
+         IWzDqvrbmCyGrKVpXBmR664wXZYLd0IxoJtEUF9ssrvBFKRUwjicImsIzbEG/Zhjh2
+         jZyvPROispblQ==
+Date:   Sun, 1 Mar 2020 16:45:59 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20200301164559.6148189e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65186cee-358a-5c23-49e0-5507730941ad@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: multipart/signed; boundary="Sig_/gl3ARaOVCMcihYwEU/sJb3o";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/28/20 at 12:14pm, David Hildenbrand wrote:
-> On 28.02.20 11:34, Baoquan He wrote:
-> > On 02/28/20 at 10:58am, David Hildenbrand wrote:
-> >> Let's drop the basically unused section stuff and simplify. The logic
-> >> now matches the logic in __remove_pages().
-> >>
-> >> Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Oscar Salvador <osalvador@suse.de>
-> >> Cc: Michal Hocko <mhocko@kernel.org>
-> >> Cc: Baoquan He <bhe@redhat.com>
-> >> Cc: Dan Williams <dan.j.williams@intel.com>
-> >> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >> ---
-> >>  mm/memory_hotplug.c | 18 +++++++-----------
-> >>  1 file changed, 7 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> index 8fe7e32dad48..1a00b5a37ef6 100644
-> >> --- a/mm/memory_hotplug.c
-> >> +++ b/mm/memory_hotplug.c
-> >> @@ -307,8 +307,9 @@ static int check_hotplug_memory_addressable(unsigned long pfn,
-> >>  int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
-> >>  		struct mhp_restrictions *restrictions)
-> >>  {
-> >> +	const unsigned long end_pfn = pfn + nr_pages;
-> >> +	unsigned long cur_nr_pages;
-> >>  	int err;
-> >> -	unsigned long nr, start_sec, end_sec;
-> >>  	struct vmem_altmap *altmap = restrictions->altmap;
-> >>  
-> >>  	err = check_hotplug_memory_addressable(pfn, nr_pages);
-> >> @@ -331,18 +332,13 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
-> >>  	if (err)
-> >>  		return err;
-> >>  
-> >> -	start_sec = pfn_to_section_nr(pfn);
-> >> -	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
-> >> -	for (nr = start_sec; nr <= end_sec; nr++) {
-> >> -		unsigned long pfns;
-> >> -
-> >> -		pfns = min(nr_pages, PAGES_PER_SECTION
-> >> -				- (pfn & ~PAGE_SECTION_MASK));
-> >> -		err = sparse_add_section(nid, pfn, pfns, altmap);
-> >> +	for (; pfn < end_pfn; pfn += cur_nr_pages) {
-> >> +		/* Select all remaining pages up to the next section boundary */
-> >> +		cur_nr_pages = min(end_pfn - pfn,
-> >> +				   SECTION_ALIGN_UP(pfn + 1) - pfn);
-> >> +		err = sparse_add_section(nid, pfn, cur_nr_pages, altmap);
-> > 
-> > Honestly, I am not a big fan of this kind of code refactoring. The old
-> > code may span seveal more lines or define several several more veriables,
-> > but logic is clear, and no visible defect. It's hard to say how much we
-> 
-> I'm sorry, but iterating over variables and not using a single one in
-> the body is definitely not clean, at least IMHO. Leftover from
+--Sig_/gl3ARaOVCMcihYwEU/sJb3o
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hmm, sometime we do use iterator to loop over only, it's just not so good.
-People usually have their own preferred coding style, and try to optimize to
-remove the itch in heart, totally understand. I have no strong objection
-to this, as long as it gets support from reviewers, it's not a bad
-thing.
+Hi all,
 
-> sub-section hotadd support.
-> 
-> > can benefit from this kind of code simplifying, and reviewing it will take
-> > people more time. While for the code style consistency with
-> > __remove_page(), I would like to see it's merged. My personal opinion.
-> 
-> Thanks!
-> 
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+In commit
 
+  ac5bf39e3968 ("ASoC: soc-dapm: don't use rtd->cpu_dai on for_each_rtd_cpu=
+_dai()")
+
+Fixes tag
+
+  Fixes: commit de6214a33633d ("ASoC: Add multiple CPU DAI support in DAPM")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gl3ARaOVCMcihYwEU/sJb3o
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5bTBcACgkQAVBC80lX
+0GwUxAf/RI6yNzSxRh8dxBD/Xbxto9XiEoPjRa4LHZTsDPimtEWItw44hEHHCWhN
+nbArrVXl/DcIABkIVCTC+qaaOkqfPwZtc6mK8m0K44mLUM1Y26Se3jhNidsyCMlN
+AI3I/g3ilCgJCLqwAJ8Sg5DOj+B+3/ltHieGcYMrd2G6G8WwByMQ8nri6n54+XMY
+PWrNjFkIyfspqguSM8Q+gO8r9qHhKEuLdDTEfXspJDQqBlHNmx93M9rYdf1Mz6Op
+C+LADpmwBOhiWEKGjwEK3LaBaiJlcRBciBlHhG13KUH6KWZBVRgsHDAYgWV5EtGk
+7J80OqG5tbtFWpYPllYaBBh1+VS4LQ==
+=WXTJ
+-----END PGP SIGNATURE-----
+
+--Sig_/gl3ARaOVCMcihYwEU/sJb3o--
