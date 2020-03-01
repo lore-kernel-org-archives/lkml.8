@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0CDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8886C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B6C24697
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0E0246B4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCAV4S (ORCPT
+        id S1727357AbgCAV4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:56:18 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41558 "EHLO
+        Sun, 1 Mar 2020 16:56:25 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41554 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgCAVwm (ORCPT
+        with ESMTP id S1726592AbgCAVwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:42 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVt-003fMA-2T; Sun, 01 Mar 2020 21:52:41 +0000
+        id 1j8WVs-003fM4-Sm; Sun, 01 Mar 2020 21:52:40 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 05/55] make build_open_flags() treat O_CREAT | O_EXCL as implying O_NOFOLLOW
-Date:   Sun,  1 Mar 2020 21:51:50 +0000
-Message-Id: <20200301215240.873899-5-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 04/55] follow_automount() doesn't need the entire nameidata
+Date:   Sun,  1 Mar 2020 21:51:49 +0000
+Message-Id: <20200301215240.873899-4-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,71 +42,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-O_CREAT | O_EXCL means "-EEXIST if we run into a trailing symlink".
-As it is, we might or might not have LOOKUP_FOLLOW in op->intent
-in that case - that depends upon having O_NOFOLLOW in open flags.
-It doesn't matter, since we won't be checking it in that case -
-do_last() bails out earlier.
+Only the address of ->total_link_count and the flags.
+And fix an off-by-one is ELOOP detection - make it
+consistent with symlink following, where we check if
+the pre-increment value has reached 40, rather than
+check the post-increment one.
 
-However, making sure it's not set (i.e. acting as if we had an explicit
-O_NOFOLLOW) makes the behaviour more explicit and allows to reorder the
-check for O_CREAT | O_EXCL in do_last() with the call of step_into()
-immediately following it.
+[kudos to Christian Brauner for spotted braino]
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 15 +++++----------
- fs/open.c  |  4 +++-
- 2 files changed, 8 insertions(+), 11 deletions(-)
+ fs/namei.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 6721c5f7e9d5..6938d20aa73a 100644
+index 39dd56f5171f..6721c5f7e9d5 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -3396,22 +3396,17 @@ static int do_last(struct nameidata *nd,
- 	if (unlikely(error < 0))
- 		return error;
+@@ -1208,7 +1208,7 @@ EXPORT_SYMBOL(follow_up);
+  * - return -EISDIR to tell follow_managed() to stop and return the path we
+  *   were called with.
+  */
+-static int follow_automount(struct path *path, struct nameidata *nd)
++static int follow_automount(struct path *path, int *count, unsigned lookup_flags)
+ {
+ 	struct dentry *dentry = path->dentry;
  
--	/*
--	 * create/update audit record if it already exists.
--	 */
--	audit_inode(nd->name, path.dentry, 0);
--
--	if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
--		path_to_nameidata(&path, nd);
--		return -EEXIST;
--	}
--
- 	seq = 0;	/* out of RCU mode, so the value doesn't matter */
- 	inode = d_backing_inode(path.dentry);
- finish_lookup:
- 	error = step_into(nd, &path, 0, inode, seq);
- 	if (unlikely(error))
- 		return error;
-+
-+	if (unlikely((open_flag & (O_EXCL | O_CREAT)) == (O_EXCL | O_CREAT))) {
-+		audit_inode(nd->name, nd->path.dentry, 0);
-+		return -EEXIST;
-+	}
- finish_open:
- 	/* Why this, you ask?  _Now_ we might have grown LOOKUP_JUMPED... */
- 	error = complete_walk(nd);
-diff --git a/fs/open.c b/fs/open.c
-index 0788b3715731..e5227cd533f4 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1049,8 +1049,10 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
+@@ -1223,13 +1223,12 @@ static int follow_automount(struct path *path, struct nameidata *nd)
+ 	 * as being automount points.  These will need the attentions
+ 	 * of the daemon to instantiate them before they can be used.
+ 	 */
+-	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
++	if (!(lookup_flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
+ 			   LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_AUTOMOUNT)) &&
+ 	    dentry->d_inode)
+ 		return -EISDIR;
  
- 	if (flags & O_CREAT) {
- 		op->intent |= LOOKUP_CREATE;
--		if (flags & O_EXCL)
-+		if (flags & O_EXCL) {
- 			op->intent |= LOOKUP_EXCL;
-+			flags |= O_NOFOLLOW;
-+		}
- 	}
+-	nd->total_link_count++;
+-	if (nd->total_link_count >= 40)
++	if (count && (*count)++ >= MAXSYMLINKS)
+ 		return -ELOOP;
  
- 	if (flags & O_DIRECTORY)
+ 	return finish_automount(dentry->d_op->d_automount(path), path);
+@@ -1290,7 +1289,8 @@ static int follow_managed(struct path *path, struct nameidata *nd)
+ 
+ 		/* Handle an automount point */
+ 		if (flags & DCACHE_NEED_AUTOMOUNT) {
+-			ret = follow_automount(path, nd);
++			ret = follow_automount(path, &nd->total_link_count,
++						nd->flags);
+ 			if (ret < 0)
+ 				break;
+ 			continue;
 -- 
 2.11.0
 
