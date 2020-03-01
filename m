@@ -2,100 +2,157 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D66C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95CDC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E907C246BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpxN5UuG"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF0E246BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583093587;
+	bh=KWncVSYwypNktqfGtIDhf9jfBw9MNLKepJm5DsnYDug=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CpcL4AgWN4Ebk85YH1rMbdv9UiSjND4aM/+2WeL4iZxQ8m5tOADkjOCFLYqHjf3Dt
+	 9DKyUXJXgwpk2xSKADaFH1BkDIKJ4o+tQv89mD/3Lo/JVQoGDKcJ7GGnvjvwAvqevo
+	 JG2+PrXDnzJq5B5xof21exc0hMOuJjopJqNbz8K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgCAUGz (ORCPT
+        id S1726561AbgCAUNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:06:55 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27539 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725895AbgCAUGy (ORCPT
+        Sun, 1 Mar 2020 15:13:06 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36937 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgCAUNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:06:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583093214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=q7H4hPNYog/tbA35c9gkSElzqFK/7oYTQGCuX/AtR8g=;
-        b=MpxN5UuG+3mKaP8huodK9LqwjNMqAM7d4Jlit+ePvOp0ueLttbmPBwn6s3euelccQY7m7k
-        ntJPHBgz8IAHnEdyjoQmfmru9KJQmEYqSnlTdu4gbEPleEV9fvIaEEqFt+87wvrMvZJPp0
-        A4jrgZR0bEavSYzxhmE0P/n458fhf/U=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-70XSWzalOsWK_jyOpy4JtA-1; Sun, 01 Mar 2020 15:06:52 -0500
-X-MC-Unique: 70XSWzalOsWK_jyOpy4JtA-1
-Received: by mail-qt1-f200.google.com with SMTP id p12so7532742qtu.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 12:06:52 -0800 (PST)
+        Sun, 1 Mar 2020 15:13:06 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 5so2697774oiy.4;
+        Sun, 01 Mar 2020 12:13:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q7H4hPNYog/tbA35c9gkSElzqFK/7oYTQGCuX/AtR8g=;
-        b=H1vt8Nli9g8YJG29lhFT9MuEee3B9cDkndzrr1RfmtAZWGMpxR7xrtc978/KwZBdmT
-         HwAgi3G2fff5/QLokiUZs+K/7E9kYAtHV73yK6g6Lh/bNx88fiPG9nRDMRW5PbLyfU7L
-         RHoSTR01IaaytTHpjMZE8oSazAq/OgXr1o7QwZYAcG2cmIyIl9EW/2Koo8F+vPzJHmjd
-         hIYw6c7YB2MPg9oYc/m+ACoc/peZQga0QRFIsO8K6FXSEr7H/nduAfFTBH2jyUTiWO+i
-         qtq5BY2biUj0hkBO4H/rP4pb5iuYXjiHjeA5LJ23UOR46YZq+KEs1nwWHpLCHQ2/dlbf
-         AR3A==
-X-Gm-Message-State: ANhLgQ3qpLHg1o1wgkhcEwcwbSFdOzSXfEIAGjFXMWUU+svOFn/MW1/q
-        Ocuv6jWeMvJdJYgEn25thEfGTX2AAKUVYXmRyR9Ca13Qa3wBDdF1vi+s0CbZHd5xmAfmnfU5s3D
-        Xn09aMMfOIwxJ68jgx8zjLV0Y
-X-Received: by 2002:ac8:5183:: with SMTP id c3mr5374061qtn.299.1583093212059;
-        Sun, 01 Mar 2020 12:06:52 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vusETAvYjcJ1HtYXHojlWB1Rd8L85okakt1rmMuxTe8ftDDkfFDjav/Zq5ihrTjqaRXwNuMhw==
-X-Received: by 2002:ac8:5183:: with SMTP id c3mr5374047qtn.299.1583093211820;
-        Sun, 01 Mar 2020 12:06:51 -0800 (PST)
-Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
-        by smtp.gmail.com with ESMTPSA id e2sm8930835qkb.112.2020.03.01.12.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 12:06:50 -0800 (PST)
-Date:   Sun, 1 Mar 2020 15:06:46 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Yuri Benditovich <yuri.benditovich@daynix.com>
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, yan@daynix.com,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v3 0/3] virtio-net: introduce features defined in the spec
-Message-ID: <20200301150625-mutt-send-email-mst@kernel.org>
-References: <20200301143302.8556-1-yuri.benditovich@daynix.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EFSBXCeJ1jB8KcQMkp6NN1TRtUlXUbslxnRcWQMIR6I=;
+        b=he73iD3UgVGkFxGZI4jh1kZswVamv7f8BTzZWf6eR5iF5ZeVryLEv2aO4JbY+XxXRD
+         Gyp5kV+Z2y9k5J3njjuj8MwG4T6lWegl5/Z6ChA2gzzd6vuBp5sCo+vs742QGioyjogj
+         VOaGWryoS+4bj11YQgBOb1EnPUmcFLJQuPyOuyMLd3Dz8SUCOSPSKruJW+BeJQIbjtVo
+         DEFld/Mt9ylGQpVVWj8IYZk8hvyCO3sncioLddSbVTg5Budz7Qo9TPP1HhG1AdKmzhEZ
+         1Ak0MxbmjAP+/mWR8t9Ls3DdmOyMLLS+3JXgCTD3P3G2jz/cun8idJQOuPUUEBx3Hv61
+         Ku2A==
+X-Gm-Message-State: APjAAAXSj4NJ4oqBkR877QzqEis5Mki9oBkSKsCIswnYc2RJFGoUpBbc
+        ezT3aZoVhJKJJUjQLjdWq31zbffZs0QZxY7Mt88=
+X-Google-Smtp-Source: APXvYqxbxPHmtfRGPpPP1hveHtyD20S1Jgyu5yQkA7cDSv5uULtoifR1CJMcxL/u/2XdY7RWZkl38PW9OoOvYdgqVlM=
+X-Received: by 2002:aca:c044:: with SMTP id q65mr4390997oif.68.1583093583908;
+ Sun, 01 Mar 2020 12:13:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200301143302.8556-1-yuri.benditovich@daynix.com>
+References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
+In-Reply-To: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 1 Mar 2020 21:12:53 +0100
+Message-ID: <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
+To:     madhuparnabhowmik10@gmail.com,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 04:32:59PM +0200, Yuri Benditovich wrote:
-> This series introduce virtio-net features VIRTIO_NET_F_RSC_EXT,
-> VIRTIO_NET_F_RSS and VIRTIO_NET_F_HASH_REPORT.
-> 
-> Changes from v2: reformatted structure in patch 1
+On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
+>
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>
+> This patch passes the cond argument to list_for_each_entry_rcu()
+> to fix the following false-positive lockdep warnings:
+>
+> [  330.302784] =============================
+> [  330.302789] WARNING: suspicious RCU usage
+> [  330.302796] 5.6.0-rc1+ #5 Not tainted
+> [  330.302801] -----------------------------
+> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
+>
+> [  330.303303] =============================
+> [  330.303307] WARNING: suspicious RCU usage
+> [  330.303311] 5.6.0-rc1+ #5 Not tainted
+> [  330.303315] -----------------------------
+> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
+>
+> [  331.934969] =============================
+> [  331.934971] WARNING: suspicious RCU usage
+> [  331.934973] 5.6.0-rc1+ #5 Not tainted
+> [  331.934975] -----------------------------
+> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
+>
+> [  332.467772] WARNING: suspicious RCU usage
+> [  332.467775] 5.6.0-rc1+ #5 Not tainted
+> [  332.467775] -----------------------------
+> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
 
+I don't see these warnings in the kernels run locally here.
 
-Looks good but I cound a couple more nits. Sorry I missed them
-on the previous read.
+What do you do to get them?
 
-> Yuri Benditovich (3):
->   virtio-net: Introduce extended RSC feature
->   virtio-net: Introduce RSS receive steering feature
->   virtio-net: Introduce hash report feature
-> 
->  include/uapi/linux/virtio_net.h | 100 ++++++++++++++++++++++++++++++--
->  1 file changed, 96 insertions(+), 4 deletions(-)
-> 
-> -- 
+Joel, any comments here?
+
+>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  drivers/base/power/main.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 0e99a760aebd..742c05f3c1e7 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -266,7 +266,8 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
+>          * callbacks freeing the link objects for the links in the list we're
+>          * walking.
+>          */
+> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
+> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
+> +                               device_links_read_lock_held())
+>                 if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+>                         dpm_wait(link->supplier, async);
+>
+> @@ -323,7 +324,8 @@ static void dpm_wait_for_consumers(struct device *dev, bool async)
+>          * continue instead of trying to continue in parallel with its
+>          * unregistration).
+>          */
+> -       list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
+> +       list_for_each_entry_rcu(link, &dev->links.consumers, s_node,
+> +                                device_links_read_lock_held())
+>                 if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+>                         dpm_wait(link->consumer, async);
+>
+> @@ -1235,7 +1237,8 @@ static void dpm_superior_set_must_resume(struct device *dev)
+>
+>         idx = device_links_read_lock();
+>
+> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
+> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
+> +                                device_links_read_lock_held())
+>                 link->supplier->power.must_resume = true;
+>
+>         device_links_read_unlock(idx);
+> @@ -1695,7 +1698,8 @@ static void dpm_clear_superiors_direct_complete(struct device *dev)
+>
+>         idx = device_links_read_lock();
+>
+> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
+> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
+> +                                device_links_read_lock_held()) {
+>                 spin_lock_irq(&link->supplier->power.lock);
+>                 link->supplier->power.direct_complete = false;
+>                 spin_unlock_irq(&link->supplier->power.lock);
+> --
 > 2.17.1
-
+>
