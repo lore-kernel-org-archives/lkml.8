@@ -8,61 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2101C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0174FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7020222C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CC9222C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK5HCV40"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vkkolzdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCAMXK (ORCPT
+        id S1726884AbgCAMXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 07:23:10 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35567 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCAMXK (ORCPT
+        Sun, 1 Mar 2020 07:23:23 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:47009 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCAMXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 07:23:10 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3080763plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 04:23:09 -0800 (PST)
+        Sun, 1 Mar 2020 07:23:23 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so3060512pll.13
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 04:23:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=GR/xI2gMyvXWdFF9S5uRZpICRt+f76h6nOitHcoQYmY=;
-        b=UK5HCV40LjKSntbr1iFufyeFeOXrmKYkN2ZIwvyGnR4UH3pldM0FCkS0Mmg/uqK7+p
-         bFypS/136bNGzhW+erlbqIlAlTxlvavQGDgEuqQ340AnRsFHIy5a74Mj7nysOkOpHvKt
-         tLes7YFdOiW1lAA0QvFfI64LRKMsgBuDWJlZ3g+VrxW86hpzpeHN69qnrSwXScq1yzS8
-         l+nXaxJN2vnvclJAB1H0nDqPNK9jL/Oi9tk0PDyHPwC3Y1kUhShqk2qTWQsdOPYpggXU
-         x8QA4pdaauaYHm5J56DXVrDR2QbvJU67q8ByUJD37GGO0gkWsOE5Enarqs8npp/mbMrg
-         IdGg==
+        bh=ewaZEUklPCqTGahCa9RshiNF9Igtxf0iAmKwAeMUoo8=;
+        b=VkkolzdblZoL+viE7Lu2cuU7bztOqRr1iGoo4D48IN8NrWYfkEl/pAxiQxuGz/B49J
+         5s3K7COXyP3Y6xRI2x1K3vfQrvEwGEHji9Bt+dzefPRWm3Dil/UIGv+5RW3LhY7asQQc
+         mwyVmnGF0QLPwKhOcfpBosekIfgt8vmWZAaIJq9O03es3q6N9EjFBxSgtm6TL5aybj3f
+         wYr35PN/yU2DaGMrM08+nreSgL6CoB1BANeDIK5hF8KREJJ7iGkITQaeUjG8DxiYg/LH
+         ADgpGrLf49QBnkTm+KzXfKZqF2Qp1RaMpkqEN7gGiF/od7cWV0Mb2OMe35RxVhD71D6M
+         WPug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GR/xI2gMyvXWdFF9S5uRZpICRt+f76h6nOitHcoQYmY=;
-        b=iiDZtX9TCkQv+B+hOAbh669j/x4wUo/d7W9wYtGkgSTrPru3y9PEOltDaBR53SVCwH
-         qrxkngJRVRfadYQvHH1xE27V6fPoLKFpGWxciJo6i+FKyjb+xLJvnTf3YPaMTL4wSqYy
-         3f28cMeXD3/iWDoWTGj7gmvQCV05tHzf8ZEGAXU78j7pu6kkMy9sMN5O5iaMHKqzppiQ
-         oT7W9JuJayHylEaHeuEhef9dN5lf8Z4qi8IdvXVxYtJWf2qKxn/oAACkvXJD68vnbx9u
-         vcBEpq8Z7ZYMshi2GfQaoM5BP/psvgZ4a3eQ+bxZF7oi6Q/lArAU610JBRGKsTW44I+U
-         TXNg==
-X-Gm-Message-State: APjAAAUxmwDvxd7pOod1jt1LCrsCY4NzGOu78m+uIxjoMBW2E0S/4pM4
-        ZcRLYDasVMZhd2tZJUG/6mk=
-X-Google-Smtp-Source: APXvYqwlZsfL3WAhOxz2WFCSDWj8yvihulLTiLUQ2dLZnNhHKL6Vu8FNH9VWJHCtmK8WzaTqZE2kxA==
-X-Received: by 2002:a17:902:104:: with SMTP id 4mr12889185plb.24.1583065389361;
-        Sun, 01 Mar 2020 04:23:09 -0800 (PST)
+        bh=ewaZEUklPCqTGahCa9RshiNF9Igtxf0iAmKwAeMUoo8=;
+        b=UXVn2qKt+hhubdZj89Qjy/o8obKeUsz1B4333Z72ZsKvNxJKAJZFNVu1WLup1YKYtf
+         rUYtJTnMCWjZJxVAnkjZhNoqx9/zltp86rXSBWeBqsugJYwLbZwNMUDz7GdF+N2N955d
+         6s1g3/1aKggnZFpLA2656LZfw/7bdjRnb9MhnVXI1+h/xYiCccNFu/MD+KMCiJg17Gv1
+         /NWGMDUimRhPSis+5qAPMmkSrbmIsu48IWXTZCx3acaoqYxD56meZNExLyfyNTwu+VaZ
+         wUX56/TtouR6ERXlgE2QB+BBMmBLgK194+Utz9vwVDk0V/OJbhStkCL2cNrKmqFTE0gQ
+         aioA==
+X-Gm-Message-State: APjAAAU1qsiTnP0wCWLmvJiFUlO7pEhpyO1q2a0v288hM8eKjdqP1ZFU
+        1hJcuIsjrfbtOxFQs+YKLn9sGx1W
+X-Google-Smtp-Source: APXvYqydsSedEMUYW+topsgYcenMqVp/QVRnBO4ynDxScEYQ1+a4GyUt2RwiOz/ifl1Tybko7hwsOQ==
+X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr14473757pjn.127.1583065401367;
+        Sun, 01 Mar 2020 04:23:21 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id 26sm8623725pjk.3.2020.03.01.04.23.07
+        by smtp.gmail.com with ESMTPSA id c184sm17352878pfa.39.2020.03.01.04.23.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 04:23:08 -0800 (PST)
+        Sun, 01 Mar 2020 04:23:20 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
 To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Subject: [PATCH v3] ARM: rpc: replace setup_irq() by request_irq()
-Date:   Sun,  1 Mar 2020 17:53:00 +0530
-Message-Id: <20200301122300.4185-1-afzal.mohd.ma@gmail.com>
+Subject: [PATCH v3] ARM: spear: replace setup_irq() by request_irq()
+Date:   Sun,  1 Mar 2020 17:53:15 +0530
+Message-Id: <20200301122315.4240-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -100,33 +102,36 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/arm/mach-rpc/time.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/arm/mach-spear/time.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/time.c b/arch/arm/mach-rpc/time.c
-index 1d750152b160..da85cac761ba 100644
---- a/arch/arm/mach-rpc/time.c
-+++ b/arch/arm/mach-rpc/time.c
-@@ -85,11 +85,6 @@ ioc_timer_interrupt(int irq, void *dev_id)
+diff --git a/arch/arm/mach-spear/time.c b/arch/arm/mach-spear/time.c
+index 289e036c9c30..d1fdb6066f7b 100644
+--- a/arch/arm/mach-spear/time.c
++++ b/arch/arm/mach-spear/time.c
+@@ -181,12 +181,6 @@ static irqreturn_t spear_timer_interrupt(int irq, void *dev_id)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction ioc_timer_irq = {
--	.name		= "timer",
--	.handler	= ioc_timer_interrupt
+-static struct irqaction spear_timer_irq = {
+-	.name = "timer",
+-	.flags = IRQF_TIMER,
+-	.handler = spear_timer_interrupt
 -};
 -
- /*
-  * Set up timer interrupt.
-  */
-@@ -97,5 +92,6 @@ void __init ioc_timer_init(void)
+ static void __init spear_clockevent_init(int irq)
  {
- 	WARN_ON(clocksource_register_hz(&ioctime_clocksource, RPC_CLOCK_FREQ));
- 	ioctime_init();
--	setup_irq(IRQ_TIMER0, &ioc_timer_irq);
-+	if (request_irq(IRQ_TIMER0, ioc_timer_interrupt, 0, "timer", NULL))
-+		pr_err("Failed to request irq %d (timer)\n", IRQ_TIMER0);
+ 	u32 tick_rate;
+@@ -201,7 +195,8 @@ static void __init spear_clockevent_init(int irq)
+ 
+ 	clockevents_config_and_register(&clkevt, tick_rate, 3, 0xfff0);
+ 
+-	setup_irq(irq, &spear_timer_irq);
++	if (request_irq(irq, spear_timer_interrupt, IRQF_TIMER, "timer", NULL))
++		pr_err("Failed to request irq %d (timer)\n", irq);
  }
+ 
+ static const struct of_device_id timer_of_match[] __initconst = {
 -- 
 2.25.1
 
