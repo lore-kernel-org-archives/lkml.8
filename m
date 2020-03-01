@@ -2,89 +2,106 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67661C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E604C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408E324695
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC16424680
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFGvJNcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgCARBI (ORCPT
+        id S1726536AbgCAREk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 12:01:08 -0500
-Received: from hosting.gsystem.sk ([212.5.213.30]:38534 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgCARBI (ORCPT
+        Sun, 1 Mar 2020 12:04:40 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33785 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAREj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 12:01:08 -0500
-Received: from [192.168.0.253] (rev-81-92-251-198.radiolan.sk [81.92.251.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id B8DC07A0198;
-        Sun,  1 Mar 2020 18:01:05 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
-Date:   Sun, 1 Mar 2020 18:01:03 +0100
-User-Agent: KMail/1.9.10
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Denis Efremov <efremov@linux.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-block" <linux-block@vger.kernel.org>
-References: <20200224212352.8640-1-w@1wt.eu> <202003010019.14391.linux@zary.sk> <20200301064601.GA24037@1wt.eu>
-In-Reply-To: <20200301064601.GA24037@1wt.eu>
-X-KMail-QuotePrefix: > 
+        Sun, 1 Mar 2020 12:04:39 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n7so4360621pfn.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 09:04:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=RkkxF9rbxL5TO4VtQqDvZ6QeVGq/gOE8OHFbri98OUA=;
+        b=hFGvJNczcHauEnaBu3G3gkJ/h5Fb30779r6ALQuRTI0ju2iSspmmlDrPvD5ADvutAt
+         9vkwl/kUI7X0BhC2r6BNGlpRVNloRvM/6drDS5MiA02Nh5r2gK7LOOHYkjelM/XWHkfs
+         vszxOTv2SwCAmxWrV2aDJcgd7SKV6K/p74fg7X/TtDbK9SB3QDJtwFQPwA2G7VyNf/Uu
+         /NWcYGMSfzOisR1cJvwzfVK9rhBvCm2doO1SsSsxIcgUJP+Ws7JKPElfg7c0K3Woaapj
+         fPaLpj/gnS/QfYGJPXaR4LOoOC8B6OBKyT2WfK/B3dWdgYdmsBAWrIknnnibbz3cSvNu
+         ubwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RkkxF9rbxL5TO4VtQqDvZ6QeVGq/gOE8OHFbri98OUA=;
+        b=fAzLbpzeGghnxHph+lt0WqcscBjMgsBgBwHtNsQUE9ls7FtspN1W4v+IuVQnNoba//
+         wzfchYYubkKFaJ4Z1JKTnX9R5/jdyjhojVpTtEAkHAGN0nbf6dtrsVz5Px5A6UJwuNaj
+         sQD6md8oGTxlUB0xDgnqWmGn5B3LMKlcBmKjA6px6mmy6Uh57hONYZvI7KrTpfvprkIa
+         11aWa0XXRFxKdov8f5MxRccfDcANSJi2bjdF5QfpvyzfDa9YeERFl5dBxqApD/ka8mAJ
+         hpH2u8ozXtC8glSxGrLUfORcu4NO2n8Z7UvBSnUkSZP9j5GIdUsHSl7q/Q6SJgwOgTpF
+         mnHg==
+X-Gm-Message-State: APjAAAXbXrblnefY3nW88Ce8vDtu3z26Yl7aOHXCnBdrvjP6l297q38U
+        jO8sRr3Xy4X7kgj7QGI6DPs=
+X-Google-Smtp-Source: APXvYqxQNZPrKDJN42DK5dYLBtrf4X2yMiJdhbaQA9IGdgoo/pchvXju7W0AhhEzM3tNLn9c/LDhAA==
+X-Received: by 2002:a65:6846:: with SMTP id q6mr14674941pgt.352.1583082278724;
+        Sun, 01 Mar 2020 09:04:38 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id o12sm542942pjs.6.2020.03.01.09.04.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Mar 2020 09:04:38 -0800 (PST)
+Date:   Sun, 1 Mar 2020 22:34:25 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linuxppc-dev@lists.ozlabs.org,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: hvc: Use the correct style for SPDX License Identifier
+Message-ID: <20200301170419.GA7125@nishad>
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Message-Id: <202003011801.03950.linux@zary.sk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 01 March 2020 07:46:01 Willy Tarreau wrote:
-> On Sun, Mar 01, 2020 at 12:19:14AM +0100, Ondrej Zary wrote:
-> > On Saturday 29 February 2020 16:58:11 Linus Torvalds wrote:
-> > > On Sat, Feb 29, 2020 at 8:14 AM Willy Tarreau <w@1wt.eu> wrote:
-> > > > So if you or Denis think there's some value in me continuing to
-> > > > explore one of these areas, I can continue, otherwise I can simply
-> > > > resend the last part of my series with the few missing Cc and be done
-> > > > with it.
-> > >
-> > > It's fine - this driver isn't worth spending a ton of effort on.
-> > >
-> > > The only users are virtualization, and even they are going away
-> > > because floppies are so small, and other things have become more
-> > > standard anyway (ie USB disk) or easier to emulate (NVMe or whatever).
-> > >
-> > > So I suspect the only reason floppy is used even in that area is just
-> > > legacy "we haven't bothered updating to anything better and we have
-> > > old scripts and images that work".
-> > >
-> > >               Linus
-> >
-> > There are real users with real floppy drives out there.
->
-> OK thanks for the feedback. Then I'll continue the minimum cleanups to
-> try to focus on maintainability and on the principle of least surprise,
-> and I'll have a quick look at the possible simplifications brought by
-> the limitation to one FDC, in case that really helps.
+This patch corrects the SPDX License Identifier style in
+header file related to the HVC driver.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-Thank you very much for the work.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-I haven't ever seen a machine with more than single FDC so that case might be 
-hard to test. There are some ISA FDCs with configurable I/O addresses (maybe 
-I have one of them somewhere) but they might not work properly together with 
-on-board super I/O FDCs.
-The most common case - one FDC with at most two drives should be enough for 
-the modern simplified driver.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/tty/hvc/hvc_console.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/tty/hvc/hvc_console.h b/drivers/tty/hvc/hvc_console.h
+index e9319954c832..18d005814e4b 100644
+--- a/drivers/tty/hvc/hvc_console.h
++++ b/drivers/tty/hvc/hvc_console.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * hvc_console.h
+  * Copyright (C) 2005 IBM Corporation
 -- 
-Ondrej Zary
+2.17.1
+
