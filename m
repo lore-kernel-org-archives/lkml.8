@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2794C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FE6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835AC246B7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B4B246C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgCAVyZ (ORCPT
+        id S1727659AbgCAVy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:54:25 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41662 "EHLO
+        Sun, 1 Mar 2020 16:54:27 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41674 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbgCAVwr (ORCPT
+        with ESMTP id S1727101AbgCAVwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:47 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVx-003fOi-ES; Sun, 01 Mar 2020 21:52:45 +0000
+        id 1j8WVx-003fP1-Ny; Sun, 01 Mar 2020 21:52:45 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 31/55] atomic_open(): return the right dentry in FMODE_OPENED case
-Date:   Sun,  1 Mar 2020 21:52:16 +0000
-Message-Id: <20200301215240.873899-31-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 34/55] do_last(): don't bother with keeping got_write in FMODE_OPENED case
+Date:   Sun,  1 Mar 2020 21:52:19 +0000
+Message-Id: <20200301215240.873899-34-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,40 +42,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-->atomic_open() might have used a different alias than the one we'd
-passed to it; in "not opened" case we take care of that, in "opened"
-one we don't.  Currently we don't care downstream of "opened" case
-which alias to return; however, that will change shortly when we
-get to unifying may_open() calls.
-
-It's not hard to get right in all cases, anyway.
+it's easier to drop it right after lookup_open() and regain if
+needed (i.e. if we will need to truncate).  On the non-FMODE_OPENED
+path we do that anyway.  In case of FMODE_CREATED we won't be
+needing it.  And it's easier to prove correctness that way,
+especially since the initial failure to get write access is not
+always fatal; proving that we'll never end up truncating in that
+case is rather convoluted.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/namei.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 56d39a8cfc3e..bfd62fa3856c 100644
+index 91346e5d8bd8..b4de0994ccee 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -2952,11 +2952,15 @@ static struct dentry *atomic_open(struct nameidata *nd, struct dentry *dentry,
- 	d_lookup_done(dentry);
- 	if (!error) {
- 		if (file->f_mode & FMODE_OPENED) {
-+			int acc_mode = op->acc_mode;
-+			if (unlikely(dentry != file->f_path.dentry)) {
-+				dput(dentry);
-+				dentry = dget(file->f_path.dentry);
-+			}
- 			/*
- 			 * We didn't have the inode before the open, so check open
- 			 * permission here.
- 			 */
--			int acc_mode = op->acc_mode;
- 			if (file->f_mode & FMODE_CREATED) {
- 				WARN_ON(!(open_flag & O_CREAT));
- 				fsnotify_create(dir, dentry);
+@@ -3195,11 +3195,14 @@ static const char *do_last(struct nameidata *nd,
+ 	else
+ 		inode_unlock_shared(dir->d_inode);
+ 
+-	if (IS_ERR(dentry)) {
+-		error = PTR_ERR(dentry);
+-		goto out;
++	if (got_write) {
++		mnt_drop_write(nd->path.mnt);
++		got_write = false;
+ 	}
+ 
++	if (IS_ERR(dentry))
++		return ERR_CAST(dentry);
++
+ 	if (file->f_mode & FMODE_OPENED) {
+ 		if (file->f_mode & FMODE_CREATED) {
+ 			open_flag &= ~O_TRUNC;
+@@ -3224,16 +3227,6 @@ static const char *do_last(struct nameidata *nd,
+ 		goto finish_open_created;
+ 	}
+ 
+-	/*
+-	 * If atomic_open() acquired write access it is dropped now due to
+-	 * possible mount and symlink following (this might be optimized away if
+-	 * necessary...)
+-	 */
+-	if (got_write) {
+-		mnt_drop_write(nd->path.mnt);
+-		got_write = false;
+-	}
+-
+ finish_lookup:
+ 	link = step_into(nd, WALK_TRAILING, dentry, inode, seq);
+ 	if (unlikely(link)) {
+@@ -3253,27 +3246,25 @@ static const char *do_last(struct nameidata *nd,
+ 		return ERR_PTR(error);
+ 	audit_inode(nd->name, nd->path.dentry, 0);
+ 	if (open_flag & O_CREAT) {
+-		error = -EISDIR;
+ 		if (d_is_dir(nd->path.dentry))
+-			goto out;
++			return ERR_PTR(-EISDIR);
+ 		error = may_create_in_sticky(dir_mode, dir_uid,
+ 					     d_backing_inode(nd->path.dentry));
+ 		if (unlikely(error))
+-			goto out;
++			return ERR_PTR(error);
+ 	}
+-	error = -ENOTDIR;
+ 	if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
+-		goto out;
++		return ERR_PTR(-ENOTDIR);
+ 	if (!d_is_reg(nd->path.dentry))
+ 		will_truncate = false;
+ 
++finish_open_created:
+ 	if (will_truncate) {
+ 		error = mnt_want_write(nd->path.mnt);
+ 		if (error)
+-			goto out;
++			return ERR_PTR(error);
+ 		got_write = true;
+ 	}
+-finish_open_created:
+ 	error = may_open(&nd->path, acc_mode, open_flag);
+ 	if (error)
+ 		goto out;
 -- 
 2.11.0
 
