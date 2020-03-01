@@ -2,95 +2,143 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D77C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FD5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D82E246A1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9612D20CC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="KYU+jEIv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sifgC5yj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgCAXhU (ORCPT
+        id S1726846AbgCAXhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 18:37:20 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:51666 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgCAXhU (ORCPT
+        Sun, 1 Mar 2020 18:37:43 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:33190 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgCAXhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 18:37:20 -0500
-Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 17AB65C3CEF;
-        Mon,  2 Mar 2020 00:37:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1583105838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=uEXP2A+ZFevJutYapB5Olb+X7MOi5DcNCS5e20uoEP8=;
-        b=KYU+jEIvnTWc3/fWFLC+Vly+OrhuCyPaGadSfgb23VeMF7Y7XySy8A2q0Q6WIINgwNXoja
-        +FdmYKg6spUdRBgV+sSk/eT5fxH+33lsOih/Wsx1M/TjdAs9AOplfU8ixGuf57A0EeyCJl
-        jtuUzSDDzBg6wcTv5yR0lQtVZASr8VI=
-From:   Stefan Agner <stefan@agner.ch>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net
-Cc:     linux@armlinux.org.uk, manojgupta@google.com, jiancai@google.com,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] crypto: arm/ghash-ce - define fpu before fpu registers are referenced
-Date:   Mon,  2 Mar 2020 00:37:14 +0100
-Message-Id: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.25.1
+        Sun, 1 Mar 2020 18:37:42 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p3so3567067qvq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 15:37:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TC7BEViNIrcgBvuSmYhgXNOgon/ByWdiyAfu39Qw0gI=;
+        b=sifgC5yjaTaKGjMMp7QGl5KEVty3Byu3M9vc6veJC4Pvx+yyfl2ewt+f7PEvr+2Ua9
+         /Zu3+sKj/v8xoetMba3DVOD+gGvu3ukwnaIPbbKr4uo1tDN4GUidaq5FeIerMbMAzst8
+         +1swJo7ADn3BNzQSc8mP5zhdo64QRryiOi+NJsNuqCcfMe6zgeVdUF95GZpaHq+9DDF9
+         /lmBSdAFqqJtlsfHxRmAG9/619H6+hAQeN/ZL9FVOnzWObEKIIrueVdM0ZzDPlJNP5MV
+         Ivp2I6KgQRREU/EoDuTtPASSZSnvQu82GDfSgbWrG12zrhyebAXjqTpjQNPTfyYvi2gA
+         nxew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TC7BEViNIrcgBvuSmYhgXNOgon/ByWdiyAfu39Qw0gI=;
+        b=d2eIjW7uZromYs8WYrlmaFW5JSfEBsjZaDj4ZCWZbE/WvTdE5MXmHe/ZuM8IQCUtPA
+         74v4merzscG+0PHMJMEJZKhcIATxF322x6SvmtIZmeNxi5xgD+yy2WUkqnuEK4t+p+/Z
+         Mf9+cHsck4CilSL61P0YiPdRcjVTfLLfAIk91Mmvf1Kk2fvU/JtR+H/Ih9+MWZR9Ayb3
+         XL0L3fB3VgYbCZ4DNnNCEadtegqyNa3QnV6K+WuVIcArfeHNa1dOmNiFqAmROWk3lCXZ
+         H6Vb4NhWh0v+jDkwaCidg+9u+KJ510zGLL1nBpj0c7p9X83L4kmInxvzpYd3E0V8Ify+
+         aooA==
+X-Gm-Message-State: APjAAAVa0zw58zy5rHOZbFwwU7/pNk2BqGoxgizXPS1+zv74PUVvFceM
+        4DIJ0RHxODwKLlw0j1RL6RwztWqY5Ow=
+X-Google-Smtp-Source: APXvYqzxiOWmMA3NTcZgpNR77r+DSpz2rxbV/GDVOsae/oUiX/qEMP7ZKGXG35a8uPMcbyWud/KObw==
+X-Received: by 2002:ad4:48c6:: with SMTP id v6mr12512731qvx.207.1583105861532;
+        Sun, 01 Mar 2020 15:37:41 -0800 (PST)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id g185sm9079153qkd.16.2020.03.01.15.37.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 15:37:40 -0800 (PST)
+Subject: Re: [Patch v4 6/7] dt-bindings: soc: qcom: Extend RPMh power
+ controller binding to describe thermal warming device
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
+ <1574254593-16078-7-git-send-email-thara.gopinath@linaro.org>
+ <CAPDyKFrZ9QM9L4OEFuseRTC+mBqourv11Rcu3Ua95ZPKoNFgng@mail.gmail.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <4ab0463f-0fc3-6717-9b10-2ff7bd745fcd@linaro.org>
+Date:   Sun, 1 Mar 2020 18:37:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+In-Reply-To: <CAPDyKFrZ9QM9L4OEFuseRTC+mBqourv11Rcu3Ua95ZPKoNFgng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building ARMv7 with Clang's integrated assembler leads to errors such
-as:
-arch/arm/crypto/ghash-ce-core.S:34:11: error: register name expected
- t3l .req d16
-          ^
 
-Since no FPU has selected yet Clang considers d16 not a valid register.
-Moving the FPU directive on-top allows Clang to parse the registers and
-allows to successfully build this file with Clang's integrated assembler.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/crypto/ghash-ce-core.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On 2/4/20 12:41 PM, Ulf Hansson wrote:
+> On Wed, 20 Nov 2019 at 13:57, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>
+>> RPMh power controller hosts mx domain that can be used as thermal warming
+>> device. Add #cooling-cells property to the power domain provider node to
+>> indicate this.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-diff --git a/arch/arm/crypto/ghash-ce-core.S b/arch/arm/crypto/ghash-ce-core.S
-index 534c9647726d..9f51e3fa4526 100644
---- a/arch/arm/crypto/ghash-ce-core.S
-+++ b/arch/arm/crypto/ghash-ce-core.S
-@@ -8,6 +8,9 @@
- #include <linux/linkage.h>
- #include <asm/assembler.h>
- 
-+	.arch		armv8-a
-+	.fpu		crypto-neon-fp-armv8
-+
- 	SHASH		.req	q0
- 	T1		.req	q1
- 	XL		.req	q2
-@@ -88,8 +91,6 @@
- 	T3_H		.req	d17
- 
- 	.text
--	.arch		armv8-a
--	.fpu		crypto-neon-fp-armv8
- 
- 	.macro		__pmull_p64, rd, rn, rm, b1, b2, b3, b4
- 	vmull.p64	\rd, \rn, \rm
+Thanks! This file does not exist anymore. It has been moved to yaml 
+format! I will resend this in the correct file.
+
+> 
+> Kind regards
+> Uffe
+> 
+>> ---
+>> v3->v4:
+>>          - Removed subnode to indicate that mx power domain is a warming
+>>            device. Instead #cooling-cells is used as a power domain
+>>            provider property to indicate if the provider hosts a power
+>>            domain that can be used as a warming device.
+>>
+>>   Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> index bc75bf4..a193d33 100644
+>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> @@ -19,6 +19,11 @@ Required Properties:
+>>   Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
+>>   various OPPs for different platforms as well as Power domain indexes
+>>
+>> +Optional Properties
+>> + - #cooling-cells: must be 2
+>> +       RPMh also hosts power domains that can behave as thermal warming
+>> +       device. If so, indicate this by specifying #cooling-cells.
+>> +
+>>   Example: rpmh power domain controller and OPP table
+>>
+>>   #include <dt-bindings/power/qcom-rpmhpd.h>
+>> --
+>> 2.1.4
+>>
+
 -- 
-2.25.1
-
+Warm Regards
+Thara
