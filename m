@@ -4,111 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C15C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8C8C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BFF2468A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64712468A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583079731;
-	bh=cxbMuN96JtwknYZL1Vy1UG3EjBWLD6hXJDuQMV7M64I=;
+	s=default; t=1583079769;
+	bh=2nT+Ep+gICUmDhymx7NwPuYF2yXlouz0Wi4763yUn/g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iinO99sZ0RgOL/2yYOM1qHqmWjs9OufPyWTj5Z+hpyJHCQO+9dUe2+lJ3i2h3DWLu
-	 CKFMT0f69PWxbqD7rNn7eOUUf1q04pZ06HvgZ54UGkDG93zq2aU3EIppZ+sh6q1kj2
-	 1BnodCxNNnoGYGXv9ZaEQpcF5xSJQRxfkPiWqPjw=
+	b=PC2uDv6GbGBwW+QsfWYqCDa/26t9Yc5csZKZdNkQrLUcDi8oX3nYXvawMP0EMVowe
+	 irAd7Z411xMFdbRkvZj4CbAx28QALWNpFsSu7Ge0YrhPm6klTk9F/C/QNvIiTwXxP2
+	 cJrIFJCkMmUc1Et+RNLvJt617s6dyU8Yzeu5BRck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCAQWK (ORCPT
+        id S1726829AbgCAQWs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:22:10 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40366 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgCAQWK (ORCPT
+        Sun, 1 Mar 2020 11:22:48 -0500
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:36420 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgCAQWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 11:22:10 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y1so3194074plp.7;
-        Sun, 01 Mar 2020 08:22:09 -0800 (PST)
+        Sun, 1 Mar 2020 11:22:47 -0500
+Received: by mail-pf1-f181.google.com with SMTP id i13so4328350pfe.3;
+        Sun, 01 Mar 2020 08:22:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E9koHcfE2byKYUurFST7R4fCRDBFWe2+HNIUcVvidVE=;
-        b=eCzQ6fpJEEtWSQp2R110F4PFE5v2iaOVvWVUfJl86ye4sYsH9QebtOstGorS9ga7UU
-         kwjeBZI5iTIKCX3X/0RqnUXpWOyl2zI/IJU1o65WMd/CiVVv4Eop7p2D6pmIBGTL98JF
-         zC3ItHgvC9LKFUZDxbYx9/GVoKwpvUm1kKpkT3Zl2vgM7gb3r1YwL4IleN0LgpcZ54+5
-         7eET0MkxYEhsYDyzniIlqsU1eTg3SIpYjf40O8DH1bBS4wVjlXyKNZzN4Ax0supCkqTB
-         ETfKwSauT4bff2bX7Ds5HFpG/mi+S88GkxjF6MXCBwMi3Xyg1yvtYEe3VGHxC3dy89Qy
-         vhHA==
-X-Gm-Message-State: APjAAAWUYvNZlYx+jtca/yUnZhfcTYPVnQUBPHXvrUyhBgkxenMbsEbk
-        IhZnVUsFsVn00/n5ZPh1L90=
-X-Google-Smtp-Source: APXvYqxhf+/qjon77gwWZzZsyVcNKO5Z+PzjfjkCP6KY4zM/Cbdqzvd3SBMf32o8PbVbNp3mT3R0gQ==
-X-Received: by 2002:a17:90a:c091:: with SMTP id o17mr14217982pjs.47.1583079729150;
-        Sun, 01 Mar 2020 08:22:09 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RC6gqsxmlr/uPyqKDFjSYPeDRepo1Y68M1WdWsW653c=;
+        b=Wq9hrL6YtNVlkl5pqZjmxtNbqmROV/5CEWu460FgmvAg3N2cyvzdzEL/q/LQULk4aD
+         7aL0zCBi+mOIk4OY8piaYoail/EM8owwfdTMhVjOoEAAzoO2WEME/Sc7KzB8dxd9n6PW
+         0j/Vsvq+dZheFsWWgyF9I029RqdgPsQibZWneq6yn/j1qJR6omPg/h9akR0bF6+pOVsM
+         Ujrgj+7DBEAfM3HHlGC9O/YODvrLwAWYyoVPT9V0X+NnEjpbjyJo9mJdwj+LyL9pdxai
+         bKQbLS8YuWskoZuPNaJT2uPhFySaRPSTbxjI1fhqG+tcxgsU9Kx/6QJAt6mblzVhKDd2
+         JfxA==
+X-Gm-Message-State: APjAAAVtFk2bmtR9rRQDvHZhWjJbrYoONyE/r5jz1+sBxHeuALZLTO/v
+        ZN0DAT6BlPdwzscyHLKTmoA=
+X-Google-Smtp-Source: APXvYqyeDgI37eyw4PvvQ06Em4Bam3ujM0H8U7YeHZuchndlQaSGMx6T1ZCDgTYMyCMX6a6Cis8wag==
+X-Received: by 2002:a63:f925:: with SMTP id h37mr12173211pgi.103.1583079766487;
+        Sun, 01 Mar 2020 08:22:46 -0800 (PST)
 Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
-        by smtp.gmail.com with ESMTPSA id l21sm9113501pjt.7.2020.03.01.08.22.08
+        by smtp.gmail.com with ESMTPSA id e28sm17680263pgn.21.2020.03.01.08.22.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 08:22:08 -0800 (PST)
-Date:   Sun, 1 Mar 2020 08:22:07 -0800
+        Sun, 01 Mar 2020 08:22:45 -0800 (PST)
+Date:   Sun, 1 Mar 2020 08:22:44 -0800
 From:   Moritz Fischer <mdf@kernel.org>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-        mdf@kernel.org
-Subject: Re: [PATCH] fpga: ice40-spi: Use new structure for SPI transfer
- delays
-Message-ID: <20200301162207.GB7593@epycbox.lan>
-References: <20200227120932.12542-1-sergiu.cuciurean@analog.com>
+To:     richard.gong@linux.intel.com
+Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org,
+        linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv1 4/7] dt-bindings, firmware: add compatible value Intel
+ Stratix10 service layer binding
+Message-ID: <20200301162244.GC7593@epycbox.lan>
+References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
+ <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227120932.12542-1-sergiu.cuciurean@analog.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:09:32PM +0200, Sergiu Cuciurean wrote:
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current
-> `delay_usecs` with `delay` for this driver.
+On Fri, Feb 14, 2020 at 10:00:49AM -0600, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
 > 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
+> A a compatible property value to Intel Stratix10 service layer binding
 > 
-> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
 > ---
->  drivers/fpga/ice40-spi.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/fpga/ice40-spi.c b/drivers/fpga/ice40-spi.c
-> index 56e112e14a10..8d689fea0dab 100644
-> --- a/drivers/fpga/ice40-spi.c
-> +++ b/drivers/fpga/ice40-spi.c
-> @@ -46,10 +46,16 @@ static int ice40_fpga_ops_write_init(struct fpga_manager *mgr,
->  	struct spi_message message;
->  	struct spi_transfer assert_cs_then_reset_delay = {
->  		.cs_change   = 1,
-> -		.delay_usecs = ICE40_SPI_RESET_DELAY
-> +		.delay = {
-> +			.value = ICE40_SPI_RESET_DELAY,
-> +			.unit = SPI_DELAY_UNIT_USECS
-> +		}
->  	};
->  	struct spi_transfer housekeeping_delay_then_release_cs = {
-> -		.delay_usecs = ICE40_SPI_HOUSEKEEPING_DELAY
-> +		.delay = {
-> +			.value = ICE40_SPI_HOUSEKEEPING_DELAY,
-> +			.unit = SPI_DELAY_UNIT_USECS
-> +		}
->  	};
->  	int ret;
+> diff --git a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+> index 1fa6606..6eff1af 100644
+> --- a/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+> +++ b/Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+> @@ -23,7 +23,7 @@ Required properties:
+>  The svc node has the following mandatory properties, must be located under
+>  the firmware node.
 >  
+> -- compatible: "intel,stratix10-svc"
+> +- compatible: "intel,stratix10-svc" or "intel,agilex-svc"
+>  - method: smc or hvc
+>          smc - Secure Monitor Call
+>          hvc - Hypervisor Call
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 Applied to for-next,
 
