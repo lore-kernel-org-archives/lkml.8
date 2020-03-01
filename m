@@ -2,153 +2,85 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D93C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC49C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7FB2469C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J1RJ+HVn"
+	by mail.kernel.org (Postfix) with ESMTP id 7D2B0246A1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCAXFB (ORCPT
+        id S1726970AbgCAXFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 18:05:01 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34943 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgCAXFA (ORCPT
+        Sun, 1 Mar 2020 18:05:40 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43057 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgCAXFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 18:05:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583103900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XuiAbO2SkXe4tDJeax00CsvNvM/vImoEM31blqjC8GQ=;
-        b=J1RJ+HVn68U+LiSvJhctdSSRlcr1CQAM0ObGZOeHF7HWxcxYlSkNjiixmi6TPHTFzVB5/o
-        27PIyzYmRae3GWeHGL8qtP2/EDtzlCrr487RjtkXRYaWojsRaIvcajSHNS6WavLI3y9caI
-        wVikcONR0yld4pZaq8Tr3Z095PuY1DM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-zSxI_YTcNoOYWiL82Vhy5g-1; Sun, 01 Mar 2020 18:04:58 -0500
-X-MC-Unique: zSxI_YTcNoOYWiL82Vhy5g-1
-Received: by mail-wr1-f70.google.com with SMTP id m18so3615997wro.22
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 15:04:58 -0800 (PST)
+        Sun, 1 Mar 2020 18:05:39 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v22so2678291qtp.10;
+        Sun, 01 Mar 2020 15:05:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XuiAbO2SkXe4tDJeax00CsvNvM/vImoEM31blqjC8GQ=;
-        b=PfOoa6aGvw2xUzN5vjuaL72JLKJnveqBCM9FhyKFXQ9bvBalY6lA/1sHaJjmavxViE
-         wYrmXUQOnJqvXAC1REQRlZMiS4ZseQlZIURHGXlFu5vz7R+/bGy+aYhJZKZHe0aSxb4J
-         p+Kp5guc6qwpDvsBgPTruab19w2jjNAZuQksJ3ndQ+Gjm0h/t9AJrUeqZcuK4KWd+k67
-         xyEbZ7raVl1HcqJK1HCzna+LBkmntZq9cuy6CLE5sZK03abQKl+PPFevd3hIvzSUYlzF
-         BUpsqBaUcDdWX37rMqNsbtZs9YoU2vgLvMKo0050etXAIuFuzKUT9wLLiPLP0L273I8k
-         XQfA==
-X-Gm-Message-State: APjAAAWQQoWD3y6CeRO8lskXZhkQ//0qE2T0kJNv17RW5+24RGDGfSPa
-        DzUutLI8uWr3c9Uml74KA3XiMgnakASY7KseVoX2hpuUNYP9PXmkq3oHwK8aidUc7LrL38vxr6i
-        tu8+6xLxhe7zx5UUNAnABqiov
-X-Received: by 2002:a5d:4450:: with SMTP id x16mr17790261wrr.242.1583103897242;
-        Sun, 01 Mar 2020 15:04:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZ81jnnpEyXE5TvNbbTV7yDlXqCyAOUV481fDaVG/wEa0g78PtTo/ZOKikXehmdYNrR5rO3w==
-X-Received: by 2002:a5d:4450:: with SMTP id x16mr17790237wrr.242.1583103896891;
-        Sun, 01 Mar 2020 15:04:56 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e1d9:d940:4798:2d81? ([2001:b07:6468:f312:e1d9:d940:4798:2d81])
-        by smtp.gmail.com with ESMTPSA id i204sm13279922wma.44.2020.03.01.15.04.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 15:04:56 -0800 (PST)
-Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
- <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4f115b07-7d94-da4f-edb2-f4d565c4289e@redhat.com>
-Date:   Mon, 2 Mar 2020 00:04:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=rmClv7KUwsEhPV3Su7vBp7m1YxS3IV694ue7XnXG+Ow=;
+        b=qKEpjBhGTrRrez8qm5wza2pft8/5X+eqJPie5m2ic0QjN7V4w8bBe2Ao1tukxzWqk2
+         PLnsKfte2MnV70QFFLceFWW8D4n01Zm+c/cU/DYAo9hnrBh/hGgw4pVJ4C6pbkvzp2La
+         lpafj4gADyu4aitjT2f+uQ1L5KUusgK5d1jTz4qx5f4ft7Oyuw99t1WEtsAoxR6REzOm
+         QaoStTfGStRqtSvekATjJ+gfY2wfFR42h37C8uK3+MTKqCT+W/ZJiJGyfk4TtdbqLBNH
+         uoJkSFvsAMHMFs8B+xU2wlUVhPb4qkRwMMTB1Y0gvX7hkWzJwKqVq8rAF22vEijr0IB9
+         qI+g==
+X-Gm-Message-State: APjAAAUqrT8gcPq/TgwD3rDk9x2I6Mcs3abfKL4XhymdaQ+1/snrngD2
+        WGirOz8yoCeV2f3dPDuQn9A5i8bwk4M=
+X-Google-Smtp-Source: APXvYqy56aMXIUNCZtAG2NF4c1uMnZeJwSYjOsPTfiahWJAg3V8HeA/L/WbLsWSZgGG5CIs6gxEbjA==
+X-Received: by 2002:ac8:740f:: with SMTP id p15mr12682765qtq.211.1583103938201;
+        Sun, 01 Mar 2020 15:05:38 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x131sm8923906qka.1.2020.03.01.15.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 15:05:37 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Minimize the need to move the kernel in the EFI stub
+Date:   Sun,  1 Mar 2020 18:05:32 -0500
+Message-Id: <20200301230537.2247550-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/03/20 22:33, Linus Torvalds wrote:
-> On Sun, Mar 1, 2020 at 1:03 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> Paolo Bonzini (4):
->>       KVM: allow disabling -Werror
-> 
-> Honestly, this is just badly done.
-> 
-> You've basically made it enable -Werror only for very random
-> configurations - and apparently the one you test.
-> Doing things like COMPILE_TEST disables it, but so does not having
-> EXPERT enabled.
+This series adds the ability to use the entire PE image space for
+decompression, provides the preferred address to the PE loader via the
+header, and finally restricts efi_relocate_kernel to cases where we
+really need it rather than whenever we were loaded at something other
+than preferred address.
 
-Yes, I took this from the i915 Kconfig.  It's temporary, in 5.7 I am
-planning to get it to just !KASAN, but for 5.6 I wanted to avoid more
-breakage so I added the other restrictions.  The difference between
-x86-64 and i386 is really just the frame size warnings, which Christoph
-triggered because of a higher CONFIG_NR_CPUS.
+Based on tip:efi/core + the cleanup series just posted [1]
+[1] https://lore.kernel.org/linux-efi/20200301230436.2246909-1-nivedita@alum.mit.edu/
 
-(BTW, perhaps it makes sense for Sparse to have something like __nostack
-for structs that contain potentially large arrays).
+Arvind Sankar (5):
+  x86/boot/compressed/32: Save the output address instead of
+    recalculating it
+  efi/x86: Decompress at start of PE image load address
+  efi/x86: Add kernel preferred address to PE header
+  efi/x86: Remove extra headroom for setup block
+  efi/x86: Don't relocate the kernel unless necessary
 
-> I've merged this, but I wonder why you couldn't just do what I
-> suggested originally?  Seriously, if you script your build tests,
-> and don't even look at the results, then you might as well use
-> 
->    make KCFLAGS=-Werror
+ arch/x86/boot/compressed/head_32.S      | 42 +++++++++++++++--------
+ arch/x86/boot/compressed/head_64.S      | 38 +++++++++++++++++++--
+ arch/x86/boot/header.S                  |  6 ++--
+ arch/x86/boot/tools/build.c             | 44 ++++++++++++++++++-------
+ drivers/firmware/efi/libstub/x86-stub.c | 32 +++++++++++++++---
+ 5 files changed, 127 insertions(+), 35 deletions(-)
 
-I did that and I'm also adding W=1; and I threw in a smaller than
-default frame size warning option too because I don't want cpumasks on
-the stack anyway.  However, that wouldn't help contributors.  I'm okay
-if I get W=1 or frame size warnings from patches from other
-contributors, but I think it's a disservice to them that they have to
-set KCFLAGS in order to avoid warnings.
-
-> the "now it causes problems for
-> random compiler versions" is a real issue again - but at least it
-> wouldn't be a random kernel subsystem that happens to trigger it, it
-> would be a _generic_ issue, and we'd have everybody involved when a
-> compiler change introduces a new warning.
-
-Yes, and GCC prereleases are tested with Linux, for example by doing
-full Rawhide rebuilds.  If we started using -Werror by default
-(including allyesconfig), they would probably report warnings early.
-Same for clang.
-
-I hope that Linux can have -Werror everywhere, or at least a
-CONFIG_WERROR option that does it even if it defaults to n for a release
-or more.  But I don't think we can get there without first seeing what
-issues pop up in a few subsystems or arches---even before considering
-new compilers---so I decided I would just try.
-
-Paolo
-
-> Adding the powerpc people, since they have more history with their
-> somewhat less hacky one. Except that one automatically gets disabled
-> by "make allmodconfig" and friends, which is also kind of pointless.
-
-> Michael, what tends to be the triggers for people using
-> PPC_DISABLE_WERROR? Do you have reports for it? Could we have a
-> _generic_ option that just gets enabled by default, except it gets
-> disabled by _known_ issues (like KASAN).
-> 
-> Being disabled for "make allmodconfig" is kind of against one of the
-> _points_ of "the build should be warning-free".
+-- 
+2.24.1
 
