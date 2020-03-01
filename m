@@ -2,94 +2,147 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3E3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545DAC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69C320880
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 11:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15349214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ATXgwuZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm++Sacg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCALgj (ORCPT
+        id S1726563AbgCAMHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 06:36:39 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41198 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgCALgi (ORCPT
+        Sun, 1 Mar 2020 07:07:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37906 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCAMHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 06:36:38 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y17so5629522lfe.8
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 03:36:37 -0800 (PST)
+        Sun, 1 Mar 2020 07:07:14 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u9so2144299wml.3;
+        Sun, 01 Mar 2020 04:07:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/8HHbT56y06/N1CQ2ArO28lxgfkM21Fuvg5jrhOPedQ=;
-        b=ATXgwuZH2VDKS//DmttCnhs4pWquSMQE5U+U+aim54TxSinHVu4DXWERNKW+kkU2wY
-         RdgMKj6PdiHxxjpVs/D2qVl4POoCqW0f27aTIF0//7xZemZJxwdPw7N9zVkafZ9OUDpM
-         lQ2/JvljzOmblHmX+xEK6cSqaAHL0L8aLWA5PIEX6B3G7/6rF2e4gW5x0hQOxZDKh5A1
-         R0j8ppu+szvttqmGmMs+++bXBINUUEQ+DeUnZH7kaWhgE3xouEsqupi/xLy25aXwUBe5
-         xtzu+Ew4FZAjTprTDLaqvQ11SuHHpWOu2boOUqHtI2v+7GIIvlGtBscIdxUZ6wT+Fa7c
-         ryjQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g2L1+KgmlL2UuREJ51pRnap9NUM12a+0vrG5ju6s47k=;
+        b=cm++SacgY/WsKGaPbcOuT0Uwowg2582zZnNETSWcg7edGvMYVSSMxWSHsyWIHFhGge
+         EsjQHldCUqk8Csufplp/EdsNhunbc782WqkC2xOvj556FWgINUyipxApg6A4RwkcDrVk
+         pfsxvvw6TCDDM9O4gw/ARz71Vm+0QLYI6lFLQxHfJ4KEfyJU1fn07pr5L7wOxgidcPlJ
+         VGKed0Luc1UifI0XW+2kPGClgdke6ZMePUCgpREl7hoXXbZGDI2zt8uEy9kltORrzi6S
+         NypIzMkLgdTe+7dJvrvgxAFbeig7XYsHVmvW7MgQ2KcUsLwTlFBVxuZxVjJIvN6CUe1y
+         /6dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/8HHbT56y06/N1CQ2ArO28lxgfkM21Fuvg5jrhOPedQ=;
-        b=jY2s7yyw37Kah+5dkgAkuvkm05+zJxrVBgOm4wIRuTt6bqxx161mLn5S4l070uYDys
-         Zw1BCUCxIZbrKX/3QN3ntyWmFS3WWsOSg1rkLL+ReGT1V8vrMS6Dyxt2ZR1Py06EtLc+
-         NjtwKfYwSyG8EHceJ0llM+kRqrhyOZmVWcLkAXG9+XdchBLidjMI28wdrp0CqsWbnKto
-         gJyv4fEJaGnFFUlTFRb7RQGv2dHzAsvJwXJTa2iHoLwiSRP8c7wVFA6j2QeNHTIFHGmS
-         jYGfgS5nwcnX6bE3U8cgx+MIXyXJzry3xXLoqRW84Nb9rIEJUF4h2Bcd42ChgsG7GmGy
-         dERA==
-X-Gm-Message-State: ANhLgQ3jXS0+BmuajmCO660KQrPcODECzch33m1fnKM+NmJZIXwDDZPu
-        MCucsD1HrDDhjaTogdfHel58XiIgCMs=
-X-Google-Smtp-Source: ADFU+vsw36imBme+IXC8InTEQHv2zlJFuF8e7t/Zs+Jp5Kp2lmwBkCd+mDS1Fi1ibawRLq27Yj4s5Q==
-X-Received: by 2002:a19:750c:: with SMTP id y12mr7494621lfe.109.1583062596740;
-        Sun, 01 Mar 2020 03:36:36 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:631:be36:41f9:a0d4:22df:3c65? ([2a00:1fa0:631:be36:41f9:a0d4:22df:3c65])
-        by smtp.gmail.com with ESMTPSA id n13sm9700980lji.91.2020.03.01.03.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 03:36:36 -0800 (PST)
-Subject: Re: [PATCH net-next 1/2] dt-bindings: net: phy: mscc: document LOS
- active low property
-To:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200227154033.1688498-1-antoine.tenart@bootlin.com>
- <20200227154033.1688498-2-antoine.tenart@bootlin.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <43b3a101-9596-6476-8170-f09276311de7@cogentembedded.com>
-Date:   Sun, 1 Mar 2020 14:36:34 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g2L1+KgmlL2UuREJ51pRnap9NUM12a+0vrG5ju6s47k=;
+        b=jyelyGe1ZIdf4KmiooVlQ2rbKM/IMCM/AXBtJLAVn8FmZWuSmO5HblCyPNQPDDV/JG
+         6dAqMDyuZDWB1htgJ/sy9akq0IMSmJloSjcvQJKq/Vt28tjj9pzUY9cNpHAI98ePCpEE
+         iSjNUixbuE2kJbUvJMoJF6OCvU9pcjZ1+Za8QUgdgBy0PdzQQj+qESC87Rfr+F2TShUc
+         a+DKaDjo7ptDrB7SNSmWhXqbvzZ3ARALDUb5FPt6h3iyi9tvIe/6gsSLaqM39rPBuj6w
+         qTaP3+KU6o5Qt35rjdqWKmNcgdIY1/LyyWOFALLiigTLX92xFJqKwe0toaB7y2f80zYV
+         J1gQ==
+X-Gm-Message-State: APjAAAVv/ZK+jAJlzC7SaK4YhrluQvMDVWNdbMI0VJghQPEDAM00D5VR
+        DamDQHJDgPbEUsxPw3OlFis=
+X-Google-Smtp-Source: APXvYqy0flgkNWK99Sh4Q9TC6qt7uHB70U67xM9RkQ7KeAdzHLtey5dLusC0mHMn/2ouDgJTx5PauA==
+X-Received: by 2002:a05:600c:149:: with SMTP id w9mr13676684wmm.132.1583064432518;
+        Sun, 01 Mar 2020 04:07:12 -0800 (PST)
+Received: from pc636 ([80.122.78.78])
+        by smtp.gmail.com with ESMTPSA id x8sm9727390wro.55.2020.03.01.04.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 04:07:11 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Sun, 1 Mar 2020 13:07:02 +0100
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200301120702.GA9762@pc636>
+References: <20200221003035.GC2935@paulmck-ThinkPad-P72>
+ <20200221131455.GA4904@pc636>
+ <20200221202250.GK2935@paulmck-ThinkPad-P72>
+ <20200222222415.GC191380@google.com>
+ <20200223011018.GB2935@paulmck-ThinkPad-P72>
+ <20200224174030.GA22138@pc636>
+ <20200225020705.GA253171@google.com>
+ <20200225185400.GA27919@pc636>
+ <20200227133700.GC161459@google.com>
+ <20200301110843.GA8725@pc636>
 MIME-Version: 1.0
-In-Reply-To: <20200227154033.1688498-2-antoine.tenart@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200301110843.GA8725@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 27.02.2020 18:40, Antoine Tenart wrote:
-
-> This patch adds a "vsc8584,los-active-low" property to denote when the
-
-    The part before comma is supposed to be a vendor name, no?
-
-> LOS signal connected directly to the PHY is active low.
+> > > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
+> > > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
+> > > then we skip it and consider as atomic. Something like:
+> > > 
+> > > <snip>
+> > > static bool is_current_in_atomic()
+> > 
+> > Would be good to change this to is_current_in_rcu_reader() since
+> > rcu_preempt_depth() does not imply atomicity.
+> >
+> can_current_synchronize_rcu()? If can we just call:
 > 
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-[...]
+> <snip>
+>     synchronize_rcu() or synchronize_rcu_expedited();
+>     kvfree();
+> <snip>
+> 
+> > > {
+> > > #ifdef CONFIG_PREEMPT_RCU
+> > >     if (!rcu_preempt_depth() && !in_atomic())
+> > >         return false;
+> > 
+> > I think use if (!rcu_preempt_depth() && preemptible()) here.
+> > 
+> > preemptible() checks for IRQ disabled section as well.
+> > 
+> Yes but in_atomic() does it as well, it also checks other atomic
+> contexts like softirq handlers and NMI ones. So calling there
+> synchronize_rcu() is not allowed.
+> 
+Ahh. Right you are. We also have to check if irqs are disabled
+or not. preemptible() has to be added as well.
 
-MBR, Sergei
+<snip>
+can_current_synchronize_rcu()
+{
+    if (IS_ENABLED(CONFIG_PREEMPT_RCU)) {
+        if (!rcu_preempt_depth() && !in_atomic() && preemptible()) {
+            might_sleep();
+            return true;
+	}
+    }
+
+    return false;
+}
+<snip>
+
+if we can synchronize:
+    - we can directly inline kvfree() to current context;
+    - we can attached the head using GFP_KERNEL | __GFP_RETRY_MAYFAIL.
+    
+Otherwise attached the rcu_head under atomic or as we are in RCU reader section.
+
+Thoughts?
+
+--
+Vlad Rezki
