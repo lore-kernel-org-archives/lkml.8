@@ -2,95 +2,150 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98081C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75A7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8D246D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B826F2468A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 17:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRZM8P1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgCARte (ORCPT
+        id S1726527AbgCARx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 12:49:34 -0500
-Received: from mga11.intel.com ([192.55.52.93]:61884 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgCARtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 12:49:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2020 09:49:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,504,1574150400"; 
-   d="scan'208";a="257681708"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 01 Mar 2020 09:49:33 -0800
-Date:   Sun, 1 Mar 2020 09:49:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] KVM: x86/mmu: Rename kvm_mmu->get_cr3() to
- ->get_guest_cr3_or_eptp()
-Message-ID: <20200301174933.GB20843@linux.intel.com>
-References: <20200207173747.6243-1-sean.j.christopherson@intel.com>
- <20200207173747.6243-7-sean.j.christopherson@intel.com>
- <1424348b-7f09-513a-960b-6d15ac3a9ae4@redhat.com>
- <20200212162816.GB15617@linux.intel.com>
- <de17199e-aff3-b664-73f5-9c88727d064e@redhat.com>
+        Sun, 1 Mar 2020 12:53:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36486 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCARx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 12:53:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j16so9618968wrt.3;
+        Sun, 01 Mar 2020 09:53:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lV8YENdLzvicTtDlZeQ6+PGE/+HY5N98/+X62Vk5TCs=;
+        b=JRZM8P1UOu4h09GRc15hQR4Lhxdb/yxWJX+PA9h4iMGDvUaic4ujemosKsJtBN3PAX
+         PLLGjhTiBj96LFn+jNL1exrW8vh1OLkXKiqFBh7xr+IQDMcurPM9DiB1R2RVsktCqVCm
+         ej2Kpm0tZEHNZ57+LlFUkDHFxLppQq2Q/ZCx1B5HhoglFEkxaX7TrmgerI+KPzrmjqNB
+         tLcoRdrEqSYHFHOf4bqGyZBsclWCo+XGvWCYmL6QbGMz00GlX628RTlBcebUGKmVLwIv
+         4Q+by2Habyts72WApxpsx3EMIm7TpUwvWcLEu+uBjjDwjJy05JrzhiXW6CtD92MuO+Q+
+         /7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lV8YENdLzvicTtDlZeQ6+PGE/+HY5N98/+X62Vk5TCs=;
+        b=IiltpnNfQhLFoxa2zETEV/xXFVSqSzRFrO1INe8yZpzmRwONwQxXK7YNXqYqZxi024
+         MHFchIaXIsyZyHDBuZOCtsILa1/bP7JdTv9NUt/ZbY4aapbRotQVptGTeGYKtwhw2ft0
+         zsLCpQ+68j3R/ebzGqUIt85jYGCYThLevBD6c67D2P5HOEIu7UYevL0fhcohtSC2pCWl
+         gJvJ28CMm0ATp9Ii3CKiTcXBQdhQKmfXfYvvX9vXm/wGS8tl/JJbsQPdfSuPe082wx+R
+         6QQP9KjALiADYq99qqyU1s69kckXlYaOSqJrisQimNBDt7svSBpdU0GfQ/g7kF5+S/jQ
+         s85g==
+X-Gm-Message-State: APjAAAUc64jemZuxD2JtMSKcLNzbRPXDJkMaED/ADIbhLBYn3kMnjR3p
+        0/7bygrnL9iDbkj+nkMOZHA=
+X-Google-Smtp-Source: APXvYqw7mHZ/1F46q0R8bbrO4uITbQc70UeaZFmqfoWbQ3a0gReO3JftHh0063lOl8zeO0FHgFMYfQ==
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr17341866wrs.365.1583085233379;
+        Sun, 01 Mar 2020 09:53:53 -0800 (PST)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id u185sm12075847wmg.6.2020.03.01.09.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 09:53:52 -0800 (PST)
+Date:   Sun, 1 Mar 2020 18:53:51 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Will Deacon <will@kernel.org>, tj@kernel.org,
+        jiangshanlai@gmail.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org
+Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
+Message-ID: <20200301175351.GA11684@Red>
+References: <20200217204803.GA13479@Red>
+ <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
+ <20200220090350.GA19858@Red>
+ <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
+ <20200228123311.GE3275@willie-the-truck>
+ <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <de17199e-aff3-b664-73f5-9c88727d064e@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 05:42:33PM +0100, Paolo Bonzini wrote:
-> On 12/02/20 17:28, Sean Christopherson wrote:
-> > On Wed, Feb 12, 2020 at 01:00:59PM +0100, Paolo Bonzini wrote:
-> >> On 07/02/20 18:37, Sean Christopherson wrote:
-> >>> Rename kvm_mmu->get_cr3() to call out that it is retrieving a guest
-> >>> value, as opposed to kvm_mmu->set_cr3(), which sets a host value, and to
-> >>> note that it will return L1's EPTP when nested EPT is in use.  Hopefully
-> >>> the new name will also make it more obvious that L1's nested_cr3 is
-> >>> returned in SVM's nested NPT case.
-> >>>
-> >>> No functional change intended.
-> >>
-> >> Should we call it "get_pgd", since that is how Linux calls the top-level
-> >> directory?  I always get confused by PUD/PMD, but as long as we only
-> >> keep one /p.d/ moniker it should be fine.
+On Fri, Feb 28, 2020 at 10:33:31AM -0500, Daniel Jordan wrote:
+> On Fri, Feb 28, 2020 at 12:33:12PM +0000, Will Deacon wrote:
+> > On Fri, Feb 21, 2020 at 12:42:23PM -0500, Daniel Jordan wrote:
+> > > On Thu, Feb 20, 2020 at 10:03:50AM +0100, Corentin Labbe wrote:
+> > > > But I got the same with plain next (like yesterday 5.6.0-rc2-next-20200219 and tomorow 5.6.0-rc2-next-20200220) and master got the same issue.
+> > > 
+> > > Thanks.  I've been trying to reproduce this on an arm board but it's taking a
+> > > while to get it setup since I've never used it for kernel work.
+> > > 
+> > > Hoping to get it up soon, though someone with a working setup may be in a
+> > > better position to help with this.
 > > 
-> > Heh, I have the exact same sentiment.  get_pgd() works for me.
+> > Any joy with this? It sounded to me like the issue also happens on a
+> > mainline kernel. If this is the case, have you managed to bisect it?
 > 
-> Ok, I'll post a patch that uses get_guest_pgd() as soon as I open
-> kvm/next for 5.7 material.
+> I managed to get recent mainline (rawhide) booting days ago but wasn't able to
+> reproduce on a rpi 3b+.
+> 
+> My plan had been to try debug-by-email next, but then something exploded
+> internally and I haven't had time for it yet.  Still intending to help once the
+> explosion is contained, provided someone can't get to it sooner.
+> 
+> thanks,
+> Daniel
 
-I need to resend the 5-level nested EPT support, I'll include this change.
-Should I also include patches 4, 5 and 7 when I send v3 of that series?
-Your earlier mail said they were queued for 5.6, but AFAICT only patches
-1 and 2 made it into 5.6 (which is not a big deal at all).
+Hello
 
-On Wed, Feb 12, 2020 at 01:03:03PM +0100, Paolo Bonzini wrote:
-> On 07/02/20 18:37, Sean Christopherson wrote:
-> > Sean Christopherson (7):
-> >   KVM: nVMX: Use correct root level for nested EPT shadow page tables
-> >   KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
-> >   KVM: nVMX: Allow L1 to use 5-level page walks for nested EPT
-> >   KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
-> >   KVM: nVMX: Rename EPTP validity helper and associated variables
-> >   KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_cr3_or_eptp()
-> >   KVM: nVMX: Drop unnecessary check on ept caps for execute-only
-> >
->
-> Queued 1-2-4-5-7 (for 5.6), thanks!
+I tried to bisect this problem, but the result is:
+# bad: [0ecfebd2b52404ae0c54a878c872bb93363ada36] Linux 5.2
+git bisect bad 0ecfebd2b52404ae0c54a878c872bb93363ada36
+# good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+# bad: [a2d635decbfa9c1e4ae15cb05b68b2559f7f827c] Merge tag 'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
+git bisect bad a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
+# bad: [82efe439599439a5e1e225ce5740e6cfb777a7dd] Merge tag 'devicetree-for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+git bisect bad 82efe439599439a5e1e225ce5740e6cfb777a7dd
+# bad: [78438ce18f26dbcaa8993bb45d20ffb0cec3bc3e] Merge branch 'stable-fodder' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+git bisect bad 78438ce18f26dbcaa8993bb45d20ffb0cec3bc3e
+# good: [275b103a26e218b3d739e5ab15be6b40303a1428] Merge tag 'edac_for_5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp
+git bisect good 275b103a26e218b3d739e5ab15be6b40303a1428
+# bad: [962d5ecca101e65175a8cdb1b91da8e1b8434d96] Merge tag 'regmap-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap
+git bisect bad 962d5ecca101e65175a8cdb1b91da8e1b8434d96
+# good: [181a9096717b8d2128eb1162d07a4f4ee0f9f4b8] crypto: ccree - Make cc_sec_disable static
+git bisect good 181a9096717b8d2128eb1162d07a4f4ee0f9f4b8
+# good: [5d9e8b3f809f1c12e32fea7061ad2319d2848600] hwmon: (lm25066) Support SAMPLES_FOR_AVG register
+git bisect good 5d9e8b3f809f1c12e32fea7061ad2319d2848600
+# good: [7aefd944f038c7469571adb37769cb6f3924ecfa] Merge tag 'hwmon-for-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
+git bisect good 7aefd944f038c7469571adb37769cb6f3924ecfa
+# good: [c660a81796d456f0769937dd3ecf4cfd30f0ece6] selftests/kexec: define "require_root_privileges"
+git bisect good c660a81796d456f0769937dd3ecf4cfd30f0ece6
+# good: [d917fb876f6eaeeea8a2b620d2a266ce26372f4d] selftests: build and run gpio when output directory is the src dir
+git bisect good d917fb876f6eaeeea8a2b620d2a266ce26372f4d
+# good: [615c4d9a50e25645646c3bafa658aedc22ab7ca9] Merge branch 'regmap-5.2' into regmap-next
+git bisect good 615c4d9a50e25645646c3bafa658aedc22ab7ca9
+# good: [e59f755ceb6d6f39f90899d2a4e39c3e05837e12] crypto: ccree - use a proper le32 type for le32 val
+git bisect good e59f755ceb6d6f39f90899d2a4e39c3e05837e12
+# bad: [71ae5fc87c34ecbdca293c2a5c563d6be2576558] Merge tag 'linux-kselftest-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+git bisect bad 71ae5fc87c34ecbdca293c2a5c563d6be2576558
+# bad: [81ff5d2cba4f86cd850b9ee4a530cd221ee45aa3] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad 81ff5d2cba4f86cd850b9ee4a530cd221ee45aa3
+# first bad commit: [81ff5d2cba4f86cd850b9ee4a530cd221ee45aa3] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+
+The only interesting thing I see in this MR is: "Add fuzz testing to testmgr"
+
+But this wont help.
+
+Regards
