@@ -2,168 +2,476 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC485C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CFBC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609C521775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="YmDvZn1y"
+	by mail.kernel.org (Postfix) with ESMTP id 6DB2821D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583055381;
+	bh=z6+QzgWUhDTy8HckGy3cgIkkL5PHprLlQrODXIqllYQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kQlTH+2nfUpU+P4zrK3pvOILQJaU2Dc0xYpqs8zkF1kL7PW5Uac7pQxNRXVuYvGb0
+	 GLo4mEKvwXpYy8HY5zBcTAKGx6/TR/hAkkEN4je6tVxSSX7lPDprWB0791TxT8v1wU
+	 Yooxdc3nvfYzZGtQR49wqBORFIeZYQ9reccnNSmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725892AbgCAJPF (ORCPT
+        id S1726359AbgCAJgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 04:15:05 -0500
-Received: from mail-eopbgr1300058.outbound.protection.outlook.com ([40.107.130.58]:29504
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbgCAJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 04:15:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHLtUM65WexPmaPuwR3/HfsSLNne4o5oXZhv3e3Z9oF/GYUFTRvNGctN3S5UFEgdTksqDoIt3siUtkHExCmdSl7WcwsH/uml2CT5NbLOFlN5q/lQCwohUFu+MPBqsXOnhEI/38Ykl4ayLuQH0RVR5uJnpRibCsLSDMrTu5zo/kbr85nALKcrzwiooKX+EJkni80+yyYT75EMcEf2G8oKXjDR0gywnAqPigywLSq2kmtYK0iFQPamjNIUTsrfgwHiBKE8M2sVochbRJXG1snrOlz4HlxIbDEEeumvVay/5gn9owGrmLVZUHVKpf4pdzsSxnum6aoxs4hd31S+ny43IA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gjNdUXovazldeUh57tURnmqcngEnBbI7O3vFajy6Fm4=;
- b=cQEFq+ksaq1WtzAQAgm4GtyiNmb0EqpaXHZ5paimvoy4tY8JBuVJpLt4295gZvuyn4bfsLl9/n5YDrFMHgpZAyspz2zZFM0oYLTs6zrHStCVX+xQ8EXVHvNxEUXtXFh/sSpYW90MJ2/8BkqF7K4s9eOUCst+OJOQ+EDY9qu7u2suqUxI4codIWbdwFh6k5sSHOR6B9UODWgKH7AdzNcQ+9wkO2DTr67qhTlYq4NwTUgY/y07B1GIvVkA4NbQ2JTEkf6SJDPRid+TLeRGEoyPyP/gLbOLWPSaMs74PruQAIpWPJMT4k9l8Gw8VBorCkI3GQv1WUDNYdRJr5lAZgsNVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
- header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=teoenmingcorp.onmicrosoft.com; s=selector2-teoenmingcorp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gjNdUXovazldeUh57tURnmqcngEnBbI7O3vFajy6Fm4=;
- b=YmDvZn1yMuqfebkJk7GbzJi7pbTToRJPRtXCrIb5e6yfJFXJAAlM6CYyILQny54XdQVx7z3UU0omsKf8uZN8ZBSaIvdYygY8rRgIDDwMlpfa3kEus5n8lto1g82ATOLus1584K3L5/tUn8JqbbqgGTOwMwvNPKpRslvGU9Tjnbk=
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
- SG2PR01MB2394.apcprd01.prod.exchangelabs.com (20.177.82.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Sun, 1 Mar 2020 09:14:58 +0000
-Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::684a:9e0b:7e12:18bd]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
- ([fe80::684a:9e0b:7e12:18bd%4]) with mapi id 15.20.2772.019; Sun, 1 Mar 2020
- 09:14:58 +0000
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
-Subject: I am going to embark on creating my own custom Linux distro called
- Teo En Ming Linux
-Thread-Topic: I am going to embark on creating my own custom Linux distro
- called Teo En Ming Linux
-Thread-Index: AQHV76nXxRQ9eRFUDUC3pENUaAJvXA==
-Date:   Sun, 1 Mar 2020 09:14:58 +0000
-Message-ID: <SG2PR01MB2141384043250A95640BDA0F87E60@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ceo@teo-en-ming-corp.com; 
-x-originating-ip: [118.189.211.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c31a2da9-dd26-4b7d-ee65-08d7bdc103c6
-x-ms-traffictypediagnostic: SG2PR01MB2394:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2PR01MB23941B73A798BB09F182055987E60@SG2PR01MB2394.apcprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0329B15C8A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39830400003)(366004)(396003)(189003)(199004)(76116006)(86362001)(186003)(66946007)(33656002)(508600001)(966005)(26005)(7696005)(8936002)(52536014)(66446008)(64756008)(66556008)(66476007)(6916009)(81166006)(5660300002)(8676002)(81156014)(9686003)(107886003)(2906002)(316002)(71200400001)(6506007)(55016002)(4326008)(161833001);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2394;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5iHuIGme7RyRClRznPWZ4CiLr8XtvUoYb8P3JbszbkCUViYlEiO7VqArJ6hCparhj7yTS3fEK+8jJDH6lORVi4MGonS1malne4KlqXKSmkslrMQqNrYD5EAClha2X8GbgUIjqcay/iB17XFeEsAJHygbxbuCuoRo/ATPUoWrEayxYuDTMFUSnkZ2BG3Rw+fhrx3mF1SdzHjLi79SZVJoCHAdU/FwtQeRteop7dEzhxhX4ThdU8O6Cud0s9YWymEElT3phqSI5kxfY9ArK2T7mgz37nNOnqGw/xEv2ZkQK2tdL9yF7t8lh61WNrFS9jp2MpvDPTHJ/L2xNzh4OSAzp5C/knSTIvzA7Xqoyf7KwmytIkT8maWyDn33rRja8Abb0S9q2z2zx5S9zJOxLwiXFD73el+U5rbOki3ROeyw/7QzuJLz+ZjRbJtU4Mu3LNGeQ+xVWnGpjxV0nUzQ0hR163zWATb884NMv6q8Qe1TIP+aMyj5tu94LO5rqmYl/h1nZsFdoZcTYhUeJuLZA8eF3zR1o09i2YB+mjj2kN4KN3xWYC5hGpT8VkhvuQpXpNNV
-x-ms-exchange-antispam-messagedata: EPrgWslJ/mQIogcWjG6GCO0LaCJw1oyUrtSseN3aLVl14uN9CuC7iQRkZBIVsZ1mOu/yMeaiHS27m3LFUJDfoqlQ/EfalhNJBoLYQ5fhpLeCHgcQ7jZr8qUlifM/iFQCjgua5xzu9bAhNejzp2UlNg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 1 Mar 2020 04:36:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgCAJgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 04:36:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEB720880;
+        Sun,  1 Mar 2020 09:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583055359;
+        bh=z6+QzgWUhDTy8HckGy3cgIkkL5PHprLlQrODXIqllYQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eOgVz9X2SfIMR3hFLxuW2gfCz+BmEk/bNTKJi0YL46npAu00843rGCN+At/TADMkk
+         JT5UP5eQhFZPJ+2gGBYH+be3Fo/LcSBIlKI7HM+tlI6cY6X/zf19g593MzGi4WumPw
+         YFCOPiUoLZTYG+bs4nI6AWJcm3P/+qNt+f1n8y7w=
+Date:   Sun, 1 Mar 2020 10:35:57 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.215
+Message-ID: <20200301093557.GA1004810@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: teo-en-ming-corp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c31a2da9-dd26-4b7d-ee65-08d7bdc103c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2020 09:14:58.3142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ASCMAxFbNLd+Iop7aBsBP0QCtlxOyPH2m+MLze4Sh5lE+qCaC+EHM7xAsLHyK9Z99jDe0Qd25Kq0dDrp+yHfuBCrDsTz+KJOkdnO9SVdJnU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2394
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: I am going to embark on creating my own custom Linux distro called=
- Teo En Ming Linux=0A=
-=0A=
-MR. TURRITOPSIS DOHRNII TEO EN MING, SINGAPORE=0A=
-1ST MARCH 2020 SUNDAY=0A=
-=0A=
-Announcement=0A=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
-=0A=
-This is going to be my next Infocomms Technology (ICT) project.=0A=
-=0A=
-I am going to create my own custom Linux distribution called Teo En Ming Li=
-nux.=0A=
-=0A=
-Basically, I have no idea how long I will take to complete this project. It=
- could be 1 month, 1 year, or 5000 CENTILLION years :)=0A=
-=0A=
-The Linux From Scratch (LFS) book will form the basis of Teo En Ming Linux.=
-=0A=
-=0A=
-Teo En Ming Linux will have the latest Linux kernel 5.5.7 at the time of th=
-is writing.=0A=
-=0A=
-My hobby is ICT.=0A=
-=0A=
-Thank you.=0A=
-=0A=
-End of Announcement.=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
------BEGIN EMAIL SIGNATURE-----=0A=
-=0A=
-The Gospel for all Targeted Individuals (TIs):=0A=
-=0A=
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of=0A=
-U.S. Embassy Workers=0A=
-=0A=
-Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
-e.html=0A=
-=0A=
-***************************************************************************=
-*****************=0A=
-=0A=
-=0A=
-=0A=
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic=0A=
-Qualifications as at 14 Feb 2019 and refugee seeking attempts at the United=
- Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 2019) and A=
-ustralia (25 Dec 2019 to 9 Jan 2020):=0A=
-=0A=
-=0A=
-[1] https://tdtemcerts.wordpress.com/=0A=
-=0A=
-[2] https://tdtemcerts.blogspot.sg/=0A=
-=0A=
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming=0A=
-=0A=
------END EMAIL SIGNATURE-----=0A=
-=0A=
-=0A=
-=0A=
+I'm announcing the release of the 4.4.215 kernel.
+
+All users of the 4.4 kernel series must upgrade.
+
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                            |    2 
+ arch/arm/Kconfig                                    |    2 
+ arch/arm/boot/dts/r8a7779.dtsi                      |    8 
+ arch/microblaze/kernel/cpu/cache.c                  |    3 
+ arch/mips/loongson64/loongson-3/platform.c          |    3 
+ arch/s390/include/asm/timex.h                       |    2 
+ arch/s390/kernel/mcount.S                           |   15 
+ arch/sh/include/cpu-sh2a/cpu/sh7269.h               |   11 
+ arch/x86/entry/vdso/vdso32-setup.c                  |    1 
+ arch/x86/include/asm/cpufeatures.h                  |    1 
+ arch/x86/include/asm/vgtod.h                        |    7 
+ arch/x86/kernel/cpu/mcheck/mce_amd.c                |   17 
+ arch/x86/kvm/cpuid.c                                |    7 
+ arch/x86/kvm/emulate.c                              |   22 
+ arch/x86/kvm/lapic.c                                |    4 
+ arch/x86/kvm/vmx.c                                  |  102 
+ arch/x86/kvm/vmx/vmx.c                              | 8033 --------------------
+ arch/x86/platform/efi/efi.c                         |   13 
+ drivers/acpi/acpica/dsfield.c                       |    2 
+ drivers/acpi/acpica/dswload.c                       |   21 
+ drivers/base/dd.c                                   |    5 
+ drivers/block/brd.c                                 |   22 
+ drivers/block/floppy.c                              |    7 
+ drivers/clk/qcom/clk-rcg2.c                         |    3 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c        |   19 
+ drivers/gpu/drm/gma500/framebuffer.c                |    8 
+ drivers/gpu/drm/nouveau/nouveau_fence.c             |    2 
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c |    2 
+ drivers/gpu/drm/radeon/radeon_display.c             |    2 
+ drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c          |    4 
+ drivers/hwmon/pmbus/ltc2978.c                       |    4 
+ drivers/ide/cmd64x.c                                |    3 
+ drivers/ide/serverworks.c                           |    6 
+ drivers/infiniband/ulp/isert/ib_isert.c             |   12 
+ drivers/input/touchscreen/edt-ft5x06.c              |    7 
+ drivers/iommu/arm-smmu-v3.c                         |    3 
+ drivers/irqchip/irq-gic-v3-its.c                    |    2 
+ drivers/md/bcache/bset.h                            |    3 
+ drivers/media/i2c/mt9v032.c                         |   10 
+ drivers/media/platform/sti/bdisp/bdisp-hw.c         |    6 
+ drivers/net/ethernet/cisco/enic/enic_main.c         |    2 
+ drivers/net/ethernet/freescale/gianfar.c            |   10 
+ drivers/net/wan/ixp4xx_hss.c                        |    4 
+ drivers/net/wireless/b43legacy/main.c               |    5 
+ drivers/net/wireless/brcm80211/brcmfmac/sdio.c      |    1 
+ drivers/net/wireless/hostap/hostap_ap.c             |    2 
+ drivers/net/wireless/ipw2x00/ipw2100.c              |    7 
+ drivers/net/wireless/ipw2x00/ipw2200.c              |    5 
+ drivers/net/wireless/iwlegacy/3945-mac.c            |    5 
+ drivers/net/wireless/iwlegacy/4965-mac.c            |    5 
+ drivers/net/wireless/iwlegacy/common.c              |    2 
+ drivers/net/wireless/orinoco/orinoco_usb.c          |    3 
+ drivers/net/wireless/realtek/rtlwifi/pci.c          |   10 
+ drivers/nfc/port100.c                               |    2 
+ drivers/pci/setup-bus.c                             |   20 
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                 |    9 
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                 |   39 
+ drivers/regulator/rk808-regulator.c                 |    2 
+ drivers/remoteproc/remoteproc_core.c                |    2 
+ drivers/scsi/aic7xxx/aic7xxx_core.c                 |    2 
+ drivers/scsi/iscsi_tcp.c                            |    4 
+ drivers/scsi/qla2xxx/qla_os.c                       |   19 
+ drivers/scsi/scsi_transport_iscsi.c                 |   26 
+ drivers/soc/tegra/fuse/tegra-apbmisc.c              |    2 
+ drivers/staging/android/ashmem.c                    |   28 
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c      |    4 
+ drivers/staging/vt6656/dpc.c                        |    2 
+ drivers/target/iscsi/iscsi_target.c                 |   16 
+ drivers/tty/serial/imx.c                            |    2 
+ drivers/tty/vt/vt_ioctl.c                           |   75 
+ drivers/uio/uio_dmem_genirq.c                       |    6 
+ drivers/usb/core/hub.c                              |    5 
+ drivers/usb/core/quirks.c                           |    3 
+ drivers/usb/gadget/udc/gr_udc.c                     |   16 
+ drivers/usb/host/xhci-pci.c                         |    4 
+ drivers/usb/storage/uas.c                           |   23 
+ drivers/xen/preempt.c                               |    4 
+ fs/btrfs/disk-io.c                                  |    1 
+ fs/btrfs/extent_map.c                               |   11 
+ fs/btrfs/ordered-data.c                             |    7 
+ fs/btrfs/super.c                                    |    2 
+ fs/ecryptfs/crypto.c                                |    6 
+ fs/ecryptfs/keystore.c                              |    2 
+ fs/ecryptfs/messaging.c                             |    1 
+ fs/ext4/dir.c                                       |   14 
+ fs/ext4/ext4.h                                      |    7 
+ fs/ext4/inode.c                                     |   14 
+ fs/ext4/namei.c                                     |    8 
+ fs/jbd2/checkpoint.c                                |    2 
+ fs/jbd2/commit.c                                    |   50 
+ fs/jbd2/journal.c                                   |   21 
+ fs/jbd2/transaction.c                               |   10 
+ fs/nfs/Kconfig                                      |    2 
+ fs/ocfs2/journal.h                                  |    8 
+ fs/reiserfs/stree.c                                 |    3 
+ fs/reiserfs/super.c                                 |    2 
+ fs/ubifs/file.c                                     |    5 
+ include/linux/list_nulls.h                          |    8 
+ include/linux/rculist_nulls.h                       |    8 
+ include/scsi/iscsi_proto.h                          |    1 
+ include/sound/rawmidi.h                             |    6 
+ ipc/sem.c                                           |    6 
+ kernel/padata.c                                     |   45 
+ kernel/trace/trace_events_trigger.c                 |    5 
+ kernel/trace/trace_stat.c                           |   19 
+ lib/scatterlist.c                                   |    2 
+ net/netfilter/xt_bpf.c                              |    3 
+ scripts/kconfig/confdata.c                          |    2 
+ security/selinux/avc.c                              |    2 
+ sound/core/seq/seq_clientmgr.c                      |    4 
+ sound/core/seq/seq_queue.c                          |   29 
+ sound/core/seq/seq_timer.c                          |   13 
+ sound/core/seq/seq_timer.h                          |    3 
+ sound/pci/hda/hda_codec.c                           |    2 
+ sound/pci/hda/hda_eld.c                             |    2 
+ sound/pci/hda/hda_sysfs.c                           |    4 
+ sound/pci/hda/patch_conexant.c                      |    1 
+ sound/sh/aica.c                                     |    4 
+ sound/soc/atmel/Kconfig                             |    2 
+ sound/usb/quirks.c                                  |    1 
+ sound/usb/usx2y/usX2Yhwdep.c                        |    2 
+ tools/lib/api/fs/fs.c                               |    4 
+ tools/usb/usbip/src/usbip_network.c                 |   40 
+ tools/usb/usbip/src/usbip_network.h                 |   12 
+ 124 files changed, 777 insertions(+), 8411 deletions(-)
+
+Aditya Pakki (2):
+      orinoco: avoid assertion in case of NULL pointer
+      ecryptfs: replace BUG_ON with error handling code
+
+Al Viro (1):
+      VT_RESIZEX: get rid of field-by-field copyin
+
+Alan Stern (1):
+      USB: hub: Don't record a connect-change event during reset-resume
+
+Allen Pais (1):
+      scsi: qla2xxx: fix a potential NULL pointer dereference
+
+Andrey Zhizhikin (1):
+      tools lib api fs: Fix gcc9 stringop-truncation compilation error
+
+Andy Lutomirski (1):
+      x86/vdso: Use RDPID in preference to LSL when available
+
+Ard Biesheuvel (1):
+      efi/x86: Map the entire EFI vendor string before copying it
+
+Arnd Bergmann (1):
+      wan: ixp4xx_hss: fix compile-testing on 64-bit
+
+Arvind Sankar (1):
+      ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
+
+Bart Van Assche (2):
+      scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
+      scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
+
+Ben Skeggs (1):
+      drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
+
+Brandon Maier (1):
+      remoteproc: Initialize rproc_class before use
+
+Chen Zhou (1):
+      ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+
+Colin Ian King (1):
+      iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+
+Coly Li (1):
+      bcache: explicity type cast in bset_bkey_last()
+
+Dan Carpenter (3):
+      brcmfmac: Fix use after free in brcmf_sdio_readframes()
+      cmd64x: potential buffer overflow in cmd64x_program_timings()
+      ide: serverworks: potential overflow in svwks_set_pio_mode()
+
+Daniel Vetter (1):
+      radeon: insert 10ms sleep in dce5_crtc_load_lut
+
+David Sterba (2):
+      btrfs: log message when rw remount is attempted with unclean tree-log
+      btrfs: print message when tree-log replay starts
+
+Dmitry Osipenko (1):
+      soc/tegra: fuse: Correct straps' address for older Tegra124 device trees
+
+Douglas Anderson (1):
+      clk: qcom: rcg2: Don't crash if our parent can't be found; return an error
+
+EJ Hsu (1):
+      usb: uas: fix a plug & unplug racing
+
+Eric Dumazet (1):
+      vt: vt_ioctl: fix race in VT_RESIZEX
+
+Erik Kaneda (1):
+      ACPICA: Disassembler: create buffer fields in ACPI_PARSE_LOAD_PASS1
+
+Eugen Hristev (1):
+      media: i2c: mt9v032: fix enum mbus codes and frame sizes
+
+Filipe Manana (2):
+      Btrfs: fix race between using extent maps and merging them
+      Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
+
+Firo Yang (1):
+      enic: prevent waking up stopped tx queues over watchdog reset
+
+Fugang Duan (1):
+      tty: serial: imx: setup the correct sg entry for tx dma
+
+Geert Uytterhoeven (5):
+      pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+      nfs: NFS_SWAP should depend on SWAP
+      ARM: dts: r8a7779: Add device node for ARM global timer
+      pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
+      driver core: Print device when resources present in really_probe()
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.215
+
+Herbert Xu (1):
+      padata: Remove broken queue flushing
+
+Ioanna Alifieraki (1):
+      Revert "ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()"
+
+Jaihind Yadav (1):
+      selinux: ensure we cleanup the internal AVC counters on error in avc_update()
+
+Jan Kara (2):
+      ext4: fix checksum errors with indexed dirs
+      reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
+
+Jann Horn (1):
+      netfilter: xt_bpf: add overflow checks
+
+Jia-Ju Bai (3):
+      media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
+      uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+      usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+
+Kai Li (1):
+      jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+
+Larry Finger (2):
+      staging: rtl8188eu: Fix potential security hole
+      staging: rtl8188eu: Fix potential overuse of kernel memory
+
+Linus Torvalds (1):
+      floppy: check FDC index for errors before assigning it
+
+Logan Gunthorpe (1):
+      PCI: Don't disable bridge BARs when assigning bus resources
+
+Malcolm Priestley (1):
+      staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
+
+Mao Wenan (1):
+      NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+
+Masahiro Yamada (1):
+      kconfig: fix broken dependency in randconfig-generated .config
+
+Mathias Nyman (1):
+      xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
+
+Miaohe Lin (1):
+      KVM: apic: avoid calculating pending eoi from an uninitialized val
+
+Mike Jones (1):
+      hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+
+Miquel Raynal (1):
+      regulator: rk808: Lower log level on optional GPIOs being not available
+
+Nathan Chancellor (5):
+      s390/time: Fix clk type in get_tod_clock
+      ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
+      scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+      hostap: Adjust indentation in prism2_hostapd_add_sta
+      lib/scatterlist.c: adjust indentation in __sg_alloc_table
+
+Navid Emamdoost (1):
+      drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
+
+Nick Black (1):
+      scsi: iscsi: Don't destroy session if there are outstanding connections
+
+Oliver Upton (2):
+      KVM: nVMX: Refactor IO bitmap checks into helper function
+      KVM: nVMX: Check IO instruction VM-exit conditions
+
+Paolo Bonzini (2):
+      KVM: x86: emulate RDPID
+      KVM: nVMX: Don't emulate instructions in guest mode
+
+Paul E. McKenney (1):
+      rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
+
+Paul Kocialkowski (1):
+      drm/gma500: Fixup fbdev stolen size usage evaluation
+
+Peter Große (1):
+      ALSA: hda - Add docking station support for Lenovo Thinkpad T420s
+
+Philipp Zabel (1):
+      Input: edt-ft5x06 - work around first register access error
+
+Phong Tran (4):
+      b43legacy: Fix -Wcast-function-type
+      ipw2x00: Fix -Wcast-function-type
+      iwlegacy: Fix -Wcast-function-type
+      rtlwifi: rtl_pci: Fix -Wcast-function-type
+
+Qian Cai (1):
+      ext4: fix a data race in EXT4_I(inode)->i_disksize
+
+Richard Dodd (1):
+      USB: Fix novation SourceControl XL after suspend
+
+Sasha Levin (1):
+      Revert "KVM: VMX: Add non-canonical check on writes to RTIT address MSRs"
+
+Shijie Luo (1):
+      ext4: add cond_resched() to __ext4_find_entry()
+
+Shuah Khan (1):
+      usbip: Fix unsafe unaligned pointer usage
+
+Shubhrajyoti Datta (1):
+      microblaze: Prevent the overflow of the start
+
+Steven Rostedt (VMware) (1):
+      tracing: Fix very unlikely race of registering two stat tracers
+
+Suren Baghdasaryan (1):
+      staging: android: ashmem: Disallow ashmem memory from being remapped
+
+Takashi Iwai (5):
+      ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
+      ALSA: sh: Fix compile warning wrt const
+      ALSA: rawmidi: Avoid bit fields for state flags
+      ALSA: seq: Avoid concurrent access to queue flags
+      ALSA: seq: Fix concurrent access to queue current tick/time
+
+Thomas Gleixner (2):
+      x86/mce/amd: Fix kobject lifetime
+      xen: Enable interrupts when calling _cond_resched()
+
+Tiezhu Yang (1):
+      MIPS: Loongson: Fix potential NULL dereference in loongson3_platform_init()
+
+Valdis Kletnieks (1):
+      x86/vdso: Provide missing include file
+
+Vasily Averin (1):
+      trigger_next should increase position index
+
+Vasily Gorbik (1):
+      s390/ftrace: generate traced function stack frame
+
+Vincenzo Frascino (1):
+      ARM: 8951/1: Fix Kexec compilation issue.
+
+Vladimir Oltean (1):
+      gianfar: Fix TX timestamping with a stacked DSA driver
+
+Wenwen Wang (2):
+      ecryptfs: fix a memory leak bug in parse_tag_1_packet()
+      ecryptfs: fix a memory leak bug in ecryptfs_init_messaging()
+
+Will Deacon (1):
+      iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
+
+YueHaibing (1):
+      drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+
+Yunfeng Ye (1):
+      reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
+
+Zenghui Yu (1):
+      irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+
+Zhihao Cheng (1):
+      ubifs: Fix deadlock in concurrent bulk-read and writepage
+
+Zhiqiang Liu (1):
+      brd: check and limit max_part par
+
+wangyan (1):
+      ocfs2: fix a NULL pointer dereference when call ocfs2_update_inode_fsync_trans()
+
+yu kuai (1):
+      drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
+
+zhangyi (F) (4):
+      jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
+      jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
+      ext4, jbd2: ensure panic when aborting with zero errno
+      jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+
