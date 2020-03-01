@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C154DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0712C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A0A21775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CE524695
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKpA5ANu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQMUrVN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgCAVUj (ORCPT
+        id S1726872AbgCAVUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:20:39 -0500
-Received: from mail-pl1-f169.google.com ([209.85.214.169]:41973 "EHLO
-        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgCAVUj (ORCPT
+        Sun, 1 Mar 2020 16:20:44 -0500
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:41715 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgCAVUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:20:39 -0500
-Received: by mail-pl1-f169.google.com with SMTP id t14so3363827plr.8;
-        Sun, 01 Mar 2020 13:20:38 -0800 (PST)
+        Sun, 1 Mar 2020 16:20:42 -0500
+Received: by mail-pg1-f169.google.com with SMTP id b1so4367631pgm.8;
+        Sun, 01 Mar 2020 13:20:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mFTyi8DW0IuKC/6+mmSXVV/ifKvMR4lpHSQc45481xg=;
-        b=tKpA5ANuIyP8IbtLlptofIZyr5COO4tZDOepft9b/F6Qq0qRXGTA1dzMY+3DTwm8OY
-         SIU8qSqVw34+brjuSBKHlNwp5zNP7UMn1QozSMQegBj5Wrb5NfCZ2Uy+5g8XmL8eRLNv
-         geuf+ISnAlJDqIXl8ym2HnAi+e5nOL35WDadRWd+JtfqQpJvcN1/fv7kGf75pqxr4kob
-         9j1CZIac1mYIRCgL2LxEpc+dOxd7rV1FZQ7TOBwNGGkBMuDj+aRn/cQaFHlksyaFWTMH
-         wzDv45QlZK0PjWM/yCHAxJKhqeYReS3DqBWpvZKdkF1+pGpH/PomdWeYTdHA1SnNz/sj
-         4sSQ==
+        bh=rc9J+Cmf71xfajfNUuMMuICeYb/kHr4TudELbJoBD3U=;
+        b=AQMUrVN/O+R6rAjAo1vv4GsivdtxeED67OT3d0xxSkrDvt3fYq+Yel4+P7Y3Q/peOq
+         k5uX0o66W1+HYmLyIYOB/oxZxnXQ2e16d9RDQwIK/V3SyUWwnz3vWstf/fZMZqZj26Uo
+         hf5TPTXaorYnBzBwVXurSfLjYLcuwNZPSgO8HLjmZWYIc8S+HfSwvJm2zkj6sdRgpgvu
+         kkITrVOyk1GplF4ZAXZDEfgnjzlkSQ2qUT0Dz4JjNfY20neR/+vRgGnZmJuq8xnhN72g
+         G+Za/Wgfw+yvRIIrbYh4ZGb/9Ir9+Sf6iP6dQxDpf+m7ZzsipE4gBj6n4NTQ5t1NB6RK
+         NKrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mFTyi8DW0IuKC/6+mmSXVV/ifKvMR4lpHSQc45481xg=;
-        b=F/yc/MopVkDbo8uE9rK9SUgyz637g3JtgAdWageNnDx0/drg4jSmXMxxvYtQd6S/ZQ
-         NXPSIhKoyL2amYmvNcsviG5F7p9dyfL/9pVJNqugR/QNrScugnksYCmlapLMDcKEJJtq
-         aLUBcJwjHAzRwt3j/cIMxmm8y3MsoPRAg0uYHGKH4YQwvSrJkhzVaXvlANyx/VkoFj5g
-         t/rJsxuzLmeKKYBSegPWIaJ1icnvCvZVWKB4P4gua7W4Y6GAvbGHEVOOZ9cCaE9ndafO
-         G5w3lTGgN4vscHXUvW4gmxbAL2eBAYA+37z1x6eVrl7ETxL9nj5v4jKJQ+Q9lnC7SBSv
-         IXYw==
-X-Gm-Message-State: APjAAAU08BeWQSNsur4bpJ/UgaomfihLzytU10ebghatCYIAwzaRtijl
-        NxADj44OV2QA7wxJHjyUatR7oykG
-X-Google-Smtp-Source: APXvYqxxO086EU0oDGLWKKeU0ppH/s01jURiRGoGxAUJ4jJA7gzPeMlYl8zy2POclwE7Yf9VtuasGQ==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr15411460plo.259.1583097637445;
-        Sun, 01 Mar 2020 13:20:37 -0800 (PST)
+        bh=rc9J+Cmf71xfajfNUuMMuICeYb/kHr4TudELbJoBD3U=;
+        b=NZVljGT5uclsOHhScgxrOO13UkZTIUBvDdFu8Ma7VjRl50BdbDkj346G1v9iLXSN1o
+         7qFfZHmyuqx8nQfyA5U2yI3prwj5Zc4XPnrfhsge6HD8OwiNQWYzdaWpBXh+BqLHWOa/
+         T/e124JA/Ad9asFN6O4ybj610VHNvQV4JTpzQSyIg4elZs+/nZpb3d44dCM+p5zr6CRr
+         BmGobYInqKP2swJbhdk1+kgZ5MQBbWO2QmG+8XLh334SLZReRM6XdZpiQSupqXlyAhpR
+         vYDBEvg78vjb9qFK/j4k1eW/WuYkUcfRmha5WGy6xZg9SjiS9UXbdlabh9z4FWzcXQDP
+         Aaqw==
+X-Gm-Message-State: APjAAAUbHN2qUToO3E/9zdeQNxIJiQlXfVazirHxpu/JtPC2mMoUsA21
+        hKDfMoNwRMoBOk5rwEakqIFD+ko2
+X-Google-Smtp-Source: APXvYqx6mpbuec4O7HMvIyBfEoEAnpVGqr1liKpxzSafteugww+5sx6T9X6KQolbli+jWf31t10u8w==
+X-Received: by 2002:aa7:971c:: with SMTP id a28mr15117532pfg.152.1583097641365;
+        Sun, 01 Mar 2020 13:20:41 -0800 (PST)
 Received: from localhost.localdomain ([103.51.74.208])
-        by smtp.gmail.com with ESMTPSA id u19sm4547686pgf.11.2020.03.01.13.20.33
+        by smtp.gmail.com with ESMTPSA id u19sm4547686pgf.11.2020.03.01.13.20.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 13:20:37 -0800 (PST)
+        Sun, 01 Mar 2020 13:20:40 -0800 (PST)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
@@ -68,9 +68,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv2 1/3] devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3 clocks support
-Date:   Sun,  1 Mar 2020 21:20:16 +0000
-Message-Id: <20200301212019.2248-2-linux.amoon@gmail.com>
+Subject: [PATCHv2 2/3] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+Date:   Sun,  1 Mar 2020 21:20:17 +0000
+Message-Id: <20200301212019.2248-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200301212019.2248-1-linux.amoon@gmail.com>
 References: <20200301212019.2248-1-linux.amoon@gmail.com>
@@ -81,41 +81,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the new compatible string for Exynos5422 DWC3
-to support enable/disable of core and suspend clk by DWC3 driver.
-Also updated the clock names for compatible samsung,exynos5420-dwusb3.
+This patch adds new combatible strings for USBDRD3
+for adding missing suspend clk, exynos5422 usbdrd3
+support two clk USBD300 and SCLK_USBD300, so add missing
+suspemd_clk for Exynos542x DWC3 nodes.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
 Previous changes:
-	Added the missing clock name for Exynos5420 complatible
+	Added missing suspend clk name Exynos5410 SoC.
 ---
- Documentation/devicetree/bindings/usb/exynos-usb.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5410.dtsi | 8 ++++----
+ arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
+ arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-index 6aae1544f240..220f729ac8eb 100644
---- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-@@ -69,7 +69,9 @@ DWC3
- Required properties:
-  - compatible: should be one of the following -
- 	       "samsung,exynos5250-dwusb3": for USB 3.0 DWC3 controller on
--					    Exynos5250/5420.
-+					    Exynos5250.
-+	       "samsung,exynos5420-dwusb3": for USB 3.0 DWC3 controller on
-+					    Exynos5420.
- 	       "samsung,exynos5433-dwusb3": for USB 3.0 DWC3 controller on
- 					    Exynos5433.
- 	       "samsung,exynos7-dwusb3": for USB 3.0 DWC3 controller on Exynos7.
-@@ -82,6 +84,7 @@ Required properties:
-                 Following clock names shall be provided for different
-                 compatibles:
-                  - samsung,exynos5250-dwusb3: "usbdrd30",
-+                 - samsung,exynos5420-dwusb3: "usbdrd30", "usbdrd30_susp_clk",
-                  - samsung,exynos5433-dwusb3: "aclk", "susp_clk", "pipe_pclk",
-                                               "phyclk",
-                  - samsung,exynos7-dwusb3: "usbdrd30", "usbdrd30_susp_clk",
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index 2eab80bf5f3a..19845dcd528f 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -396,8 +396,8 @@ &trng {
+ };
+ 
+ &usbdrd3_0 {
+-	clocks = <&clock CLK_USBD300>;
+-	clock-names = "usbdrd30";
++	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
++	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ };
+ 
+ &usbdrd_phy0 {
+@@ -407,8 +407,8 @@ &usbdrd_phy0 {
+ };
+ 
+ &usbdrd3_1 {
+-	clocks = <&clock CLK_USBD301>;
+-	clock-names = "usbdrd30";
++	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
++	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ };
+ 
+ &usbdrd_dwc3_1 {
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index b672080e7469..bd505256a223 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -1372,8 +1372,8 @@ &trng {
+ };
+ 
+ &usbdrd3_0 {
+-	clocks = <&clock CLK_USBD300>;
+-	clock-names = "usbdrd30";
++	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
++	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ };
+ 
+ &usbdrd_phy0 {
+@@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+ };
+ 
+ &usbdrd3_1 {
+-	clocks = <&clock CLK_USBD301>;
+-	clock-names = "usbdrd30";
++	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
++	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ };
+ 
+ &usbdrd_dwc3_1 {
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index 8aa5117e58ce..0aac6255de5d 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
+ 		};
+ 
+ 		usbdrd3_0: usb3-0 {
+-			compatible = "samsung,exynos5250-dwusb3";
++			compatible = "samsung,exynos5420-dwusb3";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
+ 		};
+ 
+ 		usbdrd3_1: usb3-1 {
+-			compatible = "samsung,exynos5250-dwusb3";
++			compatible = "samsung,exynos5420-dwusb3";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
 -- 
 2.25.1
 
