@@ -2,103 +2,103 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46045C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513C8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED3321775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583078220;
-	bh=qhEfjHVx8EO32+N08TyPXheahfXEzN3WpIdl8Osp8XA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mn/qWI1mBXlTE4noWVOB+7JeOI7uLcT+hqCHBS4IkXa5XqJc9xFB1Ml+zJVKWVxDs
-	 TioBBn0RoG/Tl2ANzkFuiHlsXz04TUNDZf+Ns1EUe7hUjZ2bZZNs3mmRMTvtUTPMJ4
-	 fxWlewU5xrOoPgLOuLbqUP0Vb73YbKs8ReNhGoEw=
+	by mail.kernel.org (Postfix) with ESMTP id 2715121775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCQhYVjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCAP46 (ORCPT
+        id S1726764AbgCAP6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgCAP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:56:58 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E9921775;
-        Sun,  1 Mar 2020 15:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583078217;
-        bh=qhEfjHVx8EO32+N08TyPXheahfXEzN3WpIdl8Osp8XA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MK3ALxR5sxnFmHUjjV2VwAZvzvnAKhhC+LA6DQpzovSWNd/5HrAvZ1YmRElCRiMfM
-         oLWRpMO0IgaR/3XWc7trsG1pvqlKmGgJvcBkh1u/dPIMYHLSU36RseMSFhR2Gylb1L
-         lJyWGYj+TUS5Oj6l9WOGz5YeKowrT2nEHZI1pepU=
-Date:   Sun, 1 Mar 2020 15:56:51 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] iio: imu: adis: add a note better explaining
- state_lock
-Message-ID: <20200301155651.1e341eb8@archlinux>
-In-Reply-To: <20200225103319.20751-3-alexandru.ardelean@analog.com>
-References: <20200225103319.20751-1-alexandru.ardelean@analog.com>
-        <20200225103319.20751-3-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 1 Mar 2020 10:58:01 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42146 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAP6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 10:58:01 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z11so610372wro.9;
+        Sun, 01 Mar 2020 07:57:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iroZ9Pow8ipGPXa1xqXyS4xbrWQ/m46THJdhapkwZPs=;
+        b=HCQhYVjzECHNBFYfaOYgrLshl4w/1m8c+dZQ364hYNxIVguVcKk2RtlliqFNwRXzWT
+         p8MBfqTtJNQDFQ0hfOI0e7uyIrJEC63D+Ji79SwTPHdtEcPjeOjJRFjEEUhmUn/KphLr
+         69VOo4fbqmOBvLgRdk5Qj2pVEbqksJjjKS9gGSqjbq7I515MMDdRI/zFjH3k5xWBqVBj
+         IPV38+4wCNvyPy5JLMxxO1eDp0KOfSSVERK6fSrvltLmh07BaNI2Ro6VcycIQgMgk/Yl
+         BYvHztsSDd6Is6Ovao1Zv19TpF8Uo8GYsvyBup1TF+GHRofb+yLmU3f/Z+2vewQvR0IY
+         zqbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iroZ9Pow8ipGPXa1xqXyS4xbrWQ/m46THJdhapkwZPs=;
+        b=Ypbn2i+6ZwPYego/VorX+fkfKos80PsSpKbi0Oxic50y1ngIUExWWGx3CrGTFYjz0S
+         fBaEQ16y8Uj3hDMIdwcJoWuoKYfwSjyICTazzinfH+Jt2srISsD3gat0Lh73PceiK/zz
+         9AunSxvnEeezpiG7X5mR/Sy9Yu+rhi/wH5Iaeq3DoOfUgZpTHV86hF4Zoo5q5QcmFjYC
+         6c2zqKvj99oe3w5tKzJcGa9tnqN+s1jWEQCykkdKHZN7o18oK9akY5nzh672t/2+4Eyl
+         mHgeeHMmwo3Ag4LUBAWCVvoNAavJv3nAi353eftOuRjPCwm0x97AOVm6fpwOhItTdawA
+         7Kzg==
+X-Gm-Message-State: APjAAAWRnQCk4jFVQEuggW77vTrjHrgYrUnBx0sdp1Mm9Qip1q+mvsX9
+        URQPnL/3a+3G8N1cWA/gN6Kz9MQL
+X-Google-Smtp-Source: APXvYqzf2dAKXnrWa85zHdtNOtLGTd2I3HDiJGeZMCNQtLRqVoSE/QuTdyn8SPzHqmG3yu64it04jw==
+X-Received: by 2002:a05:6000:1147:: with SMTP id d7mr17088478wrx.142.1583078277700;
+        Sun, 01 Mar 2020 07:57:57 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d89:1500:857:2082:e9c3:b57])
+        by smtp.gmail.com with ESMTPSA id b16sm18257181wrq.14.2020.03.01.07.57.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 07:57:57 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust EFI entry to removing eboot.c
+Date:   Sun,  1 Mar 2020 16:57:48 +0100
+Message-Id: <20200301155748.4788-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 12:33:19 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into libstub")
+removed arch/x86/boot/compressed/eboot.[ch], but missed to adjust the
+MAINTAINERS entry.
 
-> The 'state_lock' mutex was renamed from 'txrx_lock' in a previous patch and
-> is intended to be used by ADIS drivers to protect the state of devices
-> during consecutive R/W ops.
-> The initial patch that introduced this change did not do a good [well, any]
-> job at explaining this. This patch adds a comment to the 'state_lock'
-> better explaining it's use.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-Thanks,
+  warning: no file matches F: arch/x86/boot/compressed/eboot.[ch]
 
-Jonathan
+Rectify EXTENSIBLE FIRMWARE INTERFACE (EFI) entry in MAINTAINERS.
 
-> ---
->  include/linux/iio/imu/adis.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 20339025c75f..dd8219138c2e 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -98,6 +98,17 @@ struct adis {
->  	const struct adis_data	*data;
->  	struct adis_burst	*burst;
->  
-> +	/**
-> +	 * The state_lock is meant to be used during operations that require
-> +	 * a sequence of SPI R/W in order to protect the SPI transfer
-> +	 * information (fields 'xfer', 'msg' & 'current_page') between
-> +	 * potential concurrent accesses.
-> +	 * This lock is used by all "adis_{functions}" that have to read/write
-> +	 * registers. These functions also have unlocked variants
-> +	 * (see "__adis_{functions}"), which don't hold this lock.
-> +	 * This allows users of the ADIS library to group SPI R/W into
-> +	 * the drivers, but they also must manage this lock themselves.
-> +	 */
->  	struct mutex		state_lock;
->  	struct spi_message	msg;
->  	struct spi_transfer	*xfer;
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Ard, please pick this patch for your linux-next branch.
+applies cleanly on next-20200228, do not apply on current master
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09b04505e7c3..4ce510b8467a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6383,7 +6383,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+ S:	Maintained
+ F:	Documentation/admin-guide/efi-stub.rst
+ F:	arch/*/kernel/efi.c
+-F:	arch/x86/boot/compressed/eboot.[ch]
+ F:	arch/*/include/asm/efi.h
+ F:	arch/x86/platform/efi/
+ F:	drivers/firmware/efi/
+-- 
+2.17.1
 
