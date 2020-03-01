@@ -2,197 +2,105 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E5C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1711FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF36B222C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDFE24672
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EmjVNr3X"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qd6LEYHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgCAUxM (ORCPT
+        id S1726658AbgCAVFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:53:12 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:45658 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAUxM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:53:12 -0500
-Received: by mail-yw1-f65.google.com with SMTP id d206so9126514ywa.12
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 12:53:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=bDaDpWDzIuINJaeNKQ8LzrSaXL2HTruooBYf7HvA7Eo=;
-        b=EmjVNr3XsE6iLfJuQRL0muXdEJAiIyL3Y+jPm6+ePhkA22A4Mz6VWiLTAkLalxBn2v
-         utg2WNjmPm0LQ7z4o2gnnDQm4+5FVg4gVvCB6+HNN+089OcaEUUXXzTnsfTX0pkEE24t
-         zSVEajAvR7kFRkabfUd9JflyThNgSWvVJHA+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=bDaDpWDzIuINJaeNKQ8LzrSaXL2HTruooBYf7HvA7Eo=;
-        b=CUVxU1pOaCtcywTr8rjOKjWiiVQ+010jA6oUlAb19caRTILuWBSmWJWyZTcPNYp5hm
-         +t4dHo7AqlYanjjXeHSDsuwsxi+Rr2itGRPKkz53ftACW4o0KqRI6T/nPJeQV0ulBDZ7
-         +cmqq7Z1EA///A1OWoCC3Is1CWp9mt8WDUQ1AqJDBMqbumFrOLOhVpDn0bARpo7ppsHs
-         r7G/Wwo/ao1ij59eA78xDprpqsU/sJmScrv5nEGbl1wHnDwti+DPScGaIBRMmgaUWvzW
-         IJFpzPcjCFsjW9C1CgFznz2lCkziBRpmooaeHhMeva0a9BjMh9HqpkDSZOuTd1qOKVSG
-         pVgg==
-X-Gm-Message-State: APjAAAV2IVFQvPq8fz+SaDPlD6sDyUwOBLVn4sVAZPqjiS0qrtBoFUpl
-        1K/iKfOJx20+PVzbQyaMe9wqFbHiIFUNSw==
-X-Google-Smtp-Source: APXvYqx3P8icet9HUO2aeTeE20820x8zQCh6UpI57dcrgc23oibLE9SWZ59F1Ozn7E08XtG9nRgNoQ==
-X-Received: by 2002:a81:f10a:: with SMTP id h10mr13376846ywm.109.1583095990710;
-        Sun, 01 Mar 2020 12:53:10 -0800 (PST)
-Received: from ?IPv6:2600:1004:b051:ad4e:accd:3cda:58d9:2348? ([2600:1004:b051:ad4e:accd:3cda:58d9:2348])
-        by smtp.gmail.com with ESMTPSA id c85sm3746327ywb.81.2020.03.01.12.53.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 12:53:10 -0800 (PST)
-Date:   Sun, 01 Mar 2020 15:53:07 -0500
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
-References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com> <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        madhuparnabhowmik10@gmail.com
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Sun, 1 Mar 2020 16:05:47 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45037 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbgCAVFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 16:05:47 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Vwm8370gz9sST;
+        Mon,  2 Mar 2020 08:05:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583096744;
+        bh=ZSbkdMpMpdF5lvPMUhVIz8Aj93wihvB1224JTqYZAaE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Qd6LEYHbinl8xDZCXgScg0s2ZhXoquCby7PxYfORLDBi8SRLl2nyTclmNPlOlOVv6
+         0P0eGrEduU69RyCm2TWr7J11OkLBl7Apzzbnw/Mri9aA3TZfZQbJiQTLVpmX/pqSVB
+         9h9ubGM9ZaTFhZvgQy66qJ4RDjQJ98PICNBHOva+hl/6YnTppxytH8V6d/s+HC4aJx
+         MLtd8RdS39RbQuTE0d+w7yDZekkcT6G+9IYK9lkRJLXskirnXbfScZOQzqaL8ifA8Y
+         PRxEr9AB0yyskixCZsIUYneXm3H6X05bf6fBTwDnsLQYeysCbvGsEO7yPjAbno8pKE
+         rWgs4zM3999hA==
+Date:   Mon, 2 Mar 2020 08:05:43 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-From:   joel@joelfernandes.org
-Message-ID: <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org>
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: manual merge of the kvm-fixes tree with Linus' tree
+Message-ID: <20200302080543.51450371@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/7rWHSHf1RaPiItDCcNSWExn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/7rWHSHf1RaPiItDCcNSWExn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On March 1, 2020 3:12:53 PM EST, "Rafael J=2E Wysocki" <rafael@kernel=2Eor=
-g> wrote:
->On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail=2Ecom> wrote:
->>
->> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail=2Ecom>
->>
->> This patch passes the cond argument to list_for_each_entry_rcu()
->> to fix the following false-positive lockdep warnings:
->>
->> [  330=2E302784] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> [  330=2E302789] WARNING: suspicious RCU usage
->> [  330=2E302796] 5=2E6=2E0-rc1+ #5 Not tainted
->> [  330=2E302801] -----------------------------
->> [  330=2E302808] drivers/base/power/main=2Ec:326 RCU-list traversed in
->non-reader section!!
->>
->> [  330=2E303303] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> [  330=2E303307] WARNING: suspicious RCU usage
->> [  330=2E303311] 5=2E6=2E0-rc1+ #5 Not tainted
->> [  330=2E303315] -----------------------------
->> [  330=2E303319] drivers/base/power/main=2Ec:1698 RCU-list traversed in
->non-reader section!!
->>
->> [  331=2E934969] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> [  331=2E934971] WARNING: suspicious RCU usage
->> [  331=2E934973] 5=2E6=2E0-rc1+ #5 Not tainted
->> [  331=2E934975] -----------------------------
->> [  331=2E934977] drivers/base/power/main=2Ec:1238 RCU-list traversed in
->non-reader section!!
->>
->> [  332=2E467772] WARNING: suspicious RCU usage
->> [  332=2E467775] 5=2E6=2E0-rc1+ #5 Not tainted
->> [  332=2E467775] -----------------------------
->> [  332=2E467778] drivers/base/power/main=2Ec:269 RCU-list traversed in
->non-reader section!!
->
->I don't see these warnings in the kernels run locally here=2E
->
->What do you do to get them?
->
->Joel, any comments here?
+Today's linux-next merge of the kvm-fixes tree got a conflict in:
 
-You have to enable lockdep in your config=2E Does your setup have that?
+  arch/x86/kvm/Makefile
 
-Thanks,
+between commit:
 
-- Joel
+  cfe2ce49b9da ("Revert "KVM: x86: enable -Werror"")
 
+from Linus' tree and commit:
 
->
->>
->> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail=2Ecom>
->> ---
->>  drivers/base/power/main=2Ec | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/base/power/main=2Ec b/drivers/base/power/main=2Ec
->> index 0e99a760aebd=2E=2E742c05f3c1e7 100644
->> --- a/drivers/base/power/main=2Ec
->> +++ b/drivers/base/power/main=2Ec
->> @@ -266,7 +266,8 @@ static void dpm_wait_for_suppliers(struct device
->*dev, bool async)
->>          * callbacks freeing the link objects for the links in the
->list we're
->>          * walking=2E
->>          */
->> -       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node)
->> +       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node,
->> +                               device_links_read_lock_held())
->>                 if (READ_ONCE(link->status) !=3D DL_STATE_DORMANT)
->>                         dpm_wait(link->supplier, async);
->>
->> @@ -323,7 +324,8 @@ static void dpm_wait_for_consumers(struct device
->*dev, bool async)
->>          * continue instead of trying to continue in parallel with
->its
->>          * unregistration)=2E
->>          */
->> -       list_for_each_entry_rcu(link, &dev->links=2Econsumers, s_node)
->> +       list_for_each_entry_rcu(link, &dev->links=2Econsumers, s_node,
->> +                                device_links_read_lock_held())
->>                 if (READ_ONCE(link->status) !=3D DL_STATE_DORMANT)
->>                         dpm_wait(link->consumer, async);
->>
->> @@ -1235,7 +1237,8 @@ static void dpm_superior_set_must_resume(struct
->device *dev)
->>
->>         idx =3D device_links_read_lock();
->>
->> -       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node)
->> +       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node,
->> +                                device_links_read_lock_held())
->>                 link->supplier->power=2Emust_resume =3D true;
->>
->>         device_links_read_unlock(idx);
->> @@ -1695,7 +1698,8 @@ static void
->dpm_clear_superiors_direct_complete(struct device *dev)
->>
->>         idx =3D device_links_read_lock();
->>
->> -       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node)
->{
->> +       list_for_each_entry_rcu(link, &dev->links=2Esuppliers, c_node,
->> +                                device_links_read_lock_held()) {
->>                 spin_lock_irq(&link->supplier->power=2Elock);
->>                 link->supplier->power=2Edirect_complete =3D false;
->>                 spin_unlock_irq(&link->supplier->power=2Elock);
->> --
->> 2=2E17=2E1
->>
+  4f337faf1c55 ("KVM: allow disabling -Werror")
+
+from the kvm-fixes tree.
+
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
 --=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Cheers,
+Stephen Rothwell
+
+--Sig_/7rWHSHf1RaPiItDCcNSWExn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5cI6cACgkQAVBC80lX
+0GwgEgf8DkjI/M5iBYlJlr2nsrJ6GC630tdLdAFXhDdSD/uW/a9EzjNVbkUc2Z9P
+EZKrPiZwm/8gJjvvBbgUWDat2WCDbuk1Om6FOas523gF8gGx1UIPx8GJxiFRzx0H
+0tcUxhXTrMcK2KEb2z7ZaFTdwwQwWng0Cx1qe6bzoeq61IUeYVNEu2CXTpKfoziA
+a0oUh8k1oULa61fxz8z0TdKh70WRDHr9P6AMNdAgW87vSQTSGJgzbyAxBO8Fvled
+iv0wCxv9r5lLof84Lz4IcpjdUJBygs6kk7eJBfuvElXh8Gt4XH7IG0y8wWpbHLMw
+DNNl944bec16oLgHBVI155HGZrxkug==
+=IrIj
+-----END PGP SIGNATURE-----
+
+--Sig_/7rWHSHf1RaPiItDCcNSWExn--
