@@ -2,99 +2,84 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1271C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5349C222C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583072656;
-	bh=R0f7aWVxkB1VclGcflnTl+GpVS4uJevvWw/NgoP2MdY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yWT3A7Mr4Fp2x9/oA39AaCAKdhqh0wki4oYCk9TywzLW0ChDclVFpGnLElWwrzpwP
-	 DQyNDGcHsxANRjfpkpkiyZCIwnjF5JVSEdFwPOAfi7i7LWudCGOd8et899pypnv7nw
-	 qCG5HJhpllb8d3o/H2b6qG/R5d87QmPV7oNOUGf8=
+	by mail.kernel.org (Postfix) with ESMTP id 828B4214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 14:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="B/fT3fVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgCAOYP (ORCPT
+        id S1726366AbgCAOdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 09:24:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgCAOYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 09:24:15 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BABA2214DB;
-        Sun,  1 Mar 2020 14:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583072654;
-        bh=R0f7aWVxkB1VclGcflnTl+GpVS4uJevvWw/NgoP2MdY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oNQKRYiVUa6RtuajN/EogC9xb2mRbz1jJUxpjVl31syYK5YqWCqgx+W+HegjD8FoH
-         peQUe1y2gKuJCaxjwalg5dMnpDyvPU5papopFsfCVN/vAnofvNTMSnOMaS10Wrz1NR
-         9kvQHyUtPbZbsXgAwHBYTWw7wapMYI0x0F+2yMRU=
-Date:   Sun, 1 Mar 2020 14:24:07 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Petr =?UTF-8?B?xaB0ZXRpYXI=?= <ynezz@true.cz>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tduszyns@gmail.com>, stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: chemical: sps30: fix missing triggered buffer
- dependency
-Message-ID: <20200301142407.0e63f6dc@archlinux>
-In-Reply-To: <20200227162734.604-1-ynezz@true.cz>
-References: <20200227162734.604-1-ynezz@true.cz>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sun, 1 Mar 2020 09:33:11 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46768 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgCAOdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 09:33:11 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j7so9127330wrp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 06:33:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=HtofGd4kToXQ+7hP6afMC/zniJHqraZJ2UCvihc7Z5g=;
+        b=B/fT3fVokUh7pBXtAfdkJ19LtYzf9ubc4q9ekSdBwzHdPi7ORgmw4lAH4fo2L1OnW9
+         eKco266285xxfB2ruqo2fqTYiIeZbT4kcZ/QvbqWDvfwmSkPFsbjDlLqDJ6WmoLI+q5w
+         7NhoWo1bTWeaSCjCyVDVtKOrjjdp4vkuWRYgEUMj7XFrmItH69CPjwVEby9+t7CZD0pp
+         WFJckq28RneNlzHSbV2phVqfObKZ03+YWAtCyTP3cCDja3E53+8OWQUyVI+lmiZ2h85N
+         ILYBJ9IAxfzsq02Cz8a51EljWBBLPMkbldCXc1VTpC16Lh+Ckhs/wUx7kXSTQtc3hj9H
+         Sjtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HtofGd4kToXQ+7hP6afMC/zniJHqraZJ2UCvihc7Z5g=;
+        b=A1va6chLuNUoVbJcZHIvf8xzRtqhJhM1J94xEWSaE/rgCbVOrbOeUqDYCbtj7meJUH
+         YwwYxFN2PsvEK2qdsXz/bt0klDUCaZchQbRFoxTTAEOFfLUZfog38W+zk48ndRZdkaw1
+         hEPEVrJe/Ze9r/UrRVvgALtKAa73ybAov7iut/6xtnxcrsL84dxsjwLk2WU3Yl0piQF3
+         8ewJTZ+GjKYbrFv7bJ22WwVJytkev/JlfR7fvxY4gbjor23mjIwYSnPo0NJbPXuGwsie
+         w3OffVCmgDcaT5x8eQ6ASYiYXS2S7Gd8RQ96FOfp0+s0cR1kMXT+3f5++VEXHBf9i9M8
+         S5fA==
+X-Gm-Message-State: APjAAAW4JnU2IYeG0nds/rUUdYxs5DB71dB+JCRUljvxLmySXxg9pZjq
+        FIFrruuZQUp7u0l5udGQ1S0YMg==
+X-Google-Smtp-Source: APXvYqw5YSvUliTyulbl5gq9KLJISDZM/NrbWMGqG+5tngtPZw5UPPomyCVnbwEy0I7UFlE0eioHcA==
+X-Received: by 2002:adf:d4ca:: with SMTP id w10mr16348178wrk.407.1583073188777;
+        Sun, 01 Mar 2020 06:33:08 -0800 (PST)
+Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
+        by smtp.gmail.com with ESMTPSA id l4sm23617241wrv.22.2020.03.01.06.33.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Mar 2020 06:33:08 -0800 (PST)
+From:   Yuri Benditovich <yuri.benditovich@daynix.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     yan@daynix.com, virtio-dev@lists.oasis-open.org
+Subject: [PATCH v3 0/3] virtio-net: introduce features defined in the spec
+Date:   Sun,  1 Mar 2020 16:32:59 +0200
+Message-Id: <20200301143302.8556-1-yuri.benditovich@daynix.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 17:27:34 +0100
-Petr =C5=A0tetiar <ynezz@true.cz> wrote:
+This series introduce virtio-net features VIRTIO_NET_F_RSC_EXT,
+VIRTIO_NET_F_RSS and VIRTIO_NET_F_HASH_REPORT.
 
-> SPS30 uses triggered buffer, but the dependency is not specified in the
-> Kconfig file.  Fix this by selecting IIO_BUFFER and IIO_TRIGGERED_BUFFER
-> config symbols.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 232e0f6ddeae ("iio: chemical: add support for Sensirion SPS30 sens=
-or")
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
+Changes from v2: reformatted structure in patch 1
 
-Applied to the fixes-togreg branch of iio.git.
+Yuri Benditovich (3):
+  virtio-net: Introduce extended RSC feature
+  virtio-net: Introduce RSS receive steering feature
+  virtio-net: Introduce hash report feature
 
-Thanks,
+ include/uapi/linux/virtio_net.h | 100 ++++++++++++++++++++++++++++++--
+ 1 file changed, 96 insertions(+), 4 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/iio/chemical/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-> index 0b91de4df8f4..a7e65a59bf42 100644
-> --- a/drivers/iio/chemical/Kconfig
-> +++ b/drivers/iio/chemical/Kconfig
-> @@ -91,6 +91,8 @@ config SPS30
->  	tristate "SPS30 particulate matter sensor"
->  	depends on I2C
->  	select CRC8
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
->  	help
->  	  Say Y here to build support for the Sensirion SPS30 particulate
->  	  matter sensor.
+-- 
+2.17.1
 
