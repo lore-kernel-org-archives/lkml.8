@@ -2,144 +2,141 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC26DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C532BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F26C246BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:03:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZIh3WrV"
+	by mail.kernel.org (Postfix) with ESMTP id 9EC2F246B9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgCATDQ (ORCPT
+        id S1726720AbgCATNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 14:03:16 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55149 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgCATDP (ORCPT
+        Sun, 1 Mar 2020 14:13:17 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:38687 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgCATNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 14:03:15 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z12so8785964wmi.4;
-        Sun, 01 Mar 2020 11:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=58YbdIpK87d+hqR4j1GhCFXTctvcaAuYQyq9nvn5aB4=;
-        b=dZIh3WrV88DSs0OHE2R/OsBpcSrRCSKkiHA6OP470nSFenuh9szh4Hiod4/y6IZ7To
-         NSCwLT1izTkX4TsOGp5kMp0+nb+JMtHLJ9lp5emwKxPZzOUuG06pVWz/ie2cZemsBpWo
-         duyl2iAjXgEZQU68ZfGAnzdB9kaEnA/t/ttpQ6j/XVVH2GG4E+IyOmgR0jIAS7LOZXiB
-         CN4rPlnUB6GB+J+nB4ESSgOacx5CWsa2bh93X5QGLBm0fEeJfgvGdPg/dTaiopusLQRd
-         XU7fVJxkNRRtHppPVKt7NqhrWVBpa8/PT6qFHWj/GsEGQUzpLg1ieMszMGvdFLJ3+Pqt
-         P8bQ==
+        Sun, 1 Mar 2020 14:13:16 -0500
+Received: by mail-il1-f198.google.com with SMTP id i67so9151629ilf.5
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 11:13:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=58YbdIpK87d+hqR4j1GhCFXTctvcaAuYQyq9nvn5aB4=;
-        b=YCPanVr+43CvabKKQc63051FMeebvyQNwNjbDQJoL3amj9yG7PprADAMMSDL9ooq6p
-         YCFneI2cEei1YUXyKcd0C0nwxlb5fkMRc0q40mKqeYvZNwwKzX8XEiK5gPcdQxA6xz8Q
-         sB3D4pAWiH7M9LV1hHfy132z51ZjIE59dwVZApM2QCVyGkhqY19YhOClBdv8p2upuMzG
-         wGUa7aPMFEW7aGg0wqX7RbjDob0y75SGMvkx0hq8/KFj48Y9gAO/3d3Eq6zbmVr0s24a
-         d/IDtoqx065ptWNcXkXC6PBnxGqR9jypNLxCKKb7lOKXOxMQ4m6Vv0etuOB98TC+D/MB
-         eb6A==
-X-Gm-Message-State: APjAAAUSh4AHGQGLcG2qrpuCvWo77KM3D4PT+Jqaaye2gd8hFczu0L3X
-        GEmKzeTESwiIZPyRqVcXabSw/sF7
-X-Google-Smtp-Source: APXvYqx+DCwQoDcqnYshPLa/WLdrCvjNxFBw1VLiMslSm7d1FYeYnUIzvMR5kKSpZ8YHZj6iOsN+vQ==
-X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr15214727wmj.17.1583089393723;
-        Sun, 01 Mar 2020 11:03:13 -0800 (PST)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id b16sm19004486wrq.14.2020.03.01.11.03.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 01 Mar 2020 11:03:13 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
-Date:   Sun,  1 Mar 2020 20:03:10 +0100
-Message-Id: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0Dcjl1wj+PD0Lgt+OXmYkTb151pyTMwnRKiof57JFPA=;
+        b=slDdIpbi4hVeqFCQ4W8iET9xNrWf9pKgYvLXt1iXFJG5REVZ5TkSZAqDvuDMxIXK0F
+         /MXGoPMCCUXwH8oXN/vEaNZsDTNVNHs2T/YrbY3GGAn70oR7S8MOKxsZ0XVcpLmR/Ls5
+         qTcf91onGaMWB/cSPhde91p0Oom0qV56fbWPAkWLz4i12I0wb2/QplN3mESIbuASdJdB
+         QcbFHwcg90Feoyp5yng2fh8nyMJqAljwiaHLQItzT/upkuXvYO2JfPLfJljBJT39otcu
+         JrKr2vcYMp1z0VnxFMeOwtsuPAzvM1+sepmYxTTe3H3IeWzO4+VlLPMZ5YFgXazxtkTX
+         zucw==
+X-Gm-Message-State: APjAAAUbNJppvRgxh+fmHoRBcOxYbAEOHp/1Gd+Nt8dh7OIyd3rPIM+g
+        4NZe5zV4wKOk6C/k3Tes2DMY8RZAOZe+v+qA6TpAc+5RgDwH
+X-Google-Smtp-Source: APXvYqwIfvSV79V1rpkNS6OvT+OANMpVQMBxs83UpQuVgpV3f5+v1w6F6FaGchmLG2IcammC7uSBfWBZ2rTBDn39leb0HPsUGxN3
+MIME-Version: 1.0
+X-Received: by 2002:a02:908a:: with SMTP id x10mr11405673jaf.16.1583089995211;
+ Sun, 01 Mar 2020 11:13:15 -0800 (PST)
+Date:   Sun, 01 Mar 2020 11:13:15 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cfed90059fcfdccb@google.com>
+Subject: BUG: corrupted list in _cma_attach_to_dev
+From:   syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hello,
 
-The following changes since commit a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
+syzbot found the following crash on:
 
-  KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16a8fa81e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e804f9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d6fd29e00000
 
-are available in the git repository at:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+list_add corruption. prev->next should be next (ffff888092dbd570), but was ffffffff8a5d2f20. (prev=ffff8880965fb1e0).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:26!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 10633 Comm: syz-executor222 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
+Code: 0b 48 89 f2 4c 89 e1 4c 89 ee 48 c7 c7 80 da 91 88 e8 29 3a b8 fd 0f 0b 48 89 f1 48 c7 c7 00 da 91 88 4c 89 e6 e8 15 3a b8 fd <0f> 0b 4c 89 f6 48 c7 c7 a0 db 91 88 e8 04 3a b8 fd 0f 0b 4c 89 ea
+RSP: 0018:ffffc90002197b70 EFLAGS: 00010286
+RAX: 0000000000000075 RBX: ffff88809db2b000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000432f60
+RBP: ffffc90002197b88 R08: 0000000000000075 R09: ffffed1015d26659
+R10: ffffed1015d26658 R11: ffff8880ae9332c7 R12: ffff888092dbd570
+R13: ffff88809db2b1e0 R14: ffff8880965fb1e0 R15: ffff88809db2b1e0
+FS:  00007f32e8400700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 00000000a71ef000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_add include/linux/list.h:67 [inline]
+ list_add_tail include/linux/list.h:100 [inline]
+ _cma_attach_to_dev+0x150/0x2f0 drivers/infiniband/core/cma.c:471
+ cma_listen_on_dev+0x252/0x6a0 drivers/infiniband/core/cma.c:2493
+ cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+ rdma_listen+0x772/0x970 drivers/infiniband/core/cma.c:3622
+ ucma_listen+0x14d/0x1c0 drivers/infiniband/core/ucma.c:1092
+ ucma_write+0x2d7/0x3c0 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0x8a/0x110 fs/read_write.c:494
+ vfs_write+0x268/0x5d0 fs/read_write.c:558
+ ksys_write+0x220/0x290 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4495e9
+Code: e8 8c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f32e83ffda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dec68 RCX: 00000000004495e9
+RDX: 0000000000000010 RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 00000000006dec60 R08: 00007f32e8400700 R09: 0000000000000000
+R10: 00007f32e8400700 R11: 0000000000000246 R12: 00000000006dec6c
+R13: 0000000000000000 R14: 0000000000006f6c R15: 00000000006dec6c
+Modules linked in:
+---[ end trace 55770a30f050c228 ]---
+RIP: 0010:__list_add_valid.cold+0x3a/0x3c lib/list_debug.c:26
+Code: 0b 48 89 f2 4c 89 e1 4c 89 ee 48 c7 c7 80 da 91 88 e8 29 3a b8 fd 0f 0b 48 89 f1 48 c7 c7 00 da 91 88 4c 89 e6 e8 15 3a b8 fd <0f> 0b 4c 89 f6 48 c7 c7 a0 db 91 88 e8 04 3a b8 fd 0f 0b 4c 89 ea
+RSP: 0018:ffffc90002197b70 EFLAGS: 00010286
+RAX: 0000000000000075 RBX: ffff88809db2b000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000432f60
+RBP: ffffc90002197b88 R08: 0000000000000075 R09: ffffed1015d26659
+R10: ffffed1015d26658 R11: ffff8880ae9332c7 R12: ffff888092dbd570
+R13: ffff88809db2b1e0 R14: ffff8880965fb1e0 R15: ffff88809db2b1e0
+FS:  00007f32e8400700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 00000000a71ef000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-for you to fetch changes up to 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
 
-  KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-----------------------------------------------------------------
-More bugfixes, including a few remaining "make W=1" issues such
-as too large frame sizes on some configurations.  On the
-ARM side, the compiler was messing up shadow stacks between
-EL1 and EL2 code, which is easily fixed with __always_inline.
-
-----------------------------------------------------------------
-Christian Borntraeger (1):
-      KVM: let declaration of kvm_get_running_vcpus match implementation
-
-Erwan Velu (1):
-      kvm: x86: Limit the number of "kvm: disabled by bios" messages
-
-James Morse (3):
-      KVM: arm64: Ask the compiler to __always_inline functions used at HYP
-      KVM: arm64: Define our own swab32() to avoid a uapi static inline
-      arm64: Ask the compiler to __always_inline functions used by KVM at HYP
-
-Jeremy Cline (1):
-      KVM: arm/arm64: Fix up includes for trace.h
-
-Mark Rutland (1):
-      kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
-
-Oliver Upton (1):
-      KVM: VMX: check descriptor table exits on instruction emulation
-
-Paolo Bonzini (4):
-      KVM: SVM: allocate AVIC data structures based on kvm_amd module parameter
-      KVM: allow disabling -Werror
-      KVM: x86: avoid useless copy of cpufreq policy
-      Merge tag 'kvmarm-fixes-5.6-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-
-Valdis Kletnieks (1):
-      KVM: x86: allow compiling as non-module with W=1
-
-Wanpeng Li (2):
-      KVM: Introduce pv check helpers
-      KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
-
- arch/arm/include/asm/kvm_host.h          |  3 --
- arch/arm64/include/asm/arch_gicv3.h      |  2 +-
- arch/arm64/include/asm/cache.h           |  2 +-
- arch/arm64/include/asm/cacheflush.h      |  2 +-
- arch/arm64/include/asm/cpufeature.h      | 10 ++---
- arch/arm64/include/asm/io.h              |  4 +-
- arch/arm64/include/asm/kvm_emulate.h     | 48 +++++++++++------------
- arch/arm64/include/asm/kvm_host.h        | 32 ----------------
- arch/arm64/include/asm/kvm_hyp.h         |  7 ++++
- arch/arm64/include/asm/kvm_mmu.h         |  3 +-
- arch/arm64/include/asm/virt.h            |  2 +-
- arch/arm64/kvm/hyp/switch.c              | 39 ++++++++++++++++++-
- arch/arm64/kvm/hyp/vgic-v2-cpuif-proxy.c |  4 +-
- arch/x86/kernel/kvm.c                    | 65 +++++++++++++++++++++-----------
- arch/x86/kvm/Kconfig                     | 13 +++++++
- arch/x86/kvm/Makefile                    |  2 +-
- arch/x86/kvm/svm.c                       |  5 ++-
- arch/x86/kvm/vmx/vmx.c                   | 17 +++++++++
- arch/x86/kvm/x86.c                       | 14 +++----
- include/linux/kvm_host.h                 |  2 +-
- virt/kvm/arm/arm.c                       |  2 -
- virt/kvm/arm/trace.h                     |  1 +
- 22 files changed, 171 insertions(+), 108 deletions(-)
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
