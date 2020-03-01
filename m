@@ -2,170 +2,190 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E710BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4CF2222C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8EC2468A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWk86eVq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+Bm1Mor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgCAQYC (ORCPT
+        id S1726744AbgCAQYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:24:02 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44601 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgCAQYC (ORCPT
+        Sun, 1 Mar 2020 11:24:22 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41974 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgCAQYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 11:24:02 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n7so1504606wrt.11;
-        Sun, 01 Mar 2020 08:24:01 -0800 (PST)
+        Sun, 1 Mar 2020 11:24:21 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b1so4147483pgm.8;
+        Sun, 01 Mar 2020 08:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aQNmJtnJXUdOZ5WP+6T2LhMyumwJevaLkPnO98h9yHA=;
-        b=YWk86eVqQaKhmsRxJRXQRhInrV5Ux6ehMNjIZTv9go70h47TctNgBesFMI2qEfm/Pq
-         gpbyJxdFj7Tgls/Mm0k3YZQaRv9jQD399/c6ld5oPxgDRH/aG3eoF59EWoZ4A5+NxGQk
-         LtNgbo6N+KbgUYu1KZpUxKQVRUJPA4ghwYmBP6tCRRO8+NXek8ol8y3YSWz7aaDh1DEp
-         Zu8vIafKIF6amGu6udehdAQ4T0cHzWvShQ+xnzgIxwR1zx2qKoK2inY1CKucGYKFpj8Z
-         BqIzIhV5dlu2L+vmCSzfM645Y4XwG51Qx9PVSTuzSt+stTZaVgXdgZU2e6aXnZtwPg6w
-         43nQ==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l75YHuHCJPf5NKCnDm87HGExQ9J1GGx9GGiE0t5xAbk=;
+        b=d+Bm1MorZjylipRacIUl+2VL5/L1ANg8064s0fc8D/CmdOrbrTijHYJCWTsQx0uFys
+         9pPtIn4M5cP8tH/whXEnCOBdcoh6S6tkLw74LOqZNOZirAJ97RZimkVSOUGWS0LgVlYT
+         lnFlxwi85w2fps21LXI4O33VHsXErfDOV4yrKjum4uzjp/ISC8KlE0iPQBQD6PgG8m9A
+         ymZBvS/2CTZOlw3qCVIpUeT/4Nqs4R6FoMHuE5y2kjt2hiHsA0z8RfUuS3nVJIm48CYT
+         WmD0YeNyPg4r7skRsWbgXutG2wV372/wjFfqWyq+se8fqF2JyA9tJWXxkF+u3+RNFPVd
+         e7Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aQNmJtnJXUdOZ5WP+6T2LhMyumwJevaLkPnO98h9yHA=;
-        b=pi0dBEhEqlN3Qwju+ScTy367W2KgErjpqWSQuKABq78jZByJHmfZCeCaEeaaGfxtzq
-         mdVIqFCLV7jwORZLffyGYnJ+zxaO29xX8QP2fp+3iR/FLX0lAbYs+LyFLz6A4dy439F+
-         u7WxiQ7zQmZR5TXqhqJOjTKWg0qyvPc1aNLLVuIWyGcAijVhaXzBufKUbmggfCA7IFlY
-         giaEXbK4YnBelz3iGMT6saM/SvupprzxEIkLZGS8sol2uFPNZP0AK5OpUc/dDyxiHq+w
-         QQa4LpsVmcjJPiOfx8RGlvo7xVj4H/MTnZHs6qqIVqoZrvFtpolNFSBWjKstsAzM41D/
-         8xIw==
-X-Gm-Message-State: APjAAAXhWTn09wDcqfdPv+FSSF0mInpR5jTo9rCImoKHS/FrcPL2Yi2p
-        uIilCJUc0XsipvU9Vgl1nBZD4k9e
-X-Google-Smtp-Source: APXvYqwl85K9W7vCtZ0ns8VWbV8zz2soEcc0P5qtb9jvqnlN1zPEqJRSLA0WfB1/HLgsKi7vye+7Uw==
-X-Received: by 2002:adf:ea91:: with SMTP id s17mr16664707wrm.129.1583079840391;
-        Sun, 01 Mar 2020 08:24:00 -0800 (PST)
-Received: from [192.168.43.139] ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id a7sm10616716wmj.12.2020.03.01.08.23.58
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=l75YHuHCJPf5NKCnDm87HGExQ9J1GGx9GGiE0t5xAbk=;
+        b=MgQ5P5JRoQvpfFZixT+LlA26KS8jYLzZ5sMNyn2fPhumqDYZbekjs/WnZU1I7z4fjt
+         GXqG6s8J/sbnDBcgqxpVAQurQ+i3IeVWKE7pd54sc/PlJs2jHjJW8KNCfr9b43+y1VtK
+         BBfihPV8h3nLnXIMRZI3PDG82o7H2FV4clEgYIf9B2l2o5WVdkytA6gv9WgylF1TRuOZ
+         rCzaAsTy0tjO7GeFOhY+xjSugqFn04FR5QrVJT0XSEHYV7joYAoV0i6wsEhmb9mxwQE3
+         xSlIJh6fg5//C9mkbgDRY93gxxIaxio65FjgK0P5gIC6gToS5kM5FeZwRk2c1dE7ZfVh
+         d2sw==
+X-Gm-Message-State: APjAAAXuMGBpt5E5IxEQRn7R75bLtiw+05YawLS91nCPX6WPGQZjsvzE
+        Nr2xwvhEv1za1LUZntl7Vu8=
+X-Google-Smtp-Source: APXvYqwVhni3mFvZ+Tq1eTqYKbFepKmpXw4+HMhbHOwzYPKERKpmZ8yTdu8pSPc8x1EoNR1ERFPc/A==
+X-Received: by 2002:a62:e30f:: with SMTP id g15mr13785771pfh.124.1583079860264;
+        Sun, 01 Mar 2020 08:24:20 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id hg11sm8758778pjb.14.2020.03.01.08.24.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 08:24:00 -0800 (PST)
-Subject: Re: [PATCH RFC 0/9] nxt propagation + locking optimisation
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583078091.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <fe4cb05b-2fd0-25dd-e120-9a9d57659008@gmail.com>
-Date:   Sun, 1 Mar 2020 19:23:14 +0300
+        Sun, 01 Mar 2020 08:24:19 -0800 (PST)
+Subject: Re: [RFT PATCH 1/4] usb: dwc2: Simplify and fix DMA alignment code
+To:     =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Boris ARZUR <boris@konbu.org>, linux-usb@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Martin Schiller <ms@dev.tdt.de>
+References: <20200226210414.28133-1-linux@roeck-us.net>
+ <20200226210414.28133-2-linux@roeck-us.net>
+ <CAD=FV=WDd4E-zDW73kb-qHo1QYQrD3BTgVpE70rzowpgeXVy7w@mail.gmail.com>
+ <ce3357a1-467f-1241-ae0d-2e113116ca8d@roeck-us.net>
+ <f94fc372-d81b-e8e4-e7ef-780fe7db1237@roeck-us.net>
+ <CAD=FV=VNsOo--1x+pkwhWOWSGAQyVB6g6CE+o4q7phPSXaDXRw@mail.gmail.com>
+ <20200228175905.GB3188@roeck-us.net>
+ <CAKv9HNbugeO0E5w8PsN-EpgHBtAjOYZppkUz1u0a5Ue6k20GwQ@mail.gmail.com>
+ <62d81632-4a6f-b2d8-e420-b58fb6c9d044@roeck-us.net>
+ <CAKv9HNax9bK-60Gkv3ovZDAS_xVEQa95-J_9WKoEkifqa0u9+A@mail.gmail.com>
+ <CAKv9HNaPJFE5if2th5gqAu+_ncPrfGHVS-sJ67Zy8jao1tJZvg@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <28e29bb7-b536-dd0f-d410-f4add6b2a9ab@roeck-us.net>
+Date:   Sun, 1 Mar 2020 08:24:18 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <cover.1583078091.git.asml.silence@gmail.com>
+In-Reply-To: <CAKv9HNaPJFE5if2th5gqAu+_ncPrfGHVS-sJ67Zy8jao1tJZvg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/03/2020 19:18, Pavel Begunkov wrote:
-> There are several independent parts in the patchset, but bundled
-> to make a point.
-> 1-2: random stuff, that implicitly used later.
-> 3-5: restore @nxt propagation
-> 6-8: optimise locking in io_worker_handle_work()
-> 9: optimise io_uring refcounting
-> 
-> The next propagation bits are done similarly as it was before, but
-> - nxt stealing is now at top-level, but not hidden in handlers
-> - ensure there is no with REQ_F_DONT_STEAL_NEXT
-> 
-> [6-8] is the reason to dismiss the previous @nxt propagation appoach,
-> I didn't found a good way to do the same. Even though it looked
-> clearer and without new flag.
-> 
-> Performance tested it with link-of-nops + IOSQE_ASYNC:
-> 
-> link size: 100
-> orig:  501 (ns per nop)
-> 0-8:   446
-> 0-9:   416
-> 
-> link size: 10
-> orig:  826
-> 0-8:   776
-> 0-9:   756
+Hi Antti,
 
-BTW, that's basically QD1, and with contention for wqe->lock the gap should be
-even wider.
-
+On 3/1/20 7:51 AM, Antti Seppälä wrote:
+> On Sat, 29 Feb 2020 at 18:33, Antti Seppälä <a.seppala@gmail.com> wrote:
+>>
+>> On Sat, 29 Feb 2020 at 17:25, Guenter Roeck <linux@roeck-us.net> wrote:
+>>>
+>>> Sigh. It would have been too simple. Too bad I can't test myself.
+>>> I'd like to know if this is because URB_NO_TRANSFER_DMA_MAP is set on a
+>>> transfer, or because the beginning of the buffer indeed needs to be aligned
+>>> to the DMA cache line size on that system. In the latter case, the question
+>>> is why the alignment to DWC2_USB_DMA_ALIGN (=4) works. In the former case,
+>>> question would be why the realignment does any good in the first place.
+>>>
+>>> Any chance you can add some test code to help figuring out what exactly
+>>> goes wrong ?
+>>>
+>>
+>> Sure, I can try to help. Just let me know what code you would like to
+>> insert and where and I'll see what I can do.
+>>
 > 
-> Pavel Begunkov (9):
->   io_uring: clean up io_close
->   io-wq: fix IO_WQ_WORK_NO_CANCEL cancellation
->   io_uring: make submission ref putting consistent
->   io_uring: remove @nxt from handlers
->   io_uring: get next req on subm ref drop
->   io-wq: shuffle io_worker_handle_work() code
->   io-wq: io_worker_handle_work() optimise locking
->   io-wq: optimise double lock for io_get_next_work()
->   io_uring: pass submission ref to async
+> So I did some further research on this and it turns out that:
+>  - URB_NO_TRANSFER_DMA_MAP is not set on the offending transfers so
+> the issue really is buffer alignment
+>  - DWC2_USB_DMA_ALIGN=4 "works" because in my limited testcase (usb
+> 4g-dongle utilized via qmi-wwan) all transfers are unaligned. That is,
+> every urb->transfer_buffer is misaligned by 2 bytes == unaligned
+>  - I can fix both issues and thus make the patch work on MIPS by
+> modifying it like this:
 > 
->  fs/io-wq.c    | 162 ++++++++++++----------
->  fs/io_uring.c | 366 ++++++++++++++++++++++----------------------------
->  2 files changed, 258 insertions(+), 270 deletions(-)
+> -#define DWC2_USB_DMA_ALIGN 4
+> +#define DWC2_USB_DMA_ALIGN dma_get_cache_alignment()
+> 
+>  struct dma_aligned_buffer {
+>         void *old_xfer_buffer;
+> -       u8 data[0];
+> +       u8 data[0] ____cacheline_aligned;
+>  };
 > 
 
--- 
-Pavel Begunkov
+Thanks for the additional testing. That means that the existing code
+is already broken, or am I missing something ?
+
+Updating DWC2_USB_DMA_ALIGN to dma_get_cache_alignment() was part
+of my initial fix, but then I abandoned it because I thought, well,
+the existing alignment works, so that can't be the problem.
+
+Anyway, using ____cacheline_aligned is an excellent idea. I'll make
+the changes suggested above for the next version of my series.
+
+Thanks,
+Guenter
