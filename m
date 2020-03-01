@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40350C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFB1C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BF021D56
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C998121D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCAK2B (ORCPT
+        id S1726755AbgCAK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 05:28:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40046 "EHLO
+        Sun, 1 Mar 2020 05:28:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40035 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgCAK2A (ORCPT
+        with ESMTP id S1725812AbgCAK16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 05:28:00 -0500
+        Sun, 1 Mar 2020 05:27:58 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j8LpC-0003NF-W4; Sun, 01 Mar 2020 11:27:55 +0100
+        id 1j8LpD-0003NK-Hk; Sun, 01 Mar 2020 11:27:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 71CBD1C20DB;
-        Sun,  1 Mar 2020 11:27:54 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2DD031C20DB;
+        Sun,  1 Mar 2020 11:27:55 +0100 (CET)
 Date:   Sun, 01 Mar 2020 10:27:54 -0000
 From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Stop disabling timers on mt-exec
+Subject: [tip: timers/core] posix-cpu-timers: Pass the task into arm_timer()
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87o8tityzs.fsf@x220.int.ebiederm.org>
-References: <87o8tityzs.fsf@x220.int.ebiederm.org>
+In-Reply-To: <8736auvdt1.fsf@x220.int.ebiederm.org>
+References: <8736auvdt1.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Message-ID: <158305847406.28353.2266608665744750242.tip-bot2@tip-bot2>
+Message-ID: <158305847484.28353.10952093270897966054.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,57 +56,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     71aebe0e9c84d06413a95857315e94305df51251
-Gitweb:        https://git.kernel.org/tip/71aebe0e9c84d06413a95857315e94305df51251
+Commit-ID:     beb41d9cbe4179058634e05d60235b6155c7b6c6
+Gitweb:        https://git.kernel.org/tip/beb41d9cbe4179058634e05d60235b6155c7b6c6
 Author:        Eric W. Biederman <ebiederm@xmission.com>
-AuthorDate:    Fri, 28 Feb 2020 11:15:03 -06:00
+AuthorDate:    Fri, 28 Feb 2020 11:09:46 -06:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 01 Mar 2020 11:21:45 +01:00
+CommitterDate: Sun, 01 Mar 2020 11:21:44 +01:00
 
-posix-cpu-timers: Stop disabling timers on mt-exec
+posix-cpu-timers: Pass the task into arm_timer()
 
-The reasons why the extra posix_cpu_timers_exit_group() invocation has been
-added are not entirely clear from the commit message.  Today all that
-posix_cpu_timers_exit_group() does is stop timers that are tracking the
-task from firing.  Every other operation on those timers is still allowed.
+The task has been already computed to take siglock before calling
+arm_timer. So pass the benefit of that labor into arm_timer().
 
-The practical implication of this is posix_cpu_timer_del() which could
-not get the siglock after the thread group leader has exited (because
-sighand == NULL) would be able to run successfully because the timer
-was already dequeued.
-
-With that locking issue fixed there is no point in disabling all of the
-timers.  So remove this ``tempoary'' hack.
-
-Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87o8tityzs.fsf@x220.int.ebiederm.org
+Link: https://lkml.kernel.org/r/8736auvdt1.fsf@x220.int.ebiederm.org
 
 ---
- kernel/exit.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ kernel/time/posix-cpu-timers.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2833ffb..df54631 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -103,17 +103,8 @@ static void __exit_signal(struct task_struct *tsk)
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 40c2d83..ef936c5 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -482,12 +482,11 @@ void posix_cpu_timers_exit_group(struct task_struct *tsk)
+  * Insert the timer on the appropriate list before any timers that
+  * expire later.  This must be called with the sighand lock held.
+  */
+-static void arm_timer(struct k_itimer *timer)
++static void arm_timer(struct k_itimer *timer, struct task_struct *p)
+ {
+ 	int clkidx = CPUCLOCK_WHICH(timer->it_clock);
+ 	struct cpu_timer *ctmr = &timer->it.cpu;
+ 	u64 newexp = cpu_timer_getexpires(ctmr);
+-	struct task_struct *p = ctmr->task;
+ 	struct posix_cputimer_base *base;
  
- #ifdef CONFIG_POSIX_TIMERS
- 	posix_cpu_timers_exit(tsk);
--	if (group_dead) {
-+	if (group_dead)
- 		posix_cpu_timers_exit_group(tsk);
--	} else {
--		/*
--		 * This can only happen if the caller is de_thread().
--		 * FIXME: this is the temporary hack, we should teach
--		 * posix-cpu-timers to handle this case correctly.
--		 */
--		if (unlikely(has_group_leader_pid(tsk)))
--			posix_cpu_timers_exit_group(tsk);
--	}
- #endif
+ 	if (CPUCLOCK_PERTHREAD(timer->it_clock))
+@@ -660,7 +659,7 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
+ 	 */
+ 	cpu_timer_setexpires(ctmr, new_expires);
+ 	if (new_expires != 0 && val < new_expires) {
+-		arm_timer(timer);
++		arm_timer(timer, p);
+ 	}
  
- 	if (group_dead) {
+ 	unlock_task_sighand(p, &flags);
+@@ -980,7 +979,7 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ 	/*
+ 	 * Now re-arm for the new expiry time.
+ 	 */
+-	arm_timer(timer);
++	arm_timer(timer, p);
+ 	unlock_task_sighand(p, &flags);
+ }
+ 
