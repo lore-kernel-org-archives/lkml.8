@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883CDC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEB2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690A420CC7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2C4246B4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgCAVx6 (ORCPT
+        id S1727563AbgCAVyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:53:58 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41702 "EHLO
+        Sun, 1 Mar 2020 16:54:04 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41694 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgCAVws (ORCPT
+        with ESMTP id S1727126AbgCAVwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:48 -0500
+        Sun, 1 Mar 2020 16:52:47 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVy-003fPh-V4; Sun, 01 Mar 2020 21:52:47 +0000
+        id 1j8WVy-003fPV-Jy; Sun, 01 Mar 2020 21:52:46 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 41/55] follow_dotdot(): expand the call of path_parent_directory()
-Date:   Sun,  1 Mar 2020 21:52:26 +0000
-Message-Id: <20200301215240.873899-41-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 39/55] path_connected(): pass mount and dentry separately
+Date:   Sun,  1 Mar 2020 21:52:24 +0000
+Message-Id: <20200301215240.873899-39-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,93 +42,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-... and move the definition of path_parent_directory() towards
-the last remaining user.
+eventually we'll want to do that check *before* mangling
+nd->path.dentry...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 42 ++++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ fs/namei.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 8e588632e03a..9b66cd00edcb 100644
+index b73ff6dcca24..971d0ee11286 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1440,21 +1440,8 @@ static void follow_mount(struct path *path)
- 	}
+@@ -550,22 +550,20 @@ static int __nd_alloc_stack(struct nameidata *nd)
  }
  
--static struct dentry *path_parent_directory(struct path *path)
--{
--	/* rare case of legitimate dget_parent()... */
--	struct dentry *parent = dget_parent(path->dentry);
--
--	if (unlikely(!path_connected(path->mnt, parent))) {
--		dput(parent);
--		parent = NULL;
--	}
--	return parent;
--}
--
- static int follow_dotdot(struct nameidata *nd)
+ /**
+- * path_connected - Verify that a path->dentry is below path->mnt.mnt_root
+- * @path: nameidate to verify
++ * path_connected - Verify that a dentry is below mnt.mnt_root
+  *
+  * Rename can sometimes move a file or directory outside of a bind
+  * mount, path_connected allows those cases to be detected.
+  */
+-static bool path_connected(const struct path *path)
++static bool path_connected(struct vfsmount *mnt, struct dentry *dentry)
  {
--	struct dentry *parent;
- 	while (1) {
- 		if (path_equal(&nd->path, &nd->root)) {
- 			if (unlikely(nd->flags & LOOKUP_BENEATH))
-@@ -1462,9 +1449,13 @@ static int follow_dotdot(struct nameidata *nd)
- 			break;
- 		}
- 		if (nd->path.dentry != nd->path.mnt->mnt_root) {
--			parent = path_parent_directory(&nd->path);
--			if (!parent)
-+			/* rare case of legitimate dget_parent()... */
-+			struct dentry *parent = dget_parent(nd->path.dentry);
-+
-+			if (unlikely(!path_connected(nd->path.mnt, parent))) {
-+				dput(parent);
- 				return -ENOENT;
-+			}
- 			dput(nd->path.dentry);
+-	struct vfsmount *mnt = path->mnt;
+ 	struct super_block *sb = mnt->mnt_sb;
+ 
+ 	/* Bind mounts and multi-root filesystems can have disconnected paths */
+ 	if (!(sb->s_iflags & SB_I_MULTIROOT) && (mnt->mnt_root == sb->s_root))
+ 		return true;
+ 
+-	return is_subdir(path->dentry, mnt->mnt_root);
++	return is_subdir(dentry, mnt->mnt_root);
+ }
+ 
+ static inline int nd_alloc_stack(struct nameidata *nd)
+@@ -1386,7 +1384,7 @@ static int follow_dotdot_rcu(struct nameidata *nd)
+ 				return -ECHILD;
  			nd->path.dentry = parent;
+ 			nd->seq = seq;
+-			if (unlikely(!path_connected(&nd->path)))
++			if (unlikely(!path_connected(nd->path.mnt, parent)))
+ 				return -ECHILD;
  			break;
-@@ -2600,6 +2591,17 @@ struct dentry *lookup_positive_unlocked(const char *name,
- EXPORT_SYMBOL(lookup_positive_unlocked);
- 
- #ifdef CONFIG_UNIX98_PTYS
-+static int path_parent_directory(struct path *path)
-+{
-+	struct dentry *old = path->dentry;
-+	/* rare case of legitimate dget_parent()... */
-+	path->dentry = dget_parent(path->dentry);
-+	dput(old);
+ 		} else {
+@@ -1448,7 +1446,7 @@ static int path_parent_directory(struct path *path)
+ 	/* rare case of legitimate dget_parent()... */
+ 	path->dentry = dget_parent(path->dentry);
+ 	dput(old);
+-	if (unlikely(!path_connected(path)))
 +	if (unlikely(!path_connected(path->mnt, path->dentry)))
-+		return -ENOENT;
-+	return 0;
-+}
-+
- int path_pts(struct path *path)
- {
- 	/* Find something mounted on "pts" in the same directory as
-@@ -2607,13 +2609,13 @@ int path_pts(struct path *path)
- 	 */
- 	struct dentry *child, *parent;
- 	struct qstr this;
-+	int ret;
- 
--	parent = path_parent_directory(path);
--	if (!parent)
--		return -ENOENT;
-+	ret = path_parent_directory(path);
-+	if (ret)
-+		return ret;
- 
--	dput(path->dentry);
--	path->dentry = parent;
-+	parent = path->dentry;
- 	this.name = "pts";
- 	this.len = 3;
- 	child = d_hash_and_lookup(parent, &this);
+ 		return -ENOENT;
+ 	return 0;
+ }
 -- 
 2.11.0
 
