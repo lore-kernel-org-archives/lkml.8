@@ -2,103 +2,151 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513C8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B4EC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2715121775
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCQhYVjz"
+	by mail.kernel.org (Postfix) with ESMTP id DC6A421775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgCAP6B (ORCPT
+        id S1726700AbgCAP7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:58:01 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42146 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAP6B (ORCPT
+        Sun, 1 Mar 2020 10:59:16 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55079 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAP7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:58:01 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z11so610372wro.9;
-        Sun, 01 Mar 2020 07:57:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iroZ9Pow8ipGPXa1xqXyS4xbrWQ/m46THJdhapkwZPs=;
-        b=HCQhYVjzECHNBFYfaOYgrLshl4w/1m8c+dZQ364hYNxIVguVcKk2RtlliqFNwRXzWT
-         p8MBfqTtJNQDFQ0hfOI0e7uyIrJEC63D+Ji79SwTPHdtEcPjeOjJRFjEEUhmUn/KphLr
-         69VOo4fbqmOBvLgRdk5Qj2pVEbqksJjjKS9gGSqjbq7I515MMDdRI/zFjH3k5xWBqVBj
-         IPV38+4wCNvyPy5JLMxxO1eDp0KOfSSVERK6fSrvltLmh07BaNI2Ro6VcycIQgMgk/Yl
-         BYvHztsSDd6Is6Ovao1Zv19TpF8Uo8GYsvyBup1TF+GHRofb+yLmU3f/Z+2vewQvR0IY
-         zqbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iroZ9Pow8ipGPXa1xqXyS4xbrWQ/m46THJdhapkwZPs=;
-        b=Ypbn2i+6ZwPYego/VorX+fkfKos80PsSpKbi0Oxic50y1ngIUExWWGx3CrGTFYjz0S
-         fBaEQ16y8Uj3hDMIdwcJoWuoKYfwSjyICTazzinfH+Jt2srISsD3gat0Lh73PceiK/zz
-         9AunSxvnEeezpiG7X5mR/Sy9Yu+rhi/wH5Iaeq3DoOfUgZpTHV86hF4Zoo5q5QcmFjYC
-         6c2zqKvj99oe3w5tKzJcGa9tnqN+s1jWEQCykkdKHZN7o18oK9akY5nzh672t/2+4Eyl
-         mHgeeHMmwo3Ag4LUBAWCVvoNAavJv3nAi353eftOuRjPCwm0x97AOVm6fpwOhItTdawA
-         7Kzg==
-X-Gm-Message-State: APjAAAWRnQCk4jFVQEuggW77vTrjHrgYrUnBx0sdp1Mm9Qip1q+mvsX9
-        URQPnL/3a+3G8N1cWA/gN6Kz9MQL
-X-Google-Smtp-Source: APXvYqzf2dAKXnrWa85zHdtNOtLGTd2I3HDiJGeZMCNQtLRqVoSE/QuTdyn8SPzHqmG3yu64it04jw==
-X-Received: by 2002:a05:6000:1147:: with SMTP id d7mr17088478wrx.142.1583078277700;
-        Sun, 01 Mar 2020 07:57:57 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d89:1500:857:2082:e9c3:b57])
-        by smtp.gmail.com with ESMTPSA id b16sm18257181wrq.14.2020.03.01.07.57.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 07:57:57 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust EFI entry to removing eboot.c
-Date:   Sun,  1 Mar 2020 16:57:48 +0100
-Message-Id: <20200301155748.4788-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 1 Mar 2020 10:59:15 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8Qz8-0006pM-Le; Sun, 01 Mar 2020 15:58:30 +0000
+Date:   Sun, 1 Mar 2020 16:58:29 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Oleg Nesterov <oleg@redhat.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
+Message-ID: <20200301155829.iiupfihl6z4jkylh@wittgenstein>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200301151333.bsjfdjcjddsza2vn@yavin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200301151333.bsjfdjcjddsza2vn@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into libstub")
-removed arch/x86/boot/compressed/eboot.[ch], but missed to adjust the
-MAINTAINERS entry.
+On Mon, Mar 02, 2020 at 02:13:33AM +1100, Aleksa Sarai wrote:
+> On 2020-03-01, Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
+> > This fixes a deadlock in the tracer when tracing a multi-threaded
+> > application that calls execve while more than one thread are running.
+> > 
+> > I observed that when running strace on the gcc test suite, it always
+> > blocks after a while, when expect calls execve, because other threads
+> > have to be terminated.  They send ptrace events, but the strace is no
+> > longer able to respond, since it is blocked in vm_access.
+> > 
+> > The deadlock is always happening when strace needs to access the
+> > tracees process mmap, while another thread in the tracee starts to
+> > execve a child process, but that cannot continue until the
+> > PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+> > 
+> > strace          D    0 30614  30584 0x00000000
+> > Call Trace:
+> > __schedule+0x3ce/0x6e0
+> > schedule+0x5c/0xd0
+> > schedule_preempt_disabled+0x15/0x20
+> > __mutex_lock.isra.13+0x1ec/0x520
+> > __mutex_lock_killable_slowpath+0x13/0x20
+> > mutex_lock_killable+0x28/0x30
+> > mm_access+0x27/0xa0
+> > process_vm_rw_core.isra.3+0xff/0x550
+> > process_vm_rw+0xdd/0xf0
+> > __x64_sys_process_vm_readv+0x31/0x40
+> > do_syscall_64+0x64/0x220
+> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > expect          D    0 31933  30876 0x80004003
+> > Call Trace:
+> > __schedule+0x3ce/0x6e0
+> > schedule+0x5c/0xd0
+> > flush_old_exec+0xc4/0x770
+> > load_elf_binary+0x35a/0x16c0
+> > search_binary_handler+0x97/0x1d0
+> > __do_execve_file.isra.40+0x5d4/0x8a0
+> > __x64_sys_execve+0x49/0x60
+> > do_syscall_64+0x64/0x220
+> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > The proposed solution is to have a second mutex that is
+> > used in mm_access, so it is allowed to continue while the
+> > dying threads are not yet terminated.
+> > 
+> > I also took the opportunity to improve the documentation
+> > of prepare_creds, which is obviously out of sync.
+> >
+> > Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+> 
+> I can't comment on the validity of the patch, but I also found and
+> reported this issue in 2016[1] and the discussion quickly veered into
+> the problem being more complicated (and uglier) than it seems at first
+> glance.
+> 
+> You should probably also Cc stable, given this has been a long-standing
+> issue and your patch doesn't look (too) invasive.
+> 
+> [1]: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Yeah, I remember you mentioning this a while back.
 
-  warning: no file matches F: arch/x86/boot/compressed/eboot.[ch]
+Bernd, we really want a reproducer for this sent alongside with this
+patch added to:
+tools/testing/selftests/ptrace/
+Having a test for this bug irrespective of whether or not we go with
+this as fix seems really worth it.
 
-Rectify EXTENSIBLE FIRMWARE INTERFACE (EFI) entry in MAINTAINERS.
+Oleg seems to have suggested that a potential alternative fix is to wait
+in de_thread() until all other threads in the thread-group have passed
+exit_notiy(). Right now we only kill them but don't wait. Currently
+de_thread() only waits for the thread-group leader to pass exit_notify()
+whenever a non-thread-group leader thread execs (because the exec'ing
+thread becomes the new thread-group leader with the same pid as the
+former thread-group leader).
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Ard, please pick this patch for your linux-next branch.
-applies cleanly on next-20200228, do not apply on current master
-
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b04505e7c3..4ce510b8467a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6383,7 +6383,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
- S:	Maintained
- F:	Documentation/admin-guide/efi-stub.rst
- F:	arch/*/kernel/efi.c
--F:	arch/x86/boot/compressed/eboot.[ch]
- F:	arch/*/include/asm/efi.h
- F:	arch/x86/platform/efi/
- F:	drivers/firmware/efi/
--- 
-2.17.1
-
+Christian
