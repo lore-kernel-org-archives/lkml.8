@@ -2,43 +2,41 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E46AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B0EC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3407920675
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588702072D
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCAA3j (ORCPT
+        id S1727247AbgCAAiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:29:39 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:55746 "EHLO gloria.sntech.de"
+        Sat, 29 Feb 2020 19:38:02 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55802 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgCAA3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:29:39 -0500
+        id S1727170AbgCAAiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:38:02 -0500
 Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1j8CU0-0004yv-LN; Sun, 01 Mar 2020 01:29:24 +0100
+        id 1j8CcI-00050E-Gp; Sun, 01 Mar 2020 01:37:58 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Michael Trimarchi <michael@amarulasolutions.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] [media] dt-bindings: Add binding for rk3228 rga
-Date:   Sun, 01 Mar 2020 01:29:23 +0100
-Message-ID: <7950264.35eqgo7tFu@phil>
-In-Reply-To: <4e66b3f029c56d7c7709d39ed15894b86f51fd37.1580768038.git.justin.swartz@risingedge.co.za>
-References: <cover.1580768038.git.justin.swartz@risingedge.co.za> <4e66b3f029c56d7c7709d39ed15894b86f51fd37.1580768038.git.justin.swartz@risingedge.co.za>
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH 1/3] ARM: dts: rockchip: Fix vcc10_lcd name and voltage for rk3288-vyasa
+Date:   Sun, 01 Mar 2020 01:37:57 +0100
+Message-ID: <3357418.yJKWReClb3@phil>
+In-Reply-To: <20200123134641.30720-1-jagan@amarulasolutions.com>
+References: <20200123134641.30720-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -47,49 +45,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
-
-Am Montag, 3. Februar 2020, 23:40:15 CET schrieb Justin Swartz:
-> Indicate that the rk3228 rga is compatible with that of the rk3288.
+Am Donnerstag, 23. Januar 2020, 14:46:39 CET schrieb Jagan Teki:
+> According to hardware schematics of Vyasa RK3288 the
+> actual name used for vcc10_lcd is vdd10_lcd.
 > 
-> But if any rk3228-specific quirks are identified in future that
-> require handling logic that differs from what is provided for the
-> rk3288, then allow for the compatibility string "rockchip,rk3228-rga"
-> to be matched instead of "rockchip,rk3288-rga".
+> regulator suspend voltage can rail upto 1.0V not 1.8V.
 > 
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> Fix the name and suspend voltage for vcc10_lcd regulator.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-what is the process in the media-world for this dt-binding only patch?
-
-Do you want to apply it, or should I just also apply it with the following
-2 dt-patches? There shouldn't be any conflicts with the media tree
-as this patch really only affects the rga binding document.
+applied all 3 for 5.7
+[added a missing blank after the regulator in patch3]
 
 Thanks
 Heiko
-
-> ---
->  Documentation/devicetree/bindings/media/rockchip-rga.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-> index fd5276abf..c53a8e513 100644
-> --- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
-> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-> @@ -6,8 +6,9 @@ BitBLT, alpha blending and image blur/sharpness.
->  
->  Required properties:
->  - compatible: value should be one of the following
-> -		"rockchip,rk3288-rga";
-> -		"rockchip,rk3399-rga";
-> +  "rockchip,rk3228-rga", "rockchip,rk3288-rga": for Rockchip RK3228
-> +  "rockchip,rk3288-rga": for Rockchip RK3288
-> +  "rockchip,rk3399-rga": for Rockchip RK3399
->  
->  - interrupts: RGA interrupt specifier.
->  
-> 
-
-
 
 
