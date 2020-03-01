@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A5CC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA079C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9661246BA
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE899246B9
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgCATNS (ORCPT
+        id S1726627AbgCATNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 14:13:18 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:50409 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgCATNR (ORCPT
+        Sun, 1 Mar 2020 14:13:16 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37863 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgCATNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 14:13:17 -0500
-Received: by mail-il1-f199.google.com with SMTP id z12so9083262ilh.17
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 11:13:16 -0800 (PST)
+        Sun, 1 Mar 2020 14:13:16 -0500
+Received: by mail-io1-f70.google.com with SMTP id p4so6765281ioo.4
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 11:13:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jjlTu0sM1FCv2/JYXo8vf5D7M9vwMhnurnNYuMi1Y40=;
-        b=HDDTZAOAUQiyDNzmoPJtgbbaEf4i8rM6snIE7ObTXjcEYkjDI6519dzkVcoGPm+GvB
-         Yd9fjuqJ9kaig2uC3dWdeqHvAkEKkJMf69Mn36ecJqir2VIY3zsYiVNMw/3aR0HCE4Wu
-         5vwDv3psRE1/Se+I7wELE4TCcs67gLEqL236IPcPLZqE6bpDNAbgAOEdVjtUL7gLs7XN
-         +EHhpwVLw6v8coqq1hqu/Kr4QQzD3FT2LnHGn0JcI13/mNOrruf6j2FXelLT9hmGmvrf
-         j+AbQuPNPutHXMWktJstGwS5lsYVejGzIR5wn4kT6bS6EB0TK6IDeQuFL80lxe2MZBUE
-         Bq3A==
-X-Gm-Message-State: APjAAAVT0Simk0u7FVadKyDVyqV79u6GTzOhnbEBVxovXoOU3jICsNvW
-        0h1YUIX8fmLz2Jylifv39f45VTSmDVhhfEkX6+YLtcPyIDVK
-X-Google-Smtp-Source: APXvYqyFjTc73AWOvtUb7cRh7w+U2e7isTS1N0zF91fwpsZL0rGSYF5dTB/f+iWZMEVL4u6pCjKFXZejrSfDmG2IVnP9ZKt8AN5c
+        bh=4/VA9BmvqbsM5rNUMslEh9Krn9FOhK79mHkgoz8CgtQ=;
+        b=PqV9klCDgExQGdwhhCHlkfg7VheNCN9pvNbb1tr6++HOvJZ6DnBAvzKuOhbh48prHJ
+         FNy4s9g2gkLMeXX1siqNaMrbQJVjqkpeugnzLiLRdiRQZaYy3pVmCPbGn/AQQGoq8CHb
+         IK5SY8YnSaF/Sx6to3MvTEt5bdD7ONzSO1VdWuNhgRabGKd5Zbc8FWR4JPObSw9nAfuZ
+         HEJq/n9L5/wdUx0dja3H7cP0Glq0lp7OkllrcVr1fxY7gVOzLvpLs4Y4P8ww7GTtNyWA
+         YnOgJbZUs5qeC5RGWkuwzOV99ta6Vr3YnE6W7Qd9Wd/mQkH3ATwKba3fxcp7zwhXbih8
+         VFoQ==
+X-Gm-Message-State: APjAAAXNTWzE+rultrGDGoYEXbhwRo01dRmEA0lrAlEu8X+zRPAF4te1
+        JN7FwF1gkAoxxKbGi8KOhQJkINnMOrhfbGgGXhCdlnIIcpPa
+X-Google-Smtp-Source: APXvYqzB1BketvTg0rahQq0fxwHpeTUel4QC/DT09Cw7tuGz2C101wjAnqMSYMcXmWgQimMlSVx69hHFmRFRaPCrAKAiDcj5Xflj
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8b10:: with SMTP id n16mr7999724iod.227.1583089995662;
+X-Received: by 2002:a92:8547:: with SMTP id f68mr13809858ilh.26.1583089995471;
  Sun, 01 Mar 2020 11:13:15 -0800 (PST)
 Date:   Sun, 01 Mar 2020 11:13:15 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d6ce19059fcfdcd4@google.com>
-Subject: memory leak in reiserfs_parse_options
-From:   syzbot <syzbot+c9e294bbe0333a6b7640@syzkaller.appspotmail.com>
-To:     darrick.wong@oracle.com, deepa.kernel@gmail.com, jack@suse.cz,
-        jeffm@suse.com, jlayton@kernel.org, linux-kernel@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
+Message-ID: <000000000000d3e319059fcfdc98@google.com>
+Subject: WARNING: bad unlock balance in ovl_llseek
+From:   syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>
+To:     amir73il@gmail.com, linux-kernel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
+        mszeredi@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,73 +57,68 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+HEAD commit:    f8788d86 Linux 5.6-rc3
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=164d5d29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6951e37c8d613538
-dashboard link: https://syzkaller.appspot.com/bug?extid=c9e294bbe0333a6b7640
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1308bbede00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15cd8e45e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
+
+The bug was bisected to:
+
+commit b1f9d3858f724ed45b279b689fb5b400d91352e3
+Author: Amir Goldstein <amir73il@gmail.com>
+Date:   Sat Dec 21 09:42:29 2019 +0000
+
+    ovl: use ovl_inode_lock in ovl_llseek()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c9e294bbe0333a6b7640@syzkaller.appspotmail.com
+Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
+Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
 
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811df75f40 (size 32):
-  comm "syz-executor611", pid 7103, jiffies 4294943290 (age 13.730s)
-  hex dump (first 32 bytes):
-    73 79 7a 00 00 00 00 00 00 00 00 00 00 00 00 00  syz.............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000adefbfe2>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000adefbfe2>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000adefbfe2>] slab_alloc mm/slab.c:3320 [inline]
-    [<00000000adefbfe2>] __do_kmalloc mm/slab.c:3654 [inline]
-    [<00000000adefbfe2>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-    [<000000006e7fd3b2>] kstrdup+0x3a/0x70 mm/util.c:60
-    [<00000000f4f9470a>] reiserfs_parse_options+0x94c/0xe80 fs/reiserfs/super.c:1277
-    [<0000000080f3e2df>] reiserfs_fill_super+0x1a1/0x10e0 fs/reiserfs/super.c:1941
-    [<00000000f75361a0>] mount_bdev+0x1ce/0x210 fs/super.c:1417
-    [<00000000b8c200cc>] get_super_block+0x35/0x40 fs/reiserfs/super.c:2606
-    [<00000000f4439f43>] legacy_get_tree+0x27/0x80 fs/fs_context.c:622
-    [<000000008eb8d222>] vfs_get_tree+0x2d/0xe0 fs/super.c:1547
-    [<00000000367f5f92>] do_new_mount fs/namespace.c:2822 [inline]
-    [<00000000367f5f92>] do_mount+0x97c/0xc80 fs/namespace.c:3107
-    [<0000000000ddb42a>] __do_sys_mount fs/namespace.c:3316 [inline]
-    [<0000000000ddb42a>] __se_sys_mount fs/namespace.c:3293 [inline]
-    [<0000000000ddb42a>] __x64_sys_mount+0xc0/0x140 fs/namespace.c:3293
-    [<00000000a60abc01>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<000000001bd2aaac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================
+WARNING: bad unlock balance detected!
+5.6.0-rc3-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
+[<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
+[<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
+but there are no more locks to release!
 
-BUG: memory leak
-unreferenced object 0xffff88811df755c0 (size 32):
-  comm "syz-executor611", pid 7103, jiffies 4294943290 (age 13.730s)
-  hex dump (first 32 bytes):
-    73 79 7a 00 00 00 00 00 00 00 00 00 00 00 00 00  syz.............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000adefbfe2>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000adefbfe2>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000adefbfe2>] slab_alloc mm/slab.c:3320 [inline]
-    [<00000000adefbfe2>] __do_kmalloc mm/slab.c:3654 [inline]
-    [<00000000adefbfe2>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-    [<000000006e7fd3b2>] kstrdup+0x3a/0x70 mm/util.c:60
-    [<00000000f4f9470a>] reiserfs_parse_options+0x94c/0xe80 fs/reiserfs/super.c:1277
-    [<0000000080f3e2df>] reiserfs_fill_super+0x1a1/0x10e0 fs/reiserfs/super.c:1941
-    [<00000000f75361a0>] mount_bdev+0x1ce/0x210 fs/super.c:1417
-    [<00000000b8c200cc>] get_super_block+0x35/0x40 fs/reiserfs/super.c:2606
-    [<00000000f4439f43>] legacy_get_tree+0x27/0x80 fs/fs_context.c:622
-    [<000000008eb8d222>] vfs_get_tree+0x2d/0xe0 fs/super.c:1547
-    [<00000000367f5f92>] do_new_mount fs/namespace.c:2822 [inline]
-    [<00000000367f5f92>] do_mount+0x97c/0xc80 fs/namespace.c:3107
-    [<0000000000ddb42a>] __do_sys_mount fs/namespace.c:3316 [inline]
-    [<0000000000ddb42a>] __se_sys_mount fs/namespace.c:3293 [inline]
-    [<0000000000ddb42a>] __x64_sys_mount+0xc0/0x140 fs/namespace.c:3293
-    [<00000000a60abc01>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-    [<000000001bd2aaac>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+other info that might help us debug this:
+1 lock held by syz-executor194/8947:
+ #0: ffff88809742ade0 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x279/0x310 fs/file.c:821
 
+stack backtrace:
+CPU: 0 PID: 8947 Comm: syz-executor194 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_unlock_imbalance_bug+0x20b/0x240 kernel/locking/lockdep.c:4007
+ __lock_release kernel/locking/lockdep.c:4241 [inline]
+ lock_release+0x469/0x710 kernel/locking/lockdep.c:4502
+ __mutex_unlock_slowpath+0x80/0x5b0 kernel/locking/mutex.c:1228
+ mutex_unlock+0xd/0x10 kernel/locking/mutex.c:740
+ ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
+ ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
+ vfs_llseek fs/read_write.c:300 [inline]
+ ksys_lseek fs/read_write.c:313 [inline]
+ __do_sys_lseek fs/read_write.c:324 [inline]
+ __se_sys_lseek fs/read_write.c:322 [inline]
+ __x64_sys_lseek+0x15f/0x1f0 fs/read_write.c:322
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445df9
+Code: e8 ac b8 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff735aecce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000008
+RAX: ffffffffffffffda RBX: 00000000006dac38 RCX: 0000000000445df
 
 
 ---
@@ -134,5 +128,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
