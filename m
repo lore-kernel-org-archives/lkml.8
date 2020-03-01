@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC11C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E802DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E601A246B6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF26924672
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5T0pypM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZ6By73B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCAVjM (ORCPT
+        id S1726811AbgCAVjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:39:12 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35423 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAVjM (ORCPT
+        Sun, 1 Mar 2020 16:39:16 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35436 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgCAVjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:39:12 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so3387802plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 13:39:10 -0800 (PST)
+        Sun, 1 Mar 2020 16:39:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s8so1751610pjq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 13:39:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ukz24jAlVoK0u9xc7RMDLoYCE0uHvE8+KI4d597Q+pU=;
-        b=Z5T0pypMoxMHFK5bluFNozMFA/6CAuR/2UvmG/1qUqwCx3nR4vAfJVzZv6DbEBoqZ7
-         Ow7cdOQAmoRdJbNdu6Pd7dFMEiWWbl+duldXVGKi9Sj2B1V/5t0Lvitve6qZGhZ+rEiy
-         6eDNqWtC/hj1fJzuMe3RmZ2X28tJD5452PdhrDz8HSwcZ+eARtZLQgAL4Pqu3iL6szfe
-         3rXbpo9cZguU1O3S9aWxpjug/SDGKE9+l2tAZVbzn6BZ2EnhbQjMorT+NVcX6NNrv1gk
-         fVe+tgaiZmagZqkhrfV8GoxUEsUAnV9rI49VFhMB2gXC/R3hw5GdOh65k5cyASfJIYXI
-         H8Kg==
+        bh=YJNHUDzAdLWChqG1N9revlyKtIZEHKpvhkJX7T9UBbE=;
+        b=LZ6By73BdbPoU4r2bSGdOY1WV4P79kzob+KJaemZh0Kocoq9IBzXEUB8EMLoHA8d+r
+         +fJU7jB6rXoUjuwCQW1ejO7mhiN1R4AzzNaGxaj1oL/gEU+qbP+5hCIqqFG2ZxUhwPsi
+         bwQLZBtKpe0qBgQky2613dMqBpP+Ka72x7aAAVhvgpwBD9tB/wmBKqYc6NNaBsfWVdsR
+         wEM26x8gzEPOi0yTWprBD1ZKKyOeJKhz/uK65RV45d5GywNLJ+64hXz0h9UpF4a5eQL3
+         E2THmIEd0WmZYvJIszGQWG4NMSU6Q9VgvZMN9jRHWM86/DZ7gklZETfu3WhxvxCIqcAC
+         CHTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ukz24jAlVoK0u9xc7RMDLoYCE0uHvE8+KI4d597Q+pU=;
-        b=TG1ImQX0yBrJlcD2a3yfof7hKJbMRHBgmI8tGsaL+lKIowK5sFhK4hRowaJVWIn3WE
-         dt9fqfL485f9D+9PjsYDInQXzwBLvLJSnpzbpBgNkAdBjwhXCV9bMa1ta8ceLumX2LKm
-         lGExESP2YHQtuXyrw4xDXwkThVBxTkjI3SFBtd/IJwaNex8v4N5obcaHfCpanTtH9ZY7
-         8sSw4Qa0y5iFo2qIe3A3tZSdzKyFGXCItnWKrwkaj/LRu0fgasfKCv4fNnQf3Hy2sRPM
-         4V0fBbSUSC8LvqXTByQaHbI7x+daQrrnh2o7y2IelXuP5Pvn3p7ci1Y6wFSTV9e9YhMf
-         +1yQ==
-X-Gm-Message-State: APjAAAVh2cpEcZNPKtM79srqgAU0XX6id+9DHR10wcO+AC0nORjZPPnv
-        lg8broqwK6BfMq100Axpy8V4uDmz
-X-Google-Smtp-Source: APXvYqyI+ZiCb7Ygnrtv0KxNcbuOkdAiN6ZDMxzSZwGMOdAOjFZol9+dbuyAgB13LgKHDa/zNXD9dA==
-X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr13821886plz.54.1583098749143;
-        Sun, 01 Mar 2020 13:39:09 -0800 (PST)
+        bh=YJNHUDzAdLWChqG1N9revlyKtIZEHKpvhkJX7T9UBbE=;
+        b=Jn+IVJ/rexDecO3wbTFDrIFWV8Znb4rKdfbXEZQC0ZX1sPekF/CQbGJgRZ4rZF1YSD
+         0CrbZ44NOVTn+48rKi5pedV4r113Q29rTC1FSvp+55bJmoI/NkCyK6mZEXY/M12Gx7DD
+         FCmkPIzz9nfFozCVZbZTcSTaKvenGSrghqEjXmy0r/m2goBtoEVi7WeQ1gTb8dnnDvR4
+         WasTwYMejtTDhTeoDOqu50peYxYspdNFxf1GXf2cOzuEDHRCPAlpqjg5hjCbcQigdjaI
+         0sLTspQeTfFYfN9Uuj0O+XDf4yDvj2OHIsiCzZcmtXtelmTLFJQG7t1LpmFMU8JbSP5J
+         RlAw==
+X-Gm-Message-State: ANhLgQ3FjiaIHl8/vEbQ64nTFYPcz1awQ+yaN+ZwRkscv31fpNRdFu8G
+        cobPY3HhpaOD4iDAUhKFI57oMVWA
+X-Google-Smtp-Source: ADFU+vuLrpCWb5J6xm7FDp6xlja4TsDZ/bD3diKdvDp/uq3M20KtjfJTS4LTlJRnpFEHJnCXX+KKUA==
+X-Received: by 2002:a17:902:5998:: with SMTP id p24mr7056846pli.215.1583098753022;
+        Sun, 01 Mar 2020 13:39:13 -0800 (PST)
 Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
-        by smtp.gmail.com with ESMTPSA id mr7sm5836640pjb.12.2020.03.01.13.39.08
+        by smtp.gmail.com with ESMTPSA id c15sm17184087pgk.66.2020.03.01.13.39.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 13:39:08 -0800 (PST)
+        Sun, 01 Mar 2020 13:39:12 -0800 (PST)
 From:   Stafford Horne <shorne@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Openrisc <openrisc@lists.librecores.org>,
@@ -64,10 +64,12 @@ Cc:     Openrisc <openrisc@lists.librecores.org>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Jonas Bonn <jonas@southpole.se>,
         Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v2 2/3] openrisc: Enable the clone3 syscall
-Date:   Mon,  2 Mar 2020 06:38:50 +0900
-Message-Id: <20200301213851.8096-3-shorne@gmail.com>
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 3/3] openrisc: Cleanup copy_thread_tls docs and comments
+Date:   Mon,  2 Mar 2020 06:38:51 +0900
+Message-Id: <20200301213851.8096-4-shorne@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200301213851.8096-1-shorne@gmail.com>
 References: <20200301213851.8096-1-shorne@gmail.com>
@@ -78,30 +80,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the clone3 syscall for OpenRISC.  We use the generic version.
+Previously copy_thread_tls was copy_thread and before that something
+else.  Remove the documentation about the regs parameter that didn't
+exist in either version.
 
-This was tested with the clone3 test from selftests.  Note, for all
-tests to pass it required enabling CONFIG_NAMESPACES which is not
-enabled in the default OpenRISC kernel config.
+Next, fix comment wrapping and details about how TLS pointer gets to the
+copy_thread_tls function.
 
 Signed-off-by: Stafford Horne <shorne@gmail.com>
 Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- arch/openrisc/include/uapi/asm/unistd.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/openrisc/kernel/process.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/openrisc/include/uapi/asm/unistd.h b/arch/openrisc/include/uapi/asm/unistd.h
-index 566f8c4f8047..fae34c60fa88 100644
---- a/arch/openrisc/include/uapi/asm/unistd.h
-+++ b/arch/openrisc/include/uapi/asm/unistd.h
-@@ -24,6 +24,7 @@
- #define __ARCH_WANT_SET_GET_RLIMIT
- #define __ARCH_WANT_SYS_FORK
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
- #define __ARCH_WANT_TIME32_SYSCALLS
- 
- #include <asm-generic/unistd.h>
+diff --git a/arch/openrisc/kernel/process.c b/arch/openrisc/kernel/process.c
+index 5caa47f7de4f..6bcdca424e11 100644
+--- a/arch/openrisc/kernel/process.c
++++ b/arch/openrisc/kernel/process.c
+@@ -122,7 +122,6 @@ extern asmlinkage void ret_from_fork(void);
+  * @usp: user stack pointer or fn for kernel thread
+  * @arg: arg to fn for kernel thread; always NULL for userspace thread
+  * @p: the newly created task
+- * @regs: CPU context to copy for userspace thread; always NULL for kthread
+  * @tls: the Thread Local Storage pointer for the new process
+  *
+  * At the top of a newly initialized kernel stack are two stacked pt_reg
 -- 
 2.21.0
 
