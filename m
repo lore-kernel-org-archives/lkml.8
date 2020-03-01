@@ -2,141 +2,166 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57441C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C6E246C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945C924697
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="geEqLlC1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AGGYvBFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgCAUAx (ORCPT
+        id S1726418AbgCAUGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:00:53 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41152 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAUAv (ORCPT
+        Sun, 1 Mar 2020 15:06:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50925 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725895AbgCAUGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:00:51 -0500
-Received: by mail-ot1-f66.google.com with SMTP id v19so7623840ote.8
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 12:00:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eSJCogFW+5WEfqSVoqYuW5WPipQ09ya4rXn8XpVI9lk=;
-        b=geEqLlC1SOE3TSZPMu4eY2C7kEQ3iAEu8+MjDZth1yJJEz3aYIl8RZzNGqXKo+fdBK
-         L3piqmGBZ+R6u2jb71FG+otXTb5dexaFNTIMqfdFtBwyUv8J83uWWiWpJL700olDe1KU
-         jdQ95KSTEviW1p++P8rmN10buW8MUjs1Ce5bxgvibleP8FVy2pIqdkf+iVbKv0OxIfep
-         R3lnoXwspaouzFJKvOL2TU0Ri+Z9X4sJEOZJahs/nnjs5Uj7mCy6y8dFFjwiRQtUui/3
-         PYeYJCJjLDd5jpik81hu7laW8Arud8MEejgRzp/E94E5OSXDgeoA9nO6m2RJMQ1ob9wA
-         F/aQ==
+        Sun, 1 Mar 2020 15:06:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583093168;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ILXO2eXZPASOoI7MkLPdupz0F1Xu1tLIw+lHAxhsHxE=;
+        b=AGGYvBFZjFkXF6/aG8XT5U2RtaCxQ3PQLXrFssn62fB7RCYABqOuARS+XzMvE5smmUe7oB
+        xIgEkAE+9LBbcj15NaO8ePXJAgXrBgXaG5acM2iDNOl8Qm5GCF0Sbq0hBpSZLb57VLyvt4
+        lyVBZzAk0faUSOBRKJ8tK4zV7qCucFA=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-RLExHw3MO4eA-OId0Q0ayQ-1; Sun, 01 Mar 2020 15:06:06 -0500
+X-MC-Unique: RLExHw3MO4eA-OId0Q0ayQ-1
+Received: by mail-qt1-f200.google.com with SMTP id r13so7500130qtn.18
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 12:06:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eSJCogFW+5WEfqSVoqYuW5WPipQ09ya4rXn8XpVI9lk=;
-        b=NLi3voGjoyiXI6dA8S3tFA/hPRy+6g35mcP9mmn/FJJ7MYVwBS2cAWfeesmMcX9xME
-         hV04nnaSD040XvDr1/QJQwxvwtL1MJUucgJUU2lE1Bs+7nIAVOCfoo7MJ9IBUSJmVkeS
-         bz6WJ9zS7WNlShPAxMYfL7gTV+QnAVP9AI8jBgYCu6bOBUEhlCb5aw8/6Go4AmGJTFe/
-         5qDCD9ybqlTLtCnf4bfbEhT/SM3qtCaJ0fKqegFh6Di8SGemBBMjryHCaUDPX8aQze80
-         pJRpKbm0dlClYBz+GdL1F6JXM1PATFZCKcIM6a6LIr/4GvXOkz15G+LKul3BvkmTmba4
-         d26Q==
-X-Gm-Message-State: APjAAAUsS2rU+bEP0H4e0EXAZNkTbpQS73pMMRQqFT7Rg00wYJsHnfRl
-        cZ8DxPUeWz9GFcYV1AKkwcP7WarNN/28UKOlsC63QQ==
-X-Google-Smtp-Source: APXvYqxlPmGGj6lqZ/+U20/sqfXaMGOTkoLMW6nyRqaPvY8us5RwnrwLaHiGmuMsLhOUI/kEd8nfooddFe4/2Iz0+l8=
-X-Received: by 2002:a9d:5e8b:: with SMTP id f11mr10976903otl.110.1583092849244;
- Sun, 01 Mar 2020 12:00:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ILXO2eXZPASOoI7MkLPdupz0F1Xu1tLIw+lHAxhsHxE=;
+        b=lR3bzmpxTwHYpUEZcUdHKwA0ktHilhHXgc9Qt48F3xFQDx2qLpehUL1+q3atvN6HWk
+         jnt5Wc9UvRJgQn0zN71t1gaHKJX4UZGc+LkYmWn/K24esmx5eWyibym6InWpweKxhuf9
+         lIdUv0SLsw+nJP34F3z+SZs2QKaFep1ocnb+fRMdj3HoG76m+QK96/A/S1ZUtgRvkyXh
+         QVdogAAdTY8XzwIcrn+svb6ETNuL462TNzOENSxHIMNWoi0OkV63rFR3c2xhWgnOmVzR
+         P2pxCVUFhZAf4Nd0dXKtZ/kSPXzPAyRFz+rf7+/XBWuyPCp79iFkqTs8WbqEeQoiVYL2
+         ZZ6w==
+X-Gm-Message-State: ANhLgQ0Idt8jmSnLqTrgd1Pv5iCK9c+SkQhxOsxfe+Za5NoRNPfm8Cfy
+        1ztW+djAy2kd80r29oFO9Zx/HT50jNsQALzeyfmrxppWNWOcSzNB7gRZHYtaxaC85WBkoNjqT7z
+        /ZWeiKiv3IM+CUC7es/ZYipnY
+X-Received: by 2002:a0c:cdc7:: with SMTP id a7mr3159173qvn.33.1583093166038;
+        Sun, 01 Mar 2020 12:06:06 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtGqdq15wkvnSqxM2yybu5grrNXTMhrlBqJgAsLezYpWNDwvB4n42onnk2g6v6fgEux8vlQpQ==
+X-Received: by 2002:a0c:cdc7:: with SMTP id a7mr3159160qvn.33.1583093165836;
+        Sun, 01 Mar 2020 12:06:05 -0800 (PST)
+Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
+        by smtp.gmail.com with ESMTPSA id x34sm4591428qta.82.2020.03.01.12.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 12:06:04 -0800 (PST)
+Date:   Sun, 1 Mar 2020 15:06:00 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Yuri Benditovich <yuri.benditovich@daynix.com>
+Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, yan@daynix.com,
+        virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v3 1/3] virtio-net: Introduce extended RSC feature
+Message-ID: <20200301145828-mutt-send-email-mst@kernel.org>
+References: <20200301143302.8556-1-yuri.benditovich@daynix.com>
+ <20200301143302.8556-2-yuri.benditovich@daynix.com>
 MIME-Version: 1.0
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com> <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
-In-Reply-To: <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
-From:   Jann Horn <jannh@google.com>
-Date:   Sun, 1 Mar 2020 21:00:22 +0100
-Message-ID: <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
-Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200301143302.8556-2-yuri.benditovich@daynix.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 1, 2020 at 7:52 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> On Sun, Mar 01, 2020 at 07:21:03PM +0100, Jann Horn wrote:
-> > On Sun, Mar 1, 2020 at 12:27 PM Bernd Edlinger
-> > <bernd.edlinger@hotmail.de> wrote:
-> > > The proposed solution is to have a second mutex that is
-> > > used in mm_access, so it is allowed to continue while the
-> > > dying threads are not yet terminated.
-> >
-> > Just for context: When I proposed something similar back in 2016,
-> > https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
-> > was the resulting discussion thread. At least back then, I looked
-> > through the various existing users of cred_guard_mutex, and the only
-> > places that couldn't be converted to the new second mutex were
-> > PTRACE_ATTACH and SECCOMP_FILTER_FLAG_TSYNC.
-> >
-> >
-> > The ideal solution would IMO be something like this: Decide what the
-> > new task's credentials should be *before* reaching de_thread(),
-> > install them into a second cred* on the task (together with the new
-> > dumpability), drop the cred_guard_mutex, and let ptrace_may_access()
-> > check against both. After that, some further restructuring might even
->
-> Hm, so essentially a private ptrace_access_cred member in task_struct?
+On Sun, Mar 01, 2020 at 04:33:00PM +0200, Yuri Benditovich wrote:
+> VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
+> is able to provide extended RSC information. When the feature
+> is negotiatede and 'gso_type' field in received packet is not
+> GSO_NONE, the device reports number of coalesced packets in
+> 'csum_start' field and number of duplicated acks in 'csum_offset'
+> field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
+> 
+> Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
+> ---
+>  include/uapi/linux/virtio_net.h | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
+> index a3715a3224c1..19e76b3e3a64 100644
+> --- a/include/uapi/linux/virtio_net.h
+> +++ b/include/uapi/linux/virtio_net.h
+> @@ -57,6 +57,7 @@
+>  					 * Steering */
+>  #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
+>  
+> +#define VIRTIO_NET_F_RSC_EXT	  61	/* extended coalescing info */
+>  #define VIRTIO_NET_F_STANDBY	  62	/* Act as standby for another device
+>  					 * with the same MAC.
+>  					 */
+> @@ -104,6 +105,7 @@ struct virtio_net_config {
+>  struct virtio_net_hdr_v1 {
+>  #define VIRTIO_NET_HDR_F_NEEDS_CSUM	1	/* Use csum_start, csum_offset */
+>  #define VIRTIO_NET_HDR_F_DATA_VALID	2	/* Csum is valid */
+> +#define VIRTIO_NET_HDR_F_RSC_INFO	4	/* rsc info in csum_ fields */
+>  	__u8 flags;
+>  #define VIRTIO_NET_HDR_GSO_NONE		0	/* Not a GSO frame */
+>  #define VIRTIO_NET_HDR_GSO_TCPV4	1	/* GSO frame, IPv4 TCP (TSO) */
+> @@ -113,8 +115,24 @@ struct virtio_net_hdr_v1 {
+>  	__u8 gso_type;
+>  	__virtio16 hdr_len;	/* Ethernet + IP + tcp/udp hdrs */
+>  	__virtio16 gso_size;	/* Bytes to append to hdr_len per frame */
+> -	__virtio16 csum_start;	/* Position to start checksumming from */
+> -	__virtio16 csum_offset;	/* Offset after that to place checksum */
+> +	union {
+> +		struct {
+> +			__virtio16 csum_start;
+> +			__virtio16 csum_offset;
+> +		};
 
-And a second dumpability field, because that changes together with the
-creds during execve. (Btw, currently the dumpability is in the
-mm_struct, but that's kinda wrong. The mm_struct is removed from a
-task on exit while access checks can still be performed against it, and
-currently ptrace_may_access() just lets the access go through in that
-case, which weakens the protection offered by PR_SET_DUMPABLE when
-used for security purposes. I think it ought to be moved over into the
-task_struct.)
 
-> That would presumably also involve altering various LSM hooks to look at
-> ptrace_access_cred.
+Pls add comments for this one as well.
 
-When I tried to implement this in the past, I changed the LSM hook to
-take the target task's cred* as an argument, and then called the LSM
-hook twice from ptrace_may_access(). IIRC having the target task's
-creds as an argument works for almost all the LSMs, with the exception
-of Yama, which doesn't really care about the target task's creds, so
-you have to pass in both the task_struct* and the cred*.
+> +		struct {
+> +			/* Position to start checksumming from */
+> +			__virtio16 start;
+> +			/* Offset after that to place checksum */
+> +			__virtio16 offset;
+> +		} csum;
+
+Can we add a comment for csum field pls? E.g.
+	/* Checksum calculation */
+
+> +		struct {
+> +			/* num of coalesced packets */
+
+
+num -> Number? Don't abbreviate and upper case for consistency.
+
+> +			__le16 packets;
+
+packets -> coalesced_packets? Or is coalesced segments in fact better?
+
+> +			/* num of duplicated acks */
+
+num -> Number? Don't abbreviate and upper case for consistency.
+
+
+> +			__le16 dup_acks;
+> +		} rsc;
+
+/* Receive Segment Coalescing report */
+
+> +	};
+>  	__virtio16 num_buffers;	/* Number of merged rx buffers */
+>  };
+>  
+> -- 
+> 2.17.1
+
