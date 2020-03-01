@@ -2,332 +2,148 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E60C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5403AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF75B24672
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fm9Q1pq8"
+	by mail.kernel.org (Postfix) with ESMTP id 25E6024649
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 01:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCAB1A (ORCPT
+        id S1727308AbgCABpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 20:27:00 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37850 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbgCAB07 (ORCPT
+        Sat, 29 Feb 2020 20:45:12 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52648 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbgCABpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 20:26:59 -0500
-Received: by mail-pl1-f193.google.com with SMTP id q4so2756439pls.4
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 17:26:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cZ98MAtmzJD3PkkfGRavMVXdDCFnsPgSryPFXXjh1aM=;
-        b=fm9Q1pq8xRhFNXUyFMgfojMeobWVOKu2sLKo8bd8PeoJwJ0Jqd03QGcLUx3fYJwaUX
-         mwfoUp0xbTksbxtCGiZn8ilxpaO7W5zUL4bigE9sbolFeebx5mgGxOS7kLiOjVsIDw7g
-         unPchVp/1jFZ3VfLQKl8SZ3NbJpwaqJDKsH++PpJUJP4zQZMLqwWgdTPBOOAkVUDeME+
-         eQItbEuaBAXIYzD43F/Uli5IEkLtH+v9FFeYKelBRx9FgCX4mDsOO7eKM0nk9XeUz5+p
-         y1wGeqhMOxRQZe2KoyWTHt117D3HG0qnHraOA/yd5XcLAqKG85wf/Q84doZsWwA4ycs8
-         8Wvg==
+        Sat, 29 Feb 2020 20:45:11 -0500
+Received: by mail-il1-f197.google.com with SMTP id n7so5161260ilm.19
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Feb 2020 17:45:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cZ98MAtmzJD3PkkfGRavMVXdDCFnsPgSryPFXXjh1aM=;
-        b=CqBoZXqDaVmQHOWPOXp0qOYNq5Y5QVYw15t1kuVOXr2Otf7osodFa3US2GNSreclUe
-         Vlt3x4lpMQ6zunXOu/rGD4NBmbxV82qYR9EElsD7FUpdTzgoTCAV+qUQUQvMbUknThid
-         kPexSMio/foq/5rLSNT+1yDZzAoI3YT0lZ7a3UFUZFHc7WcM8ivTAVTqi0vUwFTdAZz/
-         +etg780eSLjzEY+lCYMkQy/GBCZ27DPgf7ALpQqGc/WGuFWMeovhLDrjSvDBgihnlcxb
-         agt9+v0boQ4ZBHrdcVBkdOTSHLDhim75T2rPHMsnY2OwKqXBzZNu6Q3BiEcFAZsQ0Bw2
-         G2tQ==
-X-Gm-Message-State: APjAAAVX0LfqHLOopsbz2Fun++U8jl5a1VwYx8lnF2SSFHMFcQsqF0Lh
-        jj0SJeCLdpeoJxkdl2ZsYEk=
-X-Google-Smtp-Source: APXvYqyHe+nX8DM+EyFzGgX7ZTqN4LB1jGI04o9Tr2g1DG2kJSJIDbUw5y+DykDkZvZr3+9A//+vRQ==
-X-Received: by 2002:a17:902:b783:: with SMTP id e3mr10295656pls.31.1583026017145;
-        Sat, 29 Feb 2020 17:26:57 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id w2sm15728973pfw.43.2020.02.29.17.26.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 29 Feb 2020 17:26:56 -0800 (PST)
-Date:   Sun, 1 Mar 2020 06:56:55 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v5] m68k: Replace setup_irq() by request_irq()
-Message-ID: <20200301012655.GA6035@afzalpc>
-References: <20200229153406.GA32479@afzalpc>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=pHhCTce9EZRh6yMt1LKQF/1Li19vVI0eOId6Q1UjB0g=;
+        b=Ut//8AjiwzXZ7JR75O9RfomgbYoRXVJxCbz5ffAztGfY+3MkjXEurTD7inrQp9dVdm
+         aLv+hCCTKNdojj6NesY6fuvBzix1C/Ga1tXiSCAoSCA1VPmrBKaL0wizB3SnC64l0eZ0
+         8kVk2exMqfrIT+IoEgj7oW6m7bfELhU1lmB6e2S/pPV3G+UJJRAuG532h7jQwWwZwfAU
+         cIBZ55gr11VN2YO6dDapH9BhgLehCYuebAKexgh5q/VoJHTqTPF/2iWykB3xVDOS4PHG
+         DbAnYxO03J5Nt/hRMgTCNMA6r2zZgKppZyZay1CHvPUp5/i0/0c9Ivt5xEeX/vZZHQhM
+         4DkQ==
+X-Gm-Message-State: APjAAAXBfopKcq3i1PvYle50ZJ4xdl2hm1Ja86CUwNfVIvbGNLRe1ojC
+        CAEChId1mjfwCGgKURZvJLPlZyURuxXv2AL2tZvGJMLuTf7V
+X-Google-Smtp-Source: APXvYqztGXptYaZPKRKIiQ4IqcFK2tvyq0LRUkl4LpHbJ5KjeCQe0bVqM9NJPy/8a+772bOFQTRuAwvnmpZm8XDDvxyJEQCnrs0N
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229153406.GA32479@afzalpc>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+X-Received: by 2002:a5d:8952:: with SMTP id b18mr8705743iot.40.1583027111085;
+ Sat, 29 Feb 2020 17:45:11 -0800 (PST)
+Date:   Sat, 29 Feb 2020 17:45:11 -0800
+In-Reply-To: <000000000000072c55059aa2033b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a04b93059fc13804@google.com>
+Subject: Re: possible deadlock in uart_write
+From:   syzbot <syzbot+b0e376d3731cd5e82bb7@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
+syzbot has found a reproducer for the following crash on:
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
+HEAD commit:    f8788d86 Linux 5.6-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1342fd29e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=b0e376d3731cd5e82bb7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1587ee65e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11993d31e00000
 
-Hence replace setup_irq() by request_irq().
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b0e376d3731cd5e82bb7@syzkaller.appspotmail.com
 
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+============================================
+WARNING: possible recursive locking detected
+5.6.0-rc3-syzkaller #0 Not tainted
+--------------------------------------------
+swapper/1/0 is trying to acquire lock:
+ffffffff8c353e10 (&port_lock_key){-.-.}, at: uart_write+0x1e1/0x6f0 drivers/tty/serial/serial_core.c:592
 
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
+but task is already holding lock:
+ffffffff8c353e10 (&port_lock_key){-.-.}, at: serial8250_handle_irq.part.0+0x24/0x2b0 drivers/tty/serial/8250/8250_port.c:1822
 
-v5:
- * Revert to pr_err
-v4:
- * Add modifications done per v3, but missed at couple of places
-v3:
- * Instead of tree wide series, arch specific patch (per tglx)
- * Strip irrelevant portions & more tweaking in commit message
- * Remove name indirection in pr_err string, print irq # and
-   symbolic error name in case of error
- * s/pr_err/pr_debug
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
- * remove now irrelevant comment lines at 3 places
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
- arch/m68k/68000/timers.c      | 16 +++++++---------
- arch/m68k/coldfire/pit.c      | 16 +++++++---------
- arch/m68k/coldfire/sltimers.c | 29 +++++++++++++++--------------
- arch/m68k/coldfire/timers.c   | 31 +++++++++++++++----------------
- 4 files changed, 44 insertions(+), 48 deletions(-)
+       CPU0
+       ----
+  lock(&port_lock_key);
+  lock(&port_lock_key);
 
-diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
-index 71ddb4c98726..1c8e8a83c325 100644
---- a/arch/m68k/68000/timers.c
-+++ b/arch/m68k/68000/timers.c
-@@ -68,14 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
- 
- /***************************************************************************/
- 
--static struct irqaction m68328_timer_irq = {
--	.name	 = "timer",
--	.flags	 = IRQF_TIMER,
--	.handler = hw_tick,
--};
--
--/***************************************************************************/
--
- static u64 m68328_read_clk(struct clocksource *cs)
- {
- 	unsigned long flags;
-@@ -102,11 +94,17 @@ static struct clocksource m68328_clk = {
- 
- void hw_timer_init(irq_handler_t handler)
- {
-+	int ret;
-+
- 	/* disable timer 1 */
- 	TCTL = 0;
- 
- 	/* set ISR */
--	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-+	ret = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-+	if (ret) {
-+		pr_err("Failed to request irq %d (timer): %pe\n", TMR_IRQ_NUM,
-+		       ERR_PTR(ret));
-+	}
- 
- 	/* Restart mode, Enable int, Set clock source */
- 	TCTL = TCTL_OM | TCTL_IRQEN | CLOCK_SOURCE;
-diff --git a/arch/m68k/coldfire/pit.c b/arch/m68k/coldfire/pit.c
-index eb6f16b0e2e6..fd1d9c915daa 100644
---- a/arch/m68k/coldfire/pit.c
-+++ b/arch/m68k/coldfire/pit.c
-@@ -111,14 +111,6 @@ static irqreturn_t pit_tick(int irq, void *dummy)
- 
- /***************************************************************************/
- 
--static struct irqaction pit_irq = {
--	.name	 = "timer",
--	.flags	 = IRQF_TIMER,
--	.handler = pit_tick,
--};
--
--/***************************************************************************/
--
- static u64 pit_read_clk(struct clocksource *cs)
- {
- 	unsigned long flags;
-@@ -146,6 +138,8 @@ static struct clocksource pit_clk = {
- 
- void hw_timer_init(irq_handler_t handler)
- {
-+	int ret;
-+
- 	cf_pit_clockevent.cpumask = cpumask_of(smp_processor_id());
- 	cf_pit_clockevent.mult = div_sc(FREQ, NSEC_PER_SEC, 32);
- 	cf_pit_clockevent.max_delta_ns =
-@@ -156,7 +150,11 @@ void hw_timer_init(irq_handler_t handler)
- 	cf_pit_clockevent.min_delta_ticks = 0x3f;
- 	clockevents_register_device(&cf_pit_clockevent);
- 
--	setup_irq(MCF_IRQ_PIT1, &pit_irq);
-+	ret = request_irq(MCF_IRQ_PIT1, pit_tick, IRQF_TIMER, "timer", NULL);
-+	if (ret) {
-+		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_PIT1,
-+		       ERR_PTR(ret));
-+	}
- 
- 	clocksource_register_hz(&pit_clk, FREQ);
- }
-diff --git a/arch/m68k/coldfire/sltimers.c b/arch/m68k/coldfire/sltimers.c
-index 1b11e7bacab3..5ab81c9c552d 100644
---- a/arch/m68k/coldfire/sltimers.c
-+++ b/arch/m68k/coldfire/sltimers.c
-@@ -50,18 +50,19 @@ irqreturn_t mcfslt_profile_tick(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction mcfslt_profile_irq = {
--	.name	 = "profile timer",
--	.flags	 = IRQF_TIMER,
--	.handler = mcfslt_profile_tick,
--};
--
- void mcfslt_profile_init(void)
- {
-+	int ret;
-+
- 	printk(KERN_INFO "PROFILE: lodging TIMER 1 @ %dHz as profile timer\n",
- 	       PROFILEHZ);
- 
--	setup_irq(MCF_IRQ_PROFILER, &mcfslt_profile_irq);
-+	ret = request_irq(MCF_IRQ_PROFILER, mcfslt_profile_tick, IRQF_TIMER,
-+			  "profile timer", NULL);
-+	if (ret) {
-+		pr_err("Failed to request irq %d (profile timer): %pe\n",
-+		       MCF_IRQ_PROFILER, ERR_PTR(ret));
-+	}
- 
- 	/* Set up TIMER 2 as high speed profile clock */
- 	__raw_writel(MCF_BUSCLK / PROFILEHZ - 1, PA(MCFSLT_STCNT));
-@@ -92,12 +93,6 @@ static irqreturn_t mcfslt_tick(int irq, void *dummy)
- 	return timer_interrupt(irq, dummy);
- }
- 
--static struct irqaction mcfslt_timer_irq = {
--	.name	 = "timer",
--	.flags	 = IRQF_TIMER,
--	.handler = mcfslt_tick,
--};
--
- static u64 mcfslt_read_clk(struct clocksource *cs)
- {
- 	unsigned long flags;
-@@ -126,6 +121,8 @@ static struct clocksource mcfslt_clk = {
- 
- void hw_timer_init(irq_handler_t handler)
- {
-+	int r;
-+
- 	mcfslt_cycles_per_jiffy = MCF_BUSCLK / HZ;
- 	/*
- 	 *	The coldfire slice timer (SLT) runs from STCNT to 0 included,
-@@ -140,7 +137,11 @@ void hw_timer_init(irq_handler_t handler)
- 	mcfslt_cnt = mcfslt_cycles_per_jiffy;
- 
- 	timer_interrupt = handler;
--	setup_irq(MCF_IRQ_TIMER, &mcfslt_timer_irq);
-+	r = request_irq(MCF_IRQ_TIMER, mcfslt_tick, IRQF_TIMER, "timer", NULL);
-+	if (r) {
-+		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_TIMER,
-+		       ERR_PTR(r));
-+	}
- 
- 	clocksource_register_hz(&mcfslt_clk, MCF_BUSCLK);
- 
-diff --git a/arch/m68k/coldfire/timers.c b/arch/m68k/coldfire/timers.c
-index 227aa5d13709..b8301fddf901 100644
---- a/arch/m68k/coldfire/timers.c
-+++ b/arch/m68k/coldfire/timers.c
-@@ -82,14 +82,6 @@ static irqreturn_t mcftmr_tick(int irq, void *dummy)
- 
- /***************************************************************************/
- 
--static struct irqaction mcftmr_timer_irq = {
--	.name	 = "timer",
--	.flags	 = IRQF_TIMER,
--	.handler = mcftmr_tick,
--};
--
--/***************************************************************************/
--
- static u64 mcftmr_read_clk(struct clocksource *cs)
- {
- 	unsigned long flags;
-@@ -118,6 +110,8 @@ static struct clocksource mcftmr_clk = {
- 
- void hw_timer_init(irq_handler_t handler)
- {
-+	int r;
-+
- 	__raw_writew(MCFTIMER_TMR_DISABLE, TA(MCFTIMER_TMR));
- 	mcftmr_cycles_per_jiffy = FREQ / HZ;
- 	/*
-@@ -134,7 +128,11 @@ void hw_timer_init(irq_handler_t handler)
- 
- 	timer_interrupt = handler;
- 	init_timer_irq();
--	setup_irq(MCF_IRQ_TIMER, &mcftmr_timer_irq);
-+	r = request_irq(MCF_IRQ_TIMER, mcftmr_tick, IRQF_TIMER, "timer", NULL);
-+	if (r) {
-+		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_TIMER,
-+		       ERR_PTR(r));
-+	}
- 
- #ifdef CONFIG_HIGHPROFILE
- 	coldfire_profile_init();
-@@ -170,14 +168,10 @@ irqreturn_t coldfire_profile_tick(int irq, void *dummy)
- 
- /***************************************************************************/
- 
--static struct irqaction coldfire_profile_irq = {
--	.name	 = "profile timer",
--	.flags	 = IRQF_TIMER,
--	.handler = coldfire_profile_tick,
--};
--
- void coldfire_profile_init(void)
- {
-+	int ret;
-+
- 	printk(KERN_INFO "PROFILE: lodging TIMER2 @ %dHz as profile timer\n",
- 	       PROFILEHZ);
- 
-@@ -188,7 +182,12 @@ void coldfire_profile_init(void)
- 	__raw_writew(MCFTIMER_TMR_ENORI | MCFTIMER_TMR_CLK16 |
- 		MCFTIMER_TMR_RESTART | MCFTIMER_TMR_ENABLE, PA(MCFTIMER_TMR));
- 
--	setup_irq(MCF_IRQ_PROFILER, &coldfire_profile_irq);
-+	ret = request_irq(MCF_IRQ_PROFILER, coldfire_profile_tick, IRQF_TIMER,
-+			  "profile timer", NULL);
-+	if (ret) {
-+		pr_err("Failed to request irq %d (profile timer): %pe\n",
-+		       MCF_IRQ_PROFILER, ERR_PTR(ret));
-+	}
- }
- 
- /***************************************************************************/
--- 
-2.25.1
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by swapper/1/0:
+ #0: ffff88809835ec30 (&(&i->lock)->rlock){-.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+ #0: ffff88809835ec30 (&(&i->lock)->rlock){-.-.}, at: serial8250_interrupt+0x2d/0x1a0 drivers/tty/serial/8250/8250_core.c:116
+ #1: ffffffff8c353e10 (&port_lock_key){-.-.}, at: serial8250_handle_irq.part.0+0x24/0x2b0 drivers/tty/serial/8250/8250_port.c:1822
+ #2: ffff8880a6ea6090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref+0x22/0x90 drivers/tty/tty_ldisc.c:288
+
+stack backtrace:
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
+ check_deadlock kernel/locking/lockdep.c:2411 [inline]
+ validate_chain kernel/locking/lockdep.c:2954 [inline]
+ __lock_acquire.cold+0x15d/0x385 kernel/locking/lockdep.c:3954
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+ uart_write+0x1e1/0x6f0 drivers/tty/serial/serial_core.c:592
+ n_hdlc_send_frames+0x29a/0x480 drivers/tty/n_hdlc.c:401
+ n_hdlc_tty_wakeup+0xc0/0xe0 drivers/tty/n_hdlc.c:477
+ tty_wakeup+0xe9/0x120 drivers/tty/tty_io.c:536
+ tty_port_default_wakeup+0x2b/0x40 drivers/tty/tty_port.c:50
+ tty_port_tty_wakeup+0x57/0x70 drivers/tty/tty_port.c:388
+ uart_write_wakeup+0x46/0x70 drivers/tty/serial/serial_core.c:104
+ serial8250_tx_chars+0x495/0xaf0 drivers/tty/serial/8250/8250_port.c:1760
+ serial8250_handle_irq.part.0+0x261/0x2b0 drivers/tty/serial/8250/8250_port.c:1833
+ serial8250_handle_irq drivers/tty/serial/8250/8250_port.c:1819 [inline]
+ serial8250_default_handle_irq+0xc0/0x150 drivers/tty/serial/8250/8250_port.c:1849
+ serial8250_interrupt+0xf1/0x1a0 drivers/tty/serial/8250/8250_core.c:126
+ __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
+ handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
+ handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
+ handle_edge_irq+0x25e/0x8d0 kernel/irq/chip.c:830
+ generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
+ do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
+ common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
+ </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: c8 c3 c3 f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 94 14 58 00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 84 14 58 00 fb f4 <c3> cc 55 48 89 e5 41 57 41 56 41 55 41 54 53 e8 5e 83 72 f9 e8 29
+RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000286 ORIG_RAX: ffffffffffffffda
+RAX: 1ffffffff1367622 RBX: ffff8880a99fc340 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fcbd4
+RBP: ffffc90000d3fd98 R08: ffff8880a99fc340 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffffff8aa5b3c0 R14: 0000000000000000 R15: 0000000000000001
+ arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
+ default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
+ start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
 
