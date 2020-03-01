@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB35C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E46C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069E820CC7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882AA20CC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgCAVx3 (ORCPT
+        id S1727441AbgCAVx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:53:29 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41726 "EHLO
+        Sun, 1 Mar 2020 16:53:28 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41738 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgCAVwt (ORCPT
+        with ESMTP id S1727193AbgCAVwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:49 -0500
+        Sun, 1 Mar 2020 16:52:50 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WW0-003fQI-5J; Sun, 01 Mar 2020 21:52:48 +0000
+        id 1j8WW0-003fQa-Mi; Sun, 01 Mar 2020 21:52:48 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 47/55] follow_dotdot{,_rcu}(): preparation to switch to step_into()
-Date:   Sun,  1 Mar 2020 21:52:32 +0000
-Message-Id: <20200301215240.873899-47-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 50/55] follow_dotdot{,_rcu}(): massage loops
+Date:   Sun,  1 Mar 2020 21:52:35 +0000
+Message-Id: <20200301215240.873899-50-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,168 +42,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Right now the tail ends of follow_dotdot{,_rcu}() are pretty
-much the open-coded analogues of step_into().  The differences:
-	* the lack of proper LOOKUP_NO_XDEV handling in non-RCU case
-(arguably a bug)
-	* the lack of ->d_manage() handling (again, arguably a bug)
-	* the lack of (conditional) put_link() - that sits in
-handle_dots() right now.
+The logics in both of them is the same:
+	while true
+		if in process' root	// uncommon
+			break
+		if *not* in mount root	// normal case
+			find the parent
+			return
+		if at absolute root	// very uncommon
+			break
+		move to underlying mountpoint
+	report that we are in root
 
-Bring the put_link() in, adjust the calling conventions so that
-on the next step with could just switch those functions to
-returning step_into().
+Pull the common path out of the loop:
+	if in process' root		// uncommon
+		goto in_root
+	if unlikely(in mount root)
+		while true
+			if at absolute root
+				goto in_root
+			move to underlying mountpoint
+			if in process' root
+				goto in_root
+			if in mount root
+				break;
+	find the parent	// we are not in mount root
+	return
+in_root:
+	report that we are in root
+
+The reason for that transformation is that we get to keep the
+common path straight *and* get a separate block for "move
+through underlying mountpoints", which will allow to sanitize
+NO_XDEV handling there.  What's more, the pared-down loops
+will be easier to deal with - in particular, non-RCU case
+has no need to grab mount_lock and rewriting it to the
+form that wouldn't do that is a non-trivial change.  Better
+do that with less stuff getting in the way...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 49 +++++++++++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+ fs/namei.c | 77 ++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 45 insertions(+), 32 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 1bfefb99cbca..3e3bf11ee3d7 100644
+index cf7b7a6c08fc..aa03a4b2ebe9 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1689,7 +1689,7 @@ static const char *step_into(struct nameidata *nd, int flags,
- 	return pick_link(nd, &path, inode, seq, flags);
- }
- 
--static int follow_dotdot_rcu(struct nameidata *nd)
-+static const char *follow_dotdot_rcu(struct nameidata *nd, int flags)
+@@ -1693,21 +1693,12 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd,
+ 					struct inode **inodep,
+ 					unsigned *seqp)
  {
- 	struct dentry *parent = NULL;
- 	struct inode *inode = nd->inode;
-@@ -1705,9 +1705,9 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 			inode = parent->d_inode;
- 			seq = read_seqcount_begin(&parent->d_seq);
- 			if (unlikely(read_seqcount_retry(&old->d_seq, nd->seq)))
--				return -ECHILD;
-+				return ERR_PTR(-ECHILD);
- 			if (unlikely(!path_connected(nd->path.mnt, parent)))
--				return -ECHILD;
-+				return ERR_PTR(-ECHILD);
- 			break;
- 		} else {
+-	while (1) {
+-		if (path_equal(&nd->path, &nd->root))
+-			break;
+-		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+-			struct dentry *old = nd->path.dentry;
+-			struct dentry *parent = old->d_parent;
++	struct dentry *parent, *old;
+ 
+-			*inodep = parent->d_inode;
+-			*seqp = read_seqcount_begin(&parent->d_seq);
+-			if (unlikely(read_seqcount_retry(&old->d_seq, nd->seq)))
+-				return ERR_PTR(-ECHILD);
+-			if (unlikely(!path_connected(nd->path.mnt, parent)))
+-				return ERR_PTR(-ECHILD);
+-			return parent;
+-		} else {
++	if (path_equal(&nd->path, &nd->root))
++		goto in_root;
++	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
++		while (1) {
  			struct mount *mnt = real_mount(nd->path.mnt);
-@@ -1716,11 +1716,11 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 			struct inode *inode2 = mountpoint->d_inode;
- 			unsigned seq = read_seqcount_begin(&mountpoint->d_seq);
+ 			struct mount *mparent = mnt->mnt_parent;
+ 			struct dentry *mountpoint = mnt->mnt_mountpoint;
+@@ -1716,7 +1707,7 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd,
  			if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
--				return -ECHILD;
-+				return ERR_PTR(-ECHILD);
+ 				return ERR_PTR(-ECHILD);
  			if (&mparent->mnt == nd->path.mnt)
- 				break;
+-				break;
++				goto in_root;
  			if (unlikely(nd->flags & LOOKUP_NO_XDEV))
--				return -ECHILD;
-+				return ERR_PTR(-ECHILD);
+ 				return ERR_PTR(-ECHILD);
  			/* we know that mountpoint was pinned */
- 			nd->path.dentry = mountpoint;
+@@ -1724,8 +1715,22 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd,
  			nd->path.mnt = &mparent->mnt;
-@@ -1730,7 +1730,7 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 	}
- 	if (unlikely(!parent)) {
- 		if (unlikely(nd->flags & LOOKUP_BENEATH))
--			return -ECHILD;
-+			return ERR_PTR(-ECHILD);
- 	} else {
- 		nd->path.dentry = parent;
- 		nd->seq = seq;
-@@ -1739,21 +1739,23 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 		struct mount *mounted;
- 		mounted = __lookup_mnt(nd->path.mnt, nd->path.dentry);
- 		if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
--			return -ECHILD;
-+			return ERR_PTR(-ECHILD);
- 		if (!mounted)
- 			break;
- 		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
--			return -ECHILD;
-+			return ERR_PTR(-ECHILD);
- 		nd->path.mnt = &mounted->mnt;
- 		nd->path.dentry = mounted->mnt.mnt_root;
- 		inode = nd->path.dentry->d_inode;
- 		nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
- 	}
- 	nd->inode = inode;
--	return 0;
-+	if (!(flags & WALK_MORE) && nd->depth)
-+		put_link(nd);
-+	return NULL;
- }
- 
--static int follow_dotdot(struct nameidata *nd)
-+static const char *follow_dotdot(struct nameidata *nd, int flags)
- {
- 	struct dentry *parent = NULL;
- 	while (1) {
-@@ -1764,43 +1766,45 @@ static int follow_dotdot(struct nameidata *nd)
- 			parent = dget_parent(nd->path.dentry);
- 			if (unlikely(!path_connected(nd->path.mnt, parent))) {
- 				dput(parent);
--				return -ENOENT;
-+				return ERR_PTR(-ENOENT);
- 			}
- 			break;
+ 			nd->inode = inode;
+ 			nd->seq = seq;
++			if (path_equal(&nd->path, &nd->root))
++				goto in_root;
++			if (nd->path.dentry != nd->path.mnt->mnt_root)
++				break;
  		}
- 		if (!follow_up(&nd->path))
- 			break;
- 		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
--			return -EXDEV;
-+			return ERR_PTR(-EXDEV);
  	}
- 	if (unlikely(!parent)) {
- 		if (unlikely(nd->flags & LOOKUP_BENEATH))
--			return -EXDEV;
-+			return ERR_PTR(-EXDEV);
- 	} else {
- 		dput(nd->path.dentry);
- 		nd->path.dentry = parent;
- 	}
- 	follow_mount(&nd->path);
- 	nd->inode = nd->path.dentry->d_inode;
--	return 0;
-+	if (!(flags & WALK_MORE) && nd->depth)
-+		put_link(nd);
-+	return NULL;
- }
- 
- static const char *handle_dots(struct nameidata *nd, int type, int flags)
- {
- 	if (type == LAST_DOTDOT) {
--		int error = 0;
-+		const char *error = NULL;
- 
- 		if (!nd->root.mnt) {
--			error = set_root(nd);
-+			error = ERR_PTR(set_root(nd));
- 			if (error)
--				return ERR_PTR(error);
-+				return error;
- 		}
- 		if (nd->flags & LOOKUP_RCU)
--			error = follow_dotdot_rcu(nd);
-+			error = follow_dotdot_rcu(nd, flags);
- 		else
--			error = follow_dotdot(nd);
-+			error = follow_dotdot(nd, flags);
- 		if (error)
--			return ERR_PTR(error);
-+			return error;
- 
- 		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
- 			/*
-@@ -1815,9 +1819,10 @@ static const char *handle_dots(struct nameidata *nd, int type, int flags)
- 			if (unlikely(__read_seqcount_retry(&rename_lock.seqcount, nd->r_seq)))
- 				return ERR_PTR(-EAGAIN);
- 		}
-+	} else { // LAST_DOT
-+		if (!(flags & WALK_MORE) && nd->depth)
-+			put_link(nd);
- 	}
--	if (!(flags & WALK_MORE) && nd->depth)
--		put_link(nd);
++	old = nd->path.dentry;
++	parent = old->d_parent;
++	*inodep = parent->d_inode;
++	*seqp = read_seqcount_begin(&parent->d_seq);
++	if (unlikely(read_seqcount_retry(&old->d_seq, nd->seq)))
++		return ERR_PTR(-ECHILD);
++	if (unlikely(!path_connected(nd->path.mnt, parent)))
++		return ERR_PTR(-ECHILD);
++	return parent;
++in_root:
+ 	if (unlikely(nd->flags & LOOKUP_BENEATH))
+ 		return ERR_PTR(-ECHILD);
  	return NULL;
- }
- 
+@@ -1735,25 +1740,33 @@ static struct dentry *follow_dotdot(struct nameidata *nd,
+ 				 struct inode **inodep,
+ 				 unsigned *seqp)
+ {
+-	while (1) {
+-		if (path_equal(&nd->path, &nd->root))
+-			break;
+-		if (nd->path.dentry != nd->path.mnt->mnt_root) {
+-			/* rare case of legitimate dget_parent()... */
+-			struct dentry *parent = dget_parent(nd->path.dentry);
+-			if (unlikely(!path_connected(nd->path.mnt, parent))) {
+-				dput(parent);
+-				return ERR_PTR(-ENOENT);
+-			}
+-			*seqp = 0;
+-			*inodep = parent->d_inode;
+-			return parent;
++	struct dentry *parent;
++
++	if (path_equal(&nd->path, &nd->root))
++		goto in_root;
++	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
++		while (1) {
++			if (!follow_up(&nd->path))
++				goto in_root;
++			if (unlikely(nd->flags & LOOKUP_NO_XDEV))
++				return ERR_PTR(-EXDEV);
++			if (path_equal(&nd->path, &nd->root))
++				goto in_root;
++			if (nd->path.dentry != nd->path.mnt->mnt_root)
++				break;
+ 		}
+-		if (!follow_up(&nd->path))
+-			break;
+-		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+-			return ERR_PTR(-EXDEV);
+ 	}
++	/* rare case of legitimate dget_parent()... */
++	parent = dget_parent(nd->path.dentry);
++	if (unlikely(!path_connected(nd->path.mnt, parent))) {
++		dput(parent);
++		return ERR_PTR(-ENOENT);
++	}
++	*seqp = 0;
++	*inodep = parent->d_inode;
++	return parent;
++
++in_root:
+ 	if (unlikely(nd->flags & LOOKUP_BENEATH))
+ 		return ERR_PTR(-EXDEV);
+ 	dget(nd->path.dentry);
 -- 
 2.11.0
 
