@@ -2,160 +2,85 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C581C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC92C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F538214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E7D214DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 15:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCAPOB (ORCPT
+        id S1726602AbgCAPQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 10:14:01 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:45516 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgCAPOB (ORCPT
+        Sun, 1 Mar 2020 10:16:56 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:59390 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgCAPQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 10:14:01 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48VmyF5F3XzKm9t;
-        Sun,  1 Mar 2020 16:13:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id Rk-9Jz51Rj94; Sun,  1 Mar 2020 16:13:52 +0100 (CET)
-Date:   Mon, 2 Mar 2020 02:13:33 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Sun, 1 Mar 2020 10:16:55 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id F04B2200B2E;
+        Sun,  1 Mar 2020 15:16:51 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id CF43520DA9; Sun,  1 Mar 2020 16:15:55 +0100 (CET)
+Date:   Sun, 1 Mar 2020 16:15:55 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     "Souza, Jose" <jose.souza@intel.com>, airlied@redhat.com
+Cc:     "Mun, Gwan-gyeong" <gwan-gyeong.mun@intel.com>,
+        "Nikula, Jani" <jani.nikula@intel.com>,
+        "s.zharkoff@gmail.com" <s.zharkoff@gmail.com>,
+        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
+        "airlied@redhat.com" <airlied@redhat.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
-Message-ID: <20200301151333.bsjfdjcjddsza2vn@yavin>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        "jonas@kwiboo.se" <jonas@kwiboo.se>
+Subject: 5.5.6-rc1+: lockup on boot -- drm/i915/display: Force the state
+ compute phase once to enable PSR
+Message-ID: <20200301151555.GA127893@light.dominikbrodowski.net>
+References: <20200217200942.GA2433@light.dominikbrodowski.net>
+ <20200217220852.55cbac43@collabora.com>
+ <20200218114821.GA2240@light.dominikbrodowski.net>
+ <eb191e966bb4065239d413fd904684de24d37789.camel@intel.com>
+ <20200218185847.GA15931@light.dominikbrodowski.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vg5uvlw455hqb7u3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <20200218185847.GA15931@light.dominikbrodowski.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 18, 2020 at 07:58:47PM +0100, Dominik Brodowski wrote:
+> On Tue, Feb 18, 2020 at 06:01:37PM +0000, Souza, Jose wrote:
+> > Hi
+> > 
+> > Yes this patch has a issue and we have a fix, I'm trying to find
+> > someone to review it, more information: 
+> > https://gitlab.freedesktop.org/drm/intel/issues/1151
+> 
+> Alas, that patch does not apply cleanly to -master.
 
---vg5uvlw455hqb7u3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any update on this patch? It doesn't seem to have landed in -master yet,
+though it solves a clear regression and without such a patch, my laptops
+refuse to boot. So it'd be much appreciated if that patch (or a variant
+thereof) is pushed upstream rather sooner than later.
 
-On 2020-03-01, Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
-> This fixes a deadlock in the tracer when tracing a multi-threaded
-> application that calls execve while more than one thread are running.
->=20
-> I observed that when running strace on the gcc test suite, it always
-> blocks after a while, when expect calls execve, because other threads
-> have to be terminated.  They send ptrace events, but the strace is no
-> longer able to respond, since it is blocked in vm_access.
->=20
-> The deadlock is always happening when strace needs to access the
-> tracees process mmap, while another thread in the tracee starts to
-> execve a child process, but that cannot continue until the
-> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
->=20
-> strace          D    0 30614  30584 0x00000000
-> Call Trace:
-> __schedule+0x3ce/0x6e0
-> schedule+0x5c/0xd0
-> schedule_preempt_disabled+0x15/0x20
-> __mutex_lock.isra.13+0x1ec/0x520
-> __mutex_lock_killable_slowpath+0x13/0x20
-> mutex_lock_killable+0x28/0x30
-> mm_access+0x27/0xa0
-> process_vm_rw_core.isra.3+0xff/0x550
-> process_vm_rw+0xdd/0xf0
-> __x64_sys_process_vm_readv+0x31/0x40
-> do_syscall_64+0x64/0x220
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->=20
-> expect          D    0 31933  30876 0x80004003
-> Call Trace:
-> __schedule+0x3ce/0x6e0
-> schedule+0x5c/0xd0
-> flush_old_exec+0xc4/0x770
-> load_elf_binary+0x35a/0x16c0
-> search_binary_handler+0x97/0x1d0
-> __do_execve_file.isra.40+0x5d4/0x8a0
-> __x64_sys_execve+0x49/0x60
-> do_syscall_64+0x64/0x220
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->=20
-> The proposed solution is to have a second mutex that is
-> used in mm_access, so it is allowed to continue while the
-> dying threads are not yet terminated.
->=20
-> I also took the opportunity to improve the documentation
-> of prepare_creds, which is obviously out of sync.
->
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-
-I can't comment on the validity of the patch, but I also found and
-reported this issue in 2016[1] and the discussion quickly veered into
-the problem being more complicated (and uglier) than it seems at first
-glance.
-
-You should probably also Cc stable, given this has been a long-standing
-issue and your patch doesn't look (too) invasive.
-
-[1]: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---vg5uvlw455hqb7u3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXlvRGgAKCRCdlLljIbnQ
-EjRbAPwOWy8usv2Qm9fpwRZDJoGAGVji8JaOgbWjcOY+L7Oi0wEAqx+Ima9ZqQxy
-8D24v6MY2GXoi53rQW5HdUcLes0joQo=
-=LnSE
------END PGP SIGNATURE-----
-
---vg5uvlw455hqb7u3--
+Thanks,
+	Dominik
