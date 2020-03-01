@@ -2,190 +2,111 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA56C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8EC2468A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+Bm1Mor"
+	by mail.kernel.org (Postfix) with ESMTP id 226EF222C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583079867;
+	bh=sFtIWk5WhtenuAHah8mLKgj39Bwsw4QfJcapPFFcUtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RYj6B/GvIOIS91UrkgIzQSzIR/aF0cUmZMLCk2VxySDFH9eQpfzjmCO9/KVFoOYpc
+	 f1hurhIQGfFKJmkv1fXXcraCCQXUbT18QwKcXe43dqbFhlRZzgkPjrZLougXaveQed
+	 QUq5wBhIEup659mY7RaJf4X38F7Lj0LUkKxo3tm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCAQYW (ORCPT
+        id S1726970AbgCAQY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:24:22 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41974 "EHLO
+        Sun, 1 Mar 2020 11:24:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43129 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgCAQYV (ORCPT
+        with ESMTP id S1726448AbgCAQYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 11:24:21 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b1so4147483pgm.8;
-        Sun, 01 Mar 2020 08:24:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l75YHuHCJPf5NKCnDm87HGExQ9J1GGx9GGiE0t5xAbk=;
-        b=d+Bm1MorZjylipRacIUl+2VL5/L1ANg8064s0fc8D/CmdOrbrTijHYJCWTsQx0uFys
-         9pPtIn4M5cP8tH/whXEnCOBdcoh6S6tkLw74LOqZNOZirAJ97RZimkVSOUGWS0LgVlYT
-         lnFlxwi85w2fps21LXI4O33VHsXErfDOV4yrKjum4uzjp/ISC8KlE0iPQBQD6PgG8m9A
-         ymZBvS/2CTZOlw3qCVIpUeT/4Nqs4R6FoMHuE5y2kjt2hiHsA0z8RfUuS3nVJIm48CYT
-         WmD0YeNyPg4r7skRsWbgXutG2wV372/wjFfqWyq+se8fqF2JyA9tJWXxkF+u3+RNFPVd
-         e7Rg==
+        Sun, 1 Mar 2020 11:24:25 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so4141269pgb.10;
+        Sun, 01 Mar 2020 08:24:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=l75YHuHCJPf5NKCnDm87HGExQ9J1GGx9GGiE0t5xAbk=;
-        b=MgQ5P5JRoQvpfFZixT+LlA26KS8jYLzZ5sMNyn2fPhumqDYZbekjs/WnZU1I7z4fjt
-         GXqG6s8J/sbnDBcgqxpVAQurQ+i3IeVWKE7pd54sc/PlJs2jHjJW8KNCfr9b43+y1VtK
-         BBfihPV8h3nLnXIMRZI3PDG82o7H2FV4clEgYIf9B2l2o5WVdkytA6gv9WgylF1TRuOZ
-         rCzaAsTy0tjO7GeFOhY+xjSugqFn04FR5QrVJT0XSEHYV7joYAoV0i6wsEhmb9mxwQE3
-         xSlIJh6fg5//C9mkbgDRY93gxxIaxio65FjgK0P5gIC6gToS5kM5FeZwRk2c1dE7ZfVh
-         d2sw==
-X-Gm-Message-State: APjAAAXuMGBpt5E5IxEQRn7R75bLtiw+05YawLS91nCPX6WPGQZjsvzE
-        Nr2xwvhEv1za1LUZntl7Vu8=
-X-Google-Smtp-Source: APXvYqwVhni3mFvZ+Tq1eTqYKbFepKmpXw4+HMhbHOwzYPKERKpmZ8yTdu8pSPc8x1EoNR1ERFPc/A==
-X-Received: by 2002:a62:e30f:: with SMTP id g15mr13785771pfh.124.1583079860264;
-        Sun, 01 Mar 2020 08:24:20 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id hg11sm8758778pjb.14.2020.03.01.08.24.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 08:24:19 -0800 (PST)
-Subject: Re: [RFT PATCH 1/4] usb: dwc2: Simplify and fix DMA alignment code
-To:     =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Boris ARZUR <boris@konbu.org>, linux-usb@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Martin Schiller <ms@dev.tdt.de>
-References: <20200226210414.28133-1-linux@roeck-us.net>
- <20200226210414.28133-2-linux@roeck-us.net>
- <CAD=FV=WDd4E-zDW73kb-qHo1QYQrD3BTgVpE70rzowpgeXVy7w@mail.gmail.com>
- <ce3357a1-467f-1241-ae0d-2e113116ca8d@roeck-us.net>
- <f94fc372-d81b-e8e4-e7ef-780fe7db1237@roeck-us.net>
- <CAD=FV=VNsOo--1x+pkwhWOWSGAQyVB6g6CE+o4q7phPSXaDXRw@mail.gmail.com>
- <20200228175905.GB3188@roeck-us.net>
- <CAKv9HNbugeO0E5w8PsN-EpgHBtAjOYZppkUz1u0a5Ue6k20GwQ@mail.gmail.com>
- <62d81632-4a6f-b2d8-e420-b58fb6c9d044@roeck-us.net>
- <CAKv9HNax9bK-60Gkv3ovZDAS_xVEQa95-J_9WKoEkifqa0u9+A@mail.gmail.com>
- <CAKv9HNaPJFE5if2th5gqAu+_ncPrfGHVS-sJ67Zy8jao1tJZvg@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <28e29bb7-b536-dd0f-d410-f4add6b2a9ab@roeck-us.net>
-Date:   Sun, 1 Mar 2020 08:24:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b9zTyAU7BXmkEe7ugpwVE5c9UwWjYoVXP/URLOq0tQ4=;
+        b=AuDjDuNjYV+gcG+Bx7ABOuHm8+x8ftx8EOeFqbSxF4qIhKTGWCt21YNfNzmfvUbKr6
+         Xt+TMD/HM7q8juPH5fkkdyVyHBQJ0ZqRi5QRWQGewFogEWCdVmO+G1kWBdWC80VCaDPq
+         bW3yUGNW2UittcVWkRPQlgRSZ40c5kkMcBHyYvg+HHwQzLnaMLaomDZQFZokcuqOfQMx
+         7DDG/xjVX3GhsOi6/nVpscg50+kQagX8b5aDs0W64VWQLQu9+HgkYEeOgLIRymNeXpKz
+         p8EsgPSGvF0qhaVK504dzan3+7FFj3gQpXafPSj6KFFPhetrogGG3MQjTswsRNMM48CR
+         xvWQ==
+X-Gm-Message-State: APjAAAWNk54EEK9quXko+ayEScd3/vhNL0l677ydbizzs+86KY/vlCiQ
+        OA47+TwW0yXH+CegVDswUTA=
+X-Google-Smtp-Source: APXvYqxWX+PrxH14LmuPjZnJ/EeloN1ii+LgDFRMue3c1Vi+GQT4MhSGFu6Y1Xq17Txwcnj8byPCHg==
+X-Received: by 2002:a63:1926:: with SMTP id z38mr14678948pgl.303.1583079864452;
+        Sun, 01 Mar 2020 08:24:24 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
+        by smtp.gmail.com with ESMTPSA id y1sm17303083pgi.56.2020.03.01.08.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 08:24:23 -0800 (PST)
+Date:   Sun, 1 Mar 2020 08:24:22 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: Re: [PATCH] fpga: dfl: pci: fix return value of
+ cci_pci_sriov_configure
+Message-ID: <20200301162422.GF7593@epycbox.lan>
+References: <1582610838-7019-1-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKv9HNaPJFE5if2th5gqAu+_ncPrfGHVS-sJ67Zy8jao1tJZvg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582610838-7019-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Antti,
-
-On 3/1/20 7:51 AM, Antti Seppälä wrote:
-> On Sat, 29 Feb 2020 at 18:33, Antti Seppälä <a.seppala@gmail.com> wrote:
->>
->> On Sat, 29 Feb 2020 at 17:25, Guenter Roeck <linux@roeck-us.net> wrote:
->>>
->>> Sigh. It would have been too simple. Too bad I can't test myself.
->>> I'd like to know if this is because URB_NO_TRANSFER_DMA_MAP is set on a
->>> transfer, or because the beginning of the buffer indeed needs to be aligned
->>> to the DMA cache line size on that system. In the latter case, the question
->>> is why the alignment to DWC2_USB_DMA_ALIGN (=4) works. In the former case,
->>> question would be why the realignment does any good in the first place.
->>>
->>> Any chance you can add some test code to help figuring out what exactly
->>> goes wrong ?
->>>
->>
->> Sure, I can try to help. Just let me know what code you would like to
->> insert and where and I'll see what I can do.
->>
+On Tue, Feb 25, 2020 at 02:07:18PM +0800, Xu Yilun wrote:
+> pci_driver.sriov_configure should return negative value on error and
+> number of enabled VFs on success. But now the driver returns 0 on
+> success. The sriov configure still works but will cause a warning
+> message:
 > 
-> So I did some further research on this and it turns out that:
->  - URB_NO_TRANSFER_DMA_MAP is not set on the offending transfers so
-> the issue really is buffer alignment
->  - DWC2_USB_DMA_ALIGN=4 "works" because in my limited testcase (usb
-> 4g-dongle utilized via qmi-wwan) all transfers are unaligned. That is,
-> every urb->transfer_buffer is misaligned by 2 bytes == unaligned
->  - I can fix both issues and thus make the patch work on MIPS by
-> modifying it like this:
+>   XX VFs requested; only 0 enabled
 > 
-> -#define DWC2_USB_DMA_ALIGN 4
-> +#define DWC2_USB_DMA_ALIGN dma_get_cache_alignment()
+> This patch changes the return value accordingly.
 > 
->  struct dma_aligned_buffer {
->         void *old_xfer_buffer;
-> -       u8 data[0];
-> +       u8 data[0] ____cacheline_aligned;
->  };
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  drivers/fpga/dfl-pci.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> index 89ca292..5387550 100644
+> --- a/drivers/fpga/dfl-pci.c
+> +++ b/drivers/fpga/dfl-pci.c
+> @@ -248,11 +248,13 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+>  			return ret;
+>  
+>  		ret = pci_enable_sriov(pcidev, num_vfs);
+> -		if (ret)
+> +		if (ret) {
+>  			dfl_fpga_cdev_config_ports_pf(cdev);
+> +			return ret;
+> +		}
+>  	}
+>  
+> -	return ret;
+> +	return num_vfs;
+>  }
+>  
+>  static void cci_pci_remove(struct pci_dev *pcidev)
+> -- 
+> 2.7.4
 > 
 
-Thanks for the additional testing. That means that the existing code
-is already broken, or am I missing something ?
+Applied to for-next,
 
-Updating DWC2_USB_DMA_ALIGN to dma_get_cache_alignment() was part
-of my initial fix, but then I abandoned it because I thought, well,
-the existing alignment works, so that can't be the problem.
-
-Anyway, using ____cacheline_aligned is an excellent idea. I'll make
-the changes suggested above for the next version of my series.
-
-Thanks,
-Guenter
+Thanks
