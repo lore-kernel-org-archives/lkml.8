@@ -2,50 +2,51 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A88C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64608C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E82214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC0C24680
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 10:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCAKQq convert rfc822-to-8bit (ORCPT
+        id S1726490AbgCAK16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 05:16:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40021 "EHLO
+        Sun, 1 Mar 2020 05:27:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40038 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgCAKQq (ORCPT
+        with ESMTP id S1725827AbgCAK16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 05:16:46 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        Sun, 1 Mar 2020 05:27:58 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j8Le7-0003DH-Ix; Sun, 01 Mar 2020 11:16:27 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D68BD100EA2; Sun,  1 Mar 2020 11:16:26 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
-In-Reply-To: <20200229185837.7d92cd2e@oasis.local.home>
-References: <87lfolfo79.fsf@nanos.tec.linutronix.de> <4EFF3B04-2C8A-4D63-BB63-B5804EBFFE2F@amacapital.net> <20200229185837.7d92cd2e@oasis.local.home>
-Date:   Sun, 01 Mar 2020 11:16:26 +0100
-Message-ID: <87imjofkhx.fsf@nanos.tec.linutronix.de>
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j8LpD-0003Nb-Sv; Sun, 01 Mar 2020 11:27:56 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7FE7D1C2130;
+        Sun,  1 Mar 2020 11:27:55 +0100 (CET)
+Date:   Sun, 01 Mar 2020 10:27:55 -0000
+From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] posix-cpu-timers: Remove unnecessary locking
+ around cpu_clock_sample_group
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <878skmvdts.fsf@x220.int.ebiederm.org>
+References: <878skmvdts.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Message-ID: <158305847525.28353.4345801491752820779.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -54,25 +55,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+The following commit has been merged into the timers/core branch of tip:
 
-> On Sat, 29 Feb 2020 11:25:24 -0800
-> Andy Lutomirski <luto@amacapital.net> wrote:
->
->> > While the tracer itself seems to handle this correctly, what about
->> > things like BPF programs which can be attached to tracepoints and
->> > function trace entries?  
->> 
->> I think that everything using the tracing code, including BPF, should
->> either do its own rcuidle stuff or explicitly not execute if we’re
->> not in CONTEXT_KERNEL.  That is, we probably need to patch BPF.
->
-> That's basically the route we are taking.
+Commit-ID:     60f2ceaa8111d9ec51af87bde4a6809f2b3235e4
+Gitweb:        https://git.kernel.org/tip/60f2ceaa8111d9ec51af87bde4a6809f2b3235e4
+Author:        Eric W. Biederman <ebiederm@xmission.com>
+AuthorDate:    Fri, 28 Feb 2020 11:09:19 -06:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 01 Mar 2020 11:21:44 +01:00
 
-Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
-except trace_hardirq_off/on() as those trace functions do not allow to
-attach anything AFAICT.
+posix-cpu-timers: Remove unnecessary locking around cpu_clock_sample_group
 
-Thanks,
+As of e78c3496790e ("time, signal: Protect resource use statistics
+with seqlock") cpu_clock_sample_group no longers needs siglock
+protection.  Unfortunately no one realized it at the time.
 
-        tglx
+Remove the extra locking that is for cpu_clock_sample_group and not
+for cpu_clock_sample.  This significantly simplifies the code.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/878skmvdts.fsf@x220.int.ebiederm.org
+
+---
+ kernel/time/posix-cpu-timers.c | 66 ++++++---------------------------
+ 1 file changed, 12 insertions(+), 54 deletions(-)
+
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 46cc188..40c2d83 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -718,31 +718,10 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
+ 	/*
+ 	 * Sample the clock to take the difference with the expiry time.
+ 	 */
+-	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
++	if (CPUCLOCK_PERTHREAD(timer->it_clock))
+ 		now = cpu_clock_sample(clkid, p);
+-	} else {
+-		struct sighand_struct *sighand;
+-		unsigned long flags;
+-
+-		/*
+-		 * Protect against sighand release/switch in exit/exec and
+-		 * also make timer sampling safe if it ends up calling
+-		 * thread_group_cputime().
+-		 */
+-		sighand = lock_task_sighand(p, &flags);
+-		if (unlikely(sighand == NULL)) {
+-			/*
+-			 * The process has been reaped.
+-			 * We can't even collect a sample any more.
+-			 * Disarm the timer, nothing else to do.
+-			 */
+-			cpu_timer_setexpires(ctmr, 0);
+-			return;
+-		} else {
+-			now = cpu_clock_sample_group(clkid, p, false);
+-			unlock_task_sighand(p, &flags);
+-		}
+-	}
++	else
++		now = cpu_clock_sample_group(clkid, p, false);
+ 
+ 	if (now < expires) {
+ 		itp->it_value = ns_to_timespec64(expires - now);
+@@ -986,43 +965,22 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ 	/*
+ 	 * Fetch the current sample and update the timer's expiry time.
+ 	 */
+-	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
++	if (CPUCLOCK_PERTHREAD(timer->it_clock))
+ 		now = cpu_clock_sample(clkid, p);
+-		bump_cpu_timer(timer, now);
+-		if (unlikely(p->exit_state))
+-			return;
+-
+-		/* Protect timer list r/w in arm_timer() */
+-		sighand = lock_task_sighand(p, &flags);
+-		if (!sighand)
+-			return;
+-	} else {
+-		/*
+-		 * Protect arm_timer() and timer sampling in case of call to
+-		 * thread_group_cputime().
+-		 */
+-		sighand = lock_task_sighand(p, &flags);
+-		if (unlikely(sighand == NULL)) {
+-			/*
+-			 * The process has been reaped.
+-			 * We can't even collect a sample any more.
+-			 */
+-			cpu_timer_setexpires(ctmr, 0);
+-			return;
+-		} else if (unlikely(p->exit_state) && thread_group_empty(p)) {
+-			/* If the process is dying, no need to rearm */
+-			goto unlock;
+-		}
++	else
+ 		now = cpu_clock_sample_group(clkid, p, true);
+-		bump_cpu_timer(timer, now);
+-		/* Leave the sighand locked for the call below.  */
+-	}
++
++	bump_cpu_timer(timer, now);
++
++	/* Protect timer list r/w in arm_timer() */
++	sighand = lock_task_sighand(p, &flags);
++	if (unlikely(sighand == NULL))
++		return;
+ 
+ 	/*
+ 	 * Now re-arm for the new expiry time.
+ 	 */
+ 	arm_timer(timer);
+-unlock:
+ 	unlock_task_sighand(p, &flags);
+ }
+ 
