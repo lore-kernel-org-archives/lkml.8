@@ -2,145 +2,142 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750ADC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194ECC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4618D20880
+	by mail.kernel.org (Postfix) with ESMTP id E043920880
 	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 12:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqQ7Elr8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNpiy/uV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgCAMWP (ORCPT
+        id S1726956AbgCAMWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 07:22:15 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41402 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgCAMWP (ORCPT
+        Sun, 1 Mar 2020 07:22:16 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37233 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgCAMWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 07:22:15 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t14so3067617plr.8;
-        Sun, 01 Mar 2020 04:22:14 -0800 (PST)
+Received: by mail-pj1-f67.google.com with SMTP id o2so1300492pjp.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 04:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nl6uqiUH7qk6Y6MADMhhMgJO0FCDRVW4SJPmE5qRI4E=;
-        b=ZqQ7Elr8poJVF7IVcgELGLcCETsfugqQdMvBQXb9PNKtiDOc+PCWno2GNyPp5z819v
-         fi11MCioI7kYhxXsuGqEiRctov8qIHp5LHxQdVx0S8Q9K3rR5I57+ukymnPCa6wTUVx3
-         8U/SWFgJQceYLLKncqhIYJM8D+HyVS28Q+ABVo+yn35zqNeaflPb5SQTGg9Yl+8eLjB7
-         QVlTwLaU0NXlQ2DzZ5KSS/VCQuDvNw7oa97xKL2CbRSlDfBqmZCZvZVCT+fZF/LS1/fZ
-         HuWJ/uqrK2i7ZKeJtmfiKgqeU2sVnj+pQ276PEpYURX5Bo9lhb0J9KMhUgvjM48coBzI
-         1icQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=6RuW8LcV5g6WypRcQIvGZ/SRPet4fNoET5RxUt4w0FQ=;
+        b=hNpiy/uVydyqMqWo83KwxexQEzJHid6YWnsfsiep0CUh6gNn2RqgFVOHvY6gTJMyiD
+         Eaf+TcdWuvFMS9DJRFcH8XWQIPeCCtXML4Tfwek2bBmaDjtfksppHrMIi956IGrBqndC
+         PfLL+9/TpG6+hrDk75dDl8tT3Q5nRU5IxaR8VBwW8cRm8PCEtRhEV8gZacp3OzWY76Sj
+         28ihxoPU2aHwvBHH47CDcophZnBA8/6n2cc65GE3Ml8tigk18JQXpqOUuvrx9hnS19xE
+         +8GMnkBaopOecBmMKgif+qRehxN4EtqVMmQyydbabPUWMgomywtsCBaIumrlucE4PeKy
+         syAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nl6uqiUH7qk6Y6MADMhhMgJO0FCDRVW4SJPmE5qRI4E=;
-        b=CsrNReh78cZXvpb7cCpErKaOUr+LzMFwMgNtqgEmtgv/pfqU0+JocpLWfiQvrrH3Pq
-         G3n8ANXnmhtrwKgMQXmRyltMWxymbrlTPJOYNllmqWZxxGL7Erriisx3oMA1db0pHBnI
-         gABGsI4kPOMvDUYnoNeAzb07vggB4C3clucYg/mQffE6WI5UZ3ZCaaQeQCJk6E/TYuO4
-         +6Ne5FMFtK5JXYA/FBNCzjnHJUbhsp6sOzVhncTi/CHTkQ70j6p33fnpUAlZo8skoxXO
-         f7qqRaH6vRtOluW8YGEdlTKjInfzmJURoiGYRb+C42tJBAJsqlEvQbRFDmX4ic2d/RoZ
-         pyMw==
-X-Gm-Message-State: APjAAAXKnJ2ZN7nYFGrsaHAlL61wrLKTNpplYmyQxiupokXKITT/v1vU
-        zRz0C3FDNRlaZQjHy81vg9M=
-X-Google-Smtp-Source: APXvYqzKnidncZJnTITfWPjqSK7bearuseLOfLxHjtrYw3tP28IlmIGi9T2rckRfHbwcf3T1d3ACFQ==
-X-Received: by 2002:a17:90a:77c3:: with SMTP id e3mr15535343pjs.143.1583065333982;
-        Sun, 01 Mar 2020 04:22:13 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id q8sm16955436pfs.161.2020.03.01.04.22.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6RuW8LcV5g6WypRcQIvGZ/SRPet4fNoET5RxUt4w0FQ=;
+        b=PA67OD+bcVKKKFY1iJ2OyrXKWP59HkZqWcDEqoXESTLirJIJOFFlSL3PFaJGn4JFx1
+         TBsks914rvZL0hx7hKmvp7j1aHqLUGCQp6WwHqZZ0B4uXJ3AMhPFBTqAF/AMEj71Rsel
+         dZgt4rdik81vriuDqkot3dHsBT2fOImMI+P7i2TsU5osVvayBVv1rbssV8EOuTgHmC3U
+         AR/5v2D186Dp1VI9vWTvbn16l5HFee15JDrJmDXN6dGarPGH1ojjTgg+EkUcvRdslHLE
+         kDQMDPtceIIrGRSX+M3/2txHW/wMHvAzV6tNyNnH7PcNpttSdf9GQIlKfn8bX94vBZEe
+         X6WQ==
+X-Gm-Message-State: APjAAAVgUXB2GvCt52GIvp4/nW/WwTmhWqcsA35mGZWSIkC01kcBVCj3
+        l1ewLxuijLuItpJ43yfDWW/vSi0x
+X-Google-Smtp-Source: APXvYqxFvG3KgjDCtFOpqiwrVA/h5V0iFoU894xpJ/5CjNJFPDjijl8I9D/82NNQ22uympXnuRaCXA==
+X-Received: by 2002:a17:902:4a:: with SMTP id 68mr13359156pla.245.1583065334897;
+        Sun, 01 Mar 2020 04:22:14 -0800 (PST)
+Received: from localhost.localdomain ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id e1sm17520364pff.188.2020.03.01.04.22.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 04:22:13 -0800 (PST)
-Date:   Sun, 1 Mar 2020 04:22:11 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        Sun, 01 Mar 2020 04:22:14 -0800 (PST)
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
         Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH v2 2/2] net: phy: at803x: add PTP support for AR8031
-Message-ID: <20200301122211.GA32253@localhost>
-References: <20200228180226.22986-1-michael@walle.cc>
- <20200228180226.22986-3-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228180226.22986-3-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Subject: [PATCH v3] ARM: ebsa110: replace setup_irq() by request_irq()
+Date:   Sun,  1 Mar 2020 17:52:09 +0530
+Message-Id: <20200301122210.4013-1-afzal.mohd.ma@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 07:02:26PM +0100, Michael Walle wrote:
+request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+occur after memory allocators are ready.
 
-> +static int at8031_rtc_adjust(struct phy_device *phydev, s64 delta)
-> +{
-> +	struct timespec64 ts = ns_to_timespec64(delta);
-> +	int ret;
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-Here the 'ts' is written in multiple steps,
+Hence replace setup_irq() by request_irq().
 
-> +	ret = phy_write_mmd(phydev, MDIO_MMD_PCS,
-> +			    AT8031_MMD3_RTC_OFFSET_SEC_2,
-> +			    (ts.tv_sec >> 32) & 0xffff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_write_mmd(phydev, MDIO_MMD_PCS,
-> +			    AT8031_MMD3_RTC_OFFSET_SEC_1,
-> +			    (ts.tv_sec >> 16) & 0xffff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_write_mmd(phydev, MDIO_MMD_PCS,
-> +			    AT8031_MMD3_RTC_OFFSET_SEC_0,
-> +			    ts.tv_sec & 0xffff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_write_mmd(phydev, MDIO_MMD_PCS,
-> +			    AT8031_MMD3_RTC_OFFSET_NSEC_1,
-> +			    (ts.tv_nsec >> 16) & 0xffff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_write_mmd(phydev, MDIO_MMD_PCS,
-> +			    AT8031_MMD3_RTC_OFFSET_NSEC_0,
-> +			    ts.tv_nsec & 0xffff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return phy_write_mmd(phydev, MDIO_MMD_PCS, AT8031_MMD3_RTC_ADJUST,
-> +			     AT8031_RTC_ADJUST);
-> +}
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
-...
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
+Hi sub-arch maintainers,
 
-> +static int at8031_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
-> +{
-> +	struct at803x_priv *priv =
-> +		container_of(ptp, struct at803x_priv, ptp_info);
-> +	struct phy_device *phydev = priv->phydev;
-> +
-> +	return at8031_rtc_adjust(phydev, delta);
-> +}
+If the patch is okay, please take it thr' your tree.
 
-... and here there is no locking.  You would need a mutex here and
-elsewhere to prevent multiple readers/writers from accessing the
-device registers asynchronously.
+Regards
+afzal
 
-(I know this is a just a RFC and that there are bigger problems with
-the HW, but just saying.)
+v3:
+ * Split out from series, also split out from ARM patch to subarch level
+	as Thomas suggested to take it thr' respective maintainers
+ * Modify string displayed in case of error as suggested by Thomas
+ * Re-arrange code as required to improve readability
+ * Remove irrelevant parts from commit message & improve
+ 
+v2:
+ * Replace pr_err("request_irq() on %s failed" by
+           pr_err("%s: request_irq() failed"
+ * Commit message massage
 
-Thanks,
-Richard
+ arch/arm/mach-ebsa110/core.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
+diff --git a/arch/arm/mach-ebsa110/core.c b/arch/arm/mach-ebsa110/core.c
+index da2ff4f61d6b..575b2e2b6759 100644
+--- a/arch/arm/mach-ebsa110/core.c
++++ b/arch/arm/mach-ebsa110/core.c
+@@ -201,17 +201,13 @@ ebsa110_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction ebsa110_timer_irq = {
+-	.name		= "EBSA110 Timer Tick",
+-	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
+-	.handler	= ebsa110_timer_interrupt,
+-};
+-
+ /*
+  * Set up timer interrupt.
+  */
+ void __init ebsa110_timer_init(void)
+ {
++	int irq = IRQ_EBSA110_TIMER0;
++
+ 	arch_gettimeoffset = ebsa110_gettimeoffset;
+ 
+ 	/*
+@@ -221,7 +217,9 @@ void __init ebsa110_timer_init(void)
+ 	__raw_writeb(COUNT & 0xff, PIT_T1);
+ 	__raw_writeb(COUNT >> 8, PIT_T1);
+ 
+-	setup_irq(IRQ_EBSA110_TIMER0, &ebsa110_timer_irq);
++	if (request_irq(irq, ebsa110_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
++			"EBSA110 Timer Tick", NULL))
++		pr_err("Failed to request irq %d (EBSA110 Timer Tick)\n", irq);
+ }
+ 
+ static struct plat_serial8250_port serial_platform_data[] = {
+-- 
+2.25.1
 
