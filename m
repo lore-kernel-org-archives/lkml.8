@@ -2,98 +2,76 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F005C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAEBC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345FF20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B92A24672
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgCAAYk (ORCPT
+        id S1727287AbgCAAZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 19:24:40 -0500
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:53333 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgCAAYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 19:24:39 -0500
-Received: by mail-pj1-f45.google.com with SMTP id i11so2778939pju.3;
-        Sat, 29 Feb 2020 16:24:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Uq8wttYcQrTDTYvU5w0gohV1k9WlJ5G1ZTxgqMBM7TQ=;
-        b=Yu8sB9gaxYjgZ56VoUAsrJqCXxxpExPpyr/FTOnlrn6SgqylVpg9/UrimlVknFZaOK
-         NTN0xop2BSqQaQWbBvPM6dtndCLiHcqLaGbFFgvTi+jJLR//zutEy5JnJV8T1+uWOW5D
-         t93fmEuy0I0E4ADcZGYGPX1yBwG8OL+3sMWFhkeRKoJN7R5FJ/X5E2DDqov2WbZyzqRM
-         IPMPT+OzDpi9h2HOGQ6uU3LoUCN7IX+CrIvtPYntL9ukbEcOEr3acpbGOTUtRCIO/NWI
-         nwkkTvxk3DtDhNXjpv0dwxQ9auI7QZDAcQrQvxXD94R1ehPNPmUFFDHehlddhJsrLjeI
-         70sQ==
-X-Gm-Message-State: ANhLgQ1DDx+u0oJjD/QmsdvvXKRiKy/HYNwXl/0L08Q8bHyFAwUbn+3P
-        W95PnbXYTkr6dZBly2DEXF7RFKYK1oo=
-X-Google-Smtp-Source: ADFU+vsM32hYmDXHInO3Vi2N7CEymWlXyWlmE0eu5CRI28Sh8PMY9duGMepTkklUukdri+JG3n8pPA==
-X-Received: by 2002:a17:90a:210c:: with SMTP id a12mr5822209pje.16.1583022278088;
-        Sat, 29 Feb 2020 16:24:38 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:bd83:6f94:8c5:942d? ([2601:647:4000:d7:bd83:6f94:8c5:942d])
-        by smtp.gmail.com with ESMTPSA id 191sm8142236pfa.142.2020.02.29.16.24.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Feb 2020 16:24:37 -0800 (PST)
-Subject: Re: [PATCH v9 01/25] sysfs: export sysfs_remove_file_self()
-To:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        leon@kernel.org, dledford@redhat.com, jgg@ziepe.ca,
-        danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com,
-        rpenyaev@suse.de, pankaj.gupta@cloud.ionos.com,
-        Roman Pen <roman.penyaev@profitbricks.com>,
-        linux-kernel@vger.kernel.org
-References: <20200221104721.350-1-jinpuwang@gmail.com>
- <20200221104721.350-2-jinpuwang@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <8131773d-cf6e-9c1d-faad-a250f7135432@acm.org>
-Date:   Sat, 29 Feb 2020 16:24:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 29 Feb 2020 19:25:29 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55690 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727120AbgCAAZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:25:28 -0500
+Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j8CQ1-0004xy-6B; Sun, 01 Mar 2020 01:25:17 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Carlos de Paula <me@carlosedp.com>
+Cc:     papadakospan@gmail.com, jose.abreu@synopsys.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
+Date:   Sun, 01 Mar 2020 01:25:16 +0100
+Message-ID: <6132615.msM8OCcsVu@phil>
+In-Reply-To: <20200218221040.10955-1-me@carlosedp.com>
+References: <20200218221040.10955-1-me@carlosedp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221104721.350-2-jinpuwang@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-21 02:46, Jack Wang wrote:
-> Function is going to be used in transport over RDMA module
-> in subsequent patches, so export it to GPL modules.
+Am Dienstag, 18. Februar 2020, 23:10:37 CET schrieb Carlos de Paula:
+> Some rockchip SoCs like the RK3399 and RK3328 exhibit an issue
+> where tx checksumming does not work with packets larger than 1498.
+> 
+> The default Programmable Buffer Length for TX in these GMAC's is
+> not suitable for MTUs higher than 1498. The workaround is to disable
+> TX offloading with 'ethtool -K eth0 tx off rx off' causing performance
+> impacts as it disables hardware checksumming.
+> 
+> This patch sets snps,txpbl to 0x4 which is a safe number tested ok for
+> the most popular MTU value of 1500.
+> 
+> For reference, see https://lkml.org/lkml/2019/4/1/1382.
+> 
+> Signed-off-by: Carlos de Paula <me@carlosedp.com>
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+applied for 5.7
+
+Thanks
+Heiko
+
+
