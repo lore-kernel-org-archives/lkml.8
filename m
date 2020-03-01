@@ -2,229 +2,95 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6ABC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D77C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84944246DE
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D82E246A1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 23:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CujpEhgd"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="KYU+jEIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgCAXgG (ORCPT
+        id S1726805AbgCAXhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 18:36:06 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44417 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgCAXgG (ORCPT
+        Sun, 1 Mar 2020 18:37:20 -0500
+Received: from mail.kmu-office.ch ([178.209.48.109]:51666 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbgCAXhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 18:36:06 -0500
-Received: by mail-qv1-f66.google.com with SMTP id b13so1600558qvt.11
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 15:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/GiNJ2/rlUqhbIJraZkyEPs9JjHC6+JCTtQcTcJawY0=;
-        b=CujpEhgd9L0R3Jf2z/rdQGP/G7t3hzTjm/Uql+k6sF6s4QYY0IvvZ2JBmdwcwKfq+M
-         wc+m6pJQ1FWv5vdBfNO0i8wOUw56eq1hrg1V1uqL0IA4JNCHO5i3dQRSu3IiJAJFtuYJ
-         ji9MafTThebIT+6EIX2KkTOZHL6EGN7Amhwdef1TWVXr4z/N53hbQj+yVvhXp6W4F+hV
-         LPAABheXoy/KO5sJMwWFOXnSR1F/Vjz+JVBb318toxoj+bpCjIKBpFKeHpaLQhOg5HHd
-         OhyF0esTMQH+aypeq7CVlxpe7Qo7+C+ArLOEVtuXn6SvSd6s/ZHeawjRXWishHI2M5RW
-         Qztg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/GiNJ2/rlUqhbIJraZkyEPs9JjHC6+JCTtQcTcJawY0=;
-        b=p6gxIMVzEZMJTUH4sgTQLXH+IfLwTsBtBDshJMwYU7aUUtsKDuK5ftsaqIlkVuylrK
-         s12QmFWq/A8dbDZ7++JmZzN0A8osVnK8Gqr+rklZtuXVQbsM1uGdFU3Qz1QgcmW1l7gt
-         4llcMl4G4GOXgMWxFThRC3F4XZVKlj8Q8e646bChANHm/bcRCeWtgrVNYzZ1GKbxmY70
-         D+87HuYc7hbQPKR3OMeqyOZeoTBfDJzLUo0fmsUZzXe6oQ1+OX1wyoaStWbA3enOtWrO
-         lBddZHj1IL8/jNo3oXaQPAga7bKFwS7sWEKLrK11mNFfZ2prU4ES/HTOFBRIFn8l0AYc
-         ui1Q==
-X-Gm-Message-State: APjAAAV8tTCh1Dk6Edtp+GpxiJVy1YkVTaYY2oCkyGWFOfRY5rdrzKxj
-        IIUDw76QsPN/dFzVXq0Gxk6hPaS7F2E=
-X-Google-Smtp-Source: APXvYqyt73PBX7UJXStbchmC2Xz7xmShwdxTmmvosxvC9QGdkDP3Gs7j2pTPHXjsPVG6k5A1PsIA2A==
-X-Received: by 2002:ad4:40c7:: with SMTP id x7mr13166097qvp.176.1583105764533;
-        Sun, 01 Mar 2020 15:36:04 -0800 (PST)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id n138sm9100868qkn.33.2020.03.01.15.36.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 15:36:03 -0800 (PST)
-Subject: Re: [Patch v4 5/7] soc: qcom: Extend RPMh power controller driver to
- register warming devices.
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
- <1574254593-16078-6-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFopiajhFymXo3q558AYBkdDYzU6Ye9HU9XSdN4r8j+qaw@mail.gmail.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <6292d698-38f4-6a75-551c-629bbfa3c896@linaro.org>
-Date:   Sun, 1 Mar 2020 18:36:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 1 Mar 2020 18:37:20 -0500
+Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 17AB65C3CEF;
+        Mon,  2 Mar 2020 00:37:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1583105838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=uEXP2A+ZFevJutYapB5Olb+X7MOi5DcNCS5e20uoEP8=;
+        b=KYU+jEIvnTWc3/fWFLC+Vly+OrhuCyPaGadSfgb23VeMF7Y7XySy8A2q0Q6WIINgwNXoja
+        +FdmYKg6spUdRBgV+sSk/eT5fxH+33lsOih/Wsx1M/TjdAs9AOplfU8ixGuf57A0EeyCJl
+        jtuUzSDDzBg6wcTv5yR0lQtVZASr8VI=
+From:   Stefan Agner <stefan@agner.ch>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net
+Cc:     linux@armlinux.org.uk, manojgupta@google.com, jiancai@google.com,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] crypto: arm/ghash-ce - define fpu before fpu registers are referenced
+Date:   Mon,  2 Mar 2020 00:37:14 +0100
+Message-Id: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFopiajhFymXo3q558AYBkdDYzU6Ye9HU9XSdN4r8j+qaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Building ARMv7 with Clang's integrated assembler leads to errors such
+as:
+arch/arm/crypto/ghash-ce-core.S:34:11: error: register name expected
+ t3l .req d16
+          ^
 
+Since no FPU has selected yet Clang considers d16 not a valid register.
+Moving the FPU directive on-top allows Clang to parse the registers and
+allows to successfully build this file with Clang's integrated assembler.
 
-On 2/4/20 12:40 PM, Ulf Hansson wrote:
-> On Wed, 20 Nov 2019 at 13:56, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->>
->> RPMh power control hosts power domains that can be used as
->> thermal warming devices. Register these power domains
->> with the generic power domain warming device thermal framework.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->> v3->v4:
->>          - Introduce a boolean value is_warming_dev in rpmhpd structure to
->>            indicate if a generic power domain can be used as a warming
->>            device or not.With this change, device tree no longer has to
->>            specify which power domain inside the rpmh power domain provider
->>            is a warming device.
->>          - Move registering of warming devices into a late initcall to
->>            ensure that warming devices are registerd after thermal
->>            framework is initialized.
->>
->>   drivers/soc/qcom/rpmhpd.c | 38 +++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 37 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 9d37534..5666d1f 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/of_device.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/pm_opp.h>
->> +#include <linux/pwr_domain_warming.h>
->>   #include <soc/qcom/cmd-db.h>
->>   #include <soc/qcom/rpmh.h>
->>   #include <dt-bindings/power/qcom-rpmpd.h>
->> @@ -48,6 +49,7 @@ struct rpmhpd {
->>          bool            enabled;
->>          const char      *res_name;
->>          u32             addr;
->> +       bool            is_warming_dev;
->>   };
->>
->>   struct rpmhpd_desc {
->> @@ -55,6 +57,8 @@ struct rpmhpd_desc {
->>          size_t num_pds;
->>   };
->>
->> +const struct rpmhpd_desc *global_desc;
->> +
->>   static DEFINE_MUTEX(rpmhpd_lock);
->>
->>   /* SDM845 RPMH powerdomains */
->> @@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
->>          .pd = { .name = "mx", },
->>          .peer = &sdm845_mx_ao,
->>          .res_name = "mx.lvl",
->> +       .is_warming_dev = true,
->>   };
->>
->>   static struct rpmhpd sdm845_mx_ao = {
->> @@ -396,7 +401,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
->>                                                 &rpmhpds[i]->pd);
->>          }
->>
->> -       return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->> +       ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->> +
->> +       if (ret)
->> +               return ret;
->> +
->> +       global_desc = desc;
-> 
-> I assume this works fine, for now.
-> 
-> Although, nothing prevents this driver from being probed for two
-> different compatibles for the same platform. Thus the global_desc
-> could be overwritten with the last one being probed, so then how do
-> you know which one to use?
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/crypto/ghash-ce-core.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Yes. It works fine for now. There are multiple ways to fix this in 
-future. One is to make global_desc an array. Other would be to move
-the code in rpmhpd_init_warming_device to this init and make this a 
-post_core init considering thermal subsytem uses core init. Like you 
-said I will leave this at this for now and we can fix this if a need 
-arises. I don't think there is a need for multiple compatibles for the 
-same platform now. Thanks for the reviewed by! I will add it in the next 
-version.
-
-> 
->> +
->> +       return 0;
->>   }
->>
->>   static struct platform_driver rpmhpd_driver = {
->> @@ -413,3 +425,27 @@ static int __init rpmhpd_init(void)
->>          return platform_driver_register(&rpmhpd_driver);
->>   }
->>   core_initcall(rpmhpd_init);
->> +
->> +static int __init rpmhpd_init_warming_device(void)
->> +{
->> +       size_t num_pds;
->> +       struct rpmhpd **rpmhpds;
->> +       int i;
->> +
->> +       if (!global_desc)
->> +               return -EINVAL;
->> +
->> +       rpmhpds = global_desc->rpmhpds;
->> +       num_pds = global_desc->num_pds;
->> +
->> +       if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
->> +               return 0;
->> +
->> +       for (i = 0; i < num_pds; i++)
->> +               if (rpmhpds[i]->is_warming_dev)
->> +                       pwr_domain_warming_register(rpmhpds[i]->dev,
->> +                                                   rpmhpds[i]->res_name, i);
->> +
->> +       return 0;
->> +}
->> +late_initcall(rpmhpd_init_warming_device);
-> 
-> For the record, there are limitations with this approach, for example
-> you can't deal with -EPROBE_DEFER.
-> 
-> On the other hand, I don't have anything better to suggest, from the
-> top of my head. So, feel free to add:
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> 
-> Kind regards
-> Uffe
-> 
-
+diff --git a/arch/arm/crypto/ghash-ce-core.S b/arch/arm/crypto/ghash-ce-core.S
+index 534c9647726d..9f51e3fa4526 100644
+--- a/arch/arm/crypto/ghash-ce-core.S
++++ b/arch/arm/crypto/ghash-ce-core.S
+@@ -8,6 +8,9 @@
+ #include <linux/linkage.h>
+ #include <asm/assembler.h>
+ 
++	.arch		armv8-a
++	.fpu		crypto-neon-fp-armv8
++
+ 	SHASH		.req	q0
+ 	T1		.req	q1
+ 	XL		.req	q2
+@@ -88,8 +91,6 @@
+ 	T3_H		.req	d17
+ 
+ 	.text
+-	.arch		armv8-a
+-	.fpu		crypto-neon-fp-armv8
+ 
+ 	.macro		__pmull_p64, rd, rn, rm, b1, b2, b3, b4
+ 	vmull.p64	\rd, \rn, \rm
 -- 
-Warm Regards
-Thara
+2.25.1
+
