@@ -2,111 +2,122 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71F1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC7FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1EA24699
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583102069;
-	bh=Suh/emsHYdz5OjAWxH4h7mdHfnel+jzq2wtMoBo1/bs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GBCx15dlPoNuoMngYHV7e+Tur1RztMSUCHXZ5ludBgMeNHDssEyQ20AOHNoo5wqGl
-	 WQMzXYzXR45k8wy48it/GXi841sRIIe/T2twKSapiBi2gVel3i1gdKgu9SS/hDh+SA
-	 jWgC3LKZTGCswJd3WLCNDd68PbymweN9MqAnhFsI=
+	by mail.kernel.org (Postfix) with ESMTP id 710BB24699
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgCAWe2 (ORCPT
+        id S1726751AbgCAWhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 17:34:28 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40779 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgCAWe2 (ORCPT
+        Sun, 1 Mar 2020 17:37:52 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56494 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726418AbgCAWhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 17:34:28 -0500
-Received: by mail-lj1-f195.google.com with SMTP id 143so9627899ljj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 14:34:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ocqRb7d75cCd4WWUoRkxgNPbXtSjwtIPTt/0KThKpgE=;
-        b=TKFtxdV2BajveGBQ5nXkbQS8BtNEg2/h92w4Eq13y9E182WzlTMQcFcfdVicOJWci4
-         QGe9f8rSd1qRr3rMv0YVVAbPfSTGon99nPST9N9YvnSTFZJNIj4k5J/S6Kb05Tjkr8/E
-         eI+gkv5J0ueKbE9DmjV5+GcuW9KrX9639Ibck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ocqRb7d75cCd4WWUoRkxgNPbXtSjwtIPTt/0KThKpgE=;
-        b=LtH8qYN6I9IO7etvRuSaze4AEN+lvk4pfKcL5l27SzHIj4A2MPCVr3kJXOAbbS+Wmj
-         VsvaDYl0OxrkJ4J/F5XAefVzCynnJEZAz+IIGwWOqTzqSd9voRmT02zUnHdNEWbp1SyW
-         d5z8+k+N7V0I9hiSNcwlfxmn+y087AOuEQWP9oi3rGQcJfO95nqcGkVHkjugfM6hxTNj
-         izB9gnP6GKGfHWBMLEqA+RnLI1ph14riSyod5YjSHQLRhRg2lzdjToFuha563H/K0DgO
-         IfEpY7+F03HDL6cLhZV0TEhrlvM2WBcRas+suTOLjjW9Cz07RsQP6GYzJcRGLnomdg2M
-         GzLg==
-X-Gm-Message-State: ANhLgQ2GqcuJtHPIVQiYxdsDW6oB4fqNjeZeqHVSvt4dx5WXWb8oN0ws
-        nUThjRd14LHeXOcbp7dTGIv2HFwTInfnnQ==
-X-Google-Smtp-Source: ADFU+vt34NaK6KnH+9T6BijSXB5vceVYe+x2+hvtHLDFOMq33kqba/mfKU0eMm/f5zwNyh0sT1LPSQ==
-X-Received: by 2002:a2e:884d:: with SMTP id z13mr9491955ljj.116.1583102063878;
-        Sun, 01 Mar 2020 14:34:23 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id r25sm10408060lfn.36.2020.03.01.14.34.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 14:34:23 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id a10so1459665ljp.11
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 14:34:22 -0800 (PST)
-X-Received: by 2002:a2e:9d92:: with SMTP id c18mr9960735ljj.265.1583102062599;
- Sun, 01 Mar 2020 14:34:22 -0800 (PST)
+        Sun, 1 Mar 2020 17:37:52 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id F069A3A1D80;
+        Mon,  2 Mar 2020 09:37:46 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j8XDV-0004U5-FH; Mon, 02 Mar 2020 09:37:45 +1100
+Date:   Mon, 2 Mar 2020 09:37:45 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V5 05/12] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200301223745.GE10776@dread.disaster.area>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200227052442.22524-6-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200223011154.GY23230@ZenIV.linux.org.uk> <20200301215125.GA873525@ZenIV.linux.org.uk>
-In-Reply-To: <20200301215125.GA873525@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 1 Mar 2020 16:34:06 -0600
-X-Gmail-Original-Message-ID: <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
-Message-ID: <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227052442.22524-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=SBY6GoZAAwZHPrv_PwMA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 1, 2020 at 3:51 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
->         Extended since the last repost.  The branch is in #work.dotdot;
-> #work.do_last is its beginning (about 2/3 of the total), slightly
-> reworked since the last time.
+On Wed, Feb 26, 2020 at 09:24:35PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> that it is enabled for DAX.
+> 
+> Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> and underlying storage support dax.
+> 
+> Add a new function xfs_inode_enable_dax() which reflects if the inode
+> should be enabled for DAX.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from v3:
+> 	Update functions and names to be more clear
+> 	Update commit message
+> 	Merge with
+> 		'fs/xfs: Clean up DAX support check'
+> 		don't allow IS_DAX() on a directory
+> 		use STATIC macro for static
+> 		make xfs_inode_supports_dax() static
+> ---
+>  fs/xfs/xfs_iops.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..ff711efc5247 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1237,19 +1237,18 @@ static const struct inode_operations xfs_inline_symlink_inode_operations = {
+>  };
+>  
+>  /* Figure out if this file actually supports DAX. */
+> -static bool
+> +STATIC bool
+>  xfs_inode_supports_dax(
+>  	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  
+>  	/* Only supported on non-reflinked files. */
+> -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+> +	if (xfs_is_reflink_inode(ip))
+>  		return false;
+>  
+> -	/* DAX mount option or DAX iflag must be set. */
+> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> +	/* Only supported on regular files. */
+> +	if (!S_ISREG(VFS_I(ip)->i_mode))
+>  		return false;
 
-I'm traveling, so only a quick read-through.
+Why split the initial check? The "non-reflinked files" comment is
+pretty explicit, so splitting it just to add a "only support on
+regular files" comment doesn't actually add any value here.
 
-One request: can you add the total diffstat to the cover letter (along
-with what you used as a base)? I did apply it to a branch just to look
-at it more closely, so I can see the final diffstat that way:
+Cheers,
 
- Documentation/filesystems/path-lookup.rst |    7 +-
- fs/autofs/dev-ioctl.c                     |    6 +-
- fs/internal.h                             |    1 -
- fs/namei.c                                | 1333 +++++++++------------
- fs/namespace.c                            |   96 +-
- fs/open.c                                 |    4 +-
- include/linux/namei.h                     |    4 +-
- 7 files changed, 642 insertions(+), 809 deletions(-)
-
-but it would have been nice to see in your explanation too.
-
-Anyway, from a quick read-through, I don't see anything that raises my
-hackles - you've fixed the goto label naming, and I didn't notice
-anything else odd.
-
-Maybe that was because I wasn't careful enough. But the final line
-count certainly speaks for the series..
-
-             Linus
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
