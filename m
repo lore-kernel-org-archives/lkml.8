@@ -2,105 +2,61 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1711FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB492C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDFE24672
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qd6LEYHb"
+	by mail.kernel.org (Postfix) with ESMTP id 9A8B820CC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgCAVFr (ORCPT
+        id S1726592AbgCAVUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:05:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45037 "EHLO ozlabs.org"
+        Sun, 1 Mar 2020 16:20:34 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:32100 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgCAVFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:05:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Vwm8370gz9sST;
-        Mon,  2 Mar 2020 08:05:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583096744;
-        bh=ZSbkdMpMpdF5lvPMUhVIz8Aj93wihvB1224JTqYZAaE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Qd6LEYHbinl8xDZCXgScg0s2ZhXoquCby7PxYfORLDBi8SRLl2nyTclmNPlOlOVv6
-         0P0eGrEduU69RyCm2TWr7J11OkLBl7Apzzbnw/Mri9aA3TZfZQbJiQTLVpmX/pqSVB
-         9h9ubGM9ZaTFhZvgQy66qJ4RDjQJ98PICNBHOva+hl/6YnTppxytH8V6d/s+HC4aJx
-         MLtd8RdS39RbQuTE0d+w7yDZekkcT6G+9IYK9lkRJLXskirnXbfScZOQzqaL8ifA8Y
-         PRxEr9AB0yyskixCZsIUYneXm3H6X05bf6fBTwDnsLQYeysCbvGsEO7yPjAbno8pKE
-         rWgs4zM3999hA==
-Date:   Mon, 2 Mar 2020 08:05:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: manual merge of the kvm-fixes tree with Linus' tree
-Message-ID: <20200302080543.51450371@canb.auug.org.au>
+        id S1726366AbgCAVUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 16:20:33 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 021LKNLR011368;
+        Sun, 1 Mar 2020 22:20:23 +0100
+Date:   Sun, 1 Mar 2020 22:20:23 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Joe Perches <joe@perches.com>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] floppy: make use of the local/global fdc explicit
+Message-ID: <20200301212023.GA11317@1wt.eu>
+References: <20200301195555.11154-1-w@1wt.eu>
+ <03a2ea0b91ab61ba9a11230e82f1fb3bdf420a50.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7rWHSHf1RaPiItDCcNSWExn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03a2ea0b91ab61ba9a11230e82f1fb3bdf420a50.camel@perches.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7rWHSHf1RaPiItDCcNSWExn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Mar 01, 2020 at 12:33:25PM -0800, Joe Perches wrote:
+> On Sun, 2020-03-01 at 20:55 +0100, Willy Tarreau wrote:
+> > This is an update to the first minimal cleanup of the floppy driver in
+> > order to make use of the FDC number explicit so as to avoid bugs like
+> > the one fixed by 2e90ca68 ("floppy: check FDC index for errors before
+> > assigning it").
+> 
+> Thanks Willy.
+> 
+> trivia: you could style check the patches using checkpatch.
 
-Hi all,
+Oh yes, sorry about this, I did it in the first series but forgot to
+do it again. What checkpatch complains about is essentially lines which
+slightly exceed 80 characters due to the macro expansions, while I tried
+to limit the changes to the strict minimum. I guess that's OK to keep
+future fixes easier to backport.
 
-Today's linux-next merge of the kvm-fixes tree got a conflict in:
-
-  arch/x86/kvm/Makefile
-
-between commit:
-
-  cfe2ce49b9da ("Revert "KVM: x86: enable -Werror"")
-
-from Linus' tree and commit:
-
-  4f337faf1c55 ("KVM: allow disabling -Werror")
-
-from the kvm-fixes tree.
-
-I fixed it up (I just used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7rWHSHf1RaPiItDCcNSWExn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5cI6cACgkQAVBC80lX
-0GwgEgf8DkjI/M5iBYlJlr2nsrJ6GC630tdLdAFXhDdSD/uW/a9EzjNVbkUc2Z9P
-EZKrPiZwm/8gJjvvBbgUWDat2WCDbuk1Om6FOas523gF8gGx1UIPx8GJxiFRzx0H
-0tcUxhXTrMcK2KEb2z7ZaFTdwwQwWng0Cx1qe6bzoeq61IUeYVNEu2CXTpKfoziA
-a0oUh8k1oULa61fxz8z0TdKh70WRDHr9P6AMNdAgW87vSQTSGJgzbyAxBO8Fvled
-iv0wCxv9r5lLof84Lz4IcpjdUJBygs6kk7eJBfuvElXh8Gt4XH7IG0y8wWpbHLMw
-DNNl944bec16oLgHBVI155HGZrxkug==
-=IrIj
------END PGP SIGNATURE-----
-
---Sig_/7rWHSHf1RaPiItDCcNSWExn--
+Thanks,
+Willy
