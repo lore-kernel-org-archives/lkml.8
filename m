@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0F1C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D936C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1458420866
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5887220848
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgCAFam (ORCPT
+        id S1727369AbgCAFas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 00:30:42 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:56056 "EHLO inva021.nxp.com"
+        Sun, 1 Mar 2020 00:30:48 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:56146 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgCAFak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 00:30:40 -0500
+        id S1725874AbgCAFaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 00:30:46 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 88E0C200A3A;
-        Sun,  1 Mar 2020 06:30:38 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 552BB200A2F;
+        Sun,  1 Mar 2020 06:30:44 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4453320062C;
-        Sun,  1 Mar 2020 06:30:29 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C169F200A2D;
+        Sun,  1 Mar 2020 06:30:34 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 11D71402D5;
-        Sun,  1 Mar 2020 13:30:18 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 193B140302;
+        Sun,  1 Mar 2020 13:30:24 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, broonie@kernel.org,
@@ -37,9 +37,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/8] ASoC: fsl-asoc-card: Change asrc-width to asrc-format
-Date:   Sun,  1 Mar 2020 13:24:14 +0800
-Message-Id: <b220ba87a89cd4d0d876800efac9bb761f98bd70.1583039752.git.shengjiu.wang@nxp.com>
+Subject: [PATCH v4 7/8] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+Date:   Sun,  1 Mar 2020 13:24:18 +0800
+Message-Id: <2aa0b446c3e2af59e3472d8f7706298691ec4a5c.1583039752.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1583039752.git.shengjiu.wang@nxp.com>
 References: <cover.1583039752.git.shengjiu.wang@nxp.com>
@@ -51,39 +51,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asrc_format is more inteligent, which is align with the alsa
-definition snd_pcm_format_t, we don't need to convert it to
-format in driver, and it can distinguish S24_LE & S24_3LE.
+EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+IP module found on i.MX8MN.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/sound/fsl,easrc.yaml  | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 9ce55feaac22..ab21fa1cabf7 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -680,17 +680,12 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 			goto asrc_fail;
- 		}
- 
--		ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
-+		ret = of_property_read_u32(asrc_np, "fsl,asrc-format", &priv->asrc_format);
- 		if (ret) {
--			dev_err(&pdev->dev, "failed to get output rate\n");
-+			dev_err(&pdev->dev, "failed to get output format\n");
- 			ret = -EINVAL;
- 			goto asrc_fail;
- 		}
--
--		if (width == 24)
--			priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
--		else
--			priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
- 	}
- 
- 	/* Finish card registering */
+diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+new file mode 100644
+index 000000000000..500af8f0c8f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
++
++maintainers:
++  - Shengjiu Wang <shengjiu.wang@nxp.com>
++
++properties:
++  $nodename:
++    pattern: "^easrc@.*"
++
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - fsl,imx8mn-easrc
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Peripheral clock
++
++  clock-names:
++    items:
++      - const: mem
++
++  dmas:
++    maxItems: 8
++
++  dma-names:
++    oneOf:
++      - items:
++          - const: ctx0_rx
++          - const: ctx0_tx
++          - const: ctx1_rx
++          - const: ctx1_tx
++          - const: ctx2_rx
++          - const: ctx2_tx
++          - const: ctx3_rx
++          - const: ctx3_tx
++
++  fsl,easrc-ram-script-name:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The coefficient table for the filters
++
++  fsl,asrc-rate:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Defines a mutual sample rate used by DPCM Back Ends
++
++  fsl,asrc-format:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Defines a mutual sample format used by DPCM Back Ends
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - dmas
++  - dma-name
++  - fsl,easrc-ram-script-name
++  - fsl,asrc-rate
++  - fsl,asrc-format
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8mn-clock.h>
++
++    easrc: easrc@300C0000 {
++           compatible = "fsl,imx8mn-easrc";
++           reg = <0x0 0x300C0000 0x0 0x10000>;
++           interrupts = <0x0 122 0x4>;
++           clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
++           clock-names = "mem";
++           dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
++                  <&sdma2 18 23 0> , <&sdma2 19 23 0>,
++                  <&sdma2 20 23 0> , <&sdma2 21 23 0>,
++                  <&sdma2 22 23 0> , <&sdma2 23 23 0>;
++           dma-names = "ctx0_rx", "ctx0_tx",
++                       "ctx1_rx", "ctx1_tx",
++                       "ctx2_rx", "ctx2_tx",
++                       "ctx3_rx", "ctx3_tx";
++           fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
++           fsl,asrc-rate  = <8000>;
++           fsl,asrc-format = <2>;
++           status = "disabled";
++    };
 -- 
 2.21.0
 
