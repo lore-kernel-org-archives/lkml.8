@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0876C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F770C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E96A246BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E98246BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgCAVxF (ORCPT
+        id S1727350AbgCAVxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:53:05 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41730 "EHLO
+        Sun, 1 Mar 2020 16:53:10 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41756 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgCAVwt (ORCPT
+        with ESMTP id S1727209AbgCAVwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:49 -0500
+        Sun, 1 Mar 2020 16:52:51 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WW0-003fQO-9C; Sun, 01 Mar 2020 21:52:48 +0000
+        id 1j8WW1-003fQy-Mq; Sun, 01 Mar 2020 21:52:49 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 48/55] follow_dotdot{,_rcu}(): switch to use of step_into()
-Date:   Sun,  1 Mar 2020 21:52:33 +0000
-Message-Id: <20200301215240.873899-48-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 54/55] non-RCU analogue of the previous commit
+Date:   Sun,  1 Mar 2020 21:52:39 +0000
+Message-Id: <20200301215240.873899-54-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,78 +42,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-gets the regular mount crossing on result of ..
+new helper: choose_mountpoint().  Wrapper around choose_mountpoint_rcu(),
+similar to lookup_mnt() vs. __lookup_mnt().  follow_dotdot() switched to
+it.  Now we don't grab mount_lock exclusive anymore; note that the
+primitive used non-RCU mount traversals in other direction (lookup_mnt())
+doesn't bother with that either - it uses mount_lock seqcount instead.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 37 +++++++++----------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
+ fs/namei.c | 56 +++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 3e3bf11ee3d7..cc01bca2266c 100644
+index 8c09523c6f56..f247eca119f1 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1724,35 +1724,19 @@ static const char *follow_dotdot_rcu(struct nameidata *nd, int flags)
- 			/* we know that mountpoint was pinned */
- 			nd->path.dentry = mountpoint;
- 			nd->path.mnt = &mparent->mnt;
--			inode = inode2;
-+			inode = nd->inode = inode2;
- 			nd->seq = seq;
- 		}
- 	}
- 	if (unlikely(!parent)) {
- 		if (unlikely(nd->flags & LOOKUP_BENEATH))
- 			return ERR_PTR(-ECHILD);
-+		return step_into(nd, flags | WALK_NOFOLLOW,
-+				 nd->path.dentry, nd->inode, nd->seq);
- 	} else {
--		nd->path.dentry = parent;
--		nd->seq = seq;
--	}
--	while (unlikely(d_mountpoint(nd->path.dentry))) {
--		struct mount *mounted;
--		mounted = __lookup_mnt(nd->path.mnt, nd->path.dentry);
--		if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
--			return ERR_PTR(-ECHILD);
--		if (!mounted)
--			break;
--		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
--			return ERR_PTR(-ECHILD);
--		nd->path.mnt = &mounted->mnt;
--		nd->path.dentry = mounted->mnt.mnt_root;
--		inode = nd->path.dentry->d_inode;
--		nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
-+		return step_into(nd, flags | WALK_NOFOLLOW,
-+				 parent, inode, seq);
- 	}
--	nd->inode = inode;
--	if (!(flags & WALK_MORE) && nd->depth)
--		put_link(nd);
--	return NULL;
+@@ -605,10 +605,9 @@ static void terminate_walk(struct nameidata *nd)
  }
  
- static const char *follow_dotdot(struct nameidata *nd, int flags)
-@@ -1778,15 +1762,12 @@ static const char *follow_dotdot(struct nameidata *nd, int flags)
- 	if (unlikely(!parent)) {
- 		if (unlikely(nd->flags & LOOKUP_BENEATH))
+ /* path_put is needed afterwards regardless of success or failure */
+-static bool legitimize_path(struct nameidata *nd,
+-			    struct path *path, unsigned seq)
++static bool __legitimize_path(struct path *path, unsigned seq, unsigned mseq)
+ {
+-	int res = __legitimize_mnt(path->mnt, nd->m_seq);
++	int res = __legitimize_mnt(path->mnt, mseq);
+ 	if (unlikely(res)) {
+ 		if (res > 0)
+ 			path->mnt = NULL;
+@@ -622,6 +621,12 @@ static bool legitimize_path(struct nameidata *nd,
+ 	return !read_seqcount_retry(&path->dentry->d_seq, seq);
+ }
+ 
++static inline bool legitimize_path(struct nameidata *nd,
++			    struct path *path, unsigned seq)
++{
++	return __legitimize_path(path, nd->m_seq, seq);
++}
++
+ static bool legitimize_links(struct nameidata *nd)
+ {
+ 	int i;
+@@ -1383,6 +1388,31 @@ static bool choose_mountpoint_rcu(struct mount *m, const struct path *root,
+ 	return false;
+ }
+ 
++static bool choose_mountpoint(struct mount *m, const struct path *root,
++			      struct path *path)
++{
++	bool found;
++
++	rcu_read_lock();
++	while (1) {
++		unsigned seq, mseq = read_seqbegin(&mount_lock);
++
++		found = choose_mountpoint_rcu(m, root, path, &seq);
++		if (unlikely(!found)) {
++			if (!read_seqretry(&mount_lock, mseq))
++				break;
++		} else {
++			if (likely(__legitimize_path(path, seq, mseq)))
++				break;
++			rcu_read_unlock();
++			path_put(path);
++			rcu_read_lock();
++		}
++	}
++	rcu_read_unlock();
++	return found;
++}
++
+ /*
+  * Skip to top of mountpoint pile in refwalk mode for follow_dotdot()
+  */
+@@ -1758,22 +1788,14 @@ static struct dentry *follow_dotdot(struct nameidata *nd,
+ 	if (path_equal(&nd->path, &nd->root))
+ 		goto in_root;
+ 	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
+-		struct path path = nd->path;
+-		path_get(&path);
+-		while (1) {
+-			if (!follow_up(&path)) {
+-				path_put(&path);
+-				goto in_root;
+-			}
+-			if (path_equal(&path, &nd->root)) {
+-				path_put(&path);
+-				goto in_root;
+-			}
+-			if (path.dentry != nd->path.mnt->mnt_root)
+-				break;
+-		}
++		struct path path;
++
++		if (!choose_mountpoint(real_mount(nd->path.mnt),
++				       &nd->root, &path))
++			goto in_root;
+ 		path_put(&nd->path);
+ 		nd->path = path;
++		nd->inode = path.dentry->d_inode;
+ 		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
  			return ERR_PTR(-EXDEV);
-+		return step_into(nd, flags | WALK_NOFOLLOW,
-+				 dget(nd->path.dentry), nd->inode, nd->seq);
- 	} else {
--		dput(nd->path.dentry);
--		nd->path.dentry = parent;
-+		return step_into(nd, flags | WALK_NOFOLLOW,
-+				 parent, parent->d_inode, 0);
  	}
--	follow_mount(&nd->path);
--	nd->inode = nd->path.dentry->d_inode;
--	if (!(flags & WALK_MORE) && nd->depth)
--		put_link(nd);
--	return NULL;
- }
- 
- static const char *handle_dots(struct nameidata *nd, int type, int flags)
 -- 
 2.11.0
 
