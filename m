@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF713C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B4C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF4924680
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA682467B
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 05:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCAFxJ (ORCPT
+        id S1727452AbgCAFxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 00:53:09 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38900 "EHLO
+        Sun, 1 Mar 2020 00:53:14 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:38908 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgCAFxH (ORCPT
+        with ESMTP id S1726400AbgCAFxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 00:53:07 -0500
+        Sun, 1 Mar 2020 00:53:13 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 37EFB15BDA6F3;
-        Sat, 29 Feb 2020 21:53:07 -0800 (PST)
-Date:   Sat, 29 Feb 2020 21:53:06 -0800 (PST)
-Message-Id: <20200229.215306.183381322264314105.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3395D15BDA6F1;
+        Sat, 29 Feb 2020 21:53:13 -0800 (PST)
+Date:   Sat, 29 Feb 2020 21:53:12 -0800 (PST)
+Message-Id: <20200229.215312.1205811766006565082.davem@davemloft.net>
 To:     gustavo@embeddedor.com
 Cc:     kuba@kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: ipv6: mld: Replace zero-length array with
+Subject: Re: [PATCH][next] ndisc: Replace zero-length array with
  flexible-array member
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200229005141.GA8807@embeddedor>
-References: <20200229005141.GA8807@embeddedor>
+In-Reply-To: <20200229005311.GA8953@embeddedor>
+References: <20200229005311.GA8953@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Feb 2020 21:53:07 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Feb 2020 21:53:13 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Fri, 28 Feb 2020 18:51:41 -0600
+Date: Fri, 28 Feb 2020 18:53:11 -0600
 
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
