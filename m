@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDC8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9F8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB7724697
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD810246B7
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCAVzl (ORCPT
+        id S1727492AbgCAVz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:55:41 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41594 "EHLO
+        Sun, 1 Mar 2020 16:55:58 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41574 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAVwn (ORCPT
+        with ESMTP id S1726775AbgCAVwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 1 Mar 2020 16:52:43 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVu-003fN2-9O; Sun, 01 Mar 2020 21:52:42 +0000
+        id 1j8WVt-003fMY-OG; Sun, 01 Mar 2020 21:52:41 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 14/55] new step_into() flag: WALK_NOFOLLOW
-Date:   Sun,  1 Mar 2020 21:51:59 +0000
-Message-Id: <20200301215240.873899-14-viro@ZenIV.linux.org.uk>
+Subject: [RFC][PATCH v3 09/55] do_last(): collapse the call of path_to_nameidata()
+Date:   Sun,  1 Mar 2020 21:51:54 +0000
+Message-Id: <20200301215240.873899-9-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
 References: <20200301215125.GA873525@ZenIV.linux.org.uk>
@@ -42,50 +42,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Tells step_into() not to follow symlinks, regardless of LOOKUP_FOLLOW.
-Allows to switch handle_lookup_down() to of step_into(), getting
-all follow_managed() and step_into() calls paired.
+... and shift filling struct path to just before the call of
+handle_mounts().  All callers of handle_mounts() are
+immediately preceded by path->mnt = nd->path.mnt now.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/namei.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ fs/namei.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 4c9b633e1981..fe48a8d00ae5 100644
+index 4946d006ba20..f26af0559abf 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1827,7 +1827,7 @@ static int pick_link(struct nameidata *nd, struct path *link,
- 	return 1;
- }
+@@ -3364,8 +3364,6 @@ static int do_last(struct nameidata *nd,
+ 		error = PTR_ERR(dentry);
+ 		goto out;
+ 	}
+-	path.mnt = nd->path.mnt;
+-	path.dentry = dentry;
  
--enum {WALK_FOLLOW = 1, WALK_MORE = 2};
-+enum {WALK_FOLLOW = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
+ 	if (file->f_mode & FMODE_OPENED) {
+ 		if ((file->f_mode & FMODE_CREATED) ||
+@@ -3382,7 +3380,8 @@ static int do_last(struct nameidata *nd,
+ 		open_flag &= ~O_TRUNC;
+ 		will_truncate = false;
+ 		acc_mode = 0;
+-		path_to_nameidata(&path, nd);
++		dput(nd->path.dentry);
++		nd->path.dentry = dentry;
+ 		goto finish_open_created;
+ 	}
  
- /*
-  * Do we need to follow links? We _really_ want to be able
-@@ -1841,7 +1841,8 @@ static inline int step_into(struct nameidata *nd, struct path *path,
- 	if (!(flags & WALK_MORE) && nd->depth)
- 		put_link(nd);
- 	if (likely(!d_is_symlink(path->dentry)) ||
--	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW)) {
-+	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
-+	   flags & WALK_NOFOLLOW) {
- 		/* not a symlink or should not follow */
- 		path_to_nameidata(path, nd);
- 		nd->inode = inode;
-@@ -2363,10 +2364,7 @@ static int handle_lookup_down(struct nameidata *nd)
- 	err = handle_mounts(nd, nd->path.dentry, &path, &inode, &seq);
- 	if (unlikely(err < 0))
- 		return err;
--	path_to_nameidata(&path, nd);
--	nd->inode = inode;
--	nd->seq = seq;
--	return 0;
-+	return step_into(nd, &path, WALK_NOFOLLOW, inode, seq);
- }
+@@ -3396,6 +3395,8 @@ static int do_last(struct nameidata *nd,
+ 		got_write = false;
+ 	}
  
- /* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
++	path.mnt = nd->path.mnt;
++	path.dentry = dentry;
+ 	error = handle_mounts(&path, nd, &inode, &seq);
+ 	if (unlikely(error < 0))
+ 		return error;
 -- 
 2.11.0
 
