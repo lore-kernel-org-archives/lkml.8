@@ -2,109 +2,135 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D97C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF05C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5650D2468A
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:20:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BmBgW1BX"
+	by mail.kernel.org (Postfix) with ESMTP id 17CB3222C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583079715;
+	bh=rKrAk8Pbv/YZjKWFoK9aMAGzOCKVGr0i/Aj92TEli98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FtG+DTdHl+uEWY+xWdF7m6ghIe/YOK/ynOaDtLzgb8zFK4mvE5h6FWukcf9e0LzVx
+	 JXQ17jV6HfXZWxkJKnu82o2uW21MVYSLA29Rl06D4hRegMcBKSelGz+spFjHxaVms3
+	 sQzjT2Uyni7npiweEHVGGE9ZeKlZIHLI61RacbXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCAQUL (ORCPT
+        id S1726688AbgCAQVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:20:11 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44435 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCAQUK (ORCPT
+        Sun, 1 Mar 2020 11:21:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46429 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgCAQVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 11:20:10 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y5so4301370pfb.11
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 08:20:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ol996i7Ly7uLXMGPOcxJk9a2/P7UfTmFHb83woUuOo4=;
-        b=BmBgW1BXpb61N9UVhWc3UCobtjZmRY8cfjAit8K3GJNut56umMykryyzI9AzxVCNPu
-         zOEVDsY3sT4UDzTHMxTNl9cA7M9jDoCm9XTPeWxZcTzpfVvX/4GlQyjehDQw0YtTjoWL
-         EB9DXjWAslee7XYEPpiMDSk/CpSA8B7PG1YgEGGc+U8RJWtG64RB7rrOGqzA7b4rQS5s
-         omthZP5UEN5t/YqPCx4Z7BD6vT2yjRFsX2lYXKeIaPmSzb2BFnmgmLEeGuprZ4xHPtlk
-         MsDaZbTpDj609q6Y8zXZ0uP9KGKGRdg1t2ky59PPhmZPGZJqesifD/zmyl5NnA3qyDyZ
-         FcaA==
+        Sun, 1 Mar 2020 11:21:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y8so3184880pll.13;
+        Sun, 01 Mar 2020 08:21:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ol996i7Ly7uLXMGPOcxJk9a2/P7UfTmFHb83woUuOo4=;
-        b=QSxHxDZeux4MtSayO12Zig3auybSb4KnxFolSODPxh4YVg7gCNbg4PKjU9qBQNj2rW
-         plZWDUjNrdt5d7TQkYh1A3wBU0S/+DnLhm6+dbEqIQUIdSvmHZIaRxJ9gc3g0k2nucfH
-         5dlp0VX+uyrl7A+qdMyPqWWY56bT1tzvbMTiN52/ruOg8jRZXF7mzlUiJYrzkqGMZAKV
-         jfbRIoailFIIzMtT2ZEnqYCW76+gPFWI8/4H1nbciJRCg4PUtXNkemFSK37QA4I1752l
-         dbU1KPiTp/bIll9Zi5PokZDhqNWi7r6UDIF7EllFTbbC7vuOX9mvbOYuj9UlSTbYD6D9
-         KGcA==
-X-Gm-Message-State: APjAAAXfowbdeAA5vRZwimArHyk7rdGg8XAFZdJ0QRkGG5nAVWubMgJ/
-        KuC9uUm2w0jQpZ+sxOL3Jbt0Nw==
-X-Google-Smtp-Source: APXvYqybwsty6KbQzUZw6ydXZynsFTmZ7U2b15x7Sf8aB1XCoBDm81Hv5r+UKknAcAJrYKKAt382gA==
-X-Received: by 2002:a65:6147:: with SMTP id o7mr15882420pgv.442.1583079609158;
-        Sun, 01 Mar 2020 08:20:09 -0800 (PST)
-Received: from google.com ([2620:15c:211:202:ae26:61fb:e2f3:92e7])
-        by smtp.gmail.com with ESMTPSA id e2sm9004532pjs.25.2020.03.01.08.20.07
+         :mime-version:content-disposition:in-reply-to;
+        bh=fsF1XC+a5Klfpkx+LTevpo0Y9W7KrFucGF2YFTk3yeU=;
+        b=sNtyJxDhDUyYnJ3J8maRWWM6HknP0Uvoz9Gixz+hVyiaXU3tgUVDlx1TQMmxRlUXTp
+         htiImewLtkNjwU3HyjmVaDBG1wFoUkPEmamx1dwa9WiNmZkCpYJd4q8LsAIKzlvzbnU7
+         wz9BGf9NeJ5con8GfEXqB0zm/86UeQxfNT8HyV/l43z7/aOa/fDGY29iAEPCzZ6Ll5fr
+         fF7IYPk1to3nsJ+0INlVL2yBqRamxVT6WMo7HZDoHO/ueWynAXO9ebVWKSv1ybtkYpOl
+         KoN17D3P8JSHZOFfsUJkgIVDx2gIlUaaBkquKRqnzWcdAgpx6N3nyITgLaP46zCtjL0U
+         vfTQ==
+X-Gm-Message-State: APjAAAXFJ37hqQbCGC1b00BzQleL1k6FDhKBQocRdvcx9bqgVDt3AJu3
+        flSu5mZ0SxUfXyUyMJ4IMQc=
+X-Google-Smtp-Source: APXvYqyxAtJ4pkRjU89SN24DHKrHUReWUge8G120PQF1tT9VzZBHY7HksoHEpgV4NdePGIWsyhVCBg==
+X-Received: by 2002:a17:902:5ac9:: with SMTP id g9mr13314893plm.69.1583079711929;
+        Sun, 01 Mar 2020 08:21:51 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
+        by smtp.gmail.com with ESMTPSA id c15sm16759320pgk.66.2020.03.01.08.21.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 08:20:08 -0800 (PST)
-Date:   Sun, 1 Mar 2020 08:20:03 -0800
-From:   Marco Ballesio <balejs@google.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     tj@kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, corbet@lwn.net, rjw@rjwysocki.net,
-        pavel@ucw.cz, len.brown@intel.com, linux-doc@vger.kernel.org,
-        linux-pm@vger.kernel.org, minchan@google.com, surenb@google.com,
-        dancol@google.com
-Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
-Message-ID: <20200301162003.GA186618@google.com>
-References: <20200219183231.50985-1-balejs@google.com>
- <20200229005131.GB9813@google.com>
- <20200229184300.GA484762@carbon.DHCP.thefacebook.com>
+        Sun, 01 Mar 2020 08:21:51 -0800 (PST)
+Date:   Sun, 1 Mar 2020 08:21:49 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fpga: machxo2-spi: Use new structure for SPI transfer
+ delays
+Message-ID: <20200301162149.GA7593@epycbox.lan>
+References: <20200227142414.16547-1-sergiu.cuciurean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229184300.GA484762@carbon.DHCP.thefacebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200227142414.16547-1-sergiu.cuciurean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 10:43:00AM -0800, Roman Gushchin wrote:
-> On Fri, Feb 28, 2020 at 04:51:31PM -0800, Marco Ballesio wrote:
-> > Hi all,
-> > 
-> > did anyone have time to look into my proposal and, in case, are there
-> > any suggestions, ideas or comments about it?
+On Thu, Feb 27, 2020 at 04:24:14PM +0200, Sergiu Cuciurean wrote:
+> In a recent change to the SPI subsystem [1], a new `delay` struct was added
+> to replace the `delay_usecs`. This change replaces the current
+> `delay_usecs` with `delay` for this driver.
 > 
-> Hello, Marco!
+> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+> that both `delay_usecs` & `delay` are used (in this order to preserve
+> backwards compatibility).
 > 
-> I'm sorry, somehow I missed the original letter.
+> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
+> `spi_transfer` + spi_transfer_delay_exec()")
 > 
-> In general the cgroup v1 interface is considered frozen. Are there any particular
-> reasons why you want to extend the v1 freezer rather than use the v2 version of it?
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> ---
+>  drivers/fpga/machxo2-spi.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> You don't even need to fully convert to cgroup v2 in order to do it, some v1
-> controllers can still be used.
+> diff --git a/drivers/fpga/machxo2-spi.c b/drivers/fpga/machxo2-spi.c
+> index 4d8a87641587..b316369156fe 100644
+> --- a/drivers/fpga/machxo2-spi.c
+> +++ b/drivers/fpga/machxo2-spi.c
+> @@ -157,7 +157,8 @@ static int machxo2_cleanup(struct fpga_manager *mgr)
+>  	spi_message_init(&msg);
+>  	tx[1].tx_buf = &refresh;
+>  	tx[1].len = sizeof(refresh);
+> -	tx[1].delay_usecs = MACHXO2_REFRESH_USEC;
+> +	tx[1].delay.value = MACHXO2_REFRESH_USEC;
+> +	tx[1].delay.unit = SPI_DELAY_UNIT_USECS;
+>  	spi_message_add_tail(&tx[1], &msg);
+>  	ret = spi_sync(spi, &msg);
+>  	if (ret)
+> @@ -208,7 +209,8 @@ static int machxo2_write_init(struct fpga_manager *mgr,
+>  	spi_message_init(&msg);
+>  	tx[0].tx_buf = &enable;
+>  	tx[0].len = sizeof(enable);
+> -	tx[0].delay_usecs = MACHXO2_LOW_DELAY_USEC;
+> +	tx[0].delay.value = MACHXO2_LOW_DELAY_USEC;
+> +	tx[0].delay.unit = SPI_DELAY_UNIT_USECS;
+>  	spi_message_add_tail(&tx[0], &msg);
+>  
+>  	tx[1].tx_buf = &erase;
+> @@ -269,7 +271,8 @@ static int machxo2_write(struct fpga_manager *mgr, const char *buf,
+>  		spi_message_init(&msg);
+>  		tx.tx_buf = payload;
+>  		tx.len = MACHXO2_BUF_SIZE;
+> -		tx.delay_usecs = MACHXO2_HIGH_DELAY_USEC;
+> +		tx.delay.value = MACHXO2_HIGH_DELAY_USEC;
+> +		tx.delay.unit = SPI_DELAY_UNIT_USECS;
+>  		spi_message_add_tail(&tx, &msg);
+>  		ret = spi_sync(spi, &msg);
+>  		if (ret) {
+> @@ -317,7 +320,8 @@ static int machxo2_write_complete(struct fpga_manager *mgr,
+>  		spi_message_init(&msg);
+>  		tx[1].tx_buf = &refresh;
+>  		tx[1].len = sizeof(refresh);
+> -		tx[1].delay_usecs = MACHXO2_REFRESH_USEC;
+> +		tx[1].delay.value = MACHXO2_REFRESH_USEC;
+> +		tx[1].delay.unit = SPI_DELAY_UNIT_USECS;
+>  		spi_message_add_tail(&tx[1], &msg);
+>  		ret = spi_sync(spi, &msg);
+>  		if (ret)
+> -- 
+> 2.17.1
 > 
-> Thanks!
-> 
-> Roman
+Applied to for-next,
 
-Hi Roman,
-
-When compared with backports of v2 features and their dependency chains, this
-patch would be easier to carry in Android common. The potential is to have
-killability for frozen processes on hw currently in use.
-
-Marco
+Thanks
