@@ -2,216 +2,168 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB508C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC485C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D5E214DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609C521775
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 09:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ysXG6e0H"
+	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="YmDvZn1y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCAJDF (ORCPT
+        id S1725892AbgCAJPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 04:03:05 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43455 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgCAJDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 04:03:04 -0500
-Received: by mail-wr1-f67.google.com with SMTP id e10so7185230wrr.10
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 01:03:01 -0800 (PST)
+        Sun, 1 Mar 2020 04:15:05 -0500
+Received: from mail-eopbgr1300058.outbound.protection.outlook.com ([40.107.130.58]:29504
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgCAJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 04:15:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RHLtUM65WexPmaPuwR3/HfsSLNne4o5oXZhv3e3Z9oF/GYUFTRvNGctN3S5UFEgdTksqDoIt3siUtkHExCmdSl7WcwsH/uml2CT5NbLOFlN5q/lQCwohUFu+MPBqsXOnhEI/38Ykl4ayLuQH0RVR5uJnpRibCsLSDMrTu5zo/kbr85nALKcrzwiooKX+EJkni80+yyYT75EMcEf2G8oKXjDR0gywnAqPigywLSq2kmtYK0iFQPamjNIUTsrfgwHiBKE8M2sVochbRJXG1snrOlz4HlxIbDEEeumvVay/5gn9owGrmLVZUHVKpf4pdzsSxnum6aoxs4hd31S+ny43IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gjNdUXovazldeUh57tURnmqcngEnBbI7O3vFajy6Fm4=;
+ b=cQEFq+ksaq1WtzAQAgm4GtyiNmb0EqpaXHZ5paimvoy4tY8JBuVJpLt4295gZvuyn4bfsLl9/n5YDrFMHgpZAyspz2zZFM0oYLTs6zrHStCVX+xQ8EXVHvNxEUXtXFh/sSpYW90MJ2/8BkqF7K4s9eOUCst+OJOQ+EDY9qu7u2suqUxI4codIWbdwFh6k5sSHOR6B9UODWgKH7AdzNcQ+9wkO2DTr67qhTlYq4NwTUgY/y07B1GIvVkA4NbQ2JTEkf6SJDPRid+TLeRGEoyPyP/gLbOLWPSaMs74PruQAIpWPJMT4k9l8Gw8VBorCkI3GQv1WUDNYdRJr5lAZgsNVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
+ header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=slGxF9qjBPq+owUSM5HA+cWARavYP/l9u8125Kfep3Q=;
-        b=ysXG6e0H6OQFTHDPORu3KqmtZFiQlM47kqdFx1B5YIYLXT2JjdB3lFv5ZvWuoc5Uf2
-         2ExWooxYZxvazVD7HS0V/wsSLraVjM4T7MzY+X9H66arzNt5PF+6ekFF4NM/coFnhNnF
-         CY6A4onQ8ripK7vv/LaV32Ev8sq/wZ/zMC5nbJOixLWMpH7F9ez0JyXdaLdB8bVtlfGY
-         NB6yZlk3YykB8hgqRBM+BBI7zSIOASFF8cKkEE1sp0YGouJeRrqIJpQCpUk8hIj3/ZJZ
-         u4Qw0RHCF5e1fG8jwW0izXtWOXYuiNTeIxEg7CKuPPIyM72JiYxDqViQOBpFcRI0tcro
-         W9pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=slGxF9qjBPq+owUSM5HA+cWARavYP/l9u8125Kfep3Q=;
-        b=EUCOlz8a8R99Vxu7Fz9AsxMJ03kLU7sAkFLo/f1mawWznX5E7f3MDiopdyGWb9t+M7
-         dOe9MeeWdduo/GzPGolmzoZmrNi9GYyeQCB5M+oMjlbIf2sXhZ86xMCEJwf83Ctk1+t8
-         d5SxEPjD2XwA4RAKZeApPU3+LxY0Ju0kl/5CbnOob1R9YmJUKFSxTuKOxh6NzGxs4SNj
-         iulTYgNWff6Biiyf0kRO1cH4Un5D1WyFflEDPm4RhrN38M1Ln4MhrV1FGgfb9AJXkD05
-         C0CCUT5YPSWH4scs6RnPG1DFe2N+sHl2QAD71fXe9P3e0ReuTnrTiIxhB8bbimtIid9P
-         2DsQ==
-X-Gm-Message-State: APjAAAXnZq+fnMcqkMBTKw3v494SRlQIoQuKqZwkzOo/w3A5aJWo0vfw
-        rkkZHDzbaHJt4bu1c6R8tpvi1P/ksaE=
-X-Google-Smtp-Source: APXvYqwtqzLgXYZckgw7NwmNvCx/NUB+nLWIm0ENVHSQDAr8KR8jLjFUPo6/biQfCdmVDAcJqc+snQ==
-X-Received: by 2002:adf:a304:: with SMTP id c4mr14879111wrb.186.1583053379973;
-        Sun, 01 Mar 2020 01:02:59 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:41d5:595f:62f:a254? ([2a01:e34:ed2f:f020:41d5:595f:62f:a254])
-        by smtp.googlemail.com with ESMTPSA id i8sm15585002wrq.10.2020.03.01.01.02.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Mar 2020 01:02:59 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
-To:     Carlos de Paula <me@carlosedp.com>
-Cc:     papadakospan@gmail.com, jose.abreu@synopsys.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200218221040.10955-1-me@carlosedp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <92930c13-3538-32a7-b016-4150bcbc0e56@linaro.org>
-Date:   Sun, 1 Mar 2020 10:02:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200218221040.10955-1-me@carlosedp.com>
-Content-Type: text/plain; charset=utf-8
+ d=teoenmingcorp.onmicrosoft.com; s=selector2-teoenmingcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gjNdUXovazldeUh57tURnmqcngEnBbI7O3vFajy6Fm4=;
+ b=YmDvZn1yMuqfebkJk7GbzJi7pbTToRJPRtXCrIb5e6yfJFXJAAlM6CYyILQny54XdQVx7z3UU0omsKf8uZN8ZBSaIvdYygY8rRgIDDwMlpfa3kEus5n8lto1g82ATOLus1584K3L5/tUn8JqbbqgGTOwMwvNPKpRslvGU9Tjnbk=
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
+ SG2PR01MB2394.apcprd01.prod.exchangelabs.com (20.177.82.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Sun, 1 Mar 2020 09:14:58 +0000
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::684a:9e0b:7e12:18bd]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::684a:9e0b:7e12:18bd%4]) with mapi id 15.20.2772.019; Sun, 1 Mar 2020
+ 09:14:58 +0000
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+Subject: I am going to embark on creating my own custom Linux distro called
+ Teo En Ming Linux
+Thread-Topic: I am going to embark on creating my own custom Linux distro
+ called Teo En Ming Linux
+Thread-Index: AQHV76nXxRQ9eRFUDUC3pENUaAJvXA==
+Date:   Sun, 1 Mar 2020 09:14:58 +0000
+Message-ID: <SG2PR01MB2141384043250A95640BDA0F87E60@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ceo@teo-en-ming-corp.com; 
+x-originating-ip: [118.189.211.120]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c31a2da9-dd26-4b7d-ee65-08d7bdc103c6
+x-ms-traffictypediagnostic: SG2PR01MB2394:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2PR01MB23941B73A798BB09F182055987E60@SG2PR01MB2394.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0329B15C8A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39830400003)(366004)(396003)(189003)(199004)(76116006)(86362001)(186003)(66946007)(33656002)(508600001)(966005)(26005)(7696005)(8936002)(52536014)(66446008)(64756008)(66556008)(66476007)(6916009)(81166006)(5660300002)(8676002)(81156014)(9686003)(107886003)(2906002)(316002)(71200400001)(6506007)(55016002)(4326008)(161833001);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2394;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5iHuIGme7RyRClRznPWZ4CiLr8XtvUoYb8P3JbszbkCUViYlEiO7VqArJ6hCparhj7yTS3fEK+8jJDH6lORVi4MGonS1malne4KlqXKSmkslrMQqNrYD5EAClha2X8GbgUIjqcay/iB17XFeEsAJHygbxbuCuoRo/ATPUoWrEayxYuDTMFUSnkZ2BG3Rw+fhrx3mF1SdzHjLi79SZVJoCHAdU/FwtQeRteop7dEzhxhX4ThdU8O6Cud0s9YWymEElT3phqSI5kxfY9ArK2T7mgz37nNOnqGw/xEv2ZkQK2tdL9yF7t8lh61WNrFS9jp2MpvDPTHJ/L2xNzh4OSAzp5C/knSTIvzA7Xqoyf7KwmytIkT8maWyDn33rRja8Abb0S9q2z2zx5S9zJOxLwiXFD73el+U5rbOki3ROeyw/7QzuJLz+ZjRbJtU4Mu3LNGeQ+xVWnGpjxV0nUzQ0hR163zWATb884NMv6q8Qe1TIP+aMyj5tu94LO5rqmYl/h1nZsFdoZcTYhUeJuLZA8eF3zR1o09i2YB+mjj2kN4KN3xWYC5hGpT8VkhvuQpXpNNV
+x-ms-exchange-antispam-messagedata: EPrgWslJ/mQIogcWjG6GCO0LaCJw1oyUrtSseN3aLVl14uN9CuC7iQRkZBIVsZ1mOu/yMeaiHS27m3LFUJDfoqlQ/EfalhNJBoLYQ5fhpLeCHgcQ7jZr8qUlifM/iFQCjgua5xzu9bAhNejzp2UlNg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: teo-en-ming-corp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c31a2da9-dd26-4b7d-ee65-08d7bdc103c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2020 09:14:58.3142
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ASCMAxFbNLd+Iop7aBsBP0QCtlxOyPH2m+MLze4Sh5lE+qCaC+EHM7xAsLHyK9Z99jDe0Qd25Kq0dDrp+yHfuBCrDsTz+KJOkdnO9SVdJnU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2394
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 23:10, Carlos de Paula wrote:
-> Some rockchip SoCs like the RK3399 and RK3328 exhibit an issue
-> where tx checksumming does not work with packets larger than 1498.
-> 
-> The default Programmable Buffer Length for TX in these GMAC's is
-> not suitable for MTUs higher than 1498. The workaround is to disable
-> TX offloading with 'ethtool -K eth0 tx off rx off' causing performance
-> impacts as it disables hardware checksumming.
-> 
-> This patch sets snps,txpbl to 0x4 which is a safe number tested ok for
-> the most popular MTU value of 1500.
-
-What about using something like:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt#n16
-
-or
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/ethernet-controller.yaml#n37
-
-?
-
-> For reference, see https://lkml.org/lkml/2019/4/1/1382.
-> 
-> Signed-off-by: Carlos de Paula <me@carlosedp.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 ++
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> index 1f53ead52c7f..b7f1de4b7fd0 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> @@ -906,6 +906,7 @@
->  		resets = <&cru SRST_GMAC2IO_A>;
->  		reset-names = "stmmaceth";
->  		rockchip,grf = <&grf>;
-> +		snps,txpbl = <0x4>;
->  		status = "disabled";
->  	};
->  
-> @@ -913,6 +914,7 @@
->  		compatible = "rockchip,rk3328-gmac";
->  		reg = <0x0 0xff550000 0x0 0x10000>;
->  		rockchip,grf = <&grf>;
-> +		snps,txpbl = <0x4>;
->  		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
->  		interrupt-names = "macirq";
->  		clocks = <&cru SCLK_MAC2PHY_SRC>, <&cru SCLK_MAC2PHY_RXTX>,
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 33cc21fcf4c1..cd5415d7e559 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -288,6 +288,7 @@
->  		resets = <&cru SRST_A_GMAC>;
->  		reset-names = "stmmaceth";
->  		rockchip,grf = <&grf>;
-> +		snps,txpbl = <0x4>;
->  		status = "disabled";
->  	};
->  
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Subject: I am going to embark on creating my own custom Linux distro called=
+ Teo En Ming Linux=0A=
+=0A=
+MR. TURRITOPSIS DOHRNII TEO EN MING, SINGAPORE=0A=
+1ST MARCH 2020 SUNDAY=0A=
+=0A=
+Announcement=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+=0A=
+This is going to be my next Infocomms Technology (ICT) project.=0A=
+=0A=
+I am going to create my own custom Linux distribution called Teo En Ming Li=
+nux.=0A=
+=0A=
+Basically, I have no idea how long I will take to complete this project. It=
+ could be 1 month, 1 year, or 5000 CENTILLION years :)=0A=
+=0A=
+The Linux From Scratch (LFS) book will form the basis of Teo En Ming Linux.=
+=0A=
+=0A=
+Teo En Ming Linux will have the latest Linux kernel 5.5.7 at the time of th=
+is writing.=0A=
+=0A=
+My hobby is ICT.=0A=
+=0A=
+Thank you.=0A=
+=0A=
+End of Announcement.=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+-----BEGIN EMAIL SIGNATURE-----=0A=
+=0A=
+The Gospel for all Targeted Individuals (TIs):=0A=
+=0A=
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of=0A=
+U.S. Embassy Workers=0A=
+=0A=
+Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwav=
+e.html=0A=
+=0A=
+***************************************************************************=
+*****************=0A=
+=0A=
+=0A=
+=0A=
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic=0A=
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the United=
+ Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 2019) and A=
+ustralia (25 Dec 2019 to 9 Jan 2020):=0A=
+=0A=
+=0A=
+[1] https://tdtemcerts.wordpress.com/=0A=
+=0A=
+[2] https://tdtemcerts.blogspot.sg/=0A=
+=0A=
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming=0A=
+=0A=
+-----END EMAIL SIGNATURE-----=0A=
+=0A=
+=0A=
+=0A=
