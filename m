@@ -1,67 +1,91 @@
-Return-Path: <SRS0=iO2y=4R=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659F4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6702468E
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Feb 2020 23:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3752468E
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 00:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgB2X6l convert rfc822-to-8bit (ORCPT
+        id S1727236AbgCAACK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Feb 2020 18:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        Sat, 29 Feb 2020 19:02:10 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55476 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgB2X6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Feb 2020 18:58:41 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78F8520409;
-        Sat, 29 Feb 2020 23:58:39 +0000 (UTC)
-Date:   Sat, 29 Feb 2020 18:58:37 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
-Message-ID: <20200229185837.7d92cd2e@oasis.local.home>
-In-Reply-To: <4EFF3B04-2C8A-4D63-BB63-B5804EBFFE2F@amacapital.net>
-References: <87lfolfo79.fsf@nanos.tec.linutronix.de>
-        <4EFF3B04-2C8A-4D63-BB63-B5804EBFFE2F@amacapital.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727162AbgCAACJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Feb 2020 19:02:09 -0500
+Received: from p508fcd9d.dip0.t-ipconnect.de ([80.143.205.157] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j8C3a-0004tG-JZ; Sun, 01 Mar 2020 01:02:06 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>, dianders@chromium.org
+Cc:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 3/4] dt-bindings: arm: fix Rockchip rk3399-evb bindings
+Date:   Sun, 01 Mar 2020 01:02:06 +0100
+Message-ID: <3089122.gegXmbq47i@phil>
+In-Reply-To: <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
+References: <20200228061436.13506-1-jbx6244@gmail.com> <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com> <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Feb 2020 11:25:24 -0800
-Andy Lutomirski <luto@amacapital.net> wrote:
+Hi Johan,
 
-> > While the tracer itself seems to handle this correctly, what about
-> > things like BPF programs which can be attached to tracepoints and
-> > function trace entries?  
+Am Freitag, 28. Februar 2020, 14:28:36 CET schrieb Johan Jonker:
+> Hi Robin,
 > 
-> I think that everything using the tracing code, including BPF, should
-> either do its own rcuidle stuff or explicitly not execute if we’re
-> not in CONTEXT_KERNEL.  That is, we probably need to patch BPF.
+> When I look at the review process of rk3399-evb.dts
+> it is mentioned here:
+> 
+> https://lore.kernel.org/patchwork/patch/672327/
+> 
+> >> +	model = "Rockchip RK3399 Evaluation Board";
+> >> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
+> >> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
+> >> +		     "google,rk3399evb-rev0" ;
+> > 
+> > can you check against which compatibles that coreboot really matches?
+> > 
+> > As we said that the evb changed between rev1 and rev2, I would expect the 
+> > compatible to be something like
+> > 
+> > 	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
+> > 			"rockchip,rk3399";
+> > 
+> > leaving out the rev1 and rev0
+> 
+> The consensus in version 4 ends in what is shown in the dts file, so I
+> changed it in rockchip.yaml. Things from the past maybe can better be
+> explained by Heiko. Please advise if this patch needs to change and in
+> what file.
 
-That's basically the route we are taking.
+Just get rid of the "google,rk3399evb-rev2" from the .dts please :-) .
 
--- Steve
+(1)  "rockchip,rk3399-evb", "rockchip,rk3399", "google,rk3399evb-rev2";
+    is just wrong for the reasons Robin explained, I guess that slipped
+    through review at the time.
+(2) "google,rk3399evb-rev2" was a specific variant for Google I'm pretty
+    sure they'll have scraped all these boards directly after they had the
+    first actual rk3399-gru development devices
+
+So I'm pretty sure the only rk3399-evbs in existence are the general ones.
+
+
+Heiko
+
+
+
