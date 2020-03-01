@@ -2,157 +2,186 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95CDC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6C3C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF0E246BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B426321744
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 20:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583093587;
-	bh=KWncVSYwypNktqfGtIDhf9jfBw9MNLKepJm5DsnYDug=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CpcL4AgWN4Ebk85YH1rMbdv9UiSjND4aM/+2WeL4iZxQ8m5tOADkjOCFLYqHjf3Dt
-	 9DKyUXJXgwpk2xSKADaFH1BkDIKJ4o+tQv89mD/3Lo/JVQoGDKcJ7GGnvjvwAvqevo
-	 JG2+PrXDnzJq5B5xof21exc0hMOuJjopJqNbz8K0=
+	s=default; t=1583093709;
+	bh=xtHhfpQG1yNXRNMNT7O6zsFDLkfakTVUMH4y2fI2GJA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=i/OlNrYFbOOEN0B66V8N8p4HBQyTRox9JwNrvr2Zov5XOsR2iV8FOVNyfMf3V5/a9
+	 ncw3PImOdK8tvxHY5K0CTgY0GcnPc8cioEtLDbyNXBmVg+8t6FMiUmKdtuQZbtfQKJ
+	 p3GE6WL/ahGpX+HTJN1VRLwv5XdU2TOozf/IdICc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgCAUNG (ORCPT
+        id S1726592AbgCAUPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 15:13:06 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36937 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAUNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 15:13:06 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 5so2697774oiy.4;
-        Sun, 01 Mar 2020 12:13:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EFSBXCeJ1jB8KcQMkp6NN1TRtUlXUbslxnRcWQMIR6I=;
-        b=he73iD3UgVGkFxGZI4jh1kZswVamv7f8BTzZWf6eR5iF5ZeVryLEv2aO4JbY+XxXRD
-         Gyp5kV+Z2y9k5J3njjuj8MwG4T6lWegl5/Z6ChA2gzzd6vuBp5sCo+vs742QGioyjogj
-         VOaGWryoS+4bj11YQgBOb1EnPUmcFLJQuPyOuyMLd3Dz8SUCOSPSKruJW+BeJQIbjtVo
-         DEFld/Mt9ylGQpVVWj8IYZk8hvyCO3sncioLddSbVTg5Budz7Qo9TPP1HhG1AdKmzhEZ
-         1Ak0MxbmjAP+/mWR8t9Ls3DdmOyMLLS+3JXgCTD3P3G2jz/cun8idJQOuPUUEBx3Hv61
-         Ku2A==
-X-Gm-Message-State: APjAAAXSj4NJ4oqBkR877QzqEis5Mki9oBkSKsCIswnYc2RJFGoUpBbc
-        ezT3aZoVhJKJJUjQLjdWq31zbffZs0QZxY7Mt88=
-X-Google-Smtp-Source: APXvYqxbxPHmtfRGPpPP1hveHtyD20S1Jgyu5yQkA7cDSv5uULtoifR1CJMcxL/u/2XdY7RWZkl38PW9OoOvYdgqVlM=
-X-Received: by 2002:aca:c044:: with SMTP id q65mr4390997oif.68.1583093583908;
- Sun, 01 Mar 2020 12:13:03 -0800 (PST)
+        Sun, 1 Mar 2020 15:15:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgCAUPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 15:15:08 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A80C21744;
+        Sun,  1 Mar 2020 20:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583093707;
+        bh=xtHhfpQG1yNXRNMNT7O6zsFDLkfakTVUMH4y2fI2GJA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gxakopvh+tUV+Eu06cPEBz16rMeAWxtnUb2ghQOQszKvCG8FWytrO8Ix8JVJOJj3m
+         0gSKhdnXZWAxm3fqosod1nis+1uEwyiGyFBXiGcuS7koocNlsuV7RFAKQVbZS952J0
+         CqChhPwbbOMQO8THcMqqGo4ILvG15zZIECN74I7E=
+Date:   Sun, 1 Mar 2020 20:14:58 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] counter: 104-quad-8: Support Differential Encoder Cable
+ Status
+Message-ID: <20200301201458.4dcce64c@archlinux>
+In-Reply-To: <20200222154340.89464-1-vilhelm.gray@gmail.com>
+References: <20200222154340.89464-1-vilhelm.gray@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
-In-Reply-To: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 1 Mar 2020 21:12:53 +0100
-Message-ID: <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
-To:     madhuparnabhowmik10@gmail.com,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
->
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->
-> This patch passes the cond argument to list_for_each_entry_rcu()
-> to fix the following false-positive lockdep warnings:
->
-> [  330.302784] =============================
-> [  330.302789] WARNING: suspicious RCU usage
-> [  330.302796] 5.6.0-rc1+ #5 Not tainted
-> [  330.302801] -----------------------------
-> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
->
-> [  330.303303] =============================
-> [  330.303307] WARNING: suspicious RCU usage
-> [  330.303311] 5.6.0-rc1+ #5 Not tainted
-> [  330.303315] -----------------------------
-> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
->
-> [  331.934969] =============================
-> [  331.934971] WARNING: suspicious RCU usage
-> [  331.934973] 5.6.0-rc1+ #5 Not tainted
-> [  331.934975] -----------------------------
-> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
->
-> [  332.467772] WARNING: suspicious RCU usage
-> [  332.467775] 5.6.0-rc1+ #5 Not tainted
-> [  332.467775] -----------------------------
-> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
+On Sat, 22 Feb 2020 10:43:40 -0500
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-I don't see these warnings in the kernels run locally here.
+> The ACCES 104-QUAD-8 series provides status information about the
+> connection state of the differential encoder cable inputs. This patch
+> implements support to expose such information from these devices.
+> 
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-What do you do to get them?
+Hi William,  Couple of things on the interface...
 
-Joel, any comments here?
-
->
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > ---
->  drivers/base/power/main.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 0e99a760aebd..742c05f3c1e7 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -266,7 +266,8 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
->          * callbacks freeing the link objects for the links in the list we're
->          * walking.
->          */
-> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-> +                               device_links_read_lock_held())
->                 if (READ_ONCE(link->status) != DL_STATE_DORMANT)
->                         dpm_wait(link->supplier, async);
->
-> @@ -323,7 +324,8 @@ static void dpm_wait_for_consumers(struct device *dev, bool async)
->          * continue instead of trying to continue in parallel with its
->          * unregistration).
->          */
-> -       list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
-> +       list_for_each_entry_rcu(link, &dev->links.consumers, s_node,
-> +                                device_links_read_lock_held())
->                 if (READ_ONCE(link->status) != DL_STATE_DORMANT)
->                         dpm_wait(link->consumer, async);
->
-> @@ -1235,7 +1237,8 @@ static void dpm_superior_set_must_resume(struct device *dev)
->
->         idx = device_links_read_lock();
->
-> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-> +                                device_links_read_lock_held())
->                 link->supplier->power.must_resume = true;
->
->         device_links_read_unlock(idx);
-> @@ -1695,7 +1698,8 @@ static void dpm_clear_superiors_direct_complete(struct device *dev)
->
->         idx = device_links_read_lock();
->
-> -       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
-> +       list_for_each_entry_rcu(link, &dev->links.suppliers, c_node,
-> +                                device_links_read_lock_held()) {
->                 spin_lock_irq(&link->supplier->power.lock);
->                 link->supplier->power.direct_complete = false;
->                 spin_unlock_irq(&link->supplier->power.lock);
-> --
-> 2.17.1
->
+>  .../ABI/testing/sysfs-bus-counter-104-quad-8  | 12 ++++++
+>  drivers/counter/104-quad-8.c                  | 38 +++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> index 46b1f33b2fce..492b3e98f369 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> +++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> @@ -1,3 +1,15 @@
+> +What:		/sys/bus/counter/devices/counterX/cable_status
+> +KernelVersion:	5.7
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Differential encoder cable status; bits 0 through 7
+> +		correspond to channels 1 through 8. Writing a 0 to the
+> +		corresponding bit will enable the status of the
+> +		respective channel.
+I'm never personally that keen on cases where a sysfs file doesn't have
+inherent 'obviousness'.  In this case we have a bitmap that doesn't make that
+clear and that also that doesn't have particularly obviously meaning either
+on the write or read.
+
+Hmm.  So if you wanted to keep it as a bitmap perhaps something like...
+
+cable_test_bitmap
+
+So a 1 (or true) would be a successful cable test on read.  However that is
+still not obviously something that needs an enable.  It think you need to
+split it.
+
+*_enable
+*_status 
+
+Next question is whether it should be a map like this?  sysfs rules are usually
+one value to one sysfs file.    It might seem wasteful but I'd like to see something
+like
+
+cable0_test_enable
+cable0_test_status
+cable7_test_enable
+cable7_test_status
+
+I haven't thought about whether this could be fit better with the counter ABI
+but something along those lines!
+
+> +
+> +		Logic 0 = cable fault (not connected or loose wires)
+> +		Logic 1 = cable connection good or cable fault disabled
+> +
+>  What:		/sys/bus/counter/devices/counterX/signalY/index_polarity
+>  KernelVersion:	5.2
+>  Contact:	linux-iio@vger.kernel.org
+> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+> index 17e67a84777d..1cbaf7e100a3 100644
+> --- a/drivers/counter/104-quad-8.c
+> +++ b/drivers/counter/104-quad-8.c
+> @@ -56,6 +56,7 @@ struct quad8_iio {
+>  
+>  #define QUAD8_REG_CHAN_OP 0x11
+>  #define QUAD8_REG_INDEX_INPUT_LEVELS 0x16
+> +#define QUAD8_DIFF_ENCODER_CABLE_STATUS 0x17
+>  /* Borrow Toggle flip-flop */
+>  #define QUAD8_FLAG_BT BIT(0)
+>  /* Carry Toggle flip-flop */
+> @@ -1268,6 +1269,42 @@ static struct counter_count quad8_counts[] = {
+>  	QUAD8_COUNT(7, "Channel 8 Count")
+>  };
+>  
+> +static ssize_t quad8_cable_status_read(struct counter_device *counter,
+> +				       void *private, char *buf)
+> +{
+> +	const struct quad8_iio *const priv = counter->priv;
+> +	unsigned int status;
+> +
+> +	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+> +
+> +	return sprintf(buf, "0x%X\n", status);
+> +}
+> +
+> +static ssize_t quad8_cable_status_write(struct counter_device *counter,
+> +					void *private, const char *buf,
+> +					size_t len)
+> +{
+> +	struct quad8_iio *const priv = counter->priv;
+> +	u8 enable;
+> +	int ret;
+> +
+> +	ret = kstrtou8(buf, 0, &enable);
+> +	if (ret)
+> +		return ret;
+> +
+> +	outb(enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+> +
+> +	return len;
+> +}
+> +
+> +static const struct counter_device_ext quad8_device_ext[] = {
+> +	{
+> +		.name = "cable_status",
+> +		.read = quad8_cable_status_read,
+> +		.write = quad8_cable_status_write
+> +	}
+> +};
+> +
+>  static int quad8_probe(struct device *dev, unsigned int id)
+>  {
+>  	struct iio_dev *indio_dev;
+> @@ -1304,6 +1341,7 @@ static int quad8_probe(struct device *dev, unsigned int id)
+>  	quad8iio->counter.num_counts = ARRAY_SIZE(quad8_counts);
+>  	quad8iio->counter.signals = quad8_signals;
+>  	quad8iio->counter.num_signals = ARRAY_SIZE(quad8_signals);
+> +	quad8iio->counter.ext = quad8_device_ext;
+>  	quad8iio->counter.priv = quad8iio;
+>  	quad8iio->base = base[id];
+>  
+
