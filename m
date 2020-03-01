@@ -2,135 +2,144 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE05DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC26DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF142469C
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F26C246BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 19:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gAsXDbhm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZIh3WrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgCATC6 (ORCPT
+        id S1726755AbgCATDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 14:02:58 -0500
-Received: from mout.gmx.net ([212.227.17.22]:53029 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgCATC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 14:02:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583089374;
-        bh=b7klEXlb9iSc2WlfM7FNvMUOj01QhI9dl87GI1ydfjY=;
-        h=X-UI-Sender-Class:From:To:CC:In-reply-to:Subject:Reply-to:
-         References:Date;
-        b=gAsXDbhmQbMD5FXUvEhMLGpWRCCNce4WM05utPSPYdy6xEzkujYN9AWZbg3Fcqhpf
-         hhSbhUOAG9e0R817mT2kOZjobzl5w+E1BWyDDnBfklBUptAY2SqZcVIcTNQSJSHZAk
-         2/p4ev0RRoAnh5LOaOQHGdpmf2XKQsS/Cr3nV4wY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from corona.crabdance.com ([173.228.106.117]) by mail.gmx.com
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MYeR1-1iwE2g3Pk3-00VgES; Sun, 01 Mar 2020 20:02:54 +0100
-Received: by corona.crabdance.com (Postfix, from userid 1001)
-        id BC7C96E85603; Sun,  1 Mar 2020 11:02:10 -0800 (PST)
-From:   Stefan Schaeckeler <schaecsn@gmx.net>
-To:     luto@kernel.org
-CC:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-In-reply-to: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
-        (message from Andy Lutomirski on Tue, 25 Feb 2020 13:49:34 -0800)
-Subject: Re: [PATCH 0/1] i2c: imc: Add support for Intel iMC SMBus host controller.
-Content-Type: text/plain
-Reply-to: schaecsn@gmx.net
-References: <1582498270-50674-1-git-send-email-schaecsn@gmx.net> <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
-Message-Id: <20200301190210.BC7C96E85603@corona.crabdance.com>
-Date:   Sun,  1 Mar 2020 11:02:10 -0800 (PST)
-X-Provags-ID: V03:K1:uvcoIrN+VcLwbyStKhfI0D1Cs3p4kQM6IPQ01WeRQUxu+l4kYc4
- DMqfdTUsUVfm8FvMDYr4k/cBxgFKlyssm8CL1N96mwcvDtlLKTQmo8Fxqba2uLz40q1bg9Z
- npe/kJS0Pdin/KXWxgXlyShnHAzbSCIYVvS9EfZgYLOwmBbeLPZiSXrBi9XQn8/mTcKf/7k
- UYqOnf2Tk9KwWc/hA/nFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1DZx5GvmMoQ=:DtP0k+dC4IOLFn11IMVOre
- N6UqlaXcf2dsL6SX2F63jIs/qEFvIy04hIVtcgyB7+XbMfC3BvrkvSv8p5vq1/7/MlHkGllu5
- 5JWHQbvarXhtoXTjopjrDSaiF4Ox7XFXZDYXft8vTByAJG5/aEuxjoYX7IbmrWK8kqda+l4KI
- G4o2Lb7g0uZ0TZB9TCiPPKi6UifFnj9B3YAORJFOuZ9hZM9sBc2dFUOYvhnXvr26xmHGB6kbe
- /o6lt73Hus65aenm8acGza2+odQqZ4R9bkq1VikbgiCZpPg0NK8ZeQ+d6whn4viS45hS8rPje
- d3a7hMwzpbiK3jfxZya5QnVnl0iXGtBWaeKLXcWrBdy59AoQTyIgrfTPymqJ296yGtbULpXGH
- 85bSI9OHK25Ocz6SJKTa4RZnl3wAg8iwsW//YuYcaQ2MLbXG2YSbsw/zzYSnRpq7/ZlZrxMNk
- WURzJzbWkk3GxnLvuq9C+sHcCkkCqDf7qddKB2wPF+7XTdx3pDzKCSWI7NZB0JH9sXXpHxfDh
- SsILCge6BsjYuA2LFfR6NO+U+yJJ8UKhPwzmHW46MdQQawhZCUbMMmEfatXsumTYDLMtaX9Yx
- NFhvnRT+eHEw//IQhwwGJ8N8WLI0JAcVXgA6TfcLKEg7LRBYTBNdYDmiXk2JgjDMfgV/pooyO
- I6XBmpLSDYJNaNQUwL4ouXhoDPwrVx/yi/nUyitGCX2NcoleU/xao66LA77n0Mn3hGZhiYyCm
- OaB8JHH0UFX2E6aKF++R7uDw6sH5rG5MAJc5hDEBrkIJSn/6XJhmR5LWUtjpyEa9fW5VhQgYN
- KaWXkpGROOmSSnhfOokjeF2c1CWK8wy12b91wy0lAsSVR4XHQY5fiKmvuJnK4eegK2lsnuBGV
- jckbVQhlwQjg6h21bAXEC/00RBaplNaeSBuQxWX7ooskjYw1isyHPE11ZkxWXAUWRzQZaMgcA
- KX2V/1rVxEXzQTXl9UzL2bePNCXp1bLNp+Pvb2fb9cfbva6yjWYzo0/9e5rGzkGZba/dgLMYI
- gxOHBr0c6cdM83QIz5vbjcfcrv1pEuhLouq3d2qOMP5ZxyFzIiyG3PHJd30hZ+HQrCV25OiIJ
- bJS/22FO1O6kj5X3vF7aLzd2gy339E2Y+sxOyCCrJaFZj0PdV4MvurtyW6+XL7MXjVRl0zvvq
- x2xISo2I2ttI5ZWZwakn9WdfIq2sqmwJNgMQMSew8NawUi6PlvbBk8d/CuA8ic0cow2RKlz5a
- zPgZztPcLILEqkAJA
-Content-Transfer-Encoding: quoted-printable
+        Sun, 1 Mar 2020 14:03:16 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55149 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgCATDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 14:03:15 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z12so8785964wmi.4;
+        Sun, 01 Mar 2020 11:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=58YbdIpK87d+hqR4j1GhCFXTctvcaAuYQyq9nvn5aB4=;
+        b=dZIh3WrV88DSs0OHE2R/OsBpcSrRCSKkiHA6OP470nSFenuh9szh4Hiod4/y6IZ7To
+         NSCwLT1izTkX4TsOGp5kMp0+nb+JMtHLJ9lp5emwKxPZzOUuG06pVWz/ie2cZemsBpWo
+         duyl2iAjXgEZQU68ZfGAnzdB9kaEnA/t/ttpQ6j/XVVH2GG4E+IyOmgR0jIAS7LOZXiB
+         CN4rPlnUB6GB+J+nB4ESSgOacx5CWsa2bh93X5QGLBm0fEeJfgvGdPg/dTaiopusLQRd
+         XU7fVJxkNRRtHppPVKt7NqhrWVBpa8/PT6qFHWj/GsEGQUzpLg1ieMszMGvdFLJ3+Pqt
+         P8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=58YbdIpK87d+hqR4j1GhCFXTctvcaAuYQyq9nvn5aB4=;
+        b=YCPanVr+43CvabKKQc63051FMeebvyQNwNjbDQJoL3amj9yG7PprADAMMSDL9ooq6p
+         YCFneI2cEei1YUXyKcd0C0nwxlb5fkMRc0q40mKqeYvZNwwKzX8XEiK5gPcdQxA6xz8Q
+         sB3D4pAWiH7M9LV1hHfy132z51ZjIE59dwVZApM2QCVyGkhqY19YhOClBdv8p2upuMzG
+         wGUa7aPMFEW7aGg0wqX7RbjDob0y75SGMvkx0hq8/KFj48Y9gAO/3d3Eq6zbmVr0s24a
+         d/IDtoqx065ptWNcXkXC6PBnxGqR9jypNLxCKKb7lOKXOxMQ4m6Vv0etuOB98TC+D/MB
+         eb6A==
+X-Gm-Message-State: APjAAAUSh4AHGQGLcG2qrpuCvWo77KM3D4PT+Jqaaye2gd8hFczu0L3X
+        GEmKzeTESwiIZPyRqVcXabSw/sF7
+X-Google-Smtp-Source: APXvYqx+DCwQoDcqnYshPLa/WLdrCvjNxFBw1VLiMslSm7d1FYeYnUIzvMR5kKSpZ8YHZj6iOsN+vQ==
+X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr15214727wmj.17.1583089393723;
+        Sun, 01 Mar 2020 11:03:13 -0800 (PST)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b16sm19004486wrq.14.2020.03.01.11.03.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 01 Mar 2020 11:03:13 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
+Date:   Sun,  1 Mar 2020 20:03:10 +0100
+Message-Id: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Any,
+Linus,
 
-> > This patch is based on Andy Lutomirski's iMC SMBus driver patch-set
-> > https://lkml.org/lkml/2016/4/28/926. It never made it into the kernel.=
- I hope
-> > this rewrite will:
-> >
-> >
-> > Overview
-> >
-> > Modern Intel memory controllers host an SMBus controller and connectio=
-n to
-> > DIMMs and their thermal sensors. The memory controller firmware has th=
-ree modes
-> > of operation: Closed Loop Thermal Throttling (CLTT), Open Loop Thermal
-> > Throttling (OLTT) and none.
-> >
-> > - CLTT: The memory controller firmware is periodically accessing the D=
-IMM
-> >   temperature sensor over the SMBus.
-> >
->
->
-> I think this is great!  One question, though: what happens if the
-> system is in CLTT mode but you disable CLTT and claim the bus for too
-> long?  For example, if there's an infinite loop or other lockup which
-> you have the tsod polling interval set to 0?  Does the system catch
-> fire or does the system do something intelligent like temporarily
-> switching to open loop?
+The following changes since commit a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
 
-I don't know. Most likely, the current memory throttling rate will be kept=
-.
-That might not be enough for the forthcoming workload and, ehm, the system=
- may
-catch fire.
+  KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
 
-I assume our use-case is the most common use-case for this driver: our emb=
-edded
-system comes with its own environmental management software. It monitors, =
-among
-other sensor values, the DIMM temperatures and takes action on abnormal va=
-lues.
-If one is concerned about your scenario, then the environmental management
-software needs to consider blocked reads on the sysfs node as a worst case
-scenario and reboot the system.
+are available in the git repository at:
 
-Nothing can really go wrong while the polling interval is set to 0, though=
-:
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-- reading and setting pci configuration space registers.
-- calling dev_err, dev_warn and alike.
-- usleep_range(131,140) and up to 20 udelay(9).
+for you to fetch changes up to 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
 
-What is not clear to me is what if imc_smbus_xfer() is executing while the
-driver is rmmod-ed. Defensively, I set in the driver's remove function the
-tsod_polling_interval back to its original value.
+  KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
 
-~ Stefan
+----------------------------------------------------------------
+More bugfixes, including a few remaining "make W=1" issues such
+as too large frame sizes on some configurations.  On the
+ARM side, the compiler was messing up shadow stacks between
+EL1 and EL2 code, which is easily fixed with __always_inline.
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: let declaration of kvm_get_running_vcpus match implementation
+
+Erwan Velu (1):
+      kvm: x86: Limit the number of "kvm: disabled by bios" messages
+
+James Morse (3):
+      KVM: arm64: Ask the compiler to __always_inline functions used at HYP
+      KVM: arm64: Define our own swab32() to avoid a uapi static inline
+      arm64: Ask the compiler to __always_inline functions used by KVM at HYP
+
+Jeremy Cline (1):
+      KVM: arm/arm64: Fix up includes for trace.h
+
+Mark Rutland (1):
+      kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
+
+Oliver Upton (1):
+      KVM: VMX: check descriptor table exits on instruction emulation
+
+Paolo Bonzini (4):
+      KVM: SVM: allocate AVIC data structures based on kvm_amd module parameter
+      KVM: allow disabling -Werror
+      KVM: x86: avoid useless copy of cpufreq policy
+      Merge tag 'kvmarm-fixes-5.6-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
+
+Valdis Kletnieks (1):
+      KVM: x86: allow compiling as non-module with W=1
+
+Wanpeng Li (2):
+      KVM: Introduce pv check helpers
+      KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
+
+ arch/arm/include/asm/kvm_host.h          |  3 --
+ arch/arm64/include/asm/arch_gicv3.h      |  2 +-
+ arch/arm64/include/asm/cache.h           |  2 +-
+ arch/arm64/include/asm/cacheflush.h      |  2 +-
+ arch/arm64/include/asm/cpufeature.h      | 10 ++---
+ arch/arm64/include/asm/io.h              |  4 +-
+ arch/arm64/include/asm/kvm_emulate.h     | 48 +++++++++++------------
+ arch/arm64/include/asm/kvm_host.h        | 32 ----------------
+ arch/arm64/include/asm/kvm_hyp.h         |  7 ++++
+ arch/arm64/include/asm/kvm_mmu.h         |  3 +-
+ arch/arm64/include/asm/virt.h            |  2 +-
+ arch/arm64/kvm/hyp/switch.c              | 39 ++++++++++++++++++-
+ arch/arm64/kvm/hyp/vgic-v2-cpuif-proxy.c |  4 +-
+ arch/x86/kernel/kvm.c                    | 65 +++++++++++++++++++++-----------
+ arch/x86/kvm/Kconfig                     | 13 +++++++
+ arch/x86/kvm/Makefile                    |  2 +-
+ arch/x86/kvm/svm.c                       |  5 ++-
+ arch/x86/kvm/vmx/vmx.c                   | 17 +++++++++
+ arch/x86/kvm/x86.c                       | 14 +++----
+ include/linux/kvm_host.h                 |  2 +-
+ virt/kvm/arm/arm.c                       |  2 -
+ virt/kvm/arm/trace.h                     |  1 +
+ 22 files changed, 171 insertions(+), 108 deletions(-)
