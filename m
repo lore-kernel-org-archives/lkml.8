@@ -2,111 +2,160 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA56C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA53C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226EF222C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583079867;
-	bh=sFtIWk5WhtenuAHah8mLKgj39Bwsw4QfJcapPFFcUtA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RYj6B/GvIOIS91UrkgIzQSzIR/aF0cUmZMLCk2VxySDFH9eQpfzjmCO9/KVFoOYpc
-	 f1hurhIQGfFKJmkv1fXXcraCCQXUbT18QwKcXe43dqbFhlRZzgkPjrZLougXaveQed
-	 QUq5wBhIEup659mY7RaJf4X38F7Lj0LUkKxo3tm4=
+	by mail.kernel.org (Postfix) with ESMTP id B22042468A
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 16:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtkZRttB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCAQY0 (ORCPT
+        id S1726997AbgCAQYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 11:24:26 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43129 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgCAQYZ (ORCPT
+        Sun, 1 Mar 2020 11:24:31 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35849 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgCAQYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 11:24:25 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u12so4141269pgb.10;
-        Sun, 01 Mar 2020 08:24:24 -0800 (PST)
+        Sun, 1 Mar 2020 11:24:30 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j16so9447850wrt.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 08:24:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=g1SEBumqJq81TxO2qvGmu7yktNeKNEfXhG8t+bNaQr8=;
+        b=PtkZRttBCR04PMNO5fIPbIptvsEO9UA0BJTA9Nb3zzJ/HnoCIu48mqqoS8XFIH3pJ1
+         PWve6+/kKCRXzM6flKzaUlyceejEQVorc7Pj4HpUVahWWAts4dKE9borqiE6Uu6RiBeV
+         NnERxRbou1BJfXv8qUpx08uMspd9fSHwDYIqcInSGd2UqcZ7GElcf1raHdSW4Zs2wcHl
+         9krnrs9ZHmmMmZQrCeKk2bpXqVtOh0IymcyfMDpSAL9fHY6N3un6GLKEuEtasmtWzzMO
+         cDsFmRf4CNdfPd1iTNSADam5vgDSIcHzWW8b5CFzbOz3sn36MpBHM/cx8RK+o7NbKNdK
+         oSYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b9zTyAU7BXmkEe7ugpwVE5c9UwWjYoVXP/URLOq0tQ4=;
-        b=AuDjDuNjYV+gcG+Bx7ABOuHm8+x8ftx8EOeFqbSxF4qIhKTGWCt21YNfNzmfvUbKr6
-         Xt+TMD/HM7q8juPH5fkkdyVyHBQJ0ZqRi5QRWQGewFogEWCdVmO+G1kWBdWC80VCaDPq
-         bW3yUGNW2UittcVWkRPQlgRSZ40c5kkMcBHyYvg+HHwQzLnaMLaomDZQFZokcuqOfQMx
-         7DDG/xjVX3GhsOi6/nVpscg50+kQagX8b5aDs0W64VWQLQu9+HgkYEeOgLIRymNeXpKz
-         p8EsgPSGvF0qhaVK504dzan3+7FFj3gQpXafPSj6KFFPhetrogGG3MQjTswsRNMM48CR
-         xvWQ==
-X-Gm-Message-State: APjAAAWNk54EEK9quXko+ayEScd3/vhNL0l677ydbizzs+86KY/vlCiQ
-        OA47+TwW0yXH+CegVDswUTA=
-X-Google-Smtp-Source: APXvYqxWX+PrxH14LmuPjZnJ/EeloN1ii+LgDFRMue3c1Vi+GQT4MhSGFu6Y1Xq17Txwcnj8byPCHg==
-X-Received: by 2002:a63:1926:: with SMTP id z38mr14678948pgl.303.1583079864452;
-        Sun, 01 Mar 2020 08:24:24 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:c2fa:3aa3:193c:db86])
-        by smtp.gmail.com with ESMTPSA id y1sm17303083pgi.56.2020.03.01.08.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 08:24:23 -0800 (PST)
-Date:   Sun, 1 Mar 2020 08:24:22 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Wu Hao <hao.wu@intel.com>
-Subject: Re: [PATCH] fpga: dfl: pci: fix return value of
- cci_pci_sriov_configure
-Message-ID: <20200301162422.GF7593@epycbox.lan>
-References: <1582610838-7019-1-git-send-email-yilun.xu@intel.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g1SEBumqJq81TxO2qvGmu7yktNeKNEfXhG8t+bNaQr8=;
+        b=lyjLyjJP9epGKyS+V2oy13JndRgK03mdTcbtK99I/bLS9Y/jRN5PRFnr7r33XTFlH6
+         6PwHG9Qi6oc0IeWkfev9oiJq5tmir1EzGRC7MBvhxhfIIV+Anr1IAf/GjnAIL1TOo0qc
+         Ck1MjefYpi1fwZcSWxF8Y+cne2rmbB5rqQfL2tvwD0jkLq1rce58E1SzVPgihDj5/Kwn
+         bgBpTHoEs8NT037g3ArslD049J+Ei4W8VjYIImbq+/qFiLVcFpnUkW5ipHlHQzyhw8Wr
+         k+XkJk9kfdYpNX9ee776X4jFjYcUaMV9QHpwdCDyDHKSetR76SHdw1K60u3UC+G9JjqV
+         x4pg==
+X-Gm-Message-State: APjAAAVIaHPGmUFCJL7fXk1s2K5hZzqlA/6mcfDqNrG4GRjfdO80yZRo
+        CAyxUCF/CkfPgBFoPeNfXa4=
+X-Google-Smtp-Source: APXvYqxxiXUgX0QTdUl2mT9OwCWm1oSPN8TXXbwNQZdyVZb0SU4Z/z4oweEcgioUI7wOx8Q73UXm5g==
+X-Received: by 2002:a5d:526c:: with SMTP id l12mr17906156wrc.117.1583079868088;
+        Sun, 01 Mar 2020 08:24:28 -0800 (PST)
+Received: from [192.168.1.201] ([62.68.29.211])
+        by smtp.gmail.com with ESMTPSA id d15sm19439521wrp.37.2020.03.01.08.24.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 08:24:27 -0800 (PST)
+Subject: Re: [PATCH v3] ARM: ep93xx: Replace setup_irq() by request_irq()
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200301122112.3847-1-afzal.mohd.ma@gmail.com>
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Message-ID: <51cebbbb-3ba4-b336-82a9-abcc22f9a69c@gmail.com>
+Date:   Sun, 1 Mar 2020 17:21:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582610838-7019-1-git-send-email-yilun.xu@intel.com>
+In-Reply-To: <20200301122112.3847-1-afzal.mohd.ma@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:07:18PM +0800, Xu Yilun wrote:
-> pci_driver.sriov_configure should return negative value on error and
-> number of enabled VFs on success. But now the driver returns 0 on
-> success. The sriov configure still works but will cause a warning
-> message:
+Hi Afzal, Arnd,
+
+as there is no dedicated tree for EP93xx, could you please
+consider the below patch for your arm-soc tree?
+
+On 01/03/2020 13:21, afzal mohammed wrote:
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
 > 
->   XX VFs requested; only 0 enabled
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
 > 
-> This patch changes the return value accordingly.
+> Hence replace setup_irq() by request_irq().
 > 
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+
+Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+
 > ---
->  drivers/fpga/dfl-pci.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> Hi sub-arch maintainers,
 > 
-> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> index 89ca292..5387550 100644
-> --- a/drivers/fpga/dfl-pci.c
-> +++ b/drivers/fpga/dfl-pci.c
-> @@ -248,11 +248,13 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
->  			return ret;
+> If the patch is okay, please take it thr' your tree.
+> 
+> Regards
+> afzal
+> 
+> v3:
+>  * Split out from series, also create subarch level patch as Thomas
+> 	suggested to take it thr' respective maintainers
+>  * Modify string displayed in case of error as suggested by Thomas
+>  * Re-arrange code as required to improve readability
+>  * Remove irrelevant parts from commit message & improve
 >  
->  		ret = pci_enable_sriov(pcidev, num_vfs);
-> -		if (ret)
-> +		if (ret) {
->  			dfl_fpga_cdev_config_ports_pf(cdev);
-> +			return ret;
-> +		}
->  	}
->  
-> -	return ret;
-> +	return num_vfs;
+> v2:
+>  * Replace pr_err("request_irq() on %s failed" by
+>            pr_err("%s: request_irq() failed"
+>  * Commit message massage
+> 
+>  arch/arm/mach-ep93xx/timer-ep93xx.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/mach-ep93xx/timer-ep93xx.c b/arch/arm/mach-ep93xx/timer-ep93xx.c
+> index de998830f534..dd4b164d1831 100644
+> --- a/arch/arm/mach-ep93xx/timer-ep93xx.c
+> +++ b/arch/arm/mach-ep93xx/timer-ep93xx.c
+> @@ -117,15 +117,11 @@ static irqreturn_t ep93xx_timer_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
 >  }
 >  
->  static void cci_pci_remove(struct pci_dev *pcidev)
-> -- 
-> 2.7.4
+> -static struct irqaction ep93xx_timer_irq = {
+> -	.name		= "ep93xx timer",
+> -	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
+> -	.handler	= ep93xx_timer_interrupt,
+> -	.dev_id		= &ep93xx_clockevent,
+> -};
+> -
+>  void __init ep93xx_timer_init(void)
+>  {
+> +	int irq = IRQ_EP93XX_TIMER3;
+> +	unsigned long flags = IRQF_TIMER | IRQF_IRQPOLL;
+> +
+>  	/* Enable and register clocksource and sched_clock on timer 4 */
+>  	writel(EP93XX_TIMER4_VALUE_HIGH_ENABLE,
+>  	       EP93XX_TIMER4_VALUE_HIGH);
+> @@ -136,7 +132,9 @@ void __init ep93xx_timer_init(void)
+>  			     EP93XX_TIMER4_RATE);
+>  
+>  	/* Set up clockevent on timer 3 */
+> -	setup_irq(IRQ_EP93XX_TIMER3, &ep93xx_timer_irq);
+> +	if (request_irq(irq, ep93xx_timer_interrupt, flags, "ep93xx timer",
+> +			&ep93xx_clockevent))
+> +		pr_err("Failed to request irq %d (ep93xx timer)\n", irq);
+>  	clockevents_config_and_register(&ep93xx_clockevent,
+>  					EP93XX_TIMER123_RATE,
+>  					1,
 > 
-
-Applied to for-next,
-
-Thanks
