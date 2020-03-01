@@ -2,156 +2,69 @@ Return-Path: <SRS0=2gEN=4S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9932C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAFA246B4
-	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 21:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859F9246A1
+	for <linux-kernel@archiver.kernel.org>; Sun,  1 Mar 2020 22:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgCAVwl (ORCPT
+        id S1726614AbgCAWHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 16:52:41 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41544 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgCAVwl (ORCPT
+        Sun, 1 Mar 2020 17:07:12 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:56881 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726050AbgCAWHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 16:52:41 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8WVs-003fLp-7h; Sun, 01 Mar 2020 21:52:40 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC][PATCH v3 01/55] do_add_mount(): lift lock_mount/unlock_mount into callers
-Date:   Sun,  1 Mar 2020 21:51:46 +0000
-Message-Id: <20200301215240.873899-1-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200301215125.GA873525@ZenIV.linux.org.uk>
-References: <20200301215125.GA873525@ZenIV.linux.org.uk>
+        Sun, 1 Mar 2020 17:07:11 -0500
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 021M78Ha029007
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 1 Mar 2020 17:07:08 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 355AB42045B; Sun,  1 Mar 2020 17:07:08 -0500 (EST)
+Date:   Sun, 1 Mar 2020 17:07:08 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: [GIT PULL] more ext4 bug fixes for 5.6
+Message-ID: <20200301220708.GA91502@mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-preparation to finish_automount() fix (next commit)
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/namespace.c | 47 ++++++++++++++++++++++++-----------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+are available in the Git repository at:
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..dcd015fafe01 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2697,45 +2697,32 @@ static int do_move_mount_old(struct path *path, const char *old_name)
- /*
-  * add a mount into a namespace's mount tree
-  */
--static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
-+static int do_add_mount(struct mount *newmnt, struct mountpoint *mp,
-+			struct path *path, int mnt_flags)
- {
--	struct mountpoint *mp;
--	struct mount *parent;
--	int err;
-+	struct mount *parent = real_mount(path->mnt);
- 
- 	mnt_flags &= ~MNT_INTERNAL_FLAGS;
- 
--	mp = lock_mount(path);
--	if (IS_ERR(mp))
--		return PTR_ERR(mp);
--
--	parent = real_mount(path->mnt);
--	err = -EINVAL;
- 	if (unlikely(!check_mnt(parent))) {
- 		/* that's acceptable only for automounts done in private ns */
- 		if (!(mnt_flags & MNT_SHRINKABLE))
--			goto unlock;
-+			return -EINVAL;
- 		/* ... and for those we'd better have mountpoint still alive */
- 		if (!parent->mnt_ns)
--			goto unlock;
-+			return -EINVAL;
- 	}
- 
- 	/* Refuse the same filesystem on the same mount point */
--	err = -EBUSY;
- 	if (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&
- 	    path->mnt->mnt_root == path->dentry)
--		goto unlock;
-+		return -EBUSY;
- 
--	err = -EINVAL;
- 	if (d_is_symlink(newmnt->mnt.mnt_root))
--		goto unlock;
-+		return -EINVAL;
- 
- 	newmnt->mnt.mnt_flags = mnt_flags;
--	err = graft_tree(newmnt, parent, mp);
--
--unlock:
--	unlock_mount(mp);
--	return err;
-+	return graft_tree(newmnt, parent, mp);
- }
- 
- static bool mount_too_revealing(const struct super_block *sb, int *new_mnt_flags);
-@@ -2748,6 +2735,7 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
- 			   unsigned int mnt_flags)
- {
- 	struct vfsmount *mnt;
-+	struct mountpoint *mp;
- 	struct super_block *sb = fc->root->d_sb;
- 	int error;
- 
-@@ -2768,7 +2756,13 @@ static int do_new_mount_fc(struct fs_context *fc, struct path *mountpoint,
- 
- 	mnt_warn_timestamp_expiry(mountpoint, mnt);
- 
--	error = do_add_mount(real_mount(mnt), mountpoint, mnt_flags);
-+	mp = lock_mount(mountpoint);
-+	if (IS_ERR(mp)) {
-+		mntput(mnt);
-+		return PTR_ERR(mp);
-+	}
-+	error = do_add_mount(real_mount(mnt), mp, mountpoint, mnt_flags);
-+	unlock_mount(mp);
- 	if (error < 0)
- 		mntput(mnt);
- 	return error;
-@@ -2830,6 +2824,7 @@ static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
- int finish_automount(struct vfsmount *m, struct path *path)
- {
- 	struct mount *mnt = real_mount(m);
-+	struct mountpoint *mp;
- 	int err;
- 	/* The new mount record should have at least 2 refs to prevent it being
- 	 * expired before we get a chance to add it
-@@ -2842,7 +2837,13 @@ int finish_automount(struct vfsmount *m, struct path *path)
- 		goto fail;
- 	}
- 
--	err = do_add_mount(mnt, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
-+	mp = lock_mount(path);
-+	if (IS_ERR(mp)) {
-+		err = PTR_ERR(mp);
-+		goto fail;
-+	}
-+	err = do_add_mount(mnt, mp, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
-+	unlock_mount(mp);
- 	if (!err)
- 		return 0;
- fail:
--- 
-2.11.0
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus_stable
 
+for you to fetch changes up to 37b0b6b8b99c0e1c1f11abbe7cf49b6d03795b3f:
+
+  ext4: potential crash on allocation error in ext4_alloc_flex_bg_array() (2020-02-29 17:48:08 -0500)
+
+----------------------------------------------------------------
+Two more bug fixes (including a regression) for 5.6
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      ext4: potential crash on allocation error in ext4_alloc_flex_bg_array()
+
+Qian Cai (1):
+      jbd2: fix data races at struct journal_head
+
+ fs/ext4/super.c       | 6 +++---
+ fs/jbd2/transaction.c | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
