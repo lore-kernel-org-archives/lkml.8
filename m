@@ -2,326 +2,340 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DACC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01107C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBE82468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C8E24697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgCBGGN (ORCPT
+        id S1726874AbgCBGPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:06:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42642 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgCBGGN (ORCPT
+        Mon, 2 Mar 2020 01:15:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725446AbgCBGPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:06:13 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0225ufuw042366
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 01:06:12 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfkn94awb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 01:06:11 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 2 Mar 2020 06:06:09 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 06:06:02 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022661DR42926082
+        Mon, 2 Mar 2020 01:15:08 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02269Sgn056544;
+        Mon, 2 Mar 2020 01:14:59 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfjf3dyy2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 01:14:59 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0226EuIP004680;
+        Mon, 2 Mar 2020 06:14:58 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 2yffk6bfnh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 06:14:58 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0226Eu6g48497136
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 06:06:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F7E5AE057;
-        Mon,  2 Mar 2020 06:06:01 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BF9EAE04D;
-        Mon,  2 Mar 2020 06:06:00 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 06:06:00 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CABC3A00BE;
-        Mon,  2 Mar 2020 17:05:55 +1100 (AEDT)
-Subject: Re: [PATCH v3 16/27] powerpc/powernv/pmem: Register a character
- device for userspace to interact with
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Mon, 2 Mar 2020 06:14:56 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F82FC6057;
+        Mon,  2 Mar 2020 06:14:56 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 004F9C6055;
+        Mon,  2 Mar 2020 06:14:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.31.186])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 06:14:52 +0000 (GMT)
+Subject: Re: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
         Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Mon, 02 Mar 2020 17:05:59 +1100
-In-Reply-To: <1e980dc7-109a-d96f-1329-1c38918e2bba@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-17-alastair@au1.ibm.com>
-         <1e980dc7-109a-d96f-1329-1c38918e2bba@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+ <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+ <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+Date:   Mon, 2 Mar 2020 11:44:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20030206-0016-0000-0000-000002EC1123
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030206-0017-0000-0000-0000334F5136
-Message-Id: <8cff2a36a2d9f50725c7df1292c4c6df79a1711d.camel@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-02_01:2020-02-28,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 suspectscore=2 clxscore=1015 mlxscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020045
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 16:34 +1100, Andrew Donnellan wrote:
-> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > This patch introduces a character device (/dev/ocxl-scmX) which
-> > further
-> > patches will use to interact with userspace.
+
+
+On 2/20/20 4:06 PM, Joakim Zhang wrote:
 > 
-> As with the comments on other patches in this series, this commit 
-> message is lacking in explanation. What's the purpose of this device?
+>> -----Original Message-----
+>> From: kajoljain <kjain@linux.ibm.com>
+>> Sent: 2020年2月20日 17:54
+>> To: Joakim Zhang <qiangqing.zhang@nxp.com>; acme@kernel.org
+>> Cc: linux-kernel@vger.kernel.org; linux-perf-users@vger.kernel.org; Jiri Olsa
+>> <jolsa@kernel.org>; Alexander Shishkin <alexander.shishkin@linux.intel.com>;
+>> Andi Kleen <ak@linux.intel.com>; Kan Liang <kan.liang@linux.intel.com>; Peter
+>> Zijlstra <peterz@infradead.org>; Jin Yao <yao.jin@linux.intel.com>; Madhavan
+>> Srinivasan <maddy@linux.vnet.ibm.com>; Anju T Sudhakar
+>> <anju@linux.vnet.ibm.com>; Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> Subject: Re: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+>> metric group with multiple events incase of overlapping events
+>>
+>>
+>>
+>> On 2/17/20 8:41 AM, Joakim Zhang wrote:
+>>>
+>>>> -----Original Message-----
+>>>> From: linux-perf-users-owner@vger.kernel.org
+>>>> <linux-perf-users-owner@vger.kernel.org> On Behalf Of Kajol Jain
+>>>> Sent: 2020年2月12日 13:41
+>>>> To: acme@kernel.org
+>>>> Cc: linux-kernel@vger.kernel.org; linux-perf-users@vger.kernel.org;
+>>>> kjain@linux.ibm.com; Jiri Olsa <jolsa@kernel.org>; Alexander Shishkin
+>>>> <alexander.shishkin@linux.intel.com>; Andi Kleen
+>>>> <ak@linux.intel.com>; Kan Liang <kan.liang@linux.intel.com>; Peter
+>>>> Zijlstra <peterz@infradead.org>; Jin Yao <yao.jin@linux.intel.com>;
+>>>> Madhavan Srinivasan <maddy@linux.vnet.ibm.com>; Anju T Sudhakar
+>>>> <anju@linux.vnet.ibm.com>; Ravi Bangoria
+>>>> <ravi.bangoria@linux.ibm.com>
+>>>> Subject: [PATCH v4] tools/perf/metricgroup: Fix printing event names
+>>>> of metric group with multiple events incase of overlapping events
+>>>>
+>>>> Commit f01642e4912b ("perf metricgroup: Support multiple events for
+>>>> metricgroup") introduced support for multiple events in a metric
+>>>> group. But with the current upstream, metric events names are not
+>>>> printed properly incase we try to run multiple metric groups with
+>> overlapping event.
+>>>>
+>>>> With current upstream version, incase of overlapping metric events
+>>>> issue is, we always start our comparision logic from start.
+>>>> So, the events which already matched with some metric group also take
+>>>> part in comparision logic. Because of that when we have overlapping
+>>>> events, we end up matching current metric group event with already
+>> matched one.
+>>>>
+>>>> For example, in skylake machine we have metric event CoreIPC and
+>>>> Instructions. Both of them need 'inst_retired.any' event value.
+>>>> As events in Instructions is subset of events in CoreIPC, they endup
+>>>> in pointing to same 'inst_retired.any' value.
+>>>>
+>>>> In skylake platform:
+>>>>
+>>>> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>      1,254,992,790      inst_retired.any          # 1254992790.0
+>>>>
+>> Instructions
+>>>>                                                   #      1.3
+>>>> CoreIPC
+>>>>        977,172,805      cycles
+>>>>      1,254,992,756      inst_retired.any
+>>>>
+>>>>        1.000802596 seconds time elapsed
+>>>>
+>>>> command:# sudo ./perf stat -M UPI,IPC sleep 1
+>>>>
+>>>>    Performance counter stats for 'sleep 1':
+>>>>
+>>>>            948,650      uops_retired.retire_slots
+>>>>            866,182      inst_retired.any          #      0.7 IPC
+>>>>            866,182      inst_retired.any
+>>>>          1,175,671      cpu_clk_unhalted.thread
+>>>>
+>>>> Patch fixes the issue by adding a new bool pointer 'evlist_used' to
+>>>> keep track of events which already matched with some group by setting it
+>> true.
+>>>> So, we skip all used events in list when we start comparision logic.
+>>>> Patch also make some changes in comparision logic, incase we get a
+>>>> match miss, we discard the whole match and start again with first
+>>>> event id in metric event.
+>>>>
+>>>> With this patch:
+>>>> In skylake platform:
+>>>>
+>>>> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>          3,348,415      inst_retired.any          #      0.3
+>> CoreIPC
+>>>>         11,779,026      cycles
+>>>>          3,348,381      inst_retired.any          # 3348381.0
+>>>>
+>> Instructions
+>>>>
+>>>>        1.001649056 seconds time elapsed
+>>>>
+>>>> command:# ./perf stat -M UPI,IPC sleep 1
+>>>>
+>>>>  Performance counter stats for 'sleep 1':
+>>>>
+>>>>          1,023,148      uops_retired.retire_slots #      1.1 UPI
+>>>>            924,976      inst_retired.any
+>>>>            924,976      inst_retired.any          #      0.6 IPC
+>>>>          1,489,414      cpu_clk_unhalted.thread
+>>>>
+>>>>        1.003064672 seconds time elapsed
+>>>>
+>>>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>>>> Cc: Jiri Olsa <jolsa@kernel.org>
+>>>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>>>> Cc: Andi Kleen <ak@linux.intel.com>
+>>>> Cc: Kan Liang <kan.liang@linux.intel.com>
+>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>> Cc: Jin Yao <yao.jin@linux.intel.com>
+>>>> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+>>>> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+>>>> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>>>> ---
+>>>>  tools/perf/util/metricgroup.c | 50
+>>>> ++++++++++++++++++++++-------------
+>>>>  1 file changed, 31 insertions(+), 19 deletions(-)
+>>>
+>>> Hi Kajol,
+>>>
+>>> I am not sure if it is good to ask a question here :-)
+>>>
+>>> I encountered a perf metricgroup issue, the result is incorrect when the
+>> metric includes more than 2 events.
+>>>
+>>> git log --oneline tools/perf/util/metricgroup.c
+>>> 3635b27cc058 perf metricgroup: Fix printing event names of metric
+>>> group with multiple events f01642e4912b perf metricgroup: Support
+>>> multiple events for metricgroup
+>>> 287f2649f791 perf metricgroup: Scale the metric result
+>>>
+>>> I did a simple test, below is the JSON file and result.
+>>> [
+>>>         {
+>>>              "PublicDescription": "Calculate DDR0 bus actual utilization
+>> which vary from DDR0 controller clock frequency",
+>>>              "BriefDescription": "imx8qm: ddr0 bus actual utilization",
+>>>              "MetricName": "imx8qm-ddr0-bus-util",
+>>>              "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ +
+>> imx8_ddr0\\/write\\-cycles\\/ )",
+>>>              "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
+>>>         }
+>>> ]
+>>> ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+>>> #           time             counts unit events
+>>>      1.000104250              16720      imx8_ddr0/read-cycles/
+>> #  22921.0 imx8qm-ddr0-bus-util
+>>>      1.000104250               6201      imx8_ddr0/write-cycles/
+>>>      2.000525625               8316      imx8_ddr0/read-cycles/
+>> #  12785.5 imx8qm-ddr0-bus-util
+>>>      2.000525625               2738      imx8_ddr0/write-cycles/
+>>>      3.000819125               1056      imx8_ddr0/read-cycles/
+>> #   4136.7 imx8qm-ddr0-bus-util
+>>>      3.000819125                303      imx8_ddr0/write-cycles/
+>>>      4.001103750               6260      imx8_ddr0/read-cycles/
+>> #   9149.8 imx8qm-ddr0-bus-util
+>>>      4.001103750               2317      imx8_ddr0/write-cycles/
+>>>      5.001392750               2084      imx8_ddr0/read-cycles/
+>> #   4516.0 imx8qm-ddr0-bus-util
+>>>      5.001392750                601      imx8_ddr0/write-cycles/
+>>>
+>>> You can see that only the first result is correct, could this be reproduced at
+>> you side?
+>>
+>> Hi Joakim,
+>>         Will try to look into it from my side.
 > 
 
-I'll reword this for v4.
-
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 116
-> > +++++++++++++++++-
-> >   .../platforms/powernv/pmem/ocxl_internal.h    |   2 +
-> >   2 files changed, 116 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > index b8bd7e703b19..63109a870d2c 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > @@ -10,6 +10,7 @@
-> >   #include <misc/ocxl.h>
-> >   #include <linux/delay.h>
-> >   #include <linux/ndctl.h>
-> > +#include <linux/fs.h>
-> >   #include <linux/mm_types.h>
-> >   #include <linux/memory_hotplug.h>
-> >   #include "ocxl_internal.h"
-> > @@ -339,6 +340,9 @@ static void free_ocxlpmem(struct ocxlpmem
-> > *ocxlpmem)
-> >   
-> >   	free_minor(ocxlpmem);
-> >   
-> > +	if (ocxlpmem->cdev.owner)
-> > +		cdev_del(&ocxlpmem->cdev);
-> > +
-> >   	if (ocxlpmem->metadata_addr)
-> >   		devm_memunmap(&ocxlpmem->dev, ocxlpmem->metadata_addr);
-> >   
-> > @@ -396,6 +400,70 @@ static int ocxlpmem_register(struct ocxlpmem
-> > *ocxlpmem)
-> >   	return device_register(&ocxlpmem->dev);
-> >   }
-> >   
-> > +static void ocxlpmem_put(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	put_device(&ocxlpmem->dev);
-> > +}
-> > +
-> > +static struct ocxlpmem *ocxlpmem_get(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	return (get_device(&ocxlpmem->dev) == NULL) ? NULL : ocxlpmem;
-> > +}
-> > +
-> > +static struct ocxlpmem *find_and_get_ocxlpmem(dev_t devno)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem;
-> > +	int minor = MINOR(devno);
-> > +	/*
-> > +	 * We don't declare an RCU critical section here, as our AFU
-> > +	 * is protected by a re0ference counter on the device. By the
-> > time the
-> > +	 * minor number of a device is removed from the idr, the ref
-> > count of
-> > +	 * the device is already at 0, so no user API will access that
-> > AFU and
-> > +	 * this function can't return it.
-> > +	 */
-> > +	ocxlpmem = idr_find(&minors_idr, minor);
-> > +	if (ocxlpmem)
-> > +		ocxlpmem_get(ocxlpmem);
-> > +	return ocxlpmem;
-> > +}
-> > +
-> > +static int file_open(struct inode *inode, struct file *file)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem;
-> > +
-> > +	ocxlpmem = find_and_get_ocxlpmem(inode->i_rdev);
-> > +	if (!ocxlpmem)
-> > +		return -ENODEV;
-> > +
-> > +	file->private_data = ocxlpmem;
-> > +	return 0;
-> > +}
-> > +
-> > +static int file_release(struct inode *inode, struct file *file)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem = file->private_data;
-> > +
-> > +	ocxlpmem_put(ocxlpmem);
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct file_operations fops = {
-> > +	.owner		= THIS_MODULE,
-> > +	.open		= file_open,
-> > +	.release	= file_release,
-> > +};
-> > +
-> > +/**
-> > + * create_cdev() - Create the chardev in /dev for the device
-> > + * @ocxlpmem: the SCM metadata
-> > + * Return: 0 on success, negative on failure
-> > + */
-> > +static int create_cdev(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	cdev_init(&ocxlpmem->cdev, &fops);
-> > +	return cdev_add(&ocxlpmem->cdev, ocxlpmem->dev.devt, 1);
-> > +}
-> > +
-> >   /**
-> >    * ocxlpmem_remove() - Free an OpenCAPI persistent memory device
-> >    * @pdev: the PCI device information struct
-> > @@ -572,6 +640,11 @@ static int probe(struct pci_dev *pdev, const
-> > struct pci_device_id *ent)
-> >   		goto err;
-> >   	}
-> >   
-> > +	if (create_cdev(ocxlpmem)) {
-> > +		dev_err(&pdev->dev, "Could not create character
-> > device\n");
-> > +		goto err;
-> > +	}
-> > +
-> >   	elapsed = 0;
-> >   	timeout = ocxlpmem->readiness_timeout + ocxlpmem-
-> > >memory_available_timeout;
-> >   	while (!is_usable(ocxlpmem, false)) {
-> > @@ -613,20 +686,59 @@ static struct pci_driver pci_driver = {
-> >   	.shutdown = ocxlpmem_remove,
-> >   };
-> >   
-> > +static int file_init(void)
-> > +{
-> > +	int rc;
-> > +
-> > +	mutex_init(&minors_idr_lock);
-> > +	idr_init(&minors_idr);
-> > +
-> > +	rc = alloc_chrdev_region(&ocxlpmem_dev, 0, NUM_MINORS, "ocxl-
-> > pmem");
+> Thanks Kajol for your help, I look into this issue, but don't know how to fix it.
 > 
-> If the driver is going to be called "ocxlpmem" can we standardise on 
-> that without the extra hyphen?
+> The results are always correct if signal event used in "MetricExpr" with "-I" parameters, but the results are incorrect when more than one events used in "MetricExpr".
+> 
 
-Ok
+Hi Joakim,
+    So, I try to look into this issue and understand the flow. From my understanding, whenever we do
+    calculation of metric expression we don't use exact count we are getting.
+    Basically we use mean value of each event in the calculation of metric expression.
 
-> > +	if (rc) {
-> > +		idr_destroy(&minors_idr);
-> > +		pr_err("Unable to allocate OpenCAPI persistent memory
-> > major number: %d\n", rc);
-> > +		return rc;
-> > +	}
-> > +
-> > +	ocxlpmem_class = class_create(THIS_MODULE, "ocxl-pmem");
-> > +	if (IS_ERR(ocxlpmem_class)) {
-> > +		idr_destroy(&minors_idr);
-> > +		pr_err("Unable to create ocxl-pmem class\n");
-> > +		unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-> > +		return PTR_ERR(ocxlpmem_class);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void file_exit(void)
-> > +{
-> > +	class_destroy(ocxlpmem_class);
-> > +	unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-> > +	idr_destroy(&minors_idr);
-> > +}
-> > +
-> >   static int __init ocxlpmem_init(void)
-> >   {
-> > -	int rc = 0;
-> > +	int rc;
-> >   
-> > -	rc = pci_register_driver(&pci_driver);
-> > +	rc = file_init();
-> >   	if (rc)
-> >   		return rc;
-> >   
-> > +	rc = pci_register_driver(&pci_driver);
-> > +	if (rc) {
-> > +		file_exit();
-> > +		return rc;
-> > +	}
-> > +
-> >   	return 0;
-> >   }
-> >   
-> >   static void ocxlpmem_exit(void)
-> >   {
-> >   	pci_unregister_driver(&pci_driver);
-> > +	file_exit();
-> >   }
-> >   
-> >   module_init(ocxlpmem_init);
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+So, I am taking same example you refer.
 
+Metric Event: imx8qm-ddr0-bus-util
+MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )"
+
+command#: ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+
+#           time             counts unit events
+     1.000104250              16720      imx8_ddr0/read-cycles/    #  22921.0 imx8qm-ddr0-bus-util
+     1.000104250               6201      imx8_ddr0/write-cycles/
+     2.000525625               8316      imx8_ddr0/read-cycles/    #  12785.5 imx8qm-ddr0-bus-util
+     2.000525625               2738      imx8_ddr0/write-cycles/
+     3.000819125               1056      imx8_ddr0/read-cycles/    #   4136.7 imx8qm-ddr0-bus-util
+     3.000819125                303      imx8_ddr0/write-cycles/
+     4.001103750               6260      imx8_ddr0/read-cycles/    #   9149.8 imx8qm-ddr0-bus-util
+     4.001103750               2317      imx8_ddr0/write-cycles/
+     5.001392750               2084      imx8_ddr0/read-cycles/    #   4516.0 imx8qm-ddr0-bus-util
+     5.001392750                601      imx8_ddr0/write-cycles/
+
+If you see we have a function called 'update_stats' in file util/stat.c where we do this calculation
+and updating stats->mean value. And this mean value is what we are using actually in our
+metric expression calculation.
+
+We call this function in each iteration where we update stats->mean and stats->n for each event.
+But one weird issue is, for very first event, stat->n is always 1 that is why we are getting 
+mean same as count.
+So this is the reason for single event you get exact aggregate of metric expression.
+So doesn't matter how many events you have in your metric expression, every time
+you take exact count for first one and normalized value for rest which is weird.
+
+According to update_stats function:  We are updating mean as:
+
+stats->mean += delta / stats->n where,  delta = val - stats->mean. 
+
+If we take write-cycles here. Initially mean = 0 and n = 1.
+
+1st iteration: n=1, write cycle : 6201 and mean = 6201  (Final agg value: 16720 + 6201 = 22921)
+2nd iteration: n=2, write cycles:  6201 + (2738 - 6201)/2 =  4469.5  (Final aggr value: 8316 + 4469.5 = 12785.5)
+3rd iteration: n=3, write cycles: 4469.5 + (303 - 4469.5)/3 = 3080.6667 (Final aggr value: 1056 + 3080.6667 = 4136.7)
+
+Andi and Jiri, I am not sure if its expected behavior. I mean shouldn't we either take mean value of each event 
+or take n as 1 for each event. And one more question, Should we add an option to say whether user want exact aggregate or
+this normalize aggregate to remove the confusion? I try to find it out if we already have one but didn't get.
+Please let me know if my understanding is fine.
+
+Thanks,
+Kajol
+
+
+> Hope you can find the root cause :-)
+> 
+> Best Regards,
+> Joakim Zhang
+>> Thanks,
+>> Kajol
+>>>
+>>> Thanks a lot!
+>>>
+>>> Best Regards,
+>>> Joakim Zhang
+>>>
