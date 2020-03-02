@@ -2,87 +2,132 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332BFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A430C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F22F214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AF4214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="c5+T4h6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgCBMSx (ORCPT
+        id S1727829AbgCBMTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:18:53 -0500
-Received: from smtprelay0201.hostedemail.com ([216.40.44.201]:41853 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725802AbgCBMSx (ORCPT
+        Mon, 2 Mar 2020 07:19:13 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.79]:14642 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725802AbgCBMTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:18:53 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id D8764100E7B46;
-        Mon,  2 Mar 2020 12:18:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: mouth08_4d1868ea18439
-X-Filterd-Recvd-Size: 2221
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  2 Mar 2020 12:18:49 +0000 (UTC)
-Message-ID: <843d33f05fabc63329b3d305a25f0a31e9fba7b5.camel@perches.com>
-Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
-From:   Joe Perches <joe@perches.com>
-To:     John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Mon, 02 Mar 2020 04:17:18 -0800
-In-Reply-To: <87r1ybujm5.fsf@linutronix.de>
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
-         <20200128161948.8524-2-john.ogness@linutronix.de>
-         <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
-         <87r1ybujm5.fsf@linutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 2 Mar 2020 07:19:12 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 753DA27DD7
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:10:06 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 8jtejS8tdRP4z8jtejq1h4; Mon, 02 Mar 2020 06:10:06 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SI9L7t5+PJPUj9nJSrkM4IY5Y4jla0GxFqwLN6bviuM=; b=c5+T4h6ffuTf0aWn7ux1BWA2Yr
+        hXkYlM9AjdbBIi5V8XZ/z7/oJTlLFZD3hICBaLLQxSZsxdNO2l2p9fTi6H/tkYjDOVu27Vb1N3PVG
+        rR/bFcR6cy/wJSWeRqkqD/6hzBKvr6B4R/ri4yqKX6FDWzDi1IeijJ0ZEW3y3RkCU6S6+STp3nxzk
+        oLWU6DHq5LzuRD38CkYfEPOR8XA8iH8FsVTSkU4ThnNUsYHSilhei9giFG+PueTQHtpbXUaISmIf+
+        9wJrUdx5mzYFXYPT0RE6/tYIOi5shFMXPYpxwaRf+Nx8ZmJgGHjxNEy78a2JYwmBtaH4acM0wTp0R
+        AzhRR0Ew==;
+Received: from [201.166.157.38] (port=42262 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j8jrV-003wUT-JF; Mon, 02 Mar 2020 06:07:54 -0600
+Date:   Mon, 2 Mar 2020 06:10:51 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        "GR-Linux-NIC-Dev@marvell.com David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] bna: bnad: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200302121051.GA28820@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.157.38
+X-Source-L: No
+X-Exim-ID: 1j8jrV-003wUT-JF
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.157.38]:42262
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 11:38 +0100, John Ogness wrote:
-> On 2020-02-21, Petr Mladek <pmladek@suse.com> wrote:
-> > > diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-[]
-> > > +static struct prb_data_block *to_block(struct prb_data_ring *data_ring,
-> > > +				       unsigned long begin_lpos)
-> > > +{
-> > > +	char *data = &data_ring->data[DATA_INDEX(data_ring, begin_lpos)];
-> > > +
-> > > +	return (struct prb_data_block *)data;
-> > 
-> > Nit: Please, use "blk" instead of "data". I was slightly confused
-> > because "data" is also one member of struct prb_data_block.
-> 
-> OK.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-trivia:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Perhaps use void * instead of char * and a direct return
-and avoid the naming altogether.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-static struct prb_data_block *to_block(struct prb_data_ring *data_ring, 
-				       unsigned long begin_lpos)
-{
-	return (void *)&data_ring->data[DATA_INDEX(data_ring, begin_lpos)];
-}
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/brocade/bna/bnad.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/brocade/bna/bnad.h b/drivers/net/ethernet/brocade/bna/bnad.h
+index 492a02d54f14..bfa58b40dc3f 100644
+--- a/drivers/net/ethernet/brocade/bna/bnad.h
++++ b/drivers/net/ethernet/brocade/bna/bnad.h
+@@ -253,7 +253,7 @@ struct bnad_rx_unmap_q {
+ 	int			alloc_order;
+ 	u32			map_size;
+ 	enum bnad_rxbuf_type	type;
+-	struct bnad_rx_unmap	unmap[0] ____cacheline_aligned;
++	struct bnad_rx_unmap	unmap[] ____cacheline_aligned;
+ };
+ 
+ #define BNAD_PCI_DEV_IS_CAT2(_bnad) \
+-- 
+2.25.0
 
