@@ -2,331 +2,109 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39334C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB2E21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sweS0JDV"
+	by mail.kernel.org (Postfix) with ESMTP id 04FC421556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCBUsG (ORCPT
+        id S1727005AbgCBUsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:48:06 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:34494 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726880AbgCBUsF (ORCPT
+        Mon, 2 Mar 2020 15:48:51 -0500
+Received: from goliath.siemens.de ([192.35.17.28]:50115 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgCBUsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:48:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583182084; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=7B7vfNN9ZidLxz72TPxTHDR6U5u+fqRwsbKANCP/UgU=; b=sweS0JDVLu7Dk3FuUFXG2KmIaVia65poAVjA0d8VDwcDtGAdmHj9KTuQhyrG6BEsFJfWYnxD
- cR2YFW5MfcFfcY4LNBwBbzaZGwF3MvWWkfWIEthSW0k0GiaEauOqmHNy6WGqQtsTLCsY1C2B
- qPeLxO/MEW8+c6D06kcpfq4315w=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5d70fb.7f5b25055c00-smtp-out-n03;
- Mon, 02 Mar 2020 20:47:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 10C5FC447A3; Mon,  2 Mar 2020 20:47:55 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3909C4479D;
-        Mon,  2 Mar 2020 20:47:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E3909C4479D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 1/2] dt-bindings: display: msm: Convert GMU bindings to YAML
-Date:   Mon,  2 Mar 2020 13:47:46 -0700
-Message-Id: <1583182067-16530-2-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583182067-16530-1-git-send-email-jcrouse@codeaurora.org>
-References: <1583182067-16530-1-git-send-email-jcrouse@codeaurora.org>
+        Mon, 2 Mar 2020 15:48:50 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 022KmR6k007017
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 21:48:29 +0100
+Received: from [139.25.68.37] ([139.25.68.37])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 022KmQfk011003;
+        Mon, 2 Mar 2020 21:48:26 +0100
+Subject: Re: [PATCH 5/6] KVM: x86: Rename "found" variable in kvm_cpuid() to
+ "exact_entry_exists"
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-6-sean.j.christopherson@intel.com>
+ <680d85ee-948c-6968-2d1a-d563d4863140@siemens.com>
+ <20200302203510.GF6244@linux.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <42135019-bbb8-40e0-35c7-070365a5ad79@siemens.com>
+Date:   Mon, 2 Mar 2020 21:48:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200302203510.GF6244@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-text bindings.
+On 02.03.20 21:35, Sean Christopherson wrote:
+> On Mon, Mar 02, 2020 at 09:20:52PM +0100, Jan Kiszka wrote:
+>> On 02.03.20 20:57, Sean Christopherson wrote:
+>>> Rename "found" in kvm_cpuid() to "exact_entry_exists" to better convey
+>>> that the intent of the tracepoint's "found/not found" output is to trace
+>>> whether the output values are for the actual requested leaf or for some
+>>> other (likely unrelated) leaf that was found while processing entries to
+>>> emulate funky CPU behavior, e.g. the max basic leaf on Intel CPUs when
+>>> the requested CPUID leaf is out of range.
+>>>
+>>> Suggested-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>>   arch/x86/kvm/cpuid.c | 6 +++---
+>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>> index 869526930cf7..b0a4f3c17932 100644
+>>> --- a/arch/x86/kvm/cpuid.c
+>>> +++ b/arch/x86/kvm/cpuid.c
+>>> @@ -1002,10 +1002,10 @@ void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   {
+>>>   	const u32 function = *eax, index = *ecx;
+>>>   	struct kvm_cpuid_entry2 *entry;
+>>> -	bool found;
+>>> +	bool exact_entry_exists;
+>>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> -	found = entry;
+>>> +	exact_entry_exists = !!entry;
+>>>   	/*
+>>>   	 * Intel CPUID semantics treats any query for an out-of-range
+>>>   	 * leaf as if the highest basic leaf (i.e. CPUID.0H:EAX) were
+>>> @@ -1047,7 +1047,7 @@ void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   			}
+>>>   		}
+>>>   	}
+>>> -	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, found);
+>>> +	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, exact_entry_exists);
+>>
+>> Actually, I think we also what to change output in the tracepoint.
+> 
+> Oh, I definitely want to change it, but AIUI it's ABI and shouldn't be
+> changed.  Paolo?
+> 
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+This can be discovered via the format string in sysfs and handled by the 
+consumer. But I'm not an expert in the tracing ABI.
 
- .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
- .../devicetree/bindings/display/msm/gmu.yaml       | 123 +++++++++++++++++++++
- 2 files changed, 123 insertions(+), 116 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+Jan
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-deleted file mode 100644
-index bf9c7a2..0000000
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ /dev/null
-@@ -1,116 +0,0 @@
--Qualcomm adreno/snapdragon GMU (Graphics management unit)
--
--The GMU is a programmable power controller for the GPU. the CPU controls the
--GMU which in turn handles power controls for the GPU.
--
--Required properties:
--- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
--    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
--  Note that you need to list the less specific "qcom,adreno-gmu"
--  for generic matches and the more specific identifier to identify
--  the specific device.
--- reg: Physical base address and length of the GMU registers.
--- reg-names: Matching names for the register regions
--  * "gmu"
--  * "gmu_pdc"
--  * "gmu_pdc_seg"
--- interrupts: The interrupt signals from the GMU.
--- interrupt-names: Matching names for the interrupts
--  * "hfi"
--  * "gmu"
--- clocks: phandles to the device clocks
--- clock-names: Matching names for the clocks
--   * "gmu"
--   * "cxo"
--   * "axi"
--   * "mnoc"
--- power-domains: should be:
--	<&clock_gpucc GPU_CX_GDSC>
--	<&clock_gpucc GPU_GX_GDSC>
--- power-domain-names: Matching names for the power domains
--- iommus: phandle to the adreno iommu
--- operating-points-v2: phandle to the OPP operating points
--
--Optional properties:
--- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
--        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
--
--Example:
--
--/ {
--	...
--
--	gmu: gmu@506a000 {
--		compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
--
--		reg = <0x506a000 0x30000>,
--			<0xb280000 0x10000>,
--			<0xb480000 0x10000>;
--		reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
--
--		interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "hfi", "gmu";
--
--		clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
--			<&gpucc GPU_CC_CXO_CLK>,
--			<&gcc GCC_DDRSS_GPU_AXI_CLK>,
--			<&gcc GCC_GPU_MEMNOC_GFX_CLK>;
--		clock-names = "gmu", "cxo", "axi", "memnoc";
--
--		power-domains = <&gpucc GPU_CX_GDSC>,
--				<&gpucc GPU_GX_GDSC>;
--		power-domain-names = "cx", "gx";
--
--		iommus = <&adreno_smmu 5>;
--
--		operating-points-v2 = <&gmu_opp_table>;
--	};
--};
--
--a3xx example with OCMEM support:
--
--/ {
--	...
--
--	gpu: adreno@fdb00000 {
--		compatible = "qcom,adreno-330.2",
--		             "qcom,adreno";
--		reg = <0xfdb00000 0x10000>;
--		reg-names = "kgsl_3d0_reg_memory";
--		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "kgsl_3d0_irq";
--		clock-names = "core",
--		              "iface",
--		              "mem_iface";
--		clocks = <&mmcc OXILI_GFX3D_CLK>,
--		         <&mmcc OXILICX_AHB_CLK>,
--		         <&mmcc OXILICX_AXI_CLK>;
--		sram = <&gmu_sram>;
--		power-domains = <&mmcc OXILICX_GDSC>;
--		operating-points-v2 = <&gpu_opp_table>;
--		iommus = <&gpu_iommu 0>;
--	};
--
--	ocmem@fdd00000 {
--		compatible = "qcom,msm8974-ocmem";
--
--		reg = <0xfdd00000 0x2000>,
--		      <0xfec00000 0x180000>;
--		reg-names = "ctrl",
--		             "mem";
--
--		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
--		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
--		clock-names = "core",
--		              "iface";
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		gmu_sram: gmu-sram@0 {
--			reg = <0x0 0x100000>;
--			ranges = <0 0 0xfec00000 0x100000>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-new file mode 100644
-index 0000000..0b8736a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
-+%YAML 1.2
-+---
-+
-+$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Devicetree bindings for the GMU attached to certain Adreno GPUs
-+
-+maintainers:
-+  - Rob Clark <robdclark@gmail.com>
-+
-+description: |
-+  These bindings describe the Graphics Management Unit (GMU) that is attached
-+  to members of the Adreno A6xx GPU family. The GMU provides on-device power
-+  management and support to improve power efficiency and reduce the load on
-+  the CPU.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,adreno-gmu-630.2
-+      - const: qcom,adreno-gmu
-+
-+  reg:
-+    items:
-+      - description: Core GMU registers
-+      - description: GMU PDC registers
-+      - description: GMU PDC sequence registers
-+
-+  reg-names:
-+    items:
-+      - const: gmu
-+      - const: gmu_pdc
-+      - const: gmu_pdc_seq
-+
-+  clocks:
-+    items:
-+     - description: GMU clock
-+     - description: GPU CX clock
-+     - description: GPU AXI clock
-+     - description: GPU MEMNOC clock
-+
-+  clock-names:
-+    items:
-+      - const: gmu
-+      - const: cxo
-+      - const: axi
-+      - const: memnoc
-+
-+  interrupts:
-+    items:
-+     - description: GMU HFI interrupt
-+     - description: GMU interrupt
-+
-+
-+  interrupt-names:
-+    items:
-+      - const: hfi
-+      - const: gmu
-+
-+  power-domains:
-+     items:
-+       - description: CX power domain
-+       - description: GX power domain
-+
-+  power-domain-names:
-+     items:
-+       - const: cx
-+       - const: gx
-+
-+  iommus:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - power-domains
-+  - power-domain-names
-+  - iommus
-+  - operating-points-v2
-+
-+examples:
-+ - |
-+   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-+   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+   #include <dt-bindings/interrupt-controller/irq.h>
-+   #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+   gmu: gmu@506a000 {
-+        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
-+
-+        reg = <0x506a000 0x30000>,
-+              <0xb280000 0x10000>,
-+              <0xb480000 0x10000>;
-+        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-+                 <&gpucc GPU_CC_CXO_CLK>,
-+                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+        clock-names = "gmu", "cxo", "axi", "memnoc";
-+
-+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "hfi", "gmu";
-+
-+        power-domains = <&gpucc GPU_CX_GDSC>,
-+                        <&gpucc GPU_GX_GDSC>;
-+        power-domain-names = "cx", "gx";
-+
-+        iommus = <&adreno_smmu 5>;
-+        operating-points-v2 = <&gmu_opp_table>;
-+   };
 -- 
-2.7.4
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
