@@ -2,153 +2,312 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48530C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236CFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E5721D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0C121D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjBc7d6Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vf/1v0TF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCBQc4 (ORCPT
+        id S1727414AbgCBQc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:32:56 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:40200 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgCBQc4 (ORCPT
+        Mon, 2 Mar 2020 11:32:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47558 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727072AbgCBQc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:32:56 -0500
-Received: by mail-vk1-f194.google.com with SMTP id c129so3121115vkh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:32:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6G1UATj4krZxsCknjrQEeeFai91FPwBe7XfsjRuVvR4=;
-        b=gjBc7d6YnjDc2NB2v1tqHbdmYRA6US1Zc4Bwdfw5pIWhSmmK+Bim0XXVC967za6mwx
-         ttu/8XEIGHY+D5pOwYhrSNHH/c4SoLvoncF5LehwoF40RSVQ9t9odVgxLiDlcLjFr8Qf
-         uXYk5vh3osEyjqmPttQL18i1ib4MEU32Qt3I2R3oe2JnmiK3Jik/inzsusGzwGnwm8pV
-         s1va7f8IYUZ7uLxzJUgWIyTWYsii4w3rsSFeFJeDn2VTka/qdtcbcgiRxqnQuUa+AYgx
-         0sFVAYTtpPKHuI2iqRu7GbzoyP3paHDugM7UXOnTi6wNwOQFMIQx2OSWfFXbxa+LWAu3
-         a1yw==
+        Mon, 2 Mar 2020 11:32:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583166775;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X9rcUbisKxxmFlt7qW9aNoQqeqD9jDa6T4zDyj5oRUY=;
+        b=Vf/1v0TFP383X4KR7W/gVj0w8uIQO1c+No/hYLlVSfB18Q70rVuI/asAIAQDdU86JFXUck
+        YNrKu5HriHdzw67GFUV8B2L4r56D5TB7Bs0JI1si8XuhYt12UZAig8qoB30twevok6YgFw
+        wLEgxbcWAApy77mWCDFGidf9amuxq/M=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-GBPppWQfNWCZUPKurUpT8g-1; Mon, 02 Mar 2020 11:32:53 -0500
+X-MC-Unique: GBPppWQfNWCZUPKurUpT8g-1
+Received: by mail-wr1-f70.google.com with SMTP id f10so6026894wrv.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:32:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6G1UATj4krZxsCknjrQEeeFai91FPwBe7XfsjRuVvR4=;
-        b=C76lyQeKK04YKRQSbJOPAADPGneciSHE7jzY6VVXvfJqm+AKyOncjADlywVjwGEP1X
-         jDy0e1EKvCzF/u/hy3owMyUPNWjxcfZZ+EwObCV/C7+F9q7OPk4i5CyZ30jT9++JFLIh
-         YIs0Pe5AtXj35yl4xIpqs7hvniXgDJPeb2YNfbDygtUIdiqO4VLTlMgCJsQ5XPWDephF
-         Am/X6F7HvbYXzQxQTyr5Y7sa44WFjFQO5AyNHJ5j0LC1+cWA67S2DtMJK1/DzQAa45Nm
-         nZryie9GXkv/WUre6x+ERqTR0laHNXz/oMNA4KDXhNG6MvOz/0+e/QAJIJS4JGAcZSlh
-         k/aw==
-X-Gm-Message-State: ANhLgQ2TFb8LQJMejAqCekJZz4BaUDdbM7zfuWFaQU+co6OHPbbYwyQ0
-        jvjKhmXDUneuJU4pzhlDU6g0+20Xig+7OG8Bpi+cmQ==
-X-Google-Smtp-Source: ADFU+vudr5OddUJOm/nCflCRNBR8hUNIZhkJyQ8IXmQMh0kL9nYnxmTqjHWz5AHVu0pL2BiPYiLALTBK7m4MdHvpN+w=
-X-Received: by 2002:ac5:c914:: with SMTP id t20mr334096vkl.37.1583166775011;
- Mon, 02 Mar 2020 08:32:55 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X9rcUbisKxxmFlt7qW9aNoQqeqD9jDa6T4zDyj5oRUY=;
+        b=AfeVKu2Vz6BywDo7doGhMsJVJta8wQc+hPzdHhLe7MNxakwKz9YImajcErW+GEeLvU
+         qbYDJW2T6ZNg5kC1WShyk6jhuhC50KX7m9kued/aFOtS5STl8wZYJOEsOpPiDbcNeZJW
+         I5eOeFynhKnZmrlMTenA2pIPUAD6vCc9r4HlxP78QzTIZrHpenNepDDUUyq+wyhGWr2P
+         qUYiVb7/8qYXMBzckkCmqlWxR/1I3ERaXbww0ilegOJtMepWaG6QCRW5IiQpkxSRZLcK
+         3CteIKaEbI3gwe+vCZP7iCBQyCCvS4M162+W8FRVyMtoRs8D0ToBB4jqf2Fowip+e/uL
+         XJRQ==
+X-Gm-Message-State: ANhLgQ21o5Eb4bAtZn3eRzVEVYp4FvbpZTER0e+eH5kN0VrNca3HYFLc
+        aA+h5l42sdxxNrHU1mLqE4jB4+kfXPgaOUU+QX4ev7ekq6vRURLlrCu+KjPhVPzJL8afWCYszXd
+        ocoIYyIFX0dfdPg9uWFaSaNY8
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr360686wrr.379.1583166771753;
+        Mon, 02 Mar 2020 08:32:51 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvuZEjb6Nr8Jrwbslhtq5FeU7KvE06qDYUKp17eJgGVM+1Fh2zFoywyfkUqFHbCBpG23lH0lg==
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr360656wrr.379.1583166771449;
+        Mon, 02 Mar 2020 08:32:51 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.85.6])
+        by smtp.gmail.com with ESMTPSA id s15sm973084wrr.45.2020.03.02.08.32.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 08:32:50 -0800 (PST)
+Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <441ae2d3-cece-2c74-900c-22c7fa7ff373@redhat.com>
+Date:   Mon, 2 Mar 2020 17:32:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200219014433.88424-1-minchan@kernel.org> <20200219014433.88424-7-minchan@kernel.org>
- <CAJuCfpE=7aqwegMb5i3EwWb=xcphXSNE33dCCUvt=WS0Sr-wfg@mail.gmail.com> <20200302073332.gn7lvhxmmv5pupyq@butterfly.localdomain>
-In-Reply-To: <20200302073332.gn7lvhxmmv5pupyq@butterfly.localdomain>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 2 Mar 2020 08:32:44 -0800
-Message-ID: <CAJuCfpE++EUbmhmr6+iutFk5Nd3teXy5Xr0y735LP25ciNKKcQ@mail.gmail.com>
-Subject: Re: [PATCH v6 6/7] mm/madvise: employ mmget_still_valid for write lock
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 1, 2020 at 11:33 PM Oleksandr Natalenko
-<oleksandr@redhat.com> wrote:
->
-> Hello.
->
-> On Fri, Feb 28, 2020 at 03:19:55PM -0800, Suren Baghdasaryan wrote:
-> > On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
-> > >
-> > > From: Oleksandr Natalenko <oleksandr@redhat.com>
-> > >
-> > > Do the very same trick as we already do since 04f5866e41fb. KSM hints
-> > > will require locking mmap_sem for write since they modify vm_flags, so
-> > > for remote KSM hinting this additional check is needed.
-> > >
-> > > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > ---
-> > >  mm/madvise.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index f6d9b9e66243..c55a18fe71f9 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> > >         if (write) {
-> > >                 if (down_write_killable(&mm->mmap_sem))
-> > >                         return -EINTR;
-> > > +               if (current->mm != mm && !mmget_still_valid(mm))
-> >
-> > mmget_still_valid() seems pretty light-weight, so why not just use
-> > that without checking that the mm belongs to the current process
-> > first?
->
-> I'd keep the checks separate to a) do not functionally change current->mm
-> == mm case; b) clearly separate the intention to call
-> mmget_still_valid() only for remote access (using mmget_still_valid()
-> for current->mm == mm does not make any sense here, IMO, since there's
-> no possibility of expecting a core dump at this point); c) ease the job for
-> reviewer once mmget_still_valid() is scheduled to be removed (I hope it
-> eventually goes away indeed).
->
+On 26/02/20 03:41, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated 
+> several times, each time it will consume 10+ us observed by ftrace in my 
+> non-overcommit environment since the expensive memory allocate/mutex/rcu etc 
+> operations. This patch optimizes it by recaluating apic map in batch, I hope 
+> this can benefit the serverless scenario which can frequently create/destroy 
+> VMs. 
+> 
+> Before patch:
+> 
+> kvm_lapic_reset  ~27us
+> 
+> After patch:
+> 
+> kvm_lapic_reset  ~14us 
+> 
+> Observed by ftrace, improve ~48%.
+> 
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v2 -> v3:
+>  * move apic_map_dirty to kvm_arch
+>  * add the suggestions from Paolo
+> 
+> v1 -> v2:
+>  * add apic_map_dirty to kvm_lapic
+>  * error condition in kvm_apic_set_state, do recalcuate  unconditionally
+> 
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/lapic.c            | 46 ++++++++++++++++++++++++++++++++---------
+>  arch/x86/kvm/lapic.h            |  1 +
+>  arch/x86/kvm/x86.c              |  1 +
+>  4 files changed, 39 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 40a0c0f..4380ed1 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -920,6 +920,7 @@ struct kvm_arch {
+>  	atomic_t vapics_in_nmi_mode;
+>  	struct mutex apic_map_lock;
+>  	struct kvm_apic_map *apic_map;
+> +	bool apic_map_dirty;
+>  
+>  	bool apic_access_page_done;
+>  	unsigned long apicv_inhibit_reasons;
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index afcd30d..de832aa 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -164,14 +164,28 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
+>  	kvfree(map);
+>  }
+>  
+> -static void recalculate_apic_map(struct kvm *kvm)
+> +void kvm_recalculate_apic_map(struct kvm *kvm)
+>  {
+>  	struct kvm_apic_map *new, *old = NULL;
+>  	struct kvm_vcpu *vcpu;
+>  	int i;
+>  	u32 max_id = 255; /* enough space for any xAPIC ID */
+>  
+> +	if (!kvm->arch.apic_map_dirty) {
+> +		/*
+> +		 * Read kvm->arch.apic_map_dirty before
+> +		 * kvm->arch.apic_map
+> +		 */
+> +		smp_rmb();
+> +		return;
+> +	}
+> +
+>  	mutex_lock(&kvm->arch.apic_map_lock);
+> +	if (!kvm->arch.apic_map_dirty) {
+> +		/* Someone else has updated the map. */
+> +		mutex_unlock(&kvm->arch.apic_map_lock);
+> +		return;
+> +	}
+>  
+>  	kvm_for_each_vcpu(i, vcpu, kvm)
+>  		if (kvm_apic_present(vcpu))
+> @@ -236,6 +250,12 @@ static void recalculate_apic_map(struct kvm *kvm)
+>  	old = rcu_dereference_protected(kvm->arch.apic_map,
+>  			lockdep_is_held(&kvm->arch.apic_map_lock));
+>  	rcu_assign_pointer(kvm->arch.apic_map, new);
+> +	/*
+> +	 * Write kvm->arch.apic_map before
+> +	 * clearing apic->apic_map_dirty
+> +	 */
+> +	smp_wmb();
+> +	kvm->arch.apic_map_dirty = false;
+>  	mutex_unlock(&kvm->arch.apic_map_lock);
+>  
+>  	if (old)
+> @@ -257,20 +277,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
+>  		else
+>  			static_key_slow_inc(&apic_sw_disabled.key);
+>  
+> -		recalculate_apic_map(apic->vcpu->kvm);
+> +		apic->vcpu->kvm->arch.apic_map_dirty = true;
+>  	}
+>  }
+>  
+>  static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
+>  {
+>  	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
+> -	recalculate_apic_map(apic->vcpu->kvm);
+> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
+>  }
+>  
+>  static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
+>  {
+>  	kvm_lapic_set_reg(apic, APIC_LDR, id);
+> -	recalculate_apic_map(apic->vcpu->kvm);
+> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
+>  }
+>  
+>  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
+> @@ -286,7 +306,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
+>  
+>  	kvm_lapic_set_reg(apic, APIC_ID, id);
+>  	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
+> -	recalculate_apic_map(apic->vcpu->kvm);
+> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
+>  }
+>  
+>  static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
+> @@ -1912,7 +1932,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+>  	case APIC_DFR:
+>  		if (!apic_x2apic_mode(apic)) {
+>  			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
+> -			recalculate_apic_map(apic->vcpu->kvm);
+> +			apic->vcpu->kvm->arch.apic_map_dirty = true;
+>  		} else
+>  			ret = 1;
+>  		break;
+> @@ -2018,6 +2038,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+>  		break;
+>  	}
+>  
+> +	kvm_recalculate_apic_map(apic->vcpu->kvm);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
+> @@ -2166,7 +2188,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
+>  			static_key_slow_dec_deferred(&apic_hw_disabled);
+>  		} else {
+>  			static_key_slow_inc(&apic_hw_disabled.key);
+> -			recalculate_apic_map(vcpu->kvm);
+> +			vcpu->kvm->arch.apic_map_dirty = true;
+>  		}
+>  	}
+>  
+> @@ -2207,6 +2229,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  	if (!apic)
+>  		return;
+>  
+> +	vcpu->kvm->arch.apic_map_dirty = false;
+>  	/* Stop the timer in case it's a reset to an active apic */
+>  	hrtimer_cancel(&apic->lapic_timer.timer);
+>  
+> @@ -2258,6 +2281,8 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	vcpu->arch.apic_arb_prio = 0;
+>  	vcpu->arch.apic_attention = 0;
+> +
+> +	kvm_recalculate_apic_map(vcpu->kvm);
+>  }
+>  
+>  /*
+> @@ -2479,17 +2504,18 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  	int r;
+>  
+> -
+>  	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
+>  	/* set SPIV separately to get count of SW disabled APICs right */
+>  	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
+>  
+>  	r = kvm_apic_state_fixup(vcpu, s, true);
+> -	if (r)
+> +	if (r) {
+> +		kvm_recalculate_apic_map(vcpu->kvm);
+>  		return r;
+> +	}
+>  	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
+>  
+> -	recalculate_apic_map(vcpu->kvm);
+> +	kvm_recalculate_apic_map(vcpu->kvm);
+>  	kvm_apic_set_version(vcpu);
+>  
+>  	apic_update_ppr(apic);
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index ec6fbfe..7581bc2 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -78,6 +78,7 @@ void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
+>  void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
+>  void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
+>  u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
+> +void kvm_recalculate_apic_map(struct kvm *kvm);
+>  void kvm_apic_set_version(struct kvm_vcpu *vcpu);
+>  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
+>  int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 79bc995..d3802a2 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -350,6 +350,7 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	}
+>  
+>  	kvm_lapic_set_base(vcpu, msr_info->data);
+> +	kvm_recalculate_apic_map(vcpu->kvm);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_apic_base);
+> 
 
-Makes sense. Thanks!
+Queued, thanks.
 
-> >
-> > > +                       goto skip_mm;
-> > >         } else {
-> > >                 down_read(&mm->mmap_sem);
-> > >         }
-> > > @@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> > >         }
-> > >  out:
-> > >         blk_finish_plug(&plug);
-> > > +skip_mm:
-> > >         if (write)
-> > >                 up_write(&mm->mmap_sem);
-> > >         else
-> > > --
-> > > 2.25.0.265.gbab2e86ba0-goog
-> > >
-> >
->
-> --
->   Best regards,
->     Oleksandr Natalenko (post-factum)
->     Principal Software Maintenance Engineer
->
+Paolo
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
