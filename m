@@ -2,162 +2,200 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAC1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8BCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140E921775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0AD2080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583160742;
+	bh=FpLJgWkkh8fCmPgOKqDhlneGC4YvaWwoXzMAYLaCZFc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kIShn+X/Ba2igN+Hp4E84SmL7nfW5CzyqKPRL3hXWmSdG/4nkm09XyNIJA1bic7d1
+	 9XX9nYyhYrPTdudN4qfTpa7bztpc1NYUy7b2ZiQT0G4rNRr3mgMB2YCoY9zY6Pu80x
+	 51t/08u3J9OMfy6dnMrAN6+FXA22tolNFdrfe8aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCBOwR (ORCPT
+        id S1727316AbgCBOwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:52:17 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2496 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727112AbgCBOwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:52:17 -0500
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 9916AECE61B444B501C5;
-        Mon,  2 Mar 2020 14:52:15 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 2 Mar 2020 14:52:15 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 2 Mar 2020
- 14:52:14 +0000
-Date:   Mon, 2 Mar 2020 14:52:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sudeep.holla@arm.com>,
-        <lukasz.luba@arm.com>, <james.quinlan@broadcom.com>
-Subject: Re: [RFC PATCH v3 01/13] firmware: arm_scmi: Add receive buffer
- support for notifications
-Message-ID: <20200302145213.00003304@Huawei.com>
-In-Reply-To: <20200224144124.2008-2-cristian.marussi@arm.com>
-References: <20200224144124.2008-1-cristian.marussi@arm.com>
-        <20200224144124.2008-2-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 2 Mar 2020 09:52:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbgCBOwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:52:21 -0500
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE25C24682
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 14:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583160740;
+        bh=FpLJgWkkh8fCmPgOKqDhlneGC4YvaWwoXzMAYLaCZFc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SGSSjUABSQVozTtC4IWs3ii/v+T7bjwhLiRSJ9WKhHMAbVymnYUgl6eLt2glMy+JQ
+         1GVbHa/nmCYdBBcKMYo2Qm4GRvgRJaFHR81rzUoCHnVmF2MSkIQPuVY4ezpIX40JYM
+         f4ynofaR4Q/5EBzsHz1lGGs/fus8RBXk16Fm644E=
+Received: by mail-wr1-f44.google.com with SMTP id v2so12870702wrp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:52:19 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0Ttt44pKSwYqTceAicFFHxmjasOYsgCTanWSJKIxRY1lOBWejd
+        kf2FrHDstkJ+b5sXWzbq+VP4yUwWORsyUe/UfimSeg==
+X-Google-Smtp-Source: ADFU+vuD/JTTM+IbJxK5SJVF+H1KyJRiVk8Ouz9HW+yomY1Ty4oAkjWVxkJixOQT9AmMZ6uSsXE+x/HFSCoPrWL29PI=
+X-Received: by 2002:a5d:6051:: with SMTP id j17mr2737207wrt.151.1583160738331;
+ Mon, 02 Mar 2020 06:52:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com> <1583160524.8544.91.camel@linux.ibm.com>
+In-Reply-To: <1583160524.8544.91.camel@linux.ibm.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 2 Mar 2020 15:52:07 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
+Message-ID: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
+Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 14:41:12 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
+On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
+> > Every time a new architecture defines the IMA architecture specific
+> > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> > include file needs to be updated. To avoid this "noise", this patch
+> > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> > the different architectures to select it.
+> >
+> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > ---
+> >  arch/powerpc/Kconfig           | 2 +-
+> >  arch/s390/Kconfig              | 1 +
+> >  arch/x86/Kconfig               | 1 +
+> >  include/linux/ima.h            | 3 +--
+> >  security/integrity/ima/Kconfig | 9 +++++++++
+> >  5 files changed, 13 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > index 497b7d0b2d7e..b8ce1b995633 100644
+> > --- a/arch/powerpc/Kconfig
+> > +++ b/arch/powerpc/Kconfig
+> > @@ -246,6 +246,7 @@ config PPC
+> >       select SYSCTL_EXCEPTION_TRACE
+> >       select THREAD_INFO_IN_TASK
+> >       select VIRT_TO_BUS                      if !PPC64
+> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if PPC_SECURE_BOOT
+> >       #
+> >       # Please keep this list sorted alphabetically.
+> >       #
+> > @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
+> >       prompt "Enable secure boot support"
+> >       bool
+> >       depends on PPC_POWERNV
+> > -     depends on IMA_ARCH_POLICY
+> >       help
+> >         Systems with firmware secure boot enabled need to define security
+> >         policies to extend secure boot to the OS. This config allows a user
+> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> > index 8abe77536d9d..90ff3633ade6 100644
+> > --- a/arch/s390/Kconfig
+> > +++ b/arch/s390/Kconfig
+> > @@ -195,6 +195,7 @@ config S390
+> >       select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> >       select SWIOTLB
+> >       select GENERIC_ALLOCATOR
+> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >
+> >
+> >  config SCHED_OMIT_FRAME_POINTER
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index beea77046f9b..cafa66313fe2 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -230,6 +230,7 @@ config X86
+> >       select VIRT_TO_BUS
+> >       select X86_FEATURE_NAMES                if PROC_FS
+> >       select PROC_PID_ARCH_STATUS             if PROC_FS
+> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
+>
+> Not everyone is interested in enabling IMA or requiring IMA runtime
+> policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
+> still left up to the person building the kernel.  As a result, I'm
+> seeing the following warning, which is kind of cool.
+>
+> WARNING: unmet direct dependencies detected for
+> IMA_SECURE_AND_OR_TRUSTED_BOOT
+>   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
+>   Selected by [y]:
+>   - X86 [=y] && EFI [=y]
+>
+> Ard, Michael, Martin, just making sure this type of warning is
+> acceptable before upstreaming this patch.  I would appreciate your
+> tags.
+>
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> With all the plumbing in place, let's just add the separate dedicated
-> receive buffers to handle notifications that can arrive asynchronously
-> from the platform firmware to OS.
-> 
-> Also add one check to see if the platform supports any receive channels
-> before allocating the receive buffers: since those buffers are optionally
-> supported though, the whole xfer initialization is also postponed to be
-> able to check for their existence in advance.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> [Changed parameters in __scmi_xfer_info_init()]
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Looks good to me.
+Ehm, no, warnings like these are not really acceptable. It means there
+is an inconsistency in the way the Kconfig dependencies are defined.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Does this help:
 
-> ---
-> V1 --> V2:
-> - reviewed commit message
-> - reviewed parameters of __scmi_xfer_info_init()
-> ---
->  drivers/firmware/arm_scmi/driver.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index dbec767222e9..efb660c34b57 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -76,6 +76,7 @@ struct scmi_xfers_info {
->   *	implementation version and (sub-)vendor identification.
->   * @handle: Instance of SCMI handle to send to clients
->   * @tx_minfo: Universal Transmit Message management info
-> + * @rx_minfo: Universal Receive Message management info
->   * @tx_idr: IDR object to map protocol id to Tx channel info pointer
->   * @rx_idr: IDR object to map protocol id to Rx channel info pointer
->   * @protocols_imp: List of protocols implemented, currently maximum of
-> @@ -89,6 +90,7 @@ struct scmi_info {
->  	struct scmi_revision_info version;
->  	struct scmi_handle handle;
->  	struct scmi_xfers_info tx_minfo;
-> +	struct scmi_xfers_info rx_minfo;
->  	struct idr tx_idr;
->  	struct idr rx_idr;
->  	u8 *protocols_imp;
-> @@ -525,13 +527,13 @@ int scmi_handle_put(const struct scmi_handle *handle)
->  	return 0;
->  }
->  
-> -static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +static int __scmi_xfer_info_init(struct scmi_info *sinfo,
-> +				 struct scmi_xfers_info *info)
->  {
->  	int i;
->  	struct scmi_xfer *xfer;
->  	struct device *dev = sinfo->dev;
->  	const struct scmi_desc *desc = sinfo->desc;
-> -	struct scmi_xfers_info *info = &sinfo->tx_minfo;
->  
->  	/* Pre-allocated messages, no more than what hdr.seq can support */
->  	if (WARN_ON(desc->max_msg >= MSG_TOKEN_MAX)) {
-> @@ -566,6 +568,16 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
->  	return 0;
->  }
->  
-> +static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +{
-> +	int ret = __scmi_xfer_info_init(sinfo, &sinfo->tx_minfo);
-> +
-> +	if (!ret && idr_find(&sinfo->rx_idr, SCMI_PROTOCOL_BASE))
-> +		ret = __scmi_xfer_info_init(sinfo, &sinfo->rx_minfo);
-> +
-> +	return ret;
-> +}
-> +
->  static int scmi_chan_setup(struct scmi_info *info, struct device *dev,
->  			   int prot_id, bool tx)
->  {
-> @@ -699,10 +711,6 @@ static int scmi_probe(struct platform_device *pdev)
->  	info->desc = desc;
->  	INIT_LIST_HEAD(&info->node);
->  
-> -	ret = scmi_xfer_info_init(info);
-> -	if (ret)
-> -		return ret;
-> -
->  	platform_set_drvdata(pdev, info);
->  	idr_init(&info->tx_idr);
->  	idr_init(&info->rx_idr);
-> @@ -715,6 +723,10 @@ static int scmi_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = scmi_xfer_info_init(info);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = scmi_base_protocol_init(handle);
->  	if (ret) {
->  		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
+  select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+
+?
 
 
+>
+> >
+> >  config INSTRUCTION_DECODER
+> >       def_bool y
+> > diff --git a/include/linux/ima.h b/include/linux/ima.h
+> > index 1659217e9b60..aefe758f4466 100644
+> > --- a/include/linux/ima.h
+> > +++ b/include/linux/ima.h
+> > @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+> >  extern void ima_add_kexec_buffer(struct kimage *image);
+> >  #endif
+> >
+> > -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> > -     || defined(CONFIG_PPC_SECURE_BOOT)
+> > +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >  extern bool arch_ima_get_secureboot(void);
+> >  extern const char * const *arch_get_ima_policy(void);
+> >  #else
+> > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> > index 3f3ee4e2eb0d..d17972aa413a 100644
+> > --- a/security/integrity/ima/Kconfig
+> > +++ b/security/integrity/ima/Kconfig
+> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+> >       depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> >       depends on SYSTEM_TRUSTED_KEYRING
+> >       default y
+> > +
+> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > +     bool
+> > +     depends on IMA
+> > +     depends on IMA_ARCH_POLICY
+> > +     default n
+> > +     help
+> > +        This option is selected by architectures to enable secure and/or
+> > +        trusted boot based on IMA runtime policies.
+>
+>
+>
+>
