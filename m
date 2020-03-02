@@ -2,168 +2,149 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69AAC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CD3C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A266246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6D1246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583135372;
-	bh=F7Y2CSH9Vo747TuphhHP7GKkij3BinbARb2kByPkBGQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kSBC3WP3eYCFjmNjtT2VGUo4YYkEJbhyL5NnyzcuevP1Uk2nQeioTuM6z7pMrmAZ9
-	 RBoZ6t8auM1OeTPuHR04Zn+E3AxPQm4kaaXijrAZjV9w1EMFvQaN04CcYAH0X55r4S
-	 ltNOMLg8R45dhU4RCPLbYJoJLILZROzHeH/zgyus=
+	s=default; t=1583135400;
+	bh=ONNo5czmh6fu5j0BUfw9CMOMf+tPmThhb62/x1pFQcs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v7r5MzIY86I/850qUac/EFmIYkHiypLGaOgLXqPwg5IRPQiXHMumfYJVB07p0SBGE
+	 lZA/8QEYAmn3arRBOsWvfan8Q1yEJAS4BNq2blBhnbW+jGkFB4n00IKKhB5COvT/YO
+	 afmsLChSurbn17mNcj8Q3Y3yzPkmDF0s3FdcE0Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgCBHtb (ORCPT
+        id S1727154AbgCBHt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:49:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgCBHtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:49:31 -0500
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D17F246BB
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 07:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583135370;
-        bh=F7Y2CSH9Vo747TuphhHP7GKkij3BinbARb2kByPkBGQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jR6RNQXg06aaNBNURh/fYG5Q6Wz7Kb4sTf8GlFCbDd4NjmqBaMAqBiEJjeK/5uTFX
-         q5xG4eTBEIfUYmpjntrp7N7Si1huGRhvadIzEIvO46cFxTvr7TUBwFPe47Ai5ak0Lp
-         MG/NZwSEEcxyjwZLfi4RQoPZiNf7OkDgSnrVHsQg=
-Received: by mail-wr1-f45.google.com with SMTP id y17so11214561wrn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:49:29 -0800 (PST)
-X-Gm-Message-State: APjAAAVrZFS9HDnP6vGuz3LDLB5erDVs0xpq3lTvn9eNy2JHw/btcqbV
-        qfMC1+vPh5PCgt7Er4JSJv2U1QuXsNvWR0jDTAlzEA==
-X-Google-Smtp-Source: APXvYqx/9ZnowcmE3GP8PGqMzClr8fWOKRtWHduBTkfyOxrQ5OXiHjTjSmDuZkUFF8ZWkDZA9c84jyg1A2v4CflAeWM=
-X-Received: by 2002:adf:a411:: with SMTP id d17mr20534370wra.126.1583135368426;
- Sun, 01 Mar 2020 23:49:28 -0800 (PST)
+        Mon, 2 Mar 2020 02:49:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43042 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBHt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:49:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=0Gx1JYZhfx2m87lYF6sjqKW0wz1nAkV9fNxlNiWemtg=; b=DUv3pXp/WnZAz6/NloRdVJoHy3
+        mZMQveVL2VS0z5P1D/PcDICmKLczfNXGCBGpl+9Kv3OgtSCpT3W7eUlAW1vwHjfFSheUJRhgjHIY+
+        lnXXHN2u04NC3PfDngbIOFXjg6M74Jwez8yXq1CXhCeHRVdhvNoPPlKZrxyvXUtZSe9DcwImDy1rG
+        H0AMXKKNNCDV4WOFOWqyaJZ+5MGQCCi4NIHTyH0vdg17cMs6LTIdVGQUNetCHS1edaSWnjfUQ6n6c
+        uzVkHJfRooFf+sHodHXWKZ9FPze1bxToD4fZzHw58Bt69UAlXLebJRthTLZZBWQMSc+2ehxaoTgUd
+        yUxSCQmw==;
+Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j8fpt-0003Te-42; Mon, 02 Mar 2020 07:49:57 +0000
+Date:   Mon, 2 Mar 2020 08:49:50 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Andy Whitcroft <apw@canonical.com>, devicetree@vger.kernel.org,
+        Harry Wei <harryxiyou@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Joe Perches <joe@perches.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200302084950.589fe0b6@coco.lan>
+In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
+References: <cover.1583134242.git.mchehab+samsung@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200301230436.2246909-1-nivedita@alum.mit.edu> <20200301230436.2246909-4-nivedita@alum.mit.edu>
-In-Reply-To: <20200301230436.2246909-4-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 2 Mar 2020 08:49:17 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
-Message-ID: <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] efi/x86: Make efi32_pe_entry more readable
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 00:04, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Setup a proper frame pointer in efi32_pe_entry so that it's easier to
-> calculate offsets for arguments.
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  arch/x86/boot/compressed/head_64.S | 57 +++++++++++++++++++++---------
->  1 file changed, 40 insertions(+), 17 deletions(-)
->
-> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-> index 920daf62dac2..fabbd4c2e9f2 100644
-> --- a/arch/x86/boot/compressed/head_64.S
-> +++ b/arch/x86/boot/compressed/head_64.S
-> @@ -658,42 +658,65 @@ SYM_DATA(efi_is64, .byte 1)
->         .text
->         .code32
->  SYM_FUNC_START(efi32_pe_entry)
-> +/*
-> + * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
-> + *                            efi_system_table_32_t *sys_table)
-> + */
-> +
->         pushl   %ebp
-> +       movl    %esp, %ebp
-> +       pushl   %eax                            // dummy push to allocate loaded_image
->
-> -       pushl   %ebx
-> +       pushl   %ebx                            // save callee-save registers
->         pushl   %edi
-> +
->         call    verify_cpu                      // check for long mode support
-> -       popl    %edi
-> -       popl    %ebx
->         testl   %eax, %eax
->         movl    $0x80000003, %eax               // EFI_UNSUPPORTED
-> -       jnz     3f
-> +       jnz     2f
->
->         call    1f
-> -1:     pop     %ebp
-> -       subl    $1b, %ebp
-> +1:     pop     %ebx
-> +       subl    $1b, %ebx
->
->         /* Get the loaded image protocol pointer from the image handle */
-> -       subl    $12, %esp                       // space for the loaded image pointer
-> -       pushl   %esp                            // pass its address
-> -       leal    loaded_image_proto(%ebp), %eax
-> +       leal    -4(%ebp), %eax
-> +       pushl   %eax                            // &loaded_image
-> +       leal    loaded_image_proto(%ebx), %eax
->         pushl   %eax                            // pass the GUID address
-> -       pushl   28(%esp)                        // pass the image handle
-> +       pushl   8(%ebp)                         // pass the image handle
->
-> -       movl    36(%esp), %eax                  // sys_table
-> +       /*
-> +        * Note the alignment of the stack frame.
-> +        *   sys_table
-> +        *   handle             <-- 16-byte aligned on entry by ABI
-> +        *   return address
-> +        *   frame pointer
-> +        *   loaded_image       <-- local variable
-> +        *   saved %ebx         <-- 16-byte aligned here
-> +        *   saved %edi
-> +        *   &loaded_image
-> +        *   &loaded_image_proto
-> +        *   handle             <-- 16-byte aligned for call to handle_protocol
-> +        */
-> +
-> +       movl    12(%ebp), %eax                  // sys_table
->         movl    ST32_boottime(%eax), %eax       // sys_table->boottime
->         call    *BS32_handle_protocol(%eax)     // sys_table->boottime->handle_protocol
-> -       cmp     $0, %eax
-> +       addl    $12, %esp                       // restore argument space
-> +       testl   %eax, %eax
->         jnz     2f
->
-> -       movl    32(%esp), %ecx                  // image_handle
-> -       movl    36(%esp), %edx                  // sys_table
-> -       movl    12(%esp), %esi                  // loaded_image
-> +       movl    8(%ebp), %ecx                   // image_handle
-> +       movl    12(%ebp), %edx                  // sys_table
-> +       movl    -4(%ebp), %esi                  // loaded_image
->         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
-> +       movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
+Em Mon,  2 Mar 2020 08:37:55 +0100
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
 
-The code that follows efi32_pe_stub_entry still expects the runtime
-displacement in %ebp, so we'll need to pass that in another way here.
+Please ignore this patch series. Something got wrong with my settings. It
+ended getting a wrong "From" e-mail address from my previous employer.
 
->         jmp     efi32_pe_stub_entry
->
-> -2:     addl    $24, %esp
-> -3:     popl    %ebp
-> +2:     popl    %edi                            // restore callee-save registers
-> +       popl    %ebx
-> +       leave
->         ret
->  SYM_FUNC_END(efi32_pe_entry)
->
-> --
-> 2.24.1
->
+I should be resending it after fixing the issue.
+
+
+
+
+> While most of the devicetree stuff has its own format (with is now being
+> converted to YAML format), some documents there are actually
+> describing the DT concepts and how to contribute to it.
+> 
+> IMHO, those documents would fit perfectly as part of the documentation
+> body, as part of the firmare documents set.
+> 
+> This patch series manually converts some DT documents that, on my
+> opinion, would belong to it.
+> 
+> If you want to see how this would show at the documentation body,
+> a sneak peak of this series (together with the other pending
+> doc patches from me) is available at:
+> 
+> 	https://www.infradead.org/~mchehab/kernel_docs/devicetree/index.html
+> 
+> Mauro Carvalho Chehab (12):
+>   docs: dt: add an index.rst file for devicetree
+>   docs: dt: convert usage-model.txt to ReST
+>   docs: dt: usage_model.rst: fix link for DT usage
+>   docs: dt: convert booting-without-of.txt to ReST format
+>   docs: dt: convert changesets to ReST
+>   docs: dt: convert dynamic-resolution-notes.txt to ReST
+>   docs: dt: convert of_unittest.txt to ReST
+>   docs: dt: convert overlay-notes.txt to ReST format
+>   docs: dt: minor adjustments at writing-schema.rst
+>   docs: dt: convert ABI.txt to ReST format
+>   docs: dt: convert submitting-patches.txt to ReST format
+>   docs: dt: convert writing-bindings.txt to ReST
+> 
+>  Documentation/arm/booting.rst                 |   2 +-
+>  Documentation/arm/microchip.rst               |   2 +-
+>  .../devicetree/bindings/{ABI.txt => ABI.rst}  |   5 +-
+>  .../devicetree/bindings/arm/amlogic.yaml      |   2 +-
+>  .../devicetree/bindings/arm/syna.txt          |   2 +-
+>  Documentation/devicetree/bindings/index.rst   |  12 +
+>  ...ing-patches.txt => submitting-patches.rst} |  12 +-
+>  ...ting-bindings.txt => writing-bindings.rst} |   9 +-
+>  ...-without-of.txt => booting-without-of.rst} | 299 ++++++++++--------
+>  .../{changesets.txt => changesets.rst}        |  24 +-
+>  ...notes.txt => dynamic-resolution-notes.rst} |   5 +-
+>  Documentation/devicetree/index.rst            |  18 ++
+>  .../{of_unittest.txt => of_unittest.rst}      | 186 +++++------
+>  .../{overlay-notes.txt => overlay-notes.rst}  | 143 +++++----
+>  .../{usage-model.txt => usage-model.rst}      |  35 +-
+>  Documentation/devicetree/writing-schema.rst   |   9 +-
+>  Documentation/index.rst                       |   3 +
+>  Documentation/process/submitting-patches.rst  |   2 +-
+>  .../it_IT/process/submitting-patches.rst      |   2 +-
+>  Documentation/translations/zh_CN/arm/Booting  |   2 +-
+>  MAINTAINERS                                   |   4 +-
+>  include/linux/mfd/core.h                      |   2 +-
+>  scripts/checkpatch.pl                         |   2 +-
+>  23 files changed, 446 insertions(+), 336 deletions(-)
+>  rename Documentation/devicetree/bindings/{ABI.txt => ABI.rst} (94%)
+>  create mode 100644 Documentation/devicetree/bindings/index.rst
+>  rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
+>  rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (89%)
+>  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
+>  rename Documentation/devicetree/{changesets.txt => changesets.rst} (59%)
+>  rename Documentation/devicetree/{dynamic-resolution-notes.txt => dynamic-resolution-notes.rst} (90%)
+>  create mode 100644 Documentation/devicetree/index.rst
+>  rename Documentation/devicetree/{of_unittest.txt => of_unittest.rst} (54%)
+>  rename Documentation/devicetree/{overlay-notes.txt => overlay-notes.rst} (56%)
+>  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+> 
+
+
+Thanks,
+Mauro
