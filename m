@@ -2,66 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E65BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E90EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505612166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6992465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCBLAX (ORCPT
+        id S1727267AbgCBLBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:00:23 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:54471 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgCBLAX (ORCPT
+        Mon, 2 Mar 2020 06:01:01 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:58144 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726831AbgCBLBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:00:23 -0500
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 8AC94200016;
-        Mon,  2 Mar 2020 11:00:18 +0000 (UTC)
-Message-ID: <8897a0f0f44ccc2060bf5ea627cb4a6e8242d730.camel@hadess.net>
-Subject: Re: [PATCH v1 2/2] Input: goodix - support gt9147 touchpanel
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 2 Mar 2020 06:01:00 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TrQzvOi_1583146855;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrQzvOi_1583146855)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 02 Mar 2020 19:00:55 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 02 Mar 2020 12:00:17 +0100
-In-Reply-To: <1583144308-3781-3-git-send-email-yannick.fertre@st.com>
-References: <1583144308-3781-1-git-send-email-yannick.fertre@st.com>
-         <1583144308-3781-3-git-send-email-yannick.fertre@st.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.91 (3.35.91-1.fc32) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v9 05/20] mm/thp: clean up lru_add_page_tail
+Date:   Mon,  2 Mar 2020 19:00:15 +0800
+Message-Id: <1583146830-169516-6-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 11:18 +0100, Yannick Fertre wrote:
-> Add support for it by adding compatible and supported chip data
-> (default settings used).
-> The chip data on GT9147 is similar to GT912, like
-> - config data register has 0x8047 address
-> - config data register max len is 240
-> - config data checksum has 8-bit
-> 
-> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+Since the first parameter is only used by head page, it's better to make
+it stright. And no needs to keep head checking:
+	VM_BUG_ON_PAGE(!PageHead(page), page);
 
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/huge_memory.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-Both patches:
-Reviewed-by: Bastien Nocera <hadess@hadess.net>
-
-But you'll likely need to send another update on top of the "Add
-support for Goodix GT917S touch controller" patchset, which makes some
-changes to goodix_get_chip_data().
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index acef164a8981..599367d25fca 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2445,21 +2445,20 @@ static void remap_page(struct page *page)
+ 	}
+ }
+ 
+-void lru_add_page_tail(struct page *page, struct page *page_tail,
++void lru_add_page_tail(struct page *head, struct page *page_tail,
+ 		       struct lruvec *lruvec, struct list_head *list)
+ {
+ 	const int file = 0;
+ 
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
+-	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
++	VM_BUG_ON_PAGE(PageCompound(page_tail), head);
++	VM_BUG_ON_PAGE(PageLRU(page_tail), head);
+ 	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
+ 
+ 	if (!list)
+ 		SetPageLRU(page_tail);
+ 
+-	if (likely(PageLRU(page)))
+-		list_add_tail(&page_tail->lru, &page->lru);
++	if (likely(PageLRU(head)))
++		list_add_tail(&page_tail->lru, &head->lru);
+ 	else if (list) {
+ 		/* page reclaim is reclaiming a huge page */
+ 		get_page(page_tail);
+@@ -2476,7 +2475,7 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 					  page_lru(page_tail));
+ 	}
+ 
+-	if (!PageUnevictable(page))
++	if (!PageUnevictable(head))
+ 		update_page_reclaim_stat(lruvec, file, PageActive(page_tail));
+ }
+ 
+-- 
+1.8.3.1
 
