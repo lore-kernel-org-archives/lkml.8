@@ -2,162 +2,139 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4250C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4143C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A207A2465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UqoUm420"
+	by mail.kernel.org (Postfix) with ESMTP id AE3F92146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgCBSI6 (ORCPT
+        id S1727381AbgCBSKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:08:58 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44787 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbgCBSI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:08:57 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so103101oia.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:08:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PzpHTT1CytF1CxOEOyrFfNGNhtkDEaDUtrYOH2iFLfA=;
-        b=UqoUm420YQqph3lafHzahQC9V4PdPL/4Qyv6M+TEFjDDlhJUhALb/SAIvAmoSGffyg
-         a+snzgE9CJkyJGW23tqeS/3KQPZf8xJ7BanaVOsbMgKmsVis3fA3OOYQ4v4jTJ1AGhBx
-         K9uQcOSkDeBAtHH7P5nmgTAOojjqNLiO2lPI2fA3RN3wz4dmhavt79Zq4NlnBzpJ+OiA
-         y/TbZNOouXWb/oNa3vM1C3IKrlLfcmIRapwpat4xfLEuvxXctHbiwYexiaQCCtswST76
-         0aZ+VZ+Y0oTlg6eIsuwolOfq1+Y8oOzdLvBO6TZUDoqbSO/q1tj2btepq92gHR5lOUfD
-         s1FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PzpHTT1CytF1CxOEOyrFfNGNhtkDEaDUtrYOH2iFLfA=;
-        b=DAjWgYEfb08TdMhulMh0UK0KaRmOeMA3HGiKctS2d+vdhLPkTWEARh/dCRBqQf57RM
-         RJme3pFdM1g+SK/1ng2IrlJkFWpEvTrhgmpnUFjdIwq0vVESo04ndEZoprU1bxwVFz6F
-         RkfovzbQ388cPQbbTlwokNHstr2fn7VpsWAkGJKkW0saT385bQhzuyNJ6BBg4qhNQ7gy
-         b7TF4ZGyfeyK3duCbiJX/W9Zl4f4MPNS0e+w/RzSIlIr4KlTMdamt38UoOU0Q70VeNEZ
-         EDMuu/XWgSKbxSBXKQGHkBsn3j3E2CWyKskhQtvXUbS37Gqt+b4hX4lbBZZDfcy7WBfE
-         LFiw==
-X-Gm-Message-State: ANhLgQ2jv0+VsML6a+sXre41aN17nC3A9U/421OM6Z6q1Utk4x0d8rYZ
-        GFSUZgBMbQG9UU2jcz/HpHtm22Qbv02p/r5NeIDr+w==
-X-Google-Smtp-Source: ADFU+vvElPHbaOkc/ffKR7JWZMzjpg6bZ6JiSaTN3SNT/Yuy1ZmDiKrsYKSVrGwdXREPaOYmbN9ESv+hvKDnpyK2MgA=
-X-Received: by 2002:aca:538e:: with SMTP id h136mr242942oib.39.1583172536153;
- Mon, 02 Mar 2020 10:08:56 -0800 (PST)
-MIME-Version: 1.0
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein> <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74zmfc9.fsf@x220.int.ebiederm.org> <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87k142lpfz.fsf@x220.int.ebiederm.org> <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org> <CAG48ez0iXMD0mduKWHG6GZZoR+s2jXy776zwiRd+tFADCEiBEw@mail.gmail.com>
- <AM6PR03MB5170BD130F15CE1909F59B55E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez1jj_J3PtENWvu8piFGsik6RvuyD38ie48TYr2k1Rbf3A@mail.gmail.com> <5e5d45a3.1c69fb81.f99ac.0806@mx.google.com>
-In-Reply-To: <5e5d45a3.1c69fb81.f99ac.0806@mx.google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 2 Mar 2020 19:08:29 +0100
-Message-ID: <CAG48ez0zfutdReRCP38+F2O=LMU11FUQAG59YkaKZY8AJNxSGQ@mail.gmail.com>
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mon, 2 Mar 2020 13:10:25 -0500
+Received: from mga12.intel.com ([192.55.52.136]:32971 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727255AbgCBSKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:10:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 10:10:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="258037919"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 10:10:07 -0800
+Message-ID: <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>, linux-doc@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Mon, 02 Mar 2020 10:09:19 -0800
+In-Reply-To: <20200229143644.GA1129@zn.tnic>
+References: <20200228121724.GA25261@zn.tnic>
+         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
+         <20200228162359.GC25261@zn.tnic>
+         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+         <20200228172202.GD25261@zn.tnic>
+         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
+         <20200228183131.GE25261@zn.tnic>
+         <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
+         <20200228214742.GF25261@zn.tnic>
+         <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+         <20200229143644.GA1129@zn.tnic>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 6:43 PM <christian@brauner.io> wrote:
-> On March 2, 2020 6:37:27 PM GMT+01:00, Jann Horn <jannh@google.com> wrote:
-> >On Mon, Mar 2, 2020 at 6:01 PM Bernd Edlinger
-> ><bernd.edlinger@hotmail.de> wrote:
-> >> On 3/2/20 5:43 PM, Jann Horn wrote:
-> >> > On Mon, Mar 2, 2020 at 5:19 PM Eric W. Biederman
-> ><ebiederm@xmission.com> wrote:
-[...]
-> >> >> I am 99% convinced that the fix is to move cred_guard_mutex down.
-> >> >
-> >> > "move cred_guard_mutex down" as in "take it once we've already set
-> >up
-> >> > the new process, past the point of no return"?
-> >> >
-> >> >> Then right after we take cred_guard_mutex do:
-> >> >>         if (ptraced) {
-> >> >>                 use_original_creds();
-> >> >>         }
-> >> >>
-> >> >> And call it a day.
-> >> >>
-> >> >> The details suck but I am 99% certain that would solve everyones
-> >> >> problems, and not be too bad to audit either.
-> >> >
-> >> > Ah, hmm, that sounds like it'll work fine at least when no LSMs are
-> >involved.
-> >> >
-> >> > SELinux normally doesn't do the execution-degrading thing, it just
-> >> > blocks the execution completely - see their
-> >selinux_bprm_set_creds()
-> >> > hook. So I think they'd still need to set some state on the task
-> >that
-> >> > says "we're currently in the middle of an execution where the
-> >target
-> >> > task will run in context X", and then check against that in the
-> >> > ptrace_may_access hook. Or I suppose they could just kill the task
-> >> > near the end of execve, although that'd be kinda ugly.
-> >> >
-> >>
-> >> We have current->in_execve for that, right?
-> >> I think when the cred_guard_mutex is taken only in the critical
-> >section,
-> >> then PTRACE_ATTACH could take the guard_mutex, and look at
-> >current->in_execve,
-> >> and just return -EAGAIN in that case, right, everybody happy :)
-> >
-> >It's probably going to mean that things like strace will just randomly
-> >fail to attach to processes if they happen to be in the middle of
-> >execve... but I guess that works?
->
-> That sounds like an acceptable outcome.
-> We can at least risk it and if we regress
-> revert or come up with the more complex
-> solution suggested in another mail here?
+On Sat, 2020-02-29 at 15:36 +0100, Borislav Petkov wrote:
+> On Fri, Feb 28, 2020 at 02:13:29PM -0800, Yu-cheng Yu wrote:
+> > If the XSAVES buffer already has current data (i.e. TIF_NEED_FPU_LOAD is
+> > set), then skip copy_xregs_to_kernel().  This happens when the task was
+> > context-switched out and has not returned to user-mode.
+> 
+> So I got tired of this peacemeal game back'n'forth and went and did your
+> work for ya.
+> 
+> First of all, on my fairly new KBL test box, the context size is almost
+> a kB:
+> 
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
+> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+> [    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
+> [    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
+> [    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
+> 
+> Then, I added this ontop of your patchset:
+> 
+> diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+> index 0d3e06a772b0..2e57b8d79c0e 100644
+> --- a/arch/x86/kernel/fpu/signal.c
+> +++ b/arch/x86/kernel/fpu/signal.c
+> @@ -337,6 +337,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+>          */
+>         fpregs_lock();
+>         if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+> +               trace_printk("!NEED_FPU_LOAD, size: %d, supervisor: 0x%llx\n",
+> +                            size, xfeatures_mask_supervisor());
+>                 if (xfeatures_mask_supervisor())
+>                         copy_xregs_to_kernel(&fpu->state.xsave);
+>                 set_thread_flag(TIF_NEED_FPU_LOAD);
+> 
+> and traced a fairly boring kernel build workload where the kernel
+> .config is not even a distro one but a tailored for this machine.
+> 
+> Which means, it took 3m35.058s to build and the trace buffer had 53973
+> entries like this one:
+> 
+> bash-1211  [002] ...1   648.238585: __fpu__restore_sig: !NEED_FPU_LOAD, size: 1092, supervisor: 0x0
+> 
+> which means I have
+> 
+> 53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
+> 
+> And this only during this single workload - I don't even wanna imagine
+> what that number would be if it were a huge, overloaded box with a
+> signal heavy workload.
+> 
+> And all this overhead to save 16 + 24 bytes supervisor states and throw
+> away the rest up to 960 bytes each time.
+> 
+> Err, I don't think so.
 
-Yeah, sounds reasonable, I guess.
+This patch serves supervisor states that has not been saved prior to
+sigreturn.  CET state is in sigcontext and does not need to be saved here.
+
+We can drop this for now, and for new supervisor states, replace
+copy_xregs_to_kernel() with a callback that saves only necessary
+information.
+
+I will send out v3.
+
+Yu-cheng
+
+
