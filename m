@@ -2,445 +2,176 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AF0C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2BFC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758E42468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E4D2468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCBGkf (ORCPT
+        id S1726872AbgCBGm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:40:35 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:36176 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgCBGke (ORCPT
+        Mon, 2 Mar 2020 01:42:56 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39608 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgCBGm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:40:34 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j8ekd-0001Co-C0; Sun, 01 Mar 2020 23:40:27 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j8ekZ-0007Je-VK; Sun, 01 Mar 2020 23:40:26 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
-        <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
-        <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
-        <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 02 Mar 2020 00:38:14 -0600
-In-Reply-To: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Sun, 1 Mar 2020 20:34:16 +0000")
-Message-ID: <87a74zmfc9.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 2 Mar 2020 01:42:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so11020066wrn.6;
+        Sun, 01 Mar 2020 22:42:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DAG9cmWmVJzMYyOlx6UPKwvFKQax568BaQjSnLCNBOY=;
+        b=SDJqrimLVbCe8o9SjkQCpW0zvwUbNiiItq1mIr3dfCs/GyB+QknN2x4TJbdMRhwMOQ
+         ydLaxtQB0bJn3zKDMthulF/k6HPOaOHHfizvuY8emn6/GPRDwvQUQ2DFDbkUzRCKYrv/
+         lZM6i+Pu53AtpeVfFlHpG8tOcmootBXcAQve9N0PN6c0FdEI4r50SqYW5D61dz0fiG+V
+         VzvudrV5YbmxpXdvCV/fpBqB4vWghefvqp+7xmRosYes31/ZSDFHjqk8B1M0Z804/OLV
+         Aydft8nh1EAYFyeunMq0xEqRe8GxQ/WDUom9NIG/w+bGtXqUAFVRdnhNnLa5xoEX6fMx
+         Qp9w==
+X-Gm-Message-State: APjAAAWNHslLlBYUsZBXL/cp1D2aVXA0YkLVYBzXYPavorf199OesfG5
+        2tNW/mZc/dYAHJBLBTjJrW1sPLsFC1c=
+X-Google-Smtp-Source: APXvYqz4uK3JkmbLgd64jVtxXhhdNhDYl6H0WhWZekAovtV+rXkSl+fsAuTWSh5n8vLSv2frSILj+g==
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr21451636wre.372.1583131373888;
+        Sun, 01 Mar 2020 22:42:53 -0800 (PST)
+Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
+        by smtp.gmail.com with ESMTPSA id j5sm26902861wrw.24.2020.03.01.22.42.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Mar 2020 22:42:52 -0800 (PST)
+From:   Jiri Slaby <jslaby@suse.cz>
+Subject: Re: [PATCH] vt: fix CVE-2020-8647
+To:     Ye Bin <yebin10@huawei.com>, gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200302023553.44792-1-yebin10@huawei.com>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <154cd686-f9fc-a709-7624-4565efc0a789@suse.cz>
+Date:   Mon, 2 Mar 2020 07:42:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j8ekZ-0007Je-VK;;;mid=<87a74zmfc9.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1//e7nTlsRN0fvWenFVh7U2fAMKCnUdZyE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200302023553.44792-1-yebin10@huawei.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+Hi,
 
-> This fixes a deadlock in the tracer when tracing a multi-threaded
-> application that calls execve while more than one thread are running.
->
-> I observed that when running strace on the gcc test suite, it always
-> blocks after a while, when expect calls execve, because other threads
-> have to be terminated.  They send ptrace events, but the strace is no
-> longer able to respond, since it is blocked in vm_access.
->
-> The deadlock is always happening when strace needs to access the
-> tracees process mmap, while another thread in the tracee starts to
-> execve a child process, but that cannot continue until the
-> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+you should use some better Subject. "vt: fix CVE-2020-8647" is not
+descriptive at all. Something like "vt: fix use after free in
+vc_resize". You can reference the CVE in the text if you want.
 
-I think your patch works, but I don't think to solve your case another
-mutex is necessary.  Possibly it is justified, but I hesitate to
-introduce yet another concept in the code.
+On 02. 03. 20, 3:35, Ye Bin wrote:
+> We must calculate origin buffer end before update "old_origin", or it
+> will lead to access illegal memory.
 
-Having read elsewhere in the thread that this does not solve the problem
-Oleg has mentioned I am really hesitant to add more complexity to the
-situation.
+You should explain why we must. I.e. how the bad access can happen.
 
+> BUG: KASan: use after free in vc_do_resize+0x49e/0xb30 at addr ffff88000016b9c0
+> Read of size 2 by task syz-executor.3/24164
 
-For your case there is a straight forward and local workaround.
+For sure, the report mentioned a Reported-by line you should add to the
+fix. Could you do so?
 
-When the current task is ptracing the target task don't bother with
-cred_gaurd_mutex and ptrace_may_access in access_mm as those tests
-have already passed.  Instead just confirm the ptrace status. AKA
-the permission check in ptraces_access_vm.
-
-I think something like this is all we need.
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index cee89229606a..b0ab98c84589 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1224,6 +1224,16 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
- 	struct mm_struct *mm;
- 	int err;
- 
-+	if (task->ptrace && (current == task->parent)) {
-+		mm = get_task_mm(task);
-+		if ((get_dumpable(mm) != SUID_DUMP_USER) &&
-+		    !ptracer_capable(task, mm->user_ns)) {
-+			mmput(mm);
-+			mm = ERR_PTR(-EACCESS);
-+		}
-+		return mm;
-+	}
-+
- 	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
- 	if (err)
- 		return ERR_PTR(err);
-
-Does this solve your test case?
-
-The patch above is short the approriate locking for the ptrace attached
-check.  (tasklist_lock I think).  But is enough to illustrate the idea,
-and it is probably a check we want in any event so that if the tracer
-starts dropping privileges process_vm_readv and process_vm_writev will
-still be usable by the tracer.
-
-Eric
-
-
-> strace          D    0 30614  30584 0x00000000
+> page:ffffea0000005ac0 count:0 mapcount:0 mapping:          (null) index:0x0
+> page flags: 0xfffff00000000()
+> page dumped because: kasan: bad access detected
+> CPU: 0 PID: 24164 Comm: syz-executor.3 Not tainted 3.10.0-862.14.2.1.x86_64+ #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
 > Call Trace:
-> __schedule+0x3ce/0x6e0
-> schedule+0x5c/0xd0
-> schedule_preempt_disabled+0x15/0x20
-> __mutex_lock.isra.13+0x1ec/0x520
-> __mutex_lock_killable_slowpath+0x13/0x20
-> mutex_lock_killable+0x28/0x30
-> mm_access+0x27/0xa0
-> process_vm_rw_core.isra.3+0xff/0x550
-> process_vm_rw+0xdd/0xf0
-> __x64_sys_process_vm_readv+0x31/0x40
-> do_syscall_64+0x64/0x220
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> expect          D    0 31933  30876 0x80004003
-> Call Trace:
-> __schedule+0x3ce/0x6e0
-> schedule+0x5c/0xd0
-> flush_old_exec+0xc4/0x770
-> load_elf_binary+0x35a/0x16c0
-> search_binary_handler+0x97/0x1d0
-> __do_execve_file.isra.40+0x5d4/0x8a0
-> __x64_sys_execve+0x49/0x60
-> do_syscall_64+0x64/0x220
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> The proposed solution is to have a second mutex that is
-> used in mm_access, so it is allowed to continue while the
-> dying threads are not yet terminated.
->
-> I also took the opportunity to improve the documentation
-> of prepare_creds, which is obviously out of sync.
->
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+>  [<ffffffffb059f309>] dump_stack+0x1e/0x20
+>  [<ffffffffaf8af957>] kasan_report+0x577/0x950
+>  [<ffffffffaf8ae652>] __asan_load2+0x62/0x80
+>  [<ffffffffafe3728e>] vc_do_resize+0x49e/0xb30
+>  [<ffffffffafe3795c>] vc_resize+0x3c/0x60
+>  [<ffffffffafe1d80d>] vt_ioctl+0x16ed/0x2670
+>  [<ffffffffafe0089a>] tty_ioctl+0x46a/0x1a10
+>  [<ffffffffaf92db3d>] do_vfs_ioctl+0x5bd/0xc40
+>  [<ffffffffaf92e2f2>] SyS_ioctl+0x132/0x170
+>  [<ffffffffb05c9b1b>] system_call_fastpath+0x22/0x27
+> 
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
 > ---
->  Documentation/security/credentials.rst    | 18 ++++++------
->  fs/exec.c                                 |  9 ++++++
->  include/linux/binfmts.h                   |  6 +++-
->  include/linux/sched/signal.h              |  1 +
->  init/init_task.c                          |  1 +
->  kernel/cred.c                             |  2 +-
->  kernel/fork.c                             |  5 ++--
->  mm/process_vm_access.c                    |  2 +-
->  tools/testing/selftests/ptrace/Makefile   |  4 +--
->  tools/testing/selftests/ptrace/vmaccess.c | 46 +++++++++++++++++++++++++++++++
->  10 files changed, 79 insertions(+), 15 deletions(-)
->  create mode 100644 tools/testing/selftests/ptrace/vmaccess.c
->
-> v2: adds a test case which passes when this patch is applied.
->
->
-> diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
-> index 282e79f..c98e0a8 100644
-> --- a/Documentation/security/credentials.rst
-> +++ b/Documentation/security/credentials.rst
-> @@ -437,9 +437,13 @@ new set of credentials by calling::
+>  drivers/tty/vt/vt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index 8fa059ec6cc8..1d7217bef678 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -1231,6 +1231,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+>  	old_origin = vc->vc_origin;
+>  	new_origin = (long) newscreen;
+>  	new_scr_end = new_origin + new_screen_size;
+> +	end = old_origin + old_row_size * min(old_rows, new_rows);
 >  
->  	struct cred *prepare_creds(void);
+>  	if (vc->vc_y > new_rows) {
+>  		if (old_rows - vc->vc_y < new_rows) {
+> @@ -1249,7 +1250,6 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+>  		old_origin += first_copied_row * old_row_size;
+>  	} else
+>  		first_copied_row = 0;
+> -	end = old_origin + old_row_size * min(old_rows, new_rows);
 >  
-> -this locks current->cred_replace_mutex and then allocates and constructs a
-> -duplicate of the current process's credentials, returning with the mutex still
-> -held if successful.  It returns NULL if not successful (out of memory).
-> +this allocates and constructs a duplicate of the current process's credentials.
-> +It returns NULL if not successful (out of memory).
-> +
-> +If called from __do_execve_file, the mutex current->signal->cred_guard_mutex
-> +is acquired before this function gets called, and the mutex
-> +current->signal->cred_change_mutex is acquired later, while the credentials
-> +and the process mmap are actually changed.
->  
->  The mutex prevents ``ptrace()`` from altering the ptrace state of a process
->  while security checks on credentials construction and changing is taking place
-> @@ -466,9 +470,8 @@ by calling::
->  
->  This will alter various aspects of the credentials and the process, giving the
->  LSM a chance to do likewise, then it will use ``rcu_assign_pointer()`` to
-> -actually commit the new credentials to ``current->cred``, it will release
-> -``current->cred_replace_mutex`` to allow ``ptrace()`` to take place, and it
-> -will notify the scheduler and others of the changes.
-> +actually commit the new credentials to ``current->cred``, and it will notify
-> +the scheduler and others of the changes.
->  
->  This function is guaranteed to return 0, so that it can be tail-called at the
->  end of such functions as ``sys_setresuid()``.
-> @@ -486,8 +489,7 @@ invoked::
->  
->  	void abort_creds(struct cred *new);
->  
-> -This releases the lock on ``current->cred_replace_mutex`` that
-> -``prepare_creds()`` got and then releases the new credentials.
-> +This releases the new credentials.
->  
->  
->  A typical credentials alteration function would look something like this::
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 74d88da..a6884e4 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1266,6 +1266,12 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	if (retval)
->  		goto out;
->  
-> +	retval = mutex_lock_killable(&current->signal->cred_change_mutex);
-> +	if (retval)
-> +		goto out;
-> +
-> +	bprm->called_flush_old_exec = 1;
-> +
->  	/*
->  	 * Must be called _before_ exec_mmap() as bprm->mm is
->  	 * not visibile until then. This also enables the update
-> @@ -1420,6 +1426,8 @@ static void free_bprm(struct linux_binprm *bprm)
->  {
->  	free_arg_pages(bprm);
->  	if (bprm->cred) {
-> +		if (bprm->called_flush_old_exec)
-> +			mutex_unlock(&current->signal->cred_change_mutex);
->  		mutex_unlock(&current->signal->cred_guard_mutex);
->  		abort_creds(bprm->cred);
->  	}
-> @@ -1469,6 +1477,7 @@ void install_exec_creds(struct linux_binprm *bprm)
->  	 * credentials; any time after this it may be unlocked.
->  	 */
->  	security_bprm_committed_creds(bprm);
-> +	mutex_unlock(&current->signal->cred_change_mutex);
->  	mutex_unlock(&current->signal->cred_guard_mutex);
->  }
->  EXPORT_SYMBOL(install_exec_creds);
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc63..2e1318b 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -44,7 +44,11 @@ struct linux_binprm {
->  		 * exec has happened. Used to sanitize execution environment
->  		 * and to set AT_SECURE auxv for glibc.
->  		 */
-> -		secureexec:1;
-> +		secureexec:1,
-> +		/*
-> +		 * Set by flush_old_exec, when the cred_change_mutex is taken.
-> +		 */
-> +		called_flush_old_exec:1;
->  #ifdef __alpha__
->  	unsigned int taso:1;
->  #endif
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index 8805025..37eeabe 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -225,6 +225,7 @@ struct signal_struct {
->  	struct mutex cred_guard_mutex;	/* guard against foreign influences on
->  					 * credential calculations
->  					 * (notably. ptrace) */
-> +	struct mutex cred_change_mutex; /* guard against credentials change */
->  } __randomize_layout;
->  
->  /*
-> diff --git a/init/init_task.c b/init/init_task.c
-> index 9e5cbe5..6cd9a0f 100644
-> --- a/init/init_task.c
-> +++ b/init/init_task.c
-> @@ -26,6 +26,7 @@
->  	.multiprocess	= HLIST_HEAD_INIT,
->  	.rlim		= INIT_RLIMITS,
->  	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
-> +	.cred_change_mutex = __MUTEX_INITIALIZER(init_signals.cred_change_mutex),
->  #ifdef CONFIG_POSIX_TIMERS
->  	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
->  	.cputimer	= {
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index 809a985..e4c78de 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -676,7 +676,7 @@ void __init cred_init(void)
->   *
->   * Returns the new credentials or NULL if out of memory.
->   *
-> - * Does not take, and does not return holding current->cred_replace_mutex.
-> + * Does not take, and does not return holding ->cred_guard_mutex.
->   */
->  struct cred *prepare_kernel_cred(struct task_struct *daemon)
->  {
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 0808095..0395154 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1224,7 +1224,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  	struct mm_struct *mm;
->  	int err;
->  
-> -	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
-> +	err =  mutex_lock_killable(&task->signal->cred_change_mutex);
->  	if (err)
->  		return ERR_PTR(err);
->  
-> @@ -1234,7 +1234,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  		mmput(mm);
->  		mm = ERR_PTR(-EACCES);
->  	}
-> -	mutex_unlock(&task->signal->cred_guard_mutex);
-> +	mutex_unlock(&task->signal->cred_change_mutex);
->  
->  	return mm;
->  }
-> @@ -1594,6 +1594,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
->  	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
->  
->  	mutex_init(&sig->cred_guard_mutex);
-> +	mutex_init(&sig->cred_change_mutex);
->  
->  	return 0;
->  }
-> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-> index 357aa7b..b3e6eb5 100644
-> --- a/mm/process_vm_access.c
-> +++ b/mm/process_vm_access.c
-> @@ -204,7 +204,7 @@ static ssize_t process_vm_rw_core(pid_t pid, struct iov_iter *iter,
->  	if (!mm || IS_ERR(mm)) {
->  		rc = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
->  		/*
-> -		 * Explicitly map EACCES to EPERM as EPERM is a more a
-> +		 * Explicitly map EACCES to EPERM as EPERM is a more
->  		 * appropriate error code for process_vw_readv/writev
->  		 */
->  		if (rc == -EACCES)
-> diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
-> index c0b7f89..2f1f532 100644
-> --- a/tools/testing/selftests/ptrace/Makefile
-> +++ b/tools/testing/selftests/ptrace/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -CFLAGS += -iquote../../../../include/uapi -Wall
-> +CFLAGS += -std=c99 -pthread -iquote../../../../include/uapi -Wall
->  
-> -TEST_GEN_PROGS := get_syscall_info peeksiginfo
-> +TEST_GEN_PROGS := get_syscall_info peeksiginfo vmaccess
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/ptrace/vmaccess.c b/tools/testing/selftests/ptrace/vmaccess.c
-> new file mode 100644
-> index 0000000..ef08c9f
-> --- /dev/null
-> +++ b/tools/testing/selftests/ptrace/vmaccess.c
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2020 Bernd Edlinger <bernd.edlinger@hotmail.de>
-> + * All rights reserved.
-> + *
-> + * Check whether /proc/$pid/mem can be accessed without causing deadlocks
-> + * when de_thread is blocked with ->cred_guard_mutex held.
-> + */
-> +
-> +#include "../kselftest_harness.h"
-> +#include <stdio.h>
-> +#include <fcntl.h>
-> +#include <pthread.h>
-> +#include <signal.h>
-> +#include <unistd.h>
-> +#include <sys/ptrace.h>
-> +
-> +static void *thread(void *arg)
-> +{
-> +	ptrace(PTRACE_TRACEME, 0, 0, 0);
-> +	return NULL;
-> +}
-> +
-> +TEST(vmaccess)
-> +{
-> +	int f, pid = fork();
-> +	char mm[64];
-> +
-> +	if (!pid) {
-> +		pthread_t pt;
-> +		pthread_create(&pt, NULL, thread, NULL);
-> +		pthread_join(pt, NULL);
-> +		execlp("true", "true", NULL);
-> +	}
-> +
-> +	sleep(1);
-> +	sprintf(mm, "/proc/%d/mem", pid);
-> +	f = open(mm, O_RDONLY);
-> +	ASSERT_LE(0, f)
-> +		close(f);
-> +	/* this is not fixed! ptrace(PTRACE_ATTACH, pid, 0,0); */
-> +	f = kill(pid, SIGCONT);
-> +	ASSERT_EQ(0, f);
-> +}
-> +
-> +TEST_HARNESS_MAIN
+>  	vc_uniscr_copy_area(new_uniscr, new_cols, new_rows,
+>  			    get_vc_uniscr(vc), rlth/2, first_copied_row,
+> 
+
+thanks,
+-- 
+js
+suse labs
+
+-- 
+js
+suse labs
