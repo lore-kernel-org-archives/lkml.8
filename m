@@ -2,113 +2,98 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84189217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:04:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sR5HyV6o"
+	by mail.kernel.org (Postfix) with ESMTP id 4E415217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCBPE0 (ORCPT
+        id S1727417AbgCBPFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:04:26 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39196 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgCBPEZ (ORCPT
+        Mon, 2 Mar 2020 10:05:16 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:30410 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgCBPFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:04:25 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o15so12109723ljg.6;
-        Mon, 02 Mar 2020 07:04:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OsxgYgsKphJDyuRREvQcBCxW+LOMW9YuhqtTDzyIanc=;
-        b=sR5HyV6oXBFgipsb3ANiMlO3m5ZKXcTJRG44spcXmrm3FDiSyFsOPjc1oCYcz0S4+q
-         Zy0/Wy3Vyznt+BF7js7FKTYwQHUP6+u8VXht705SHRioh9qBs0fxgZK6fMpyHC6E8Icq
-         6jKE8GIroACzzGUyBr/hl9Ku0PBXswtudX1McI/vS0QunxqBkUqjO4ajROAj8u1PFGWT
-         KbJdJ1I/m6E/pfW1Tbv97cXQPFOI9R5qxrZb1Meo2e7t6yhSl7cuCAV0HiDS/mafPBti
-         pHMECofq9Qlgc+n6zvkJOfqkIxm+JrvidRotdWKWwJMZ+HszfSo9YLgka0NB8ZC7FQSK
-         FERw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OsxgYgsKphJDyuRREvQcBCxW+LOMW9YuhqtTDzyIanc=;
-        b=H7Nc338xnCeRcp/R6GyxmtIrO5gr0UVEPYfjd+6c7pci5hVCzrHJ+/mRewYbDcnGlc
-         TA8Pa9hJHwT39xp85a9lexnUuyNYmn0NdfKQ/0P8PgGbB5kR1n08kKlwFuMsSlzU8QHo
-         /wh77SgN1unRmxz3uCCSx1+BmkmOgUbwPMW+KMXdQO4dp51q7L9D6ouWIGraRrxXbF+U
-         wnkkwGjT73b6cnk6plDzSCAMjLShL4S59LnUOoTlVv3tURqEG1UWPEl7lj0R0NnWMfdu
-         ZQDIP9PaBXa1MvSAYts+5m/W4qGyaPrEJPjKu3WJR/nwDy/icbTNxbF3TPiFrxSAonYr
-         KOmQ==
-X-Gm-Message-State: ANhLgQ3bJkXl1h8656zSKrqcmdNHYYM+ZGgkkmaSg+aNQ3rrn4EAJMvk
-        P9DiGmHudI6EZNzJyM+yaFGPcvlv
-X-Google-Smtp-Source: ADFU+vtiyeT++BmeCxJab16/JiA7Sq6GAi7V95VfEd1lChxPAqxfx6XOoQi/iC91aKCTY3perxTq0w==
-X-Received: by 2002:a05:651c:2c9:: with SMTP id f9mr4667824ljo.85.1583161462499;
-        Mon, 02 Mar 2020 07:04:22 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r15sm11141676ljh.11.2020.03.02.07.04.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:04:21 -0800 (PST)
-Subject: Re: [PATCH v1] media: staging: tegra-vde: Use
- devm_platform_ioremap_resource_byname()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-References: <20200227180915.9541-1-digetx@gmail.com>
- <20200302080456.GD4140@kadam>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d748bf2c-e38c-dabb-59ad-39e14813e40a@gmail.com>
-Date:   Mon, 2 Mar 2020 18:04:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 10:05:16 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 48WNjj5B4XzKmgy;
+        Mon,  2 Mar 2020 16:05:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id JQEoqVqSuZg2; Mon,  2 Mar 2020 16:05:10 +0100 (CET)
+Date:   Tue, 3 Mar 2020 02:04:59 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
+        metze@samba.org, torvalds@linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302150459.zu3eo5so66vrji4w@yavin>
+References: <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <859019.1583159423@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200302080456.GD4140@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="srr2nycvnmhscg5l"
+Content-Disposition: inline
+In-Reply-To: <859019.1583159423@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.03.2020 11:04, Dan Carpenter пишет:
-> On Thu, Feb 27, 2020 at 09:09:15PM +0300, Dmitry Osipenko wrote:
->> This helps to make code cleaner a tad.
-> 
-> Please don't start the commit message in the middle of a sentence.
 
-Could you please clarify what do you mean by the "middle of a sentence"?
-The commit's message doesn't sound "middle" to me at all.
+--srr2nycvnmhscg5l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> It looks like this for some of us:
-> 
-> https://marc.info/?l=linux-driver-devel&m=158282701430176&w=2
+On 2020-03-02, David Howells <dhowells@redhat.com> wrote:
+> Florian Weimer <fweimer@redhat.com> wrote:
+>=20
+> > Regarding open flags, I think the key point for future APIs is to avoid
+> > using the set of flags for both control of the operation itself
+> > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
+> > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
+> > help code that has to re-create an equivalent descriptor.  The operation
+> > flags are largely irrelevant to that if you can get the descriptor by
+> > other means.
+>=20
+> It would also be nice to sort out the problem with O_CLOEXEC.  That can h=
+ave a
+> different value, depending on the arch - so it excludes at least three bi=
+ts
+> from the O_* flag set.
 
-This link points to this patch, I don't quite understand what you're
-trying to convey here.
+Not to mention there are (at least?) three or four different values for
+_CLOEXEC for different syscalls...
 
-> I generally read the subject or the full commit message but seldom
-> both.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-The commit's title describes the change briefly, while the message gives
-a rational for the change. Usually reviewer should consult the code
-changes themselves for more details.
+--srr2nycvnmhscg5l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Do you have some kind of a email filter that shows only the commit's
-message? Otherwise I'm not sure what's the problem.
+-----BEGIN PGP SIGNATURE-----
 
-> Otherwise the patch looks very good.
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXl0gmQAKCRCdlLljIbnQ
+Eo7SAP9PealEn3lKj+b8hZYp6P0KfxGubwWRVoi9l1VdUvarNgD/QAMhskbDrH+M
+rphWjsN4FWzH+8qNavLDTyruNZ8+nQk=
+=0CCy
+-----END PGP SIGNATURE-----
 
-Thanks
+--srr2nycvnmhscg5l--
