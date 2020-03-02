@@ -2,175 +2,118 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2368C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A72C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A920020675
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BeMSOf8G"
+	by mail.kernel.org (Postfix) with ESMTP id 289C0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583149518;
+	bh=vIoBeIWjUNLTuoGcAXMCEry0YLOFGilpxKVJx7rdzZs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GJOulaqaXG37uqWLJkkKAUxXJAJw/EwHm5g8kEDM/go9SO0iWgUtyWx+34UC9DhLn
+	 HQ2tycXkmbR5Bvh//1/akR9KFb+xen81S4GcYE9zKN0txn00YjjzIPkrEG63E/NLW5
+	 glfVDWs2hPffjqhTZscxWIJJEdBX4Jkm8099RKRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgCBLip (ORCPT
+        id S1727644AbgCBLpO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:38:45 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17335 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727470AbgCBLip (ORCPT
+        Mon, 2 Mar 2020 06:45:14 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41910 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgCBLpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:38:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583149124; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SpecQ+3x7goJ87//8OV9O2P+2GcYcoXhPwlIoaAQZJk=; b=BeMSOf8GsPgqLkjix3GKSx70RNP0pENP0SkaI43ZuYPLJUWqaZ3tTKUrQGRekSfy2Yv3Uh7t
- oejrR0kY4iUBjHDhdycwTMzcC2Bv0HnnVE0+5NrYeUJ5VOJBcfLbd/OPXAA2/F96NhLE8Fij
- p4c0OlGHdMmbNDOwdntTqZrFDiE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5cf038.7fb06cd99e30-smtp-out-n01;
- Mon, 02 Mar 2020 11:38:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EA764C447A0; Mon,  2 Mar 2020 11:38:31 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD57AC433A2;
-        Mon,  2 Mar 2020 11:38:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD57AC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v9 2/3] soc: qcom: rpmh: Update dirty flag only when data
- changes
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org>
- <1582889903-12890-3-git-send-email-mkshah@codeaurora.org>
- <CAE=gft5aOtOx6MyuNuv3ebc6ZHmG_W3i0EA3HJjKceYMr7Nx3A@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <73906d43-cfac-59c4-5e50-51424f0c136f@codeaurora.org>
-Date:   Mon, 2 Mar 2020 17:08:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 06:45:13 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i1so9946699oie.8;
+        Mon, 02 Mar 2020 03:45:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SLNYhHV8VgjuhrZ6PkGrsfgyd81HsPtycIyiuh3CoLI=;
+        b=qENEVz8ucXvymnHgkfj+OlQhRD8RsxUadDyJjGTJEth/6yrV8vPp5nFarAG/HC+AAp
+         MQn4+BKUrWj/4HurMKjV0l7Gha8LRsWf5rTHn/763dkOR4ZsesPSEIvKZ0iL4OkRklHC
+         hDhuxHo9uSjcuNs/aH40v4J22tDbBqB2f22Y/Mg6zUcUCeyOOdoe+ZpPvG9nw19q+4Us
+         8D9zCZnysUwtNJIT+GmG11fICAzMl9t8AFEn9OGRnPhDsUV7QLWQ/DwaE0Bcq5RaoaWi
+         6TX1s3tMlpUQiZdxg7mRtJ5MV7uAWlw1N0jqc0Q9X0oxixriwXEUNJHBoORTX2JL49KE
+         wl8Q==
+X-Gm-Message-State: APjAAAWHVrzvly8KAGnhapmyoyevWgIem1sRBTRel9V/XJ6Y1xBHtZoE
+        Fbd/bJmCweKkCQe+0KRECJ0yDcmmnmp/NKbHuww=
+X-Google-Smtp-Source: APXvYqw52kt1OueUejBSTej59FJzkSRmsyOjRvbmPvah+zgjVX4FkHL5Pr4NN28Le28iXSOTo5WdzOdiIxXYm+925zU=
+X-Received: by 2002:aca:ebcf:: with SMTP id j198mr9618581oih.115.1583149512878;
+ Mon, 02 Mar 2020 03:45:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft5aOtOx6MyuNuv3ebc6ZHmG_W3i0EA3HJjKceYMr7Nx3A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
+ <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com> <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 2 Mar 2020 12:45:01 +0100
+Message-ID: <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
+Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2/29/2020 3:20 AM, Evan Green wrote:
-> On Fri, Feb 28, 2020 at 3:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Currently rpmh ctrlr dirty flag is set for all cases regardless of data
->> is really changed or not. Add changes to update dirty flag when data is
->> changed to newer values.
->>
->> Also move dirty flag updates to happen from within cache_lock and remove
->> unnecessary INIT_LIST_HEAD() call and a default case from switch.
->>
->> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 21 +++++++++++++--------
->>   1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index eb0ded0..f28afe4 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -133,26 +133,30 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>
->>          req->addr = cmd->addr;
->>          req->sleep_val = req->wake_val = UINT_MAX;
->> -       INIT_LIST_HEAD(&req->list);
->>          list_add_tail(&req->list, &ctrlr->cache);
->>
->>   existing:
->>          switch (state) {
->>          case RPMH_ACTIVE_ONLY_STATE:
->> -               if (req->sleep_val != UINT_MAX)
->> +               if (req->sleep_val != UINT_MAX) {
->>                          req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_WAKE_ONLY_STATE:
->> -               req->wake_val = cmd->data;
->> +               if (req->wake_val != cmd->data) {
->> +                       req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_SLEEP_STATE:
->> -               req->sleep_val = cmd->data;
->> -               break;
->> -       default:
->> +               if (req->sleep_val != cmd->data) {
->> +                       req->sleep_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          }
->>
->> -       ctrlr->dirty = true;
->>   unlock:
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->> @@ -287,6 +291,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->>
->>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>          list_add_tail(&req->list, &ctrlr->batch_cache);
->> +       ctrlr->dirty = true;
-> Is this fixing a case where we were not previously marking the
-> controller dirty but should have?
-Well, its not a missing case as such.
-Let me explain.
-Whenever rpmh_invalidate()  (lets call it event a) is called, controller 
-dirty flag is set.
-post invalidating, the aggregator driver always sends new sleep data 
-(event b) and wake data (event c).
-the last cpu going down flushes the cached data and dirty flag is 
-unset.  (event d)
-
-hence setting dirty flag, only once during (event a) and not updating it 
-during (event b, c) was not any issue/missing case, at least till now.
-
-However with changes to invoke rpmh_flush() whenever data is dirty, it 
-is required to set this flag for each of these events.
-Otherwise as the rpmh_flush() call happened during event b would have 
-marked as non-dirty data at the end of it,
-now when rpmh_flush() call happened during event c, it will not flush 
-anything as caches are not dirty, which is not the expectation.
-
-
-> I notice there's a fixes tag, but it
-> would be helpful to add something to the commit text indicating that
-> you're fixing a missing case where the controller should have been
-> marked dirty.
-sure i can add details on why we need to update dirty flag everytime 
-when touching caches.
-> With that fixed, you can add my tag:
+On Mon, Mar 2, 2020 at 11:38 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-Thanks
+> On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+> >
+> > Daniel Drake <drake@endlessm.com> 於 2020年2月28日 週五 下午5:43寫道：
+> > >
+> > > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > > > The purpose of this series of update of the ACPI EC driver is to make its
+> > > > initialization more straightforward.
+> > > >
+> > > > They fix a couple of issues, clean up some things, remove redundant code etc.
+> > > >
+> > > > Please refer to the changelogs of individual patches for details.
+> > > >
+> > > > For easier access, the series is available in the git branch at
+> > > >
+> > > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> > > >  acpi-ec-work
+> > > >
+> > > > on top of 5.6-rc3.
+> > >
+> > > Jian-Hong, can you please test this on Asus UX434DA?
+> > > Check if the screen brightness hotkeys are still working after these changes.
+> >
+> > Hi Rafael,
+> >
+> > Thanks for your patches, but we found an issue:
+> > The laptops like ASUS UX434DA's screen brightness hotkeys work before
+> > this patch series.  However, the hotkeys are failed with the patch
+> > "ACPI: EC: Unify handling of event handler installation failures".
+>
+> So I have modified the series to avoid the change that can possibly break this.
+>
+> Can you please pull the new series from
+>
+>  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>  acpi-ec-work
+>
+> (same branch) and retest?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Note that the current top-most commit in that branch is
+
+0957d98f50da ACPI: EC: Consolidate event handler installation code
+
+
+
+>
+> I'll post the updated patches later this week, but it would be good to
+> try them on now if possible.
+>
+> Thanks!
