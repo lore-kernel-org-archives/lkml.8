@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50FDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7454214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A643521D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgCBNeF (ORCPT
+        id S1728086AbgCBNdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:34:05 -0500
+        Mon, 2 Mar 2020 08:33:39 -0500
 Received: from mga05.intel.com ([192.55.52.43]:64712 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbgCBNdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:33:41 -0500
+        id S1728039AbgCBNdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:33:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 05:33:40 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 05:33:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="440136240"
+   d="scan'208";a="440136225"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 05:33:37 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 05:33:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1C53C9E5; Mon,  2 Mar 2020 15:33:28 +0200 (EET)
+        id ABBBF411; Mon,  2 Mar 2020 15:33:27 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 15/19] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date:   Mon,  2 Mar 2020 16:33:23 +0300
-Message-Id: <20200302133327.55929-16-mika.westerberg@linux.intel.com>
+Subject: [PATCH v7 05/19] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date:   Mon,  2 Mar 2020 16:33:13 +0300
+Message-Id: <20200302133327.55929-6-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
 References: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
@@ -58,47 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
+ };
+ 
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
+ 
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
  }
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
+ {
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
+ 
+ 	return 0;
+ }
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
+ 
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
 +
- #else /* !CONFIG_X86_INTEL_MID */
- 
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
- 
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
-+
- #endif /* !CONFIG_X86_INTEL_MID */
- 
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
--
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.25.0
 
