@@ -2,117 +2,109 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C426C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7EEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAFA2469C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E852469C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQMVAY2N"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z5WUg+NW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgCBCdU (ORCPT
+        id S1726805AbgCBCfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 21:33:20 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42608 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgCBCdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 21:33:20 -0500
-Received: by mail-qk1-f193.google.com with SMTP id o28so8678767qkj.9;
-        Sun, 01 Mar 2020 18:33:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
-        b=iQMVAY2Ndh6lL0ADxF8SUuHgZM9LffAiUH9Jvo+D7d/ez5K2m+Xaq6zuA4Va/AQqpV
-         4yIO1YhZtjdhB16NbDa+FGYPHncktlCZH9TI2o2TJd+0MrWrNFr8TYpNnC9Zv8PRmBz6
-         nb0vIZN2EZjNqdK+AoHPFEZjSupAG+P+IP6xup6n+0p5tkkTgPOsoXgFVAC9UqGaZH5t
-         x3mZmg7tOMLdkleO2q6pMA7krpmC0HGvpoWMZHheKpdGpVoGShjT8VdSTdvmuzwCL7Bh
-         7g2Y0Dn1NlknZDnen2WoNzmnDOHrIMLrpBk36ojLpStVKvCxsTswk2UEE8EIMhaP99XC
-         1BzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
-        b=KO8LXoPI05mej1kczmiQx29UOwbitfFn9vD838sNi7LexBb3vHTa/GPnHfI7AioA4C
-         hDpeuAOFQIizyyz3kE2a+8ESMOeOEz7uxVJ/kxvxiPRX3kxrJw7VLmCOLhXM1WHEKhNm
-         AuTfRNEnhn6HAD3BvLGVIDgajD0DxKYbvuTehFgvNQUx6QXQLRnbbzBuawSwSpuUcHHO
-         tHtosL9nownggvjxVnEftCRV9R6USS9AGGIv4D1KDOqZ0qE7U0LZMSWT69o4WnQdwKpQ
-         bzSj7hOmEEkrg0b9aYzQiGBqPtqZs7rnyjouZ0hLZjoYza40oaK3uBF025DkF3pZF7/P
-         MrgA==
-X-Gm-Message-State: APjAAAXVMMB6UCJLH6xO9j4ZHDFswFoSRynv+uCk3fiCxb94p9G4NEl1
-        0pPiwDUp2TK568T3GBTySI98M4WVPFjnLHFn7x54F7HP
-X-Google-Smtp-Source: APXvYqxWCNUo+QCfgt2XoZOE8ooJt2tqa9zZ3mhTxXmdKAeQmDiToITnQJU/qN0uQKHKjwSjJ0PBZ4KYYvNyPiwzNug=
-X-Received: by 2002:a37:6447:: with SMTP id y68mr14513354qkb.114.1583116399569;
- Sun, 01 Mar 2020 18:33:19 -0800 (PST)
+        Sun, 1 Mar 2020 21:35:46 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39725 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbgCBCfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 21:35:46 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48W44w2LJzz9sSM;
+        Mon,  2 Mar 2020 13:35:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583116544;
+        bh=PTyADRT7rNDTfnhYJBz0UBmQ9vp9yqGXCN/gxmgFYYY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Z5WUg+NWXsULcuLtqVQ5FKIlzQMcN7LFJXQHc29M3Cb+UOLZCZAlv4r+4HzCCaCtd
+         a/afPKUfyf3/IAv874pWbf7qyDuoQWql1xitPF15vPjDPYBW7nIwHPgPWoekKnkp6s
+         YI3VrYYFm8Watd8MNibDuE1XB1jNWt43xCqElKdcX8mQTHoMDB4MBakKDARtldSTK3
+         FbpbKN0S/b5zCYPQcPBMbeUX1wXRIU/BCRGvtRFShHg1wsoln2jgu6XNJAv7XoAyPl
+         fnwbwGuKu2B67/nIGBahUFy0GtC6SpUUMFbJpu97u8vUtQ0/KGUVTePWJceKdA5rl3
+         LSkFRSv2LrIbg==
+Date:   Mon, 2 Mar 2020 13:35:43 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian King <brking@linux.vnet.ibm.com>
+Subject: linux-next: build warning after merge of the scsi-mkp tree
+Message-ID: <20200302133543.7052d654@canb.auug.org.au>
 MIME-Version: 1.0
-References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
- <202002290858.UhNBgssD%lkp@intel.com>
-In-Reply-To: <202002290858.UhNBgssD%lkp@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 2 Mar 2020 10:33:08 +0800
-Message-ID: <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
- into a module
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/9M8=f.JwJs.X_ACgpTY9PBZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+--Sig_/9M8=f.JwJs.X_ACgpTY9PBZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Baolin,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on pinctrl/devel]
-> [also build test ERROR on v5.6-rc3 next-20200228]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-> config: i386-randconfig-d003-20200229 (attached as .config)
-> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
-> >> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
->      ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
->            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->            pinconf_generic_dump_config
->    cc1: some warnings being treated as errors
+Hi all,
 
-I followed your attached configuration, but I can not reproduce your
-building error. Did I miss anything else? Thanks.
+After merging the scsi-mkp tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-CONFIG_PINCTRL=y
-CONFIG_PINMUX=y
-CONFIG_GENERIC_PINMUX_FUNCTIONS=y
-CONFIG_PINCONF=y
-CONFIG_GENERIC_PINCONF=y
-CONFIG_PINCTRL_SPRD=y
-CONFIG_PINCTRL_SPRD_SC9860=y
+In file included from include/uapi/linux/posix_types.h:5,
+                 from include/uapi/linux/types.h:14,
+                 from include/linux/types.h:6,
+                 from include/linux/list.h:5,
+                 from include/linux/module.h:12,
+                 from drivers/scsi/ibmvscsi/ibmvfc.c:10:
+drivers/scsi/ibmvscsi/ibmvfc.c: In function 'ibmvfc_tgt_implicit_logout_and=
+_del':
+include/linux/stddef.h:8:14: warning: 'return' with a value, in function re=
+turning void [-Wreturn-type]
+    8 | #define NULL ((void *)0)
+      |              ^
+drivers/scsi/ibmvscsi/ibmvfc.c:3644:10: note: in expansion of macro 'NULL'
+ 3644 |   return NULL;
+      |          ^~~~
+drivers/scsi/ibmvscsi/ibmvfc.c:3638:13: note: declared here
+ 3638 | static void ibmvfc_tgt_implicit_logout_and_del(struct ibmvfc_target=
+ *tgt)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Introduced by commit
+
+  54b04c99d02e ("scsi: ibmvfc: Avoid loss of all paths during SVC node rebo=
+ot")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9M8=f.JwJs.X_ACgpTY9PBZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5ccP8ACgkQAVBC80lX
+0GyiBgf+Ln6FCnnNflgek2G/vI0p5CeztpNHPP0z7JKvne4vt0g+Bwt48+3GhojJ
+nAaIdWnpAaRusttbKHKuwJsLkehrtmlczDb/7bLz8asuEp3IRjwVbFInSqJl9JEu
+mOEZv8IE40pZB+Zm0vObNTFUHfFl7QVHA8bim5qoCpOhJVq8DnGIkenzpa4tR/Zz
+K/UbAKyjxeD/+7pS+mwHKOV1va6YiMOiG8cyduoTd37jCBgeAyoXCs//LArAQJRm
+eGmL8osvYW7njB3/qf79xnoTNBPf0mnnn6G+DonzPwC12qFyxYxBSjfzhwIvZZFq
+NIAgR2yz4XJDJK10ADCe7jLDUwKsug==
+=opuZ
+-----END PGP SIGNATURE-----
+
+--Sig_/9M8=f.JwJs.X_ACgpTY9PBZ--
