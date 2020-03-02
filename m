@@ -2,176 +2,123 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82E5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE059C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A825B2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E722166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WRPVw0MY"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="gCBpS1Km"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgCBKvw (ORCPT
+        id S1727681AbgCBKvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:51:52 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56029 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgCBKvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:51:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WH5J5J6mz9sSb;
-        Mon,  2 Mar 2020 21:51:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583146309;
-        bh=b16uewG1Ij2M7fZzm8YX4KBgHz05Ojayzf65tUSrteo=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=WRPVw0MYXwNvewO+4MvrFWaQWlL9dS4BusnrqtmZQRlGB+6kh6XdQbJ/NkeAkZ62e
-         rlG+sfqNrJSwQZkKVb1KYy++Hwq3hKemJCshjrf8Ul5gYnrEvmiUMs9rYyRGr4zZMO
-         QYD1e9yH1usGu4q46IOfyy79zR4/gTgA/r7v70iHo0En1K88RvIPnU7aEw/XfgBxCC
-         yTIV7VGmeV35zMHdeCXfeOCtivsGQeFeUJxLuVxvoQzZY9HqbT+f46YCgXrabWIDX/
-         ObdNVmIgrcAwBbyKsB4NpkWSMMnJzuTnrqCohNz/LkiwWjnmvAN98GsRzO/41qd6rl
-         t+SkcBlfdgzHA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
-In-Reply-To: <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com>
-References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com> <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com>
-Date:   Mon, 02 Mar 2020 21:51:44 +1100
-Message-ID: <87pndvrpvj.fsf@mpe.ellerman.id.au>
+        Mon, 2 Mar 2020 05:51:55 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:53838 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727027AbgCBKvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:51:54 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1AEC12E09C5;
+        Mon,  2 Mar 2020 13:51:51 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id xzrWdUQQnx-pox8C8xr;
+        Mon, 02 Mar 2020 13:51:51 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1583146311; bh=c8nRtiIQTy0hYZDBROc/llu6uiBzaMtKduryGQp4LBA=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=gCBpS1KmIO8HmVRphH0wt2/ehafdwEXHTQvpI1t/jpszIVkKnQ4W8mDmJfxzFGbTD
+         nvs85msRPN7O6gHUcZeh3uWlwzUE6B10eiF2RgrFmSrxpVSSeSm7rjNGIi9gbHQR8J
+         bUuXSS0nTTxOeYwPM2hhd4BPO88uD7rmLcAssvsI=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:7cd4:25a8:c7e3:39e2])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 1HkcgWlnvl-poWebbTs;
+        Mon, 02 Mar 2020 13:51:50 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] block: keep bdi->io_pages in sync with max_sectors_kb for
+ stacked devices
+To:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Cc:     linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <158290150891.4423.13566449569964563258.stgit@buzz>
+ <35ef813c-d5a4-8eb8-073d-9c5814266299@molgen.mpg.de>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <4ce1ccf2-6a7c-818d-bfe3-b9bf29e8be3e@yandex-team.ru>
+Date:   Mon, 2 Mar 2020 13:51:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <35ef813c-d5a4-8eb8-073d-9c5814266299@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Sun, Mar 1, 2020 at 1:03 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+On 02/03/2020 13.41, Paul Menzel wrote:
+> Dear Konstantin,
+> 
+> 
+> Thank you for the patch.
+> 
+> 
+> On 2020-02-28 15:51, Konstantin Khlebnikov wrote:
+>> Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+>> size based on read-ahead setting") removes unneeded split of read requests.
 >>
->> Paolo Bonzini (4):
->>       KVM: allow disabling -Werror
->
-> Honestly, this is just badly done.
->
-> You've basically made it enable -Werror only for very random
-> configurations - and apparently the one you test.
->
-> Doing things like COMPILE_TEST disables it, but so does not having
-> EXPERT enabled.
->
-> So it looks entirely ad-hoc and makes very little sense. At least the
-> "with KASAN, disable this" part makes sense, since that's a known
-> source or warnings. But everything else looks very random.
->
-> I've merged this, but I wonder why you couldn't just do what I
-> suggested originally?
->
-> Seriously, if you script your build tests, and don't even look at the
-> results, then you might as well use
->
->    make KCFLAGS=-Werror
->
-> instead of having this kind of completely random option that has
-> almost no logic to it at all.
->
-> And if you depend entirely on random build infrastructure like the
-> 0day bot etc, this likely _is_ going to break when it starts using a
-> new gcc version, or when it starts testing using clang, or whatever.
-> So then we end up with another odd random situation where now kvm (and
-> only kvm) will fail those builds just because they are automated.
->
-> Yes, as I said in that original thread, I'd love to do -Werror in
-> general, at which point it wouldn't be some random ad-hoc kvm special
-> case for some random option. But the "now it causes problems for
-> random compiler versions" is a real issue again - but at least it
-> wouldn't be a random kernel subsystem that happens to trigger it, it
-> would be a _generic_ issue, and we'd have everybody involved when a
-> compiler change introduces a new warning.
->
-> I've pulled this for now, but I really think it's a horrible hack, and
-> it's just done entirely wrong.
->
-> Adding the powerpc people, since they have more history with their
-> somewhat less hacky one. Except that one automatically gets disabled
-> by "make allmodconfig" and friends, which is also kind of pointless.
->
-> Michael, what tends to be the triggers for people using
-> PPC_DISABLE_WERROR? Do you have reports for it?
+>> Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they setup
+> 
+> The verb is spelled with a space *set up*.
+> 
+>> limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+>> Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
+>>
+>> This patch updates io_pages after merging limits in disk_stack_limits().
+>>
+>> Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+>> the same problem for device-mapper devices, this one fixes MD RAIDs.
+> 
+> Add a Fixes: tag?
+> 
+> Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
 
-My memory is that we have had very few reports of it actually causing
-problems. But I don't have hard data to back that up.
+Maybe, but this isn't fatal bug. Just incomplete fix.
 
-It has tripped up the Clang folks, but that's partly because they're
-building clang HEAD, and also because ~zero powerpc kernel developers
-are building regularly with clang. I'm trying to fix the latter ...
+Same problem exists for non-disk BDIs. I.e. network filesystem must
+set io_pages manually if doesn't want split read requests.
 
-
-The thing that makes me disable -Werror (enable PPC_DISABLE_WERROR) most
-often is bisecting back to before fixes for my current compiler were
-merged.
-
-For example with GCC 8 if you go back before ~4.18 you hit the warning
-fixed by bee20031772a ("disable -Wattribute-alias warning for
-SYSCALL_DEFINEx()").
-
-And then building with GCC head sometimes requires disabling -Werror
-because of some new warning, sometimes valid sometimes not.
-
-I think we could mostly avoid those problems by having the option only
-on by default for known compiler versions.
-
-eg:
-
-config WERROR
-	bool "Build with -Werror"
-	default CC_IS_GCC && (GCC_VERSION >= 70000 && GCC_VERSION <= 90000)
-
-And we could bump the upper version up once each new GCC version has had
-any problems ironed out.
-
-> Could we have a _generic_ option that just gets enabled by default,
-> except it gets disabled by _known_ issues (like KASAN).
-
-Right now I don't think we could have a generic option that's enabled by
-default, there's too many warnings floating around on minor arches and
-in odd configurations.
-
-But we could have a generic option that signifies the desire to build
-with -Werror where possible, and then each arch/subsystem/etc could use
-that config option to enable -Werror in stages.
-
-Then after a release or three we could change the option to globally
-enable -Werror and opt-out any areas that are still problematic.
-
-It's also possible to use -Wno-error to turn certain warnings back into
-warnings even when -Werror is set, so that's another way we could
-incrementally attack the problem.
-
-
-It'd also be nice if we could do:
-
- $ make WERROR=0
-
-Or something similarly obvious to turn off the WERROR option. That way
-users don't even have to edit their .config manually, they just rerun
-make with WERROR=0 and it works.
-
-
-> Being disabled for "make allmodconfig" is kind of against one of the
-> _points_ of "the build should be warning-free".
-
-True, it was just the conservative choice to disable it for allmod/yes.
-We should probably revisit that these days.
-
-cheers
+> 
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> ---
+>>   block/blk-settings.c |    2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/block/blk-settings.c b/block/blk-settings.c
+>> index c8eda2e7b91e..66c45fd79545 100644
+>> --- a/block/blk-settings.c
+>> +++ b/block/blk-settings.c
+>> @@ -664,6 +664,8 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+>>   		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+>>   		       top, bottom);
+>>   	}
+>> +
+>> +	t->backing_dev_info->io_pages = t->limits.max_sectors >> (PAGE_SHIFT-9);
+>>   }
+>>   EXPORT_SYMBOL(disk_stack_limits);
+> 
+> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
