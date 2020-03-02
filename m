@@ -2,103 +2,157 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A65C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E20C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D47246B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56ADD24695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCBG2P (ORCPT
+        id S1726918AbgCBG3Q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:28:15 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:41503 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgCBG2P (ORCPT
+        Mon, 2 Mar 2020 01:29:16 -0500
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:60800 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCBG3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:28:15 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TrMqUGR_1583130473;
-Received: from 30.25.170.53(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TrMqUGR_1583130473)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 02 Mar 2020 14:28:10 +0800
-Subject: Re: [PATCH] Introduce OSCCA certificate and SM2 asymmetric algorithm
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        ebiggers@kernel.org, pvanleeuwen@rambus.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@intel.com, penguin-kernel@I-love.SAKURA.ne.jp,
-        jmorris@namei.org, rusty@rustcorp.com.au, nicstange@gmail.com,
-        tadeusz.struk@intel.com, gilad@benyossef.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
-Message-ID: <b48a70cf-8f3d-011c-275e-0c508ca212f5@linux.alibaba.com>
-Date:   Mon, 2 Mar 2020 14:27:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 01:29:15 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 0226SYIB024592; Mon, 2 Mar 2020 15:28:34 +0900
+X-Iguazu-Qid: 2wGrZsIRE3OS1b6YEL
+X-Iguazu-QSIG: v=2; s=0; t=1583130514; q=2wGrZsIRE3OS1b6YEL; m=X60almfTyOdz9J+1VrluHbhCEEh2o3p2cHwKn7ITjqA=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1112) id 0226SW51018421;
+        Mon, 2 Mar 2020 15:28:32 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 0226SVbh001454;
+        Mon, 2 Mar 2020 15:28:31 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 0226SVF0030943;
+        Mon, 2 Mar 2020 15:28:31 +0900
+From:   <masahiro31.yamada@kioxia.com>
+To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
+        <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nvme: add a compat_ioctl handler for NVME_IOCTL_SUBMIT_IO
+Thread-Topic: [PATCH] nvme: add a compat_ioctl handler for
+ NVME_IOCTL_SUBMIT_IO
+Thread-Index: AdXwWtP+3uT/YWciSkKTlF+qgQWgkQ==
+Date:   Mon, 2 Mar 2020 06:28:29 +0000
+X-TSB-HOP: ON
+Message-ID: <c0d7091c43154d9ea7a978c42a78b01a@TGXML281.toshiba.local>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [133.118.177.171]
+msscp.transfermailtomossagent: 103
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently 32 bit application gets ENOTTY when it calls
+compat_ioctl with NVME_IOCTL_SUBMIT_IO in 64 bit kernel.
+
+The cause is that the results of sizeof(struct nvme_user_io),
+which is used to define NVME_IOCTL_SUBMIT_IO,
+are not same between 32 bit compiler and 64 bit compiler.
+
+* 32 bit: the result of sizeof nvme_user_io is 44.
+* 64 bit: the result of sizeof nvme_user_io is 48.
+
+64 bit compiler seems to add 32 bit padding for multiple of 8 bytes.
+
+This patch adds a compat_ioctl handler.
+The handler replaces NVME_IOCTL_SUBMIT_IO32 with NVME_IOCTL_SUBMIT_IO
+in case 32 bit application calls compat_ioctl for submit in 64 bit kernel.
+Then, it calls nvme_ioctl as usual.
+
+Signed-off-by: Masahiro Yamada (KIOXIA) <masahiro31.yamada@kioxia.com>
+---
+ drivers/nvme/host/core.c        | 13 +++++++++++--
+ include/uapi/linux/nvme_ioctl.h | 16 ++++++++++++++++
+ 2 files changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 641c07347e8d..7bc1e39b7cc9 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1584,6 +1584,15 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
+ 	return ret;
+ }
+ 
++static int nvme_compat_ioctl(struct block_device *bdev, fmode_t mode,
++		unsigned int cmd, unsigned long arg)
++{
++	if (cmd == NVME_IOCTL_SUBMIT_IO32)
++		return nvme_ioctl(bdev, mode, NVME_IOCTL_SUBMIT_IO, arg);
++
++	return nvme_ioctl(bdev, mode, cmd, arg);
++}
++
+ static int nvme_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	struct nvme_ns *ns = bdev->bd_disk->private_data;
+@@ -2027,7 +2036,7 @@ EXPORT_SYMBOL_GPL(nvme_sec_submit);
+ static const struct block_device_operations nvme_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.ioctl		= nvme_ioctl,
+-	.compat_ioctl	= nvme_ioctl,
++	.compat_ioctl	= nvme_compat_ioctl,
+ 	.open		= nvme_open,
+ 	.release	= nvme_release,
+ 	.getgeo		= nvme_getgeo,
+@@ -2055,7 +2064,7 @@ const struct block_device_operations nvme_ns_head_ops = {
+ 	.open		= nvme_ns_head_open,
+ 	.release	= nvme_ns_head_release,
+ 	.ioctl		= nvme_ioctl,
+-	.compat_ioctl	= nvme_ioctl,
++	.compat_ioctl	= nvme_compat_ioctl,
+ 	.getgeo		= nvme_getgeo,
+ 	.pr_ops		= &nvme_pr_ops,
+ };
+diff --git a/include/uapi/linux/nvme_ioctl.h b/include/uapi/linux/nvme_ioctl.h
+index d99b5a772698..52699a26b9b3 100644
+--- a/include/uapi/linux/nvme_ioctl.h
++++ b/include/uapi/linux/nvme_ioctl.h
+@@ -24,6 +24,21 @@ struct nvme_user_io {
+ 	__u16	appmask;
+ };
+ 
++struct nvme_user_io32 {
++	__u8	opcode;
++	__u8	flags;
++	__u16	control;
++	__u16	nblocks;
++	__u16	rsvd;
++	__u64	metadata;
++	__u64	addr;
++	__u64	slba;
++	__u32	dsmgmt;
++	__u32	reftag;
++	__u16	apptag;
++	__u16	appmask;
++} __attribute__((packed));
++
+ struct nvme_passthru_cmd {
+ 	__u8	opcode;
+ 	__u8	flags;
+@@ -72,6 +87,7 @@ struct nvme_passthru_cmd64 {
+ #define NVME_IOCTL_ID		_IO('N', 0x40)
+ #define NVME_IOCTL_ADMIN_CMD	_IOWR('N', 0x41, struct nvme_admin_cmd)
+ #define NVME_IOCTL_SUBMIT_IO	_IOW('N', 0x42, struct nvme_user_io)
++#define NVME_IOCTL_SUBMIT_IO32	_IOW('N', 0x42, struct nvme_user_io32)
+ #define NVME_IOCTL_IO_CMD	_IOWR('N', 0x43, struct nvme_passthru_cmd)
+ #define NVME_IOCTL_RESET	_IO('N', 0x44)
+ #define NVME_IOCTL_SUBSYS_RESET	_IO('N', 0x45)
+-- 
+2.20.1
 
 
-On 2020/2/16 16:59, Tianjia Zhang wrote:
-> Hello all,
-> 
-> This new module implement the OSCCA certificate and SM2 public key
-> algorithm. It was published by State Encryption Management Bureau, China.
-> List of specifications for OSCCA certificate and SM2 elliptic curve
-> public key cryptography:
-> 
-> * GM/T 0003.1-2012
-> * GM/T 0003.2-2012
-> * GM/T 0003.3-2012
-> * GM/T 0003.4-2012
-> * GM/T 0003.5-2012
-> * GM/T 0015-2012
-> * GM/T 0009-2012
-> 
-> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
-> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
-> scctc: http://www.gmbz.org.cn/main/bzlb.html
-> 
-> These patchs add the OID object identifier defined by OSCCA. The
-> x509 certificate supports sm2-with-sm3 type certificate parsing
-> and verification.
-> 
-> The sm2 algorithm is based on libgcrypt's mpi implementation, and has
-> made some additions to the kernel's original mpi library, and added the
-> implementation of ec to better support elliptic curve-like algorithms.
-> 
-> sm2 has good support in both openssl and gnupg projects, and sm3 and sm4
-> of the OSCCA algorithm family have also been implemented in the kernel.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> 
-> Thanks,
-> Tianjia
-> 
 
-Hello all,
-
-This is the review request.
-
-The OSCCA certificate and related algorithms used to verify the 
-certificate are newly introduced. Among them, sm3 and sm4 have been well 
-implemented in the kernel. This group of patches has newly introduced sm2.
-In order to implement sm2 more perfectly, I expanded the mpi library and 
-introduced the ec implementation of the mpi library as the basic 
-algorithm. Compared to the kernel's crypto/ecc.c, the implementation of 
-mpi/ec.c is more complete and elegant, sm2 is implemented based on these 
-algorithms.
-At this point, the kernel can parse and verify sm2-with-sm3 certificates 
-normally.
-
-Thanks,
-Tianjia
