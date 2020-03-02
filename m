@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4565C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3293D246D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA03C217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgCBX5w (ORCPT
+        id S1727700AbgCBX5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:52 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25524 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:57:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25521 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:30 -0500
+        id S1727509AbgCBX5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:31 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384731"
+   d="scan'208";a="243384752"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for EPT in VMX code
-Date:   Mon,  2 Mar 2020 15:56:39 -0800
-Message-Id: <20200302235709.27467-37-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 43/66] KVM: x86: Use KVM cpu caps to mark CR4.LA57 as not-reserved
+Date:   Mon,  2 Mar 2020 15:56:46 -0800
+Message-Id: <20200302235709.27467-44-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,47 +49,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the clearing of the GBPAGE CPUID bit into VMX to eliminate an
-instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
-pattern in the common CPUID handling code, and to pave the way toward
-eliminating ->get_lpage_level().
+Add accessor(s) for KVM cpu caps and use said accessor to detect
+hardware support for LA57 instead of manually querying CPUID.
+
+Note, the explicit conversion to bool via '!!' in kvm_cpu_cap_has() is
+technically unnecessary, but it gives people a warm fuzzy feeling.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c   | 3 +--
- arch/x86/kvm/vmx/vmx.c | 2 ++
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/cpuid.h | 13 +++++++++++++
+ arch/x86/kvm/x86.c   |  2 +-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 84b9a488a443..aacfd6af774a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -416,8 +416,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 	int r, i, max_idx;
- 	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
- #ifdef CONFIG_X86_64
--	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
--				? F(GBPAGES) : 0;
-+	unsigned f_gbpages = F(GBPAGES);
- 	unsigned f_lm = F(LM);
- #else
- 	unsigned f_gbpages = 0;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1a4ac20797a4..131f4b88d307 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7145,6 +7145,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- 	case 0x80000001:
- 		if (!cpu_has_vmx_rdtscp())
- 			cpuid_entry_clear(entry, X86_FEATURE_RDTSCP);
-+		if (enable_ept && !cpu_has_vmx_ept_1g_page())
-+			cpuid_entry_clear(entry, X86_FEATURE_GBPAGES);
- 		break;
- 	default:
- 		break;
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index b5155b8b4897..68c31d76e045 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -273,6 +273,19 @@ static __always_inline void kvm_cpu_cap_set(unsigned int x86_feature)
+ 	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
+ }
+ 
++static __always_inline u32 kvm_cpu_cap_get(unsigned int x86_feature)
++{
++	unsigned int x86_leaf = x86_feature / 32;
++
++	reverse_cpuid_check(x86_leaf);
++	return kvm_cpu_caps[x86_leaf] & __feature_bit(x86_feature);
++}
++
++static __always_inline bool kvm_cpu_cap_has(unsigned int x86_feature)
++{
++	return !!kvm_cpu_cap_get(x86_feature);
++}
++
+ static __always_inline void kvm_cpu_cap_check_and_set(unsigned int x86_feature)
+ {
+ 	if (boot_cpu_has(x86_feature))
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b032fd144073..400d65125e91 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -910,7 +910,7 @@ static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
+ {
+ 	u64 reserved_bits = __cr4_reserved_bits(cpu_has, c);
+ 
+-	if (cpuid_ecx(0x7) & feature_bit(LA57))
++	if (kvm_cpu_cap_has(X86_FEATURE_LA57))
+ 		reserved_bits &= ~X86_CR4_LA57;
+ 
+ 	if (kvm_x86_ops->umip_emulated())
 -- 
 2.24.1
 
