@@ -2,116 +2,145 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F6CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA90724697
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741F424697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCBCRh (ORCPT
+        id S1726838AbgCBCRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 21:17:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgCBCRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 21:17:37 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A2824697;
-        Mon,  2 Mar 2020 02:17:36 +0000 (UTC)
-Date:   Sun, 1 Mar 2020 21:17:33 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Question about enabling trave_events on module load
-Message-ID: <20200301211733.26949f4a@oasis.local.home>
-In-Reply-To: <8107a684-3ade-2457-28e4-c7e29ab1b1f5@intel.com>
-References: <8107a684-3ade-2457-28e4-c7e29ab1b1f5@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 1 Mar 2020 21:17:38 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60200 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726695AbgCBCRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 21:17:38 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 489E9EE228E2F0D26E70;
+        Mon,  2 Mar 2020 10:17:36 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
+ 10:17:29 +0800
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     Scott Wood <oss@buserror.net>, Daniel Axtens <dja@axtens.net>,
+        <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <me@tobin.cc>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+ <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+ <8171d326-5138-4f5c-cff6-ad3ee606f0c2@huawei.com>
+ <e8cd8f287934954cfa07dcf76ac73492e2d49a5b.camel@buserror.net>
+ <dd8db870-b607-3f74-d3bc-a8d9f33f9852@huawei.com>
+ <4c0e7fec63dbc7b91fa6c24692c73c256c131f51.camel@buserror.net>
+ <188971ed-f1c4-39b3-c07e-89cc593d88d7@huawei.com>
+ <530c49dfd97c811dc53ffc78c594d7133f7eb1e9.camel@buserror.net>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <35e6c660-3896-bdb8-45f3-c1504aa2171f@huawei.com>
+Date:   Mon, 2 Mar 2020 10:17:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <530c49dfd97c811dc53ffc78c594d7133f7eb1e9.camel@buserror.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 20:16:54 +0100
-Cezary Rojewski <cezary.rojewski@intel.com> wrote:
 
-> Hello Steven,
+
+在 2020/3/1 6:54, Scott Wood 写道:
+> On Sat, 2020-02-29 at 15:27 +0800, Jason Yan wrote:
+>>
+>> 在 2020/2/29 12:28, Scott Wood 写道:
+>>> On Fri, 2020-02-28 at 14:47 +0800, Jason Yan wrote:
+>>>>
+>>>> 在 2020/2/28 13:53, Scott Wood 写道:
+>>>>>
+>>>>> I don't see any debug setting for %pK (or %p) to always print the
+>>>>> actual
+>>>>> address (closest is kptr_restrict=1 but that only works in certain
+>>>>> contexts)... from looking at the code it seems it hashes even if kaslr
+>>>>> is
+>>>>> entirely disabled?  Or am I missing something?
+>>>>>
+>>>>
+>>>> Yes, %pK (or %p) always hashes whether kaslr is disabled or not. So if
+>>>> we want the real value of the address, we cannot use it. But if you only
+>>>> want to distinguish if two pointers are the same, it's ok.
+>>>
+>>> Am I the only one that finds this a bit crazy?  If you want to lock a
+>>> system
+>>> down then fine, but why wage war on debugging even when there's no
+>>> randomization going on?  Comparing two pointers for equality is not always
+>>> adequate.
+>>>
+>>
+>> AFAIK, %p hashing is only exist because of many legacy address printings
+>> and force who really want the raw values to switch to %px or even %lx.
+>> It's not the opposite of debugging. Raw address printing is not
+>> forbidden, only people need to estimate the risk of adrdress leaks.
 > 
-> I bet that is not the first time said question is asked - that's for 
-> sure - but I failed to find a method for solving the issue, that is: not 
-> missing a single trace from the moment given module is loaded. Maybe I'm 
-> missing something or documentation wasn't clear enough and that's why 
-> I'm here.
+> Yes, but I don't see any format specifier to switch to that will hash in a
+> randomized production environment, but not in a debug or other non-randomized
+> environment which seems like the ideal default for most debug output.
 > 
-> If I am, please point to towards the right direction. Then you can slap 
-> me for not reading the documentation carefully.
+
+Sorry I have no idea why there is no format specifier considered for 
+switching of randomized or non-randomized environment. May they think 
+that raw address should not leak in non-randomized environment too. May 
+be Kees or Tobin can answer this question.
+
+Kees? Tobin?
+
+>>
+>> Turnning to %p may not be a good idea in this situation. So
+>> for the REG logs printed when dumping stack, we can disable it when
+>> KASLR is open. For the REG logs in other places like show_regs(), only
+>> privileged can trigger it, and they are not combind with a symbol, so
+>> I think it's ok to keep them.
+>>
+>> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+>> index fad50db9dcf2..659c51f0739a 100644
+>> --- a/arch/powerpc/kernel/process.c
+>> +++ b/arch/powerpc/kernel/process.c
+>> @@ -2068,7 +2068,10 @@ void show_stack(struct task_struct *tsk, unsigned
+>> long *stack)
+>>                   newsp = stack[0];
+>>                   ip = stack[STACK_FRAME_LR_SAVE];
+>>                   if (!firstframe || ip != lr) {
+>> -                       printk("["REG"] ["REG"] %pS", sp, ip, (void *)ip);
+>> +                       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+>> +                               printk("%pS", (void *)ip);
+>> +                       else
+>> +                               printk("["REG"] ["REG"] %pS", sp, ip,
+>> (void *)ip);
 > 
-> "trace_event=" cmdline option seems to target built-in tracepoints 
-> _only_ so ain't much of a help to me. After digging the past for some 
-> time, I've found a very promising thread:
-> 	tracing: Enable tracepoints via module parameters
-> 	https://lore.kernel.org/patchwork/patch/240185/
-
-I find this email extremely amusing. Just the day before (Thursday), I
-was trying to clean out my INBOX (it had emails back from 2008!) and I
-came across this very thread, and said to myself. "Hmm, I wonder if I
-should push this again?". What a coincidence that the next day, someone
-would email me about that thread after 9 years!
-
+> This doesn't deal with "nokaslr" on the kernel command line.  It also doesn't
+> seem like something that every callsite should have to opencode, versus having
+> an appropriate format specifier behaves as I described above (and I still
+> don't see why that format specifier should not be "%p").
 > 
-> Sadly, I wasn't able to find _that_ solution (or anything similar for 
-> that matter) implemented into the kernel.
 
-That's because it was dropped and forgotten about :-(  I left it in my
-INBOX to remind myself to bring it back, but that didn't work out as
-well as I expected, as my INBOX turned into more of a graveyard than a
-TODO list.
+Actually I still do not understand why we should print the raw value 
+here. When KALLSYMS is enabled we have symbol name  and  offset like 
+put_cred_rcu+0x108/0x110, and when KALLSYMS is disabled we have the raw 
+address.
 
-> 
-> So far, the only option I came with was separating traces into a 
-> built-in piece that declares all events upfront so "trace_event=" option 
-> has something to hook into. Said piece is of course made of a standard 
-> trace header file filled with macro usage and a .c file with handful of 
-> EXPORT_TRACEPOINT_SYMBOL(s).
-> 
-> While that solution could suffice, localization is the problem here - if 
-> a tree my module is built in is configured via -m, the built-in piece 
-
-I'm unfamiliar with "-m", what does that do?
-
-> won't expose symbols at all and 'make' will leave me with bunch of 
-> "ERROR: <symbol> undefined" for every module my traces were used in. To 
-> fix the problem, I've relocated my trace .c file to /kernel/trace/. 
-> Finally it compiles and works as intended..
-
-Well, obviously (as you state below), that's not an answer.
-
-> 
-> Not really satisfying, though. While there are some examples of 
-> subsystems keeping their trace .c in /kernel/trace (e.g.: 
-> power-traces.c), I don't believe that place is open for _every single 
-> driver_ to dump their trace sources into.
-> 
-> If indeed traces cannot be enabled on module load, then this is a gap.
-> While not everyone looked satisfied in the 9year old thread, I believe 
-> having the gap closed is important - and userspace can always be 
-> improved upon as time passes.
+> -Scott
 > 
 > 
-> Thank you in advance for your input and time.
+> 
+> .
+> 
 
-I think your email confirmed to me that I need to push this thread
-again.
-
-Thanks for reaching out!
-
--- Steve
