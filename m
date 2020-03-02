@@ -2,120 +2,109 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48520C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47A3C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 149A9246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B67246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:28:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WB1cvaKO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kgn+3P9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgCBI0T (ORCPT
+        id S1727115AbgCBI2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:26:19 -0500
-Received: from mail-vi1eur05on2088.outbound.protection.outlook.com ([40.107.21.88]:55521
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726887AbgCBI0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:26:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XZqDuuo7gB01O6obsL7YYZcL9LBcnBt/9JMLkd7MXzDubGXzGhFkxKt0tYAdmNwie/MbRY9LW/xNDLikQZnKwJszzvGjd30xN19/XA3BDj7DqtRUPbbur0MblXht/5loH2prIus91Etj0XvgB9clxLKLtwJDo/FF0YzH3KFlyvg6LEBOb07iWb+UzBluyNy/PJ91JbhjT4htmlqwZkrCzRcncCN2HGbUG3WWRwYoGoFglbK94JqhZqMjKVHRCK3NPmJHWfNardWxeKRy1FTnxdJ1TI10Eyt804OiULfoHAeVWVoPNO3Hh/DMASvle78PSCVlA0hnlQqhdpQJG/hprA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5ACdaGopONiBvmA8JYS9jezNfrXgF5XQcoM8cnnkrY=;
- b=j0Qi4VkHgltbCEcnVdnlqDtR64YLv6CLlK4/NOW+wT+0SEz276sGULyv9SEozRXlG+apDvJuN7K2/ARUUJpVsyVG2DnjvjNgQvKGPS3qEt3mcinCaTFv8ulF06ytTurk2u9d/FfsFFNYoaY0CipqfKRgu1PTDq0edByMA5ZI82DD/nrKDx/HO9MLwJ0Z14IJVJurUSClotzrJrhDrSa0JPKKaDV+pH1nlhd3KcmM4o5WIpDiG4fCAuZ2zhyEMeUraPErlkLR1BuNNC0LLm8f5tbXzJNxPdmjkGqCdNuVfGj0W/082dl+WUL4+K/iY8W5CqCq0CV6v5D0PjQ0N5mYAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5ACdaGopONiBvmA8JYS9jezNfrXgF5XQcoM8cnnkrY=;
- b=WB1cvaKOgi+O9VRBeYsBQNXeG5v1xLhxKTClBvZbskVMovOk7M1UJupn6Ct/xt9Gi6+tEYqko9brOJgJasBxM6NwHI0OI2jWHAbKgrpaKNu/JVUjqhBM9s/ddXUwArsOwXGhP/NEOGPghnb7eanSkjCjROU2+apmDJpHDQKd8z4=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3786.eurprd04.prod.outlook.com (52.134.71.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.14; Mon, 2 Mar 2020 08:26:14 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 08:26:14 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2] thermal: imx_thermal: Use __maybe_unused instead of
- CONFIG_PM_SLEEP
-Thread-Topic: [PATCH V2] thermal: imx_thermal: Use __maybe_unused instead of
- CONFIG_PM_SLEEP
-Thread-Index: AQHV8GgP/M8Ol/PK50WikUZ0uCvNYqg08kkAgAAFMJA=
-Date:   Mon, 2 Mar 2020 08:26:14 +0000
-Message-ID: <DB3PR0402MB3916DC28A21BE0B9B8BFFC25F5E70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1583135410-7496-1-git-send-email-Anson.Huang@nxp.com>
- <20200302080700.ubnboqklhbva7bas@pengutronix.de>
-In-Reply-To: <20200302080700.ubnboqklhbva7bas@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4c595519-b6f0-4511-c5ab-08d7be835f2e
-x-ms-traffictypediagnostic: DB3PR0402MB3786:|DB3PR0402MB3786:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB378604E6D3D981CE6F836E37F5E70@DB3PR0402MB3786.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(199004)(189003)(7416002)(71200400001)(4326008)(5660300002)(86362001)(76116006)(66946007)(66476007)(66556008)(64756008)(478600001)(8676002)(316002)(66446008)(81156014)(81166006)(54906003)(6916009)(55016002)(9686003)(2906002)(8936002)(6506007)(26005)(52536014)(4744005)(186003)(33656002)(44832011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3786;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oTmnKuzFuwxyLBVDL6G3ejZz0WGu7nTc80oVRdJnoMIBAAM+yEWKm9nvml1mYA4O1C2CeLbXjhMxgjNgXl9kCev6bAkgkC6iPf+y9oi9vRZ8RgoarjauzfPK3RRYDS4npTF5vwN+j1QUZlrVVt554IFayGYU6RCC989fIDtbmnopTzCzOuYX1Ucw2sE9RL6avpr7gOsn9U24rE7zS4/AtKhhU0HFaVr41gyKWYJgAZSv9pfpdiKmSZ1veR9ZqEV6J+b5jQAi1u6sEK7olnNiHR0D99ukk8WFGaIMGsY3USTmwtlabzak5+GxCFR3LJ6T7vLKQlrA4RE2TdJ2p3uedj+7sc6KJfnmALyO+Ei/jtNc4PNQDeThOlCp4meBvYfdq4XnewIg1Q+pugKsWoMLyUfVpdUWqrMgFD0QOg56EOBKhWBzgB5jqWkROTOjdGVS
-x-ms-exchange-antispam-messagedata: zM95ygmJhx3kQZNrdWtQkTsNyNcYVafYIvb80zP01qvp+dC1CfwnjDkckfxQxgfePqeitpuniOWO+BTbuOZF4iE8mY/T75voQJaXlAs/UQ2e1bDblILfTpH9U+IjfhwBux6YuBxz8EHL1lDY3cLcKA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 2 Mar 2020 03:28:39 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39464 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgCBI2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:28:39 -0500
+Received: by mail-lj1-f195.google.com with SMTP id o15so10707451ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:28:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=gI/JDL1Wx8nFohMqc9CK4+V7cJXPQia3eW5lIJu+x/Y=;
+        b=Kgn+3P9O/U+faU0qvawFHExSGZwH8rhtL71T7+Sbn0N8eVh9D2i3h8NjoYL6fqg/rs
+         6KRhlGZFMAO+Tl5zx/GImTAUYx68AkHdoysf6pk+2VN+Cqwf8iUU25a+Zt24oIJM2GNZ
+         SUAh09yhezJuVyONzHTmbuFIsR2AJwy1S2T2DnEpSzpwHAMCVMW2562+8aTg/ynP++GR
+         Ro6BEyj4t6q9y/zJJBhYcgg+6NtMxu4mF3telGibEMvbNpTC+Y0iCy73wzITJyWoT1RZ
+         SDTujyqjXwCjyCB1yNp8CWDxbq8+iM10m+5j9ZkiI8O8yxr5dU/7eoNRWT3to8VuSIPD
+         rDmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=gI/JDL1Wx8nFohMqc9CK4+V7cJXPQia3eW5lIJu+x/Y=;
+        b=HknHzKUG+VDq4jVT5k6/AS1LxQdwpaVLgcugf5tuZDx2tlIXP9BrOIK2t83imJF1zr
+         Oa1MNjhlPskoc+zcstb4qSFpsLLl6ueQnAvUfoE2uNToebOx43jVCoyB1SvExGCM7hGy
+         BZRK0vJIkP6RlyTbn6aUeMAG78mpvnXG9+JYUy/Nx630dVtxCU1fSfEayw8PWtfQT+e/
+         QGh7TmhRkAgrBKFHjvlU/uG+R9R42QS7DP5KyUdFNHoaQFWW8hqrCxPE4qwjnOfUJjAx
+         K+mYmT+8w96LkZKzmOVNWT+/Jd6bfmcztmUtjTTRo37AMm/8DSj5d3gshPk0t7re7IFb
+         P5sw==
+X-Gm-Message-State: ANhLgQ3Xj1xfr/wPG8Yijy76E+eqfmyoswrUeHleZEtqeq2IkGebyZSN
+        V/miDz4u9g9oJEClBXBEULFqsUlSjfWw8bZcseKj/w==
+X-Google-Smtp-Source: ADFU+vsFmGtvm64OwRrbUe6sxD91S6yku24dp48uac8AWEk1QrZr4l3dD1lXGsN5/IrIRBsbogGWJMcp1iuT0aE6huI=
+X-Received: by 2002:a2e:8e70:: with SMTP id t16mr10884152ljk.73.1583137716931;
+ Mon, 02 Mar 2020 00:28:36 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c595519-b6f0-4511-c5ab-08d7be835f2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 08:26:14.1819
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QeaFaIicIQnmJgt7/Th0Rkp7akHLhV+2bWzMJbCfGAxsb9O630qtHy9zJikihbMPeda7iqBlgg7i93IP9XJgGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3786
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 2 Mar 2020 13:58:26 +0530
+Message-ID: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+Subject: Linux-next-20200302: arm64 build failed
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        rppt@linux.ibm.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>, suzuki.poulose@arm.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFV3ZQ0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMl0gdGhlcm1hbDogaW14X3RoZXJt
-YWw6IFVzZSBfX21heWJlX3VudXNlZCBpbnN0ZWFkDQo+IG9mIENPTkZJR19QTV9TTEVFUA0KPiAN
-Cj4gT24gTW9uLCBNYXIgMDIsIDIwMjAgYXQgMDM6NTA6MTBQTSArMDgwMCwgQW5zb24gSHVhbmcg
-d3JvdGU6DQo+ID4gVXNlIF9fbWF5YmVfdW51c2VkIGZvciBwb3dlciBtYW5hZ2VtZW50IHJlbGF0
-ZWQgZnVuY3Rpb25zIGluc3RlYWQgb2YNCj4gPiAjaWYgQ09ORklHX1BNX1NMRUVQIHRvIHNpbXBs
-aWZ5IHRoZSBjb2RlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29u
-Lkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1Lmts
-ZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQo+IA0KPiBJTUhPIHRyYW5zbGF0aW5nIG15ICJv
-dGhlcndpc2UgbG9va3MgZmluZSIgaW4gYSAiUmV2aWV3ZWQtYnkiIGlzIGEgYml0IGJvbGQuDQo+
-IFBsZWFzZSBkb24ndCBhc3N1bWUgdGhpcy4NCg0KT0ssIHdpbGwga2VlcCBpdCBpbiBtaW5kIG5l
-eHQgdGltZSwgdGhhbmtzLg0KDQpBbnNvbg0K
+Linux-Next 20200302 arm64 build failed due to below errors,
+Suspecting patch causing this build break.
+
+87d900aef3e2  arm/arm64: add support for folded p4d page tables
+
+Error log,
+-------------
+arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+include/linux/compiler.h:284:1: error: incompatible type for argument
+1 of 'p4d_page_paddr'
+ ({         \
+ ^
+arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+'__phys_to_virt'
+ #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+                                             ^
+arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+ #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+                                          ^~~~
+include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+ #define READ_ONCE(x) __READ_ONCE(x, 1)
+                      ^~~~~~~~~~~
+arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+ #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
++ pud_index(addr) * sizeof(pud_t))
+                                                    ^~~~~~~~~
+arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+'pud_offset_phys'
+ #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+                                               ^~~~~~~~~~~~~~~
+arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+   pudp = pud_offset(pgdp, addr);
+          ^~~~~~~~~~
+
+ref:
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=juno,label=docker-lkft/716/consoleText
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
