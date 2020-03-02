@@ -2,91 +2,144 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3F1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2045720848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A9A20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2+CtWcv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bk5FPeMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgCBPXc (ORCPT
+        id S1727367AbgCBPXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:23:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24413 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726751AbgCBPXc (ORCPT
+        Mon, 2 Mar 2020 10:23:52 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33534 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:23:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583162611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QnN+iIj+lJ/C1dzRk6vOrtrA8A6rdXY2O4R067Olucc=;
-        b=h2+CtWcv6Pi6aeAcAbNRvRjbpJQBGBzNAEVNSV6WrGKPR+dbhisi9kZGKLxmHqKsM4S5Zb
-        0bF0jw7PpKKSp6IGOkDgFgVGUPCOYJTJGvixvIqKqLt53ZcROVqouQwVGpmNCjjh/f0MhH
-        PwiieKrAyrAFNamivaoOdA5l1ANl6zU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-HUcrpoOwNeSKqK0Ek5dKSg-1; Mon, 02 Mar 2020 10:23:29 -0500
-X-MC-Unique: HUcrpoOwNeSKqK0Ek5dKSg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6464101FC6B;
-        Mon,  2 Mar 2020 15:23:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 077B18D553;
-        Mon,  2 Mar 2020 15:23:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200302151021.x5mm54jtoukg4tdk@yavin>
-References: <20200302151021.x5mm54jtoukg4tdk@yavin> <20200302143546.srzk3rnh4o6s76a7@wittgenstein> <20200302115239.pcxvej3szmricxzu@wittgenstein> <96563.1582901612@warthog.procyon.org.uk> <20200228152427.rv3crd7akwdhta2r@wittgenstein> <87h7z7ngd4.fsf@oldenburg2.str.redhat.com> <848282.1583159228@warthog.procyon.org.uk> <888183.1583160603@warthog.procyon.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     dhowells@redhat.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fweimer@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+        Mon, 2 Mar 2020 10:23:52 -0500
+Received: by mail-lj1-f193.google.com with SMTP id f13so3354144ljp.0;
+        Mon, 02 Mar 2020 07:23:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MaY5BjX4U0fw7Jc2pnXPLi9P/wkj0pbZKNkb4xe1iTs=;
+        b=bk5FPeMujjrQIxwztnaeLzsDAZ8hSzf0Ur2Sd5Rw1+OOI8XgxcXlq+757qMIi2IAfI
+         nmWvRjOLNdTo33+iN/ChsCkkrQdanwlIaGkYx8eybYWlJWGveRI++Cxj8sLMItESn5FW
+         Aid01MknW03NDPOT0aeQqJ2W6WcMzHp/ynkNO2ZqXvWbkIkLhL0iH9vm5yzFhhJgXXvI
+         Nmf6l9jp6250rlbm9i3TC0VZXV42/oqMink55w8ULqAtaoC3AJ/FoB60CaC7rPA0Ec6Y
+         JHHFePn4gf5db2aVw6txSwhuLb2pDvcBwqz8u8wlkQHiTYtVR75nzBWIGN175nT0LM01
+         0eMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MaY5BjX4U0fw7Jc2pnXPLi9P/wkj0pbZKNkb4xe1iTs=;
+        b=lNsszS4WJu7Fw7VHBYI3F5uQke8iN9aaG3txDbSTUdipvfkPWjCMQZIbWTF2WhAIXK
+         TBp1YL1mkEngsIRQZ1NEa7btyWNfUWTwLg0wbt9FgxewaZwR6F4vT7x8APmmI2GHLZGw
+         CA05huwFKM9cGDbWpuNLMR6PXnZT7hXKY1d9LYY24MLrJHgBK3JwjGE+rU3/tcQUEO/h
+         anAsAPjhmJ0AdaI8EgaXfLUkPjvCnzWAUrI7LI1n4DVizRnkCS8LlZ/SFW43H4FsBhEg
+         zYxE3GVef5KKdy4dbhX66+hMhLILl9YyS9+uJ6DLvSAMfYDicloKsnz+mwaUHWT4XFgL
+         eqYg==
+X-Gm-Message-State: ANhLgQ3svJ3J/RzOzBYQVeskrToesslpe1p/w6mJhhBoC4sm4RjW5cpq
+        kYTUsaqMvd4eYI7k2xuizBY36WRdSvI=
+X-Google-Smtp-Source: ADFU+vui28YnTdYfhFBZf4D3JtQhqKy7pmfetRgJ6cQjX3HFesG9cY/4EccMZdh/OEVowcaEndAbtQ==
+X-Received: by 2002:a2e:b54a:: with SMTP id a10mr12277954ljn.47.1583162627814;
+        Mon, 02 Mar 2020 07:23:47 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id z9sm10226873lfq.48.2020.03.02.07.23.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:23:47 -0800 (PST)
+Subject: Re: linux-next: build failure after merge of the keys tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200302113737.7c3fdee0@canb.auug.org.au>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <4bbc60e7-ae6e-fc83-4cc1-6229e8dc01ac@gmail.com>
+Date:   Mon, 2 Mar 2020 18:23:46 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <927227.1583162604.1@warthog.procyon.org.uk>
-Date:   Mon, 02 Mar 2020 15:23:24 +0000
-Message-ID: <927228.1583162604@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200302113737.7c3fdee0@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aleksa Sarai <cyphar@cyphar.com> wrote:
+On 3/2/2020 3:37 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the keys tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
 
-> My counter-argument is that most people actually want
-> RESOLVE_NO_SYMLINKS (as evidenced by the countless symlink-related
-> security bugs -- many of which used O_NOFOLLOW incorrectly), it just
-> wasn't available before Linux 5.6.
+Acked-by: Pavel Begunkov <asml.silence@gmail.com>
+Thanks
 
-I would quibble as to whether they actually want this in all situations.
-There are some in which the difference in behaviour will conceivably break
-things - though that's more the case for things like stat(), statx(), fsinfo()
-and getxattr() where you might want to be able to query a specific symlink
-than for openat2() where you almost always want to follow it (save O_PATH |
-O_NOFOLLOW).
+> fs/io_uring.c: In function 'io_splice_punt':
+> fs/io_uring.c:2473:6: error: too few arguments to function 'get_pipe_info'
+>  2473 |  if (get_pipe_info(file))
+>       |      ^~~~~~~~~~~~~
+> In file included from include/linux/splice.h:12,
+>                  from include/linux/skbuff.h:36,
+>                  from include/linux/if_ether.h:19,
+>                  from include/uapi/linux/ethtool.h:19,
+>                  from include/linux/ethtool.h:18,
+>                  from include/linux/netdevice.h:37,
+>                  from include/net/sock.h:46,
+>                  from fs/io_uring.c:64:
+> include/linux/pipe_fs_i.h:267:25: note: declared here
+>   267 | struct pipe_inode_info *get_pipe_info(struct file *file, bool for_splice);
+>       |                         ^~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   549d46d3827d ("pipe: Add general notification queue support")
+> 
+> interacting with commit
+> 
+>   52b31bc9aabc ("io_uring: add splice(2) support")
+> 
+> from the block tree.
+> 
+> I have added the following merge fix patch.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 2 Mar 2020 11:27:27 +1100
+> Subject: [PATCH] io_uring: fix up for get_pipe_info() API change
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  fs/io_uring.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index fb8fe0bd5e18..8cdd3870cd4e 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2470,7 +2470,7 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+>  
+>  static bool io_splice_punt(struct file *file)
+>  {
+> -	if (get_pipe_info(file))
+> +	if (get_pipe_info(file, true))
+>  		return false;
+>  	if (!io_file_supports_async(file))
+>  		return true;
+> 
 
-However, if you're okay with me adding, say, RESOLVE_NO_TERMINAL_SYMLINK and
-RESOLVE_NO_TERMINAL_AUTOMOUNT, I can use these flags.
-
-I don't want to have to allow both RESOLVE_* and AT_*.
-
-David
-
+-- 
+Pavel Begunkov
