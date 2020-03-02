@@ -2,146 +2,79 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6F246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BDA246B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgCBJaL (ORCPT
+        id S1727384AbgCBJbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:30:11 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2484 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgCBJaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:30:11 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id D8351E6D818B170870C1;
-        Mon,  2 Mar 2020 09:30:09 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 2 Mar 2020 09:30:09 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 2 Mar 2020
- 09:30:09 +0000
-Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
- buswidth
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <andriy.shevchenko@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linuxarm@huawei.com>,
-        <linux-spi@vger.kernel.org>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
- <1582903131-160033-2-git-send-email-john.garry@huawei.com>
- <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <07bb2213-5543-0ef0-9585-be83026c1199@huawei.com>
-Date:   Mon, 2 Mar 2020 09:30:08 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 2 Mar 2020 04:31:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:49997 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCBJbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:31:15 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8hPs-0008Gm-Cd; Mon, 02 Mar 2020 09:31:12 +0000
+Date:   Mon, 2 Mar 2020 10:31:11 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Hongbo Yao <yaohongbo@huawei.com>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, chenzhou10@huawei.com, rjw@rjwysocki.net,
+        pavel@ucw.cz
+Subject: Re: [PATCH -next] drivers/base/power: fix build error without SYSFS
+Message-ID: <20200302093111.eavix4e65otpudb5@wittgenstein>
+References: <20200302092918.40163-1-yaohongbo@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200302092918.40163-1-yaohongbo@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/03/2020 10:04, Sergei Shtylyov wrote:
-> Hello!
+On Mon, Mar 02, 2020 at 05:29:18PM +0800, Hongbo Yao wrote:
+> If CONFIG_SYSFS=n, the following error is seen while building 
+> drivers/base/power/sysfs.c:
 > 
-
-Hi Sergei,
-
-> On 28.02.2020 18:18, John Garry wrote:
+> drivers/base/power/sysfs.c: In function dpm_sysfs_change_owner:
+> drivers/base/power/sysfs.c:708:44: error: passing argument 2 of
+> sysfs_group_change_owner from incompatible pointer type
+> [-Werror=incompatible-pointer-types]
+>   rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+>                                             ^
+> In file included from ./include/linux/kobject.h:20:0,
+>                  from ./include/linux/device.h:17,
+>                  from drivers/base/power/sysfs.c:3:
+> ./include/linux/sysfs.h:564:19: note: expected const struct
+> attribute_group ** but argument is of type const struct attribute_group *
 > 
->> Currently ACPI firmware description for a SPI device does not have any
->> method to describe the data buswidth on the board.
->>
->> So even through the controller and device may support higher modes than
->            ^^^^^^^
->     Though?
+> dpm_sysfs_change_owner() should only used when CONFIG_SYSFS is
+> defined.
 > 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 3b52fc5d7876 ("drivers/base/power: add dpm_sysfs_change_owner()")
+> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
 
-right
+Thanks for catching this!
+An organizational comment first. The series this belongs to is sitting
+in Dave Miller's net-next tree. So this fix needs to go through his tree
+to. This just means, you should Cc the netdev kernel mailing list and
+append make the subject
+[PATCH net-next] drivers/base/power: fix build error without SYSFS
+.
 
->> standard SPI, it cannot be assumed that the board does - as such, that
->> device is limited to standard SPI in such a circumstance.
->>
->> As a workaround, allow the controller driver supply buswidth override 
->> bits,
->> which are used inform the core code that the controller driver knows the
->> buswidth supported on that board for that device.
->>
->> A host controller driver might know this info from DMI tables, for 
->> example.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>   drivers/spi/spi.c       | 4 +++-
->>   include/linux/spi/spi.h | 3 +++
->>   2 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
->> index 38b4c78df506..292f26807b41 100644
->> --- a/drivers/spi/spi.c
->> +++ b/drivers/spi/spi.c
->> @@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct 
->> spi_controller *ctlr)
->>       spi->dev.bus = &spi_bus_type;
->>       spi->dev.release = spidev_release;
->>       spi->cs_gpio = -ENOENT;
->> +    spi->mode = ctlr->buswidth_override_bits;
->>       spin_lock_init(&spi->statistics.lock);
->> @@ -2181,9 +2182,10 @@ static acpi_status 
->> acpi_register_spi_device(struct spi_controller *ctlr,
->>           return AE_NO_MEMORY;
->>       }
->> +
-> 
->     What for?
+But about the fix. It strikes me as odd that this fails in pm_attr_group
+since dpm_sysfs_add() doesn't but also unconditionally accesses pm_attr_group.
 
-slipped through the net
-
-> 
->>       ACPI_COMPANION_SET(&spi->dev, adev);
->>       spi->max_speed_hz    = lookup.max_speed_hz;
->> -    spi->mode        = lookup.mode;
->> +    spi->mode        |= lookup.mode;
->>       spi->irq        = lookup.irq;
->>       spi->bits_per_word    = lookup.bits_per_word;
->>       spi->chip_select    = lookup.chip_select;
-> [...]
-
-TBH, I did not think that this series would be applied since I tagged it 
-as RFC, hence the typos which would have been caught. Indeed, this also 
-exposes an issue with enabling quad SPI for a spansion SPI NOR part, 
-which I need to debug now in the SPI NOR driver.
-
-Hi Mark,
-
-Do you want me to do anything about the above superfluous newline?
-
-Thanks,
-John
-
-> 
-> MBR, Sergei
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> .
-
+Christian
