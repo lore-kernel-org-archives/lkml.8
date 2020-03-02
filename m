@@ -2,240 +2,133 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA65FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996C3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E98222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693022465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eqQqUAdf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XveByeXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCBPJG (ORCPT
+        id S1727422AbgCBPJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:09:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46460 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727077AbgCBPJG (ORCPT
+        Mon, 2 Mar 2020 10:09:20 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41954 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgCBPJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:09:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583161745;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fPKPYyNpDnqAVBKIrF12LFsdNoQG0+cDCDMMSa5vHXw=;
-        b=eqQqUAdf8vKbz9DXVsnv8FReSA6tjXYiVTdgW4KzTA1V5D0vu3mN11wlKFHq98jt00JTbe
-        Tsv0RrRRibEQO/bAj058LZgxvcH+ItO3TKFKoNHU0mZ57YnwlkfZcsLU7HhjT67IfVvpCj
-        JMEtH/HmgXqld6duwbL5/LhTwNlbzPU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-CxihSTk0Ow6aP3RruQn1qw-1; Mon, 02 Mar 2020 10:09:01 -0500
-X-MC-Unique: CxihSTk0Ow6aP3RruQn1qw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54D488017DF;
-        Mon,  2 Mar 2020 15:08:57 +0000 (UTC)
-Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 125FC5C1B0;
-        Mon,  2 Mar 2020 15:08:49 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 16:08:47 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v3 6/8] perf/tools: Enhance JSON/metric infrastructure to
- handle "?"
-Message-ID: <20200302150847.GB259142@krava>
-References: <20200229094159.25573-1-kjain@linux.ibm.com>
- <20200229094159.25573-7-kjain@linux.ibm.com>
+        Mon, 2 Mar 2020 10:09:19 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l21so126658qtr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:09:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=+apLJWjExJ8VxuyjBvnXQYOfQQ8hl3/eahyCF3FSk1E=;
+        b=XveByeXagNMtDfoeCVfKPZG8GU9ry2ifaOzGK1rI3omR6I79KNRQ0UGmMh0D/YGvRR
+         MaJsfi2GNKxEyiQh18k+jMY0yj/X1D2eqDhZwb9IuRKjs4GeVQicV/5HfNbiOZh7oBO+
+         yw45vyG7tf7mPQYZJTNBH1yQrpLPvcqY3KxrKc3YlqDZW2Cph4fEDYSVuJ872p0xL787
+         3ftkQ9J9Lg2M6KMc/0NSoLBdopkX2ADzSIc3UnDlrEOMB136MRrCFURECJCWWVGSQ58C
+         neOlfO6Fkbq9AzArEPb+PeDkEPlZiVBMQON4Ro6BqzDsyFKppl2vhVXWikeH1bTpnlGx
+         fgbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=+apLJWjExJ8VxuyjBvnXQYOfQQ8hl3/eahyCF3FSk1E=;
+        b=JG6mZGc51BGHyuSzuM9Sdj6PNuKQKcAe9T53YfWdTO2OtV1C7JFTQ5PtAcTDuK5NiW
+         lHL/cxvaNdl5Bbd4ERMSk0+6UWhENGhtAZyOT5eSDZTbHcXrFTK5qjm9sizNh14uULgM
+         niQ8XhTPajtEWqCStP4FkUEQw9/z3Bd+5pmIvuJSVCmTxwOpaHcJ98bQswUUEwfmahvr
+         uxvQaADmuTytXVtbIlfjeW2O3JiPQWHMr/xlFRFOKO9ylA1LLUWVS3h3HLn/xdDbu2bM
+         a2pL04DIui65RDjsxrGwgS6sUYVpBEA8uoOdPbcq3mEBAHP68337cXZYEB7vWtSM+Tge
+         GkvQ==
+X-Gm-Message-State: ANhLgQ365Arsf0MdB7mD6aVmGFQtzHMB4/ViaPUrz8fCVHiGqT+7qu0u
+        5AoAy7+smY4uqTvACrTIfULQJsp3GtA=
+X-Google-Smtp-Source: ADFU+vviJh0ACosKvaEPyG2THPSoekQINBEK8CkLUfOqGD7cBsDsvfQbKkKnuBnkj47pvsVUXOuTQw==
+X-Received: by 2002:ac8:f95:: with SMTP id b21mr197270qtk.50.1583161757229;
+        Mon, 02 Mar 2020 07:09:17 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id l20sm47401qtu.22.2020.03.02.07.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 07:09:16 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 80655403AD; Mon,  2 Mar 2020 12:09:14 -0300 (-03)
+Date:   Mon, 2 Mar 2020 12:09:14 -0300
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] perf bench: Share 'start', 'end', 'runtime' global vars
+Message-ID: <20200302150914.GB28183@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229094159.25573-7-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 03:11:57PM +0530, Kajol Jain wrote:
+Hi,
 
-SNIP
+	Noticed with gcc 10 (fedora rawhide) that those variables were
+not being declared as static, so end up with:
 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 02aee946b6c1..f629828cc0de 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -399,6 +399,11 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
->  	strlist__delete(metriclist);
->  }
->  
-> +int __weak arch_get_runtimeparam(void)
-> +{
-> +	return 1;
-> +}
-> +
->  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->  				   struct list_head *group_list)
->  {
-> @@ -419,52 +424,77 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->  			continue;
->  		if (match_metric(pe->metric_group, metric) ||
->  		    match_metric(pe->metric_name, metric)) {
-> -			const char **ids;
-> -			int idnum;
-> -			struct egroup *eg;
-> -			bool no_group = false;
-> +			int k, count;
+ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/bench/perf-in.o] Error 1
 
-two things in here.. there's already ack-ed patchset from Kan Liang:
-  Support metric group constraint
-    >[PATCH V2 2/5] perf metricgroup: Factor out metricgroup__add_metric_weak_group()
+	Just prefixing them with 'extern' in all but one (futex-hash.c)
+seems to be enough, ok?
 
-that's changing this place, so you might want to synchronize with that
+- Arnaldo
 
-
-> +
-> +			if (strstr(pe->metric_expr, "?"))
-> +				count = arch_get_runtimeparam();
-> +			else
-> +				count = 1;
-> +
-> +			/* This loop is added to create multiple
-> +			 * events depend on count value and add
-> +			 * those events to group_list.
-> +			 */
-> +			for (k = 0; k < count; k++) {
-> +				const char **ids;
-> +				int idnum;
-> +				struct egroup *eg;
-> +				bool no_group = false;
-> +				char value[PATH_MAX];
-> +
-> +				pr_debug("metric expr %s for %s\n",
-> +					 pe->metric_expr, pe->metric_name);
-> +				expr__runtimeparam = k;
-
-the other thing is that I don't really follow what's going on in here
-
-you're setting expr__runtimeparam to the loop index,
-which you get from some arch related file
-
-we should do this in arch-specific way.. I think that Kan's change is
-already moving some bits into separate function and that should make
-all this more readable, but perhaps we might need more, so all the
-'repeating' code will be in a function
-
-please either separate this to arch code, or make it understandable
-for people from other archs ;-)
-
-jirka
-
-> +				if (expr__find_other(pe->metric_expr, NULL,
-> +						     &ids, &idnum) < 0)
-> +					continue;
-> +				if (events->len > 0)
-> +					strbuf_addf(events, ",");
-> +				for (j = 0; j < idnum; j++) {
-> +					pr_debug("found event %s\n", ids[j]);
-> +					/*
-> +					 * Duration time maps to a software
-> +					 * event and can make groups not count.
-> +					 * Always use it outside a group.
-> +					 */
-> +					if (!strcmp(ids[j], "duration_time")) {
-> +						if (j > 0)
-> +							strbuf_addf(events,
-> +								    "}:W,");
-> +						strbuf_addf(events,
-> +							    "duration_time");
-> +						no_group = true;
-> +						continue;
-> +					}
-> +					strbuf_addf(events, "%s%s",
-> +						    j == 0 || no_group ? "{" :
-> +						    ",", ids[j]);
-> +					no_group = false;
-> +				}
-> +				if (!no_group)
-> +					strbuf_addf(events, "}:W");
->  
-> -			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-> +				eg = malloc(sizeof(struct egroup));
-> +				if (!eg) {
-> +					ret = -ENOMEM;
-> +					break;
-> +				}
-> +				eg->ids = ids;
-> +				eg->idnum = idnum;
->  
-> -			if (expr__find_other(pe->metric_expr,
-> -					     NULL, &ids, &idnum) < 0)
-> -				continue;
-> -			if (events->len > 0)
-> -				strbuf_addf(events, ",");
-> -			for (j = 0; j < idnum; j++) {
-> -				pr_debug("found event %s\n", ids[j]);
-> -				/*
-> -				 * Duration time maps to a software event and can make
-> -				 * groups not count. Always use it outside a
-> -				 * group.
-> -				 */
-> -				if (!strcmp(ids[j], "duration_time")) {
-> -					if (j > 0)
-> -						strbuf_addf(events, "}:W,");
-> -					strbuf_addf(events, "duration_time");
-> -					no_group = true;
-> -					continue;
-> +				if (strstr(pe->metric_expr, "?")) {
-> +					sprintf(value, "%s%c%d",
-> +						pe->metric_name, '_', k);
-> +				} else {
-> +					strcpy(value, pe->metric_name);
->  				}
-> -				strbuf_addf(events, "%s%s",
-> -					j == 0 || no_group ? "{" : ",",
-> -					ids[j]);
-> -				no_group = false;
-> -			}
-> -			if (!no_group)
-> -				strbuf_addf(events, "}:W");
->  
-> -			eg = malloc(sizeof(struct egroup));
-> -			if (!eg) {
-> -				ret = -ENOMEM;
-> -				break;
-> +				eg->metric_name = strdup(value);
-> +				eg->metric_expr = pe->metric_expr;
-> +				eg->metric_unit = pe->unit;
-> +				list_add_tail(&eg->nd, group_list);
-> +				ret = 0;
->  			}
-> -			eg->ids = ids;
-> -			eg->idnum = idnum;
-> -			eg->metric_name = pe->metric_name;
-> -			eg->metric_expr = pe->metric_expr;
-> -			eg->metric_unit = pe->unit;
-> -			list_add_tail(&eg->nd, group_list);
-> -			ret = 0;
->  		}
->  	}
->  	return ret;
-
-SNIP
-
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index bb617e568841..8a7681fca8ab 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -35,7 +35,7 @@
+ 
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 8;
+-struct timeval start, end, runtime;
++extern struct timeval start, end, runtime;
+ static bool done, __verbose, randomize;
+ 
+ /*
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 7af694437f4e..170b96938275 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -90,7 +90,7 @@
+ 
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 8;
+-struct timeval start, end, runtime;
++extern struct timeval start, end, runtime;
+ static bool wdone, done, __verbose, randomize, nonblocking;
+ 
+ /*
+diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+index d0cae8125423..253ae62e618d 100644
+--- a/tools/perf/bench/futex-lock-pi.c
++++ b/tools/perf/bench/futex-lock-pi.c
+@@ -37,7 +37,7 @@ static bool silent = false, multi = false;
+ static bool done = false, fshared = false;
+ static unsigned int nthreads = 0;
+ static int futex_flag = 0;
+-struct timeval start, end, runtime;
++extern struct timeval start, end, runtime;
+ static pthread_mutex_t thread_lock;
+ static unsigned int threads_starting;
+ static struct stats throughput_stats;
