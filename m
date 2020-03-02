@@ -2,148 +2,160 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E270C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EEC3F2D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6A42468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DPbqMB03"
+	by mail.kernel.org (Postfix) with ESMTP id 68875246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583137062;
+	bh=4a4S5kJaWHjHlpmrc68T5FTFIJzAj8bHB4TYgHYD3iY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CGQ/QeVQ0dbV/90BMzwjHcVyEnLJVOrqmQlglIEiyb8Yww94d83aKU6yLsUwN7njn
+	 Qr4bUdlIMNrxhF+ExxEdhGujKioxXgEdovIMPg1roagSomS6jvALkrC29XRLhdtzkV
+	 Tz0+NnYqurW7la3Ia8Ggkbp51UpZz41quau10Piw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgCBIRd (ORCPT
+        id S1727328AbgCBIQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:17:33 -0500
-Received: from mail-am6eur05on2060.outbound.protection.outlook.com ([40.107.22.60]:6016
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727648AbgCBIR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:17:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oMl5xZiZDYxmA9IER81/Ms3V13HSmPtm7+J5gmZr2l9lX8x2jRYpuz9uSfKXcImyeJxSntvJGuGFNV1GLywSjwmozDT1KRKmPTwLc56qNzeLdu99SVZb62tGThWwmeE/TW0dhbIdebrAJZymJWuWb8FKC2hsavR9wlUXwJe8L8EvQqhrcsvAj7GrYfwr75oFX33+2EWQqMp3zCS5cnO7TS0fnlaGoiI781qX7Ivbr8K9GybHf9roMFeMgeNbxLUyRS0xm6cTHmnPXgXEBgYWsHiXqF1OSTJZ+7STbioLgya7g54bh2KeE5HOcag5LtoqGVRUc0nSZoyE/YBsEYdG/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AacDFEEEq0oC3BZUdYs1DCJEO11Omnm4+cgCsxyXKSE=;
- b=GlgAMomynL558sVhD2Ufx6fRJFYAhalN1U94nHG1zYwEX4kU5czXOmqLJ2oWSP2QoukXZt/S8Km+qQtfxRUBFGmqdgGP6jpLBB09Zoro+CJ/ZWLa8wXCIJvA4Z0JNSdndme8eBzDRO0MLmvvh9QpHu1a1u+4MNsvltv2TSKZIMrCO27fd5oRGrgPcri6uIaGcVQ0vOM7DcexoDu5OJt2girZkTqY0babFSm1/AJLy9jZWE9bV6tW4C8WJ+N7UqzNlm0So8vy+ZEZHIjIq490k6e88fMUYbc4WS8ner3sm6Fhg0fbf8FF6a69NWz9lbVFQb2ZFhHXohQd6PBFs3Q1YQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AacDFEEEq0oC3BZUdYs1DCJEO11Omnm4+cgCsxyXKSE=;
- b=DPbqMB03XLFUXU2SWGzHoFBL4fTxoW6bi1KpyPsvN3sm9MwnoSzKWLhJ3YiKIE5mtbNoWuze8WZIJO4R+aNKmZx5puGcO1SWtMEeFUetE36Rlc95E465tMyq3TfP6LgzNi87GI4ud4D10HymGULQH1CuzPSJnCGV3LkkrbvBa8Q=
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
- AM0PR0402MB3556.eurprd04.prod.outlook.com (52.133.43.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Mon, 2 Mar 2020 08:17:23 +0000
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::dc6e:5cc4:dd53:3088]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::dc6e:5cc4:dd53:3088%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 08:17:23 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     =?iso-8859-2?Q?Andr=E9_Draszik?= <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Rob Herring <robh@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to
- pwrkey
-Thread-Topic: [PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to
- pwrkey
-Thread-Index: AQHV6/ZSv/DVqZ+iC02h9uEXERTtvg==
-Date:   Mon, 2 Mar 2020 08:17:23 +0000
-Message-ID: <AM0PR0402MB347685AB405373EBED8A386498E70@AM0PR0402MB3476.eurprd04.prod.outlook.com>
-References: <20200225161201.1975-1-git@andred.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 197ad76b-7fb0-462a-d815-08d7be822305
-x-ms-traffictypediagnostic: AM0PR0402MB3556:|AM0PR0402MB3556:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0402MB35568B27391383708C495DF398E70@AM0PR0402MB3556.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1002;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(189003)(199004)(33656002)(55016002)(9686003)(110136005)(54906003)(26005)(2906002)(186003)(7416002)(76116006)(7696005)(6506007)(71200400001)(64756008)(66446008)(5660300002)(4326008)(66946007)(66556008)(52536014)(66476007)(53546011)(91956017)(478600001)(316002)(4744005)(44832011)(8676002)(81166006)(81156014)(8936002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3556;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fdDP+iDFFTIcvN3C7M08xoNNbI7FaLi7LgTwdR+GubC33BqJ8gNWByo6NOUgw/ftqja6AZiEDhwfLTwatPcU10n0k/4pOUcyT7Vt0pNe5IEUtL92zC2ULgI2fXmFGqZNmLCvnECwi1s/XqdjuQSr04hp5Z1MGS1LeXIkZDP4dI9PDYN2SMAm9erDCYv73+kZaocG4/IfUsVJRAYOiXDCjcmeI3CwMqdJrQfy0ZrylkDGmaiDNw8NPEiVfy/dVByrtGjcToqrJRZm5jqkIm53iZamidKXtjeAJagWbs5F62wyI21cHnRcTyut8L9HwF4HH0+boqE/iqElwzVcX4rNdn0XsBtClyAbqu1wJGsmO8A/rhgR6odgQpjhWn4NA5tZeZvgFHAPITrnC9Fq1U1ILMgbTTVvzPZqICeaHq9aWRONaMHajvYktiVPOEJ9DgqE
-x-ms-exchange-antispam-messagedata: gHr8CuxSNKT77vOO5YAwFQMyghbVCWFmCVdFtyyk7RcnRnWbTxuQaeNn3G91bAGS353LPiiN6ItIXXU15KzW6qoyKww6hI7f0nfeifACuKJXwrK2M/OUxMj+6z5ooEyn/AX5fqihNCsZZEigZll8rA==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 03:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgCBIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:16:20 -0500
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09237246BE;
+        Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583136979;
+        bh=4a4S5kJaWHjHlpmrc68T5FTFIJzAj8bHB4TYgHYD3iY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BK9G92s16vEfR45VhMUPyHZnzmSf9It/HN6BriRW01xol4KQp99jyDIArgmC9J6Gs
+         VZaOSFginfpEiMuuSuK7Gnq1L5UigoN1BkDG991V1aGgIRDG2c7L7T1YtPxshQjiXz
+         Dn3fgyTbf34ySeKvvvWc3sszVLvuALtPxdx/csLY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1j8gFN-0003xI-7p; Mon, 02 Mar 2020 09:16:17 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 09/42] docs: scsi: convert bfa.txt to ReST
+Date:   Mon,  2 Mar 2020 09:15:42 +0100
+Message-Id: <6660d0f83ddae2ab8efb31c39f9c220fc132e9d4.1583136624.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
+References: <cover.1583136624.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 197ad76b-7fb0-462a-d815-08d7be822305
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 08:17:23.7746
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TsPH7FCxkyNqZQfbkzm3KAOp74O3WPGU7MmpSdv6rBvbyRfN8Aeln4d3KepL6ihBV9yNScyqlpZX2ausndAchg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3556
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/2020 6:12 PM, Andr=E9 Draszik wrote:=0A=
-> On i.MX7 and i.MX8M, the SNVS requires a clock. This is similar to the=0A=
-> clock bound to the SNVS RTC node, but if the SNVS RTC driver isn't=0A=
-> enabled, then SNVS doesn't work, and as such the pwrkey driver doesn't=0A=
-> work (i.e. hangs the kernel, as the clock isn't enabled).=0A=
-> =0A=
-> Also see commit ec2a844ef7c1=0A=
-> ("ARM: dts: imx7s: add snvs rtc clock")=0A=
-> for a similar fix.=0A=
-> =0A=
-> Signed-off-by: Andr=E9 Draszik <git@andred.net>=0A=
-> Acked-by: Rob Herring <robh@kernel.org>=0A=
-> Cc: "Horia Geant=E3" <horia.geanta@nxp.com>=0A=
-> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: "David S. Miller" <davem@davemloft.net>=0A=
-> Cc: Rob Herring <robh+dt@kernel.org>=0A=
-> Cc: Mark Rutland <mark.rutland@arm.com>=0A=
-> Cc: Shawn Guo <shawnguo@kernel.org>=0A=
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>=0A=
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>=0A=
-> Cc: Fabio Estevam <festevam@gmail.com>=0A=
-> Cc: NXP Linux Team <linux-imx@nxp.com>=0A=
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>=0A=
-> Cc: Anson Huang <Anson.Huang@nxp.com>=0A=
-> Cc: Robin Gong <yibin.gong@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: devicetree@vger.kernel.org=0A=
-> Cc: linux-arm-kernel@lists.infradead.org=0A=
-> Cc: linux-input@vger.kernel.org=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/scsi/{bfa.txt => bfa.rst} | 28 +++++++++++++++++--------
+ Documentation/scsi/index.rst            |  1 +
+ 2 files changed, 20 insertions(+), 9 deletions(-)
+ rename Documentation/scsi/{bfa.txt => bfa.rst} (72%)
+
+diff --git a/Documentation/scsi/bfa.txt b/Documentation/scsi/bfa.rst
+similarity index 72%
+rename from Documentation/scsi/bfa.txt
+rename to Documentation/scsi/bfa.rst
+index 3cc4d80d6092..3abc0411857d 100644
+--- a/Documentation/scsi/bfa.txt
++++ b/Documentation/scsi/bfa.rst
+@@ -1,5 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================================
+ Linux driver for Brocade FC/FCOE adapters
+-
++=========================================
+ 
+ Supported Hardware
+ ------------------
+@@ -7,8 +10,9 @@ Supported Hardware
+ bfa 3.0.2.2 driver supports all Brocade FC/FCOE adapters. Below is a list of
+ adapter models with corresponding PCIIDs.
+ 
+-	PCIID		  	Model
+-
++	===================	===========================================
++	PCIID			Model
++	===================	===========================================
+ 	1657:0013:1657:0014	425 4Gbps dual port FC HBA
+ 	1657:0013:1657:0014	825 8Gbps PCIe dual port FC HBA
+ 	1657:0013:103c:1742	HP 82B 8Gbps PCIedual port FC HBA
+@@ -26,6 +30,7 @@ adapter models with corresponding PCIIDs.
+ 
+ 	1657:0022:1657:0024	1860 16Gbps FC HBA
+ 	1657:0022:1657:0022	1860 10Gbps CNA - FCOE
++	===================	===========================================
+ 
+ 
+ Firmware download
+@@ -37,9 +42,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
+ 
+ and then click following respective util package link:
+ 
+-	Version			Link
+-
++	=========	=======================================================
++	Version		Link
++	=========	=======================================================
+ 	v3.0.0.0	Linux Adapter Firmware package for RHEL 6.2, SLES 11SP2
++	=========	=======================================================
+ 
+ 
+ Configuration & Management utility download
+@@ -52,9 +59,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
+ 
+ and then click following respective util package link
+ 
+-	Version			Link
+-
++	=========	=======================================================
++	Version		Link
++	=========	=======================================================
+ 	v3.0.2.0	Linux Adapter Firmware package for RHEL 6.2, SLES 11SP2
++	=========	=======================================================
+ 
+ 
+ Documentation
+@@ -69,10 +78,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
+ and use the following inbox and out-of-box driver version mapping to find
+ the corresponding documentation:
+ 
++	=============		==================
+ 	Inbox Version		Out-of-box Version
+-
++	=============		==================
+ 	v3.0.2.2		v3.0.0.0
+-
++	=============		==================
+ 
+ Support
+ -------
+diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
+index c0b66763515f..1e37227f3536 100644
+--- a/Documentation/scsi/index.rst
++++ b/Documentation/scsi/index.rst
+@@ -13,5 +13,6 @@ Linux SCSI Subsystem
+    aha152x
+    aic79xx
+    aic7xxx
++   bfa
+ 
+    scsi_transport_srp/figures
+-- 
+2.21.1
+
