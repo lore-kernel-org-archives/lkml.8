@@ -2,120 +2,82 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57202C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126A5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EDF214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583159155;
-	bh=TIo+veEs16hslvlH82AiTf1xcl3jofNIs60au7Ay0M0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TbAqulXGBBTvtLoojMUlDE2sHOa4I2aGxDSelLaauCFCLhjj2/PoPw7yOVTFuHH+3
-	 b6+AZI7/Ec9oG+lcxbmFdmtgC12j12qHYXRThymbg/K1jdcr5N5Jf8sHUkiJK6Nse4
-	 tvg3EPWz29i6iDIbVuv8PokhKOXMXMKxxqU45a7I=
+	by mail.kernel.org (Postfix) with ESMTP id D82C0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYkFLO6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgCBOZy (ORCPT
+        id S1727181AbgCBO11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:25:54 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:46326 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbgCBOZx (ORCPT
+        Mon, 2 Mar 2020 09:27:27 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33524 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727075AbgCBO11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:25:53 -0500
-Received: by mail-wr1-f48.google.com with SMTP id j7so12749099wrp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:25:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=91i00x+r3ObU17/Jn02LmIVt8253x20peMqSjQ89ikI=;
-        b=uP9ETzMp5LSht6suRXGaPQBDmuKMfa42FlUlgv2DAi77X5ZjtiQ9/mE3L+YAhpKJx8
-         fh+TgBtTR9xv5GVWSZSb04hVxppKC8sa+nwhGRldsO3Wb7piMkfRqC3g1FjBDN6IDezT
-         1Q+f4K6/HGKVfZfu+mtWa8U8ZFTVk8QCD6XptNDjNZ8XbAaLuVfsWtlvYWrFDCRS/pcY
-         YEN2XQ/Z8YmCQQuWPgtybiFlVB3/M1JQ0r+qEArlT83AU1C3q6BJ2YjVCf1y0FcuCEfc
-         hBBxMvHFciJ89p92YvfHqc0KhAqNh3XV7YpxHg4iO5/kfRUqofFqmCpqKrkPgxWXGHss
-         RAug==
-X-Gm-Message-State: APjAAAXN0Y83Ai6f84GCScSFYsiuMwOslSJeq2eiEkMoiqFOCK5vv70J
-        APcyLg/dKid1QBobmhSpTrQ=
-X-Google-Smtp-Source: APXvYqwdAQL3VnZNwjPeETAbUL+bLXtL8v4BUHFJcIm/NTpDVwnZDrNB/j65t032OBVc8SsE4bQMYg==
-X-Received: by 2002:a5d:5286:: with SMTP id c6mr16208977wrv.418.1583159151203;
-        Mon, 02 Mar 2020 06:25:51 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id q12sm30065989wrg.71.2020.03.02.06.25.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 06:25:50 -0800 (PST)
-Date:   Mon, 2 Mar 2020 15:25:49 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200302142549.GO4380@dhcp22.suse.cz>
-References: <20200228033819.3857058-1-ying.huang@intel.com>
- <20200228034248.GE29971@bombadil.infradead.org>
- <87a7538977.fsf@yhuang-dev.intel.com>
- <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228095048.GK3771@dhcp22.suse.cz>
- <87d09u7sm2.fsf@yhuang-dev.intel.com>
+        Mon, 2 Mar 2020 09:27:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583159246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3+UBgX7eoIkK/t5w+2bDxE2KMKopb4wrJcspZOaATZ0=;
+        b=FYkFLO6yOEtrELHtwzPZxfN051bsIKYVIo8f6FXEQLbSPwt9XE/Of51g0xfuK7YFNX9QMb
+        ucUSwXsh7qNJKb0cnqFNsrOEksUO4p0ujTCZMW9W5kAJ7Wt/MabQCZo3QszaTV7kgdUTsr
+        WsjY+ehtuo/wmO9BRg+tERE5kGOXpP4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-72-_RitG97wNkGAfE8aopeJaA-1; Mon, 02 Mar 2020 09:27:12 -0500
+X-MC-Unique: _RitG97wNkGAfE8aopeJaA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDC02107ACCC;
+        Mon,  2 Mar 2020 14:27:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D890C5D9C9;
+        Mon,  2 Mar 2020 14:27:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200302115239.pcxvej3szmricxzu@wittgenstein>
+References: <20200302115239.pcxvej3szmricxzu@wittgenstein> <96563.1582901612@warthog.procyon.org.uk> <20200228152427.rv3crd7akwdhta2r@wittgenstein> <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     dhowells@redhat.com, Florian Weimer <fweimer@redhat.com>,
+        linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
+        metze@samba.org, torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d09u7sm2.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <848281.1583159228.1@warthog.procyon.org.uk>
+Date:   Mon, 02 Mar 2020 14:27:08 +0000
+Message-ID: <848282.1583159228@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 02-03-20 22:12:53, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
-[...]
-> > And MADV_FREE pages are a kind of cache as well. If the target node is
-> > short on memory then those will be reclaimed as a cache so a
-> > pro-active freeing sounds counter productive as you do not have any
-> > idea whether that cache is going to be used in future. In other words
-> > you are not going to free a clean page cache if you want to use that
-> > memory as a migration target right? So you should make a clear case
-> > about why MADV_FREE cache is less important than the clean page cache
-> > and ideally have a good justification backed by real workloads.
+Christian Brauner <christian.brauner@ubuntu.com> wrote:
+
+> > AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
+> > so it's relatively little protection.
 > 
-> Clean page cache still have valid contents, while clean MADV_FREE pages
-> has no valid contents.  So penalty of discarding the clean page cache is
-> reading from disk, while the penalty of discarding clean MADV_FREE pages
-> is just page allocation and zeroing.
+> So this is partially why I think it's at least worth considerings: the
+> new RESOLVE_NO_SYMLINKS flag does block all symlink resolution, not just
+> for the last component in contrast to AT_SYMLINK_NOFOLLOW. This is
+> 278121417a72d87fb29dd8c48801f80821e8f75a
 
-And "just page allocation and zeroing" overhead is the primary
-motivation to keep the page in memory. It is a decision of the workload
-to use MADV_FREE because chances are that this will speed things up. All
-that with a contract that the memory goes away under memory pressure so
-with a good workload/memory sizing you do not really lose that
-optimization. Now you want to make decision on behalf of the consumer of
-the MADV_FREE memory.
+That sounds like a potentially significant UAPI change.  What will that break?
 
-> I understand that MADV_FREE is another kind of cache and has its value.
-> But in the original implementation, during migration, we have already
-> freed the original "cache", then reallocate the cache elsewhere and
-> copy.  This appears more like all pages are populated in mmap() always.
-> I know there's value to populate all pages in mmap(), but does that need
-> to be done always by default?
+David
 
-It is not. You have to explicitly request MAP_POPULATE to initialize
-mmap.
-
--- 
-Michal Hocko
-SUSE Labs
