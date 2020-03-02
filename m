@@ -7,104 +7,104 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F507C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A79AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377BF217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626D024673
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JkXpl/Eu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UCgv4M8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCBPl4 (ORCPT
+        id S1727420AbgCBPmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:41:56 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55535 "EHLO
+        Mon, 2 Mar 2020 10:42:02 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55565 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgCBPlz (ORCPT
+        with ESMTP id S1727195AbgCBPmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:41:55 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154153euoutp01d3e67720750db424d58653aa64aba50a~4hwKFQqAp1219112191euoutp01T
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:41:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200302154153euoutp01d3e67720750db424d58653aa64aba50a~4hwKFQqAp1219112191euoutp01T
+        Mon, 2 Mar 2020 10:42:01 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154159euoutp0119b0c2eb08978a4c4df6499250d1f579~4hwPai0Ey1322613226euoutp01s
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:41:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200302154159euoutp0119b0c2eb08978a4c4df6499250d1f579~4hwPai0Ey1322613226euoutp01s
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583163713;
-        bh=T+Qagezjk3GYC6IUfr1MpSBM/7xUpvBGzVFpeZNM0w0=;
+        s=mail20170921; t=1583163719;
+        bh=9iwDuNks6TWsXPgWeaK7Fe2TdtajOJI4hQcS6THLJxU=;
         h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=JkXpl/Eu5lZj+OYEtH2ku1U5JNLDx0A/JEpbFYZ1iDOoUdyHvFRfivTAmv8hbQMGL
-         wEWX1VkPAFonqVYqFunbOyqjc/nEmJlAMXvgLaj0qBeY6wMmozU4cgjfla1WYMW+/S
-         JzHfyc2DtxXJ/MuE7pwiNlgE+/9lwCPdMpnK5wq4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=UCgv4M8T7uL6/i5RRGSZjxuwLhPtE2/dg1lo6lCjTletcigEzGts6GY/7+28CV3xu
+         56R3ZNbrDwc8UXcXlWglTeQQtkptFCAwKVSDdZEs2vL/EA2g2omtsmim3HsK2iZ/7k
+         v8CrYz35fgKvp5MjQkeqHSFVpFIjIa6p4xhxMbq4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200302154153eucas1p28485feaccb7dd7009abd29877092a216~4hwJ-aznj2199521995eucas1p22;
-        Mon,  2 Mar 2020 15:41:53 +0000 (GMT)
+        20200302154159eucas1p2d9570bf48851e5602c57e7661dc7999e~4hwPOiKLJ1937719377eucas1p2D;
+        Mon,  2 Mar 2020 15:41:59 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id EC.7D.61286.1492D5E5; Mon,  2
-        Mar 2020 15:41:53 +0000 (GMT)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 55.B3.60698.7492D5E5; Mon,  2
+        Mar 2020 15:41:59 +0000 (GMT)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154153eucas1p2db854c0f1a1b25e5b4c260379d7b6260~4hwJpbpvU1937719377eucas1p29;
-        Mon,  2 Mar 2020 15:41:53 +0000 (GMT)
+        20200302154158eucas1p2980ec38ee99c29f0f958dbd454af7a22~4hwOfh4j31937719377eucas1p2C;
+        Mon,  2 Mar 2020 15:41:58 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200302154153eusmtrp1cb5af2209331c6ae657320d037d5eec5~4hwJo89K22862728627eusmtrp1i;
-        Mon,  2 Mar 2020 15:41:53 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-80-5e5d2941bc52
+        20200302154158eusmtrp1b830c3bc924f8410a3566c61b115cc70~4hwOfBwOt2862728627eusmtrp1r;
+        Mon,  2 Mar 2020 15:41:58 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-1d-5e5d29473f97
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CC.00.08375.1492D5E5; Mon,  2
-        Mar 2020 15:41:53 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id DE.00.08375.6492D5E5; Mon,  2
+        Mar 2020 15:41:58 +0000 (GMT)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154153eusmtip2ecca85bcdc5c3287a022639fe2d18d62~4hwJO003y2174521745eusmtip2b;
-        Mon,  2 Mar 2020 15:41:52 +0000 (GMT)
+        20200302154158eusmtip25cfcdab877519a9dabeade0ed85dcd90~4hwOQeJlv2155721557eusmtip2i;
+        Mon,  2 Mar 2020 15:41:58 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/2] video: fbdev: w100fb: fix sparse warnings
+Subject: Re: [PATCH 2/2] video: fbdev: w100fb: add COMPILE_TEST support
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Message-ID: <41d71487-4479-2d7d-7fad-e25f01c939ec@samsung.com>
-Date:   Mon, 2 Mar 2020 16:41:52 +0100
+Message-ID: <cb3cf021-30a9-7255-5e33-1d4cf0265a1d@samsung.com>
+Date:   Mon, 2 Mar 2020 16:41:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200117185737.GB24508@ravnborg.org>
+In-Reply-To: <20200117185755.GC24508@ravnborg.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7djPc7qOmrFxBh0LdC2ufH3PZnGi7wOr
-        xeVdc9gsVvzcyujA4nG/+ziTx5JpV9k8Pm+SC2CO4rJJSc3JLEst0rdL4Mro2rGTpWAxS0X7
-        tHfMDYwnmLsYOTkkBEwklkx9y9rFyMUhJLCCUeL0tRVQzhdGifUvr7NAOJ8ZJZb+u8UK0/Li
-        wRN2iMRyRonzs/5AVb1llHh8txNsMJuAlcTE9lWMILawgJPEtyuTwbpFBJQljp+/BmYzCyRI
-        fLn5GayeV8BO4tCsu2BxFgEViRuT9rOB2KICERKfHhxmhagRlDg58wkLiM0pYCTxa909Jog5
-        4hK3nsyHsuUltr+dwwxykIRAN7tEc18jG8TZLhJfW/ewQ9jCEq+Ob4GyZSROT+5hgWhYxyjx
-        t+MFVPd2Ronlk/9BdVtL3Dn3C8jmAFqhKbF+lz5E2FFiTu9aFpCwhACfxI23ghBH8ElM2jad
-        GSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9gVJqF5LVZSN6ZheSdWQh7FzCyrGIUTy0tzk1PLTbM
-        Sy3XK07MLS7NS9dLzs/dxAhMKqf/Hf+0g/HrpaRDjAIcjEo8vAHMsXFCrIllxZW5hxglOJiV
-        RHh9OaPjhHhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamBc
-        3RfXfdayVFJIgy/n6+knc4Xz0pu97EIP5Kk/MSufJjtFKX7NJZNfVic5W3PSHuzVnDFxT4hk
-        B/dz/tt1jyRZ1dVOr+3kfbov67Jw6s6IL7cZX+2tP3pUZuX9tF99Ru4clqWnHNc8V39R3Rh5
-        61DzjvCvr39WRMfKKxta3dJeXld1RudahYESS3FGoqEWc1FxIgBy1G3nJgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xe7qOmrFxBp9viFpc+fqezeJE3wdW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djPc7rumrFxBkdmiFtc+fqezeJE3wdW
+        i8u75rBZrPi5ldGBxeN+93EmjyXTrrJ5fN4kF8AcxWWTkpqTWZZapG+XwJVxaddD9oJTzBVv
+        X6s2MDYwdzFyckgImEgc/vebpYuRi0NIYAWjxIol59khnC+MEh8vbGKGcD4zSrS0fmSDaXm+
+        4RgTRGI5o0TfkU9QzltGiW/bj7KDVLEJWElMbF/FCGILC7hLdC1dyQJiiwgoSxw/f40VxGYW
+        SJD4cvMz2CG8AnYSs868AKtnEVCRONAxBWybqECExKcHh1khagQlTs58AjaHU8BIoql1CQvE
+        HHGJW0/mM0HY8hLb386Beq6fXeLtqjgI20Wid84DJghbWOLV8S3sELaMxOnJPeAAkBBYxyjx
+        t+MFM4SznVFi+eR/UD9bS9w59wvI5gDaoCmxfpc+RNhRYtfWvewgYQkBPokbbwUhbuCTmLRt
+        OjNEmFeio00IolpNYsOyDWwwa7t2rmSewKg0C8lns5B8MwvJN7MQ9i5gZFnFKJ5aWpybnlps
+        nJdarlecmFtcmpeul5yfu4kRmFBO/zv+dQfjvj9JhxgFOBiVeHgDmGPjhFgTy4orcw8xSnAw
+        K4nw+nJGxwnxpiRWVqUW5ccXleakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXA
+        uO/2dLnNWck2pVa3PzSbPc5r/rv+vvSryzE9s4p3CpjsCZ8lbyOtLapTyOx67tISW2cVhxqL
+        LTk7pgbMC+ZRyHzpqbzxw/oTATHdRpIZRut2FO4J3aCTU2Q/XzGitaktvbvSge+FGOv+mkaV
+        r9cbc+rZsiO2/dm1ZqfljlzJlJmfV3W2enEpsRRnJBpqMRcVJwIAC0solyQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xe7pumrFxBvvOq1lc+fqezeJE3wdW
         i8u75rBZrPi5ldGBxeN+93EmjyXTrrJ5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRtWMnS8Filor2ae+YGxhPMHcxcnJICJhIvHjw
-        hB3EFhJYyijRfj+5i5EDKC4jcXx9GUSJsMSfa11sXYxcQCWvGSUmfT/NApJgE7CSmNi+ihHE
-        FhZwkvh2ZTIriC0ioCxx/Pw1MJtZIEFi0/2pUM27GCUObl7IBJLgFbCTODTrLlgRi4CKxI1J
-        +9lAbFGBCInDO2YxQtQISpyc+QRsGaeAkcSvdfeYIIaqS/yZd4kZwhaXuPVkPlRcXmL72znM
-        ExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjKBtx35u3sF4
-        aWPwIUYBDkYlHt4A5tg4IdbEsuLK3EOMEhzMSiK8vpzRcUK8KYmVValF+fFFpTmpxYcYTYGe
-        m8gsJZqcD4zuvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjALc
-        zMd934S4n5/m/mNzkodqu9buwrJjVVbBLM5nRJcJN0tk3/x16E9kvdWLpbHd7p4Z1/ma2Vnb
-        9L5mW3rdTygoZLtQV1zjZb62cv39A5NWlZX1bTzEvkJ7w1nL/y7TLV9z9sd1HguXc33JXnMo
-        kakmram+7x5f9ZtXFm9Ome45clurz+6/EktxRqKhFnNRcSIAeL93OrYCAAA=
-X-CMS-MailID: 20200302154153eucas1p2db854c0f1a1b25e5b4c260379d7b6260
+        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdxaddD9oJTzBVvX6s2MDYwdzFyckgImEg833CM
+        qYuRi0NIYCmjRMOBmaxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKPHx1wpWkASbgJXExPZVjCC2
+        sIC7RNfSlSwgtoiAssTx89fAapgFEiQ23Z8K1byLUaLr3z6wzbwCdhKzzrwAa2YRUJE40DGF
+        DcQWFYiQOLxjFiNEjaDEyZlPwIZyChhJNLUuYYEYqi7xZ94lZghbXOLWk/lMELa8xPa3c5gn
+        MArNQtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1yal66XnJ+7iREYQduO/dy8g/HS
+        xuBDjAIcjEo8vAHMsXFCrIllxZW5hxglOJiVRHh9OaPjhHhTEiurUovy44tKc1KLDzGaAj03
+        kVlKNDkfGN15JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYxbx+
+        ihvUt/xe88yR7/Qh2/MzNz25v2WeQfkeqekn5bdVl5++Y+jrdiHn63KRJdEL/i7qsePhCNxc
+        NPuRXCHTpNW2a/lW+CTOOnSMp9L7T15vjiX7Isev3XeSmCOmtc6ddID53g595yUb3BhCYnUu
+        zTs2h3/j2Y0SZ3bV2qy59evvv5mPRI935iuxFGckGmoxFxUnAgDZbuJHtgIAAA==
+X-CMS-MailID: 20200302154158eucas1p2980ec38ee99c29f0f958dbd454af7a22
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116145320eucas1p188ed7bed08623bc2c2ba6b863ff223d8
+X-RootMTR: 20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116145320eucas1p188ed7bed08623bc2c2ba6b863ff223d8
-References: <CGME20200116145320eucas1p188ed7bed08623bc2c2ba6b863ff223d8@eucas1p1.samsung.com>
-        <d438108a-e569-a14a-a9b1-3fefd88fcadc@samsung.com>
-        <20200117185737.GB24508@ravnborg.org>
+X-CMS-RootMailID: 20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad
+References: <CGME20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad@eucas1p1.samsung.com>
+        <a929db5e-d373-7b09-ae2b-efec227f7e85@samsung.com>
+        <20200117185755.GC24508@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -112,11 +112,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 1/17/20 7:57 PM, Sam Ravnborg wrote:
-> On Thu, Jan 16, 2020 at 03:53:20PM +0100, Bartlomiej Zolnierkiewicz wrote:
->> * Add missing __iomem annotations where needed.
->> * Make w100fb_probe() static.
->> * Return NULL pointer (instead of using plain integer) in
->>   w100_get_xtal_tabl().
+> On Thu, Jan 16, 2020 at 03:53:58PM +0100, Bartlomiej Zolnierkiewicz wrote:
+>> Add COMPILE_TEST support to w100fb driver for better compile
+>> testing coverage.
 >>
 >> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 > Acked-by: Sam Ravnborg <sam@ravnborg.org>
