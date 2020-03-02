@@ -2,200 +2,168 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8BCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAFCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0AD2080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA37217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583160742;
-	bh=FpLJgWkkh8fCmPgOKqDhlneGC4YvaWwoXzMAYLaCZFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kIShn+X/Ba2igN+Hp4E84SmL7nfW5CzyqKPRL3hXWmSdG/4nkm09XyNIJA1bic7d1
-	 9XX9nYyhYrPTdudN4qfTpa7bztpc1NYUy7b2ZiQT0G4rNRr3mgMB2YCoY9zY6Pu80x
-	 51t/08u3J9OMfy6dnMrAN6+FXA22tolNFdrfe8aA=
+	s=default; t=1583160801;
+	bh=1w9gTDD0mrerWDAhBZGXC4+5deyJLyj8xbrGt2brb1M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xdg1MZ3F03waa0ONd5UFAPfGTrk8l2KHU8f2k7i33lUy7CxhjWutzRfHbH7g3o6p6
+	 SJtt4LUpC6UPoxWdNmQSoBMR8gZ6OWlClaDdQ3pCakx4l1OlB6rarRMily4A1coa3D
+	 bSJp8fDP4wma3HT9B3DO7u3z42vpJ0SxOBs2R7gI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCBOwV (ORCPT
+        id S1727349AbgCBOxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:52:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 09:53:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgCBOwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:52:21 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727121AbgCBOxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:53:20 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE25C24682
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 14:52:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B702080C;
+        Mon,  2 Mar 2020 14:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583160740;
-        bh=FpLJgWkkh8fCmPgOKqDhlneGC4YvaWwoXzMAYLaCZFc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SGSSjUABSQVozTtC4IWs3ii/v+T7bjwhLiRSJ9WKhHMAbVymnYUgl6eLt2glMy+JQ
-         1GVbHa/nmCYdBBcKMYo2Qm4GRvgRJaFHR81rzUoCHnVmF2MSkIQPuVY4ezpIX40JYM
-         f4ynofaR4Q/5EBzsHz1lGGs/fus8RBXk16Fm644E=
-Received: by mail-wr1-f44.google.com with SMTP id v2so12870702wrp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:52:19 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0Ttt44pKSwYqTceAicFFHxmjasOYsgCTanWSJKIxRY1lOBWejd
-        kf2FrHDstkJ+b5sXWzbq+VP4yUwWORsyUe/UfimSeg==
-X-Google-Smtp-Source: ADFU+vuD/JTTM+IbJxK5SJVF+H1KyJRiVk8Ouz9HW+yomY1Ty4oAkjWVxkJixOQT9AmMZ6uSsXE+x/HFSCoPrWL29PI=
-X-Received: by 2002:a5d:6051:: with SMTP id j17mr2737207wrt.151.1583160738331;
- Mon, 02 Mar 2020 06:52:18 -0800 (PST)
+        s=default; t=1583160798;
+        bh=1w9gTDD0mrerWDAhBZGXC4+5deyJLyj8xbrGt2brb1M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vbwhZe/bLsp7NOTdfaVhIg+efxFdCJXjCBx2bckpQ3qaVSuNgaPyuipY86T6XKLqX
+         DOW1RIhCiMORXa1+yh/1bhqlm3O6V8hFAnkYx0EswUdqMs97/5Y36Y2eWBV0tHP8WC
+         KxF/fGryhEoQqyJOI147qTKoyO0TkR3UmSczIyxQ=
+Date:   Mon, 2 Mar 2020 15:53:12 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
+Message-ID: <20200302155312.62185b98@coco.lan>
+In-Reply-To: <20200302153039.0c4ff54f@collabora.com>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-6-ezequiel@collabora.com>
+        <20200302145746.3e94c1d1@coco.lan>
+        <20200302153039.0c4ff54f@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com> <1583160524.8544.91.camel@linux.ibm.com>
-In-Reply-To: <1583160524.8544.91.camel@linux.ibm.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 2 Mar 2020 15:52:07 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
-Message-ID: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
-Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
-> > Every time a new architecture defines the IMA architecture specific
-> > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> > include file needs to be updated. To avoid this "noise", this patch
-> > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> > the different architectures to select it.
-> >
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > Cc: Philipp Rudo <prudo@linux.ibm.com>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > ---
-> >  arch/powerpc/Kconfig           | 2 +-
-> >  arch/s390/Kconfig              | 1 +
-> >  arch/x86/Kconfig               | 1 +
-> >  include/linux/ima.h            | 3 +--
-> >  security/integrity/ima/Kconfig | 9 +++++++++
-> >  5 files changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > index 497b7d0b2d7e..b8ce1b995633 100644
-> > --- a/arch/powerpc/Kconfig
-> > +++ b/arch/powerpc/Kconfig
-> > @@ -246,6 +246,7 @@ config PPC
-> >       select SYSCTL_EXCEPTION_TRACE
-> >       select THREAD_INFO_IN_TASK
-> >       select VIRT_TO_BUS                      if !PPC64
-> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if PPC_SECURE_BOOT
-> >       #
-> >       # Please keep this list sorted alphabetically.
-> >       #
-> > @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
-> >       prompt "Enable secure boot support"
-> >       bool
-> >       depends on PPC_POWERNV
-> > -     depends on IMA_ARCH_POLICY
-> >       help
-> >         Systems with firmware secure boot enabled need to define security
-> >         policies to extend secure boot to the OS. This config allows a user
-> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> > index 8abe77536d9d..90ff3633ade6 100644
-> > --- a/arch/s390/Kconfig
-> > +++ b/arch/s390/Kconfig
-> > @@ -195,6 +195,7 @@ config S390
-> >       select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> >       select SWIOTLB
-> >       select GENERIC_ALLOCATOR
-> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >
-> >
-> >  config SCHED_OMIT_FRAME_POINTER
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index beea77046f9b..cafa66313fe2 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -230,6 +230,7 @@ config X86
-> >       select VIRT_TO_BUS
-> >       select X86_FEATURE_NAMES                if PROC_FS
-> >       select PROC_PID_ARCH_STATUS             if PROC_FS
-> > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
->
-> Not everyone is interested in enabling IMA or requiring IMA runtime
-> policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
-> still left up to the person building the kernel.  As a result, I'm
-> seeing the following warning, which is kind of cool.
->
-> WARNING: unmet direct dependencies detected for
-> IMA_SECURE_AND_OR_TRUSTED_BOOT
->   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
->   Selected by [y]:
->   - X86 [=y] && EFI [=y]
->
-> Ard, Michael, Martin, just making sure this type of warning is
-> acceptable before upstreaming this patch.  I would appreciate your
-> tags.
->
+Em Mon, 2 Mar 2020 15:30:39 +0100
+Boris Brezillon <boris.brezillon@collabora.com> escreveu:
 
-Ehm, no, warnings like these are not really acceptable. It means there
-is an inconsistency in the way the Kconfig dependencies are defined.
+> On Mon, 2 Mar 2020 14:57:46 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+>=20
+> > > +#define M_N(ctxidx, idc0_m, idc0_n, idc1_m, idc1_n,		\
+> > > +	    idc2_m, idc2_n, intra_m, intra_n)			\
+> > > +	[0][(ctxidx)] =3D {idc0_m, idc0_n},			\
+> > > +	[1][(ctxidx)] =3D {idc1_m, idc1_n},			\
+> > > +	[2][(ctxidx)] =3D {idc2_m, idc2_n},			\
+> > > +	[3][(ctxidx)] =3D {intra_m, intra_n}   =20
+> >=20
+> > Hmm... I can't even imagine what a macro named "M_N" would do.
+> > Please use a better name for it. =20
+>=20
+> Well, the meaning of those fields is explained in the spec, and the
+> name itself has been chosen so it's short enough to not have lines
+> exceeding 80 chars while still keeping the number of lines used for the
+> cabac_table[] definition acceptable. But, I'm open to any other
+> suggestion.
 
-Does this help:
+Well, code reviewers may not have the specs on their hands when
+reviewing patches :-)
 
-  select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+Keep 80 columns is something we desire, but not at the expense of
+making the code harder to maintain or understand. Yet, I suspect
+that increasing the name by a few extra bytes will still allow it to
+sit at the 80 columns space[1].
 
-?
+[1] This macro passes 9 parameters. If each parameter consumes 4 chars,
+    and they're preceded by a tab, that would mean 44 columns.
+
+Perhaps something like CABAC_ENTRY or even MN_VALUES would be better.
+
+>=20
+> >=20
+> > -
+> >=20
+> > With regards to the macro itself, at least for my eyes, it looked bad,
+> > from long-term maintenance PoV, to have a first argument (ctxidx) whose
+> > value is just a monotonic linearly-incremented counter. =20
+>=20
+> It's not, we have holes in the middle, hence the explicit indexing. I
+> also tried to have something as close as possible to the spec, so
+> people can easily see where it comes from.
+>=20
+> >=20
+> > I mean, the way it is, it sounds risky, as one might miss a number
+> > and one entire line of the array would be filled with zeros. =20
+>=20
+> That's exactly why I used explicit indexing: I want specific portions
+> of the table to be 0-filled :-).
+
+Ah, OK! Implementation makes sense then.
+>=20
+> >  =20
+> > > +
+> > > +/*
+> > > + * Constant CABAC table.
+> > > + * Built from the tables described in section '9.3.1.1 Initialisatio=
+n process
+> > > + * for context variables' of the H264 spec.
+> > > + */
+> > > +static const s8 rkvdec_h264_cabac_table[4][464][2] =3D {
+> > > +	/* Table 9-12 =E2=80=93 Values of variables m and n for ctxIdx from=
+ 0 to 10 */
+> > > +	M_N(0, 20, -15, 20, -15, 20, -15, 20, -15),   =20
+> >=20
+> > So, (maybe except if the ctxidx value has some real meaning),
+> > perhaps you could, instead, switch the array order at the tables,
+> > and get rid of ctxidx parameter for good, so the above code would
+> > be like: =20
+>=20
+> I can't switch the array order since the HW expects things to be
+> organized this way (that table is directly copied to a memory region
+> that's passed to the HW).
+>=20
+> >=20
+> > #define INIT_MN_PAIRS(idc0_m, idc0_n, idc1_m, idc1_n,	\
+> > 	       idc2_m, idc2_n, intra_m, intra_n)	\
+> > 	{						\
+> > 		[0] =3D {idc0_m, idc0_n},			\
+> > 		[1] =3D {idc1_m, idc1_n},			\
+> > 		[2] =3D {idc2_m, idc2_n},			\
+> > 		[3] =3D {intra_m, intra_n}		\
+> > 	},
+> >=20
+> > static const s8 rkvdec_h264_cabac_table[464][4][2] =3D {
+> > 	/* Table 9-12 =E2=80=93 Values of variables m and n for ctxIdx from 0 =
+to 10 */
+> > 	INIT_MN_PAIRS(20, -15, 20, -15, 20, -15, 20, -15),
+> > 	... =20
+>=20
 
 
->
-> >
-> >  config INSTRUCTION_DECODER
-> >       def_bool y
-> > diff --git a/include/linux/ima.h b/include/linux/ima.h
-> > index 1659217e9b60..aefe758f4466 100644
-> > --- a/include/linux/ima.h
-> > +++ b/include/linux/ima.h
-> > @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
-> >  extern void ima_add_kexec_buffer(struct kimage *image);
-> >  #endif
-> >
-> > -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-> > -     || defined(CONFIG_PPC_SECURE_BOOT)
-> > +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >  extern bool arch_ima_get_secureboot(void);
-> >  extern const char * const *arch_get_ima_policy(void);
-> >  #else
-> > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> > index 3f3ee4e2eb0d..d17972aa413a 100644
-> > --- a/security/integrity/ima/Kconfig
-> > +++ b/security/integrity/ima/Kconfig
-> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
-> >       depends on IMA_MEASURE_ASYMMETRIC_KEYS
-> >       depends on SYSTEM_TRUSTED_KEYRING
-> >       default y
-> > +
-> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > +     bool
-> > +     depends on IMA
-> > +     depends on IMA_ARCH_POLICY
-> > +     default n
-> > +     help
-> > +        This option is selected by architectures to enable secure and/or
-> > +        trusted boot based on IMA runtime policies.
->
->
->
->
+Thanks,
+Mauro
