@@ -2,105 +2,170 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1274C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3081EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CDD2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="co856hF4"
+	by mail.kernel.org (Postfix) with ESMTP id F0DC92187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583150978;
+	bh=/kKqSL1/BQ+dOVDuB+J6MXMNhp46sJ9EIoVg6zdqQ0k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Aw/zNOcxnqBayXRN5+uay2twaoOI5T/rim+b/WWZA1xhSwGv/HqjNOrxyxvxmEucg
+	 89gjR8vKfAXI8B39Fu/tySuEeT44dqp5gqx5dJFro1qIYHZ2EMwKMSxvp8ATPUXtGs
+	 Ags5KfmN5ognsPgFzNUe2xnAJhwZmAagIlNfSIuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgCBMJR (ORCPT
+        id S1725802AbgCBMJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:09:17 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57358 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727267AbgCBMJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:09:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583150956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SZ2xJwN1TAuj2eEmBgNnYZoxdDxugiWmVbQd23vU95o=;
-        b=co856hF4d2/7HQNUbxAtijQ+OJixYfN2FqCL/oGF4+fCsTlqD9JeWE/f8Yz6+Rgm4LEPxx
-        GzCFSWoVNNsSLoexWNGTWjpR012+xbFLWfRgjko0tX+DZWARL2+wK8rw1XEAJqyxqz1YVS
-        kjSBs5zQrexztZ1Nyh8h+tWlbWBvpwQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-ZYR_4tyyMimtrkww2b8zPw-1; Mon, 02 Mar 2020 07:09:12 -0500
-X-MC-Unique: ZYR_4tyyMimtrkww2b8zPw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 2 Mar 2020 07:09:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgCBMJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:09:36 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0ECFE1005510;
-        Mon,  2 Mar 2020 12:09:11 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDB495C1D6;
-        Mon,  2 Mar 2020 12:09:08 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-References: <96563.1582901612@warthog.procyon.org.uk>
-        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
-        <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
-        <20200302115239.pcxvej3szmricxzu@wittgenstein>
-Date:   Mon, 02 Mar 2020 13:09:06 +0100
-In-Reply-To: <20200302115239.pcxvej3szmricxzu@wittgenstein> (Christian
-        Brauner's message of "Mon, 2 Mar 2020 12:52:39 +0100")
-Message-ID: <8736arnel9.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63412173E;
+        Mon,  2 Mar 2020 12:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583150975;
+        bh=/kKqSL1/BQ+dOVDuB+J6MXMNhp46sJ9EIoVg6zdqQ0k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UnW9k+By/DJjzanJO2aiRSCSCFKWrDOefChvcbg6RBUFUzBw2gsqv1/BH1n5DulSX
+         qfg5Vv7O8iWGhLzFd2FAYgd2CPUhZ+uf4XUhRoHa8TO67Mtp1lPlt1CTcubTRy9nX6
+         +wwCEHHTAub0pmgm1s4geTfluo33PLANPc6F94W8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j8jt7-009N70-ST; Mon, 02 Mar 2020 12:09:34 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 02 Mar 2020 12:09:33 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
+ SGI callbacks
+In-Reply-To: <4f8f3958-2976-b0a7-8d17-440ecaba0fc8@huawei.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-9-maz@kernel.org>
+ <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+ <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
+ <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
+ <3d725ede-6631-59fb-1a10-9fb9890f3df6@huawei.com>
+ <dd9f1224b3b21ad793862406bd8855ba@kernel.org>
+ <54c52057161f925c818446953050c951@kernel.org>
+ <4f8f3958-2976-b0a7-8d17-440ecaba0fc8@huawei.com>
+Message-ID: <db819547d4be8daa458bcd56aac2efcd@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+Hi Zenghui,
 
->> But that's inconsistent with the rest of the system.  And for example,
->> if you make /etc/resolv.conf a symbolic link, a program which uses a new
->> I/O library (with the new interfaces) will not be able to read it.
->
-> Fair, but I expect that e.g. a C library would simply implement openat()
-> on top of openat2() if the latter is available and thus could simply
-> pass RESOLVE_SYMLINKS so any new I/O library not making use of the
-> syscall directly would simply get the old behavior. For anyone using the
-> syscall directly they need to know about its exact semantics anyway. But
-> again, maybe just having it opt-in is fine.
+On 2020-03-02 08:18, Zenghui Yu wrote:
+> On 2020/3/2 3:00, Marc Zyngier wrote:
+>> On 2020-02-28 19:37, Marc Zyngier wrote:
+>>> On 2020-02-20 03:11, Zenghui Yu wrote:
+>> 
+>>>> Do we really need to grab the vpe_lock for those which are belong to
+>>>> the same irqchip with its_vpe_set_affinity()? The IRQ core code 
+>>>> should
+>>>> already ensure the mutual exclusion among them, wrong?
+>>> 
+>>> I've been trying to think about that, but jet-lag keeps getting in 
+>>> the way.
+>>> I empirically think that you are right, but I need to go and check 
+>>> the various
+>>> code paths to be sure. Hopefully I'll have a bit more brain space 
+>>> next week.
+>> 
+>> So I slept on it and came back to my senses. The only case we actually 
+>> need
+>> to deal with is when an affinity change impacts *another* interrupt.
+>> 
+>> There is only two instances of this issue:
+>> 
+>> - vLPIs have their *physical* affinity impacted by the affinity of the
+>>    vPE. Their virtual affinity is of course unchanged, but the 
+>> physical
+>>    one becomes important with direct invalidation. Taking a per-VPE 
+>> lock
+>>    in such context should address the issue.
+>> 
+>> - vSGIs have the exact same issue, plus the matter of requiring some
+>>    *extra* one when reading the pending state, which requires a RMW
+>>    on two different registers. This requires an extra per-RD lock.
+> 
+> Agreed with both!
+> 
+>> 
+>> My original patch was stupidly complex, and the irq_desc lock is
+>> perfectly enough to deal with anything that only affects the interrupt
+>> state itself.
+>> 
+>> GICv4 + direct invalidation for vLPIs breaks this by bypassing the
+>> serialization initially provided by the ITS, as the RD is completely
+>> out of band. The per-vPE lock brings back this serialization.
+>> 
+>> I've updated the branch, which seems to run OK on D05. I still need
+>> to run the usual tests on the FVP model though.
+> 
+> I have pulled the latest branch and it looks good to me, except for
+> one remaining concern:
+> 
+> GICR_INV{LPI, ALL}R + GICR_SYNCR can also be accessed concurrently
+> by multiple direct invalidation, should we also use the per-RD lock
+> to ensure mutual exclusion?  It looks not so harmful though, as this
+> will only increase one's polling time against the Busy bit (in my 
+> view).
+> 
+> But I point it out again for confirmation.
 
-I'm more worried about fancy new libraries which go directly to the new
-system calls, but set the wrong defaults for a general-purpose open
-operation.
+I was about to say that it doesn't really matter because it is only a
+performance optimisation (and we're noty quite there yet), until I 
+spotted
+this great nugget in the spec:
 
-Can we pass RESOLVE_SYMLINKS with O_NOFLLOW, so that we can easily
-implement open/openat for architectures that provide only the openat2
-system call?
+<quote>
+Writing GICR_INVLPIR or GICR_INVALLR when GICR_SYNCR.Busy==1 is 
+CONSTRAINED
+UNPREDICTABLE:
+- The write is IGNORED .
+- The invalidate specified by the write is performed.
+</quote>
 
->> AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
->> so it's relatively little protection.
->
-> So this is partially why I think it's at least worth considerings: the
-> new RESOLVE_NO_SYMLINKS flag does block all symlink resolution, not just
-> for the last component in contrast to AT_SYMLINK_NOFOLLOW. This is
-> 278121417a72d87fb29dd8c48801f80821e8f75a
+So we really need some form of mutual exclusion on a per-RD basis to 
+ensure
+that no two invalidations occur at the same time, ensuring that Busy 
+clears
+between the two.
 
-RESOLVE_NO_SYMLINKS shouldn't be the default, though (whoever is
-responsible for applying that default).  Otherwise system administrators
-can no longer move around data between different file systems and set
-symbolic links accordingly.
+Thanks for the heads up,
 
-Thanks,
-Florian
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
