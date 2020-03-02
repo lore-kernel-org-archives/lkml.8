@@ -2,121 +2,75 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054D2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14C5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C991B2187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAB4d29/"
+	by mail.kernel.org (Postfix) with ESMTP id C73A8217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgCBMyi (ORCPT
+        id S1727883AbgCBMze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:54:38 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35394 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgCBMyh (ORCPT
+        Mon, 2 Mar 2020 07:55:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56364 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbgCBMze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:54:37 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 7so5404573pgr.2;
-        Mon, 02 Mar 2020 04:54:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HEh7CqSCXgWfailCBb8Rs+qB5N+bl/4veud+2lfhJ3c=;
-        b=kAB4d29/ko/klMw//ZuCCDjxlWJmKBj6aYjBLaaWpXUGa2HrPYNP995nR9WGuqSzEH
-         fluQ71pG7wsJkuGZvSsfu9JFGjGYfuE2cE151OiwrNC8PZl9x7XioTn+VbgU4RWQ6Ufw
-         GgU3QbFS+76CeEIMQMe0lV0COD1vE8CdUdiRrVXjRz3FrXNwnmW8+QUQN8L4Lafo/5fJ
-         BWFDW81BAltxPyU7ZV8VjT9u6VvUnvAjS5i2hgMj2ydh4iKsv9v1Vlqq5jEN1vpvIg0Y
-         QdIRXqAXYtyUBZ0QuRW7az7jsrlAdBclNrfA1UDgOlJbuZRMexRIy58eiuYpgu1KVA7m
-         xv/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HEh7CqSCXgWfailCBb8Rs+qB5N+bl/4veud+2lfhJ3c=;
-        b=dXv9KOnIxOcWCKz7Gd8sUyldUQGxv9VgaZMePu6gf08O+oPScLPsiji1qtOzim/Kpl
-         FQXr43HpOpkE6t7BT9mFG13M6JUNiHSt2Ce9aIrnpT4wFNTLogRJjM6hQ3317AItqyfO
-         XmwfPCmwixtkK6Hi4/Ntpe3auGx8m4EH73HKYqXGZpOF27vy+R7urty/3v3MioZmU1de
-         KrZnTO6ybvSUVt+x0XaX+hJkLMR+vuoX3JD0aYvwoUBpE+h9s8VR49l8WGafW/KTX7Iv
-         VRruhFTXvl3EzQb70EraJePLe6iU8jJnwi+tTsbtX/Y68RTNln34z9PTasEQvXXMH8mx
-         chrQ==
-X-Gm-Message-State: APjAAAUCvUiXgFaT97Hk2rlEtoIwmizrnaUkqydDXLQjgaZvYSyIU7g9
-        FVqyIWY6r7oGtKaXX/YzIFI=
-X-Google-Smtp-Source: APXvYqzvXVSEfr6bpf3GIPRYKUv7jKl6r8NlwZCenHEBeS4uW+3WkXAE27vkYrNhhLNvUn6R77Ka4w==
-X-Received: by 2002:aa7:8299:: with SMTP id s25mr17299604pfm.261.1583153675622;
-        Mon, 02 Mar 2020 04:54:35 -0800 (PST)
-Received: from localhost.localdomain ([103.51.74.208])
-        by smtp.gmail.com with ESMTPSA id p2sm2138238pfb.41.2020.03.02.04.54.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 04:54:35 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-Date:   Mon,  2 Mar 2020 12:53:09 +0000
-Message-Id: <20200302125310.742-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200302125310.742-1-linux.amoon@gmail.com>
-References: <20200302125310.742-1-linux.amoon@gmail.com>
+        Mon, 2 Mar 2020 07:55:34 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8kbc-0005MT-1m; Mon, 02 Mar 2020 12:55:32 +0000
+Date:   Mon, 2 Mar 2020 13:55:31 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302125531.7z2viveb3zxhqkuj@wittgenstein>
+References: <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <8736arnel9.fsf@oldenburg2.str.redhat.com>
+ <20200302121959.it3iophjavbhtoyp@wittgenstein>
+ <20200302123510.bm3a2zssohwvkaa4@wittgenstein>
+ <87y2sjlygl.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87y2sjlygl.fsf@oldenburg2.str.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Odroid n2, cpub_clk is not geting enable, which lead the stalling
-at booting of the device, updating flags to CLK_IS_CRITICAL which help
-enable all the parent for cpub_clk.
+On Mon, Mar 02, 2020 at 01:42:50PM +0100, Florian Weimer wrote:
+> * Christian Brauner:
+> 
+> > One difference to openat() is that openat2() doesn't silently ignore
+> > unknown flags. But I'm not sure that would matter for iplementing
+> > openat() via openat2() since there are no flags that openat() knows about
+> > that openat2() doesn't know about afaict. So the only risks would be
+> > programs that accidently have a bit set that isn't used yet.
+> 
+> Will there be any new flags for openat in the future?  If not, we can
+> just use a constant mask in an openat2-based implementation of openat.
 
-Fixes: ffae8475b90c (clk: meson: g12a: add notifiers to handle cpu clock change);
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Previous changes
-	fix the commit $subject and $message as previously I was
-        wrong on the my findings.
-        Added the Fixed tags to the commit.
+From past experiences with other syscalls I would expect that any new
+features would only be available through openat2().
+The way I see it in general is that a revised version of a syscall
+basically deprecates the old syscall _wrt to new features_, i.e. new
+features will only be available through the revised version unless there
+are very strong reasons to also allow it in the old version (security
+bug or whatever).
+(But I don't want to be presumptuous here and pretend I can make any
+definiteve statement. Ultimately it's up to the community, I guess. :))
 
-Following Neil's suggestion, I have prepared this patch.
-https://patchwork.kernel.org/patch/11177441/#22964889
----
- drivers/clk/meson/g12a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index d2760a021301..7237d08b4112 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -681,7 +681,7 @@ static struct clk_regmap g12b_cpub_clk = {
- 			&g12a_sys_pll.hw
- 		},
- 		.num_parents = 2,
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
- 	},
- };
- 
--- 
-2.25.1
-
+Christian
