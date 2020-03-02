@@ -2,216 +2,303 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CC9C3F2D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4883CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBDCE246BE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1121A246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137171;
-	bh=XsQJ1i4+U1vKLIHBb0iuZxTTYKZjKKpjTdHYQ+ASJBg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PKBJzF6cJmIXLyK923oOQBlS+I3Ut5TRGHq7TU6LTgPC995/WnzIAFZ8U//+IRryv
-	 rCf8JX2eeWxZCjyEwfSeL9SbSxVVCLZBd08Zrxo8b5Yxv/j9JojMbAZJUAqH+ego4t
-	 cCsYKV6G6f7jRdxmURz2sVXjphxSz7SovSvGLZuc=
+	s=default; t=1583137355;
+	bh=9UF7klqnrbh0temRz5WiDn20JW2/9IC60+Evo/cYDQ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q6pDfO8DouPvpc/bYj0+fAJNLAfv/Cno2JkKnyJVD6PQwMErFdDufzanipVYbslNM
+	 Mm/H6Qmwqf5H7Zn7IioRthpG0rPccFkspf1r49Yb3nLaM0N29Yt8/IX4hOxpJ7rG5z
+	 GYUQFPcYF6VzpedhYFobP6CWESMz/iTkl9LT7cm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCBIT1 (ORCPT
+        id S1727130AbgCBIWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgCBIQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:16:19 -0500
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E075E246B6;
-        Mon,  2 Mar 2020 08:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583136979;
-        bh=XsQJ1i4+U1vKLIHBb0iuZxTTYKZjKKpjTdHYQ+ASJBg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVg1QNhic0ebfUl+Cdak06D/0msKDQp70nvO31BvDpJrDErWJFDUilsXQj/a733z1
-         h2+QUfPRMymErWgf02cxnvCO8bebZrH/ZR4qISSsd1Mp6M8RxCA63MF1pkJwyxAMoO
-         XOXwrneVk96/e7J6n+iCdhfO0UX3hb8IpV5Fk7Nw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003wr-1o; Mon, 02 Mar 2020 09:16:17 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH 03/42] docs: scsi: convert 53c700.txt to ReST
-Date:   Mon,  2 Mar 2020 09:15:36 +0100
-Message-Id: <a2e5116b70564f36b4fc7f1f1e5da1e693d7dadb.1583136624.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
-References: <cover.1583136624.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 03:22:33 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:31050 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbgCBIWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:22:33 -0500
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0228MRcA017331;
+        Mon, 2 Mar 2020 17:22:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0228MRcA017331
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583137348;
+        bh=0NFqNxJyxan6aRmOhiOYfjzVH/cuDJuR1BoBM2znMoI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D3uBq8wmBHFaLItBjkFFC8Z01rN7LdpebGuiK4KU6oHMXE91CaUyW3KfUyVybfSJe
+         t1SbP526w1Ets2u1kT8iq+zNlMIyRqPm4BV8WqiQm8iBMJriVNMwxhAFRIhHMHEyzv
+         0PtBtIZIf0Oj7PQc3er3p8yRDtqe9qnZwh8M20Jx75EC7LptD3Xy/vqMUOXsVpzq9/
+         ZaGunzLrpMf2zWdszPteVcBpKop0eXNGJXr0TySyqVp9M0kIsUW+nb9DEbM8C2w8fO
+         5hR6qQ3rKuMkdMgePwHLdoa+sWvdTRinas5jPij5pcXJbiMptXDohD4tS6PH34baJe
+         YmPu61g9FXLcg==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id y3so3302012uae.3;
+        Mon, 02 Mar 2020 00:22:28 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3u84tO0g5Bm3RlzOoez9I0B+uPM7gNb0Pyy/vZCqbjo3L34MaQ
+        hoES2BjI3JT4qCuNsozi196vzoGTE7/C2G/499E=
+X-Google-Smtp-Source: ADFU+vt4TH9XlZghKnEnQCXPSJgYjYvMJZ4r+dBC2Zmb2bsqxJAoGOGBeuSmm17BXzmE+2c2sdMlesfZVbA/nrh1CSY=
+X-Received: by 2002:ab0:2414:: with SMTP id f20mr7620189uan.121.1583137347176;
+ Mon, 02 Mar 2020 00:22:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200219074950.23344-1-masahiroy@kernel.org> <CAMuHMdU7=jRNCWvtiFhJwUM6P4xNmqwXdPX14qvE=6by1V7APA@mail.gmail.com>
+ <CAK7LNATKh9Y_QmO19iPw+zXT8RG-HfXBFY5bvpX0YSyOO-=NGA@mail.gmail.com> <CAMuHMdWNhd3kwqQ2OYOscq3VFDjip_FZtt8w6PVCenz095kCZg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWNhd3kwqQ2OYOscq3VFDjip_FZtt8w6PVCenz095kCZg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 2 Mar 2020 17:21:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQNb-5RdivSwMONVT_YCXohR-0NMJW5ceVrJPxWUGF+Lg@mail.gmail.com>
+Message-ID: <CAK7LNAQNb-5RdivSwMONVT_YCXohR-0NMJW5ceVrJPxWUGF+Lg@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: make 'imply' obey the direct dependency
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/scsi/{53c700.txt => 53c700.rst} | 61 +++++++++----------
- Documentation/scsi/index.rst                  |  2 +
- MAINTAINERS                                   |  2 +-
- 3 files changed, 33 insertions(+), 32 deletions(-)
- rename Documentation/scsi/{53c700.txt => 53c700.rst} (75%)
+Hi Geert,
 
-diff --git a/Documentation/scsi/53c700.txt b/Documentation/scsi/53c700.rst
-similarity index 75%
-rename from Documentation/scsi/53c700.txt
-rename to Documentation/scsi/53c700.rst
-index e31aceb6df15..53a0e9f9c198 100644
---- a/Documentation/scsi/53c700.txt
-+++ b/Documentation/scsi/53c700.rst
-@@ -1,3 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+The 53c700 Driver Notes
-+=======================
-+
- General Description
- ===================
- 
-@@ -16,9 +22,9 @@ fill in to get the driver working.
- Compile Time Flags
- ==================
- 
--A compile time flag is:
-+A compile time flag is::
- 
--CONFIG_53C700_LE_ON_BE
-+	CONFIG_53C700_LE_ON_BE
- 
- define if the chipset must be supported in little endian mode on a big
- endian architecture (used for the 700 on parisc).
-@@ -51,9 +57,11 @@ consistent with the best operation of the chip (although some choose
- to drive it off the CPU or bus clock rather than going to the expense
- of an extra clock chip).  The best operation clock speeds are:
- 
--53c700 - 25MHz
--53c700-66 - 50MHz
--53c710 - 40Mhz
-+=========  =====
-+53c700     25MHz
-+53c700-66  50MHz
-+53c710     40Mhz
-+=========  =====
- 
- Writing Your Glue Driver
- ========================
-@@ -69,7 +77,7 @@ parameters that matter to you (see below), plumb the NCR_700_intr
- routine into the interrupt line and call NCR_700_detect with the host
- template and the new parameters as arguments.  You should also call
- the relevant request_*_region function and place the register base
--address into the `base' pointer of the host parameters.
-+address into the 'base' pointer of the host parameters.
- 
- In the release routine, you must free the NCR_700_Host_Parameters that
- you allocated, call the corresponding release_*_region and free the
-@@ -78,7 +86,7 @@ interrupt.
- Handling Interrupts
- -------------------
- 
--In general, you should just plumb the card's interrupt line in with 
-+In general, you should just plumb the card's interrupt line in with
- 
- request_irq(irq, NCR_700_intr, <irq flags>, <driver name>, host);
- 
-@@ -95,41 +103,32 @@ Settable NCR_700_Host_Parameters
- The following are a list of the user settable parameters:
- 
- clock: (MANDATORY)
--
--Set to the clock speed of the chip in MHz.
-+  Set to the clock speed of the chip in MHz.
- 
- base: (MANDATORY)
--
--set to the base of the io or mem region for the register set. On 64
--bit architectures this is only 32 bits wide, so the registers must be
--mapped into the low 32 bits of memory.
-+  Set to the base of the io or mem region for the register set. On 64
-+  bit architectures this is only 32 bits wide, so the registers must be
-+  mapped into the low 32 bits of memory.
- 
- pci_dev: (OPTIONAL)
--
--set to the PCI board device.  Leave NULL for a non-pci board.  This is
--used for the pci_alloc_consistent() and pci_map_*() functions.
-+  Set to the PCI board device.  Leave NULL for a non-pci board.  This is
-+  used for the pci_alloc_consistent() and pci_map_*() functions.
- 
- dmode_extra: (OPTIONAL, 53c710 only)
--
--extra flags for the DMODE register.  These are used to control bus
--output pins on the 710.  The settings should be a combination of
--DMODE_FC1 and DMODE_FC2.  What these pins actually do is entirely up
--to the board designer.  Usually it is safe to ignore this setting.
-+  Extra flags for the DMODE register.  These are used to control bus
-+  output pins on the 710.  The settings should be a combination of
-+  DMODE_FC1 and DMODE_FC2.  What these pins actually do is entirely up
-+  to the board designer.  Usually it is safe to ignore this setting.
- 
- differential: (OPTIONAL)
--
--set to 1 if the chip drives a differential bus.
-+  Set to 1 if the chip drives a differential bus.
- 
- force_le_on_be: (OPTIONAL, only if CONFIG_53C700_LE_ON_BE is set)
--
--set to 1 if the chip is operating in little endian mode on a big
--endian architecture.
-+  Set to 1 if the chip is operating in little endian mode on a big
-+  endian architecture.
- 
- chip710: (OPTIONAL)
--
--set to 1 if the chip is a 53c710.
-+  Set to 1 if the chip is a 53c710.
- 
- burst_disable: (OPTIONAL, 53c710 only)
--
--disable 8 byte bursting for DMA transfers.
--
-+  Disable 8 byte bursting for DMA transfers.
-diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index 3ef7ad65372a..99efc77c3ac2 100644
---- a/Documentation/scsi/index.rst
-+++ b/Documentation/scsi/index.rst
-@@ -7,4 +7,6 @@ Linux SCSI Subsystem
- .. toctree::
-    :maxdepth: 1
- 
-+   53c700
-+
-    scsi_transport_srp/figures
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b04505e7c3..1552db209e69 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9445,7 +9445,7 @@ LASI 53c700 driver for PARISC
- M:	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
- L:	linux-scsi@vger.kernel.org
- S:	Maintained
--F:	Documentation/scsi/53c700.txt
-+F:	Documentation/scsi/53c700.rst
- F:	drivers/scsi/53c700*
- 
- LEAKING_ADDRESSES
--- 
-2.21.1
 
+On Wed, Feb 19, 2020 at 6:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Wed, Feb 19, 2020 at 10:24 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > On Wed, Feb 19, 2020 at 5:42 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, Feb 19, 2020 at 8:51 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > The 'imply' statement may create unmet direct dependency when the
+> > > > implied symbol depends on m.
+> > > >
+> > > > [Test Code]
+> > > >
+> > > >   config FOO
+> > > >           tristate "foo"
+> > > >           imply BAZ
+> > > >
+> > > >   config BAZ
+> > > >           tristate "baz"
+> > > >           depends on BAR
+> > > >
+> > > >   config BAR
+> > > >           def_tristate m
+> > > >
+> > > >   config MODULES
+> > > >           def_bool y
+> > > >           option modules
+> > > >
+> > > > If you set FOO=y, BAZ is also promoted to y, which results in the
+> > > > following .config file:
+> > > >
+> > > >   CONFIG_FOO=y
+> > > >   CONFIG_BAZ=y
+> > > >   CONFIG_BAR=m
+> > > >   CONFIG_MODULES=y
+> > > >
+> > > > This ignores the dependency "BAZ depends on BAR".
+> > > >
+> > > > Unlike 'select', what is worse, Kconfig never shows the
+> > > > "WARNING: unmet direct dependencies detected for ..." for this case.
+> > > >
+> > > > Because 'imply' should be weaker than 'depends on', Kconfig should
+> > > > take the direct dependency into account.
+> > > >
+> > > > Describe this case in Documentation/kbuild/kconfig-language.rst for
+> > > > clarification.
+> > > >
+> > > > Commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword") says that
+> > > > a symbol implied by y is restricted to y or n, excluding m.
+> > > >
+> > > > As for the combination of FOO=y and BAR=m, the case of BAZ=m is excluded
+> > > > by the 'imply', and BAZ=y is also excluded by 'depends on'. So, only the
+> > > > possible value is BAZ=n.
+> > > >
+> > > > Having said that, this case was probably "We don't care" at that time
+> > > > because Kconfig did not handle 'depends on m' correctly until
+> > > > commit f622f8279581 ("kconfig: warn unmet direct dependency of tristate
+> > > > symbols selected by y") fixed it.
+> > > >
+> > > > Backporting this to 4.19+ will probably be fine. If you care this
+> > > > problem on 4.14.x, you need to backport f622f8279581 as well.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > >
+> > > Thanks a lot! This fixes the build issues in
+> > > https://lore.kernel.org/alsa-devel/CAMuHMdW8SvDgQJyenTtEm4Xn2Ma6PK9pfwKR2_gn60t2AqNWXg@mail.gmail.com/
+> > >
+> > > Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> >
+> > Even if this patch fixes the build issues,
+> > the result may not be what you expect.
+> >
+> > The very subtle part of 'imply' is that
+> > symbols implied by 'y' cannot be 'm'.
+> >
+> > When CONFIG_SND_SOC_ALL_CODECS=y,
+> > the select'ed drivers were previously able to be 'm'.
+> >
+> > After ea00d95200d02, drivers that were previously
+> > 'm' are now 'n'.
+> >
+> > Probably, it shrunk the test-coverage.
+> >
+> > I'd recommend to compare the .config file.
+>
+> I always do, when running make oldconfig ;-)
+>
+> I only see expected changes from y to m.
+> I don't see any unexpected changes from m to n.
+
+
+This is because you used oldconfig.
+
+The 'imply' keyword defines the default
+of symbols _without_ user-defined values.
+
+oldconfig loads the .config file,
+which contains the user-defined values.
+
+When you test the 'imply' keyword,
+you must start Kconfig from a pristine state
+(e.g. 'make defconfig')
+
+
+
+Compare the difference between v5.6-rc4 and
+v5.6-rc4 + the following two patches.
+
+https://lore.kernel.org/patchwork/patch/1190445/
+https://lore.kernel.org/patchwork/patch/1196514/
+
+
+
+[How to reproduce]
+
+Tweak x86_64_defconfig as follows, then
+compare the result of 'make defconfig'.
+
+
+
+masahiro@pug:~/ref/linux$ git diff
+diff --git a/arch/x86/configs/x86_64_defconfig
+b/arch/x86/configs/x86_64_defconfig
+index 0b9654c7a05c..e102d75d3707 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -194,7 +194,7 @@ CONFIG_WATCHDOG=y
+ CONFIG_AGP=y
+ CONFIG_AGP_AMD64=y
+ CONFIG_AGP_INTEL=y
+-CONFIG_DRM=y
++# CONFIG_DRM is not set
+ CONFIG_DRM_I915=y
+ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_TILEBLITTING=y
+@@ -296,3 +296,11 @@ CONFIG_SECURITY_SELINUX_DISABLE=y
+ CONFIG_EFI_STUB=y
+ CONFIG_EFI_MIXED=y
+ CONFIG_ACPI_BGRT=y
++CONFIG_EXPERT=y
++# CONFIG_TTY is not set
++CONFIG_INPUT=m
++CONFIG_I2C=y
++CONFIG_SPI=y
++CONFIG_COMPILE_TEST=y
++CONFIG_SND_SOC=y
++CONFIG_SND_SOC_ALL_CODECS=y
+
+
+masahiro@pug:~/ref/linux$ git checkout v5.6-rc4
+M arch/x86/configs/x86_64_defconfig
+Note: checking out 'v5.6-rc4'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 98d54f81e36b Linux 5.6-rc4
+masahiro@pug:~/ref/linux$ git log --oneline  -1
+98d54f81e36b (HEAD, tag: v5.6-rc4, origin/master, origin/HEAD, master)
+Linux 5.6-rc4
+masahiro@pug:~/ref/linux$ make -s O=before   defconfig
+M arch/x86/configs/x86_64_defconfig
+Previous HEAD position was 98d54f81e36b Linux 5.6-rc4
+Switched to branch 'geert'
+masahiro@pug:~/ref/linux$ git log --oneline  -3
+231be9523aee (HEAD -> geert) kconfig: make 'imply' obey the direct dependency
+4132db11c62e ASoC: Use imply for SND_SOC_ALL_CODECS
+98d54f81e36b (tag: v5.6-rc4, origin/master, origin/HEAD, master) Linux 5.6-rc4
+masahiro@pug:~/ref/linux$ make -s O=after   defconfig
+masahiro@pug:~/ref/linux$ ./scripts/diffconfig  before/.config after/.config
+ SND_SOC_CS42L52 m -> n
+ SND_SOC_CS42L56 m -> n
+ SND_SOC_MT6351 n -> y
+ SND_SOC_MT6358 n -> y
+ SND_SOC_WM8962 m -> n
++SND_SOC_88PM860X n
++SND_SOC_ARIZONA y
++SND_SOC_CROS_EC_CODEC n
++SND_SOC_CS47L15 y
++SND_SOC_CS47L24 y
++SND_SOC_CS47L35 y
++SND_SOC_CS47L85 y
++SND_SOC_CS47L90 y
++SND_SOC_CS47L92 y
++SND_SOC_CX20442 n
++SND_SOC_LOCHNAGAR_SC n
++SND_SOC_MADERA y
++SND_SOC_MC13783 y
++SND_SOC_RT1308_SDW n
++SND_SOC_RT700_SDW n
++SND_SOC_RT711_SDW n
++SND_SOC_RT715_SDW n
++SND_SOC_SI476X y
++SND_SOC_TWL4030 n
++SND_SOC_TWL6040 n
++SND_SOC_WCD9335 n
++SND_SOC_WCD934X n
++SND_SOC_WL1273 y
++SND_SOC_WM5102 y
++SND_SOC_WM5110 y
++SND_SOC_WM8350 n
++SND_SOC_WM8400 n
++SND_SOC_WM8994 y
++SND_SOC_WM8997 y
++SND_SOC_WM8998 y
++SND_SOC_WSA881X n
+
+
+
+SND_SOC_CS42L52, SND_SOC_CS42L56 and SND_SOC_WM8962
+were previously m, but now disabled.
+
+
+--
+Best Regards
+Masahiro Yamada
