@@ -2,152 +2,86 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E23C3F2DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D4CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F572166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uX4Z/US3"
+	by mail.kernel.org (Postfix) with ESMTP id 2FA0220873
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgCBSsM (ORCPT
+        id S1727450AbgCBSvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:48:12 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37020 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727578AbgCBSsH (ORCPT
+        Mon, 2 Mar 2020 13:51:44 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42374 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBSvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:48:07 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583174886; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=G7PCFWuRjXAohXYyjHkhWQExcT9ynBbz57eDM95Qv8w=; b=uX4Z/US3NrRdmrXgsdS+ggZta7qDZhWz4qD5wLRGMeaIUVRcSyW5iT3tq8GFVKJZgr52eh39
- zFbv5hqm1pNdApFLRR/e3TH0sQxDeJhQVCl8xiA9NMiWfzkyT6TqebPYviHe8Ed/vkxVZz9r
- azkihZ+iiXp1DUJVTl4H85hwsuY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5d54d3.7f824f280b20-smtp-out-n02;
- Mon, 02 Mar 2020 18:47:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0999CC43383; Mon,  2 Mar 2020 18:47:46 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12D75C4479F;
-        Mon,  2 Mar 2020 18:47:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12D75C4479F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org
-Cc:     agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tsoni@codeaurora.org, vnkgutta@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 2/3] dt-bindings: soc: qcom: apr: Add protection domain bindings
-Date:   Tue,  3 Mar 2020 00:17:22 +0530
-Message-Id: <20200302184723.16420-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200302184723.16420-1-sibis@codeaurora.org>
-References: <20200302184723.16420-1-sibis@codeaurora.org>
+        Mon, 2 Mar 2020 13:51:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so287124otd.9;
+        Mon, 02 Mar 2020 10:51:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cH1nDM4uwumr6KdthICcbpNTedeJBeY/wKjOC4m8TLQ=;
+        b=EeW/108PF8Vk/izFryec4ZmriJb9PlrBde9zT17X+01T01pL45SFvgGKJHoXT6ReI0
+         szDn6ySFYKq/+AWkI2bCuXEjaCuqGxyZnfijahD23dXZxDUacepckHcJHARuDvjRRoW8
+         AP7mo670oWS/Opofmxfj8c8BPsIqBtf+MMdNtH/5BgUS8MAusPYSb9tyVwz94QuWzV58
+         wIzrfctzMa3Al3z6+AAYd+eJH+zlDKDJiJK8j3Ha+t37ImBa5z7wlDwU2JsjsI8G0KNd
+         pQCOITAQeljdm/u9UUgXMSUiR0+lQn9e3tl+16JV+lwRnnsqpN+6wtR/5W0azoyEL219
+         24Rw==
+X-Gm-Message-State: ANhLgQ2MbDrSdO6OpAVjDjFTaCuxzCiz3FIohkgLcIHKSmvSTguGOb17
+        85R7PqktzeBRoXbTGYL/Vvm9zU2vrNv4ViN0z/0=
+X-Google-Smtp-Source: ADFU+vtjNzCGescRbFcFgmJZbsy+UPTWYBrrpuwFClvDp2HC/YFd54MwAImxgozZRZYrp9DjMoDEHIgXHozDv3Kahco=
+X-Received: by 2002:a05:6830:100e:: with SMTP id a14mr435280otp.297.1583175101255;
+ Mon, 02 Mar 2020 10:51:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com> <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 19:51:29 +0100
+Message-ID: <CAMuHMdW7Xu6EzfmVFx1+i1byy3KOS5A+h2GuMb8nkZ+-jD1=BA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device buswidth
+To:     John Garry <john.garry@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm SoCs (starting with MSM8998) allow for multiple protection
-domains (PDs) to run on the same Q6 sub-system. This allows for
-services like AVS AUDIO to have their own separate address space and
-crash/recover without disrupting the other PDs running on the same Q6
-ADSP. Add "qcom,protection-domain" bindings to capture the dependencies
-between the APR service and the PD on which the apr service runs.
+Hi John,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+On Fri, Feb 28, 2020 at 4:23 PM John Garry <john.garry@huawei.com> wrote:
+> Currently ACPI firmware description for a SPI device does not have any
+> method to describe the data buswidth on the board.
+>
+> So even through the controller and device may support higher modes than
+> standard SPI, it cannot be assumed that the board does - as such, that
+> device is limited to standard SPI in such a circumstance.
+>
+> As a workaround, allow the controller driver supply buswidth override bits,
+> which are used inform the core code that the controller driver knows the
+> buswidth supported on that board for that device.
 
-V5:
- * Picked up Bjorn's R-b
+Just wondering: can't the controller just override this (e.g. in the .setuup()
+callback) without having to touch the generic code?
 
- .../devicetree/bindings/soc/qcom/qcom,apr.txt | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-index db501269f47b8..f8fa71f5d84ba 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-@@ -45,6 +45,18 @@ by the individual bindings for the specific service
- 			12 - Ultrasound stream manager.
- 			13 - Listen stream manager.
- 
-+- qcom,protection-domain
-+	Usage: optional
-+	Value type: <stringlist>
-+	Definition: Must list the protection domain service name and path
-+		    that the particular apr service has a dependency on.
-+	Possible values are :
-+			"avs/audio", "msm/adsp/audio_pd".
-+			"kernel/elf_loader", "msm/modem/wlan_pd".
-+			"tms/servreg", "msm/adsp/audio_pd".
-+			"tms/servreg", "msm/modem/wlan_pd".
-+			"tms/servreg", "msm/slpi/sensor_pd".
-+
- = EXAMPLE
- The following example represents a QDSP based sound card on a MSM8996 device
- which uses apr as communication between Apps and QDSP.
-@@ -82,3 +94,41 @@ which uses apr as communication between Apps and QDSP.
- 			...
- 		};
- 	};
-+
-+= EXAMPLE 2
-+The following example represents a QDSP based sound card with protection domain
-+dependencies specified. Here some of the apr services are dependent on services
-+running on protection domain hosted on ADSP/SLPI remote processors while others
-+have no such dependency.
-+
-+	apr {
-+		compatible = "qcom,apr-v2";
-+		qcom,glink-channels = "apr_audio_svc";
-+		qcom,apr-domain = <APR_DOMAIN_ADSP>;
-+
-+		q6core {
-+			compatible = "qcom,q6core";
-+			reg = <APR_SVC_ADSP_CORE>;
-+		};
-+
-+		q6afe: q6afe {
-+			compatible = "qcom,q6afe";
-+			reg = <APR_SVC_AFE>;
-+			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+			...
-+		};
-+
-+		q6asm: q6asm {
-+			compatible = "qcom,q6asm";
-+			reg = <APR_SVC_ASM>;
-+			qcom,protection-domain = "tms/servreg", "msm/slpi/sensor_pd";
-+			...
-+		};
-+
-+		q6adm: q6adm {
-+			compatible = "qcom,q6adm";
-+			reg = <APR_SVC_ADM>;
-+			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+			...
-+		};
-+	};
+                        Geert
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
