@@ -2,126 +2,123 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DE2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B973CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8904B2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:29:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="exSa+YIJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9B35521739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCBK3n (ORCPT
+        id S1727543AbgCBKaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:29:43 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49754 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726654AbgCBK3n (ORCPT
+        Mon, 2 Mar 2020 05:30:04 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:33524 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726874AbgCBKaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:29:43 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022ANQDP005577;
-        Mon, 2 Mar 2020 11:29:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=zkytL5nVEwPnsSSru/KymaDUr/ha+HwULMX9F6zIoyc=;
- b=exSa+YIJRpOznMWRg+X11gkj5wmZyPmRg08IYzfFup7xEtPRjr6hWuETdT4oWSeRj3gy
- wg3QhBQp7WTFiMxpDmBLYzfUI0Z4kea/DHRf82bFxgz48iJsg368pvRH6M0FBQQJNvm2
- 0YtY1DCoULu5mT1lJ0lgrxwVHyC9zPpFuF/GYQlx5zjVBJ/TepQqiOoRZEw0lYD/5ZxJ
- /1s50RY+qf7NVfQdXBcYlsg6gkidy+IpOg0GatzRrm3hdSfJPdQ+5+F/QNciTNbLBRYc
- d/EGAvKYG+5A3T82naPax11ZVINz1N2f98HRIsLxjAIZH2hM78fSz8U2ZnViQc3sIiEi XQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yffqpjscd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 11:29:31 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C81410002A;
-        Mon,  2 Mar 2020 11:29:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 610342B881B;
-        Mon,  2 Mar 2020 11:29:30 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar
- 2020 11:29:29 +0100
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: add STM32MP1-based Linux Automation
- MC-1 board
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>
-References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
- <20200226143826.1146-2-a.fatoum@pengutronix.de>
- <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
- <fbba971d7501c774ce0081f22dcff4ef74002a4d.camel@pengutronix.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <e227de9a-7440-7e1f-2928-5648cbbe44c1@st.com>
-Date:   Mon, 2 Mar 2020 11:29:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <fbba971d7501c774ce0081f22dcff4ef74002a4d.camel@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Mon, 2 Mar 2020 05:30:04 -0500
+Received: from mr1.cc.vt.edu (mr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 022AU2Ob021054
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 05:30:02 -0500
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 022ATvCL018786
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 05:30:02 -0500
+Received: by mail-qt1-f197.google.com with SMTP id i25so588434qtm.17
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:30:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=/VcLffZUTgvTWC8ZFO3N6mDeTTtIIDh0TAgvcx3iXEw=;
+        b=mICqQddg3iDL2n0siUN2iHpZwz87eT/1bSIjf9PEVof/9H0FG1aI4+K9hH63uuDcW0
+         H1mCZ1eVjzlVQB+lsb4MHM0viDkBuv7IeBDx8JN6JOlc5m9EK1dPS4UiBgn8VYua2xqJ
+         yHWkZiBN2Xa10UldS3m/mcnafbAxwelI5z4J7HhrMNPodSicLs5uAXDOe5Z9RfMmb/gk
+         EhpV/yNEEffUfqvXKBbHFug8p8IW4QmADzquOzq8xaJ6/BhgwKKRfJ9XJOecTCBlhZ52
+         XDx1XsWfkb/48dkxnnY/WWMqr5vJhI/uOja3AKp3EHsOq7YxaGgK0X46oO4wBBktAMh+
+         bxDw==
+X-Gm-Message-State: APjAAAWP5SIJX4pivYmtQi+z+wTJK48noURpkvPo8hrCItAB72LX0CMP
+        t7MN/Z+/2xmBd+znyvwKmc7mPw5oh9YKXpdpA8fAzA3bIoFo+h4dmscJjCoXMGXLfp5vQcwt7Vn
+        sa3jNXy0QggXwsCAMzYCL5Ff6v0cqXdYUcaU=
+X-Received: by 2002:a37:4e53:: with SMTP id c80mr14345727qkb.58.1583144996947;
+        Mon, 02 Mar 2020 02:29:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwBh6WXMWHNRoxL92FxaSm7tZWkWljn+/lubfFhH1jeDvkVwJTYHB9DmVs0hkAFcj5IVD9Bog==
+X-Received: by 2002:a37:4e53:: with SMTP id c80mr14345713qkb.58.1583144996622;
+        Mon, 02 Mar 2020 02:29:56 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id j17sm10248504qth.27.2020.03.02.02.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 02:29:54 -0800 (PST)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: exfat: clean up d_entry rebuilding.
+In-Reply-To: <20200302095716.64155-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+References: <20200302095716.64155-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1583144993_2391P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
+Date:   Mon, 02 Mar 2020 05:29:54 -0500
+Message-ID: <240472.1583144994@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lucas
+--==_Exmh_1583144993_2391P
+Content-Type: text/plain; charset=us-ascii
 
-On 3/2/20 11:18 AM, Lucas Stach wrote:
-> On Mo, 2020-03-02 at 11:06 +0100, Alexandre Torgue wrote:
->> Hi Ahmad
->>
->> Thanks for adding a new STM32 board. Some minor comments.
->>
->> On 2/26/20 3:38 PM, Ahmad Fatoum wrote:
->>> The Linux Automation MC-1 is a SBC built around the Octavo Systems
->>> OSD32MP15x SiP. The SiP features up to 1 GB DDR3 RAM, EEPROM and
->>> a PMIC. The board has eMMC and a SD slot for storage and GbE
->>> for both connectivity and power.
->>>
->>> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de
->>> ---
-> [...]
->>> +
->>> +&gpu {
->>> +	status = "okay";
->>> +};
-> 
-> This question is more to the ST guys than this specific DT: Why is the
-> GPU marked as disabled in the SoC dtsi file? This device is always
-> present on the SoC and AFAICS there are no board level dependencies, so
-> there is no reason to have it disabled by default, right? Removing the
-> status property from the dtsi would remove the need for this override
-> on the board DT.
+On Mon, 02 Mar 2020 18:57:15 +0900, Tetsuhiro Kohada said:
+> Clean up d_entry rebuilding in exfat_rename_file() and move_file().
+>
+> -Replace memcpy of d_entry with structure copy.
 
-You are right. With new stm32 device tree diversity, it makes no longer 
-sens to disable GPU node in stm32mp157 dtsi file. Indeed, we use now 
-dedicated files for each SoC (stm32mp151 / stm32mp153 /stm32mp157).
+Those look OK.
 
-Ahmad, can you add this modification in your series please ?
+> -Change to use the value already stored in fid.
 
-regards
-Alex
+> -		if (exfat_get_entry_type(epnew) == TYPE_FILE) {
+
+> +		if (fid->type == TYPE_FILE) {
+
+Are you sure this is OK to do? exfat_get_entry_type() does a lot of
+mapping between values, using a file_dentry_t->type, while
+fid->type is a file_id_t->type. and at first read it's not obvious to me whether
+fid->type is guaranteed to have the correct value already.
+
+(The abundant use of 0xNN constants in exfat_get_entry_type()  doesn't
+inspire confidence that it's looking at what you think it's looking at...)
 
 
-> 
-> Regards,
-> Lucas
-> 
+
+--==_Exmh_1583144993_2391P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXlzgIQdmEQWDXROgAQI58g/8DOieHjL/SZ7yeem2t4q7TX4M9CzzWBEA
+gCgEpSqWrxEfRPn4OfLS/S6CMQtDPrdv8mDqvmNIRa0S27G+kvvCdOVbIYDnDIHD
+uqUmHKhPoUdTH+6k4XXErNBO4hG0NlpFAAVEpyY0x3Yo8zK5a6kW9NroYknqHq0g
+/zafLt+WTiwU4InxRznidC4UvQ9Dvi9hMUnEzziYuR/E11ruzpQjfc8gcCkRawh0
+F2bgfjwXhAFdyXGhkJdcfeNjXRMgFUPy4a0fVK32uxSo3kfYJYX0cSzSspkCoZm2
+bIWbR0pg/Lx/AjH1V5JiTK+EQixeC0ujAXmbzGVT2H16cWSMqnFbmVVjRgSBY0fI
+Y/N8HHyLxUx5u87b6B97wvNZiExkDID38Br05uFuOIasOMOMs3fE3mpJ7/J/FRFd
+dUXKZJ6+wni8X4kZVHTleUuZVtQK0hSTZBj3wOL7prAn9uJiCP3b7t6MdfCOegV6
+VcKJyhLvu6LmByPunjU75UTTmWj3dMGYdYDFEDD+jfHBXMh0AX54rHwy4jO0BwU2
+/X+YrqpbOWL8C7+1E//vJq00X+CNyNG98iJ1QJWJV7EOUrUTnnLUa11+DLc9CUtB
+R6r7VF469EJ7MfZG8L0keg5eLSNUQL2H9I8FU1id0xrHxJ7HQtH9lz6Dav1+Bnj4
+bOOVWDTwOt8=
+=DpqH
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1583144993_2391P--
