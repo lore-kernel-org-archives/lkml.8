@@ -2,77 +2,110 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B0FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC068C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0CD20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F6C2084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:26:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoSkkwh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCBPZc (ORCPT
+        id S1727384AbgCBP0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:25:32 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54179 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgCBPZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:25:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 07:25:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="351562614"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 02 Mar 2020 07:25:26 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 02 Mar 2020 17:25:25 +0200
-Date:   Mon, 2 Mar 2020 17:25:25 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/19] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Message-ID: <20200302152525.GB2540@lahna.fi.intel.com>
-References: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
- <20200302142621.GB3494@dell>
- <20200302143803.GI2667@lahna.fi.intel.com>
- <20200302151924.GC3494@dell>
+        Mon, 2 Mar 2020 10:26:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36121 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCBP0F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:26:05 -0500
+Received: by mail-lf1-f67.google.com with SMTP id s1so7922480lfd.3;
+        Mon, 02 Mar 2020 07:26:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=bukTu9hwl5g5tnxxRv26V6s76cWTVObhbh4EskdLihU=;
+        b=OoSkkwh7Cmv3dCPJ/k1vu9Sn5CeBGuir/88pWzCGEYK9jq7EjoUY7/PBZmMJMtmxYg
+         M5wWnf3WOrg76bbA8+VQsuj8mj+RbK8UMLq7PR7yIx3LE6+WR3Qn3aO0B3/hMgX3osbS
+         a5A3V/GeBRDKnR4zfzy7DoWCALYlD07R6nlmwtF6t0GKYjoEdmqcd5D5Eq/Ft8YmEW7o
+         T3QKXKNkhGaPw8hmO+5+OJwDLIYWPREuQarcV4clbrOyR0qz0wo0VOHt4Lss8b2wxfhj
+         2F1APIe4aPffFjqqZsd88CVqULmVOxY6U+PxKWHp6JUQcpN9ItxqMzVeMyctKqSlfYF6
+         WKEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bukTu9hwl5g5tnxxRv26V6s76cWTVObhbh4EskdLihU=;
+        b=TSuxY52FDcs2u4vg+c0FYTjHJTGY0YtTjzaKPqTRTa4U3LcnYp/nFibix3qE7esJtl
+         lKUU1av7xx6AS/AgJIF//1Gb4g8gFCjZR/68DRTp5bzrnNAKO4iGbdnd7gA+ngYKOFVm
+         VkE1OPa1a5dWXOSLDVLC1wOhdJzTlqNc4SpJFXRtUNvGQIUaAe5hVpPkg69PuIIzP/9f
+         m91ldvj+B/zNbfgHlsjo6jMtvMhmU00QQi1Jv9s3uTEgPNEdS3qVQlYh7KWwNJcDXxVW
+         xlggwzLNt1bOPRA/F8GO5eyyR+w93QNbQK0b+mLiNYcFdQFaBs7+3UCddxNB2+9DXnhU
+         vKbw==
+X-Gm-Message-State: ANhLgQ3PBBJZApPBGdxikNpkW0tDuqYvqB6TBuDYoOFMtGEgjir5DzX8
+        K0Qy8pusXqp2JAt2qSCdUnF0ichNx8E=
+X-Google-Smtp-Source: ADFU+vtqfAJonV+lvjYlIT+V/SuYsnMeHhJPyqr0BubSWwv4qEZKQIBkJhE1ZXWZwz2MUZcsbwolqQ==
+X-Received: by 2002:a19:ed08:: with SMTP id y8mr11146164lfy.56.1583162762468;
+        Mon, 02 Mar 2020 07:26:02 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id 138sm12353615lfk.9.2020.03.02.07.26.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:26:01 -0800 (PST)
+Subject: Re: [PATCH 9/9] io_uring: pass submission ref to async
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583078091.git.asml.silence@gmail.com>
+ <29efa25e63ea86b9b038fff202a5f7423b5482c8.1583078091.git.asml.silence@gmail.com>
+ <fb27a289-717c-b911-7981-db72cbc51c26@gmail.com>
+ <fab1f954-98f0-3576-9142-966982988bc0@gmail.com>
+ <902c439f-81ff-7593-e6b4-eee3f217c292@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <19a08aaa-069b-27d1-1cb7-5033b74c2e78@gmail.com>
+Date:   Mon, 2 Mar 2020 18:26:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302151924.GC3494@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <902c439f-81ff-7593-e6b4-eee3f217c292@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 03:19:24PM +0000, Lee Jones wrote:
-> > I wasn't really sure what to do with them. They are not in the normal
-> > tag format I've seen so I thought you use them yourself somehow to
-> > manage your mailboxes. I can add them back if needed.
+On 3/2/2020 6:12 PM, Jens Axboe wrote:
+> On 3/2/20 8:08 AM, Pavel Begunkov wrote:
+>> On 3/2/2020 12:39 AM, Pavel Begunkov wrote:
+>>> On 01/03/2020 19:18, Pavel Begunkov wrote:
+>>>> Currenlty, every async work handler accepts a submission reference,
+>>>> which it should put. Also there is a reference grabbed in io_get_work()
+>>>> and dropped in io_put_work(). This patch merge them together.
+>>>>
+>>>> - So, ownership of the submission reference passed to io-wq, and it'll
+>>>> be put in io_put_work().
+>>>> - io_get_put() doesn't take a ref now and so deleted.
+>>>> - async handlers don't put the submission ref anymore.
+>>>> - make cancellation bits of io-wq to call {get,put}_work() handlers
+>>>
+>>> Hmm, it makes them more like {init,fini}_work() and unbalanced/unpaired. May be
+>>> no a desirable thing.
+>>
+>> Any objections against replacing {get,put}_work() with
+>> io_finilise_work()? It will be called once and only once, and a work
+>> must not go away until it happened. It will be enough for now, but not
+>> sure whether you have some plans for this get/put pinning.
 > 
-> Yes, please add them, so I can track them.
-> 
-> It normally means that I plan to take the set through MFD and
-> subsequently send an immutable pull-request out to the other
-> Maintainers once all the other Acks have been provided.
-> 
-> MFD handles these kinds of cross-subsystem patch-sets often.
+> I have no further plans there, the get/put work only exist to ensure that
+> the work item stays valid in case of cancelation lookups.
 
-OK, thanks for the explanation. I'll re-send with your acks added then.
+Great, it'll go into v2 as well.
+
+-- 
+Pavel Begunkov
