@@ -4,185 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54601C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05807C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D13220656
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D912B2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgCBNyz (ORCPT
+        id S1726925AbgCBN5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:54:55 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727101AbgCBNyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:54:55 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022DpRn5138752
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 08:54:53 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfhs3pm4q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:54:53 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 2 Mar 2020 13:54:50 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 13:54:47 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022Dskmq57475226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 13:54:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37EC64C046;
-        Mon,  2 Mar 2020 13:54:46 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1642B4C050;
-        Mon,  2 Mar 2020 13:54:45 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.207.124])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  2 Mar 2020 13:54:44 +0000 (GMT)
-Date:   Mon, 2 Mar 2020 15:54:43 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: Linux-next-20200302: arm64 build failed
-References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
- <20200302104726.GA7995@willie-the-truck>
+        Mon, 2 Mar 2020 08:57:43 -0500
+Received: from mga03.intel.com ([134.134.136.65]:39949 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgCBN5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:57:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 05:57:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="351545030"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 02 Mar 2020 05:57:39 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 02 Mar 2020 15:57:38 +0200
+Date:   Mon, 2 Mar 2020 15:57:38 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, davidgow@google.com,
+        Heidi Fahim <heidifahim@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v1] Revert "software node: Simplify
+ software_node_release() function"
+Message-ID: <20200302135738.GD22243@kuha.fi.intel.com>
+References: <20200228000001.240428-1-brendanhiggins@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302104726.GA7995@willie-the-truck>
-X-TM-AS-GCONF: 00
-x-cbid: 20030213-0020-0000-0000-000003AF9840
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030213-0021-0000-0000-00002207C383
-Message-Id: <20200302135443.GA24831@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_04:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
- suspectscore=5 clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2003020101
+In-Reply-To: <20200228000001.240428-1-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
-> [+Anshuman and Catalin]
+On Thu, Feb 27, 2020 at 04:00:01PM -0800, Brendan Higgins wrote:
+> This reverts commit 3df85a1ae51f6b256982fe9d17c2dc5bfb4cc402.
 > 
-> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
-> > Linux-Next 20200302 arm64 build failed due to below errors,
-> > Suspecting patch causing this build break.
-> > 
-> > 87d900aef3e2  arm/arm64: add support for folded p4d page tables
-> > 
-> > Error log,
-> > -------------
-> > arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
-> > include/linux/compiler.h:284:1: error: incompatible type for argument
-> > 1 of 'p4d_page_paddr'
-> >  ({         \
-> >  ^
-> > arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
-> > '__phys_to_virt'
-> >  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
-> >                                              ^
-> > arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
-> >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >                                           ^~~~
-> > include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
-> >  #define READ_ONCE(x) __READ_ONCE(x, 1)
-> >                       ^~~~~~~~~~~
-> > arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
-> >  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
-> > + pud_index(addr) * sizeof(pud_t))
-> >                                                     ^~~~~~~~~
-> > arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
-> > 'pud_offset_phys'
-> >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >                                                ^~~~~~~~~~~~~~~
-> > arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
-> >    pudp = pud_offset(pgdp, addr);
-> >           ^~~~~~~~~~
+> The reverted commit says "It's possible to release the node ID
+> immediately when fwnode_remove_software_node() is called, no need to
+> wait for software_node_release() with that." However, releasing the node
+> ID before waiting for software_node_release() to be called causes the
+> node ID to be released before the kobject and the underlying sysfs
+> entry; this means there is a period of time where a sysfs entry exists
+> that is associated with an unallocated node ID.
 > 
-> Looks like we need an implementation of unmap_hotplug_p4d_range() to
-> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
-> patches in the arm64 tree so we'll either need a common branch or the
-> hotplug patches will need to be dropped for the moment.
+> Once consequence of this is that there is a race condition where it is
+> possible to call fwnode_create_software_node() with no parent node
+> specified (NULL) and have it fail with -EEXIST because the node ID that
+> was assigned is still associated with a stale sysfs entry that hasn't
+> been cleaned up yet.
+> 
+> Although it is difficult to reproduce this race condition under normal
+> conditions, it can be deterministically reproduced with the following
+> minconfig on UML:
+> 
+> CONFIG_KUNIT_DRIVER_PE_TEST=y
+> CONFIG_DEBUG_KERNEL=y
+> CONFIG_DEBUG_OBJECTS=y
+> CONFIG_DEBUG_OBJECTS_TIMERS=y
+> CONFIG_DEBUG_KOBJECT_RELEASE=y
+> CONFIG_KUNIT=y
+> 
+> Running the tests with this configuration causes the following failure:
+> 
+> <snip>
+> kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 400)
+> 	ok 1 - pe_test_uints
+> sysfs: cannot create duplicate filename '/kernel/software_nodes/node0'
+> CPU: 0 PID: 28 Comm: kunit_try_catch Not tainted 5.6.0-rc3-next-20200227 #14
+> <snip>
+> kobject_add_internal failed for node0 with -EEXIST, don't try to register things with the same name in the same directory.
+> kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 100)
+> 	# pe_test_uint_arrays: ASSERTION FAILED at drivers/base/test/property-entry-test.c:123
+> 	Expected node is not error, but is: -17
+> 	not ok 2 - pe_test_uint_arrays
+> <snip>
+> 
+> Reported-by: Heidi Fahim <heidifahim@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-unmap_hotplug_p4d_range() is easy :)
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
-From: Mike Rapoport <rppt@linux.ibm.com>
-Date: Mon, 2 Mar 2020 15:53:17 +0200
-Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+> ---
+>  drivers/base/swnode.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index 0b081dee1e95c..de8d3543e8fe3 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -608,6 +608,13 @@ static void software_node_release(struct kobject *kobj)
+>  {
+>  	struct swnode *swnode = kobj_to_swnode(kobj);
+>  
+> +	if (swnode->parent) {
+> +		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+> +		list_del(&swnode->entry);
+> +	} else {
+> +		ida_simple_remove(&swnode_root_ids, swnode->id);
+> +	}
+> +
+>  	if (swnode->allocated) {
+>  		property_entries_free(swnode->node->properties);
+>  		kfree(swnode->node);
+> @@ -773,13 +780,6 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+>  	if (!swnode)
+>  		return;
+>  
+> -	if (swnode->parent) {
+> -		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+> -		list_del(&swnode->entry);
+> -	} else {
+> -		ida_simple_remove(&swnode_root_ids, swnode->id);
+> -	}
+> -
+>  	kobject_put(&swnode->kobj);
+>  }
+>  EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+> -- 
+> 2.25.1.481.gfbce0eb801-goog
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 05ec8e5f1436..c76b11577558 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
- 	} while (addr = next, addr < end);
- }
- 
-+static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
-+				unsigned long end, bool free_mapped)
-+{
-+	unsigned long next;
-+	pgd_t *p4dp, p4d;
-+
-+	do {
-+		next = p4d_addr_end(addr, end);
-+		p4dp = p4d_offset(pgd, addr);
-+		p4d = READ_ONCE(*p4dp);
-+		if (p4d_none(p4d))
-+			continue;
-+
-+		WARN_ON(!p4d_present(p4d));
-+		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
-+	} while (addr = next, addr < end);
-+}
-+
- static void unmap_hotplug_range(unsigned long addr, unsigned long end,
- 				bool free_mapped)
- {
-@@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
- 			continue;
- 
- 		WARN_ON(!pgd_present(pgd));
--		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
-+		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
- 	} while (addr = next, addr < end);
- }
- 
--- 
-2.21.1
-
- 
-> Will
+thanks,
 
 -- 
-Sincerely yours,
-Mike.
-
+heikki
