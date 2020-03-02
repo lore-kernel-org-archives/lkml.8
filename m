@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD4DC3F2DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA8EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F882086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BD32086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCBT5o (ORCPT
+        id S1727059AbgCBT5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:57:44 -0500
+        Mon, 2 Mar 2020 14:57:51 -0500
 Received: from mga05.intel.com ([192.55.52.43]:30422 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgCBT5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:57:39 -0500
+        id S1726896AbgCBT5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:57:41 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:39 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="438404982"
+   d="scan'208";a="438404992"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:38 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:40 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 3/6] KVM: x86: Add dedicated emulator helper for grabbing CPUID.maxphyaddr
-Date:   Mon,  2 Mar 2020 11:57:33 -0800
-Message-Id: <20200302195736.24777-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 6/6] KVM: x86: Add requested index to the CPUID tracepoint
+Date:   Mon,  2 Mar 2020 11:57:36 -0800
+Message-Id: <20200302195736.24777-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302195736.24777-1-sean.j.christopherson@intel.com>
 References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
@@ -50,79 +50,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to retrieve cpuid_maxphyaddr() instead of manually
-calculating the value in the emulator via raw CPUID output.  In addition
-to consolidating logic, this also paves the way toward simplifying
-kvm_cpuid(), whose somewhat confusing return value exists purely to
-support the emulator's maxphyaddr calculation.
+Output the requested index when tracing CPUID emulation; it's basically
+mandatory for leafs where the index is meaningful, and is helpful for
+verifying KVM correctness even when the index isn't meaningful, e.g. the
+trace for a Linux guest's hypervisor_cpuid_base() probing appears to
+be broken (returns all zeroes) at first glance, but is correct because
+the index is non-zero, i.e. the output values correspond to random index
+in the maximum basic leaf.
 
-No functional change intended.
-
+Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_emulate.h |  1 +
- arch/x86/kvm/emulate.c             | 10 +---------
- arch/x86/kvm/x86.c                 |  6 ++++++
- 3 files changed, 8 insertions(+), 9 deletions(-)
+ arch/x86/kvm/cpuid.c |  3 ++-
+ arch/x86/kvm/trace.h | 13 ++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-index bf5f5e476f65..ded06515d30f 100644
---- a/arch/x86/include/asm/kvm_emulate.h
-+++ b/arch/x86/include/asm/kvm_emulate.h
-@@ -222,6 +222,7 @@ struct x86_emulate_ops {
- 
- 	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
- 			  u32 *ecx, u32 *edx, bool check_limit);
-+	int (*get_cpuid_maxphyaddr)(struct x86_emulate_ctxt *ctxt);
- 	bool (*guest_has_long_mode)(struct x86_emulate_ctxt *ctxt);
- 	bool (*guest_has_movbe)(struct x86_emulate_ctxt *ctxt);
- 	bool (*guest_has_fxsr)(struct x86_emulate_ctxt *ctxt);
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index dd19fb3539e0..bf02ed51e90f 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -4244,16 +4244,8 @@ static int check_cr_write(struct x86_emulate_ctxt *ctxt)
- 
- 		ctxt->ops->get_msr(ctxt, MSR_EFER, &efer);
- 		if (efer & EFER_LMA) {
--			u64 maxphyaddr;
--			u32 eax, ebx, ecx, edx;
-+			int maxphyaddr = ctxt->ops->get_cpuid_maxphyaddr(ctxt);
- 
--			eax = 0x80000008;
--			ecx = 0;
--			if (ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx,
--						 &edx, false))
--				maxphyaddr = eax & 0xff;
--			else
--				maxphyaddr = 36;
- 			rsvd = rsvd_bits(maxphyaddr, 63);
- 			if (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_PCIDE)
- 				rsvd &= ~X86_CR3_PCID_NOFLUSH;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ddd1d296bd20..5467ee71c25b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6209,6 +6209,11 @@ static bool emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
- 	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index b0a4f3c17932..a3c9f6bf43f3 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -1047,7 +1047,8 @@ void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 			}
+ 		}
+ 	}
+-	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, exact_entry_exists);
++	trace_kvm_cpuid(function, index, *eax, *ebx, *ecx, *edx,
++			exact_entry_exists);
  }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
  
-+static int emulator_get_cpuid_maxphyaddr(struct x86_emulate_ctxt *ctxt)
-+{
-+	return cpuid_maxphyaddr(emul_to_vcpu(ctxt));
-+}
-+
- static bool emulator_guest_has_long_mode(struct x86_emulate_ctxt *ctxt)
- {
- 	return guest_cpuid_has(emul_to_vcpu(ctxt), X86_FEATURE_LM);
-@@ -6301,6 +6306,7 @@ static const struct x86_emulate_ops emulate_ops = {
- 	.fix_hypercall       = emulator_fix_hypercall,
- 	.intercept           = emulator_intercept,
- 	.get_cpuid           = emulator_get_cpuid,
-+	.get_cpuid_maxphyaddr= emulator_get_cpuid_maxphyaddr,
- 	.guest_has_long_mode = emulator_guest_has_long_mode,
- 	.guest_has_movbe     = emulator_guest_has_movbe,
- 	.guest_has_fxsr      = emulator_guest_has_fxsr,
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index f194dd058470..aa372d0119f0 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -151,12 +151,14 @@ TRACE_EVENT(kvm_fast_mmio,
+  * Tracepoint for cpuid.
+  */
+ TRACE_EVENT(kvm_cpuid,
+-	TP_PROTO(unsigned int function, unsigned long rax, unsigned long rbx,
+-		 unsigned long rcx, unsigned long rdx, bool found),
+-	TP_ARGS(function, rax, rbx, rcx, rdx, found),
++	TP_PROTO(unsigned int function, unsigned int index, unsigned long rax,
++		 unsigned long rbx, unsigned long rcx, unsigned long rdx,
++		 bool found),
++	TP_ARGS(function, index, rax, rbx, rcx, rdx, found),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	unsigned int,	function	)
++		__field(	unsigned int,	index		)
+ 		__field(	unsigned long,	rax		)
+ 		__field(	unsigned long,	rbx		)
+ 		__field(	unsigned long,	rcx		)
+@@ -166,6 +168,7 @@ TRACE_EVENT(kvm_cpuid,
+ 
+ 	TP_fast_assign(
+ 		__entry->function	= function;
++		__entry->index		= index;
+ 		__entry->rax		= rax;
+ 		__entry->rbx		= rbx;
+ 		__entry->rcx		= rcx;
+@@ -173,8 +176,8 @@ TRACE_EVENT(kvm_cpuid,
+ 		__entry->found		= found;
+ 	),
+ 
+-	TP_printk("func %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
+-		  __entry->function, __entry->rax,
++	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
++		  __entry->function, __entry->index, __entry->rax,
+ 		  __entry->rbx, __entry->rcx, __entry->rdx,
+ 		  __entry->found ? "found" : "not found")
+ );
 -- 
 2.24.1
 
