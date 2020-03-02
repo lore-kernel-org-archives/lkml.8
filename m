@@ -2,175 +2,613 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AE9C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D7AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604C820848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1044E20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ZF1JAjbn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FukyXLIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCBPYT (ORCPT
+        id S1727393AbgCBPZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:24:19 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38723 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgCBPYS (ORCPT
+        Mon, 2 Mar 2020 10:25:01 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51402 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726805AbgCBPZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:24:18 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t11so160065wrw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6/CIkWNCwNaImmXlS8dDLwAcR6sRgPxwGGxRlcKCoVs=;
-        b=ZF1JAjbnFfIgiCw6NX8mgzBabbjZJRZ4pT7T3b0Z7AbuYhSseXIOObM0JlCuObWu+Q
-         jsc2U3owHmjYwWLA9kG8h9lVtxNutsF4FQA5TPXf6psBmNT7GUs6OM+0kIQv083y0i+a
-         yXE70XLBvDPTe+WfDAmBf52LvcXEVoRFkb+AzcOr8/bNEH5GhckOIO4p/nCwvrpeiVIA
-         p+mWJyS9xTFDzaV9RmEc2AU1N4+XE97vlAhV3KGI/EBGNILL+WxiS9ZVxxEvzML36cpP
-         VHXh2ql3saT3JJyFFAwbcplIvcGUTD/JkVJ68613fQSE55NaDAIl6iHWYGaOHqJOkBv3
-         Ik5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6/CIkWNCwNaImmXlS8dDLwAcR6sRgPxwGGxRlcKCoVs=;
-        b=FXlSgvFMIQMplUwQ8OS5ycqr+9o/IBIsNlLjXrL3ZllsmyBBqaXHRziitCGeR4DM4u
-         CiW35RaCd3qQP7Xv65PpLTkzl9BNopdmxrEREwIKNxJWpascRJ+gnD3ZkmIBpeUhpg0Z
-         U2dn67PaiGUxOVYKlX0gARdBYjrm89VudfzzL2cqctfUrqmCnb0tQPWlh9IlmILZ6Yuh
-         8PWsiwzS/wukb9EByoFhFAmEtKy5QQbvO176Itu0sYd27/ss4p/02ua8xJkoLdR3b4S2
-         ZSA8KJvqYeyA4ymcLlalbNO8Dv9mPeQWtWHVYumO8Kt1A32yS3arUzkLKdjGQlOyalhH
-         XazQ==
-X-Gm-Message-State: ANhLgQ0WgaYZ6aeymGgOnaQvNvsQczaMyDSOZKwsPs0MiagNIXomzz7J
-        6CvwxvBSR+AFlIRT9QQMbcjm/nJRzDcCm0nKlTE3ng==
-X-Google-Smtp-Source: ADFU+vvibXAAaRXVSYO3pfwNHCZglN+HZMDcfhsGZWm7NVOMxOJvAA9oxubzIxeaxzXnvUeM97Z2+XnC+/da8ZEZbGk=
-X-Received: by 2002:adf:e542:: with SMTP id z2mr160388wrm.150.1583162656640;
- Mon, 02 Mar 2020 07:24:16 -0800 (PST)
+        Mon, 2 Mar 2020 10:25:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583162699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ENb59bSVT/7227H0y8YPpRQXJ5L7nAu3vXx22XGILpg=;
+        b=FukyXLIUu2NfToQ12OuISySUQPKw6JqshHXj4F4SqekBHtZnui7g8y4KRrFt4UziuggxJE
+        o8JwJOt542rIXTvsbTtnaSn9YNA4Jrozi7dygXephLDDZdIzLxVWxi3mYonmo5/RjiGvV4
+        o9bZzMgU1pGs5BsECf6uKnYxKxnHm6o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-Ac6sTM4FMsSRJfzj9UkMgg-1; Mon, 02 Mar 2020 10:24:53 -0500
+X-MC-Unique: Ac6sTM4FMsSRJfzj9UkMgg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FDF013E4;
+        Mon,  2 Mar 2020 15:24:51 +0000 (UTC)
+Received: from t490s (dhcp-17-205.bos.redhat.com [10.18.17.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 11F0C92D20;
+        Mon,  2 Mar 2020 15:24:50 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 10:24:48 -0500
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Salter <msalter@redhat.com>,
+        Jon Masters <jcm@jonmasters.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        Michal Hocko <mhocko@kernel.org>, QI Fuli <qi.fuli@fujitsu.com>
+Subject: Re: [PATCH 3/3] arm64: tlb: skip tlbi broadcast
+Message-ID: <20200302152448.GB74754@t490s>
+References: <20200223192520.20808-1-aarcange@redhat.com>
+ <20200223192520.20808-4-aarcange@redhat.com>
 MIME-Version: 1.0
-References: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200228165503.18054-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228165503.18054-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Mon, 2 Mar 2020 15:24:01 +0000
-Message-ID: <CAPY8ntBbm2d4b1p__FdyZS52sBV6CtfGKaVrg74Q=3aKeby1nQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] media: i2c: imx219: Fix power sequence
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223192520.20808-4-aarcange@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad.
-
-Thanks again for the patch.
-
-On Fri, 28 Feb 2020 at 16:55, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> When supporting Rpi Camera v2 Module on the RZ/G2E, found the driver had
-> some issues with rcar mipi-csi driver. The sesnosr never entered into LP-11
-
-s/sesnosr/sensor
-
-> state.
->
-> The powerup sequence in the datasheet[1] shows the sensor entering into
-> LP-11 in streaming mode, so to fix this issue transitions are performed
-> from "standby -> streaming -> standby" in the probe().
->
-> With this commit the sensor is able to enter LP-11 mode during power up,
-> as expected by some CSI-2 controllers.
-
-I guess I'm lucky that the CSI2 receiver I deal with doesn't care on this front.
-The datasheet does seem to imply that the line is left in what appears
-to be LP-00 after power up, but this feels like a huge amount of stuff
-to do.
-
-> [1] https://publiclab.org/system/images/photos/000/023/294/original/
-> RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sun, Feb 23, 2020 at 02:25:20PM -0500, Andrea Arcangeli wrote:
+> With multiple NUMA nodes and multiple sockets, the tlbi broadcast
+> shall be delivered through the interconnects in turn increasing the
+> CPU interconnect traffic and the latency of the tlbi broadcast
+> instruction. To avoid the synchronous delivery of the tlbi broadcast
+> before the tlbi instruction can be retired, the hardware would need to
+> implement a replicated mm_cpumask bitflag for each ASID and every CPU
+> would need to tell every other CPU which ASID is being loaded. Exactly
+> what x86 does with mm_cpumask in software.
+> 
+> Even within a single NUMA node the latency of the tlbi broadcast
+> instruction increases almost linearly with the number of CPUs trying
+> to send tlbi broadcasts at the same time.
+> 
+> If a single thread of the process is running and it's also running in
+> the CPU issuing the TLB flush, or if no thread of the process are
+> running, we can achieve full SMP scalability in the arm64 TLB flushng
+> by skipping the tlbi broadcasting.
+> 
+> After the local TLB flush this means the ASID context goes out of sync
+> in all CPUs except the local one. This can be tracked on the per-mm
+> cpumask: if the bit is set it means the ASID context is stale for that
+> CPU. This results in an extra local ASID TLB flush only when threads
+> are running in new CPUs after a TLB flush.
+> 
+> Skipping the tlbi instruction broadcasting is already implemented in
+> local_flush_tlb_all(), this patch only extends it to flush_tlb_mm(),
+> flush_tlb_range() and flush_tlb_page() too.
+> 
+> The below benchmarks are measured on a non-NUMA 32 CPUs system (ARMv8
+> Ampere), so it should be far from a worst case scenario: the
+> enterprise kernel config allows multiple NUMA nodes with NR_CPUS set
+> by default to 4096.
+> 
+> === stock ===
+> 
+>  # cat for-each-cpu.sh
+>  #!/bin/bash
+> 
+>  for i in $(seq `nproc`); do
+>          "$@" &>/dev/null &
+>  done
+>  wait
+>  # perf stat -r 10 -e dummy ./for-each-cpu.sh ./mprotect-threaded 10000
+> [..]
+>             2.1696 +- 0.0122 seconds time elapsed  ( +-  0.56% )
+> 
+>  # perf stat -r 10 -e dummy ./for-each-cpu.sh ./gperftools/tcmalloc_large_heap_fragmentation_unittest
+> [..]
+>             0.99018 +- 0.00360 seconds time elapsed  ( +-  0.36% )
+> 
+>  # cat sort-compute
+>  #!/bin/bash
+> 
+>  for x in `seq 256`; do
+>          for i in `seq 32`; do /usr/bin/sort </usr/bin/sort >/dev/null; done &
+>  done
+>  wait
+>  # perf stat -r 10 -e dummy ./sort-compute
+> [..]
+>             1.8094 +- 0.0139 seconds time elapsed  ( +-  0.77% )
+> 
+> === patch applied ===
+> 
+>  # perf stat -r 10 -e dummy ./for-each-cpu.sh ./mprotect-threaded 10000
+> [..]
+>             0.13941 +- 0.00449 seconds time elapsed  ( +-  3.22% )
+> 
+>  # perf stat -r 10 -e dummy ./for-each-cpu.sh ./gperftools/tcmalloc_large_heap_fragmentation_unittest
+> [..]
+>             0.90510 +- 0.00262 seconds time elapsed  ( +-  0.29% )
+> 
+>  # perf stat -r 10 -e dummy ./sort-compute
+> [..]
+>             1.64025 +- 0.00618 seconds time elapsed  ( +-  0.38% )
+> 
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 > ---
->  drivers/media/i2c/imx219.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index f1effb5a5f66..8b48e148f2d0 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -1171,6 +1171,7 @@ static int imx219_check_hwcfg(struct device *dev)
->
->  static int imx219_probe(struct i2c_client *client)
+>  arch/arm64/include/asm/efi.h         |  2 +-
+>  arch/arm64/include/asm/mmu.h         |  4 +-
+>  arch/arm64/include/asm/mmu_context.h | 33 ++++++++--
+>  arch/arm64/include/asm/tlbflush.h    | 95 +++++++++++++++++++++++++++-
+>  arch/arm64/mm/context.c              | 54 ++++++++++++++++
+>  5 files changed, 177 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
+> index 44531a69d32b..5d9a1433d918 100644
+> --- a/arch/arm64/include/asm/efi.h
+> +++ b/arch/arm64/include/asm/efi.h
+> @@ -131,7 +131,7 @@ static inline void efifb_setup_from_dmi(struct screen_info *si, const char *opt)
+>  
+>  static inline void efi_set_pgd(struct mm_struct *mm)
 >  {
-> +       const struct imx219_reg_list *reg_list;
->         struct device *dev = &client->dev;
->         struct imx219 *imx219;
->         int ret;
-> @@ -1224,6 +1225,38 @@ static int imx219_probe(struct i2c_client *client)
->         /* Set default mode to max resolution */
->         imx219->mode = &supported_modes[0];
->
-> +       /* sensor doesn't enter to LP-11 state upon power up until and unless
-
-Remove "to"
-
-> +        * streaming is started, so upon power up set the default format and
-> +        * switch the modes: standby -> streaming -> standby
-> +        */
-> +       /* getting sensor out of sleep */
-> +       ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
-> +                              IMX219_REG_VALUE_08BIT, IMX219_MODE_STANDBY);
-
-The datasheet says the default for IMX219_REG_MODE_SELECT is already 0
-/ STANDY, so this should be unnecessary as we've only just powered up.
-
-> +       if (ret < 0)
-> +               goto error_power_off;
-> +       usleep_range(100, 110);
+> -	__switch_mm(mm);
+> +	__switch_mm(mm, smp_processor_id());
+>  
+>  	if (system_uses_ttbr0_pan()) {
+>  		if (mm != current->active_mm) {
+> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+> index e4d862420bb4..9072fd7bc5f8 100644
+> --- a/arch/arm64/include/asm/mmu.h
+> +++ b/arch/arm64/include/asm/mmu.h
+> @@ -20,6 +20,7 @@ typedef struct {
+>  	atomic64_t	id;
+>  	void		*vdso;
+>  	unsigned long	flags;
+> +	atomic_t	nr_active_mm;
+>  } mm_context_t;
+>  
+>  /*
+> @@ -27,7 +28,8 @@ typedef struct {
+>   * ASID change and therefore doesn't need to reload the counter using
+>   * atomic64_read.
+>   */
+> -#define ASID(mm)	((mm)->context.id.counter & 0xffff)
+> +#define __ASID(asid)	((asid) & 0xffff)
+> +#define ASID(mm)	__ASID((mm)->context.id.counter)
+>  
+>  extern bool arm64_use_ng_mappings;
+>  
+> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> index 3827ff4040a3..9c66fe317e2f 100644
+> --- a/arch/arm64/include/asm/mmu_context.h
+> +++ b/arch/arm64/include/asm/mmu_context.h
+> @@ -175,7 +175,10 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
+>  #define destroy_context(mm)		do { } while(0)
+>  void check_and_switch_context(struct mm_struct *mm, unsigned int cpu);
+>  
+> -#define init_new_context(tsk,mm)	({ atomic64_set(&(mm)->context.id, 0); 0; })
+> +#define init_new_context(tsk,mm)			\
+> +	({ atomic64_set(&(mm)->context.id, 0);		\
+> +	   atomic_set(&(mm)->context.nr_active_mm, 0);	\
+> +	   0; })
+>  
+>  #ifdef CONFIG_ARM64_SW_TTBR0_PAN
+>  static inline void update_saved_ttbr0(struct task_struct *tsk,
+> @@ -203,6 +206,15 @@ static inline void update_saved_ttbr0(struct task_struct *tsk,
+>  static inline void
+>  enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+>  {
+> +	unsigned int cpu = smp_processor_id();
+> +	if (per_cpu(cpu_not_lazy_tlb, cpu) &&
+> +	    is_idle_task(tsk)) {
+> +		per_cpu(cpu_not_lazy_tlb, cpu) = false;
+> +		if (!system_uses_ttbr0_pan())
+> +			cpu_set_reserved_ttbr0();
+> +		atomic_dec(&mm->context.nr_active_mm);
+> +	}
+> +	VM_WARN_ON(atomic_read(&mm->context.nr_active_mm) < 0);
+>  	/*
+>  	 * We don't actually care about the ttbr0 mapping, so point it at the
+>  	 * zero page.
+> @@ -210,10 +222,8 @@ enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+>  	update_saved_ttbr0(tsk, &init_mm);
+>  }
+>  
+> -static inline void __switch_mm(struct mm_struct *next)
+> +static inline void __switch_mm(struct mm_struct *next, unsigned int cpu)
+>  {
+> -	unsigned int cpu = smp_processor_id();
+> -
+>  	/*
+>  	 * init_mm.pgd does not contain any user mappings and it is always
+>  	 * active for kernel addresses in TTBR1. Just set the reserved TTBR0.
+> @@ -230,8 +240,19 @@ static inline void
+>  switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>  	  struct task_struct *tsk)
+>  {
+> -	if (prev != next)
+> -		__switch_mm(next);
+> +	unsigned int cpu = smp_processor_id();
 > +
-> +       reg_list = &imx219->mode->reg_list;
-> +       ret = imx219_write_regs(imx219, reg_list->regs, reg_list->num_of_regs);
-> +       if (ret) {
-> +               dev_err(&client->dev, "%s failed to default mode\n", __func__);
-> +               goto error_power_off;
-> +       }
-
-Seeing as we don't want the images produced, and we're about to power
-the sensor back down again, do the default register settings do enough
-to allow the shift to LP-11? ie can we drop writing any mode setup
-registers here, and just got to STREAMING and back to STANDBY?
-
-> +       /* getting sensor out of sleep */
-
-We already did that above. This is standby->streaming.
-
-> +       ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
-> +                              IMX219_REG_VALUE_08BIT, IMX219_MODE_STREAMING);
-> +       if (ret < 0)
-> +               goto error_power_off;
-> +       usleep_range(100, 110);
+> +	if (!per_cpu(cpu_not_lazy_tlb, cpu)) {
+> +		per_cpu(cpu_not_lazy_tlb, cpu) = true;
+> +		atomic_inc(&next->context.nr_active_mm);
+> +		__switch_mm(next, cpu);
+> +	} else if (prev != next) {
+> +		atomic_inc(&next->context.nr_active_mm);
+> +		__switch_mm(next, cpu);
+> +		atomic_dec(&prev->context.nr_active_mm);
+> +	}
+> +	VM_WARN_ON(!atomic_read(&next->context.nr_active_mm));
+> +	VM_WARN_ON(atomic_read(&prev->context.nr_active_mm) < 0);
+>  
+>  	/*
+>  	 * Update the saved TTBR0_EL1 of the scheduled-in task as the previous
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index bc3949064725..0bd987ff9cbd 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -136,6 +136,15 @@ static inline void local_flush_tlb_all(void)
+>  	isb();
+>  }
+>  
+> +static inline void local_flush_tlb_asid(unsigned long asid)
+> +{
+> +	asid = __TLBI_VADDR(0, __ASID(asid));
+> +	dsb(nshst);
+> +	__tlbi(aside1, asid);
+> +	__tlbi_user(aside1, asid);
+> +	dsb(nsh);
+> +}
 > +
-> +       /* put sensor back to standby mode */
-> +       ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
-> +                              IMX219_REG_VALUE_08BIT, IMX219_MODE_STANDBY);
-> +       if (ret < 0)
-> +               goto error_power_off;
-> +       usleep_range(100, 110);
+>  static inline void flush_tlb_all(void)
+>  {
+>  	dsb(ishst);
+> @@ -144,9 +153,38 @@ static inline void flush_tlb_all(void)
+>  	isb();
+>  }
+>  
+> +DECLARE_PER_CPU(bool, cpu_not_lazy_tlb);
 > +
->         ret = imx219_init_controls(imx219);
->         if (ret)
->                 goto error_power_off;
-> --
-> 2.20.1
+> +enum tlb_flush_types {
+> +	TLB_FLUSH_NO,
+> +	TLB_FLUSH_LOCAL,
+> +	TLB_FLUSH_BROADCAST,
+> +};
+> +extern enum tlb_flush_types tlb_flush_check(struct mm_struct *mm,
+> +					    unsigned int cpu);
+> +
+>  static inline void flush_tlb_mm(struct mm_struct *mm)
+>  {
+>  	unsigned long asid = __TLBI_VADDR(0, ASID(mm));
+> +	enum tlb_flush_types flush;
+> +
+> +	flush = tlb_flush_check(mm, get_cpu());
+> +	switch (flush) {
+> +	case TLB_FLUSH_LOCAL:
+> +
+> +		dsb(nshst);
+> +		__tlbi(aside1, asid);
+> +		__tlbi_user(aside1, asid);
+> +		dsb(nsh);
+> +
+> +		/* fall through */
+> +	case TLB_FLUSH_NO:
+> +		put_cpu();
+> +		return;
+> +	case TLB_FLUSH_BROADCAST:
+> +		break;
+> +	}
+> +	put_cpu();
+>  
+>  	dsb(ishst);
+>  	__tlbi(aside1is, asid);
+> @@ -167,7 +205,31 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+>  static inline void flush_tlb_page(struct vm_area_struct *vma,
+>  				  unsigned long uaddr)
+>  {
+> -	flush_tlb_page_nosync(vma, uaddr);
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	unsigned long addr = __TLBI_VADDR(uaddr, ASID(mm));
+> +	enum tlb_flush_types flush;
+> +
+> +	flush = tlb_flush_check(mm, get_cpu());
+> +	switch (flush) {
+> +	case TLB_FLUSH_LOCAL:
+> +
+> +		dsb(nshst);
+> +		__tlbi(vale1, addr);
+> +		__tlbi_user(vale1, addr);
+> +		dsb(nsh);
+> +
+> +		/* fall through */
+> +	case TLB_FLUSH_NO:
+> +		put_cpu();
+> +		return;
+> +	case TLB_FLUSH_BROADCAST:
+> +		break;
+> +	}
+> +	put_cpu();
+> +
+> +	dsb(ishst);
+> +	__tlbi(vale1is, addr);
+> +	__tlbi_user(vale1is, addr);
+>  	dsb(ish);
+>  }
+>  
+> @@ -181,14 +243,16 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  				     unsigned long start, unsigned long end,
+>  				     unsigned long stride, bool last_level)
+>  {
+> -	unsigned long asid = ASID(vma->vm_mm);
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	unsigned long asid = ASID(mm);
+>  	unsigned long addr;
+> +	enum tlb_flush_types flush;
+>  
+>  	start = round_down(start, stride);
+>  	end = round_up(end, stride);
+>  
+>  	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+> -		flush_tlb_mm(vma->vm_mm);
+> +		flush_tlb_mm(mm);
+>  		return;
+>  	}
+>  
+> @@ -198,6 +262,31 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  	start = __TLBI_VADDR(start, asid);
+>  	end = __TLBI_VADDR(end, asid);
+>  
+> +	flush = tlb_flush_check(mm, get_cpu());
+> +	switch (flush) {
+> +	case TLB_FLUSH_LOCAL:
+> +
+> +		dsb(nshst);
+> +		for (addr = start; addr < end; addr += stride) {
+> +			if (last_level) {
+> +				__tlbi(vale1, addr);
+> +				__tlbi_user(vale1, addr);
+> +			} else {
+> +				__tlbi(vae1, addr);
+> +				__tlbi_user(vae1, addr);
+> +			}
+> +		}
+> +		dsb(nsh);
+> +
+> +		/* fall through */
+> +	case TLB_FLUSH_NO:
+> +		put_cpu();
+> +		return;
+> +	case TLB_FLUSH_BROADCAST:
+> +		break;
+> +	}
+> +	put_cpu();
+> +
+>  	dsb(ishst);
+>  	for (addr = start; addr < end; addr += stride) {
+>  		if (last_level) {
+> diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
+> index 8ef73e89d514..3152b7f7da12 100644
+> --- a/arch/arm64/mm/context.c
+> +++ b/arch/arm64/mm/context.c
+> @@ -25,6 +25,7 @@ static unsigned long *asid_map;
+>  static DEFINE_PER_CPU(atomic64_t, active_asids);
+>  static DEFINE_PER_CPU(u64, reserved_asids);
+>  static cpumask_t tlb_flush_pending;
+> +DEFINE_PER_CPU(bool, cpu_not_lazy_tlb);
+>  
+>  #define ASID_MASK		(~GENMASK(asid_bits - 1, 0))
+>  #define ASID_FIRST_VERSION	(1UL << asid_bits)
+> @@ -191,6 +192,12 @@ static u64 new_context(struct mm_struct *mm)
+>  set_asid:
+>  	__set_bit(asid, asid_map);
+>  	cur_idx = asid;
+> +	/*
+> +	  * check_and_switch_context() will change the ASID of this mm
+> +	  * so no need of extra ASID local TLB flushes: the new ASID
+> +	  * isn't stale anymore after the tlb_flush_pending was set.
+> +	  */
+> +	cpumask_clear(mm_cpumask(mm));
+>  	return idx2asid(asid) | generation;
+>  }
+>  
+> @@ -240,6 +247,15 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+>  	raw_spin_unlock_irqrestore(&cpu_asid_lock, flags);
+>  
+>  switch_mm_fastpath:
+> +	/*
+> +	 * Enforce CPU ordering between the atomic_inc(nr_active_mm)
+> +	 * in switch_mm() and the below cpumask_test_cpu(mm_cpumask).
+> +	 */
+> +	smp_mb();
+> +	if (cpumask_test_cpu(cpu, mm_cpumask(mm))) {
+> +		cpumask_clear_cpu(cpu, mm_cpumask(mm));
+> +		local_flush_tlb_asid(asid);
+> +	}
+>  
+>  	arm64_apply_bp_hardening();
+>  
+> @@ -251,6 +267,44 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+>  		cpu_switch_mm(mm->pgd, mm);
+>  }
+>  
+> +enum tlb_flush_types tlb_flush_check(struct mm_struct *mm, unsigned int cpu)
+> +{
+> +	if (atomic_read(&mm->context.nr_active_mm) <= 1) {
+> +		bool is_local = current->active_mm == mm &&
+> +			per_cpu(cpu_not_lazy_tlb, cpu);
+> +		cpumask_t *stale_cpumask = mm_cpumask(mm);
+> +		unsigned int next_zero = cpumask_next_zero(-1, stale_cpumask);
+> +		bool local_is_clear = false;
+> +		if (next_zero < nr_cpu_ids &&
+> +		    (is_local && next_zero == cpu)) {
+> +			next_zero = cpumask_next_zero(next_zero, stale_cpumask);
+> +			local_is_clear = true;
+> +		}
+> +		if (next_zero < nr_cpu_ids) {
+> +			cpumask_setall(stale_cpumask);
+> +			local_is_clear = false;
+> +		}
+> +
+> +		/*
+> +		 * Enforce CPU ordering between the above
+> +		 * cpumask_setall(mm_cpumask) and the below
+> +		 * atomic_read(nr_active_mm).
+> +		 */
+> +		smp_mb();
+> +
+> +		if (likely(atomic_read(&mm->context.nr_active_mm)) <= 1) {
+> +			if (is_local) {
+> +				if (!local_is_clear)
+> +					cpumask_clear_cpu(cpu, stale_cpumask);
+> +				return TLB_FLUSH_LOCAL;
+> +			}
+> +			if (atomic_read(&mm->context.nr_active_mm) == 0)
+> +				return TLB_FLUSH_NO;
+> +		}
+> +	}
+> +	return TLB_FLUSH_BROADCAST;
+> +}
+> +
+>  /* Errata workaround post TTBRx_EL1 update. */
+>  asmlinkage void post_ttbr_update_workaround(void)
+>  {
 
-Cheers,
-  Dave
+
+May I suggest the following (cosmetic) changes to this
+patch?
+
+I'm testing these changes against RHEL integration + regression
+tests, and I'll also run them against a specially crafted test
+to measure the impact on task-switching, if any. (I'll report back,
+soon)
+
+Cheers!
+ Rafael
+--
+
+
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index bb73f02bef28..14eceba302bc 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -182,25 +182,21 @@ static inline void flush_tlb_mm(struct mm_struct *mm)
+ 	flush = tlb_flush_check(mm, get_cpu());
+ 	switch (flush) {
+ 	case TLB_FLUSH_LOCAL:
+-
+ 		dsb(nshst);
+ 		__tlbi(aside1, asid);
+ 		__tlbi_user(aside1, asid);
+ 		dsb(nsh);
+-
+ 		/* fall through */
+ 	case TLB_FLUSH_NO:
+-		put_cpu();
+-		return;
++		break;
+ 	case TLB_FLUSH_BROADCAST:
++		dsb(ishst);
++		__tlbi(aside1is, asid);
++		__tlbi_user(aside1is, asid);
++		dsb(ish);
+ 		break;
+ 	}
+ 	put_cpu();
+-
+-	dsb(ishst);
+-	__tlbi(aside1is, asid);
+-	__tlbi_user(aside1is, asid);
+-	dsb(ish);
+ }
+ 
+ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+@@ -223,25 +219,21 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+ 	flush = tlb_flush_check(mm, get_cpu());
+ 	switch (flush) {
+ 	case TLB_FLUSH_LOCAL:
+-
+ 		dsb(nshst);
+ 		__tlbi(vale1, addr);
+ 		__tlbi_user(vale1, addr);
+ 		dsb(nsh);
+-
+ 		/* fall through */
+ 	case TLB_FLUSH_NO:
+-		put_cpu();
+-		return;
++		break;
+ 	case TLB_FLUSH_BROADCAST:
++		dsb(ishst);
++		__tlbi(vale1is, addr);
++		__tlbi_user(vale1is, addr);
++		dsb(ish);
+ 		break;
+ 	}
+ 	put_cpu();
+-
+-	dsb(ishst);
+-	__tlbi(vale1is, addr);
+-	__tlbi_user(vale1is, addr);
+-	dsb(ish);
+ }
+ 
+ /*
+@@ -276,7 +268,6 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 	flush = tlb_flush_check(mm, get_cpu());
+ 	switch (flush) {
+ 	case TLB_FLUSH_LOCAL:
+-
+ 		dsb(nshst);
+ 		for (addr = start; addr < end; addr += stride) {
+ 			if (last_level) {
+@@ -288,27 +279,24 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 			}
+ 		}
+ 		dsb(nsh);
+-
+ 		/* fall through */
+ 	case TLB_FLUSH_NO:
+-		put_cpu();
+-		return;
++		break;
+ 	case TLB_FLUSH_BROADCAST:
++		dsb(ishst);
++		for (addr = start; addr < end; addr += stride) {
++			if (last_level) {
++				__tlbi(vale1is, addr);
++				__tlbi_user(vale1is, addr);
++			} else {
++				__tlbi(vae1is, addr);
++				__tlbi_user(vae1is, addr);
++			}
++		}
++		dsb(ish);
+ 		break;
+ 	}
+ 	put_cpu();
+-
+-	dsb(ishst);
+-	for (addr = start; addr < end; addr += stride) {
+-		if (last_level) {
+-			__tlbi(vale1is, addr);
+-			__tlbi_user(vale1is, addr);
+-		} else {
+-			__tlbi(vae1is, addr);
+-			__tlbi_user(vae1is, addr);
+-		}
+-	}
+-	dsb(ish);
+ }
+ 
+ static inline void flush_tlb_range(struct vm_area_struct *vma,
+
