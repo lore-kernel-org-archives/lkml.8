@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9899C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623B7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E3F246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9A9246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aMm4+bks"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aLJD/jdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCBAFL (ORCPT
+        id S1726859AbgCBAFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:05:11 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44671 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgCBAFK (ORCPT
+        Sun, 1 Mar 2020 19:05:18 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53622 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbgCBAFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:05:10 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a14so4485815pgb.11
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 16:05:08 -0800 (PST)
+        Sun, 1 Mar 2020 19:05:17 -0500
+Received: by mail-pj1-f66.google.com with SMTP id cx7so455871pjb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 16:05:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=HL4U/mhSqP+I8ieHIpJ1bevhb68hH4LDsXHxJRde9Ok=;
-        b=aMm4+bksmSzN4Xi5NWUAAvfgFK8Xo4CKpy8hgZHVs9TJURoyfuiSqmauJJ8fYwvbMT
-         NWx7zsQaz+fCtPpDoL0cp9HBqs2svj44p7RQPXVR6OBHdPYpDCFV58282l9/GeDD8pUK
-         ovv+BYmkRjI4e7MhXgy4nHO3wY/AbsYChLWqOOZtL1IyyW2X2sJFbVxAqcItxAV3YsSG
-         otB2iLZ0GiRiZNAJOX3tDbGluV9P966Ee5+aDXVxcp98a2LEkwmXfo2DhEki0cUVZDAt
-         2oyfPxjqoYKDqNXMzHFdLFvyP/Lsv0IUs8kfwlC2prTPTyD3RFBG/71eLoGjjGMxFI+9
-         MnLg==
+        bh=s2fBx8J6GyzyTr+yWkTnlDANlDiTpifKHO8aX/LJVZ0=;
+        b=aLJD/jdoeWRcBmGB9UJDHEOsiTXmMCZX2qHuC9G1Na9qtP6bwlFcbBJ5l7nRZmAGw2
+         YqXuvD5U9G8W8Q3lT/vxF2laR7nwNqjPgPpvP9AOso/+X2N1Q3ZpYmTUigTMTehaWyfY
+         sUjJfbK6NqNNuK13oOAvdbh/h8ecZ2HiE+rjimytVcMlSkMZ7dWzu3nHx3AJBmanzZNp
+         8yNNrfx4sVwq0C2y+HwXCRQZjOd/WDkF1GcRlGHT4g6FasOCPgZFWPNC85iX3Ls+Tl/s
+         CrKBi+G2oFBKoGG4z5Dqc4/uG+/xkdovbC/CeqPEvNUVXEEz7K519yMXHNzVyG8joR7w
+         ZckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=HL4U/mhSqP+I8ieHIpJ1bevhb68hH4LDsXHxJRde9Ok=;
-        b=hKlKgFxCRGZn3n4J6sCPjbygPPH4rYSEZUjil0iFTbtMPPza5XwFCt/YOKkhrEAM95
-         B2kqbnIp8k79kbzB/rgRZfB8PnTgbUIVTnkAp2o3pvidMoA51CueAPCBEQpj/eBCH7Ob
-         RHtShgZtSclygl0CKGG55VK89DvxQhq8tWOj/gnOQxGprhS19PPFMu6+yXeZjymCcLRM
-         /N2Fp28ABx58oZS0yyB/7I0N/oxHY3H/p2YTamAybqeFAJo2/SmY/w4JH6BLWbx4KF0N
-         NteXOt5r08N1jFpwej68ul6aGq3GQgbntuaUuw7hZKB95o+9GAZ05ABuNM15sm5MzMdW
-         eeJw==
-X-Gm-Message-State: ANhLgQ0tQaF+ppzTml7Iq/6siwshp6Amk3O6KFETVY0jt5QgQMpGlHiF
-        KNdaGYSJuulzKJ7eJx9woThGdQ==
-X-Google-Smtp-Source: ADFU+vsEOC/HzMkuaeWddnFs9Umo1QdxDB48tqkJBHcoBlw19DJR6MFjGfO2P7dsKuTLNAkSkIPkyQ==
-X-Received: by 2002:aa7:8426:: with SMTP id q6mr8892478pfn.221.1583107508211;
-        Sun, 01 Mar 2020 16:05:08 -0800 (PST)
+        bh=s2fBx8J6GyzyTr+yWkTnlDANlDiTpifKHO8aX/LJVZ0=;
+        b=j+r4hkwQhM/lSpTHUO5HQxcZAizOy4GItg3Qkccn19gutna7gyxJ7LsjCn7+iEzLoI
+         fs9R2YTFA3WRyzng9oVerLrfDoWZRO9YdHI6r+VIhVt2hKNlAsqR7WlC08hMa6xadJWg
+         yL/6i5HCECWudnuz3T9cEkXfnwofkpgn0H8v3+dOFcIfXbuJ7YsIUfEoy4stlc2bm5HO
+         UW0kvWu42Cpd7qe/R27NPSG73CNNuPUwe6gcWPvBvccWyGwK2T0MAkAwwGdMQYZ5UrFD
+         Cn8B4rkdkxG1dV+8N5Bf+iPfRYfT3dq6EORm4xLSK5jJYE/segqjigrll5kWGtITW49d
+         73/A==
+X-Gm-Message-State: APjAAAXRk109wTeRk/rKN/KpVX6OjsxZIiIXEampCZbwlYcXrMtfDl/h
+        Rhjo835+8THzevLHoK3uJMeraw==
+X-Google-Smtp-Source: APXvYqxz4SV+mLft6McRhU3HpemRKIdhbgx1rY2V2skT/KnaIiFXqNWvdBQ87anIhdGyyEzLZM2hZA==
+X-Received: by 2002:a17:90a:8c8a:: with SMTP id b10mr18515195pjo.51.1583107514888;
+        Sun, 01 Mar 2020 16:05:14 -0800 (PST)
 Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 5sm5851383pfw.179.2020.03.01.16.05.07
+        by smtp.gmail.com with ESMTPSA id iq3sm9864063pjb.0.2020.03.01.16.05.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 16:05:07 -0800 (PST)
-Date:   Sun, 1 Mar 2020 16:05:06 -0800 (PST)
+        Sun, 01 Mar 2020 16:05:13 -0800 (PST)
+Date:   Sun, 1 Mar 2020 16:05:13 -0800 (PST)
 From:   David Rientjes <rientjes@google.com>
 X-X-Sender: rientjes@chino.kir.corp.google.com
 To:     Christoph Hellwig <hch@lst.de>,
@@ -66,9 +66,10 @@ cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
         baekhw@google.com,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: [rfc 1/6] dma-mapping: pass device to atomic allocation functions
+Subject: [rfc 2/6] dma-remap: add additional atomic pools to map to gfp
+ mask
 In-Reply-To: <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.2003011536330.213582@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.2003011537000.213582@chino.kir.corp.google.com>
 References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
@@ -78,112 +79,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This augments the dma_{alloc,free}_from_pool() functions with a pointer
-to the struct device of the allocation.   This introduces no functional
-change and will be used later to determine the optimal gfp mask to
-allocate memory from.
+The single atomic pool is allocated from the lowest zone possible since
+it is guaranteed to be applicable for any DMA allocation.
 
-dma_in_atomic_pool() is not used outside kernel/dma/remap.c, so remove
-its declaration from the header file.
+Devices may allocate through the DMA API but not have a strict reliance
+on GFP_DMA memory.  Since the atomic pool will be used for all
+non-blockable allocations, returning all memory from ZONE_DMA may
+unnecessarily deplete the zone.
+
+Provision for multiple atomic pools that will map to the optimal gfp
+mask of the device.  These will be wired up in a subsequent patch.
 
 Signed-off-by: David Rientjes <rientjes@google.com>
 ---
- drivers/iommu/dma-iommu.c   | 5 +++--
- include/linux/dma-mapping.h | 6 +++---
- kernel/dma/direct.c         | 4 ++--
- kernel/dma/remap.c          | 9 +++++----
- 4 files changed, 13 insertions(+), 11 deletions(-)
+ kernel/dma/remap.c | 75 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -952,7 +952,7 @@ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
- 
- 	/* Non-coherent atomic allocation? Easy */
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
--	    dma_free_from_pool(cpu_addr, alloc_size))
-+	    dma_free_from_pool(dev, cpu_addr, alloc_size))
- 		return;
- 
- 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
-@@ -1035,7 +1035,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    !gfpflags_allow_blocking(gfp) && !coherent)
--		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
-+		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
-+					       gfp);
- 	else
- 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
- 	if (!cpu_addr)
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -630,9 +630,9 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
- 			pgprot_t prot, const void *caller);
- void dma_common_free_remap(void *cpu_addr, size_t size);
- 
--bool dma_in_atomic_pool(void *start, size_t size);
--void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags);
--bool dma_free_from_pool(void *start, size_t size);
-+void *dma_alloc_from_pool(struct device *dev, size_t size,
-+			  struct page **ret_page, gfp_t flags);
-+bool dma_free_from_pool(struct device *dev, void *start, size_t size);
- 
- int
- dma_common_get_sgtable(struct device *dev, struct sg_table *sgt, void *cpu_addr,
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -127,7 +127,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    dma_alloc_need_uncached(dev, attrs) &&
- 	    !gfpflags_allow_blocking(gfp)) {
--		ret = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
-+		ret = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page, gfp);
- 		if (!ret)
- 			return NULL;
- 		goto done;
-@@ -210,7 +210,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	}
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
--	    dma_free_from_pool(cpu_addr, PAGE_ALIGN(size)))
-+	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
- 		return;
- 
- 	if (force_dma_unencrypted(dev))
 diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
 --- a/kernel/dma/remap.c
 +++ b/kernel/dma/remap.c
-@@ -173,7 +173,7 @@ static int __init dma_atomic_pool_init(void)
+@@ -100,6 +100,8 @@ void dma_common_free_remap(void *cpu_addr, size_t size)
+ 
+ #ifdef CONFIG_DMA_DIRECT_REMAP
+ static struct gen_pool *atomic_pool __ro_after_init;
++static struct gen_pool *atomic_pool_dma32 __ro_after_init;
++static struct gen_pool *atomic_pool_normal __ro_after_init;
+ 
+ #define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
+ static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
+@@ -111,66 +113,79 @@ static int __init early_coherent_pool(char *p)
  }
+ early_param("coherent_pool", early_coherent_pool);
+ 
+-static gfp_t dma_atomic_pool_gfp(void)
++static int __init __dma_atomic_pool_init(struct gen_pool **pool,
++					 size_t pool_size, gfp_t gfp)
+ {
+-	if (IS_ENABLED(CONFIG_ZONE_DMA))
+-		return GFP_DMA;
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		return GFP_DMA32;
+-	return GFP_KERNEL;
+-}
+-
+-static int __init dma_atomic_pool_init(void)
+-{
+-	unsigned int pool_size_order = get_order(atomic_pool_size);
+-	unsigned long nr_pages = atomic_pool_size >> PAGE_SHIFT;
++	const unsigned int order = get_order(pool_size);
++	const unsigned long nr_pages = pool_size >> PAGE_SHIFT;
+ 	struct page *page;
+ 	void *addr;
+ 	int ret;
+ 
+ 	if (dev_get_cma_area(NULL))
+-		page = dma_alloc_from_contiguous(NULL, nr_pages,
+-						 pool_size_order, false);
++		page = dma_alloc_from_contiguous(NULL, nr_pages, order, false);
+ 	else
+-		page = alloc_pages(dma_atomic_pool_gfp(), pool_size_order);
++		page = alloc_pages(gfp, order);
+ 	if (!page)
+ 		goto out;
+ 
+-	arch_dma_prep_coherent(page, atomic_pool_size);
++	arch_dma_prep_coherent(page, pool_size);
+ 
+-	atomic_pool = gen_pool_create(PAGE_SHIFT, -1);
+-	if (!atomic_pool)
++	*pool = gen_pool_create(PAGE_SHIFT, -1);
++	if (!*pool)
+ 		goto free_page;
+ 
+-	addr = dma_common_contiguous_remap(page, atomic_pool_size,
++	addr = dma_common_contiguous_remap(page, pool_size,
+ 					   pgprot_dmacoherent(PAGE_KERNEL),
+ 					   __builtin_return_address(0));
+ 	if (!addr)
+ 		goto destroy_genpool;
+ 
+-	ret = gen_pool_add_virt(atomic_pool, (unsigned long)addr,
+-				page_to_phys(page), atomic_pool_size, -1);
++	ret = gen_pool_add_virt(*pool, (unsigned long)addr, page_to_phys(page),
++				pool_size, -1);
+ 	if (ret)
+ 		goto remove_mapping;
+-	gen_pool_set_algo(atomic_pool, gen_pool_first_fit_order_align, NULL);
++	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
+ 
+-	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
+-		atomic_pool_size / 1024);
++	pr_info("DMA: preallocated %zu KiB %pGg pool for atomic allocations\n",
++		pool_size >> 10, &gfp);
+ 	return 0;
+ 
+ remove_mapping:
+-	dma_common_free_remap(addr, atomic_pool_size);
++	dma_common_free_remap(addr, pool_size);
+ destroy_genpool:
+-	gen_pool_destroy(atomic_pool);
+-	atomic_pool = NULL;
++	gen_pool_destroy(*pool);
++	*pool = NULL;
+ free_page:
+ 	if (!dma_release_from_contiguous(NULL, page, nr_pages))
+-		__free_pages(page, pool_size_order);
++		__free_pages(page, order);
+ out:
+-	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
+-		atomic_pool_size / 1024);
++	pr_err("DMA: failed to allocate %zu KiB %pGg pool for atomic allocation\n",
++		atomic_pool_size >> 10, &gfp);
+ 	return -ENOMEM;
+ }
++
++static int __init dma_atomic_pool_init(void)
++{
++	int ret = 0;
++	int err;
++
++	ret = __dma_atomic_pool_init(&atomic_pool_normal, atomic_pool_size,
++				     GFP_KERNEL);
++	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
++		err = __dma_atomic_pool_init(&atomic_pool, atomic_pool_size,
++					     GFP_DMA);
++		if (!ret && err)
++			ret = err;
++	}
++	if (IS_ENABLED(CONFIG_ZONE_DMA32)) {
++		err = __dma_atomic_pool_init(&atomic_pool_dma32,
++					     atomic_pool_size, GFP_DMA32);
++		if (!ret && err)
++			ret = err;
++	}
++	return ret;
++}
  postcore_initcall(dma_atomic_pool_init);
  
--bool dma_in_atomic_pool(void *start, size_t size)
-+static bool dma_in_atomic_pool(struct device *dev, void *start, size_t size)
- {
- 	if (unlikely(!atomic_pool))
- 		return false;
-@@ -181,7 +181,8 @@ bool dma_in_atomic_pool(void *start, size_t size)
- 	return gen_pool_has_addr(atomic_pool, (unsigned long)start, size);
- }
- 
--void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
-+void *dma_alloc_from_pool(struct device *dev, size_t size,
-+			  struct page **ret_page, gfp_t flags)
- {
- 	unsigned long val;
- 	void *ptr = NULL;
-@@ -203,9 +204,9 @@ void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
- 	return ptr;
- }
- 
--bool dma_free_from_pool(void *start, size_t size)
-+bool dma_free_from_pool(struct device *dev, void *start, size_t size)
- {
--	if (!dma_in_atomic_pool(start, size))
-+	if (!dma_in_atomic_pool(dev, start, size))
- 		return false;
- 	gen_pool_free(atomic_pool, (unsigned long)start, size);
- 	return true;
+ static bool dma_in_atomic_pool(struct device *dev, void *start, size_t size)
