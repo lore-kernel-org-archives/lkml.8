@@ -2,70 +2,68 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D295C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E46C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20C3214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83BB214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCBOff (ORCPT
+        id S1727328AbgCBOfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:35:35 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46524 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgCBOfe (ORCPT
+        Mon, 2 Mar 2020 09:35:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32853 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgCBOfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:35:34 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 162EB294121;
-        Mon,  2 Mar 2020 14:35:33 +0000 (GMT)
-Date:   Mon, 2 Mar 2020 15:35:29 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
-Message-ID: <20200302153529.4e2429e7@collabora.com>
-In-Reply-To: <20200302145746.3e94c1d1@coco.lan>
-References: <20200220163016.21708-1-ezequiel@collabora.com>
-        <20200220163016.21708-6-ezequiel@collabora.com>
-        <20200302145746.3e94c1d1@coco.lan>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 2 Mar 2020 09:35:51 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8mAd-00073L-DL; Mon, 02 Mar 2020 14:35:47 +0000
+Date:   Mon, 2 Mar 2020 15:35:46 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302143546.srzk3rnh4o6s76a7@wittgenstein>
+References: <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <848282.1583159228@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <848282.1583159228@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 14:57:46 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> > +	for (j = 0; j < 3; j++) {  
+On Mon, Mar 02, 2020 at 02:27:08PM +0000, David Howells wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> wrote:
 > 
-> Again a magic number. I guess this came from that big "M_N" table with 4
-> elements, right? Please use a define instead of hardcoding a number
-> here.
+> > > AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
+> > > so it's relatively little protection.
+> > 
+> > So this is partially why I think it's at least worth considerings: the
+> > new RESOLVE_NO_SYMLINKS flag does block all symlink resolution, not just
+> > for the last component in contrast to AT_SYMLINK_NOFOLLOW. This is
+> > 278121417a72d87fb29dd8c48801f80821e8f75a
+> 
+> That sounds like a potentially significant UAPI change.  What will that break?
 
-Nope, it's unrelated to the cabac_table size, it's related to how the
-HW accesses the P/B reflists (there are 1 P reflist, and 2 B reflists,
-hence the 3 here). I guess we can have a '#define NUM_REFLISTS 3'.
+I think we settled this and can agree on RESOLVE_NO_SYMLINKS being the
+right thing to do, i.e. not resolving symlinks will stay opt-in.
+Or is your worry even with the current semantics of openat2()? I don't
+see the issue since O_NOFOLLOW still works with openat2().
+
+Christian
