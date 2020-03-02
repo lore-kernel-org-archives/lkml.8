@@ -2,424 +2,122 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F5AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654FBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6752146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B56D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R5Q5ih4j"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="g4G7EghD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCBPNY (ORCPT
+        id S1727195AbgCBPOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:13:24 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46623 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbgCBPNX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:13:23 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h18so12004056ljl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0znOc/l4mj2MJ35/NatCkndFXeueBI39Q/e36DG17iU=;
-        b=R5Q5ih4jWWs27qQeLWxWpxlrF2siqroVPitDRgHweg3soyN+wO3wOnPU8gXE+1xFUm
-         5ZonsQW1PeZnHOLs3Wz1+gCshU1Svg4r6tI+/DDukRfjl50fGOHJjPCuDGlDSlMRHrTL
-         1O38TcjI1oNlTqmCScGEkXrFd5FhdZqUiBzexHOzCNgYU5uYFBrCabW1S4HnJzJU8cvD
-         LfFX9Ll4uRtK5AVYhQB9LuhXoRsvoudOVxjJb5DGH9Eh4zqsV1tJg1zyjSJ8g+BNDgKn
-         qHC14K/3y6lGdw1TCQl5T/pzDYB0h7GLMscDxTU38EaMjykswDkGT5SNFyc2FPIF6NHS
-         vHAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0znOc/l4mj2MJ35/NatCkndFXeueBI39Q/e36DG17iU=;
-        b=rmFeLHjoKmccLghJGePC+uHp6XbSVjwC88gcWYYIhRLGe9V8AO91QHrBXvaGLNDAF3
-         HWe5rCBYHFalkOLMAaCsLT4XYDtkXzx9b0KSugReaFcIhpFFQYPEpBMbFfEtFVVOJYWt
-         WfX4Ek5JNTHublna0jsdmzuaop3ZW/1VczbfHxz1dtafLZVUJxEtX3bprMUKkGZrH70K
-         ka64pbTD1F4q+Wj2y0g4Cf4vXDWV6cldM7PzXSAvgLoRwMOmiQ45E5ZaEYBZvs5RhYqx
-         p5la+n4ZYO/FpbPFsF/xYDbzPxMnNv7wqr/ol3XdlLwP28iXFRZZUxq02qb/Wl07a47C
-         2bsg==
-X-Gm-Message-State: ANhLgQ3uxDStQInSL9fXKYNX0ySBH0Cnl/J+XV/MqvgTkxqLcea3YL2C
-        F7rUgIrth564pYWMVELMUoDnQQ==
-X-Google-Smtp-Source: ADFU+vt57LW8SmXLrd9ODHMkgUjfh7RsWPqsfRJnfCjyE7BoC7s1c6y2EaNcRrTje8v8HX/jTyFJfw==
-X-Received: by 2002:a2e:9256:: with SMTP id v22mr12302182ljg.45.1583162000087;
-        Mon, 02 Mar 2020 07:13:20 -0800 (PST)
-Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
-        by smtp.gmail.com with ESMTPSA id r14sm3028500ljj.54.2020.03.02.07.13.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:13:19 -0800 (PST)
-Subject: Re: [PATCH 2/3] media: i2c: imx219: Add support for SRGGB8_1X8 format
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228165503.18054-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <830c49f7-74b4-c6c3-7883-ec0f967ec730@linaro.org>
-Date:   Mon, 2 Mar 2020 18:13:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200228165503.18054-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Mar 2020 10:14:21 -0500
+Received: from m15-113.126.com ([220.181.15.113]:47910 "EHLO m15-113.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgCBPOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:14:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=hbtuA6sJCGwZmeCm5d
+        VANr4qYyH1rkLKX1gUP6zj/ZE=; b=g4G7EghDT40FCio/gpHJxKjigaPPGy2SPR
+        NrhT6bdIRNw6RZvRao7UPkcscl7lb4vRVfRLanCKSWqs8PB6GTgHxiK5xsBQtzjj
+        GyZvk4nvAq4xR55tHFW92tQJ8aWkBBx01VuQM6kOm1VLiD/dHxBJEKSNrN9epCxr
+        HLWgrgQKA=
+Received: from 192.168.137.250 (unknown [112.10.84.98])
+        by smtp3 (Coremail) with SMTP id DcmowACXJcLBIl1e0wO_Bw--.47949S3;
+        Mon, 02 Mar 2020 23:14:10 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/filemap.c: clear page error before actual read
+Date:   Mon,  2 Mar 2020 10:14:09 -0500
+Message-Id: <1583162049-17623-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DcmowACXJcLBIl1e0wO_Bw--.47949S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWF1DKFWkWF43JF13AF13Jwb_yoW5WFykpr
+        ZxJ3WxKr4DGFnIkF4vy3Z7Cr1rGr4vyay5Way8W3srZwn8GFn3u34SkayDWrW3Jr1FyF42
+        qrsYqas8CrZYqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jSE__UUUUU=
+X-Originating-IP: [112.10.84.98]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi7QDapFpD+Fix5QABs-
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
-
-Thanks for the patch!
-
-On 28.02.2020 19:55, Lad Prabhakar wrote:
-> imx219 sensor is capable for RAW8/RAW10 modes, this commit adds support
-> for SRGGB8_1X8 format.
-
-... but not for SGRBG8_1X8, SGBRG8_1X8, and SBGGR8_1X8?
-
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->   drivers/media/i2c/imx219.c | 122 +++++++++++++++++++++++++++++--------
->   1 file changed, 96 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index 8b48e148f2d0..1388c9bc00bb 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -90,6 +90,9 @@
->   
->   #define IMX219_REG_ORIENTATION		0x0172
->   
-> +#define IMX219_CSI_DATA_FORMAT_A_0_7	0x018c
-> +#define IMX219_CSI_DATA_FORMAT_A_8_15	0x018d
-> +
->   /* Test Pattern Control */
->   #define IMX219_REG_TEST_PATTERN		0x0600
->   #define IMX219_TEST_PATTERN_DISABLE	0
-> @@ -135,6 +138,16 @@ struct imx219_mode {
->   	struct imx219_reg_list reg_list;
->   };
->   
-> +struct imx219_pixfmt {
-> +	u32 code;
-> +	u32 colorspace;
-> +};
-> +
-> +static const struct imx219_pixfmt imx219_formats[] = {
-> +	{ MEDIA_BUS_FMT_SRGGB8_1X8, V4L2_COLORSPACE_SRGB, },
-> +	{ MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_COLORSPACE_SRGB },
-> +};
-
-This table has only one (RGGB) layout (out of 4 possible) for 8-bit and for 10-bit
-modes.
-
-> +
->   /*
->    * Register sets lifted off the i2C interface from the Raspberry Pi firmware
->    * driver.
-> @@ -168,8 +181,6 @@ static const struct imx219_reg mode_3280x2464_regs[] = {
->   	{0x0171, 0x01},
->   	{0x0174, 0x00},
->   	{0x0175, 0x00},
-> -	{0x018c, 0x0a},
-> -	{0x018d, 0x0a},
->   	{0x0301, 0x05},
->   	{0x0303, 0x01},
->   	{0x0304, 0x03},
-> @@ -230,8 +241,6 @@ static const struct imx219_reg mode_1920_1080_regs[] = {
->   	{0x0171, 0x01},
->   	{0x0174, 0x00},
->   	{0x0175, 0x00},
-> -	{0x018c, 0x0a},
-> -	{0x018d, 0x0a},
->   	{0x0301, 0x05},
->   	{0x0303, 0x01},
->   	{0x0304, 0x03},
-> @@ -290,8 +299,6 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
->   	{0x0171, 0x01},
->   	{0x0174, 0x01},
->   	{0x0175, 0x01},
-> -	{0x018c, 0x0a},
-> -	{0x018d, 0x0a},
->   	{0x0301, 0x05},
->   	{0x0303, 0x01},
->   	{0x0304, 0x03},
-> @@ -413,6 +420,8 @@ struct imx219 {
->   	struct v4l2_subdev sd;
->   	struct media_pad pad;
->   
-> +	struct v4l2_mbus_framefmt fmt;
-> +
-
-- adding the whole struct v4l2_mbus_framefmt for "is it RAW10 or RAW8" looks
-like an overkill (and adds some duplication of code - see below).
-
->   	struct clk *xclk; /* system clock to IMX219 */
->   	u32 xclk_freq;
->   
-> @@ -519,19 +528,26 @@ static int imx219_write_regs(struct imx219 *imx219,
->   }
->   
->   /* Get bayer order based on flip setting. */
-> -static u32 imx219_get_format_code(struct imx219 *imx219)
-> +static u32 imx219_get_format_code(struct imx219 *imx219, u32 code)
-
-Naming the 2nd argument as 'code' seems a bit confusing to me, as it
-used to select between MEDIA_BUS_FMT_*_1X10 and MEDIA_BUS_FMT_*_1X8.
-While the Bayer order depends on the current hflip/vflip settings
-(they are stored in struct imx219).
-
->   {
-> -	/*
-> -	 * Only one bayer order is supported.
-> -	 * It depends on the flip settings.
-> -	 */
-> -	static const u32 codes[2][2] = {
-> +	static const u32 codes10[2][2] = {
->   		{ MEDIA_BUS_FMT_SRGGB10_1X10, MEDIA_BUS_FMT_SGRBG10_1X10, },
->   		{ MEDIA_BUS_FMT_SGBRG10_1X10, MEDIA_BUS_FMT_SBGGR10_1X10, },
->   	};
-> +	static const u32 codes8[2][2] = {
-> +		{ MEDIA_BUS_FMT_SRGGB8_1X8, MEDIA_BUS_FMT_SGRBG8_1X8, },
-> +		{ MEDIA_BUS_FMT_SGBRG8_1X8, MEDIA_BUS_FMT_SBGGR8_1X8, },
-> +	};
->   
->   	lockdep_assert_held(&imx219->mutex);
-> -	return codes[imx219->vflip->val][imx219->hflip->val];
-> +
-> +	if (code == MEDIA_BUS_FMT_SRGGB10_1X10 ||
-> +	    code == MEDIA_BUS_FMT_SGRBG10_1X10 ||
-> +	    code == MEDIA_BUS_FMT_SGBRG10_1X10 ||
-> +	    code == MEDIA_BUS_FMT_SBGGR10_1X10)
-> +		return codes10[imx219->vflip->val][imx219->hflip->val];
-> +
-> +	return codes8[imx219->vflip->val][imx219->hflip->val];
->   }
-
-Wouldn't extending the original table be a better and simpler solution?
-Something like:
-
-static u32 imx219_get_format_code(struct imx219 *imx219, int is_8_bit)
-{
-	static const u32 codes[2][2][2] = {
-		{
-	   		{ MEDIA_BUS_FMT_SRGGB10_1X10, MEDIA_BUS_FMT_SGRBG10_1X10, },
-	   		{ MEDIA_BUS_FMT_SGBRG10_1X10, MEDIA_BUS_FMT_SBGGR10_1X10, },
-		},
-		{
-			{ MEDIA_BUS_FMT_SRGGB8_1X8, MEDIA_BUS_FMT_SGRBG8_1X8, },
-			{ MEDIA_BUS_FMT_SGBRG8_1X8, MEDIA_BUS_FMT_SBGGR8_1X8, },
-		},
-	};
-
-  	lockdep_assert_held(&imx219->mutex);
-	return codes[is_8bit][imx219->vflip->val][imx219->hflip->val];
+Mount failure issue happens under the circumstances:
+Application totally forked 38 threads to mount 38 cramfs images in docker,
+but several mounts failed with high probability.
+Mount failed due to the checking result of the page(read from the superblock
+of loop dev) is not uptodate after wait_on_page_locked(page) returned in
+function cramfs_read:
+wait_on_page_locked(page);
+if (!PageUptodate(page)) {
+	...
 }
 
-"is_8bit" a member of struct imx219 which equals to 0 if the sensor if RAW10 mode,
-and is 1 for RAW8 mode.
+The reason of the checking result of the page not uptodate:
+systemd-udevd read the loopX dev before mount, because the status of loopX
+is Lo_unbound at this time, so loop_make_request directly trigger the calling
+of io_end handler end_buffer_async_read, which called SetPageError(page). So It
+caused the page can't be set to uptodate in function end_buffer_saync_read:
+if(page_uptodate && !PageError(page)) {
+	SetPageUptodate(page);
+}
+Then mount operation is performed, it used the same page which is just used by
+systemd-udevd above, Because this page is not uptodate, it will launch a actual
+read via submit_bh, then wait on this page by calling wait_on_page_locked(page).
+When the I/O of the page done, io_end handler end_buffer_async_read is called,
+because no one cleared the page error(during the whole read path), which is caused
+by systemd-udevd, so this page is still in "PageError" staus, which is can't
+be set to uptodate in function end_buffer_async_read, then caused mount failure.
 
->   
->   static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-> @@ -539,13 +555,26 @@ static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
->   	struct imx219 *imx219 = to_imx219(sd);
->   	struct v4l2_mbus_framefmt *try_fmt =
->   		v4l2_subdev_get_try_format(sd, fh->pad, 0);
-> +	struct v4l2_mbus_framefmt *fmt;
->   
->   	mutex_lock(&imx219->mutex);
->   
-> +	fmt = &imx219->fmt;
-> +	fmt->code = MEDIA_BUS_FMT_SRGGB8_1X8;
-> +	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> +	fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->colorspace);
-> +	fmt->quantization = V4L2_MAP_QUANTIZATION_DEFAULT(true,
-> +							  fmt->colorspace,
-> +							  fmt->ycbcr_enc);
-> +	fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(fmt->colorspace);
-> +	fmt->width = supported_modes[0].width;
-> +	fmt->height = supported_modes[0].height;
-> +	fmt->field = V4L2_FIELD_NONE;
-> +
->   	/* Initialize try_fmt */
->   	try_fmt->width = supported_modes[0].width;
->   	try_fmt->height = supported_modes[0].height;
-> -	try_fmt->code = imx219_get_format_code(imx219);
-> +	try_fmt->code = imx219_get_format_code(imx219, fmt->code);
->   	try_fmt->field = V4L2_FIELD_NONE;
->   
->   	mutex_unlock(&imx219->mutex);
-> @@ -646,16 +675,12 @@ static int imx219_enum_mbus_code(struct v4l2_subdev *sd,
->   				 struct v4l2_subdev_pad_config *cfg,
->   				 struct v4l2_subdev_mbus_code_enum *code)
->   {
-> -	struct imx219 *imx219 = to_imx219(sd);
-> -
-> -	/*
-> -	 * Only one bayer order is supported (though it depends on the flip
-> -	 * settings)
-> -	 */
+But sometimes mount succeed even through systemd-udeved read loop dev just before,
+The reason is systemd-udevd launched other loopX read just between step 3.1 and 3.2,
+the steps as below:
+1, loopX dev default status is Lo_unbound;
+2, systemd-udved read loopX dev (page is set to PageError);
+3, mount operation
+   1) set loopX status to Lo_bound;
+   ==>systemd-udevd read loopX dev<==
+   2) read loopX dev(page has no error)
+   3) mount succeed
+As the loopX dev status is set to Lo_bound after step 3.1, so the other loopX dev read
+by systemd-udevd will go through the whole I/O stack, part of the call trace as below:
+   SYS_read
+      vfs_read
+          do_sync_read
+              blkdev_aio_read
+                 generic_file_aio_read
+                     do_generic_file_read
+                         ClearPageError(page);mapping->a_ops->readpage(filp, page)
+here, mapping->a_ops_readpage() is blkdev_readpage.
+We can see the ClearPageError(page) is called, then the read in step 3.2 succeed.
 
-Guess the above comment still holds
+The fix is to add ClearPageError just before the actual read of other read path.
 
-> -	if (code->index > 0)
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
+---
+ mm/filemap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Though two media bus formats will be available: 8-bit and 10-bit ones, both
-with the same Bayer order.
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1784478..c2cf0fd 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2755,6 +2755,7 @@ static struct page *do_read_cache_page(struct address_space *mapping,
+ 		}
+ 
+ filler:
++		ClearPageError(page);
+ 		if (filler)
+ 			err = filler(data, page);
+ 		else
+-- 
+1.8.3.1
 
-> +	if (code->pad != 0)
-> +		return -EINVAL;
-> +	if (code->index >= ARRAY_SIZE(imx219_formats))
->   		return -EINVAL;
->   
-> -	code->code = imx219_get_format_code(imx219);
-> +	code->code = imx219_formats[code->index].code;
-
-This excludes all the Bayer orders except RGGB thus breaking the hflip/vflip support, right?
-
-I would better check (as the sensor can only support two media bus formats at a time):
-	if (code->index > 1)
-		return -EINVAL;
-and use imx219_get_format_code(struct imx219 *imx219, int is_8_bit) to set the code->code:
-	code->code = imx219_get_format_code(imx219, code->index);
-
->   
->   	return 0;
->   }
-> @@ -669,7 +694,7 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
->   	if (fse->index >= ARRAY_SIZE(supported_modes))
->   		return -EINVAL;
->   
-> -	if (fse->code != imx219_get_format_code(imx219))
-> +	if (fse->code != imx219_get_format_code(imx219, imx219->fmt.code))
->   		return -EINVAL;
->   
->   	fse->min_width = supported_modes[fse->index].width;
-
-Looking at the "[PATCH 3/3] media: i2c: imx219: Add support 640x480",
-the RAW8 mode is added to the end of the supported_modes[] array after the three RAW10 modes.
-Guess this breaks VIDIOC_SUBDEV_ENUM_FRAME_SIZE ioctl for RAW8, as in the RAW8 case
-it would return 0 (and the supported frame sizes) for fse->index=3 only, while for all
-the other values, fse->index=0 included, it will return -EINVAL ...
-
-> @@ -696,7 +721,7 @@ static void imx219_update_pad_format(struct imx219 *imx219,
->   {
->   	fmt->format.width = mode->width;
->   	fmt->format.height = mode->height;
-> -	fmt->format.code = imx219_get_format_code(imx219);
-> +	fmt->format.code = imx219_get_format_code(imx219, imx219->fmt.code);
->   	fmt->format.field = V4L2_FIELD_NONE;
->   
->   	imx219_reset_colorspace(&fmt->format);
-> @@ -710,7 +735,7 @@ static int __imx219_get_pad_format(struct imx219 *imx219,
->   		struct v4l2_mbus_framefmt *try_fmt =
->   			v4l2_subdev_get_try_format(&imx219->sd, cfg, fmt->pad);
->   		/* update the code which could change due to vflip or hflip: */
-> -		try_fmt->code = imx219_get_format_code(imx219);
-> +		try_fmt->code = imx219_get_format_code(imx219, try_fmt->code);
->   		fmt->format = *try_fmt;
->   	} else {
->   		imx219_update_pad_format(imx219, imx219->mode, fmt);
-> @@ -741,11 +766,19 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
->   	const struct imx219_mode *mode;
->   	struct v4l2_mbus_framefmt *framefmt;
->   	int exposure_max, exposure_def, hblank;
-> +	int i;
->   
->   	mutex_lock(&imx219->mutex);
->   
-> +	for (i = 0; i < ARRAY_SIZE(imx219_formats); i++)
-> +		if (imx219_formats[i].code == fmt->format.code)
-
-This excludes all the Bayer orders except RGGB thus breaking the hflip/vflip support, right?
-
-> +			break;
-> +	if (i >= ARRAY_SIZE(imx219_formats))
-> +		i = 0;
-> +
->   	/* Bayer order varies with flips */
-> -	fmt->format.code = imx219_get_format_code(imx219);
-> +	fmt->format.code = imx219_get_format_code(imx219,
-> +						  imx219_formats[i].code);
->   
->   	mode = v4l2_find_nearest_size(supported_modes,
->   				      ARRAY_SIZE(supported_modes),
-> @@ -756,6 +789,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
->   		framefmt = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
->   		*framefmt = fmt->format;
->   	} else if (imx219->mode != mode) {
-> +		imx219->fmt = fmt->format;
->   		imx219->mode = mode;
->   		/* Update limits and set FPS to default */
->   		__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
-> @@ -786,6 +820,36 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
->   	return 0;
->   }
->   
-> +static int imx219_set_framefmt(struct imx219 *imx219)
-> +{
-> +	int ret;
-> +
-> +	switch (imx219->fmt.code) {
-> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> +	case MEDIA_BUS_FMT_SGRBG8_1X8:
-> +	case MEDIA_BUS_FMT_SGBRG8_1X8:
-> +	case MEDIA_BUS_FMT_SBGGR8_1X8:
-> +		ret = imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_0_7,
-> +				       IMX219_REG_VALUE_08BIT, 0x08);
-> +		ret |= imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_8_15,
-> +				       IMX219_REG_VALUE_08BIT, 0x08);
-> +		break;
-> +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> +	case MEDIA_BUS_FMT_SGRBG10_1X10:
-> +	case MEDIA_BUS_FMT_SGBRG10_1X10:
-> +	case MEDIA_BUS_FMT_SBGGR10_1X10:
-> +		ret = imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_0_7,
-> +				       IMX219_REG_VALUE_08BIT, 0x0a);
-> +		ret |= imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_8_15,
-> +				       IMX219_REG_VALUE_08BIT, 0x0a);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static int imx219_start_streaming(struct imx219 *imx219)
->   {
->   	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
-> @@ -800,6 +864,12 @@ static int imx219_start_streaming(struct imx219 *imx219)
->   		return ret;
->   	}
->   
-> +	ret = imx219_set_framefmt(imx219);
-
-I just wonder if it makes sense to remove setting IMX219_CSI_DATA_FORMAT_A register
-from the struct imx219_reg mode_x_y_regs[] tables and to introduce new imx219_set_framefmt()
-function which is called right after the settings from the mode_x_y_regs[] are written
-into the sensor, and is never called otherwise?
-
-> +	if (ret) {
-> +		dev_err(&client->dev, "%s failed to set format\n", __func__);
-> +		return ret;
-> +	}
-> +
->   	/* Apply customized values from user */
->   	ret =  __v4l2_ctrl_handler_setup(imx219->sd.ctrl_handler);
->   	if (ret)
-> 
