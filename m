@@ -2,79 +2,65 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D72C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BDA246B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FEE246BE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCBJbP (ORCPT
+        id S1727316AbgCBJc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:31:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49997 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgCBJbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:31:15 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j8hPs-0008Gm-Cd; Mon, 02 Mar 2020 09:31:12 +0000
-Date:   Mon, 2 Mar 2020 10:31:11 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Hongbo Yao <yaohongbo@huawei.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, chenzhou10@huawei.com, rjw@rjwysocki.net,
-        pavel@ucw.cz
-Subject: Re: [PATCH -next] drivers/base/power: fix build error without SYSFS
-Message-ID: <20200302093111.eavix4e65otpudb5@wittgenstein>
-References: <20200302092918.40163-1-yaohongbo@huawei.com>
+        Mon, 2 Mar 2020 04:32:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34010 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbgCBJc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:32:57 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B2149B01D;
+        Mon,  2 Mar 2020 09:32:55 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm,thp,compaction,cma: allow THP migration for CMA
+ allocations
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        mhocko@kernel.org, mgorman@techsingularity.net,
+        rientjes@google.com, aarcange@redhat.com, ziy@nvidia.com
+References: <cover.1582321646.git.riel@surriel.com>
+ <20200227213238.1298752-2-riel@surriel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <aa39b1d9-96c1-c75b-d09b-4dbacdad2f46@suse.cz>
+Date:   Mon, 2 Mar 2020 10:32:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200227213238.1298752-2-riel@surriel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200302092918.40163-1-yaohongbo@huawei.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:29:18PM +0800, Hongbo Yao wrote:
-> If CONFIG_SYSFS=n, the following error is seen while building 
-> drivers/base/power/sysfs.c:
+On 2/27/20 10:32 PM, Rik van Riel wrote:
+> The code to implement THP migrations already exists, and the code
+> for CMA to clear out a region of memory already exists.
 > 
-> drivers/base/power/sysfs.c: In function dpm_sysfs_change_owner:
-> drivers/base/power/sysfs.c:708:44: error: passing argument 2 of
-> sysfs_group_change_owner from incompatible pointer type
-> [-Werror=incompatible-pointer-types]
->   rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
->                                             ^
-> In file included from ./include/linux/kobject.h:20:0,
->                  from ./include/linux/device.h:17,
->                  from drivers/base/power/sysfs.c:3:
-> ./include/linux/sysfs.h:564:19: note: expected const struct
-> attribute_group ** but argument is of type const struct attribute_group *
+> Only a few small tweaks are needed to allow CMA to move THP memory
+> when attempting an allocation from alloc_contig_range.
 > 
-> dpm_sysfs_change_owner() should only used when CONFIG_SYSFS is
-> defined.
+> With these changes, migrating THPs from a CMA area works when
+> allocating a 1GB hugepage from CMA memory.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 3b52fc5d7876 ("drivers/base/power: add dpm_sysfs_change_owner()")
-> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-Thanks for catching this!
-An organizational comment first. The series this belongs to is sitting
-in Dave Miller's net-next tree. So this fix needs to go through his tree
-to. This just means, you should Cc the netdev kernel mailing list and
-append make the subject
-[PATCH net-next] drivers/base/power: fix build error without SYSFS
-.
+With the followup fix,
 
-But about the fix. It strikes me as odd that this fails in pm_attr_group
-since dpm_sysfs_add() doesn't but also unconditionally accesses pm_attr_group.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Christian
+Thanks.
