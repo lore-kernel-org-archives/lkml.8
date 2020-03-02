@@ -2,102 +2,100 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33873C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA439246B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E18246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sH6kyBtD"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="skswSqAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgCBJ2S (ORCPT
+        id S1727513AbgCBJ2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:28:18 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37195 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgCBJ2N (ORCPT
+        Mon, 2 Mar 2020 04:28:22 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50494 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbgCBJ2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:28:13 -0500
-Received: by mail-pj1-f66.google.com with SMTP id o2so2262759pjp.2;
-        Mon, 02 Mar 2020 01:28:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PY4MuK9MtCzBBPb4BM+bF8sugRCFY9M8l8A3pQbpdiw=;
-        b=sH6kyBtDw0rtBL8JJCp0gjcaIXkgXwiRFurf3c/d+4vPM+9vWt287P81nKtqzYG0ay
-         5LF5ZvgufuVwc0sxB/FUyX4E8LUUFoOAqBgsnezhD8RT/9n1Uzt/1xc1wYuUa7OaLjiJ
-         lgvUFYzwNd0x0iY2+dE6EvBRCNCGQ6C2UUAxQAWhC5g251G7fQDxCdtCY1N+pkHQHt0O
-         nRGLbt9L3RCF+nWlrzzqpG2CEphWVeLnwASyFQOQLELIObjMpjURtbGasFsETeQh9gxM
-         TtVR69dovPrIrMvDbtFM2nyhKg3A2/j/5i6wGTahMAHbG0wgBl69tx4+TevNucn0A2kr
-         yKrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PY4MuK9MtCzBBPb4BM+bF8sugRCFY9M8l8A3pQbpdiw=;
-        b=n+/TvlhA9JEM2oGoRhrtIibXOmX2guZnA4cDYWb136V4KegQbgyaR1Z1IZSrmHNFh6
-         5YhAQHbjhmL+fpLrXPW7SaNLJ9Xlt4mnR4X5fP1Bnj5hBhfFiJp0KvsMV0sOoWafel6F
-         pcUAQTYnLr0993L5EaM5mPrup+OmpqploxxlcFhJD0ukyuBZ8G1uf7Zh6WIGjpyKyr/y
-         R8jkwQMtOkkgeCQemthVjC/IeOScXuyBEAq02iJuncUrkqmq/xuINs6BQZw/CW4eWMpW
-         aRSt66CwYjgVTqlLZ71jbKrd83kaIONCVdzXHGTlP2eZxoHWbjMvWdYPXKngn1j2DGqR
-         xQNw==
-X-Gm-Message-State: APjAAAUWJ64GhzqgurMOLoCeBK/PvDMj5SiLL119Yrq9y+ooFE6QbfOn
-        CdNebKBKaC+PvQbNNw9wdvY=
-X-Google-Smtp-Source: APXvYqyeNNsZf2cgZjbOAIPSLGSZ+N52xHOXT7mNYakDKjVkVzamzuWHN7a0r80GFylvRLX8MXK76g==
-X-Received: by 2002:a17:90a:d101:: with SMTP id l1mr21047899pju.130.1583141292001;
-        Mon, 02 Mar 2020 01:28:12 -0800 (PST)
-Received: from ?IPv6:2601:647:4700:9b2:999b:d09b:90a3:47d8? ([2601:647:4700:9b2:999b:d09b:90a3:47d8])
-        by smtp.gmail.com with ESMTPSA id x70sm11811963pgd.37.2020.03.02.01.28.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 01:28:11 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2] x86/kvm: Handle async page faults directly through
- do_page_fault()
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <53626d08de5df34eacce80cb74f19a06fdc690c6.1582998497.git.luto@kernel.org>
-Date:   Mon, 2 Mar 2020 01:28:04 -0800
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <34082A11-321D-4DF0-A076-7BBF332DCA66@gmail.com>
-References: <53626d08de5df34eacce80cb74f19a06fdc690c6.1582998497.git.luto@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Mon, 2 Mar 2020 04:28:14 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 178FE54A;
+        Mon,  2 Mar 2020 10:28:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583141292;
+        bh=9ZqrQgN1kicNCFdvQnafSQx8lmmfNjFur/cYDbP3rDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=skswSqAQuA8w3fEw57iweTsG5i9uxgyuyyKNg3OiEsiYEb0M3CjsQQczW9udnAGEr
+         T2HSEz9s35KdPJUtHRFZ5Wm2YwCWHcLEITfyn+nNW7CqkZe5EGYbEb/hiEAjsId6bv
+         HuOSO3bAcOeA8l0Ibo4SK095T1jkIsyXt2Q/ZZ08=
+Date:   Mon, 2 Mar 2020 11:27:48 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] drm/bridge: dw-hdmi: Fix color space conversion
+ detection
+Message-ID: <20200302092748.GE11960@pendragon.ideasonboard.com>
+References: <20200229163043.158262-1-jernej.skrabec@siol.net>
+ <20200229163043.158262-3-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200229163043.158262-3-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Feb 29, 2020, at 9:50 AM, Andy Lutomirski <luto@kernel.org> wrote:
-> 
-> KVM overloads #PF to indicate two types of not-actually-page-fault
-> events.  Right now, the KVM guest code intercepts them by modifying
-> the IDT and hooking the #PF vector.  This makes the already fragile
-> fault code even harder to understand, and it also pollutes call
-> traces with async_page_fault and do_async_page_fault for normal page
-> faults.
-> 
-> Clean it up by moving the logic into do_page_fault() using a static
-> branch.  This gets rid of the platform trap_init override mechanism
-> completely.
-> 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Hi Jernej,
 
-Indeed the async-PF mechanism is only used by KVM, and there is no need for
-over-engineering the solution just in case some other hypervisor ever
-introduces support for a similar paravirtual feature.
+Thank you for the patch.
 
-Yet, this might be a slippery slope, making Linux optimized to run on KVM
-(and maybe Xen). In other words, I wonder whether a similar change was
-acceptable for a paravirtual feature that is only supported by a proprietary
-hypervisor, such as Hyper-V or VMware.
+On Sat, Feb 29, 2020 at 05:30:41PM +0100, Jernej Skrabec wrote:
+> Currently, is_color_space_conversion() compares not only color spaces
+> but also formats. For example, function would return true if YCbCr 4:4:4
+> and YCbCr 4:2:2 would be set. Obviously in that case color spaces are
+> the same.
+> 
+> Fix that by comparing if both values represent RGB color space.
+> 
+> Fixes: b21f4b658df8 ("drm: imx: imx-hdmi: move imx-hdmi to bridge/dw_hdmi")
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
+This isn't implemented today, but could the CSC be used to convert
+between different YCbCr encodings ?
+
+In any case the patch is correct based on the current implementation, so
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 24965e53d351..9d7bfb1cb213 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -956,7 +956,8 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
+>  
+>  static int is_color_space_conversion(struct dw_hdmi *hdmi)
+>  {
+> -	return hdmi->hdmi_data.enc_in_bus_format != hdmi->hdmi_data.enc_out_bus_format;
+> +	return hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) !=
+> +		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format);
+>  }
+>  
+>  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+
+-- 
+Regards,
+
+Laurent Pinchart
