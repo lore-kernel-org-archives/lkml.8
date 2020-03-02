@@ -2,215 +2,105 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F99C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1274C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B253B2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CDD2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="co856hF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgCBMJJ (ORCPT
+        id S1727770AbgCBMJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:09:09 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24146 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727736AbgCBMJJ (ORCPT
+        Mon, 2 Mar 2020 07:09:17 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57358 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727267AbgCBMJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:09:09 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022C60ej030460;
-        Mon, 2 Mar 2020 07:09:04 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfk5krv72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 07:09:04 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 022C5DKL007259;
-        Mon, 2 Mar 2020 12:09:03 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 2yffk6x937-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 12:09:03 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022C92tL62980592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 12:09:02 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED02C136060;
-        Mon,  2 Mar 2020 12:09:01 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E70413605D;
-        Mon,  2 Mar 2020 12:09:00 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.102.1.4])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 12:08:59 +0000 (GMT)
-X-Mailer: emacs 27.0.90 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 3/5] libnvdimm/namespace: Enforce
- memremap_compat_align()
-In-Reply-To: <158291748226.1609624.8971922874557923784.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158291746615.1609624.7591692546429050845.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158291748226.1609624.8971922874557923784.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Mon, 02 Mar 2020 17:38:57 +0530
-Message-ID: <87fterrmau.fsf@linux.ibm.com>
+        Mon, 2 Mar 2020 07:09:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583150956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SZ2xJwN1TAuj2eEmBgNnYZoxdDxugiWmVbQd23vU95o=;
+        b=co856hF4d2/7HQNUbxAtijQ+OJixYfN2FqCL/oGF4+fCsTlqD9JeWE/f8Yz6+Rgm4LEPxx
+        GzCFSWoVNNsSLoexWNGTWjpR012+xbFLWfRgjko0tX+DZWARL2+wK8rw1XEAJqyxqz1YVS
+        kjSBs5zQrexztZ1Nyh8h+tWlbWBvpwQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-ZYR_4tyyMimtrkww2b8zPw-1; Mon, 02 Mar 2020 07:09:12 -0500
+X-MC-Unique: ZYR_4tyyMimtrkww2b8zPw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0ECFE1005510;
+        Mon,  2 Mar 2020 12:09:11 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDB495C1D6;
+        Mon,  2 Mar 2020 12:09:08 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+References: <96563.1582901612@warthog.procyon.org.uk>
+        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+        <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+        <20200302115239.pcxvej3szmricxzu@wittgenstein>
+Date:   Mon, 02 Mar 2020 13:09:06 +0100
+In-Reply-To: <20200302115239.pcxvej3szmricxzu@wittgenstein> (Christian
+        Brauner's message of "Mon, 2 Mar 2020 12:52:39 +0100")
+Message-ID: <8736arnel9.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_03:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020092
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+* Christian Brauner:
 
-> The pmem driver on PowerPC crashes with the following signature when
-> instantiating misaligned namespaces that map their capacity via
-> memremap_pages().
+>> But that's inconsistent with the rest of the system.  And for example,
+>> if you make /etc/resolv.conf a symbolic link, a program which uses a new
+>> I/O library (with the new interfaces) will not be able to read it.
 >
->     BUG: Unable to handle kernel data access at 0xc001000406000000
->     Faulting instruction address: 0xc000000000090790
->     NIP [c000000000090790] arch_add_memory+0xc0/0x130
->     LR [c000000000090744] arch_add_memory+0x74/0x130
->     Call Trace:
->      arch_add_memory+0x74/0x130 (unreliable)
->      memremap_pages+0x74c/0xa30
->      devm_memremap_pages+0x3c/0xa0
->      pmem_attach_disk+0x188/0x770
->      nvdimm_bus_probe+0xd8/0x470
+> Fair, but I expect that e.g. a C library would simply implement openat()
+> on top of openat2() if the latter is available and thus could simply
+> pass RESOLVE_SYMLINKS so any new I/O library not making use of the
+> syscall directly would simply get the old behavior. For anyone using the
+> syscall directly they need to know about its exact semantics anyway. But
+> again, maybe just having it opt-in is fine.
+
+I'm more worried about fancy new libraries which go directly to the new
+system calls, but set the wrong defaults for a general-purpose open
+operation.
+
+Can we pass RESOLVE_SYMLINKS with O_NOFLLOW, so that we can easily
+implement open/openat for architectures that provide only the openat2
+system call?
+
+>> AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
+>> so it's relatively little protection.
 >
-> With the assumption that only memremap_pages() has alignment
-> constraints, enforce memremap_compat_align() for
-> pmem_should_map_pages(), nd_pfn, and nd_dax cases. This includes
-> preventing the creation of namespaces where the base address is
-> misaligned and cases there infoblock padding parameters are invalid.
->
+> So this is partially why I think it's at least worth considerings: the
+> new RESOLVE_NO_SYMLINKS flag does block all symlink resolution, not just
+> for the last component in contrast to AT_SYMLINK_NOFOLLOW. This is
+> 278121417a72d87fb29dd8c48801f80821e8f75a
 
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+RESOLVE_NO_SYMLINKS shouldn't be the default, though (whoever is
+responsible for applying that default).  Otherwise system administrators
+can no longer move around data between different file systems and set
+symbolic links accordingly.
 
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Cc: Jeff Moyer <jmoyer@redhat.com>
-> Fixes: a3619190d62e ("libnvdimm/pfn: stop padding pmem namespaces to section alignment")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/nvdimm/namespace_devs.c |   12 ++++++++++++
->  drivers/nvdimm/pfn_devs.c       |   26 +++++++++++++++++++++++---
->  2 files changed, 35 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index 032dc61725ff..68e89855f779 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -10,6 +10,7 @@
->  #include <linux/nd.h>
->  #include "nd-core.h"
->  #include "pmem.h"
-> +#include "pfn.h"
->  #include "nd.h"
->  
->  static void namespace_io_release(struct device *dev)
-> @@ -1739,6 +1740,17 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
->  		return ERR_PTR(-ENODEV);
->  	}
+Thanks,
+Florian
 
-May be add a comment here that both dax/fsdax namespace details are
-checked in nd_pfn_validate() so that we look at start_pad and end_trunc
-while validating the namespace?
-
->  
-> +	if (pmem_should_map_pages(dev)) {
-> +		struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
-> +		struct resource *res = &nsio->res;
-> +
-> +		if (!IS_ALIGNED(res->start | (res->end + 1),
-> +					memremap_compat_align())) {
-> +			dev_err(&ndns->dev, "%pr misaligned, unable to map\n", res);
-> +			return ERR_PTR(-EOPNOTSUPP);
-> +		}
-> +	}
-> +
->  	if (is_namespace_pmem(&ndns->dev)) {
->  		struct nd_namespace_pmem *nspm;
->  
-> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-> index 79fe02d6f657..3bdd4b883d05 100644
-> --- a/drivers/nvdimm/pfn_devs.c
-> +++ b/drivers/nvdimm/pfn_devs.c
-> @@ -446,6 +446,7 @@ static bool nd_supported_alignment(unsigned long align)
->  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
->  {
->  	u64 checksum, offset;
-> +	struct resource *res;
->  	enum nd_pfn_mode mode;
->  	struct nd_namespace_io *nsio;
->  	unsigned long align, start_pad;
-> @@ -578,13 +579,14 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
->  	 * established.
->  	 */
->  	nsio = to_nd_namespace_io(&ndns->dev);
-> -	if (offset >= resource_size(&nsio->res)) {
-> +	res = &nsio->res;
-> +	if (offset >= resource_size(res)) {
->  		dev_err(&nd_pfn->dev, "pfn array size exceeds capacity of %s\n",
->  				dev_name(&ndns->dev));
->  		return -EOPNOTSUPP;
->  	}
->  
-> -	if ((align && !IS_ALIGNED(nsio->res.start + offset + start_pad, align))
-> +	if ((align && !IS_ALIGNED(res->start + offset + start_pad, align))
->  			|| !IS_ALIGNED(offset, PAGE_SIZE)) {
->  		dev_err(&nd_pfn->dev,
->  				"bad offset: %#llx dax disabled align: %#lx\n",
-> @@ -592,6 +594,18 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
->  		return -EOPNOTSUPP;
->  	}
->  
-> +	if (!IS_ALIGNED(res->start + le32_to_cpu(pfn_sb->start_pad),
-> +				memremap_compat_align())) {
-> +		dev_err(&nd_pfn->dev, "resource start misaligned\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	if (!IS_ALIGNED(res->end + 1 - le32_to_cpu(pfn_sb->end_trunc),
-> +				memremap_compat_align())) {
-> +		dev_err(&nd_pfn->dev, "resource end misaligned\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL(nd_pfn_validate);
-> @@ -750,7 +764,13 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  	start = nsio->res.start;
->  	size = resource_size(&nsio->res);
->  	npfns = PHYS_PFN(size - SZ_8K);
-> -	align = max(nd_pfn->align, SUBSECTION_SIZE);
-> +	align = max(nd_pfn->align, memremap_compat_align());
-> +	if (!IS_ALIGNED(start, memremap_compat_align())) {
-> +		dev_err(&nd_pfn->dev, "%s: start %pa misaligned to %#lx\n",
-> +				dev_name(&ndns->dev), &start,
-> +				memremap_compat_align());
-> +		return -EINVAL;
-> +	}
-
-This validates start in case of a new namespace creation where the user
-updated nd_region->align value? A comment there would help when looking
-at the code later?
-
->  	end_trunc = start + size - ALIGN_DOWN(start + size, align);
->  	if (nd_pfn->mode == PFN_MODE_PMEM) {
->  		/*
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
