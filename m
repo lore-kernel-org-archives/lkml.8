@@ -2,104 +2,409 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7616CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BE3C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4963E24695
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6ntJOgc"
+	by mail.kernel.org (Postfix) with ESMTP id 8B4F824695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583133031;
+	bh=egDLvpCbp+jsKXtRBN0k3c48+SeK0ov67bdVR0sQ1ho=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=C8u0NGQkEVwfU3Uljc43BD+B3rFZIDSgomyEitP83EW7v1e9Klb5xFKZnL4b5oVfn
+	 pHW3IW71jqZ74gf0QR3fjsNtxndqPahkJp4c+pFoLD0kPBIXC1b4Z+KdOP75c3T97N
+	 cbUKQq+WTnDX+vLPEgeTV0/9uO7a8GAMpwL18rV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCBHGv (ORCPT
+        id S1726657AbgCBHKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:06:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36206 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBHGv (ORCPT
+        Mon, 2 Mar 2020 02:10:30 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32940 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBHK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:06:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=e+UgOBP2C/fGrEWGLe7tJJaQdy33rX5WFPpAjGLY4fc=; b=i6ntJOgc4OfIEImyEteflOZcPZ
-        AYG+UzbtSIvtt+BilEHf4GRmGpw9I81IRGpvfb0LKOXg3Y9spOzerqUgJlCqX6szl71GyI6veBNmu
-        2mz683PEfZERQjHeRkYjNdbvlbrT8pWnE7YCEjv2gICYU/qczGnKWxj3eprw5OQ7WbQ3km+wJ1gHV
-        7hG4voO1hWM4HAwBVaO8nEI/cZclLXwtnlcFQo/g/08ic19bybo49n1j4DgVVR4dFs9YekY0Q1i7m
-        5sgf0xUGehZovAuBbkL6ic4vtrKPNFtGFfoV3CNBjrOuSa+97o3PKMEq5lBmxr+nIcoRqMB2pub+9
-        VQitlLSg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8fA9-0006yk-Ii; Mon, 02 Mar 2020 07:06:49 +0000
-Subject: Re: [PATCH v2] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-References: <158287861133.18632.12035327305997207220.stgit@devnote2>
- <158287862131.18632.11822701514141299400.stgit@devnote2>
- <972ba3a8-9dd7-e043-d2f0-8fa8620686f7@infradead.org>
- <20200302155247.93558d4865a8bcd160ef39e5@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2080a377-f03d-9df6-bb4a-c440d6f8ac11@infradead.org>
-Date:   Sun, 1 Mar 2020 23:06:48 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 02:10:29 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a25so1809195wmm.0;
+        Sun, 01 Mar 2020 23:10:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ofOypCruFLY+RzekRLP/cwypomBwPG/ybo11TWcSycM=;
+        b=TRqrUcIrKFdDwWseg6HOEW8i3BT79a7e7DdYFrNeUzl24kFv2199mEtCCzGSlc6QV/
+         jGSmXDJCEPZ2Hqrg0VjF6+gDIEIzz5yVOE+kXrVnBb2rrcv6jNQvNwJAegQYvymKMHSY
+         eBHnEXUJXWP5WyhfroT0cqhoJJGFZHrBmeGBiOaRsIYgy7KeId1toSnsHsABL0OgNG90
+         b56553DIjKKreBuGKXB5A3HWaHxM6Ly4NoeHSUaSQ8FxN8kpxg7lv9ghFi0s08oEwCMO
+         2DjdD//9aEcLaFP1Yd4+FJfl2LB9X4eYc0TqFl7qshui9VQZzaXwXlIsZxR13cqlWzR2
+         OE7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=ofOypCruFLY+RzekRLP/cwypomBwPG/ybo11TWcSycM=;
+        b=QJpK6EGV0ArHzgTDBseDUcF8y8Q5Y5BeYSvJj02rTSL/6UOMoapys9FuwnQaxZekKm
+         e/FqH9kPBoC9uBM9sv11LZmkygFG01pVt6ui34Lnzp7FumsvPTQo7jOA+OI1VoAgzIVU
+         Av5f8729o0C3ZjrrcoDWYRcO5ULVlMWCdz7LAMTCaESTxa+kTYdj8SOMI3V05zfTARG3
+         mPcRagkjBfh3ZuAPwX+DekRiob1EUxfp550k2US9Upi3+/PWOWCQWie29g53CHFrJDpl
+         PoXdAc64pxZ4A+C/MaNfVrNPbr9HTGAAn8GpZ88+NCdcEcliotMZg36UBnWT2ILTDVxv
+         Aq1g==
+X-Gm-Message-State: APjAAAXB4o1c2YTUEbcIL5EfdYBS0lO3L8Tm0lFM1m7nPnWBVn3yPL9I
+        uxK3Q5Dty8AbgLvnTAP1Jh2CGzRw
+X-Google-Smtp-Source: APXvYqyOxb8oIOp8G8Fj6ES5vYXXDyvTXtX2NK8hfoEvNobIWEkYwD3jYwB46IZmK0CfVe3bxaEAZg==
+X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr17520202wme.125.1583133026406;
+        Sun, 01 Mar 2020 23:10:26 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c2sm14239053wma.39.2020.03.01.23.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 23:10:25 -0800 (PST)
+Date:   Mon, 2 Mar 2020 08:10:23 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [GIT PULL] EFI fixes
+Message-ID: <20200302071023.GA7775@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302155247.93558d4865a8bcd160ef39e5@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/20 10:52 PM, Masami Hiramatsu wrote:
-> On Fri, 28 Feb 2020 21:59:45 -0800
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->> On 2/28/20 12:30 AM, Masami Hiramatsu wrote:
->>> Update boot configuration documentation.
->>>
->>>  - Not using "config" abbreviation but configuration or description.
->>>  - Rewrite descriptions of node and its maxinum number.
->>>  - Add a section of use cases of boot configuration.
->>>  - Move how to use bootconfig to earlier section.
->>>  - Fix some typos, indents and format mistakes.
->>>
->>> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
->>> ---
->>> Changes in v2:
->>>  - Fixes additional typos (Thanks Markus and Randy!)
->>>  - Change a section title to "Tree Structured Key".
->>> ---
->>>  Documentation/admin-guide/bootconfig.rst |  180 +++++++++++++++++++-----------
->>>  Documentation/trace/boottime-trace.rst   |    2 
->>>  2 files changed, 116 insertions(+), 66 deletions(-)
+
+Linus,
+
+Please pull the latest efi-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
+
+   # HEAD: be36f9e7517e17810ec369626a128d7948942259 efi: READ_ONCE rng seed size before munmap
 
 
->>> +Also, some subsystem may depend on the boot configuration, and it has own
->>> +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
->>> +describe its options [2]_. In this case, you need to use the boot
->>> +configuration.
->>
->> Does this say that "ftrace" requires use of bootconfig?
->> It seems to say that.
-> 
-> Ah, I got it. The last sentence is confusing. How about below?
-> 
-> "If you want to use the boot-time tracer, you need to use the boot configuration."
+Three fixes to EFI mixed boot mode, mostly related to x86-64 vmap stacks 
+activated years ago, bug-fixed recently for EFI, which had knock-on 
+effects of various 1:1 mapping assumptions in mixed mode.
 
-Yes, that is better. Thanks.
+There's also a READ_ONCE() fix for reading an mmap-ed EFI firmware data 
+field only once, out of caution.
 
--- 
-~Randy
+ Thanks,
 
+	Ingo
+
+------------------>
+Ard Biesheuvel (3):
+      efi/x86: Align GUIDs to their size in the mixed mode runtime wrapper
+      efi/x86: Remove support for EFI time and counter services in mixed mode
+      efi/x86: Handle by-ref arguments covering multiple pages in mixed mode
+
+Jason A. Donenfeld (1):
+      efi: READ_ONCE rng seed size before munmap
+
+
+ arch/x86/platform/efi/efi_64.c | 151 ++++++++++++++---------------------------
+ drivers/firmware/efi/efi.c     |   4 +-
+ 2 files changed, 54 insertions(+), 101 deletions(-)
+
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index fa8506e76bbe..d19a2edd63cb 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -180,7 +180,7 @@ void efi_sync_low_kernel_mappings(void)
+ static inline phys_addr_t
+ virt_to_phys_or_null_size(void *va, unsigned long size)
+ {
+-	bool bad_size;
++	phys_addr_t pa;
+ 
+ 	if (!va)
+ 		return 0;
+@@ -188,16 +188,13 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
+ 	if (virt_addr_valid(va))
+ 		return virt_to_phys(va);
+ 
+-	/*
+-	 * A fully aligned variable on the stack is guaranteed not to
+-	 * cross a page bounary. Try to catch strings on the stack by
+-	 * checking that 'size' is a power of two.
+-	 */
+-	bad_size = size > PAGE_SIZE || !is_power_of_2(size);
++	pa = slow_virt_to_phys(va);
+ 
+-	WARN_ON(!IS_ALIGNED((unsigned long)va, size) || bad_size);
++	/* check if the object crosses a page boundary */
++	if (WARN_ON((pa ^ (pa + size - 1)) & PAGE_MASK))
++		return 0;
+ 
+-	return slow_virt_to_phys(va);
++	return pa;
+ }
+ 
+ #define virt_to_phys_or_null(addr)				\
+@@ -568,85 +565,25 @@ efi_thunk_set_virtual_address_map(unsigned long memory_map_size,
+ 
+ static efi_status_t efi_thunk_get_time(efi_time_t *tm, efi_time_cap_t *tc)
+ {
+-	efi_status_t status;
+-	u32 phys_tm, phys_tc;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-	phys_tc = virt_to_phys_or_null(tc);
+-
+-	status = efi_thunk(get_time, phys_tm, phys_tc);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t efi_thunk_set_time(efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(set_time, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t
+ efi_thunk_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
+ 			  efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_enabled, phys_pending, phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_enabled = virt_to_phys_or_null(enabled);
+-	phys_pending = virt_to_phys_or_null(pending);
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(get_wakeup_time, phys_enabled,
+-			     phys_pending, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t
+ efi_thunk_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(set_wakeup_time, enabled, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static unsigned long efi_name_size(efi_char16_t *name)
+@@ -658,6 +595,8 @@ static efi_status_t
+ efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 		       u32 *attr, unsigned long *data_size, void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	efi_status_t status;
+ 	u32 phys_name, phys_vendor, phys_attr;
+ 	u32 phys_data_size, phys_data;
+@@ -665,14 +604,19 @@ efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_data_size = virt_to_phys_or_null(data_size);
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+ 	phys_attr = virt_to_phys_or_null(attr);
+ 	phys_data = virt_to_phys_or_null_size(data, *data_size);
+ 
+-	status = efi_thunk(get_variable, phys_name, phys_vendor,
+-			   phys_attr, phys_data_size, phys_data);
++	if (!phys_name || (data && !phys_data))
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(get_variable, phys_name, phys_vendor,
++				   phys_attr, phys_data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -683,19 +627,25 @@ static efi_status_t
+ efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 		       u32 attr, unsigned long data_size, void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	u32 phys_name, phys_vendor, phys_data;
+ 	efi_status_t status;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+-	/* If data_size is > sizeof(u32) we've got problems */
+-	status = efi_thunk(set_variable, phys_name, phys_vendor,
+-			   attr, data_size, phys_data);
++	if (!phys_name || !phys_data)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(set_variable, phys_name, phys_vendor,
++				   attr, data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -707,6 +657,8 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
+ 				   u32 attr, unsigned long data_size,
+ 				   void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	u32 phys_name, phys_vendor, phys_data;
+ 	efi_status_t status;
+ 	unsigned long flags;
+@@ -714,13 +666,17 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
+ 	if (!spin_trylock_irqsave(&efi_runtime_lock, flags))
+ 		return EFI_NOT_READY;
+ 
++	*vnd = *vendor;
++
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+-	/* If data_size is > sizeof(u32) we've got problems */
+-	status = efi_thunk(set_variable, phys_name, phys_vendor,
+-			   attr, data_size, phys_data);
++	if (!phys_name || !phys_data)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(set_variable, phys_name, phys_vendor,
++				   attr, data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -732,39 +688,36 @@ efi_thunk_get_next_variable(unsigned long *name_size,
+ 			    efi_char16_t *name,
+ 			    efi_guid_t *vendor)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	efi_status_t status;
+ 	u32 phys_name_size, phys_name, phys_vendor;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_name_size = virt_to_phys_or_null(name_size);
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_name = virt_to_phys_or_null_size(name, *name_size);
+ 
+-	status = efi_thunk(get_next_variable, phys_name_size,
+-			   phys_name, phys_vendor);
++	if (!phys_name)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(get_next_variable, phys_name_size,
++				   phys_name, phys_vendor);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
++	*vendor = *vnd;
+ 	return status;
+ }
+ 
+ static efi_status_t
+ efi_thunk_get_next_high_mono_count(u32 *count)
+ {
+-	efi_status_t status;
+-	u32 phys_count;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_count = virt_to_phys_or_null(count);
+-	status = efi_thunk(get_next_high_mono_count, phys_count);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static void
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 621220ab3d0e..21ea99f65113 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -552,7 +552,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 
+ 		seed = early_memremap(efi.rng_seed, sizeof(*seed));
+ 		if (seed != NULL) {
+-			size = seed->size;
++			size = READ_ONCE(seed->size);
+ 			early_memunmap(seed, sizeof(*seed));
+ 		} else {
+ 			pr_err("Could not map UEFI random seed!\n");
+@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 					      sizeof(*seed) + size);
+ 			if (seed != NULL) {
+ 				pr_notice("seeding entropy pool\n");
+-				add_bootloader_randomness(seed->bits, seed->size);
++				add_bootloader_randomness(seed->bits, size);
+ 				early_memunmap(seed, sizeof(*seed) + size);
+ 			} else {
+ 				pr_err("Could not map UEFI random seed!\n");
