@@ -2,114 +2,72 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7646C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64060C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B6020842
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321B42173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgCBTNO (ORCPT
+        id S1727673AbgCBTNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:13:14 -0500
-Received: from mga06.intel.com ([134.134.136.31]:22460 "EHLO mga06.intel.com"
+        Mon, 2 Mar 2020 14:13:43 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:50530 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727471AbgCBTNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:13:14 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:13:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="386344227"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 02 Mar 2020 11:13:13 -0800
-Date:   Mon, 2 Mar 2020 11:13:13 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/13] KVM: x86: Shrink the usercopy region of the
- emulation context
-Message-ID: <20200302191313.GC6244@linux.intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
- <20200218232953.5724-11-sean.j.christopherson@intel.com>
- <87r1yhi6ex.fsf@vitty.brq.redhat.com>
+        id S1727408AbgCBTNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:13:42 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6B447FB08;
+        Mon,  2 Mar 2020 20:13:39 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lt_4OpfdEgK8; Mon,  2 Mar 2020 20:13:37 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 76A544048B; Mon,  2 Mar 2020 20:13:36 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] drm/etnaviv: Ignore MC bit when checking for runtime suspend
+Date:   Mon,  2 Mar 2020 20:13:31 +0100
+Message-Id: <cover.1583176306.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1yhi6ex.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 06:51:02PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > Shuffle a few operand structs to the end of struct x86_emulate_ctxt and
-> > update the cache creation to whitelist only the region of the emulation
-> > context that is expected to be copied to/from user memory, e.g. the
-> > instruction operands, registers, and fetch/io/mem caches.
-> >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/kvm_emulate.h |  8 +++++---
-> >  arch/x86/kvm/x86.c         | 12 ++++++------
-> >  2 files changed, 11 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/kvm_emulate.h b/arch/x86/kvm/kvm_emulate.h
-> > index 2f0a600efdff..82f712d5c692 100644
-> > --- a/arch/x86/kvm/kvm_emulate.h
-> > +++ b/arch/x86/kvm/kvm_emulate.h
-> > @@ -322,9 +322,6 @@ struct x86_emulate_ctxt {
-> >  	u8 intercept;
-> >  	u8 op_bytes;
-> >  	u8 ad_bytes;
-> > -	struct operand src;
-> > -	struct operand src2;
-> > -	struct operand dst;
-> >  	int (*execute)(struct x86_emulate_ctxt *ctxt);
-> >  	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
-> >  	/*
-> > @@ -349,6 +346,11 @@ struct x86_emulate_ctxt {
-> >  	u8 seg_override;
-> >  	u64 d;
-> >  	unsigned long _eip;
-> > +
-> > +	/* Here begins the usercopy section. */
-> > +	struct operand src;
-> > +	struct operand src2;
-> > +	struct operand dst;
-> 
-> Out of pure curiosity, how certain are we that this is going to be
-> enough for userspaces?
+At least GC7000 fails to enter runtime suspend for long periods of time since
+the MC becomes busy again even when the FE is idle. The rest of the series
+makes detecting similar issues easier to debug in the future by checking
+all known bits in debugfs and also warning in the EBUSY case.
 
-This is purely related to in-kernel hardening, there's no concern about
-this being "enough" because it's not directly visible to userspace.
+Tested on GC7000 with a reduced runtime delay of 50ms. Patches are
+against next-20200226.
 
-usercopy refers to the kernel copying data to/from user memory.  When
-running with CONFIG_HARDENED_USERCOPY=y, copy_{to,from}_user performs
-extra checks to warn if the kernel is doing something potentially
-dangerous.  For this code specifically, it will warn if user data is
-being copied into a struct and the affected range within the struct isn't
-explicitly annotated as being safe for usercopy.  The idea is that the
-kernel shouldn't be copying user data into variables that the kernel
-expects are fully under its control.
+Thanks to Lucas Stach for pointing me in the right direction.
 
-Currently, KVM marks the entire struct x86_emulate_ctxt as being "safe"
-for usercopy, which is sub-optimal because HARDENED_USERCOPY wouldn't be
-able to detect KVM bugs, e.g. if "enum x86emul_mode mode" were overwritten
-by copy_from_user().  Shuffling the emulator fields so that the all fields
-that are used for usercopy are clustered together allows KVM to use a more
-precise declaration for which fields are "safe", e.g. the theoretical @mode
-bug would now be caught.
+Guido Günther (5):
+  drm/etnaviv: Fix typo in comment
+  drm/etnaviv: Update idle bits
+  drm/etnaviv: Consider all kwnown idle bits in debugfs
+  drm/etnaviv: Ignore MC when checking runtime suspend idleness
+  drm/etnaviv: Warn when GPU doesn't idle fast enough
+
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c  | 26 ++++++++++++++++++++++----
+ drivers/gpu/drm/etnaviv/state_hi.xml.h |  7 +++++++
+ 2 files changed, 29 insertions(+), 4 deletions(-)
+
+-- 
+2.23.0
+
