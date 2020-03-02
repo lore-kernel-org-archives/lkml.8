@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B783C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC5BC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A81246B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51402246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583136996;
-	bh=iWqyftf/3vX50YquAB9yHvEblGCJxLuDz+tnJH3X8eQ=;
+	s=default; t=1583137003;
+	bh=nHBE8hSbRK70GyTxcyABzfwHy/ZXR4Alx6a7xDaRBdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ie7E0UVamEPu3tfUMwP7OkvJNl1x7LXq5nnvWcHynl8GeesZ+tUBEi/vmcrMvAOxh
-	 p0m3HhCu7Vz3o1jeECr+6GUMeB0GL8uz+jpDxoZod0cnqDxKX8ibhskz6fkGAuDjwP
-	 DTwac7LRSwYh4Lt4/fULFN5aXAcTG3Bw/na0M1X8=
+	b=KH3N4OJnWdLg2TesEQYQP5C9P8tRwPCPldcS+xq2xQAhId1hSpdb4e3/B4XiPhNhQ
+	 OjI0DXdaSoEoM8oLrtM7sNAAvRbzLPM4yn5+pX5frY0f6b6h5qvOLkM5GIxt3tt7qN
+	 WVCZ3uq//3nru0xMnWuCLCu8j4prf84UC/Oiot+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgCBIQa (ORCPT
+        id S1727505AbgCBIQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:16:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 03:16:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbgCBIQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:16:26 -0500
+        id S1727384AbgCBIQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:16:25 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC98246F4;
+        by mail.kernel.org (Postfix) with ESMTPSA id E79F624707;
         Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583136980;
-        bh=iWqyftf/3vX50YquAB9yHvEblGCJxLuDz+tnJH3X8eQ=;
+        bh=nHBE8hSbRK70GyTxcyABzfwHy/ZXR4Alx6a7xDaRBdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kn96XlBNItVI1NPTOAs29lLprLv5Tjs2s2uDIReDww8FdufeutGILsB4EAasp3mMI
-         lO1pzdp4XFFwxo93cvzH+oo03u8o4+Rmx2YpBM7mm6/qnaMmnG+cqDCMDE/CJXEtF/
-         srozRVYlMM8Zp0fH979yRoHYp8RznyMeWHVCCokM=
+        b=qIpB2NKKaH2ix1Guxbxs3nD9C/6IdU52JS3mZeJPD18KNY28Io8VCE6RUbiW8MEvN
+         XDICDWvdkw+C5grV57dbyijuBw5zxP9becnYHU9KxEsdrGpgnN5KBYT6Wa8D8Mbbb7
+         0BPka476h7WnMRHRYtJD0EZ8nLhZYJgtWLOFkxFA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003z2-R8; Mon, 02 Mar 2020 09:16:17 +0100
+        id 1j8gFO-0003zf-1C; Mon, 02 Mar 2020 09:16:18 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 31/42] docs: scsi: convert scsi_mid_low_api.txt to ReST
-Date:   Mon,  2 Mar 2020 09:16:04 +0100
-Message-Id: <881e7741dfed5d6f5f73e1dfc2826b200b8604aa.1583136624.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH 38/42] docs: scsi: convert sym53c8xx_2.txt to ReST
+Date:   Mon,  2 Mar 2020 09:16:11 +0100
+Message-Id: <08202c87294d61d147ec4ac784219d20805cdeb5.1583136624.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
 References: <cover.1583136624.git.mchehab+huawei@kernel.org>
@@ -62,2100 +65,1644 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/scsi/index.rst                  |    1 +
- Documentation/scsi/scsi_eh.rst                |    2 +-
- ...i_mid_low_api.txt => scsi_mid_low_api.rst} | 1730 +++++++++--------
- scripts/documentation-file-ref-check          |    2 +-
- 4 files changed, 895 insertions(+), 840 deletions(-)
- rename Documentation/scsi/{scsi_mid_low_api.txt => scsi_mid_low_api.rst} (39%)
+ .../scsi/{sym53c8xx_2.txt => sym53c8xx_2.rst} | 1109 ++++++++++-------
+ drivers/scsi/Kconfig                          |    2 +-
+ 3 files changed, 637 insertions(+), 475 deletions(-)
+ rename Documentation/scsi/{sym53c8xx_2.txt => sym53c8xx_2.rst} (53%)
 
 diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index 119280f26da6..48337be1c3f1 100644
+index 00584fb0588c..238dd0ac36a6 100644
 --- a/Documentation/scsi/index.rst
 +++ b/Documentation/scsi/index.rst
-@@ -35,5 +35,6 @@ Linux SCSI Subsystem
-    scsi_eh
-    scsi_fc_transport
-    scsi-generic
-+   scsi_mid_low_api
+@@ -42,5 +42,6 @@ Linux SCSI Subsystem
+    smartpqi
+    st
+    sym53c500_cs
++   sym53c8xx_2
  
     scsi_transport_srp/figures
-diff --git a/Documentation/scsi/scsi_eh.rst b/Documentation/scsi/scsi_eh.rst
-index 341f22f35056..7d78c2475615 100644
---- a/Documentation/scsi/scsi_eh.rst
-+++ b/Documentation/scsi/scsi_eh.rst
-@@ -5,7 +5,7 @@ SCSI EH
- =======
- 
- This document describes SCSI midlayer error handling infrastructure.
--Please refer to Documentation/scsi/scsi_mid_low_api.txt for more
-+Please refer to Documentation/scsi/scsi_mid_low_api.rst for more
- information regarding SCSI midlayer.
- 
- .. TABLE OF CONTENTS
-diff --git a/Documentation/scsi/scsi_mid_low_api.txt b/Documentation/scsi/scsi_mid_low_api.rst
-similarity index 39%
-rename from Documentation/scsi/scsi_mid_low_api.txt
-rename to Documentation/scsi/scsi_mid_low_api.rst
-index 2a4be1c3e6db..37ee63b147e9 100644
---- a/Documentation/scsi/scsi_mid_low_api.txt
-+++ b/Documentation/scsi/scsi_mid_low_api.rst
-@@ -1,11 +1,13 @@
--                          Linux Kernel 2.6 series
--                 SCSI mid_level - lower_level driver interface
--                 =============================================
+diff --git a/Documentation/scsi/sym53c8xx_2.txt b/Documentation/scsi/sym53c8xx_2.rst
+similarity index 53%
+rename from Documentation/scsi/sym53c8xx_2.txt
+rename to Documentation/scsi/sym53c8xx_2.rst
+index d28186553fb0..8de44a7baa9b 100644
+--- a/Documentation/scsi/sym53c8xx_2.txt
++++ b/Documentation/scsi/sym53c8xx_2.rst
+@@ -1,99 +1,111 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
++=========================================
+ The Linux SYM-2 driver documentation file
++=========================================
+ 
+ Written by Gerard Roudier <groudier@free.fr>
++
+ 21 Rue Carnot
++
+ 95170 DEUIL LA BARRE - FRANCE
+ 
+ Updated by Matthew Wilcox <matthew@wil.cx>
+ 
+ 2004-10-09
+-===============================================================================
+ 
+-1.  Introduction
+-2.  Supported chips and SCSI features
+-3.  Advantages of this driver for newer chips.
+-      3.1 Optimized SCSI SCRIPTS
+-      3.2 New features appeared with the SYM53C896
+-4.  Memory mapped I/O versus normal I/O
+-5.  Tagged command queueing
+-6.  Parity checking
+-7.  Profiling information
+-8.  Control commands
+-      8.1  Set minimum synchronous period
+-      8.2  Set wide size
+-      8.3  Set maximum number of concurrent tagged commands
+-      8.4  Set debug mode
+-      8.5  Set flag (no_disc)
+-      8.6  Set verbose level
+-      8.7  Reset all logical units of a target
+-      8.8  Abort all tasks of all logical units of a target
+-9.  Configuration parameters
+-10. Boot setup commands
+-      10.1 Syntax
+-      10.2 Available arguments
+-             10.2.1  Default number of tagged commands
+-             10.2.2  Burst max
+-             10.2.3  LED support
+-             10.2.4  Differential mode
+-             10.2.5  IRQ mode
+-             10.2.6  Check SCSI BUS 
+-             10.2.7  Suggest a default SCSI id for hosts
+-             10.2.8  Verbosity level
+-             10.2.9  Debug mode
+-             10.2.10 Settle delay
+-             10.2.11 Serial NVRAM
+-             10.2.12 Exclude a host from being attached
+-      10.3 Converting from old options
+-      10.4 SCSI BUS checking boot option
+-11. SCSI problem troubleshooting
+-      15.1 Problem tracking
+-      15.2 Understanding hardware error reports
+-12. Serial NVRAM support (by Richard Waltham)
+-      17.1 Features
+-      17.2 Symbios NVRAM layout
+-      17.3 Tekram  NVRAM layout
++.. Contents
++
++   1.  Introduction
++   2.  Supported chips and SCSI features
++   3.  Advantages of this driver for newer chips.
++         3.1 Optimized SCSI SCRIPTS
++         3.2 New features appeared with the SYM53C896
++   4.  Memory mapped I/O versus normal I/O
++   5.  Tagged command queueing
++   6.  Parity checking
++   7.  Profiling information
++   8.  Control commands
++         8.1  Set minimum synchronous period
++         8.2  Set wide size
++         8.3  Set maximum number of concurrent tagged commands
++         8.4  Set debug mode
++         8.5  Set flag (no_disc)
++         8.6  Set verbose level
++         8.7  Reset all logical units of a target
++         8.8  Abort all tasks of all logical units of a target
++   9.  Configuration parameters
++   10. Boot setup commands
++         10.1 Syntax
++         10.2 Available arguments
++                10.2.1  Default number of tagged commands
++                10.2.2  Burst max
++                10.2.3  LED support
++                10.2.4  Differential mode
++                10.2.5  IRQ mode
++                10.2.6  Check SCSI BUS
++                10.2.7  Suggest a default SCSI id for hosts
++                10.2.8  Verbosity level
++                10.2.9  Debug mode
++                10.2.10 Settle delay
++                10.2.11 Serial NVRAM
++                10.2.12 Exclude a host from being attached
++         10.3 Converting from old options
++         10.4 SCSI BUS checking boot option
++   11. SCSI problem troubleshooting
++         15.1 Problem tracking
++         15.2 Understanding hardware error reports
++   12. Serial NVRAM support (by Richard Waltham)
++         17.1 Features
++         17.2 Symbios NVRAM layout
++         17.3 Tekram  NVRAM layout
+ 
+-===============================================================================
+ 
+ 1. Introduction
++===============
+ 
+ This driver supports the whole SYM53C8XX family of PCI-SCSI controllers.
+-It also support the subset of LSI53C10XX PCI-SCSI controllers that are based 
++It also support the subset of LSI53C10XX PCI-SCSI controllers that are based
+ on the SYM53C8XX SCRIPTS language.
+ 
+-It replaces the sym53c8xx+ncr53c8xx driver bundle and shares its core code 
+-with the FreeBSD SYM-2 driver. The `glue' that allows this driver to work 
++It replaces the sym53c8xx+ncr53c8xx driver bundle and shares its core code
++with the FreeBSD SYM-2 driver. The 'glue' that allows this driver to work
+ under Linux is contained in 2 files named sym_glue.h and sym_glue.c.
+-Other drivers files are intended not to depend on the Operating System 
++Other drivers files are intended not to depend on the Operating System
+ on which the driver is used.
+ 
+ The history of this driver can be summarized as follows:
+ 
+ 1993: ncr driver written for 386bsd and FreeBSD by:
+-          Wolfgang Stanglmeier        <wolf@cologne.de>
+-          Stefan Esser                <se@mi.Uni-Koeln.de>
++
++          - Wolfgang Stanglmeier        <wolf@cologne.de>
++          - Stefan Esser                <se@mi.Uni-Koeln.de>
+ 
+ 1996: port of the ncr driver to Linux-1.2.13 and rename it ncr53c8xx.
+-          Gerard Roudier
+ 
+-1998: new sym53c8xx driver for Linux based on LOAD/STORE instruction and that 
++          - Gerard Roudier
++
++1998: new sym53c8xx driver for Linux based on LOAD/STORE instruction and that
+       adds full support for the 896 but drops support for early NCR devices.
+-          Gerard Roudier
+ 
+-1999: port of the sym53c8xx driver to FreeBSD and support for the LSI53C1010 
+-      33 MHz and 66MHz Ultra-3 controllers. The new driver is named `sym'.
+-          Gerard Roudier
++          - Gerard Roudier
+ 
+-2000: Add support for early NCR devices to FreeBSD `sym' driver.
+-      Break the driver into several sources and separate the OS glue 
++1999: port of the sym53c8xx driver to FreeBSD and support for the LSI53C1010
++      33 MHz and 66MHz Ultra-3 controllers. The new driver is named 'sym'.
++
++          - Gerard Roudier
++
++2000: Add support for early NCR devices to FreeBSD 'sym' driver.
++      Break the driver into several sources and separate the OS glue
+       code from the core code that can be shared among different O/Ses.
+       Write a glue code for Linux.
+-          Gerard Roudier
++
++          - Gerard Roudier
+ 
+ 2004: Remove FreeBSD compatibility code.  Remove support for versions of
+       Linux before 2.6.  Start using Linux facilities.
+ 
+-This README file addresses the Linux version of the driver. Under FreeBSD, 
++This README file addresses the Linux version of the driver. Under FreeBSD,
+ the driver documentation is the sym.8 man page.
+ 
+ Information about new chips is available at LSILOGIC web server:
+@@ -104,113 +116,145 @@ SCSI standard documentations are available at T10 site:
+ 
+           http://www.t10.org/
+ 
+-Useful SCSI tools written by Eric Youngdale are part of most Linux 
++Useful SCSI tools written by Eric Youngdale are part of most Linux
+ distributions:
+-   scsiinfo:    command line tool
+-   scsi-config: TCL/Tk tool using scsiinfo
++
++   ============ ==========================
++   scsiinfo     command line tool
++   scsi-config  TCL/Tk tool using scsiinfo
++   ============ ==========================
+ 
+ 2. Supported chips and SCSI features
++====================================
+ 
+ The following features are supported for all chips:
+ 
+-	Synchronous negotiation
+-	Disconnection
+-	Tagged command queuing
+-	SCSI parity checking
+-	PCI Master parity checking
++	- Synchronous negotiation
++	- Disconnection
++	- Tagged command queuing
++	- SCSI parity checking
++	- PCI Master parity checking
+ 
+ Other features depends on chip capabilities.
+-The driver notably uses optimized SCRIPTS for devices that support 
+-LOAD/STORE and handles PHASE MISMATCH from SCRIPTS for devices that 
++
++The driver notably uses optimized SCRIPTS for devices that support
++LOAD/STORE and handles PHASE MISMATCH from SCRIPTS for devices that
+ support the corresponding feature.
+ 
+ The following table shows some characteristics of the chip family.
+ 
+-       On board                                   LOAD/STORE   HARDWARE
+-Chip   SDMS BIOS   Wide   SCSI std.   Max. sync   SCRIPTS      PHASE MISMATCH
+-----   ---------   ----   ---------   ----------  ----------   --------------
+-810        N         N      FAST10    10 MB/s        N             N
+-810A       N         N      FAST10    10 MB/s        Y             N
+-815        Y         N      FAST10    10 MB/s        N             N
+-825        Y         Y      FAST10    20 MB/s        N             N
+-825A       Y         Y      FAST10    20 MB/s        Y             N
+-860        N         N      FAST20    20 MB/s        Y             N
+-875        Y         Y      FAST20    40 MB/s        Y             N
+-875A       Y         Y      FAST20    40 MB/s        Y             Y
+-876        Y         Y      FAST20    40 MB/s        Y             N
+-895        Y         Y      FAST40    80 MB/s        Y             N
+-895A       Y         Y      FAST40    80 MB/s        Y             Y
+-896        Y         Y      FAST40    80 MB/s        Y             Y
+-897        Y         Y      FAST40    80 MB/s        Y             Y
+-1510D      Y         Y      FAST40    80 MB/s        Y             Y
+-1010       Y         Y      FAST80   160 MB/s        Y             Y
+-1010_66*   Y         Y      FAST80   160 MB/s        Y             Y
+++--------+-----------+-----+-----------+------------+------------+---------+
++|        |           |     |           |            |Load/store  |Hardware |
++|        |On board   |     |           |            |scripts     |phase    |
++|Chip    |SDMS BIOS  |Wide |SCSI std.  | Max. sync  |            |mismatch |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|810     |     N     |  N  | FAST10    | 10 MB/s    |      N     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|810A    |     N     |  N  | FAST10    | 10 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|815     |     Y     |  N  | FAST10    | 10 MB/s    |      N     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|825     |     Y     |  Y  | FAST10    | 20 MB/s    |      N     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|825A    |     Y     |  Y  | FAST10    | 20 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|860     |     N     |  N  | FAST20    | 20 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|875     |     Y     |  Y  | FAST20    | 40 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|875A    |     Y     |  Y  | FAST20    | 40 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|876     |     Y     |  Y  | FAST20    | 40 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|895     |     Y     |  Y  | FAST40    | 80 MB/s    |      Y     |    N    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|895A    |     Y     |  Y  | FAST40    | 80 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|896     |     Y     |  Y  | FAST40    | 80 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|897     |     Y     |  Y  | FAST40    | 80 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|1510D   |     Y     |  Y  | FAST40    | 80 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|1010    |     Y     |  Y  | FAST80    |160 MB/s    |      Y     |    Y    |
+++--------+-----------+-----+-----------+------------+------------+---------+
++|1010_66 |     Y     |  Y  | FAST80    |160 MB/s    |      Y     |    Y    |
++|[1]_    |           |     |           |            |            |         |
+++--------+-----------+-----+-----------+------------+------------+---------+
+ 
+-* Chip supports 33MHz and 66MHz PCI bus clock.
++.. [1] Chip supports 33MHz and 66MHz PCI bus clock.
+ 
+ 
+ Summary of other supported features:
+ 
+-Module:                allow to load the driver
+-Memory mapped I/O:     increases performance
+-Control commands:      write operations to the proc SCSI file system
+-Debugging information: written to syslog (expert only)
+-Scatter / gather
+-Shared interrupt
+-Boot setup commands
+-Serial NVRAM:          Symbios and Tekram formats
++:Module:                allow to load the driver
++:Memory mapped I/O:     increases performance
++:Control commands:      write operations to the proc SCSI file system
++:Debugging information: written to syslog (expert only)
++:Serial NVRAM:          Symbios and Tekram formats
++
++- Scatter / gather
++- Shared interrupt
++- Boot setup commands
+ 
+ 
+ 3. Advantages of this driver for newer chips.
 +=============================================
-+SCSI mid_level - lower_level driver interface
-+=============================================
  
- Introduction
- ============
- This document outlines the interface between the Linux SCSI mid level and
--SCSI lower level drivers. Lower level drivers (LLDs) are variously called 
-+SCSI lower level drivers. Lower level drivers (LLDs) are variously called
- host bus adapter (HBA) drivers and host drivers (HD). A "host" in this
- context is a bridge between a computer IO bus (e.g. PCI or ISA) and a
- single SCSI initiator port on a SCSI transport. An "initiator" port
-@@ -24,8 +26,8 @@ directory).
- For example, the aic7xxx LLD controls Adaptec SCSI parallel interface
- (SPI) controllers based on that company's 7xxx chip series. The aic7xxx
- LLD can be built into the kernel or loaded as a module. There can only be
--one aic7xxx LLD running in a Linux system but it may be controlling many 
--HBAs. These HBAs might be either on PCI daughter-boards or built into 
-+one aic7xxx LLD running in a Linux system but it may be controlling many
-+HBAs. These HBAs might be either on PCI daughter-boards or built into
- the motherboard (or both). Some aic7xxx based HBAs are dual controllers
- and thus represent two hosts. Like most modern HBAs, each aic7xxx host
- has its own PCI device address. [The one-to-one correspondence between
-@@ -39,20 +41,20 @@ This version of the document roughly matches linux kernel version 2.6.8 .
+-3.1 Optimized SCSI SCRIPTS.
++3.1 Optimized SCSI SCRIPTS
++--------------------------
  
- Documentation
- =============
--There is a SCSI documentation directory within the kernel source tree, 
-+There is a SCSI documentation directory within the kernel source tree,
- typically Documentation/scsi . Most documents are in plain
--(i.e. ASCII) text. This file is named scsi_mid_low_api.txt and can be 
-+(i.e. ASCII) text. This file is named scsi_mid_low_api.txt and can be
- found in that directory. A more recent copy of this document may be found
--at http://web.archive.org/web/20070107183357rn_1/sg.torque.net/scsi/. 
-+at http://web.archive.org/web/20070107183357rn_1/sg.torque.net/scsi/.
- Many LLDs are documented there (e.g. aic7xxx.txt). The SCSI mid-level is
--briefly described in scsi.txt which contains a url to a document 
--describing the SCSI subsystem in the lk 2.4 series. Two upper level 
--drivers have documents in that directory: st.txt (SCSI tape driver) and 
-+briefly described in scsi.txt which contains a url to a document
-+describing the SCSI subsystem in the lk 2.4 series. Two upper level
-+drivers have documents in that directory: st.txt (SCSI tape driver) and
- scsi-generic.txt (for the sg driver).
+-All chips except the 810, 815 and 825, support new SCSI SCRIPTS instructions 
+-named LOAD and STORE that allow to move up to 1 DWORD from/to an IO register 
+-to/from memory much faster that the MOVE MEMORY instruction that is supported 
++All chips except the 810, 815 and 825, support new SCSI SCRIPTS instructions
++named LOAD and STORE that allow to move up to 1 DWORD from/to an IO register
++to/from memory much faster that the MOVE MEMORY instruction that is supported
+ by the 53c7xx and 53c8xx family.
  
- Some documentation (or urls) for LLDs may be found in the C source code
- or in the same directory as the C source code. For example to find a url
--about the USB mass storage driver see the 
-+about the USB mass storage driver see the
- /usr/src/linux/drivers/usb/storage directory.
+-The LOAD/STORE instructions support absolute and DSA relative addressing 
+-modes. The SCSI SCRIPTS had been entirely rewritten using LOAD/STORE instead 
++The LOAD/STORE instructions support absolute and DSA relative addressing
++modes. The SCSI SCRIPTS had been entirely rewritten using LOAD/STORE instead
+ of MOVE MEMORY instructions.
  
- Driver structure
-@@ -62,7 +64,7 @@ the drivers/scsi directory. For example, a driver called "xyz" has a header
- file "xyz.h" and a source file "xyz.c". [Actually there is no good reason
- why this couldn't all be in one file; the header file is superfluous.] Some
- drivers that have been ported to several operating systems have more than
--two files. For example the aic7xxx driver has separate files for generic 
-+two files. For example the aic7xxx driver has separate files for generic
- and OS-specific code (e.g. FreeBSD and Linux). Such drivers tend to have
- their own directory under the drivers/scsi directory.
+-Due to the lack of LOAD/STORE SCRIPTS instructions by earlier chips, this 
+-driver also incorporates a different SCRIPTS set based on MEMORY MOVE, in 
++Due to the lack of LOAD/STORE SCRIPTS instructions by earlier chips, this
++driver also incorporates a different SCRIPTS set based on MEMORY MOVE, in
+ order to provide support for the entire SYM53C8XX chips family.
  
-@@ -80,10 +82,11 @@ to be hot plugged (and unplugged) during the lifetime of the LLD and will
- be referred to as the "hotplug" initialization model. The newer model is
- preferred as it can handle both traditional SCSI equipment that is
- permanently connected as well as modern "SCSI" devices (e.g. USB or
--IEEE 1394 connected digital cameras) that are hotplugged. Both 
-+IEEE 1394 connected digital cameras) that are hotplugged. Both
- initialization models are discussed in the following sections.
+ 3.2 New features appeared with the SYM53C896
++--------------------------------------------
  
- An LLD interfaces to the SCSI subsystem several ways:
+-Newer chips (see above) allows handling of the phase mismatch context from 
+-SCRIPTS (avoids the phase mismatch interrupt that stops the SCSI processor 
++Newer chips (see above) allows handling of the phase mismatch context from
++SCRIPTS (avoids the phase mismatch interrupt that stops the SCSI processor
+ until the C code has saved the context of the transfer).
+ 
+-The 896 and 1010 chips support 64 bit PCI transactions and addressing, 
++The 896 and 1010 chips support 64 bit PCI transactions and addressing,
+ while the 895A supports 32 bit PCI transactions and 64 bit addressing.
+-The SCRIPTS processor of these chips is not true 64 bit, but uses segment 
+-registers for bit 32-63. Another interesting feature is that LOAD/STORE 
++The SCRIPTS processor of these chips is not true 64 bit, but uses segment
++registers for bit 32-63. Another interesting feature is that LOAD/STORE
+ instructions that address the on-chip RAM (8k) remain internal to the chip.
+ 
+ 4. Memory mapped I/O versus normal I/O
++======================================
+ 
+-Memory mapped I/O has less latency than normal I/O and is the recommended 
+-way for doing IO with PCI devices. Memory mapped I/O seems to work fine on 
+-most hardware configurations, but some poorly designed chipsets may break 
+-this feature. A configuration option is provided for normal I/O to be 
++Memory mapped I/O has less latency than normal I/O and is the recommended
++way for doing IO with PCI devices. Memory mapped I/O seems to work fine on
++most hardware configurations, but some poorly designed chipsets may break
++this feature. A configuration option is provided for normal I/O to be
+ used but the driver defaults to MMIO.
+ 
+ 5. Tagged command queueing
++==========================
+ 
+-Queuing more than 1 command at a time to a device allows it to perform 
+-optimizations based on actual head positions and its mechanical 
++Queuing more than 1 command at a time to a device allows it to perform
++optimizations based on actual head positions and its mechanical
+ characteristics. This feature may also reduce average command latency.
+-In order to really gain advantage of this feature, devices must have 
+-a reasonable cache size (No miracle is to be expected for a low-end 
++In order to really gain advantage of this feature, devices must have
++a reasonable cache size (No miracle is to be expected for a low-end
+ hard disk with 128 KB or less).
 +
-   a) directly invoking functions supplied by the mid level
-   b) passing a set of function pointers to a registration function
-      supplied by the mid level. The mid level will then invoke these
-@@ -98,11 +101,11 @@ supplied functions" below.
- Those functions in group b) are listed in a section entitled "Interface
- functions" below. Their function pointers are placed in the members of
- "struct scsi_host_template", an instance of which is passed to
--scsi_host_alloc() ** .  Those interface functions that the LLD does not 
--wish to supply should have NULL placed in the corresponding member of 
--struct scsi_host_template.  Defining an instance of struct 
-+scsi_host_alloc() [#]_.  Those interface functions that the LLD does not
-+wish to supply should have NULL placed in the corresponding member of
-+struct scsi_host_template.  Defining an instance of struct
- scsi_host_template at file scope will cause NULL to be  placed in function
-- pointer members not explicitly initialized.
-+pointer members not explicitly initialized.
- 
- Those usages in group c) should be handled with care, especially in a
- "hotplug" environment. LLDs should be aware of the lifetime of instances
-@@ -110,11 +113,11 @@ that are shared with the mid level and other layers.
- 
- All functions defined within an LLD and all data defined at file scope
- should be static. For example the slave_alloc() function in an LLD
--called "xxx" could be defined as 
--"static int xxx_slave_alloc(struct scsi_device * sdev) { /* code */ }"
-+called "xxx" could be defined as
-+``static int xxx_slave_alloc(struct scsi_device * sdev) { /* code */ }``
- 
--** the scsi_host_alloc() function is a replacement for the rather vaguely
--named scsi_register() function in most situations.
-+.. [#] the scsi_host_alloc() function is a replacement for the rather vaguely
-+       named scsi_register() function in most situations.
- 
- 
- Hotplug initialization model
-@@ -136,48 +139,47 @@ aware of an LLD when that LLD registers its first HBA.
- 
- At some later time, the LLD becomes aware of an HBA and what follows
- is a typical sequence of calls between the LLD and the mid level.
--This example shows the mid level scanning the newly introduced HBA for 3 
--scsi devices of which only the first 2 respond:
-+This example shows the mid level scanning the newly introduced HBA for 3
-+scsi devices of which only the first 2 respond::
- 
--     HBA PROBE: assume 2 SCSI devices found in scan
--LLD                   mid level                    LLD
--===-------------------=========--------------------===------
--scsi_host_alloc()  -->
--scsi_add_host()  ---->
--scsi_scan_host()  -------+
--                         |
--                    slave_alloc()
--                    slave_configure() -->  scsi_change_queue_depth()
--                         |
--                    slave_alloc()
--                    slave_configure()
--                         |
--                    slave_alloc()   ***
--                    slave_destroy() ***
--------------------------------------------------------------
-+	HBA PROBE: assume 2 SCSI devices found in scan
-+    LLD                   mid level                    LLD
-+    ===-------------------=========--------------------===------
-+    scsi_host_alloc()  -->
-+    scsi_add_host()  ---->
-+    scsi_scan_host()  -------+
-+			    |
-+			slave_alloc()
-+			slave_configure() -->  scsi_change_queue_depth()
-+			    |
-+			slave_alloc()
-+			slave_configure()
-+			    |
-+			slave_alloc()   ***
-+			slave_destroy() ***
+ Some known old SCSI devices do not properly support tagged command queuing.
+-Generally, firmware revisions that fix this kind of problems are available 
++Generally, firmware revisions that fix this kind of problems are available
+ at respective vendor web/ftp sites.
+-All I can say is that I never have had problem with tagged queuing using 
+-this driver and its predecessors. Hard disks that behaved correctly for 
 +
++All I can say is that I never have had problem with tagged queuing using
++this driver and its predecessors. Hard disks that behaved correctly for
+ me using tagged commands are the following:
+ 
+ - IBM S12 0662
+@@ -223,9 +267,9 @@ me using tagged commands are the following:
+ - Quantum Atlas IV
+ - Seagate Cheetah II
+ 
+-If your controller has NVRAM, you can configure this feature per target 
+-from the user setup tool. The Tekram Setup program allows to tune the 
+-maximum number of queued commands up to 32. The Symbios Setup only allows 
++If your controller has NVRAM, you can configure this feature per target
++from the user setup tool. The Tekram Setup program allows to tune the
++maximum number of queued commands up to 32. The Symbios Setup only allows
+ to enable or disable this feature.
+ 
+ The maximum number of simultaneous tagged commands queued to a device
+@@ -233,15 +277,15 @@ is currently set to 16 by default.  This value is suitable for most SCSI
+ disks.  With large SCSI disks (>= 2GB, cache >= 512KB, average seek time
+ <= 10 ms), using a larger value may give better performances.
+ 
+-This driver supports up to 255 commands per device, and but using more than 
+-64 is generally not worth-while, unless you are using a very large disk or 
+-disk arrays. It is noticeable that most of recent hard disks seem not to 
+-accept more than 64 simultaneous commands. So, using more than 64 queued 
++This driver supports up to 255 commands per device, and but using more than
++64 is generally not worth-while, unless you are using a very large disk or
++disk arrays. It is noticeable that most of recent hard disks seem not to
++accept more than 64 simultaneous commands. So, using more than 64 queued
+ commands is probably just resource wasting.
+ 
+-If your controller does not have NVRAM or if it is managed by the SDMS 
+-BIOS/SETUP, you can configure tagged queueing feature and device queue 
+-depths from the boot command-line. For example:
++If your controller does not have NVRAM or if it is managed by the SDMS
++BIOS/SETUP, you can configure tagged queueing feature and device queue
++depths from the boot command-line. For example::
+ 
+   sym53c8xx=tags:4/t2t3q15-t4q7/t1u0q32
+ 
+@@ -257,25 +301,28 @@ In some special conditions, some SCSI disk firmwares may return a
+ QUEUE FULL status for a SCSI command. This behaviour is managed by the
+ driver using the following heuristic:
+ 
+-- Each time a QUEUE FULL status is returned, tagged queue depth is reduced 
+-  to the actual number of disconnected commands. 
++- Each time a QUEUE FULL status is returned, tagged queue depth is reduced
++  to the actual number of disconnected commands.
+ 
+ - Every 200 successfully completed SCSI commands, if allowed by the
+   current limit, the maximum number of queueable commands is incremented.
+ 
+-Since QUEUE FULL status reception and handling is resource wasting, the 
+-driver notifies by default this problem to user by indicating the actual 
+-number of commands used and their status, as well as its decision on the 
++Since QUEUE FULL status reception and handling is resource wasting, the
++driver notifies by default this problem to user by indicating the actual
++number of commands used and their status, as well as its decision on the
+ device queue depth change.
+-The heuristic used by the driver in handling QUEUE FULL ensures that the 
+-impact on performances is not too bad. You can get rid of the messages by 
++The heuristic used by the driver in handling QUEUE FULL ensures that the
++impact on performances is not too bad. You can get rid of the messages by
+ setting verbose level to zero, as follow:
+ 
+-1st method: boot your system using 'sym53c8xx=verb:0' option.
+-2nd method: apply "setverbose 0" control command to the proc fs entry 
++1st method:
++	    boot your system using 'sym53c8xx=verb:0' option.
++2nd method:
++	    apply "setverbose 0" control command to the proc fs entry
+             corresponding to your controller after boot-up.
+ 
+ 6. Parity checking
++==================
+ 
+ The driver supports SCSI parity checking and PCI bus master parity
+ checking.  These features must be enabled in order to ensure safe
+@@ -284,17 +331,19 @@ with parity.  The options to defeat parity checking have been removed
+ from the driver.
+ 
+ 7. Profiling information
++========================
+ 
+ This driver does not provide profiling information as did its predecessors.
+-This feature was not this useful and added complexity to the code. 
+-As the driver code got more complex, I have decided to remove everything 
++This feature was not this useful and added complexity to the code.
++As the driver code got more complex, I have decided to remove everything
+ that didn't seem actually useful.
+ 
+ 8. Control commands
++===================
+ 
+ Control commands can be sent to the driver with write operations to
+ the proc SCSI file system. The generic command syntax is the
+-following:
++following::
+ 
+       echo "<verb> <parameters>" >/proc/scsi/sym53c8xx/0
+       (assumes controller number is 0)
+@@ -305,97 +354,112 @@ apply to all targets of the SCSI chain (except the controller).
+ Available commands:
+ 
+ 8.1 Set minimum synchronous period factor
++-----------------------------------------
+ 
+     setsync <target> <period factor>
+ 
+-    target:    target number
+-    period:    minimum synchronous period.
++    :target:   target number
++    :period:   minimum synchronous period.
+                Maximum speed = 1000/(4*period factor) except for special
+                cases below.
+ 
+     Specify a period of 0, to force asynchronous transfer mode.
+ 
+-       9 means 12.5 nano-seconds synchronous period
+-      10 means 25 nano-seconds synchronous period
+-      11 means 30 nano-seconds synchronous period
+-      12 means 50 nano-seconds synchronous period
++     -  9 means 12.5 nano-seconds synchronous period
++     - 10 means 25 nano-seconds synchronous period
++     - 11 means 30 nano-seconds synchronous period
++     - 12 means 50 nano-seconds synchronous period
+ 
+ 8.2 Set wide size
++-----------------
+ 
+     setwide <target> <size>
+ 
+-    target:    target number
+-    size:      0=8 bits, 1=16bits
++    :target:   target number
++    :size:     0=8 bits, 1=16bits
+ 
+ 8.3 Set maximum number of concurrent tagged commands
+- 
++----------------------------------------------------
 +
-+    *** For scsi devices that the mid level tries to scan but do not
-+	respond, a slave_alloc(), slave_destroy() pair is called.
+     settags <target> <tags>
  
- If the LLD wants to adjust the default queue settings, it can invoke
- scsi_change_queue_depth() in its slave_configure() routine.
+-    target:    target number
+-    tags:      number of concurrent tagged commands
++    :target:   target number
++    :tags:     number of concurrent tagged commands
+                must not be greater than configured (default: 16)
  
--*** For scsi devices that the mid level tries to scan but do not
--    respond, a slave_alloc(), slave_destroy() pair is called.
+ 8.4 Set debug mode
++------------------
+ 
+     setdebug <list of debug flags>
+ 
+     Available debug flags:
+-        alloc:   print info about memory allocations (ccb, lcb)
+-        queue:   print info about insertions into the command start queue
+-        result:  print sense data on CHECK CONDITION status
+-        scatter: print info about the scatter process
+-        scripts: print info about the script binding process
+-	tiny:    print minimal debugging information
+-	timing:  print timing information of the NCR chip
+-	nego:    print information about SCSI negotiations
+-	phase:   print information on script interruptions
++
++	======== ========================================================
++        alloc    print info about memory allocations (ccb, lcb)
++        queue    print info about insertions into the command start queue
++        result   print sense data on CHECK CONDITION status
++        scatter  print info about the scatter process
++        scripts  print info about the script binding process
++	tiny     print minimal debugging information
++	timing   print timing information of the NCR chip
++	nego     print information about SCSI negotiations
++	phase    print information on script interruptions
++	======== ========================================================
+ 
+     Use "setdebug" with no argument to reset debug flags.
+ 
+ 
+ 8.5 Set flag (no_disc)
+- 
++----------------------
++
+     setflag <target> <flag>
+ 
+-    target:    target number
++    :target:    target number
+ 
+     For the moment, only one flag is available:
+ 
+         no_disc:   not allow target to disconnect.
+ 
+     Do not specify any flag in order to reset the flag. For example:
+-    - setflag 4
++
++    setflag 4
+       will reset no_disc flag for target 4, so will allow it disconnections.
+-    - setflag all
++    setflag all
+       will allow disconnection for all devices on the SCSI bus.
+ 
+ 
+ 8.6 Set verbose level
++---------------------
+ 
+     setverbose #level
+ 
+-    The driver default verbose level is 1. This command allows to change 
++    The driver default verbose level is 1. This command allows to change
+     th driver verbose level after boot-up.
+ 
+ 8.7 Reset all logical units of a target
++---------------------------------------
+ 
+     resetdev <target>
+ 
+-    target:    target number
++    :target:    target number
++
+     The driver will try to send a BUS DEVICE RESET message to the target.
+ 
+ 8.8 Abort all tasks of all logical units of a target
++----------------------------------------------------
+ 
+     cleardev <target>
+ 
+-    target:    target number
+-    The driver will try to send a ABORT message to all the logical units 
++    :target:    target number
++
++    The driver will try to send a ABORT message to all the logical units
+     of the target.
+ 
+ 
+ 9. Configuration parameters
++===========================
+ 
+-Under kernel configuration tools (make menuconfig, for example), it is 
++Under kernel configuration tools (make menuconfig, for example), it is
+ possible to change some default driver configuration parameters.
+ If the firmware of all your devices is perfect enough, all the
+ features supported by the driver can be enabled at start-up. However,
+@@ -414,166 +478,238 @@ Default tagged command queue depth    (default answer: 16)
+     This parameter can be specified from the boot command line.
+ 
+ Maximum number of queued commands     (default answer: 32)
+-    This option allows you to specify the maximum number of tagged commands 
++    This option allows you to specify the maximum number of tagged commands
+     that can be queued to a device. The maximum supported value is 255.
+ 
+ Synchronous transfers frequency       (default answer: 80)
+-    This option allows you to specify the frequency in MHz the driver 
++    This option allows you to specify the frequency in MHz the driver
+     will use at boot time for synchronous data transfer negotiations.
+     0 means "asynchronous data transfers".
+ 
+ 10. Boot setup commands
++=======================
+ 
+ 10.1 Syntax
++-----------
+ 
+ Setup commands can be passed to the driver either at boot time or as
+ parameters to modprobe, as described in Documentation/admin-guide/kernel-parameters.rst
+ 
+-Example of boot setup command under lilo prompt:
++Example of boot setup command under lilo prompt::
+ 
+-lilo: linux root=/dev/sda2 sym53c8xx.cmd_per_lun=4 sym53c8xx.sync=10 sym53c8xx.debug=0x200
++    lilo: linux root=/dev/sda2 sym53c8xx.cmd_per_lun=4 sym53c8xx.sync=10 sym53c8xx.debug=0x200
+ 
+ - enable tagged commands, up to 4 tagged commands queued.
+ - set synchronous negotiation speed to 10 Mega-transfers / second.
+ - set DEBUG_NEGO flag.
+ 
+ The following command will install the driver module with the same
+-options as above.
++options as above::
+ 
+     modprobe sym53c8xx cmd_per_lun=4 sync=10 debug=0x200
+ 
+ 10.2 Available arguments
++------------------------
+ 
+ 10.2.1  Default number of tagged commands
+-        cmd_per_lun=0 (or cmd_per_lun=1) tagged command queuing disabled
+-        cmd_per_lun=#tags (#tags > 1) tagged command queuing enabled
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++        - cmd_per_lun=0 (or cmd_per_lun=1) tagged command queuing disabled
++        - cmd_per_lun=#tags (#tags > 1) tagged command queuing enabled
++
+   #tags will be truncated to the max queued commands configuration parameter.
+ 
+ 10.2.2 Burst max
++^^^^^^^^^^^^^^^^
++
++	========== ======================================================
+         burst=0    burst disabled
+         burst=255  get burst length from initial IO register settings.
+         burst=#x   burst enabled (1<<#x burst transfers max)
+-  #x is an integer value which is log base 2 of the burst transfers max.
++
++		   #x is an integer value which is log base 2 of the burst
++		   transfers max.
++	========== ======================================================
++
+   By default the driver uses the maximum value supported by the chip.
+ 
+ 10.2.3 LED support
++^^^^^^^^^^^^^^^^^^
++
++	=====      ===================
+         led=1      enable  LED support
+         led=0      disable LED support
++	=====      ===================
++
+   Do not enable LED support if your scsi board does not use SDMS BIOS.
+   (See 'Configuration parameters')
+ 
+ 10.2.4 Differential mode
+-        diff=0	never set up diff mode
++^^^^^^^^^^^^^^^^^^^^^^^^
++
++	======	=================================
++	diff=0	never set up diff mode
+         diff=1	set up diff mode if BIOS set it
+         diff=2	always set up diff mode
+         diff=3	set diff mode if GPIO3 is not set
++	======	=================================
+ 
+ 10.2.5 IRQ mode
++^^^^^^^^^^^^^^^
++
++	======     ================================================
+         irqm=0     always open drain
+         irqm=1     same as initial settings (assumed BIOS settings)
+         irqm=2     always totem pole
++	======     ================================================
++
++10.2.6 Check SCSI BUS
++^^^^^^^^^^^^^^^^^^^^^
+ 
+-10.2.6 Check SCSI BUS 
+         buschk=<option bits>
+ 
+     Available option bits:
+-        0x0:   No check.
+-        0x1:   Check and do not attach the controller on error.  
+-        0x2:   Check and just warn on error.
++
++	===    ================================================
++        0x0    No check.
++        0x1    Check and do not attach the controller on error.
++        0x2    Check and just warn on error.
++	===    ================================================
+ 
+ 10.2.7 Suggest a default SCSI id for hosts
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++	==========	==========================================
+         hostid=255	no id suggested.
+-        hostid=#x   (0 < x < 7) x suggested for hosts SCSI id.
++        hostid=#x	(0 < x < 7) x suggested for hosts SCSI id.
++	==========	==========================================
+ 
+-    If a host SCSI id is available from the NVRAM, the driver will ignore 
+-    any value suggested as boot option. Otherwise, if a suggested value 
+-    different from 255 has been supplied, it will use it. Otherwise, it will 
+-    try to deduce the value previously set in the hardware and use value 
++    If a host SCSI id is available from the NVRAM, the driver will ignore
++    any value suggested as boot option. Otherwise, if a suggested value
++    different from 255 has been supplied, it will use it. Otherwise, it will
++    try to deduce the value previously set in the hardware and use value
+     7 if the hardware value is zero.
+ 
+ 10.2.8  Verbosity level
++^^^^^^^^^^^^^^^^^^^^^^^
++
++	======     ========
+         verb=0     minimal
+         verb=1     normal
+         verb=2     too much
++	======     ========
+ 
+ 10.2.9 Debug mode
+-        debug=0	 clear debug flags
+-        debug=#x   set debug flags
+-  #x is an integer value combining the following power-of-2 values:
+-  DEBUG_ALLOC       0x1
+-  DEBUG_PHASE       0x2
+-  DEBUG_POLL        0x4
+-  DEBUG_QUEUE       0x8
+-  DEBUG_RESULT     0x10
+-  DEBUG_SCATTER    0x20
+-  DEBUG_SCRIPT     0x40
+-  DEBUG_TINY       0x80
+-  DEBUG_TIMING    0x100
+-  DEBUG_NEGO      0x200
+-  DEBUG_TAGS      0x400
+-  DEBUG_FREEZE    0x800
+-  DEBUG_RESTART  0x1000
++^^^^^^^^^^^^^^^^^
+ 
+-  You can play safely with DEBUG_NEGO. However, some of these flags may 
+-  generate bunches of syslog messages. 
++	=========   ====================================
++        debug=0	    clear debug flags
++        debug=#x    set debug flags
++
++		    #x is an integer value combining the
++		    following power-of-2 values:
++
++		    =============  ======
++		    DEBUG_ALLOC       0x1
++		    DEBUG_PHASE       0x2
++		    DEBUG_POLL        0x4
++		    DEBUG_QUEUE       0x8
++		    DEBUG_RESULT     0x10
++		    DEBUG_SCATTER    0x20
++		    DEBUG_SCRIPT     0x40
++		    DEBUG_TINY       0x80
++		    DEBUG_TIMING    0x100
++		    DEBUG_NEGO      0x200
++		    DEBUG_TAGS      0x400
++		    DEBUG_FREEZE    0x800
++		    DEBUG_RESTART  0x1000
++		    =============  ======
++	=========   ====================================
++
++  You can play safely with DEBUG_NEGO. However, some of these flags may
++  generate bunches of syslog messages.
+ 
+ 10.2.10 Settle delay
++^^^^^^^^^^^^^^^^^^^^
++
++	========	===================
+         settle=n	delay for n seconds
++	========	===================
+ 
+   After a bus reset, the driver will delay for n seconds before talking
+   to any device on the bus.  The default is 3 seconds and safe mode will
+   default it to 10.
+ 
+ 10.2.11 Serial NVRAM
+-	NB: option not currently implemented.
++^^^^^^^^^^^^^^^^^^^^
++
++	.. Note:: option not currently implemented.
++
++	=======     =========================================
+         nvram=n     do not look for serial NVRAM
+         nvram=y     test controllers for onboard serial NVRAM
++	=======     =========================================
++
+         (alternate binary form)
++
+         nvram=<bits options>
++
++        ====   =================================================================
+         0x01   look for NVRAM  (equivalent to nvram=y)
+         0x02   ignore NVRAM "Synchronous negotiation" parameters for all devices
+         0x04   ignore NVRAM "Wide negotiation"  parameter for all devices
+         0x08   ignore NVRAM "Scan at boot time" parameter for all devices
+         0x80   also attach controllers set to OFF in the NVRAM (sym53c8xx only)
++        ====   =================================================================
+ 
+ 10.2.12 Exclude a host from being attached
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
+         excl=<io_address>,...
+ 
+     Prevent host at a given io address from being attached.
+-    For example 'excl=0xb400,0xc000' indicate to the 
++    For example 'excl=0xb400,0xc000' indicate to the
+     driver not to attach hosts at address 0xb400 and 0xc000.
+ 
+ 10.3 Converting from old style options
++--------------------------------------
++
++Previously, the sym2 driver accepted arguments of the form::
+ 
+-Previously, the sym2 driver accepted arguments of the form
+ 	sym53c8xx=tags:4,sync:10,debug:0x200
+ 
+ As a result of the new module parameters, this is no longer available.
+ Most of the options have remained the same, but tags has become
+ cmd_per_lun to reflect its different purposes.  The sample above would
+-be specified as:
++be specified as::
++
+ 	modprobe sym53c8xx cmd_per_lun=4 sync=10 debug=0x200
+ 
+-or on the kernel boot line as:
++or on the kernel boot line as::
++
+ 	sym53c8xx.cmd_per_lun=4 sym53c8xx.sync=10 sym53c8xx.debug=0x200
+ 
+-10.4 SCSI BUS checking boot option.
++10.4 SCSI BUS checking boot option
++----------------------------------
+ 
+-When this option is set to a non-zero value, the driver checks SCSI lines 
++When this option is set to a non-zero value, the driver checks SCSI lines
+ logic state, 100 micro-seconds after having asserted the SCSI RESET line.
+ The driver just reads SCSI lines and checks all lines read FALSE except RESET.
+-Since SCSI devices shall release the BUS at most 800 nano-seconds after SCSI 
++Since SCSI devices shall release the BUS at most 800 nano-seconds after SCSI
+ RESET has been asserted, any signal to TRUE may indicate a SCSI BUS problem.
+ Unfortunately, the following common SCSI BUS problems are not detected:
++
+ - Only 1 terminator installed.
+ - Misplaced terminators.
+ - Bad quality terminators.
+-On the other hand, either bad cabling, broken devices, not conformant 
++
++On the other hand, either bad cabling, broken devices, not conformant
+ devices, ... may cause a SCSI signal to be wrong when te driver reads it.
+ 
+ 15. SCSI problem troubleshooting
++================================
+ 
+ 15.1 Problem tracking
++---------------------
+ 
+ Most SCSI problems are due to a non conformant SCSI bus or too buggy
+ devices.  If unfortunately you have SCSI problems, you can check the
+@@ -607,86 +743,96 @@ hard disks.  Good SCSI hard disks with a large cache gain advantage of
+ tagged commands queuing.
+ 
+ 15.2 Understanding hardware error reports
++-----------------------------------------
+ 
+-When the driver detects an unexpected error condition, it may display a 
+-message of the following pattern.
++When the driver detects an unexpected error condition, it may display a
++message of the following pattern::
+ 
+-sym0:1: ERROR (0:48) (1-21-65) (f/95/0) @ (script 7c0:19000000).
+-sym0: script cmd = 19000000
+-sym0: regdump: da 10 80 95 47 0f 01 07 75 01 81 21 80 01 09 00.
++    sym0:1: ERROR (0:48) (1-21-65) (f/95/0) @ (script 7c0:19000000).
++    sym0: script cmd = 19000000
++    sym0: regdump: da 10 80 95 47 0f 01 07 75 01 81 21 80 01 09 00.
+ 
+-Some fields in such a message may help you understand the cause of the 
+-problem, as follows:
++Some fields in such a message may help you understand the cause of the
++problem, as follows::
+ 
+-sym0:1: ERROR (0:48) (1-21-65) (f/95/0) @ (script 7c0:19000000).
+-.....A.........B.C....D.E..F....G.H..I.......J.....K...L.......
++    sym0:1: ERROR (0:48) (1-21-65) (f/95/0) @ (script 7c0:19000000).
++    .....A.........B.C....D.E..F....G.H..I.......J.....K...L.......
+ 
+ Field A : target number.
+-  SCSI ID of the device the controller was talking with at the moment the 
++  SCSI ID of the device the controller was talking with at the moment the
+   error occurs.
+ 
+ Field B : DSTAT io register (DMA STATUS)
+-  Bit 0x40 : MDPE Master Data Parity Error
++  ========   =============================================================
++  Bit 0x40   MDPE Master Data Parity Error
+              Data parity error detected on the PCI BUS.
+-  Bit 0x20 : BF   Bus Fault
++  Bit 0x20   BF   Bus Fault
+              PCI bus fault condition detected
+-  Bit 0x01 : IID  Illegal Instruction Detected
+-             Set by the chip when it detects an Illegal Instruction format 
++  Bit 0x01   IID  Illegal Instruction Detected
++             Set by the chip when it detects an Illegal Instruction format
+              on some condition that makes an instruction illegal.
+-  Bit 0x80 : DFE Dma Fifo Empty
++  Bit 0x80   DFE Dma Fifo Empty
+              Pure status bit that does not indicate an error.
+-  If the reported DSTAT value contains a combination of MDPE (0x40), 
++  ========   =============================================================
++
++  If the reported DSTAT value contains a combination of MDPE (0x40),
+   BF (0x20), then the cause may be likely due to a PCI BUS problem.
+ 
+ Field C : SIST io register (SCSI Interrupt Status)
+-  Bit 0x08 : SGE  SCSI GROSS ERROR
+-             Indicates that the chip detected a severe error condition 
++  ========   ==================================================================
++  Bit 0x08   SGE  SCSI GROSS ERROR
++             Indicates that the chip detected a severe error condition
+              on the SCSI BUS that prevents the SCSI protocol from functioning
+              properly.
+-  Bit 0x04 : UDC  Unexpected Disconnection
+-             Indicates that the device released the SCSI BUS when the chip 
+-             was not expecting this to happen. A device may behave so to 
++  Bit 0x04   UDC  Unexpected Disconnection
++             Indicates that the device released the SCSI BUS when the chip
++             was not expecting this to happen. A device may behave so to
+              indicate the SCSI initiator that an error condition not reportable              using the SCSI protocol has occurred.
+-  Bit 0x02 : RST  SCSI BUS Reset
+-             Generally SCSI targets do not reset the SCSI BUS, although any 
++  Bit 0x02   RST  SCSI BUS Reset
++             Generally SCSI targets do not reset the SCSI BUS, although any
+              device on the BUS can reset it at any time.
+-  Bit 0x01 : PAR  Parity
++  Bit 0x01   PAR  Parity
+              SCSI parity error detected.
+-  On a faulty SCSI BUS, any error condition among SGE (0x08), UDC (0x04) and 
+-  PAR (0x01) may be detected by the chip. If your SCSI system sometimes 
+-  encounters such error conditions, especially SCSI GROSS ERROR, then a SCSI 
++  ========   ==================================================================
++
++  On a faulty SCSI BUS, any error condition among SGE (0x08), UDC (0x04) and
++  PAR (0x01) may be detected by the chip. If your SCSI system sometimes
++  encounters such error conditions, especially SCSI GROSS ERROR, then a SCSI
+   BUS problem is likely the cause of these errors.
+ 
+-For fields D,E,F,G and H, you may look into the sym53c8xx_defs.h file 
++For fields D,E,F,G and H, you may look into the sym53c8xx_defs.h file
+ that contains some minimal comments on IO register bits.
++
+ Field D : SOCL  Scsi Output Control Latch
+-          This register reflects the state of the SCSI control lines the 
++          This register reflects the state of the SCSI control lines the
+           chip want to drive or compare against.
+ Field E : SBCL  Scsi Bus Control Lines
+           Actual value of control lines on the SCSI BUS.
+ Field F : SBDL  Scsi Bus Data Lines
+           Actual value of data lines on the SCSI BUS.
+ Field G : SXFER  SCSI Transfer
+-          Contains the setting of the Synchronous Period for output and 
++          Contains the setting of the Synchronous Period for output and
+           the current Synchronous offset (offset 0 means asynchronous).
+ Field H : SCNTL3 Scsi Control Register 3
+-          Contains the setting of timing values for both asynchronous and 
+-          synchronous data transfers. 
++          Contains the setting of timing values for both asynchronous and
++          synchronous data transfers.
+ Field I : SCNTL4 Scsi Control Register 4
+           Only meaningful for 53C1010 Ultra3 controllers.
+ 
+-Understanding Fields J, K, L and dumps requires to have good knowledge of 
++Understanding Fields J, K, L and dumps requires to have good knowledge of
+ SCSI standards, chip cores functionnals and internal driver data structures.
+-You are not required to decode and understand them, unless you want to help 
++You are not required to decode and understand them, unless you want to help
+ maintain the driver code.
+ 
+ 17. Serial NVRAM (added by Richard Waltham: dormouse@farsrobt.demon.co.uk)
++==========================================================================
+ 
+ 17.1 Features
++-------------
+ 
+ Enabling serial NVRAM support enables detection of the serial NVRAM included
+-on Symbios and some Symbios compatible host adaptors, and Tekram boards. The 
+-serial NVRAM is used by Symbios and Tekram to hold set up parameters for the 
++on Symbios and some Symbios compatible host adaptors, and Tekram boards. The
++serial NVRAM is used by Symbios and Tekram to hold set up parameters for the
+ host adaptor and its attached drives.
+ 
+ The Symbios NVRAM also holds data on the boot order of host adaptors in a
+@@ -694,102 +840,122 @@ system with more than one host adaptor.  This information is no longer used
+ as it's fundamentally incompatible with the hotplug PCI model.
+ 
+ Tekram boards using Symbios chips, DC390W/F/U, which have NVRAM are detected
+-and this is used to distinguish between Symbios compatible and Tekram host 
++and this is used to distinguish between Symbios compatible and Tekram host
+ adaptors. This is used to disable the Symbios compatible "diff" setting
+-incorrectly set on Tekram boards if the CONFIG_SCSI_53C8XX_SYMBIOS_COMPAT 
+-configuration parameter is set enabling both Symbios and Tekram boards to be 
++incorrectly set on Tekram boards if the CONFIG_SCSI_53C8XX_SYMBIOS_COMPAT
++configuration parameter is set enabling both Symbios and Tekram boards to be
+ used together with the Symbios cards using all their features, including
+ "diff" support. ("led pin" support for Symbios compatible cards can remain
+ enabled when using Tekram cards. It does nothing useful for Tekram host
+ adaptors but does not cause problems either.)
+ 
+-The parameters the driver is able to get from the NVRAM depend on the 
++The parameters the driver is able to get from the NVRAM depend on the
+ data format used, as follow:
+ 
+-                                 Tekram format      Symbios format
+-General and host parameters
+-    Boot order                         N                   Y
+-    Host SCSI ID                       Y                   Y
+-    SCSI parity checking               Y                   Y
+-    Verbose boot messages              N                   Y
+-SCSI devices parameters
+-    Synchronous transfer speed         Y                   Y
+-    Wide 16 / Narrow                   Y                   Y
+-    Tagged Command Queuing enabled     Y                   Y
+-    Disconnections enabled             Y                   Y
+-    Scan at boot time                  N                   Y
+++-------------------------------+------------------+--------------+
++|                               |Tekram format     |Symbios format|
+++-------------------------------+------------------+--------------+
++|General and host parameters    |                  |              |
+++-------------------------------+------------------+--------------+
++|  * Boot order                 |        N         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * Host SCSI ID               |        Y         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * SCSI parity checking       |        Y         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * Verbose boot messages      |        N         |       Y      |
+++-------------------------------+------------------+--------------+
++|SCSI devices parameters                                          |
+++-------------------------------+------------------+--------------+
++|  * Synchronous transfer speed |        Y         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * Wide 16 / Narrow           |        Y         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * Tagged Command Queuing     |        Y         |       Y      |
++|    enabled                    |                  |              |
+++-------------------------------+------------------+--------------+
++|  * Disconnections enabled     |        Y         |       Y      |
+++-------------------------------+------------------+--------------+
++|  * Scan at boot time          |        N         |       Y      |
+++-------------------------------+------------------+--------------+
+ 
+-In order to speed up the system boot, for each device configured without 
+-the "scan at boot time" option, the driver forces an error on the 
++
++In order to speed up the system boot, for each device configured without
++the "scan at boot time" option, the driver forces an error on the
+ first TEST UNIT READY command received for this device.
+ 
+ 
+ 17.2 Symbios NVRAM layout
++-------------------------
++
++typical data at NVRAM address 0x100 (53c810a NVRAM)::
++
++    00 00
++    64 01
++    8e 0b
++
++    00 30 00 00 00 00 07 00 00 00 00 00 00 00 07 04 10 04 00 00
++
++    04 00 0f 00 00 10 00 50 00 00 01 00 00 62
++    04 00 03 00 00 10 00 58 00 00 01 00 00 63
++    04 00 01 00 00 10 00 48 00 00 01 00 00 61
++    00 00 00 00 00 00 00 00 00 00 00 00 00 00
++
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++    00 00 00 00 00 00 00 00
++
++    fe fe
++    00 00
++    00 00
+ 
+-typical data at NVRAM address 0x100 (53c810a NVRAM)
+------------------------------------------------------------
+-00 00
+-64 01
+-8e 0b
 -
- When an HBA is being removed it could be as part of an orderly shutdown
- associated with the LLD module being unloaded (e.g. with the "rmmod"
- command) or in response to a "hot unplug" indicated by sysfs()'s
- remove() callback being invoked. In either case, the sequence is the
--same:
-+same::
+-00 30 00 00 00 00 07 00 00 00 00 00 00 00 07 04 10 04 00 00 
+-
+-04 00 0f 00 00 10 00 50 00 00 01 00 00 62 
+-04 00 03 00 00 10 00 58 00 00 01 00 00 63 
+-04 00 01 00 00 10 00 48 00 00 01 00 00 61 
+-00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+-
+-0f 00 08 08 64 00 0a 00
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-00 00 00 00 00 00 00 00 
+-
+-fe fe
+-00 00
+-00 00
+------------------------------------------------------------
+ NVRAM layout details
+ 
+-NVRAM Address 0x000-0x0ff not used
+-              0x100-0x26f initialised data
+-              0x270-0x7ff not used
++============= =================
++NVRAM Address
++============= =================
++0x000-0x0ff   not used
++0x100-0x26f   initialised data
++0x270-0x7ff   not used
++============= =================
+ 
+-general layout
++general layout::
+ 
+         header  -   6 bytes,
+         data    - 356 bytes (checksum is byte sum of this data)
+@@ -797,7 +963,7 @@ general layout
+                   ---
+         total     368 bytes
+ 
+-data area layout
++data area layout::
+ 
+         controller set up  -  20 bytes
+         boot configuration -  56 bytes (4x14 bytes)
+@@ -806,52 +972,51 @@ data area layout
+                              ---
+         total                356 bytes
+ 
+------------------------------------------------------------
+-header
++header::
+ 
+-00 00   - ?? start marker
+-64 01   - byte count (lsb/msb excludes header/trailer)
+-8e 0b   - checksum (lsb/msb excludes header/trailer)
+------------------------------------------------------------
+-controller set up
++    00 00   - ?? start marker
++    64 01   - byte count (lsb/msb excludes header/trailer)
++    8e 0b   - checksum (lsb/msb excludes header/trailer)
+ 
+-00 30 00 00 00 00 07 00 00 00 00 00 00 00 07 04 10 04 00 00
+-                   |     |           |     |
+-                   |     |           |      -- host ID
+-                   |     |           |
+-                   |     |            --Removable Media Support
+-                   |     |               0x00 = none
+-                   |     |               0x01 = Bootable Device
+-                   |     |               0x02 = All with Media
+-                   |     |
+-                   |      --flag bits 2
+-                   |        0x00000001= scan order hi->low
+-                   |            (default 0x00 - scan low->hi)
+-                    --flag bits 1
+-                       0x00000001 scam enable
+-                       0x00000010 parity enable
+-                       0x00000100 verbose boot msgs
++controller set up::
 +
-+	    HBA REMOVE: assume 2 SCSI devices attached
-+    LLD                      mid level                 LLD
-+    ===----------------------=========-----------------===------
-+    scsi_remove_host() ---------+
-+				|
-+			slave_destroy()
-+			slave_destroy()
-+    scsi_host_put()
++    00 30 00 00 00 00 07 00 00 00 00 00 00 00 07 04 10 04 00 00
++		    |     |           |     |
++		    |     |           |      -- host ID
++		    |     |           |
++		    |     |            --Removable Media Support
++		    |     |               0x00 = none
++		    |     |               0x01 = Bootable Device
++		    |     |               0x02 = All with Media
++		    |     |
++		    |      --flag bits 2
++		    |        0x00000001= scan order hi->low
++		    |            (default 0x00 - scan low->hi)
++			--flag bits 1
++			0x00000001 scam enable
++			0x00000010 parity enable
++			0x00000100 verbose boot msgs
  
--        HBA REMOVE: assume 2 SCSI devices attached
--LLD                      mid level                 LLD
--===----------------------=========-----------------===------
--scsi_remove_host() ---------+
--                            |
--                     slave_destroy()
--                     slave_destroy()
--scsi_host_put()
--------------------------------------------------------------
--                     
- It may be useful for a LLD to keep track of struct Scsi_Host instances
- (a pointer is returned by scsi_host_alloc()). Such instances are "owned"
- by the mid-level.  struct Scsi_Host instances are freed from
-@@ -193,16 +195,15 @@ The hotplug concept may be extended to SCSI devices. Currently, when an
- HBA is added, the scsi_scan_host() function causes a scan for SCSI devices
- attached to the HBA's SCSI transport. On newer SCSI transports the HBA
- may become aware of a new SCSI device _after_ the scan has completed.
--An LLD can use this sequence to make the mid level aware of a SCSI device:
-+An LLD can use this sequence to make the mid level aware of a SCSI device::
+ remaining bytes unknown - they do not appear to change in my
+ current set up for any of the controllers.
  
--                 SCSI DEVICE hotplug
--LLD                   mid level                    LLD
--===-------------------=========--------------------===------
--scsi_add_device()  ------+
--                         |
--                    slave_alloc()
--                    slave_configure()   [--> scsi_change_queue_depth()]
--------------------------------------------------------------
-+		    SCSI DEVICE hotplug
-+    LLD                   mid level                    LLD
-+    ===-------------------=========--------------------===------
-+    scsi_add_device()  ------+
-+			    |
-+			slave_alloc()
-+			slave_configure()   [--> scsi_change_queue_depth()]
- 
- In a similar fashion, an LLD may become aware that a SCSI device has been
- removed (unplugged) or the connection to it has been interrupted. Some
-@@ -210,15 +211,14 @@ existing SCSI transports (e.g. SPI) may not become aware that a SCSI
- device has been removed until a subsequent SCSI command fails which will
- probably cause that device to be set offline by the mid level. An LLD that
- detects the removal of a SCSI device can instigate its removal from
--upper layers with this sequence:
-+upper layers with this sequence::
- 
--                  SCSI DEVICE hot unplug
--LLD                      mid level                 LLD
--===----------------------=========-----------------===------
--scsi_remove_device() -------+
--                            |
--                     slave_destroy()
--------------------------------------------------------------
-+		    SCSI DEVICE hot unplug
-+    LLD                      mid level                 LLD
-+    ===----------------------=========-----------------===------
-+    scsi_remove_device() -------+
-+				|
-+			slave_destroy()
- 
- It may be useful for an LLD to keep track of struct scsi_device instances
- (a pointer is passed as the parameter to slave_alloc() and
-@@ -237,10 +237,16 @@ where they do.
- 
- There are 3 reference counting functions of interest associated with
- struct Scsi_Host:
--  - scsi_host_alloc(): returns a pointer to new instance of struct 
+ default set up is identical for 53c810a and 53c875 NVRAM
+ (Removable Media added Symbios BIOS version 4.09)
+------------------------------------------------------------
 +
-+  - scsi_host_alloc():
-+	returns a pointer to new instance of struct
-         Scsi_Host which has its reference count ^^ set to 1
--  - scsi_host_get(): adds 1 to the reference count of the given instance
--  - scsi_host_put(): decrements 1 from the reference count of the given
+ boot configuration
+ 
+-boot order set by order of the devices in this table
++boot order set by order of the devices in this table::
+ 
+-04 00 0f 00 00 10 00 50 00 00 01 00 00 62 -- 1st controller
+-04 00 03 00 00 10 00 58 00 00 01 00 00 63    2nd controller
+-04 00 01 00 00 10 00 48 00 00 01 00 00 61    3rd controller
+-00 00 00 00 00 00 00 00 00 00 00 00 00 00    4th controller
+-       |  |  |  |     |        |     |  |
+-       |  |  |  |     |        |      ---- PCI io port adr
+-       |  |  |  |     |         --0x01 init/scan at boot time
+-       |  |  |  |      --PCI device/function number (0xdddddfff)
+-       |  |   ----- ?? PCI vendor ID (lsb/msb)
+-        ----PCI device ID (lsb/msb)
++    04 00 0f 00 00 10 00 50 00 00 01 00 00 62 -- 1st controller
++    04 00 03 00 00 10 00 58 00 00 01 00 00 63    2nd controller
++    04 00 01 00 00 10 00 48 00 00 01 00 00 61    3rd controller
++    00 00 00 00 00 00 00 00 00 00 00 00 00 00    4th controller
++	|  |  |  |     |        |     |  |
++	|  |  |  |     |        |      ---- PCI io port adr
++	|  |  |  |     |         --0x01 init/scan at boot time
++	|  |  |  |      --PCI device/function number (0xdddddfff)
++	|  |   ----- ?? PCI vendor ID (lsb/msb)
++	    ----PCI device ID (lsb/msb)
+ 
+ ?? use of this data is a guess but seems reasonable
+ 
+@@ -859,120 +1024,120 @@ remaining bytes unknown - they do not appear to change in my
+ current set up
+ 
+ default set up is identical for 53c810a and 53c875 NVRAM
+------------------------------------------------------------
+-device set up (up to 16 devices - includes controller)
+ 
+-0f 00 08 08 64 00 0a 00 - id 0
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
++device set up (up to 16 devices - includes controller)::
+ 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 
+-0f 00 08 08 64 00 0a 00 - id 15
+- |     |  |  |     |  |
+- |     |  |  |      ----timeout (lsb/msb)
+- |     |  |   --synch period (0x?? 40 Mtrans/sec- fast 40) (probably 0x28)
+- |     |  |                  (0x30 20 Mtrans/sec- fast 20)
+- |     |  |                  (0x64 10 Mtrans/sec- fast )
+- |     |  |                  (0xc8  5 Mtrans/sec)
+- |     |  |                  (0x00  asynchronous)
+- |     |   -- ?? max sync offset (0x08 in NVRAM on 53c810a) 
+- |     |                         (0x10 in NVRAM on 53c875)
+- |      --device bus width (0x08 narrow)
+- |                         (0x10 16 bit wide)
+-  --flag bits
+-    0x00000001 - disconnect enabled
+-    0x00000010 - scan at boot time
+-    0x00000100 - scan luns
+-    0x00001000 - queue tags enabled
++    0f 00 08 08 64 00 0a 00 - id 0
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
 +
-+  - scsi_host_get():
-+	adds 1 to the reference count of the given instance
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00
++    0f 00 08 08 64 00 0a 00 - id 15
++    |     |  |  |     |  |
++    |     |  |  |      ----timeout (lsb/msb)
++    |     |  |   --synch period (0x?? 40 Mtrans/sec- fast 40) (probably 0x28)
++    |     |  |                  (0x30 20 Mtrans/sec- fast 20)
++    |     |  |                  (0x64 10 Mtrans/sec- fast )
++    |     |  |                  (0xc8  5 Mtrans/sec)
++    |     |  |                  (0x00  asynchronous)
++    |     |   -- ?? max sync offset (0x08 in NVRAM on 53c810a)
++    |     |                         (0x10 in NVRAM on 53c875)
++    |      --device bus width (0x08 narrow)
++    |                         (0x10 16 bit wide)
++    --flag bits
++	0x00000001 - disconnect enabled
++	0x00000010 - scan at boot time
++	0x00000100 - scan luns
++	0x00001000 - queue tags enabled
+ 
+ remaining bytes unknown - they do not appear to change in my
+ current set up
+ 
+-?? use of this data is a guess but seems reasonable 
++?? use of this data is a guess but seems reasonable
+ (but it could be max bus width)
+ 
+ default set up for 53c810a NVRAM
+-default set up for 53c875 NVRAM - bus width     - 0x10
++default set up for 53c875 NVRAM
 +
-+  - scsi_host_put():
-+	decrements 1 from the reference count of the given
-         instance. If the reference count reaches 0 then the given instance
-         is freed
++				- bus width     - 0x10
+                                 - sync offset ? - 0x10
+                                 - sync period   - 0x30
+------------------------------------------------------------
+-?? spare device space (32 bit bus ??)
  
-@@ -254,8 +260,10 @@ to bump its reference count. When it is finished with the pointer it can
- use scsi_device_put() to decrement its reference count (and potentially
- delete it).
+-00 00 00 00 00 00 00 00  (19x8bytes)
+-.
+-.
+-00 00 00 00 00 00 00 00
++?? spare device space (32 bit bus ??)::
  
--^^ struct Scsi_Host actually has 2 reference counts which are manipulated
--in parallel by these functions.
-+.. Note::
+-default set up is identical for 53c810a and 53c875 NVRAM
+------------------------------------------------------------
+-trailer
+-
+-fe fe   - ? end marker ?
+-00 00
+-00 00
++    00 00 00 00 00 00 00 00  (19x8bytes)
++    .
++    .
++    00 00 00 00 00 00 00 00
+ 
+ default set up is identical for 53c810a and 53c875 NVRAM
+------------------------------------------------------------
+ 
++trailer::
+ 
++    fe fe   - ? end marker ?
++    00 00
++    00 00
 +
-+   struct Scsi_Host actually has 2 reference counts which are manipulated
-+   in parallel by these functions.
++default set up is identical for 53c810a and 53c875 NVRAM
  
+ 17.3 Tekram NVRAM layout
++------------------------
  
- Conventions
-@@ -263,17 +271,17 @@ Conventions
- First, Linus Torvalds's thoughts on C coding style can be found in the
- Documentation/process/coding-style.rst file.
+ nvram 64x16 (1024 bit)
  
--Next, there is a movement to "outlaw" typedefs introducing synonyms for 
-+Next, there is a movement to "outlaw" typedefs introducing synonyms for
- struct tags. Both can be still found in the SCSI subsystem, but
- the typedefs have been moved to a single file, scsi_typedefs.h to
--make their future removal easier, for example: 
-+make their future removal easier, for example:
- "typedef struct scsi_cmnd Scsi_Cmnd;"
+-Drive settings
++Drive settings::
  
- Also, most C99 enhancements are encouraged to the extent they are supported
- by the relevant gcc compilers. So C99 style structure and array
- initializers are encouraged where appropriate. Don't go too far,
- VLAs are not properly supported yet.  An exception to this is the use of
--"//" style comments; /*...*/ comments are still preferred in Linux.
-+``//`` style comments; ``/*...*/`` comments are still preferred in Linux.
+-Drive ID 0-15 (addr 0x0yyyy0 = device setup, yyyy = ID)
+-              (addr 0x0yyyy1 = 0x0000)
++    Drive ID 0-15 (addr 0x0yyyy0 = device setup, yyyy = ID)
++		(addr 0x0yyyy1 = 0x0000)
  
- Well written, tested and documented code, need not be re-formatted to
- comply with the above conventions. For example, the aic7xxx driver
-@@ -284,357 +292,358 @@ and Adaptec have their own coding conventions.
- Mid level supplied functions
- ============================
- These functions are supplied by the SCSI mid level for use by LLDs.
--The names (i.e. entry points) of these functions are exported 
-+The names (i.e. entry points) of these functions are exported
- so an LLD that is a module can access them. The kernel will
- arrange for the SCSI mid level to be loaded and initialized before any LLD
- is initialized. The functions below are listed alphabetically and their
--names all start with "scsi_".
-+names all start with ``scsi_``.
+-    x x x x  x x x x  x x x x  x x x x
+-               | | |      | |  | | | |
+-               | | |      | |  | | |  ----- parity check   0 - off
+-               | | |      | |  | | |                       1 - on
+-               | | |      | |  | | |
+-               | | |      | |  | |  ------- sync neg       0 - off
+-               | | |      | |  | |                         1 - on
+-               | | |      | |  | |
+-               | | |      | |  |  --------- disconnect     0 - off
+-               | | |      | |  |                           1 - on
+-               | | |      | |  |
+-               | | |      | |   ----------- start cmd      0 - off
+-               | | |      | |                              1 - on
+-               | | |      | |
+-               | | |      |  -------------- tagged cmds    0 - off
+-               | | |      |                                1 - on
+-               | | |      | 
+-               | | |       ---------------- wide neg       0 - off
+-               | | |                                       1 - on
+-               | | |
+-                --------------------------- sync rate      0 - 10.0 Mtrans/sec
+-                                                           1 -  8.0
+-                                                           2 -  6.6
+-                                                           3 -  5.7
+-                                                           4 -  5.0
+-                                                           5 -  4.0
+-                                                           6 -  3.0
+-                                                           7 -  2.0
+-                                                           7 -  2.0
+-                                                           8 - 20.0
+-                                                           9 - 16.7
+-                                                           a - 13.9
+-                                                           b - 11.9
++	x x x x  x x x x  x x x x  x x x x
++		| | |      | |  | | | |
++		| | |      | |  | | |  ----- parity check   0 - off
++		| | |      | |  | | |                       1 - on
++		| | |      | |  | | |
++		| | |      | |  | |  ------- sync neg       0 - off
++		| | |      | |  | |                         1 - on
++		| | |      | |  | |
++		| | |      | |  |  --------- disconnect     0 - off
++		| | |      | |  |                           1 - on
++		| | |      | |  |
++		| | |      | |   ----------- start cmd      0 - off
++		| | |      | |                              1 - on
++		| | |      | |
++		| | |      |  -------------- tagged cmds    0 - off
++		| | |      |                                1 - on
++		| | |      |
++		| | |       ---------------- wide neg       0 - off
++		| | |                                       1 - on
++		| | |
++		    --------------------------- sync rate      0 - 10.0 Mtrans/sec
++							    1 -  8.0
++							    2 -  6.6
++							    3 -  5.7
++							    4 -  5.0
++							    5 -  4.0
++							    6 -  3.0
++							    7 -  2.0
++							    7 -  2.0
++							    8 - 20.0
++							    9 - 16.7
++							    a - 13.9
++							    b - 11.9
  
- Summary:
--   scsi_add_device - creates new scsi device (lu) instance
--   scsi_add_host - perform sysfs registration and set up transport class
--   scsi_change_queue_depth - change the queue depth on a SCSI device
--   scsi_bios_ptable - return copy of block device's partition table
--   scsi_block_requests - prevent further commands being queued to given host
--   scsi_host_alloc - return a new scsi_host instance whose refcount==1
--   scsi_host_get - increments Scsi_Host instance's refcount
--   scsi_host_put - decrements Scsi_Host instance's refcount (free if 0)
--   scsi_partsize - parse partition table into cylinders, heads + sectors
--   scsi_register - create and register a scsi host adapter instance.
--   scsi_remove_device - detach and remove a SCSI device
--   scsi_remove_host - detach and remove all SCSI devices owned by host
--   scsi_report_bus_reset - report scsi _bus_ reset observed
--   scsi_scan_host - scan SCSI bus
--   scsi_track_queue_full - track successive QUEUE_FULL events 
--   scsi_unblock_requests - allow further commands to be queued to given host
--   scsi_unregister - [calls scsi_host_put()]
+ Global settings
+ 
+-Host flags 0 (addr 0x100000, 32) 
++Host flags 0 (addr 0x100000, 32)::
+ 
+     x x x x  x x x x  x x x x  x x x x
+     | | | |  | | | |           | | | |
+@@ -980,7 +1145,7 @@ Host flags 0 (addr 0x100000, 32)
+     | | | |  | | | |
+     | | | |  | | |  ----------------------- support for    0 - off
+     | | | |  | | |                          > 2 drives     1 - on
+-    | | | |  | | | 
++    | | | |  | | |
+     | | | |  | |  ------------------------- support drives 0 - off
+     | | | |  | |                            > 1Gbytes      1 - on
+     | | | |  | |
+@@ -1000,10 +1165,10 @@ Host flags 0 (addr 0x100000, 32)
+                                             as BIOS dev    1 - boot device
+                                                            2 - all
+ 
+-Host flags 1 (addr 0x100001, 33)
++Host flags 1 (addr 0x100001, 33)::
+ 
+     x x x x  x x x x  x x x x  x x x x
+-               | | |             | | | 
++               | | |             | | |
+                | | |              --------- boot delay     0 -   3 sec
+                | | |                                       1 -   5
+                | | |                                       2 -  10
+@@ -1018,7 +1183,7 @@ Host flags 1 (addr 0x100001, 33)
+                                                            3 - 16
+                                                            4 - 32
+ 
+-Host flags 2 (addr 0x100010, 34)
++Host flags 2 (addr 0x100010, 34)::
+ 
+     x x x x  x x x x  x x x x  x x x x
+                                      |
+@@ -1031,18 +1196,14 @@ checksum = 0x1234 - (sum addr 0-63)
+ 
+ ----------------------------------------------------------------------------
+ 
+-default nvram data:
++default nvram data::
+ 
+-0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
+-0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
+-0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
+-0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 
++    0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
++    0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
++    0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
++    0x0037 0x0000 0x0037 0x0000 0x0037 0x0000 0x0037 0x0000
+ 
+-0x0f07 0x0400 0x0001 0x0000 0x0000 0x0000 0x0000 0x0000
+-0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000
+-0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000
+-0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0xfbbc
 -
 -
--Details:
--
--/**
-- * scsi_add_device - creates new scsi device (lu) instance
-- * @shost:   pointer to scsi host instance
-- * @channel: channel number (rarely other than 0)
-- * @id:      target id number
-- * @lun:     logical unit number
-- *
-- *      Returns pointer to new struct scsi_device instance or 
-- *      ERR_PTR(-ENODEV) (or some other bent pointer) if something is
-- *      wrong (e.g. no lu responds at given address)
-- *
-- *      Might block: yes
-- *
-- *      Notes: This call is usually performed internally during a scsi
-- *      bus scan when an HBA is added (i.e. scsi_scan_host()). So it
-- *      should only be called if the HBA becomes aware of a new scsi
-- *      device (lu) after scsi_scan_host() has completed. If successful
-- *      this call can lead to slave_alloc() and slave_configure() callbacks
-- *      into the LLD.
-- *
-- *      Defined in: drivers/scsi/scsi_scan.c
-- **/
--struct scsi_device * scsi_add_device(struct Scsi_Host *shost, 
--                                     unsigned int channel,
--                                     unsigned int id, unsigned int lun)
--
--
--/**
-- * scsi_add_host - perform sysfs registration and set up transport class
-- * @shost:   pointer to scsi host instance
-- * @dev:     pointer to struct device of type scsi class
-- *
-- *      Returns 0 on success, negative errno of failure (e.g. -ENOMEM)
-- *
-- *      Might block: no
-- *
-- *      Notes: Only required in "hotplug initialization model" after a
-- *      successful call to scsi_host_alloc().  This function does not
-- *	scan the bus; this can be done by calling scsi_scan_host() or
-- *	in some other transport-specific way.  The LLD must set up
-- *	the transport template before calling this function and may only
-- *	access the transport class data after this function has been called.
-- *
-- *      Defined in: drivers/scsi/hosts.c
-- **/
--int scsi_add_host(struct Scsi_Host *shost, struct device * dev)
--
--
--/**
-- * scsi_change_queue_depth - allow LLD to change queue depth on a SCSI device
-- * @sdev:       pointer to SCSI device to change queue depth on
-- * @tags        Number of tags allowed if tagged queuing enabled,
-- *              or number of commands the LLD can queue up
-- *              in non-tagged mode (as per cmd_per_lun).
-- *
-- *      Returns nothing
-- *
-- *      Might block: no
-- *
-- *      Notes: Can be invoked any time on a SCSI device controlled by this
-- *      LLD. [Specifically during and after slave_configure() and prior to
-- *      slave_destroy().] Can safely be invoked from interrupt code.
-- *
-- *      Defined in: drivers/scsi/scsi.c [see source code for more notes]
-- *
-- **/
--int scsi_change_queue_depth(struct scsi_device *sdev, int tags)
--
--
--/**
-- * scsi_bios_ptable - return copy of block device's partition table
-- * @dev:        pointer to block device
-- *
-- *      Returns pointer to partition table, or NULL for failure
-- *
-- *      Might block: yes
-- *
-- *      Notes: Caller owns memory returned (free with kfree() )
-- *
-- *      Defined in: drivers/scsi/scsicam.c
-- **/
--unsigned char *scsi_bios_ptable(struct block_device *dev)
--
--
--/**
-- * scsi_block_requests - prevent further commands being queued to given host
-- *
-- * @shost: pointer to host to block commands on
-- *
-- *      Returns nothing
-- *
-- *      Might block: no
-- *
-- *      Notes: There is no timer nor any other means by which the requests
-- *      get unblocked other than the LLD calling scsi_unblock_requests().
-- *
-- *      Defined in: drivers/scsi/scsi_lib.c
--**/
--void scsi_block_requests(struct Scsi_Host * shost)
--
--
--/**
-- * scsi_host_alloc - create a scsi host adapter instance and perform basic
-- *                   initialization.
-- * @sht:        pointer to scsi host template
-- * @privsize:   extra bytes to allocate in hostdata array (which is the
-- *              last member of the returned Scsi_Host instance)
-- *
-- *      Returns pointer to new Scsi_Host instance or NULL on failure
-- *
-- *      Might block: yes
-- *
-- *      Notes: When this call returns to the LLD, the SCSI bus scan on
-- *      this host has _not_ yet been done.
-- *      The hostdata array (by default zero length) is a per host scratch 
-- *      area for the LLD's exclusive use.
-- *      Both associated refcounting objects have their refcount set to 1.
-- *      Full registration (in sysfs) and a bus scan are performed later when
-- *      scsi_add_host() and scsi_scan_host() are called.
-- *
-- *      Defined in: drivers/scsi/hosts.c .
-- **/
--struct Scsi_Host * scsi_host_alloc(struct scsi_host_template * sht,
--                                   int privsize)
--
--
--/**
-- * scsi_host_get - increment Scsi_Host instance refcount
-- * @shost:   pointer to struct Scsi_Host instance
-- *
-- *      Returns nothing
-- *
-- *      Might block: currently may block but may be changed to not block
-- *
-- *      Notes: Actually increments the counts in two sub-objects
-- *
-- *      Defined in: drivers/scsi/hosts.c
-- **/
--void scsi_host_get(struct Scsi_Host *shost)
--
--
--/**
-- * scsi_host_put - decrement Scsi_Host instance refcount, free if 0
-- * @shost:   pointer to struct Scsi_Host instance
-- *
-- *      Returns nothing
-- *
-- *      Might block: currently may block but may be changed to not block
-- *
-- *      Notes: Actually decrements the counts in two sub-objects. If the
-- *      latter refcount reaches 0, the Scsi_Host instance is freed.
-- *      The LLD need not worry exactly when the Scsi_Host instance is
-- *      freed, it just shouldn't access the instance after it has balanced
-- *      out its refcount usage.
-- *
-- *      Defined in: drivers/scsi/hosts.c
-- **/
--void scsi_host_put(struct Scsi_Host *shost)
--
--
--/**
-- * scsi_partsize - parse partition table into cylinders, heads + sectors
-- * @buf: pointer to partition table
-- * @capacity: size of (total) disk in 512 byte sectors
-- * @cyls: outputs number of cylinders calculated via this pointer
-- * @hds: outputs number of heads calculated via this pointer
-- * @secs: outputs number of sectors calculated via this pointer
-- *
-- *      Returns 0 on success, -1 on failure
-- *
-- *      Might block: no
-- *
-- *      Notes: Caller owns memory returned (free with kfree() )
-- *
-- *      Defined in: drivers/scsi/scsicam.c
-- **/
--int scsi_partsize(unsigned char *buf, unsigned long capacity,
--                  unsigned int *cyls, unsigned int *hds, unsigned int *secs)
--
--
--/**
-- * scsi_register - create and register a scsi host adapter instance.
-- * @sht:        pointer to scsi host template
-- * @privsize:   extra bytes to allocate in hostdata array (which is the
-- *              last member of the returned Scsi_Host instance)
-- *
-- *      Returns pointer to new Scsi_Host instance or NULL on failure
-- *
-- *      Might block: yes
-- *
-- *      Notes: When this call returns to the LLD, the SCSI bus scan on
-- *      this host has _not_ yet been done.
-- *      The hostdata array (by default zero length) is a per host scratch 
-- *      area for the LLD.
-- *
-- *      Defined in: drivers/scsi/hosts.c .
-- **/
--struct Scsi_Host * scsi_register(struct scsi_host_template * sht,
--                                 int privsize)
--
--
--/**
-- * scsi_remove_device - detach and remove a SCSI device
-- * @sdev:      a pointer to a scsi device instance
-- *
-- *      Returns value: 0 on success, -EINVAL if device not attached
-- *
-- *      Might block: yes
-- *
-- *      Notes: If an LLD becomes aware that a scsi device (lu) has
-- *      been removed but its host is still present then it can request
-- *      the removal of that scsi device. If successful this call will
-- *      lead to the slave_destroy() callback being invoked. sdev is an 
-- *      invalid pointer after this call.
-- *
-- *      Defined in: drivers/scsi/scsi_sysfs.c .
-- **/
--int scsi_remove_device(struct scsi_device *sdev)
--
--
--/**
-- * scsi_remove_host - detach and remove all SCSI devices owned by host
-- * @shost:      a pointer to a scsi host instance
-- *
-- *      Returns value: 0 on success, 1 on failure (e.g. LLD busy ??)
-- *
-- *      Might block: yes
-- *
-- *      Notes: Should only be invoked if the "hotplug initialization
-- *      model" is being used. It should be called _prior_ to  
-- *      scsi_unregister().
-- *
-- *      Defined in: drivers/scsi/hosts.c .
-- **/
--int scsi_remove_host(struct Scsi_Host *shost)
--
--
--/**
-- * scsi_report_bus_reset - report scsi _bus_ reset observed
-- * @shost: a pointer to a scsi host involved
-- * @channel: channel (within) host on which scsi bus reset occurred
-- *
-- *      Returns nothing
-- *
-- *      Might block: no
-- *
-- *      Notes: This only needs to be called if the reset is one which
-- *      originates from an unknown location.  Resets originated by the 
-- *      mid level itself don't need to call this, but there should be 
-- *      no harm.  The main purpose of this is to make sure that a
-- *      CHECK_CONDITION is properly treated.
-- *
-- *      Defined in: drivers/scsi/scsi_error.c .
-- **/
--void scsi_report_bus_reset(struct Scsi_Host * shost, int channel)
--
--
--/**
-- * scsi_scan_host - scan SCSI bus
-- * @shost: a pointer to a scsi host instance
-- *
-- *	Might block: yes
-- *
-- *	Notes: Should be called after scsi_add_host()
-- *
-- *	Defined in: drivers/scsi/scsi_scan.c
-- **/
--void scsi_scan_host(struct Scsi_Host *shost)
--
--
--/**
-- * scsi_track_queue_full - track successive QUEUE_FULL events on given
-- *                      device to determine if and when there is a need
-- *                      to adjust the queue depth on the device.
-- * @sdev:  pointer to SCSI device instance
-- * @depth: Current number of outstanding SCSI commands on this device,
-- *         not counting the one returned as QUEUE_FULL.
-- *
-- *      Returns 0  - no change needed
-- *              >0 - adjust queue depth to this new depth
-- *              -1 - drop back to untagged operation using host->cmd_per_lun
-- *                   as the untagged command depth
-- *
-- *      Might block: no
-- *
-- *      Notes: LLDs may call this at any time and we will do "The Right
-- *              Thing"; interrupt context safe. 
-- *
-- *      Defined in: drivers/scsi/scsi.c .
-- **/
--int scsi_track_queue_full(struct scsi_device *sdev, int depth)
--
--
--/**
-- * scsi_unblock_requests - allow further commands to be queued to given host
-- *
-- * @shost: pointer to host to unblock commands on
-- *
-- *      Returns nothing
-- *
-- *      Might block: no
-- *
-- *      Defined in: drivers/scsi/scsi_lib.c .
--**/
--void scsi_unblock_requests(struct Scsi_Host * shost)
--
--
--/**
-- * scsi_unregister - unregister and free memory used by host instance
-- * @shp:        pointer to scsi host instance to unregister.
-- *
-- *      Returns nothing
-- *
-- *      Might block: no
-- *
-- *      Notes: Should not be invoked if the "hotplug initialization
-- *      model" is being used. Called internally by exit_this_scsi_driver()
-- *      in the "passive initialization model". Hence a LLD has no need to
-- *      call this function directly.
-- *
-- *      Defined in: drivers/scsi/hosts.c .
-- **/
--void scsi_unregister(struct Scsi_Host * shp)
-+
-+  - scsi_add_device - creates new scsi device (lu) instance
-+  - scsi_add_host - perform sysfs registration and set up transport class
-+  - scsi_change_queue_depth - change the queue depth on a SCSI device
-+  - scsi_bios_ptable - return copy of block device's partition table
-+  - scsi_block_requests - prevent further commands being queued to given host
-+  - scsi_host_alloc - return a new scsi_host instance whose refcount==1
-+  - scsi_host_get - increments Scsi_Host instance's refcount
-+  - scsi_host_put - decrements Scsi_Host instance's refcount (free if 0)
-+  - scsi_partsize - parse partition table into cylinders, heads + sectors
-+  - scsi_register - create and register a scsi host adapter instance.
-+  - scsi_remove_device - detach and remove a SCSI device
-+  - scsi_remove_host - detach and remove all SCSI devices owned by host
-+  - scsi_report_bus_reset - report scsi _bus_ reset observed
-+  - scsi_scan_host - scan SCSI bus
-+  - scsi_track_queue_full - track successive QUEUE_FULL events
-+  - scsi_unblock_requests - allow further commands to be queued to given host
-+  - scsi_unregister - [calls scsi_host_put()]
-+
-+
-+Details::
-+
-+    /**
-+    * scsi_add_device - creates new scsi device (lu) instance
-+    * @shost:   pointer to scsi host instance
-+    * @channel: channel number (rarely other than 0)
-+    * @id:      target id number
-+    * @lun:     logical unit number
-+    *
-+    *      Returns pointer to new struct scsi_device instance or
-+    *      ERR_PTR(-ENODEV) (or some other bent pointer) if something is
-+    *      wrong (e.g. no lu responds at given address)
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: This call is usually performed internally during a scsi
-+    *      bus scan when an HBA is added (i.e. scsi_scan_host()). So it
-+    *      should only be called if the HBA becomes aware of a new scsi
-+    *      device (lu) after scsi_scan_host() has completed. If successful
-+    *      this call can lead to slave_alloc() and slave_configure() callbacks
-+    *      into the LLD.
-+    *
-+    *      Defined in: drivers/scsi/scsi_scan.c
-+    **/
-+    struct scsi_device * scsi_add_device(struct Scsi_Host *shost,
-+					unsigned int channel,
-+					unsigned int id, unsigned int lun)
-+
-+
-+    /**
-+    * scsi_add_host - perform sysfs registration and set up transport class
-+    * @shost:   pointer to scsi host instance
-+    * @dev:     pointer to struct device of type scsi class
-+    *
-+    *      Returns 0 on success, negative errno of failure (e.g. -ENOMEM)
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: Only required in "hotplug initialization model" after a
-+    *      successful call to scsi_host_alloc().  This function does not
-+    *	scan the bus; this can be done by calling scsi_scan_host() or
-+    *	in some other transport-specific way.  The LLD must set up
-+    *	the transport template before calling this function and may only
-+    *	access the transport class data after this function has been called.
-+    *
-+    *      Defined in: drivers/scsi/hosts.c
-+    **/
-+    int scsi_add_host(struct Scsi_Host *shost, struct device * dev)
-+
-+
-+    /**
-+    * scsi_change_queue_depth - allow LLD to change queue depth on a SCSI device
-+    * @sdev:       pointer to SCSI device to change queue depth on
-+    * @tags        Number of tags allowed if tagged queuing enabled,
-+    *              or number of commands the LLD can queue up
-+    *              in non-tagged mode (as per cmd_per_lun).
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: Can be invoked any time on a SCSI device controlled by this
-+    *      LLD. [Specifically during and after slave_configure() and prior to
-+    *      slave_destroy().] Can safely be invoked from interrupt code.
-+    *
-+    *      Defined in: drivers/scsi/scsi.c [see source code for more notes]
-+    *
-+    **/
-+    int scsi_change_queue_depth(struct scsi_device *sdev, int tags)
-+
-+
-+    /**
-+    * scsi_bios_ptable - return copy of block device's partition table
-+    * @dev:        pointer to block device
-+    *
-+    *      Returns pointer to partition table, or NULL for failure
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: Caller owns memory returned (free with kfree() )
-+    *
-+    *      Defined in: drivers/scsi/scsicam.c
-+    **/
-+    unsigned char *scsi_bios_ptable(struct block_device *dev)
-+
-+
-+    /**
-+    * scsi_block_requests - prevent further commands being queued to given host
-+    *
-+    * @shost: pointer to host to block commands on
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: There is no timer nor any other means by which the requests
-+    *      get unblocked other than the LLD calling scsi_unblock_requests().
-+    *
-+    *      Defined in: drivers/scsi/scsi_lib.c
-+    **/
-+    void scsi_block_requests(struct Scsi_Host * shost)
-+
-+
-+    /**
-+    * scsi_host_alloc - create a scsi host adapter instance and perform basic
-+    *                   initialization.
-+    * @sht:        pointer to scsi host template
-+    * @privsize:   extra bytes to allocate in hostdata array (which is the
-+    *              last member of the returned Scsi_Host instance)
-+    *
-+    *      Returns pointer to new Scsi_Host instance or NULL on failure
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: When this call returns to the LLD, the SCSI bus scan on
-+    *      this host has _not_ yet been done.
-+    *      The hostdata array (by default zero length) is a per host scratch
-+    *      area for the LLD's exclusive use.
-+    *      Both associated refcounting objects have their refcount set to 1.
-+    *      Full registration (in sysfs) and a bus scan are performed later when
-+    *      scsi_add_host() and scsi_scan_host() are called.
-+    *
-+    *      Defined in: drivers/scsi/hosts.c .
-+    **/
-+    struct Scsi_Host * scsi_host_alloc(struct scsi_host_template * sht,
-+				    int privsize)
-+
-+
-+    /**
-+    * scsi_host_get - increment Scsi_Host instance refcount
-+    * @shost:   pointer to struct Scsi_Host instance
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: currently may block but may be changed to not block
-+    *
-+    *      Notes: Actually increments the counts in two sub-objects
-+    *
-+    *      Defined in: drivers/scsi/hosts.c
-+    **/
-+    void scsi_host_get(struct Scsi_Host *shost)
-+
-+
-+    /**
-+    * scsi_host_put - decrement Scsi_Host instance refcount, free if 0
-+    * @shost:   pointer to struct Scsi_Host instance
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: currently may block but may be changed to not block
-+    *
-+    *      Notes: Actually decrements the counts in two sub-objects. If the
-+    *      latter refcount reaches 0, the Scsi_Host instance is freed.
-+    *      The LLD need not worry exactly when the Scsi_Host instance is
-+    *      freed, it just shouldn't access the instance after it has balanced
-+    *      out its refcount usage.
-+    *
-+    *      Defined in: drivers/scsi/hosts.c
-+    **/
-+    void scsi_host_put(struct Scsi_Host *shost)
-+
-+
-+    /**
-+    * scsi_partsize - parse partition table into cylinders, heads + sectors
-+    * @buf: pointer to partition table
-+    * @capacity: size of (total) disk in 512 byte sectors
-+    * @cyls: outputs number of cylinders calculated via this pointer
-+    * @hds: outputs number of heads calculated via this pointer
-+    * @secs: outputs number of sectors calculated via this pointer
-+    *
-+    *      Returns 0 on success, -1 on failure
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: Caller owns memory returned (free with kfree() )
-+    *
-+    *      Defined in: drivers/scsi/scsicam.c
-+    **/
-+    int scsi_partsize(unsigned char *buf, unsigned long capacity,
-+		    unsigned int *cyls, unsigned int *hds, unsigned int *secs)
-+
-+
-+    /**
-+    * scsi_register - create and register a scsi host adapter instance.
-+    * @sht:        pointer to scsi host template
-+    * @privsize:   extra bytes to allocate in hostdata array (which is the
-+    *              last member of the returned Scsi_Host instance)
-+    *
-+    *      Returns pointer to new Scsi_Host instance or NULL on failure
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: When this call returns to the LLD, the SCSI bus scan on
-+    *      this host has _not_ yet been done.
-+    *      The hostdata array (by default zero length) is a per host scratch
-+    *      area for the LLD.
-+    *
-+    *      Defined in: drivers/scsi/hosts.c .
-+    **/
-+    struct Scsi_Host * scsi_register(struct scsi_host_template * sht,
-+				    int privsize)
-+
-+
-+    /**
-+    * scsi_remove_device - detach and remove a SCSI device
-+    * @sdev:      a pointer to a scsi device instance
-+    *
-+    *      Returns value: 0 on success, -EINVAL if device not attached
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: If an LLD becomes aware that a scsi device (lu) has
-+    *      been removed but its host is still present then it can request
-+    *      the removal of that scsi device. If successful this call will
-+    *      lead to the slave_destroy() callback being invoked. sdev is an
-+    *      invalid pointer after this call.
-+    *
-+    *      Defined in: drivers/scsi/scsi_sysfs.c .
-+    **/
-+    int scsi_remove_device(struct scsi_device *sdev)
-+
-+
-+    /**
-+    * scsi_remove_host - detach and remove all SCSI devices owned by host
-+    * @shost:      a pointer to a scsi host instance
-+    *
-+    *      Returns value: 0 on success, 1 on failure (e.g. LLD busy ??)
-+    *
-+    *      Might block: yes
-+    *
-+    *      Notes: Should only be invoked if the "hotplug initialization
-+    *      model" is being used. It should be called _prior_ to
-+    *      scsi_unregister().
-+    *
-+    *      Defined in: drivers/scsi/hosts.c .
-+    **/
-+    int scsi_remove_host(struct Scsi_Host *shost)
-+
-+
-+    /**
-+    * scsi_report_bus_reset - report scsi _bus_ reset observed
-+    * @shost: a pointer to a scsi host involved
-+    * @channel: channel (within) host on which scsi bus reset occurred
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: This only needs to be called if the reset is one which
-+    *      originates from an unknown location.  Resets originated by the
-+    *      mid level itself don't need to call this, but there should be
-+    *      no harm.  The main purpose of this is to make sure that a
-+    *      CHECK_CONDITION is properly treated.
-+    *
-+    *      Defined in: drivers/scsi/scsi_error.c .
-+    **/
-+    void scsi_report_bus_reset(struct Scsi_Host * shost, int channel)
-+
-+
-+    /**
-+    * scsi_scan_host - scan SCSI bus
-+    * @shost: a pointer to a scsi host instance
-+    *
-+    *	Might block: yes
-+    *
-+    *	Notes: Should be called after scsi_add_host()
-+    *
-+    *	Defined in: drivers/scsi/scsi_scan.c
-+    **/
-+    void scsi_scan_host(struct Scsi_Host *shost)
-+
-+
-+    /**
-+    * scsi_track_queue_full - track successive QUEUE_FULL events on given
-+    *                      device to determine if and when there is a need
-+    *                      to adjust the queue depth on the device.
-+    * @sdev:  pointer to SCSI device instance
-+    * @depth: Current number of outstanding SCSI commands on this device,
-+    *         not counting the one returned as QUEUE_FULL.
-+    *
-+    *      Returns 0  - no change needed
-+    *              >0 - adjust queue depth to this new depth
-+    *              -1 - drop back to untagged operation using host->cmd_per_lun
-+    *                   as the untagged command depth
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: LLDs may call this at any time and we will do "The Right
-+    *              Thing"; interrupt context safe.
-+    *
-+    *      Defined in: drivers/scsi/scsi.c .
-+    **/
-+    int scsi_track_queue_full(struct scsi_device *sdev, int depth)
-+
-+
-+    /**
-+    * scsi_unblock_requests - allow further commands to be queued to given host
-+    *
-+    * @shost: pointer to host to unblock commands on
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: no
-+    *
-+    *      Defined in: drivers/scsi/scsi_lib.c .
-+    **/
-+    void scsi_unblock_requests(struct Scsi_Host * shost)
-+
-+
-+    /**
-+    * scsi_unregister - unregister and free memory used by host instance
-+    * @shp:        pointer to scsi host instance to unregister.
-+    *
-+    *      Returns nothing
-+    *
-+    *      Might block: no
-+    *
-+    *      Notes: Should not be invoked if the "hotplug initialization
-+    *      model" is being used. Called internally by exit_this_scsi_driver()
-+    *      in the "passive initialization model". Hence a LLD has no need to
-+    *      call this function directly.
-+    *
-+    *      Defined in: drivers/scsi/hosts.c .
-+    **/
-+    void scsi_unregister(struct Scsi_Host * shp)
+-===============================================================================
+-End of Linux SYM-2 driver documentation file
++    0x0f07 0x0400 0x0001 0x0000 0x0000 0x0000 0x0000 0x0000
++    0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000
++    0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000
++    0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0x0000 0xfbbc
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 5bde34020b3a..b5be6f43ec3f 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -921,7 +921,7 @@ config SCSI_SYM53C8XX_2
+ 	  language.  It does not support LSI53C10XX Ultra-320 PCI-X SCSI
+ 	  controllers; you need to use the Fusion MPT driver for that.
  
+-	  Please read <file:Documentation/scsi/sym53c8xx_2.txt> for more
++	  Please read <file:Documentation/scsi/sym53c8xx_2.rst> for more
+ 	  information.
  
- 
-@@ -645,9 +654,11 @@ Interface functions are supplied (defined) by LLDs and their function
- pointers are placed in an instance of struct scsi_host_template which
- is passed to scsi_host_alloc() [or scsi_register() / init_this_scsi_driver()].
- Some are mandatory. Interface functions should be declared static. The
--accepted convention is that driver "xyz" will declare its slave_configure() 
--function as:
-+accepted convention is that driver "xyz" will declare its slave_configure()
-+function as::
-+
-     static int xyz_slave_configure(struct scsi_device * sdev);
-+
- and so forth for all interface functions listed below.
- 
- A pointer to this function should be placed in the 'slave_configure' member
-@@ -662,388 +673,389 @@ In some cases more detail is given in scsi_host.h than below.
- The interface functions are listed below in alphabetical order.
- 
- Summary:
--   bios_param - fetch head, sector, cylinder info for a disk
--   eh_timed_out - notify the host that a command timer expired
--   eh_abort_handler - abort given command
--   eh_bus_reset_handler - issue SCSI bus reset
--   eh_device_reset_handler - issue SCSI device reset
--   eh_host_reset_handler - reset host (host bus adapter)
--   info - supply information about given host
--   ioctl - driver can respond to ioctls
--   proc_info - supports /proc/scsi/{driver_name}/{host_no}
--   queuecommand - queue scsi command, invoke 'done' on completion
--   slave_alloc - prior to any commands being sent to a new device 
--   slave_configure - driver fine tuning for given device after attach
--   slave_destroy - given device is about to be shut down
- 
-+  - bios_param - fetch head, sector, cylinder info for a disk
-+  - eh_timed_out - notify the host that a command timer expired
-+  - eh_abort_handler - abort given command
-+  - eh_bus_reset_handler - issue SCSI bus reset
-+  - eh_device_reset_handler - issue SCSI device reset
-+  - eh_host_reset_handler - reset host (host bus adapter)
-+  - info - supply information about given host
-+  - ioctl - driver can respond to ioctls
-+  - proc_info - supports /proc/scsi/{driver_name}/{host_no}
-+  - queuecommand - queue scsi command, invoke 'done' on completion
-+  - slave_alloc - prior to any commands being sent to a new device
-+  - slave_configure - driver fine tuning for given device after attach
-+  - slave_destroy - given device is about to be shut down
- 
--Details:
- 
--/**
-- *      bios_param - fetch head, sector, cylinder info for a disk
-- *      @sdev: pointer to scsi device context (defined in 
-- *             include/scsi/scsi_device.h)
-- *      @bdev: pointer to block device context (defined in fs.h)
-- *      @capacity:  device size (in 512 byte sectors)
-- *      @params: three element array to place output:
-- *              params[0] number of heads (max 255)
-- *              params[1] number of sectors (max 63)
-- *              params[2] number of cylinders 
-- *
-- *      Return value is ignored
-- *
-- *      Locks: none
-- *
-- *      Calling context: process (sd)
-- *
-- *      Notes: an arbitrary geometry (based on READ CAPACITY) is used
-- *      if this function is not provided. The params array is
-- *      pre-initialized with made up values just in case this function 
-- *      doesn't output anything.
-- *
-- *      Optionally defined in: LLD
-- **/
--    int bios_param(struct scsi_device * sdev, struct block_device *bdev,
--                   sector_t capacity, int params[3])
-+Details::
- 
-+    /**
-+    *      bios_param - fetch head, sector, cylinder info for a disk
-+    *      @sdev: pointer to scsi device context (defined in
-+    *             include/scsi/scsi_device.h)
-+    *      @bdev: pointer to block device context (defined in fs.h)
-+    *      @capacity:  device size (in 512 byte sectors)
-+    *      @params: three element array to place output:
-+    *              params[0] number of heads (max 255)
-+    *              params[1] number of sectors (max 63)
-+    *              params[2] number of cylinders
-+    *
-+    *      Return value is ignored
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process (sd)
-+    *
-+    *      Notes: an arbitrary geometry (based on READ CAPACITY) is used
-+    *      if this function is not provided. The params array is
-+    *      pre-initialized with made up values just in case this function
-+    *      doesn't output anything.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int bios_param(struct scsi_device * sdev, struct block_device *bdev,
-+		    sector_t capacity, int params[3])
- 
--/**
-- *      eh_timed_out - The timer for the command has just fired
-- *      @scp: identifies command timing out
-- *
-- *      Returns:
-- *
-- *      EH_HANDLED:             I fixed the error, please complete the command
-- *      EH_RESET_TIMER:         I need more time, reset the timer and
-- *                              begin counting again
-- *      EH_NOT_HANDLED          Begin normal error recovery
-- *
-- *
-- *      Locks: None held
-- *
-- *      Calling context: interrupt
-- *
-- *      Notes: This is to give the LLD an opportunity to do local recovery.
-- *      This recovery is limited to determining if the outstanding command
-- *      will ever complete.  You may not abort and restart the command from
-- *      this callback.
-- *
-- *      Optionally defined in: LLD
-- **/
--     int eh_timed_out(struct scsi_cmnd * scp)
- 
-+    /**
-+    *      eh_timed_out - The timer for the command has just fired
-+    *      @scp: identifies command timing out
-+    *
-+    *      Returns:
-+    *
-+    *      EH_HANDLED:             I fixed the error, please complete the command
-+    *      EH_RESET_TIMER:         I need more time, reset the timer and
-+    *                              begin counting again
-+    *      EH_NOT_HANDLED          Begin normal error recovery
-+    *
-+    *
-+    *      Locks: None held
-+    *
-+    *      Calling context: interrupt
-+    *
-+    *      Notes: This is to give the LLD an opportunity to do local recovery.
-+    *      This recovery is limited to determining if the outstanding command
-+    *      will ever complete.  You may not abort and restart the command from
-+    *      this callback.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int eh_timed_out(struct scsi_cmnd * scp)
- 
--/**
-- *      eh_abort_handler - abort command associated with scp
-- *      @scp: identifies command to be aborted
-- *
-- *      Returns SUCCESS if command aborted else FAILED
-- *
-- *      Locks: None held
-- *
-- *      Calling context: kernel thread
-- *
-- *      Notes: If 'no_async_abort' is defined this callback
-- *  	will be invoked from scsi_eh thread. No other commands
-- *	will then be queued on current host during eh.
-- *	Otherwise it will be called whenever scsi_times_out()
-- *      is called due to a command timeout.
-- *
-- *      Optionally defined in: LLD
-- **/
--     int eh_abort_handler(struct scsi_cmnd * scp)
- 
-+    /**
-+    *      eh_abort_handler - abort command associated with scp
-+    *      @scp: identifies command to be aborted
-+    *
-+    *      Returns SUCCESS if command aborted else FAILED
-+    *
-+    *      Locks: None held
-+    *
-+    *      Calling context: kernel thread
-+    *
-+    *      Notes: If 'no_async_abort' is defined this callback
-+    *  	will be invoked from scsi_eh thread. No other commands
-+    *	will then be queued on current host during eh.
-+    *	Otherwise it will be called whenever scsi_times_out()
-+    *      is called due to a command timeout.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int eh_abort_handler(struct scsi_cmnd * scp)
- 
--/**
-- *      eh_bus_reset_handler - issue SCSI bus reset
-- *      @scp: SCSI bus that contains this device should be reset
-- *
-- *      Returns SUCCESS if command aborted else FAILED
-- *
-- *      Locks: None held
-- *
-- *      Calling context: kernel thread
-- *
-- *      Notes: Invoked from scsi_eh thread. No other commands will be
-- *      queued on current host during eh.
-- *
-- *      Optionally defined in: LLD
-- **/
--     int eh_bus_reset_handler(struct scsi_cmnd * scp)
- 
-+    /**
-+    *      eh_bus_reset_handler - issue SCSI bus reset
-+    *      @scp: SCSI bus that contains this device should be reset
-+    *
-+    *      Returns SUCCESS if command aborted else FAILED
-+    *
-+    *      Locks: None held
-+    *
-+    *      Calling context: kernel thread
-+    *
-+    *      Notes: Invoked from scsi_eh thread. No other commands will be
-+    *      queued on current host during eh.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int eh_bus_reset_handler(struct scsi_cmnd * scp)
- 
--/**
-- *      eh_device_reset_handler - issue SCSI device reset
-- *      @scp: identifies SCSI device to be reset
-- *
-- *      Returns SUCCESS if command aborted else FAILED
-- *
-- *      Locks: None held
-- *
-- *      Calling context: kernel thread
-- *
-- *      Notes: Invoked from scsi_eh thread. No other commands will be
-- *      queued on current host during eh.
-- *
-- *      Optionally defined in: LLD
-- **/
--     int eh_device_reset_handler(struct scsi_cmnd * scp)
- 
-+    /**
-+    *      eh_device_reset_handler - issue SCSI device reset
-+    *      @scp: identifies SCSI device to be reset
-+    *
-+    *      Returns SUCCESS if command aborted else FAILED
-+    *
-+    *      Locks: None held
-+    *
-+    *      Calling context: kernel thread
-+    *
-+    *      Notes: Invoked from scsi_eh thread. No other commands will be
-+    *      queued on current host during eh.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int eh_device_reset_handler(struct scsi_cmnd * scp)
- 
--/**
-- *      eh_host_reset_handler - reset host (host bus adapter)
-- *      @scp: SCSI host that contains this device should be reset
-- *
-- *      Returns SUCCESS if command aborted else FAILED
-- *
-- *      Locks: None held
-- *
-- *      Calling context: kernel thread
-- *
-- *      Notes: Invoked from scsi_eh thread. No other commands will be
-- *      queued on current host during eh. 
-- *      With the default eh_strategy in place, if none of the _abort_, 
-- *      _device_reset_, _bus_reset_ or this eh handler function are 
-- *      defined (or they all return FAILED) then the device in question 
-- *      will be set offline whenever eh is invoked.
-- *
-- *      Optionally defined in: LLD
-- **/
--     int eh_host_reset_handler(struct scsi_cmnd * scp)
- 
-+    /**
-+    *      eh_host_reset_handler - reset host (host bus adapter)
-+    *      @scp: SCSI host that contains this device should be reset
-+    *
-+    *      Returns SUCCESS if command aborted else FAILED
-+    *
-+    *      Locks: None held
-+    *
-+    *      Calling context: kernel thread
-+    *
-+    *      Notes: Invoked from scsi_eh thread. No other commands will be
-+    *      queued on current host during eh.
-+    *      With the default eh_strategy in place, if none of the _abort_,
-+    *      _device_reset_, _bus_reset_ or this eh handler function are
-+    *      defined (or they all return FAILED) then the device in question
-+    *      will be set offline whenever eh is invoked.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int eh_host_reset_handler(struct scsi_cmnd * scp)
- 
--/**
-- *      info - supply information about given host: driver name plus data
-- *             to distinguish given host
-- *      @shp: host to supply information about
-- *
-- *      Return ASCII null terminated string. [This driver is assumed to
-- *      manage the memory pointed to and maintain it, typically for the
-- *      lifetime of this host.]
-- *
-- *      Locks: none
-- *
-- *      Calling context: process
-- *
-- *      Notes: Often supplies PCI or ISA information such as IO addresses
-- *      and interrupt numbers. If not supplied struct Scsi_Host::name used
-- *      instead. It is assumed the returned information fits on one line 
-- *      (i.e. does not included embedded newlines).
-- *      The SCSI_IOCTL_PROBE_HOST ioctl yields the string returned by this
-- *      function (or struct Scsi_Host::name if this function is not
-- *      available).
-- *      In a similar manner, init_this_scsi_driver() outputs to the console
-- *      each host's "info" (or name) for the driver it is registering.
-- *      Also if proc_info() is not supplied, the output of this function
-- *      is used instead.
-- *
-- *      Optionally defined in: LLD
-- **/
--    const char * info(struct Scsi_Host * shp)
- 
-+    /**
-+    *      info - supply information about given host: driver name plus data
-+    *             to distinguish given host
-+    *      @shp: host to supply information about
-+    *
-+    *      Return ASCII null terminated string. [This driver is assumed to
-+    *      manage the memory pointed to and maintain it, typically for the
-+    *      lifetime of this host.]
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: Often supplies PCI or ISA information such as IO addresses
-+    *      and interrupt numbers. If not supplied struct Scsi_Host::name used
-+    *      instead. It is assumed the returned information fits on one line
-+    *      (i.e. does not included embedded newlines).
-+    *      The SCSI_IOCTL_PROBE_HOST ioctl yields the string returned by this
-+    *      function (or struct Scsi_Host::name if this function is not
-+    *      available).
-+    *      In a similar manner, init_this_scsi_driver() outputs to the console
-+    *      each host's "info" (or name) for the driver it is registering.
-+    *      Also if proc_info() is not supplied, the output of this function
-+    *      is used instead.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	const char * info(struct Scsi_Host * shp)
- 
--/**
-- *      ioctl - driver can respond to ioctls
-- *      @sdp: device that ioctl was issued for
-- *      @cmd: ioctl number
-- *      @arg: pointer to read or write data from. Since it points to
-- *            user space, should use appropriate kernel functions
-- *            (e.g. copy_from_user() ). In the Unix style this argument
-- *            can also be viewed as an unsigned long.
-- *
-- *      Returns negative "errno" value when there is a problem. 0 or a
-- *      positive value indicates success and is returned to the user space.
-- *
-- *      Locks: none
-- *
-- *      Calling context: process
-- *
-- *      Notes: The SCSI subsystem uses a "trickle down" ioctl model.
-- *      The user issues an ioctl() against an upper level driver
-- *      (e.g. /dev/sdc) and if the upper level driver doesn't recognize
-- *      the 'cmd' then it is passed to the SCSI mid level. If the SCSI
-- *      mid level does not recognize it, then the LLD that controls
-- *      the device receives the ioctl. According to recent Unix standards
-- *      unsupported ioctl() 'cmd' numbers should return -ENOTTY.
-- *
-- *      Optionally defined in: LLD
-- **/
--    int ioctl(struct scsi_device *sdp, int cmd, void *arg)
- 
-+    /**
-+    *      ioctl - driver can respond to ioctls
-+    *      @sdp: device that ioctl was issued for
-+    *      @cmd: ioctl number
-+    *      @arg: pointer to read or write data from. Since it points to
-+    *            user space, should use appropriate kernel functions
-+    *            (e.g. copy_from_user() ). In the Unix style this argument
-+    *            can also be viewed as an unsigned long.
-+    *
-+    *      Returns negative "errno" value when there is a problem. 0 or a
-+    *      positive value indicates success and is returned to the user space.
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: The SCSI subsystem uses a "trickle down" ioctl model.
-+    *      The user issues an ioctl() against an upper level driver
-+    *      (e.g. /dev/sdc) and if the upper level driver doesn't recognize
-+    *      the 'cmd' then it is passed to the SCSI mid level. If the SCSI
-+    *      mid level does not recognize it, then the LLD that controls
-+    *      the device receives the ioctl. According to recent Unix standards
-+    *      unsupported ioctl() 'cmd' numbers should return -ENOTTY.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int ioctl(struct scsi_device *sdp, int cmd, void *arg)
- 
--/**
-- *      proc_info - supports /proc/scsi/{driver_name}/{host_no}
-- *      @buffer: anchor point to output to (0==writeto1_read0) or fetch from
-- *               (1==writeto1_read0).
-- *      @start: where "interesting" data is written to. Ignored when
-- *              1==writeto1_read0.
-- *      @offset: offset within buffer 0==writeto1_read0 is actually
-- *               interested in. Ignored when 1==writeto1_read0 .
-- *      @length: maximum (or actual) extent of buffer
-- *      @host_no: host number of interest (struct Scsi_Host::host_no)
-- *      @writeto1_read0: 1 -> data coming from user space towards driver
-- *                            (e.g. "echo some_string > /proc/scsi/xyz/2")
-- *                       0 -> user what data from this driver
-- *                            (e.g. "cat /proc/scsi/xyz/2")
-- *
-- *      Returns length when 1==writeto1_read0. Otherwise number of chars
-- *      output to buffer past offset.
-- *
-- *      Locks: none held
-- *
-- *      Calling context: process
-- *
-- *      Notes: Driven from scsi_proc.c which interfaces to proc_fs. proc_fs
-- *      support can now be configured out of the scsi subsystem.
-- *
-- *      Optionally defined in: LLD
-- **/
--    int proc_info(char * buffer, char ** start, off_t offset, 
--                  int length, int host_no, int writeto1_read0)
- 
-+    /**
-+    *      proc_info - supports /proc/scsi/{driver_name}/{host_no}
-+    *      @buffer: anchor point to output to (0==writeto1_read0) or fetch from
-+    *               (1==writeto1_read0).
-+    *      @start: where "interesting" data is written to. Ignored when
-+    *              1==writeto1_read0.
-+    *      @offset: offset within buffer 0==writeto1_read0 is actually
-+    *               interested in. Ignored when 1==writeto1_read0 .
-+    *      @length: maximum (or actual) extent of buffer
-+    *      @host_no: host number of interest (struct Scsi_Host::host_no)
-+    *      @writeto1_read0: 1 -> data coming from user space towards driver
-+    *                            (e.g. "echo some_string > /proc/scsi/xyz/2")
-+    *                       0 -> user what data from this driver
-+    *                            (e.g. "cat /proc/scsi/xyz/2")
-+    *
-+    *      Returns length when 1==writeto1_read0. Otherwise number of chars
-+    *      output to buffer past offset.
-+    *
-+    *      Locks: none held
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: Driven from scsi_proc.c which interfaces to proc_fs. proc_fs
-+    *      support can now be configured out of the scsi subsystem.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int proc_info(char * buffer, char ** start, off_t offset,
-+		    int length, int host_no, int writeto1_read0)
- 
--/**
-- *      queuecommand - queue scsi command, invoke scp->scsi_done on completion
-- *      @shost: pointer to the scsi host object
-- *      @scp: pointer to scsi command object
-- *
-- *      Returns 0 on success.
-- *
-- *      If there's a failure, return either:
-- *
-- *      SCSI_MLQUEUE_DEVICE_BUSY if the device queue is full, or
-- *      SCSI_MLQUEUE_HOST_BUSY if the entire host queue is full
-- *
-- *      On both of these returns, the mid-layer will requeue the I/O
-- *
-- *      - if the return is SCSI_MLQUEUE_DEVICE_BUSY, only that particular
-- *      device will be paused, and it will be unpaused when a command to
-- *      the device returns (or after a brief delay if there are no more
-- *      outstanding commands to it).  Commands to other devices continue
-- *      to be processed normally.
-- *
-- *      - if the return is SCSI_MLQUEUE_HOST_BUSY, all I/O to the host
-- *      is paused and will be unpaused when any command returns from
-- *      the host (or after a brief delay if there are no outstanding
-- *      commands to the host).
-- *
-- *      For compatibility with earlier versions of queuecommand, any
-- *      other return value is treated the same as
-- *      SCSI_MLQUEUE_HOST_BUSY.
-- *
-- *      Other types of errors that are detected immediately may be
-- *      flagged by setting scp->result to an appropriate value,
-- *      invoking the scp->scsi_done callback, and then returning 0
-- *      from this function. If the command is not performed
-- *      immediately (and the LLD is starting (or will start) the given
-- *      command) then this function should place 0 in scp->result and
-- *      return 0.
-- *
-- *      Command ownership.  If the driver returns zero, it owns the
-- *      command and must take responsibility for ensuring the
-- *      scp->scsi_done callback is executed.  Note: the driver may
-- *      call scp->scsi_done before returning zero, but after it has
-- *      called scp->scsi_done, it may not return any value other than
-- *      zero.  If the driver makes a non-zero return, it must not
-- *      execute the command's scsi_done callback at any time.
-- *
-- *      Locks: up to and including 2.6.36, struct Scsi_Host::host_lock
-- *             held on entry (with "irqsave") and is expected to be
-- *             held on return. From 2.6.37 onwards, queuecommand is
-- *             called without any locks held.
-- *
-- *      Calling context: in interrupt (soft irq) or process context
-- *
-- *      Notes: This function should be relatively fast. Normally it
-- *      will not wait for IO to complete. Hence the scp->scsi_done
-- *      callback is invoked (often directly from an interrupt service
-- *      routine) some time after this function has returned. In some
-- *      cases (e.g. pseudo adapter drivers that manufacture the
-- *      response to a SCSI INQUIRY) the scp->scsi_done callback may be
-- *      invoked before this function returns.  If the scp->scsi_done
-- *      callback is not invoked within a certain period the SCSI mid
-- *      level will commence error processing.  If a status of CHECK
-- *      CONDITION is placed in "result" when the scp->scsi_done
-- *      callback is invoked, then the LLD driver should perform
-- *      autosense and fill in the struct scsi_cmnd::sense_buffer
-- *      array. The scsi_cmnd::sense_buffer array is zeroed prior to
-- *      the mid level queuing a command to an LLD.
-- *
-- *      Defined in: LLD
-- **/
--    int queuecommand(struct Scsi_Host *shost, struct scsi_cmnd * scp)
- 
-+    /**
-+    *      queuecommand - queue scsi command, invoke scp->scsi_done on completion
-+    *      @shost: pointer to the scsi host object
-+    *      @scp: pointer to scsi command object
-+    *
-+    *      Returns 0 on success.
-+    *
-+    *      If there's a failure, return either:
-+    *
-+    *      SCSI_MLQUEUE_DEVICE_BUSY if the device queue is full, or
-+    *      SCSI_MLQUEUE_HOST_BUSY if the entire host queue is full
-+    *
-+    *      On both of these returns, the mid-layer will requeue the I/O
-+    *
-+    *      - if the return is SCSI_MLQUEUE_DEVICE_BUSY, only that particular
-+    *      device will be paused, and it will be unpaused when a command to
-+    *      the device returns (or after a brief delay if there are no more
-+    *      outstanding commands to it).  Commands to other devices continue
-+    *      to be processed normally.
-+    *
-+    *      - if the return is SCSI_MLQUEUE_HOST_BUSY, all I/O to the host
-+    *      is paused and will be unpaused when any command returns from
-+    *      the host (or after a brief delay if there are no outstanding
-+    *      commands to the host).
-+    *
-+    *      For compatibility with earlier versions of queuecommand, any
-+    *      other return value is treated the same as
-+    *      SCSI_MLQUEUE_HOST_BUSY.
-+    *
-+    *      Other types of errors that are detected immediately may be
-+    *      flagged by setting scp->result to an appropriate value,
-+    *      invoking the scp->scsi_done callback, and then returning 0
-+    *      from this function. If the command is not performed
-+    *      immediately (and the LLD is starting (or will start) the given
-+    *      command) then this function should place 0 in scp->result and
-+    *      return 0.
-+    *
-+    *      Command ownership.  If the driver returns zero, it owns the
-+    *      command and must take responsibility for ensuring the
-+    *      scp->scsi_done callback is executed.  Note: the driver may
-+    *      call scp->scsi_done before returning zero, but after it has
-+    *      called scp->scsi_done, it may not return any value other than
-+    *      zero.  If the driver makes a non-zero return, it must not
-+    *      execute the command's scsi_done callback at any time.
-+    *
-+    *      Locks: up to and including 2.6.36, struct Scsi_Host::host_lock
-+    *             held on entry (with "irqsave") and is expected to be
-+    *             held on return. From 2.6.37 onwards, queuecommand is
-+    *             called without any locks held.
-+    *
-+    *      Calling context: in interrupt (soft irq) or process context
-+    *
-+    *      Notes: This function should be relatively fast. Normally it
-+    *      will not wait for IO to complete. Hence the scp->scsi_done
-+    *      callback is invoked (often directly from an interrupt service
-+    *      routine) some time after this function has returned. In some
-+    *      cases (e.g. pseudo adapter drivers that manufacture the
-+    *      response to a SCSI INQUIRY) the scp->scsi_done callback may be
-+    *      invoked before this function returns.  If the scp->scsi_done
-+    *      callback is not invoked within a certain period the SCSI mid
-+    *      level will commence error processing.  If a status of CHECK
-+    *      CONDITION is placed in "result" when the scp->scsi_done
-+    *      callback is invoked, then the LLD driver should perform
-+    *      autosense and fill in the struct scsi_cmnd::sense_buffer
-+    *      array. The scsi_cmnd::sense_buffer array is zeroed prior to
-+    *      the mid level queuing a command to an LLD.
-+    *
-+    *      Defined in: LLD
-+    **/
-+	int queuecommand(struct Scsi_Host *shost, struct scsi_cmnd * scp)
- 
--/**
-- *      slave_alloc -   prior to any commands being sent to a new device 
-- *                      (i.e. just prior to scan) this call is made
-- *      @sdp: pointer to new device (about to be scanned)
-- *
-- *      Returns 0 if ok. Any other return is assumed to be an error and
-- *      the device is ignored.
-- *
-- *      Locks: none
-- *
-- *      Calling context: process
-- *
-- *      Notes: Allows the driver to allocate any resources for a device
-- *      prior to its initial scan. The corresponding scsi device may not
-- *      exist but the mid level is just about to scan for it (i.e. send
-- *      and INQUIRY command plus ...). If a device is found then
-- *      slave_configure() will be called while if a device is not found
-- *      slave_destroy() is called.
-- *      For more details see the include/scsi/scsi_host.h file.
-- *
-- *      Optionally defined in: LLD
-- **/
--    int slave_alloc(struct scsi_device *sdp)
- 
-+    /**
-+    *      slave_alloc -   prior to any commands being sent to a new device
-+    *                      (i.e. just prior to scan) this call is made
-+    *      @sdp: pointer to new device (about to be scanned)
-+    *
-+    *      Returns 0 if ok. Any other return is assumed to be an error and
-+    *      the device is ignored.
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: Allows the driver to allocate any resources for a device
-+    *      prior to its initial scan. The corresponding scsi device may not
-+    *      exist but the mid level is just about to scan for it (i.e. send
-+    *      and INQUIRY command plus ...). If a device is found then
-+    *      slave_configure() will be called while if a device is not found
-+    *      slave_destroy() is called.
-+    *      For more details see the include/scsi/scsi_host.h file.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int slave_alloc(struct scsi_device *sdp)
- 
--/**
-- *      slave_configure - driver fine tuning for given device just after it
-- *                     has been first scanned (i.e. it responded to an
-- *                     INQUIRY)
-- *      @sdp: device that has just been attached
-- *
-- *      Returns 0 if ok. Any other return is assumed to be an error and
-- *      the device is taken offline. [offline devices will _not_ have
-- *      slave_destroy() called on them so clean up resources.]
-- *
-- *      Locks: none
-- *
-- *      Calling context: process
-- *
-- *      Notes: Allows the driver to inspect the response to the initial
-- *      INQUIRY done by the scanning code and take appropriate action.
-- *      For more details see the include/scsi/scsi_host.h file.
-- *
-- *      Optionally defined in: LLD
-- **/
--    int slave_configure(struct scsi_device *sdp)
- 
-+    /**
-+    *      slave_configure - driver fine tuning for given device just after it
-+    *                     has been first scanned (i.e. it responded to an
-+    *                     INQUIRY)
-+    *      @sdp: device that has just been attached
-+    *
-+    *      Returns 0 if ok. Any other return is assumed to be an error and
-+    *      the device is taken offline. [offline devices will _not_ have
-+    *      slave_destroy() called on them so clean up resources.]
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: Allows the driver to inspect the response to the initial
-+    *      INQUIRY done by the scanning code and take appropriate action.
-+    *      For more details see the include/scsi/scsi_host.h file.
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	int slave_configure(struct scsi_device *sdp)
- 
--/**
-- *      slave_destroy - given device is about to be shut down. All
-- *                      activity has ceased on this device.
-- *      @sdp: device that is about to be shut down
-- *
-- *      Returns nothing
-- *
-- *      Locks: none
-- *
-- *      Calling context: process
-- *
-- *      Notes: Mid level structures for given device are still in place
-- *      but are about to be torn down. Any per device resources allocated
-- *      by this driver for given device should be freed now. No further
-- *      commands will be sent for this sdp instance. [However the device
-- *      could be re-attached in the future in which case a new instance
-- *      of struct scsi_device would be supplied by future slave_alloc()
-- *      and slave_configure() calls.]
-- *
-- *      Optionally defined in: LLD
-- **/
--    void slave_destroy(struct scsi_device *sdp)
-+
-+    /**
-+    *      slave_destroy - given device is about to be shut down. All
-+    *                      activity has ceased on this device.
-+    *      @sdp: device that is about to be shut down
-+    *
-+    *      Returns nothing
-+    *
-+    *      Locks: none
-+    *
-+    *      Calling context: process
-+    *
-+    *      Notes: Mid level structures for given device are still in place
-+    *      but are about to be torn down. Any per device resources allocated
-+    *      by this driver for given device should be freed now. No further
-+    *      commands will be sent for this sdp instance. [However the device
-+    *      could be re-attached in the future in which case a new instance
-+    *      of struct scsi_device would be supplied by future slave_alloc()
-+    *      and slave_configure() calls.]
-+    *
-+    *      Optionally defined in: LLD
-+    **/
-+	void slave_destroy(struct scsi_device *sdp)
- 
- 
- 
-@@ -1051,24 +1063,31 @@ Data Structures
- ===============
- struct scsi_host_template
- -------------------------
--There is one "struct scsi_host_template" instance per LLD ***. It is
-+There is one "struct scsi_host_template" instance per LLD [#]_. It is
- typically initialized as a file scope static in a driver's header file. That
- way members that are not explicitly initialized will be set to 0 or NULL.
- Member of interest:
--    name         - name of driver (may contain spaces, please limit to
-+
-+    name
-+		 - name of driver (may contain spaces, please limit to
-                    less than 80 characters)
--    proc_name    - name used in "/proc/scsi/<proc_name>/<host_no>" and
-+
-+    proc_name
-+		 - name used in "/proc/scsi/<proc_name>/<host_no>" and
-                    by sysfs in one of its "drivers" directories. Hence
-                    "proc_name" should only contain characters acceptable
-                    to a Unix file name.
--   (*queuecommand)() - primary callback that the mid level uses to inject
-+
-+   ``(*queuecommand)()``
-+		 - primary callback that the mid level uses to inject
-                    SCSI commands into an LLD.
-+
- The structure is defined and commented in include/scsi/scsi_host.h
- 
--*** In extreme situations a single driver may have several instances
--    if it controls several different classes of hardware (e.g. an LLD
--    that handles both ISA and PCI cards and has a separate instance of
--    struct scsi_host_template for each class).
-+.. [#] In extreme situations a single driver may have several instances
-+       if it controls several different classes of hardware (e.g. an LLD
-+       that handles both ISA and PCI cards and has a separate instance of
-+       struct scsi_host_template for each class).
- 
- struct Scsi_Host
- ----------------
-@@ -1078,42 +1097,58 @@ with "struct scsi_host_template". When a new struct Scsi_Host instance
- is created (in scsi_host_alloc() in hosts.c) those common members are
- initialized from the driver's struct scsi_host_template instance. Members
- of interest:
--    host_no      - system wide unique number that is used for identifying
-+
-+    host_no
-+		 - system wide unique number that is used for identifying
-                    this host. Issued in ascending order from 0.
--    can_queue    - must be greater than 0; do not send more than can_queue
-+    can_queue
-+		 - must be greater than 0; do not send more than can_queue
-                    commands to the adapter.
--    this_id      - scsi id of host (scsi initiator) or -1 if not known
--    sg_tablesize - maximum scatter gather elements allowed by host.
-+    this_id
-+		 - scsi id of host (scsi initiator) or -1 if not known
-+    sg_tablesize
-+		 - maximum scatter gather elements allowed by host.
-                    Set this to SG_ALL or less to avoid chained SG lists.
-                    Must be at least 1.
--    max_sectors  - maximum number of sectors (usually 512 bytes) allowed
-+    max_sectors
-+		 - maximum number of sectors (usually 512 bytes) allowed
-                    in a single SCSI command. The default value of 0 leads
-                    to a setting of SCSI_DEFAULT_MAX_SECTORS (defined in
-                    scsi_host.h) which is currently set to 1024. So for a
-                    disk the maximum transfer size is 512 KB when max_sectors
-                    is not defined. Note that this size may not be sufficient
-                    for disk firmware uploads.
--    cmd_per_lun  - maximum number of commands that can be queued on devices
-+    cmd_per_lun
-+		 - maximum number of commands that can be queued on devices
-                    controlled by the host. Overridden by LLD calls to
-                    scsi_change_queue_depth().
--    unchecked_isa_dma - 1=>only use bottom 16 MB of ram (ISA DMA addressing
-+    unchecked_isa_dma
-+		 - 1=>only use bottom 16 MB of ram (ISA DMA addressing
-                    restriction), 0=>can use full 32 bit (or better) DMA
-                    address space
--    no_async_abort - 1=>Asynchronous aborts are not supported
--                     0=>Timed-out commands will be aborted asynchronously
--    hostt        - pointer to driver's struct scsi_host_template from which
-+    no_async_abort
-+		 - 1=>Asynchronous aborts are not supported
-+		 - 0=>Timed-out commands will be aborted asynchronously
-+    hostt
-+		 - pointer to driver's struct scsi_host_template from which
-                    this struct Scsi_Host instance was spawned
--    hostt->proc_name  - name of LLD. This is the driver name that sysfs uses
--    transportt   - pointer to driver's struct scsi_transport_template instance
-+    hostt->proc_name
-+		 - name of LLD. This is the driver name that sysfs uses
-+    transportt
-+		 - pointer to driver's struct scsi_transport_template instance
-                    (if any). FC and SPI transports currently supported.
--    sh_list      - a double linked list of pointers to all struct Scsi_Host
-+    sh_list
-+		 - a double linked list of pointers to all struct Scsi_Host
-                    instances (currently ordered by ascending host_no)
--    my_devices   - a double linked list of pointers to struct scsi_device 
-+    my_devices
-+		 - a double linked list of pointers to struct scsi_device
-                    instances that belong to this host.
--    hostdata[0]  - area reserved for LLD at end of struct Scsi_Host. Size
-+    hostdata[0]
-+		 - area reserved for LLD at end of struct Scsi_Host. Size
-                    is set by the second argument (named 'xtr_bytes') to
-                    scsi_host_alloc() or scsi_register().
--    vendor_id    - a unique value that identifies the vendor supplying
-+    vendor_id
-+		 - a unique value that identifies the vendor supplying
-                    the LLD for the Scsi_Host.  Used most often in validating
-                    vendor-specific message requests.  Value consists of an
-                    identifier type and a vendor-specific value.
-@@ -1136,26 +1171,35 @@ commands become queued against the LLD than are indicated by
- scsi_change_queue_depth() (or struct Scsi_Host::cmd_per_lun). There will
- be at least one instance of struct scsi_cmnd available for each SCSI device.
- Members of interest:
--    cmnd         - array containing SCSI command
--    cmnd_len     - length (in bytes) of SCSI command
--    sc_data_direction - direction of data transfer in data phase. See
--                "enum dma_data_direction" in include/linux/dma-mapping.h
--    request_bufflen - number of data bytes to transfer (0 if no data phase)
--    use_sg       - ==0 -> no scatter gather list, hence transfer data
-+
-+    cmnd
-+		 - array containing SCSI command
-+    cmnd_len
-+		 - length (in bytes) of SCSI command
-+    sc_data_direction
-+		 - direction of data transfer in data phase. See
-+                   "enum dma_data_direction" in include/linux/dma-mapping.h
-+    request_bufflen
-+		 - number of data bytes to transfer (0 if no data phase)
-+    use_sg
-+		 - ==0 -> no scatter gather list, hence transfer data
-                           to/from request_buffer
-                  - >0 ->  scatter gather list (actually an array) in
-                           request_buffer with use_sg elements
--    request_buffer - either contains data buffer or scatter gather list
-+    request_buffer
-+		   - either contains data buffer or scatter gather list
-                      depending on the setting of use_sg. Scatter gather
-                      elements are defined by 'struct scatterlist' found
-                      in include/linux/scatterlist.h .
--    done         - function pointer that should be invoked by LLD when the
-+    done
-+		 - function pointer that should be invoked by LLD when the
-                    SCSI command is completed (successfully or otherwise).
-                    Should only be called by an LLD if the LLD has accepted
-                    the command (i.e. queuecommand() returned or will return
-                    0). The LLD may invoke 'done'  prior to queuecommand()
-                    finishing.
--    result       - should be set by LLD prior to calling 'done'. A value
-+    result
-+		 - should be set by LLD prior to calling 'done'. A value
-                    of 0 implies a successfully completed command (and all
-                    data (if any) has been transferred to or from the SCSI
-                    target device). 'result' is a 32 bit unsigned integer that
-@@ -1163,7 +1207,8 @@ Members of interest:
-                    in the LSB. See include/scsi/scsi.h status_byte(),
-                    msg_byte(), host_byte() and driver_byte() macros and
-                    related constants.
--    sense_buffer - an array (maximum size: SCSI_SENSE_BUFFERSIZE bytes) that
-+    sense_buffer
-+		 - an array (maximum size: SCSI_SENSE_BUFFERSIZE bytes) that
-                    should be written when the SCSI status (LSB of 'result')
-                    is set to CHECK_CONDITION (2). When CHECK_CONDITION is
-                    set, if the top nibble of sense_buffer[0] has the value 7
-@@ -1173,9 +1218,11 @@ Members of interest:
-                    retrieve the sense buffer. The latter strategy is error
-                    prone in the presence of command queuing so the LLD should
-                    always "auto-sense".
--    device       - pointer to scsi_device object that this command is
-+    device
-+		 - pointer to scsi_device object that this command is
-                    associated with.
--    resid        - an LLD should set this signed integer to the requested
-+    resid
-+		 - an LLD should set this signed integer to the requested
-                    transfer length (i.e. 'request_bufflen') less the number
-                    of bytes that are actually transferred. 'resid' is
-                    preset to 0 so an LLD can ignore it if it cannot detect
-@@ -1183,7 +1230,8 @@ Members of interest:
-                    should set 'resid' prior to invoking 'done'. The most
-                    interesting case is data transfers from a SCSI target
-                    device (e.g. READs) that underrun.
--    underflow    - LLD should place (DID_ERROR << 16) in 'result' if
-+    underflow
-+		 - LLD should place (DID_ERROR << 16) in 'result' if
-                    actual number of bytes transferred is less than this
-                    figure. Not many LLDs implement this check and some that
-                    do just output an error message to the log rather than
-@@ -1196,10 +1244,13 @@ when such data transfers have sense keys of MEDIUM ERROR and HARDWARE ERROR
- (and possibly RECOVERED ERROR). In these cases if a LLD is in doubt how much
- data has been received then the safest approach is to indicate no bytes have
- been received. For example: to indicate that no valid data has been received
--a LLD might use these helpers:
-+a LLD might use these helpers::
-+
-     scsi_set_resid(SCpnt, scsi_bufflen(SCpnt));
-+
- where 'SCpnt' is a pointer to a scsi_cmnd object. To indicate only three 512
--bytes blocks has been received 'resid' could be set like this:
-+bytes blocks has been received 'resid' could be set like this::
-+
-     scsi_set_resid(SCpnt, scsi_bufflen(SCpnt) - (3 * 512));
- 
- The scsi_cmnd structure is defined in include/scsi/scsi_cmnd.h
-@@ -1207,8 +1258,8 @@ The scsi_cmnd structure is defined in include/scsi/scsi_cmnd.h
- 
- Locks
- =====
--Each struct Scsi_Host instance has a spin_lock called struct 
--Scsi_Host::default_lock which is initialized in scsi_host_alloc() [found in 
-+Each struct Scsi_Host instance has a spin_lock called struct
-+Scsi_Host::default_lock which is initialized in scsi_host_alloc() [found in
- hosts.c]. Within the same function the struct Scsi_Host::host_lock pointer
- is initialized to point at default_lock.  Thereafter lock and unlock
- operations performed by the mid level use the struct Scsi_Host::host_lock
-@@ -1222,13 +1273,14 @@ Autosense (or auto-sense) is defined in the SAM-2 document as "the
- automatic return of sense data to the application client coincident
- with the completion of a SCSI command" when a status of CHECK CONDITION
- occurs. LLDs should perform autosense. This should be done when the LLD
--detects a CHECK CONDITION status by either: 
-+detects a CHECK CONDITION status by either:
-+
-     a) instructing the SCSI protocol (e.g. SCSI Parallel Interface (SPI))
-        to perform an extra data in phase on such responses
-     b) or, the LLD issuing a REQUEST SENSE command itself
- 
- Either way, when a status of CHECK CONDITION is detected, the mid level
--decides whether the LLD has performed autosense by checking struct 
-+decides whether the LLD has performed autosense by checking struct
- scsi_cmnd::sense_buffer[0] . If this byte has an upper nibble of 7 (or 0xf)
- then autosense is assumed to have taken place. If it has another value (and
- this byte is initialized to 0 before each command) then the mid level will
-@@ -1242,7 +1294,7 @@ to perform autosense.
- 
- Changes since lk 2.4 series
- ===========================
--io_request_lock has been replaced by several finer grained locks. The lock 
-+io_request_lock has been replaced by several finer grained locks. The lock
- relevant to LLDs is struct Scsi_Host::host_lock and there is
- one per SCSI host.
- 
-@@ -1250,9 +1302,9 @@ The older error handling mechanism has been removed. This means the
- LLD interface functions abort() and reset() have been removed.
- The struct scsi_host_template::use_new_eh_code flag has been removed.
- 
--In the 2.4 series the SCSI subsystem configuration descriptions were 
--aggregated with the configuration descriptions from all other Linux 
--subsystems in the Documentation/Configure.help file. In the 2.6 series, 
-+In the 2.4 series the SCSI subsystem configuration descriptions were
-+aggregated with the configuration descriptions from all other Linux
-+subsystems in the Documentation/Configure.help file. In the 2.6 series,
- the SCSI subsystem now has its own (much smaller) drivers/scsi/Kconfig
- file that contains both configuration and help information.
- 
-@@ -1265,16 +1317,18 @@ to support it.
- Credits
- =======
- The following people have contributed to this document:
--        Mike Anderson <andmike at us dot ibm dot com>
--        James Bottomley <James dot Bottomley at hansenpartnership dot com>
--        Patrick Mansfield <patmans at us dot ibm dot com> 
--        Christoph Hellwig <hch at infradead dot org>
--        Doug Ledford <dledford at redhat dot com>
--        Andries Brouwer <Andries dot Brouwer at cwi dot nl>
--        Randy Dunlap <rdunlap at xenotime dot net>
--        Alan Stern <stern at rowland dot harvard dot edu>
-+
-+	- Mike Anderson <andmike at us dot ibm dot com>
-+	- James Bottomley <James dot Bottomley at hansenpartnership dot com>
-+	- Patrick Mansfield <patmans at us dot ibm dot com>
-+	- Christoph Hellwig <hch at infradead dot org>
-+	- Doug Ledford <dledford at redhat dot com>
-+	- Andries Brouwer <Andries dot Brouwer at cwi dot nl>
-+	- Randy Dunlap <rdunlap at xenotime dot net>
-+	- Alan Stern <stern at rowland dot harvard dot edu>
- 
- 
- Douglas Gilbert
- dgilbert at interlog dot com
-+
- 21st September 2004
-diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index 997202a18ddb..9a8cc10cffd0 100755
---- a/scripts/documentation-file-ref-check
-+++ b/scripts/documentation-file-ref-check
-@@ -12,7 +12,7 @@ use Getopt::Long qw(:config no_auto_abbrev);
- # to mention a past documentation file, for example, to give credits for
- # the original work.
- my %false_positives = (
--	"Documentation/scsi/scsi_mid_low_api.txt" => "Documentation/Configure.help",
-+	"Documentation/scsi/scsi_mid_low_api.rst" => "Documentation/Configure.help",
- 	"drivers/vhost/vhost.c" => "Documentation/virtual/lguest/lguest.c",
- );
- 
+ config SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
 -- 
 2.21.1
 
