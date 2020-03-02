@@ -2,122 +2,109 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E75C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82F0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51735222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2EB2467B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U6wne3gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCBRJc (ORCPT
+        id S1727412AbgCBRJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:09:32 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41406 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCBRJb (ORCPT
+        Mon, 2 Mar 2020 12:09:45 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23958 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727196AbgCBRJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:09:31 -0500
-Received: by mail-il1-f194.google.com with SMTP id q13so130251ile.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:09:31 -0800 (PST)
+        Mon, 2 Mar 2020 12:09:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583168983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WT1LxWtW4Alz7bMFxQVRaqlYT59rz8oUaocc8kmU1Ic=;
+        b=U6wne3gy171tjvEeoNus2sGOEQhq1FHb/BlqEmyS7SCPNJpRmf8lwn1vHaOCi6OfoH7aXJ
+        eyyWGbHASuGWt8Pgdwo5MilSGZQ7AF2wNGPs+dkBxywVuaxrbuU5Uqkeu3Sty5mlQB+r2C
+        IDXl9ufIkOOtICr1xtau9IGrt083vMM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-A26cY9evMnO_LdMb30COfQ-1; Mon, 02 Mar 2020 12:09:42 -0500
+X-MC-Unique: A26cY9evMnO_LdMb30COfQ-1
+Received: by mail-wm1-f72.google.com with SMTP id f207so458wme.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:09:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pY7gYt6OotnqUFf5LH33Rx81o88vShjsNxCsLlJhYP4=;
-        b=DtUzEjZ2EX4gK3h2FVa30ZrjyJn5c8NLbEZlX32xqFDizBzR9jkt1IsVoyBpkqIVBb
-         wdyaBSEsz6fj8DYUIoFStMXzGiMEJUn2lsI7FDENHK2caElhml5HIDOdryQBb8stdj9N
-         YxaE5AvIwMHeJGxU5Gb2TRUhrl93Uhn0RRAqR7q2ZTc/kcn1qqEp1/oOztL0T2j95BFZ
-         DxetxZRndHIUODo4h/EmKsTjCh8Ut0dnmnBybKbPj5zqGbXkyAbWP3Y4Kr4l3uxWJmFX
-         TAgksVEStQUML5z0Y5xDHz+lIx1OAPO6n0rEa7/clUAr3sRYIFSgC7eku6BsgxhRC6yk
-         H+Ng==
-X-Gm-Message-State: ANhLgQ1KNEmaRnJQhYyyOvxTCThoTUfj06hF961Jp21fkmu9FrLoyGtv
-        /l+wfWjYi5dpa8FRHO9mFLdLnA==
-X-Google-Smtp-Source: ADFU+vvLqUKxKaXlniz29wyCsSX4+Kp1o78dvk9pMAs2sRWuO4RBSRWjMfxc6G3wlV7VF6Vft4V9EA==
-X-Received: by 2002:a92:9c57:: with SMTP id h84mr594806ili.94.1583168970924;
-        Mon, 02 Mar 2020 09:09:30 -0800 (PST)
-Received: from google.com ([2620:15c:183:0:82e0:aef8:11bc:24c4])
-        by smtp.gmail.com with ESMTPSA id z63sm6813088ilk.44.2020.03.02.09.09.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:09:30 -0800 (PST)
-Date:   Mon, 2 Mar 2020 10:09:26 -0700
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Ben Chuang <benchuanggli@gmail.com>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ben.chuang@genesyslogic.com.tw
-Subject: Re: [PATCH] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
-Message-ID: <20200302170926.GA59937@google.com>
-References: <20200219092900.9151-1-benchuanggli@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WT1LxWtW4Alz7bMFxQVRaqlYT59rz8oUaocc8kmU1Ic=;
+        b=uZglfUzgBxAtdvlsntyKMfg7JqZCyWGJNxXMlTE9PjAWK8MgC2tl0ven/EzQ3oVl7I
+         2WJl9ewiissqvlpOHfKkzSCs0aRVdehtOWYi7atqXvvF7/9ftBS+j5cNdUDc1Cr6S3jb
+         qbSL2i5W9R1OTZNPOdZRXWhKUVczvSbn1XSkkc1FSmpauPTF7otB6WMIhvZOgC3jfmJu
+         Sguo2Bqm7eE7/aMMWzKQIjV4sDTFdFJsNtr97NbQDsa26zcMIirP6WH47nQ8Anf522Zd
+         PNHZUNaDNpMNMYuhfqB+itzdLhvYXvBDcJOHViSq7oZNC0UhCSl9i85xzoJ2tPW3TdQt
+         2tfw==
+X-Gm-Message-State: ANhLgQ3iUu7JSsI4L7lPkwIBFGJTaDNQO1YEsTbJBVsjT9H7CoVUYlSg
+        bb2PAre72DF3nhMZiqBMPKzG4EBWpz+oIc0JYU0KqqDIuPM+0LbapiTAG8gWV+P1ORB86/guBfu
+        nP8GrobV5DbPClB+CPM7CKySC
+X-Received: by 2002:adf:ebca:: with SMTP id v10mr529131wrn.307.1583168980823;
+        Mon, 02 Mar 2020 09:09:40 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtVkAdxBvARGR1a/1q4KckNRdJ1jfVeNZnf0QSzFxhNZ1uq7iVs/65BkCMwF7KIJkGDcxPAQw==
+X-Received: by 2002:adf:ebca:: with SMTP id v10mr529103wrn.307.1583168980629;
+        Mon, 02 Mar 2020 09:09:40 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.85.6])
+        by smtp.gmail.com with ESMTPSA id s15sm29549483wrp.4.2020.03.02.09.09.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 09:09:40 -0800 (PST)
+Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
+To:     Jim Mattson <jmattson@google.com>, linmiaohe <linmiaohe@huawei.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+ <CALMp9eSaZ557-GaQUVXW6-ZrMkz8jxOC1S6QPk-EVNJ-f2pT5w@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a1ff3db1-1f5a-7bab-6c4b-f76e6d76d468@redhat.com>
+Date:   Mon, 2 Mar 2020 18:09:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219092900.9151-1-benchuanggli@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CALMp9eSaZ557-GaQUVXW6-ZrMkz8jxOC1S6QPk-EVNJ-f2pT5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 05:29:00PM +0800, Ben Chuang wrote:
-> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> 
-> Enable MSI interrupt for GL9750/GL9755. Some platforms
-> do not support PCI INTx and devices can not work without
-> interrupt. Like messages below:
-> 
-> [    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
-> [    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
-> [    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
-> [    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
-> [    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
-> 
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> ---
->  drivers/mmc/host/sdhci-pci-gli.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-> index 5eea8d70a85d..ce15a05f23d4 100644
-> --- a/drivers/mmc/host/sdhci-pci-gli.c
-> +++ b/drivers/mmc/host/sdhci-pci-gli.c
-> @@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
->  	return 0;
->  }
->  
-> +static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
-> +{
-> +	int ret;
-> +
-> +	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
-> +				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
-> +	if (ret < 0) {
-> +		pr_warn("%s: enable PCI MSI failed, error=%d\n",
-> +		       mmc_hostname(slot->host->mmc), ret);
-> +		return;
-> +	}
-> +
-> +	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
-> +}
-> +
->  static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
->  {
->  	struct sdhci_host *host = slot->host;
->  
-> +	gli_pcie_enable_msi(slot);
->  	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->  	sdhci_enable_v4_mode(host);
->  
-> @@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
->  {
->  	struct sdhci_host *host = slot->host;
->  
-> +	gli_pcie_enable_msi(slot);
->  	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->  	sdhci_enable_v4_mode(host);
->  
-Tested-by: Raul E Rangel <rrangel@chromium.org>
+On 02/03/20 18:01, Jim Mattson wrote:
+>> And in fact, it's not used anywhere. So it should be
+>> deprecated.
+> I don't know how you can make the assertion that this ioctl is not
+> used anywhere. For instance, I see a use of it in Google's code base.
+
+Right, it does not seem to be used anywhere according to e.g. Debian
+code search but of course it can have users.
+
+What are you using it for?  It's true that cpuid->nent is never written
+back to userspace, so the ioctl is basically unusable unless you already
+know how many entries are written.  Or unless you fill the CPUID entries
+with garbage before calling it, I guess; is that what you are doing?
+
+Paolo
 
