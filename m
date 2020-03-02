@@ -2,183 +2,165 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F4C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF093C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7586821775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3A120863
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lw190SWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgCBO5K (ORCPT
+        id S1727309AbgCBO56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:57:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42232 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727170AbgCBO5J (ORCPT
+        Mon, 2 Mar 2020 09:57:58 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43825 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgCBO56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:57:09 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EtFoO078364
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 09:57:08 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbev8tx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:57:08 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Mar 2020 14:57:06 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 14:57:01 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022Ev0Pt23396720
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 14:57:00 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A225AE051;
-        Mon,  2 Mar 2020 14:57:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08EFBAE053;
-        Mon,  2 Mar 2020 14:56:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.229.179])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 14:56:58 +0000 (GMT)
-Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Mar 2020 09:56:58 -0500
-In-Reply-To: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
-References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
-         <1583160524.8544.91.camel@linux.ibm.com>
-         <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
+        Mon, 2 Mar 2020 09:57:58 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v22so81659qtp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+12d+baUufNFOtbrxNu5ULU097qWdzx/LbKAvXyts3U=;
+        b=lw190SWS7FliZNcCsP+XIdcY2cyYcgRI0ZRukiujnC6dTpTnP4vV1Sm5wGbvWsp/u1
+         OZIf+bFbEC3q1cdOsEYyPa9K31kRYKo/S+ewl4Zn+LE4J+hcXUaqM9Kvf89YP8qo2fMJ
+         9zJBRoWfo6DV65sRXeHGtBHjwkkw5XOvKLdCPX+hhciJIDx91yGIyMoQGu6bwNxNTkYC
+         bM7qypwcg6DbSnxjdsrFRcyj8NrS4m4S2baXfPx3sth0nF44dP0HQUx8MEc6et4Ws3hF
+         CUbStSHXhHtgP6wIChBQvj21zxjuSoXPVs0SGbmA719F0qalW7SFqdlWjknTK5GUmslT
+         7gtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+12d+baUufNFOtbrxNu5ULU097qWdzx/LbKAvXyts3U=;
+        b=YoH0r6E/bGa8cGLjGfm+W3ZoeFiCGKZxhL9dnT7TsJ4gd5zXpvQfTiQUfjxbk2tYnY
+         CoAtibBSV/R18O49n81FuI6tbYDt+ioFGCX0W/vHV7HZSBBtT2xVbe1YN1nzsRCr/zgF
+         kIWBOjl8ZsQWXzhmJtpnXXmrxIYCQW7hYi7OQXEZGgkTPr07xg77dLW9cS+lAAfzAEiZ
+         C3XOY+jfSylWr4vvN6Rw3pypfJn8wTO7uVzrl9kpDpd9LX7a3IY2E9okoEsqSpBgp9Vk
+         UL3JtY5zDs2c47QTPdPD0eWa0SfloGti4pEtEeYB4QhH7GslSnXPSG+yVAkTyaiOcxi0
+         tBEg==
+X-Gm-Message-State: ANhLgQ0GljBHWYz1u4aDm3Uj7lJnt/OC9nsNrw7ILrA1Ou0oGckH8Dvs
+        5HsNfZNDTsyTll50TMjg44RtE1mdD+Tyfvj+ue0Tog==
+X-Google-Smtp-Source: ADFU+vvHUfuEA9ylWlnKnGddo0NndbQ4T3nsIGDA6Bpx8s8V2RQBxfMvslGiRm9FSYSvhz65ffakJrj1hBMP+wTgrAc=
+X-Received: by 2002:ac8:1846:: with SMTP id n6mr76025qtk.257.1583161076404;
+ Mon, 02 Mar 2020 06:57:56 -0800 (PST)
+MIME-Version: 1.0
+References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
+ <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
+ <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
+ <CACT4Y+aBvofv8AQqiWr7M77FODSUqruMMoVcHHA5ROfv5VN7tw@mail.gmail.com> <CAOQ4uxhTAR0-evX0DHdvF9BhHwgC8dU-532FyUiSCqcfujfiKA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhTAR0-evX0DHdvF9BhHwgC8dU-532FyUiSCqcfujfiKA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 2 Mar 2020 15:57:45 +0100
+Message-ID: <CACT4Y+bLxavqe7e1+P7YXRdTaRCMePb_JMDGEjPkUkNNxdzcKg@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in ovl_llseek
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030214-0020-0000-0000-000003AF9FA8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030214-0021-0000-0000-00002207CB39
-Message-Id: <1583161018.8544.96.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 15:52 +0100, Ard Biesheuvel wrote:
-> On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
-> > > Every time a new architecture defines the IMA architecture specific
-> > > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> > > include file needs to be updated. To avoid this "noise", this patch
-> > > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> > > the different architectures to select it.
+On Mon, Mar 2, 2020 at 2:24 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> > > > > On Sun, Mar 1, 2020 at 9:13 PM syzbot
+> > > > > <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > syzbot found the following crash on:
+> > > > > >
+> > > > > > HEAD commit:    f8788d86 Linux 5.6-rc3
+> > > > > > git tree:       upstream
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
+> > > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
+> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
+> > > > > >
+> > > > >
+> > > > > Dmitry,
+> > > > >
+> > > > > There is something strange about the C repro.
+> > > > > It passes an invalid address for the first arg of mount syscall:
+> > > > >
+> > > > >     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
+> > > > >             0x20000100ul);
+> > > > >
+> > > > > With this address mount syscall returns -EFAULT on my system.
+> > > > > I fixed this manually, but repro did not trigger the reported bug on my system.
+> > > >
+> > > > Hi Amir,
+> > > >
+> > > > This is not strange in the context of fuzzer, it's goal is to pass
+> > > > random data. Generally if it says 0x400000ul, that's what it is, don't
+> > > > fix it, or you are running a different program that may not reproduce
+> > > > the bug. If syzbot attaches a reproducer, the bug was triggered by
+> > > > precisely this program.
+> > > >
 > > >
-> > > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> > > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > > Cc: Philipp Rudo <prudo@linux.ibm.com>
-> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > > ---
-> > >  arch/powerpc/Kconfig           | 2 +-
-> > >  arch/s390/Kconfig              | 1 +
-> > >  arch/x86/Kconfig               | 1 +
-> > >  include/linux/ima.h            | 3 +--
-> > >  security/integrity/ima/Kconfig | 9 +++++++++
-> > >  5 files changed, 13 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > > index 497b7d0b2d7e..b8ce1b995633 100644
-> > > --- a/arch/powerpc/Kconfig
-> > > +++ b/arch/powerpc/Kconfig
-> > > @@ -246,6 +246,7 @@ config PPC
-> > >       select SYSCTL_EXCEPTION_TRACE
-> > >       select THREAD_INFO_IN_TASK
-> > >       select VIRT_TO_BUS                      if !PPC64
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if PPC_SECURE_BOOT
-> > >       #
-> > >       # Please keep this list sorted alphabetically.
-> > >       #
-> > > @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
-> > >       prompt "Enable secure boot support"
-> > >       bool
-> > >       depends on PPC_POWERNV
-> > > -     depends on IMA_ARCH_POLICY
-> > >       help
-> > >         Systems with firmware secure boot enabled need to define security
-> > >         policies to extend secure boot to the OS. This config allows a user
-> > > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> > > index 8abe77536d9d..90ff3633ade6 100644
-> > > --- a/arch/s390/Kconfig
-> > > +++ b/arch/s390/Kconfig
-> > > @@ -195,6 +195,7 @@ config S390
-> > >       select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> > >       select SWIOTLB
-> > >       select GENERIC_ALLOCATOR
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > >
-> > >
-> > >  config SCHED_OMIT_FRAME_POINTER
-> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > index beea77046f9b..cafa66313fe2 100644
-> > > --- a/arch/x86/Kconfig
-> > > +++ b/arch/x86/Kconfig
-> > > @@ -230,6 +230,7 @@ config X86
-> > >       select VIRT_TO_BUS
-> > >       select X86_FEATURE_NAMES                if PROC_FS
-> > >       select PROC_PID_ARCH_STATUS             if PROC_FS
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
+> > > What's strange it that a bug in overlay code cannot be triggered if overlay
+> > > isn't mounted and as it is the repro couldn't mount overlayfs at all, at
+> > > lease with my kernel config.
 > >
-> > Not everyone is interested in enabling IMA or requiring IMA runtime
-> > policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
-> > still left up to the person building the kernel.  As a result, I'm
-> > seeing the following warning, which is kind of cool.
+> > Can it depend on kernel config? The bug was triggered by the program
+> > provided somehow.
+>
+> I am not sure. I do not have CONFIG_HARDENED_USERCOPY set.
+>
 > >
-> > WARNING: unmet direct dependencies detected for
-> > IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
-> >   Selected by [y]:
-> >   - X86 [=y] && EFI [=y]
+> > Separate question: why is it failing? Isn't src unused for overlayfs?
+> > Where/how does vfs code look at src?
 > >
-> > Ard, Michael, Martin, just making sure this type of warning is
-> > acceptable before upstreaming this patch.  I would appreciate your
-> > tags.
-> >
-> 
-> Ehm, no, warnings like these are not really acceptable. It means there
-> is an inconsistency in the way the Kconfig dependencies are defined.
-> 
-> Does this help:
-> 
->   select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
-> 
-> ?
+>
+> SYSCALL_DEFINE5(mount, ...
+> copy_mount_string(dev_name)
+> strndup_user()
+> memdup_user()
+> copy_from_user()
+>
+> Not in overlayfs code.
+> Actually, the source (dev) is not used by overlayfs but is visible at
+> /proc/mounts.
 
-Yes, that's fine for x86.  Michael, Martin, do you want something
-similar or would you prefer actually selecting IMA_ARCH_POLICY?
+Oh, I see, this is another instance of "fuzzer fun".
 
-Mimi
+In the descriptions we define src argument as const 0. And const 0 is
+fine and is accepted by copy_mount_string (it has a check for NULL).
+Generally fuzzer does not try to change values specified as const, but
+sometimes it does. So I guess it happened so that address 0x400000ul
+is mapped onto the executable and contained something that resembles a
+null-terminated string so that copy_mount_string did not fail (but
+otherwise that string does not matter much for overlayfs). But in your
+binary 0x400000ul did not contain an addressable null-terminated
+string and mount failed.
+Additionally we don't attempt changing const value back to the default
+value during crash mimization/simplification process:
+https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/prog/minimization.go#L202-L206
+because it was deemed too expensive (for each attempt we need a
+freshly booted and clean machine) and not important enough (just a
+single arg value and does not increase "systematic complexity" of the
+repro).
 
+All of this has combined into the effect we see here... I am not sure
+what's the action item here...
+
+FWIW fuzzer-found will always be more expensive to debug and deal with
+for a very long tail of various reasons. Unit tests don't have this
+problem. If only we had a comprehensive test coverage for kernel, we
+would not need to deal with so many fuzzer-found bugs... ;)
