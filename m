@@ -2,97 +2,89 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84F8C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCE1C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9567321D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583142945;
-	bh=QFbhzKp9Lt+wDA06adr7+3yp9yLnG8X6Oj0rX2UZumM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OTysVgL+4WkeP0S9Ue2Tv5HBnsTJ9nxL6+zFAacbQPH8V/gvkAOPCkgbJFtAm7RKq
-	 Z3nX8+tmV7wMq9fSb6d9utLqjyinsoe9D1rDzCU0HSZ8H8B1siHWtKQZW93YMTG2m5
-	 XwuokLEyR9B6+WWW6jjkJQJrB3+osDqBsMLmRoyg=
+	by mail.kernel.org (Postfix) with ESMTP id 6C417246B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n5wPZ1Vd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgCBJzo convert rfc822-to-8bit (ORCPT
+        id S1727590AbgCBJ4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:55:44 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35900 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCBJzn (ORCPT
+        Mon, 2 Mar 2020 04:56:35 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51430 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgCBJ4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:55:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id t24so2490994oij.3;
-        Mon, 02 Mar 2020 01:55:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HAlb9wvoP40MDw06uLOyqoy8XCZGxiaSUpH+LIJxvNs=;
-        b=Ob2Y94o+S16AD3Wck5E0l/u/YMBfhagZc27nYw7JKixy7tC1sirUr1DeMHw47nKxXt
-         uEI9TTJoZjNYWfiCjzNVvXYaIJSy801GoyAeXKlviudZeJWUUSR5k4OSlcVjXxcGtJ8x
-         XN95MzBnIp17/z73savlcwHdmeVlAO3aDXIR7iatYJvS3K/IeMQ6smg/BjIsEgdSGmts
-         481dA5sbyTTVEcJIs5BAzGvIcJMxCFw0Y8tz9LG+6Y/cXAwJm7oohqv/dNC97tG8dW2Y
-         RzIu1bH/pUUCjKHL/zTSmphn3bU35ZV/0O44C6pihx8By432/mCyXilHZ4v989lRbnkH
-         qusQ==
-X-Gm-Message-State: APjAAAUZ/wLGcX9wVEf+o46bJQAR7U40f6P9Pog/LNuAybgAwCiI0QNh
-        2rmQ6iE1H9czeIZ4z/uTWk1d1+qaXCXRvq8iGm0=
-X-Google-Smtp-Source: APXvYqx7k18dMGDkgSbaxcXKSBdPlMqC2Jd5OzgWMeEKHtndONisZj6Wr8JAWJPAUGZmLk03a/ocOmG5AblrkHQDix8=
-X-Received: by 2002:aca:bfc2:: with SMTP id p185mr11319755oif.57.1583142943281;
- Mon, 02 Mar 2020 01:55:43 -0800 (PST)
+        Mon, 2 Mar 2020 04:56:34 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D308854A;
+        Mon,  2 Mar 2020 10:56:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583142993;
+        bh=QXED3Ldnro9xx/8nL5IJOBDjr3YPn6bHKN3OhtIpvmA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n5wPZ1VdS6fljZ7Lehb9ytqdKfYGKbOyZ3DUFJMTWi73z+KctZRKi2Gd6sI1n+ou/
+         77JwsuI7Kctrnb8KOUqdMpdKoVIRmxrmkPvSphJ8WmicJTgz0ljoTpBLB4e957LFFQ
+         ccOjRe/9yVbQagjkeBISR49uHOll9JNI9T3HjiPc=
+Date:   Mon, 2 Mar 2020 11:56:08 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/11] drm/bridge: dw-hdmi: Plug atomic state hooks to
+ the default implementation
+Message-ID: <20200302095608.GH11960@pendragon.ideasonboard.com>
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-4-narmstrong@baylibre.com>
 MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
- <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
-In-Reply-To: <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Mar 2020 10:55:31 +0100
-Message-ID: <CAJZ5v0iCL70b3b=wwB8dX8yvLjE_w79f6anHyDn2Yv4A1-VEew@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200206191834.6125-4-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
->
-> Daniel Drake <drake@endlessm.com> 於 2020年2月28日 週五 下午5:43寫道：
-> >
-> > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > The purpose of this series of update of the ACPI EC driver is to make its
-> > > initialization more straightforward.
-> > >
-> > > They fix a couple of issues, clean up some things, remove redundant code etc.
-> > >
-> > > Please refer to the changelogs of individual patches for details.
-> > >
-> > > For easier access, the series is available in the git branch at
-> > >
-> > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> > >  acpi-ec-work
-> > >
-> > > on top of 5.6-rc3.
-> >
-> > Jian-Hong, can you please test this on Asus UX434DA?
-> > Check if the screen brightness hotkeys are still working after these changes.
->
-> Hi Rafael,
->
-> Thanks for your patches, but we found an issue:
-> The laptops like ASUS UX434DA's screen brightness hotkeys work before
-> this patch series.  However, the hotkeys are failed with the patch
-> "ACPI: EC: Unify handling of event handler installation failures".
+Hi Neil,
 
-Thanks for checking!
+Thank you for the patch.
+
+On Thu, Feb 06, 2020 at 08:18:26PM +0100, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+How about adding a commit message ?
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 051001f77dd4..fec4a4bcd1fe 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2494,6 +2494,9 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
+>  }
+>  
+>  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+> +	.atomic_reset = drm_atomic_helper_bridge_reset,
+>  	.attach = dw_hdmi_bridge_attach,
+>  	.detach = dw_hdmi_bridge_detach,
+>  	.enable = dw_hdmi_bridge_enable,
+
+-- 
+Regards,
+
+Laurent Pinchart
