@@ -2,129 +2,170 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18376C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F21BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E387A208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:16:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lz48/6Mr"
+	by mail.kernel.org (Postfix) with ESMTP id E610F208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgCBKQo (ORCPT
+        id S1727334AbgCBKS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:16:44 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55202 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727027AbgCBKQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:16:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583144203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IXo+jOnMJnVg0BdBfAq0eKhEwbhNb8AEFiily5Isa3s=;
-        b=Lz48/6MrklQ1TgrAYgUnMvL5H84FnwqamDiw5QpMRvpI+KhLtT1OYWTXsdQKZb4YrC553c
-        pjGPssl6LbEcGWewxswEoLeP2tbCoQn2oasM5FaaNaSExMpoWniYULBixvqkNzdj+wCSl+
-        W1q7crQ1fFotjylPUNKyInhDV5VEHTs=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-9l02Ge80Nl22PEqgJcRN4Q-1; Mon, 02 Mar 2020 05:16:41 -0500
-X-MC-Unique: 9l02Ge80Nl22PEqgJcRN4Q-1
-Received: by mail-qk1-f197.google.com with SMTP id d2so8550682qko.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:16:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IXo+jOnMJnVg0BdBfAq0eKhEwbhNb8AEFiily5Isa3s=;
-        b=NPFSZCVY3kRXW4LFp3xL0UXQfG/iA1BevLnQYjUMlVhsyJDuB+Fi2WLXbPdKOJ/m7c
-         0P/LEEartp/60MbNBbNO6wOTNuCuXoRJK4ko+jlnbqD6HhZ3M2BC04979xBdXrBDmhHm
-         NRBDykKn+OBv41fg7NrekMDiHPZZvVXzAteR7LIYLMACpMVsnZ5r+jcxv+mWs4tFPP0e
-         nhHXjFT1ti16Fl4VlXpoAzyS3SfHRRf85E5Gg9siXi8XiCPt8zR8i/yV46msAnS2TZil
-         DQLLhPuneMjV/E7FF7kaTfRTO7AC7zvvYD6BPb1NuOC190Ddy/nYQ2hoSmfjf7x1v+SX
-         o1vw==
-X-Gm-Message-State: ANhLgQ3jZU3QSKU4lesiL7DtI+9rqxZtjNapnXehks4RBYE+5YYpn/Ue
-        7bRVivu/tbxeAoRxJH17ksv3OV7F59GyVLF5t2EgQXoTyhmums6Ks7DUBxIFSKOcjkznqnwgXud
-        YpInaas7dalTHbORbqlLJwmRke172vSQZmoDeYTaB
-X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr7903639qkk.459.1583144201401;
-        Mon, 02 Mar 2020 02:16:41 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvciVC+XX0L/bTNhtxk+6Nmcqb4gcKNRf+REB1cVh+9NmujV8iEZpeEbQ7bkpaxLzOlPc2RTSKI9C/8YAO1yK4=
-X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr7903622qkk.459.1583144201197;
- Mon, 02 Mar 2020 02:16:41 -0800 (PST)
+        Mon, 2 Mar 2020 05:18:26 -0500
+Received: from relay.sw.ru ([185.231.240.75]:36310 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgCBKS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:18:26 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j8i91-00038m-Od; Mon, 02 Mar 2020 13:17:51 +0300
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, tytso@mit.edu,
+        viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
+        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+ <20200227073336.GJ10737@dread.disaster.area>
+ <2e2ae13e-0757-0831-216d-b363b1727a0d@virtuozzo.com>
+ <20200227215634.GM10737@dread.disaster.area>
+ <e4835807-52d2-cce4-ed11-cc58448d3140@virtuozzo.com>
+ <20200229224124.GR10737@dread.disaster.area>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <8e729e06-9251-5df4-5ef8-67da61b3cfea@virtuozzo.com>
+Date:   Mon, 2 Mar 2020 13:17:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200229173007.61838-1-tanure@linux.com>
-In-Reply-To: <20200229173007.61838-1-tanure@linux.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 2 Mar 2020 11:16:30 +0100
-Message-ID: <CAO-hwJJDv=LnOQDbgWwg2sOccM9Tt-h=082Coi0aYdwG-CG-Kg@mail.gmail.com>
-Subject: Re: [PATCH] HID: hyperv: NULL check before some freeing functions is
- not needed.
-To:     Lucas Tanure <tanure@linux.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>, linux-hyperv@vger.kernel.org,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200229224124.GR10737@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 6:30 PM Lucas Tanure <tanure@linux.com> wrote:
->
-> Fix below warnings reported by coccicheck:
-> drivers/hid/hid-hyperv.c:197:2-7: WARNING: NULL check before some freeing functions is not needed.
-> drivers/hid/hid-hyperv.c:211:2-7: WARNING: NULL check before some freeing functions is not needed.
->
-> Signed-off-by: Lucas Tanure <tanure@linux.com>
-> ---
+On 01.03.2020 01:41, Dave Chinner wrote:
+> On Fri, Feb 28, 2020 at 03:41:51PM +0300, Kirill Tkhai wrote:
+>> On 28.02.2020 00:56, Dave Chinner wrote:
+>>> On Thu, Feb 27, 2020 at 02:12:53PM +0300, Kirill Tkhai wrote:
+>>>> On 27.02.2020 10:33, Dave Chinner wrote:
+>>>>> On Wed, Feb 26, 2020 at 11:05:23PM +0300, Kirill Tkhai wrote:
+>>>>>> On 26.02.2020 18:55, Christoph Hellwig wrote:
+>>>>>>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+>>>>>>>> This adds a support of physical hint for fallocate2() syscall.
+>>>>>>>> In case of @physical argument is set for ext4_fallocate(),
+>>>>>>>> we try to allocate blocks only from [@phisical, @physical + len]
+>>>>>>>> range, while other blocks are not used.
+>>>>>>>
+>>>>>>> Sorry, but this is a complete bullshit interface.  Userspace has
+>>>>>>> absolutely no business even thinking of physical placement.  If you
+>>>>>>> want to align allocations to physical block granularity boundaries
+>>>>>>> that is the file systems job, not the applications job.
+>>>>>>
+>>>>>> Why? There are two contradictory actions that filesystem can't do at the same time:
+>>>>>>
+>>>>>> 1)place files on a distance from each other to minimize number of extents
+>>>>>>   on possible future growth;
+>>>>>
+>>>>> Speculative EOF preallocation at delayed allocation reservation time
+>>>>> provides this.
+>>>>>
+>>>>>> 2)place small files in the same big block of block device.
+>>>>>
+>>>>> Delayed allocation during writeback packs files smaller than the
+>>>>> stripe unit of the filesystem tightly.
+>>>>>
+>>>>> So, yes, we do both of these things at the same time in XFS, and
+>>>>> have for the past 10 years.
+>>>>>
+>>>>>> At initial allocation time you never know, which file will stop grow in some future,
+>>>>>> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
+>>>>>> Say, if a file has not been changed for a month, it is suitable for compaction with
+>>>>>> another files like it.
+>>>>>>
+>>>>>> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
+>>>>>> and just share your algorithm here.
+>>>>>>
+>>>>>> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+>>>>>>
+>>>>>> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+>>>>>>
+>>>>>> But it does not work well in many situations, and the main problem is blocks allocation
+>>>>>> in desired place is not possible. Block allocator can't behave excellent for everything.
+>>>>>>
+>>>>>> If this interface bad, can you suggest another interface to make block allocator to know
+>>>>>> the behavior expected from him in this specific case?
+>>>>>
+>>>>> Write once, long term data:
+>>>>>
+>>>>> 	fcntl(fd, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
+>>>>>
+>>>>> That will allow the the storage stack to group all data with the
+>>>>> same hint together, both in software and in hardware.
+>>>>
+>>>> This is interesting option, but it only applicable before write is made. And it's only
+>>>> applicable on your own applications. My usecase is defragmentation of containers, where
+>>>> any applications may run. Most of applications never care whether long or short-term
+>>>> data they write.
+>>>
+>>> Why is that a problem? They'll be using the default write hint (i.e.
+>>> NONE) and so a hint aware allocation policy will be separating that
+>>> data from all the other data written with specific hints...
+>>>
+>>> And you've mentioned that your application has specific *never write
+>>> again* selection criteria for data it is repacking. And that
+>>> involves rewriting that data.  IOWs, you know exactly what policy
+>>> you want to apply before you rewrite the data, and so what other
+>>> applications do is completely irrelevant for your repacker...
+>>
+>> It is not a rewriting data, there is moving data to new place with EXT4_IOC_MOVE_EXT.
+> 
+> "rewriting" is a technical term for reading data at rest and writing
+> it again, whether it be to the same location or to some other
+> location. Changing physical location of data, by definition,
+> requires rewriting data.
+> 
+> EXT4_IOC_MOVE_EXT = data rewrite + extent swap to update the
+> metadata in the original file to point at the new data. Hence it
+> appears to "move" from userspace perspective (hence the name) but
+> under the covers it is rewriting data and fiddling pointers...
 
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Yeah, I understand this. I mean that file remains accessible for external
+users, and external reads/writes are handled properly, and state of file
+remains consistent.
 
-Sasha, do you prefer taking this through your tree or through the HID
-one. I don't think we have much scheduled for hyperv, so it's up to
-you.
+>>> What the filesystem does with the hint is up to the filesystem
+>>> and the policies that it's developers decide are appropriate. If
+>>> your filesystem doesn't do what you need, talk to the filesystem
+>>> developers about implementing the policy you require.
+>>
+>> Do XFS kernel defrag interfaces allow to pack some randomly chosen
+>> small files in 1Mb blocks? Do they allow to pack small 4Kb file into
+>> free space after a big file like in example:
+> 
+> No. Randomly selecting small holes for small file writes is a
+> terrible idea from a performance perspective. Hence filling tiny
+> holes (not randomly!) is often only done for metadata allocation
+> (e.g. extent map blocks, which are largely random access anyway) or
+> if there is no other choice for data (e.g. at ENOSPC).
 
-Cheers,
-Benjamin
+I'm speaking more about the possibility. "Random" is from block allocator
+view. But from user view they are not random, these are unmodifiable files.
+Say, static content of website never changes, and these files may be packed
+together to decrease number of occupied 1Mb disc blocks.
 
->  drivers/hid/hid-hyperv.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-> index dddfca555df9..0b6ee1dee625 100644
-> --- a/drivers/hid/hid-hyperv.c
-> +++ b/drivers/hid/hid-hyperv.c
-> @@ -193,8 +193,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
->                 goto cleanup;
->
->         /* The pointer is not NULL when we resume from hibernation */
-> -       if (input_device->hid_desc != NULL)
-> -               kfree(input_device->hid_desc);
-> +       kfree(input_device->hid_desc);
->         input_device->hid_desc = kmemdup(desc, desc->bLength, GFP_ATOMIC);
->
->         if (!input_device->hid_desc)
-> @@ -207,8 +206,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
->         }
->
->         /* The pointer is not NULL when we resume from hibernation */
-> -       if (input_device->report_desc != NULL)
-> -               kfree(input_device->report_desc);
-> +       kfree(input_device->report_desc);
->         input_device->report_desc = kzalloc(input_device->report_desc_size,
->                                           GFP_ATOMIC);
->
-> --
-> 2.25.1
->
+To pack all files on a disc together is terrible idea, I'm 100% agree with you.
 
+Kirill
