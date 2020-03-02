@@ -2,117 +2,195 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3ADC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4B8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FDF21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6428724677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UqH5orIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCBP6Z (ORCPT
+        id S1727485AbgCBP6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:58:25 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3400 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727085AbgCBP6Y (ORCPT
+        Mon, 2 Mar 2020 10:58:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37325 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbgCBP6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:58:24 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022FnsAe036178
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 10:58:23 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmwvc1md-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:58:23 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bmt@zurich.ibm.com>;
-        Mon, 2 Mar 2020 15:58:20 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 15:58:17 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022FwGrd51118282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 15:58:16 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D24CFA4062;
-        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AD0AA405B;
-        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
-Received: from spoke.zurich.ibm.com (unknown [9.4.69.152])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
-From:   Bernard Metzler <bmt@zurich.ibm.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>
-Subject: [Patch for-rc v2] RDMA/siw: Fix failure handling during device creation
-Date:   Mon,  2 Mar 2020 16:58:14 +0100
-X-Mailer: git-send-email 2.17.2
-X-TM-AS-GCONF: 00
-x-cbid: 20030215-0008-0000-0000-000003587D7C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030215-0009-0000-0000-00004A79A9BE
-Message-Id: <20200302155814.9896-1-bmt@zurich.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- clxscore=1015 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020112
+        Mon, 2 Mar 2020 10:58:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a141so11148643wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:58:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AoQx+6otORrpZueWQsiVs9p/PpLuZ6JlTQWBYGuSI14=;
+        b=UqH5orIv/AU5nHB/evxgi+quGVJx6u6hbLDUcqIfMcukH1WxjjVxXHNE/dR+JMzn54
+         zaPlWXTAYNaOTmaIkGZkvwY4X4rqL8/sZm6CmrwGe2BEZEJ0Bow9Sgyzy37s4U/Gtq0e
+         JxVvv8kgnCS7N3a/nHiEEOTryRGVn9Fm7liglujWsaYkr0WJ0lmxC0PjvgDGyEKszPux
+         TffTnIHTNyTFNpnQs/k7SbQsVM8qTDNs+VoHrIGZ7t9TRp1SYsKGZ/fseMF85OiEPo4h
+         aSteDuHdBBcpUrsQIv3Ru+GF35QJItUbj97WhkeRg5zIoW2TPNlJSoE/jinXQVhedDke
+         l2Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=AoQx+6otORrpZueWQsiVs9p/PpLuZ6JlTQWBYGuSI14=;
+        b=HjshGqboSzbjfKSXgalB78LK8QNFX2er5icpDs1KIMR5HBM7PrF8vbA3DQNEKwxETS
+         AlmjqoJgoKM91Qnur2jiEU8XB4aJZ8h3fATVz9kPJXogY/LlLZQHcHRTEaaMyxOZrY8D
+         o4qYMeW+ugW7zUpvn3ncSmvg6T9MCz9PVZtupq45V6Wh3ShzqD/R1L9yvAXbBVfoBSra
+         4M6ZqfjuLM9DmZmSuDt1Op+qHKUOxBuLHx7lF/OhBmxDEa+ezGUwYl0f7TJgzhQFYRb1
+         idMu00BdjSQW/dL0aoD5mLCFophUQhozcPkp6vrLgdzKggi0ZD/3b33dWr7EBAEYMmTo
+         F4XQ==
+X-Gm-Message-State: ANhLgQ0+UKOzLHfFh5PV/HHdpriVGgTAgY+hxYGf/3fb427tuQ3P9Ox2
+        nauvMRL51KLtvipCk1Df1LAhkKvcl9YyJQ==
+X-Google-Smtp-Source: ADFU+vulj2S8EAo9PFozXzJRpQxRbtZilV+1SZSoovGe5EHmwJY+HNhMqpY2M4Wz6PqLgkMwtwAaZA==
+X-Received: by 2002:a1c:5f54:: with SMTP id t81mr85979wmb.155.1583164714820;
+        Mon, 02 Mar 2020 07:58:34 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id j66sm16937951wmb.21.2020.03.02.07.58.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:58:34 -0800 (PST)
+Subject: Re: [PATCH v4 05/11] drm/bridge: synopsys: dw-hdmi: allow ycbcr420
+ modes for >= 0x200a
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-6-narmstrong@baylibre.com>
+ <20200302100303.GI11960@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <ab5eb3f3-44bd-84c2-6047-c7f32242305b@baylibre.com>
+Date:   Mon, 2 Mar 2020 16:58:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200302100303.GI11960@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A failing call to ib_device_set_netdev() during device creation
-caused system crash due to xa_destroy of uninitialized xarray
-hit by device deallocation. Fixed by moving xarray initialization
-before potential device deallocation.
+On 02/03/2020 11:03, Laurent Pinchart wrote:
+> Hi Neil,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Feb 06, 2020 at 08:18:28PM +0100, Neil Armstrong wrote:
+>> Now the DW-HDMI Controller supports the HDMI2.0 modes, enable support
+>> for these modes in the connector if the platform supports them.
+>> We limit these modes to DW-HDMI IP version >= 0x200a which
+>> are designed to support HDMI2.0 display modes.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 6 ++++++
+>>  include/drm/bridge/dw_hdmi.h              | 1 +
+>>  2 files changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> index 15048ad694bc..4b35ea1427df 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -3231,6 +3231,12 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>>  	hdmi->bridge.of_node = pdev->dev.of_node;
+>>  #endif
+>>  
+>> +	if (hdmi->version >= 0x200a)
+>> +		hdmi->connector.ycbcr_420_allowed =
+>> +			hdmi->plat_data->ycbcr_420_allowed;
+>> +	else
+>> +		hdmi->connector.ycbcr_420_allowed = false;
+>> +
+> 
+> The hdmi structure being allocated with kzalloc, you don't need the
+> second branch of the if, but I'm fine if you prefer keeping it. Any
+> either case,
 
-Fixes: bdcf26bf9b3a (rdma/siw: network and RDMA core interface)
-Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
----
-v1 -> v2:
-- Fix here only potential system crash during failing device
-  creation, but not missing correct error propagation.
+Yep Andrzej said the same, but I prefer it to be explicit.
 
- drivers/infiniband/sw/siw/siw_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
-index 96ed349c0939..5cd40fb9e20c 100644
---- a/drivers/infiniband/sw/siw/siw_main.c
-+++ b/drivers/infiniband/sw/siw/siw_main.c
-@@ -388,6 +388,9 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
- 		{ .max_segment_size = SZ_2G };
- 	base_dev->num_comp_vectors = num_possible_cpus();
- 
-+	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
-+	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
-+
- 	ib_set_device_ops(base_dev, &siw_device_ops);
- 	rv = ib_device_set_netdev(base_dev, netdev, 1);
- 	if (rv)
-@@ -415,9 +418,6 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
- 	sdev->attrs.max_srq_wr = SIW_MAX_SRQ_WR;
- 	sdev->attrs.max_srq_sge = SIW_MAX_SGE;
- 
--	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
--	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
--
- 	INIT_LIST_HEAD(&sdev->cep_list);
- 	INIT_LIST_HEAD(&sdev->qp_list);
- 
--- 
-2.17.2
+Thanks,
+Neil
+
+> 
+>>  	memset(&pdevinfo, 0, sizeof(pdevinfo));
+>>  	pdevinfo.parent = dev;
+>>  	pdevinfo.id = PLATFORM_DEVID_AUTO;
+>> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+>> index 9d4d5cc47969..0b34a12c4a1c 100644
+>> --- a/include/drm/bridge/dw_hdmi.h
+>> +++ b/include/drm/bridge/dw_hdmi.h
+>> @@ -129,6 +129,7 @@ struct dw_hdmi_plat_data {
+>>  	unsigned long input_bus_format;
+>>  	unsigned long input_bus_encoding;
+>>  	bool use_drm_infoframe;
+>> +	bool ycbcr_420_allowed;
+>>  
+>>  	/* Vendor PHY support */
+>>  	const struct dw_hdmi_phy_ops *phy_ops;
+> 
 
