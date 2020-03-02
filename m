@@ -2,97 +2,93 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFA4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00375C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648C621775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583166801;
-	bh=oELwpjESw1IYc/+P2F4CGX/wrBID/934WX+6x8m3sE0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R6616DYET3gHdzS0eEjfMvbOoQibmzxYmdipEMJM3s3FARMjh5nThebtXV1A75SkR
-	 FEVdAPqvMQjTAo8cFEhd6gNKUG31CDS17yNa0ToktYu3ojcY0+YCt8crkp90Qu8R0L
-	 MYlVdpXyUXaDrCceaLAh0dEeAIpOYgpq25ANf2DU=
+	by mail.kernel.org (Postfix) with ESMTP id D271021775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCBQdU (ORCPT
+        id S1727360AbgCBQeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:33:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:35120 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 11:34:03 -0500
+Received: from lizzard.sbs.de ([194.138.37.39]:39945 "EHLO lizzard.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbgCBQdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:33:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 798BFFEC;
-        Mon,  2 Mar 2020 08:33:19 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F22793F534;
-        Mon,  2 Mar 2020 08:33:18 -0800 (PST)
-Date:   Mon, 2 Mar 2020 16:33:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     John Garry <john.garry@huawei.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
- buswidth
-Message-ID: <20200302163317.GH4166@sirena.org.uk>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
- <1582903131-160033-2-git-send-email-john.garry@huawei.com>
- <CAMuHMdV9v-7eRqi3JjcNaOBpRrC2-gLDCizYOJwhQCjZiLr5dA@mail.gmail.com>
+        id S1727054AbgCBQeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:34:03 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 022GXoxm004401
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 17:33:51 +0100
+Received: from [139.25.68.37] ([139.25.68.37])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 022GXoVW007772;
+        Mon, 2 Mar 2020 17:33:50 +0100
+Subject: Re: x2apic_wrmsr_fence vs. Intel manual
+To:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
+ <87lfoienjp.fsf@nanos.tec.linutronix.de>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <9a7c60d5-bbb2-98a4-4564-844f161b212c@siemens.com>
+Date:   Mon, 2 Mar 2020 17:33:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tT3UgwmDxwvOMqfu"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV9v-7eRqi3JjcNaOBpRrC2-gLDCizYOJwhQCjZiLr5dA@mail.gmail.com>
-X-Cookie: Whistler's mother is off her rocker.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87lfoienjp.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02.03.20 17:20, Thomas Gleixner wrote:
+> Jan Kiszka <jan.kiszka@siemens.com> writes:
+>> as I generated a nice bug around fence vs. x2apic icr writes, I studied
+>> the kernel code and the Intel manual in this regard more closely. But
+>> there is a discrepancy:
+>>
+>> arch/x86/include/asm/apic.h:
+>>
+>> /*
+>>   * Make previous memory operations globally visible before
+>>   * sending the IPI through x2apic wrmsr. We need a serializing instruction or
+>>   * mfence for this.
+>>   */
+>> static inline void x2apic_wrmsr_fence(void)
+>> {
+>>          asm volatile("mfence" : : : "memory");
+>> }
+>>
+>> Intel SDM, 10.12.3 MSR Access in x2APIC Mode:
+>>
+>> "A WRMSR to an APIC register may complete before all preceding stores
+>> are globally visible; software can prevent this by inserting a
+>> serializing instruction or the sequence MFENCE;LFENCE before the WRMSR."
+>>
+>> The former dates back to ce4e240c279a, but that commit does not mention
+>> why lfence is not needed. Did the manual read differently back then? Or
+>> why are we safe? To my reading of lfence, it also has a certain
+>> instruction serializing effect that mfence does not have.
+> 
+> The 2011 SDM says:
+> 
+>    A WRMSR to an APIC register may complete before all preceding stores
+>    are globally visible; software can prevent this by inserting a
+>    serializing instruction, an SFENCE, or an MFENCE before the WRMSR.
+> 
+> Sigh....
+> 
 
---tT3UgwmDxwvOMqfu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+OK, that explains it. Curious since when (date and CPU generation) we 
+unknowingly started to play roulette here.
 
-On Mon, Mar 02, 2020 at 05:12:05PM +0100, Geert Uytterhoeven wrote:
-> On Fri, Feb 28, 2020 at 4:23 PM John Garry <john.garry@huawei.com> wrote:
+Jan
 
-> > A host controller driver might know this info from DMI tables, for example.
-
-> Can't acpi_register_spi_device() obtain that info from DMI tables,
-> to avoid contaminating the generic code?
-
-The DMI tables are going to boil down to per board quirks which we
-*could* put in the core but you end up with a lot of them and chances
-are that at some point we'll end up with device specific quirks which
-don't fit so well in the core.  Handling stuff in the drivers is fairly
-idiomatic.
-
-Much ACPI, so standards :/
-
---tT3UgwmDxwvOMqfu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5dNUwACgkQJNaLcl1U
-h9AexAf/aeE9iGeVv7pH09/MjY36txVc4+qNNLl4dd0LN6yt222WVl1jNMjvWnTl
-LrJ94pJcXCAPNZMpzkOMFJHdSK2n9PCuoA9KprkrZ2UUUpQe96q+Ll2qGnO3R7Wo
-qcL0FtJEGfuo9znEMdKSAxp2Buc6RW3AgPYp/9N7s+JT17mm9dL50BrujpvgaE6C
-LTSQ7KZ+rJFDBejSFD8T81zT80tVWXqyzWH9xdDFc9RkvBlX2iFqkUHXDP73Z1ik
-v/6mYFfXLjz0ekOn4/YKkTip2/EQ/EA4SrPYF80UOIzFFGYECBSdGXU3ZEHvkQBV
-jodU2vNG5FKyZOVlc4YxD5faKm8peA==
-=zK3/
------END PGP SIGNATURE-----
-
---tT3UgwmDxwvOMqfu--
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
