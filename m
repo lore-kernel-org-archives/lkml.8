@@ -2,95 +2,125 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1DFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DEBC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D317D24699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5AA24699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583135988;
+	bh=M+O195E7L49tv5Ek4VyCqbN3KfTSKPYgE2OtHUVAdqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f/Pq7QG/NZwHNQy4XI5h9J8WtRaqiT8uwDARlMaV2aYCsPW1F5yVegh8NbuTWPWnJ
+	 HtVMP9RwcjH4ER1x4fcQpcD+HCxGlszPktqR1f3JacbAs6eU0HntJgxWBQBI1p7UlX
+	 xaLaHBdB/2XfaoQf/H584WGDK7Ss6ua8dA4r2thw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgCBH4T (ORCPT
+        id S1727323AbgCBH7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:56:19 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:46186 "EHLO inva021.nxp.com"
+        Mon, 2 Mar 2020 02:59:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCBH4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:56:19 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BDACF200F0E;
-        Mon,  2 Mar 2020 08:56:17 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 18EFF200F14;
-        Mon,  2 Mar 2020 08:56:12 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7DEBB40299;
-        Mon,  2 Mar 2020 15:56:05 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] thermal: imx_thermal: Use __maybe_unused instead of CONFIG_PM_SLEEP
-Date:   Mon,  2 Mar 2020 15:50:10 +0800
-Message-Id: <1583135410-7496-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727138AbgCBH7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:59:42 -0500
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B98A246CC;
+        Mon,  2 Mar 2020 07:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583135982;
+        bh=M+O195E7L49tv5Ek4VyCqbN3KfTSKPYgE2OtHUVAdqI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nGbBQuzF+fdUxUTI3L6i4qoF+RWnCIFPbXGK7bdymlDM4jfAqJxfpmfMB1MJxsuEG
+         oCiTit7dJiRpGbkKy8SDh6KQRJicBFWi7oEwEBd5jilmnsCQjPtSMKy720OApQ/KD3
+         WpevFwreH+7duJVpXpYWfD2WTnho0p2AyzWxJObY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1j8fzH-0003hB-AE; Mon, 02 Mar 2020 08:59:39 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v2 12/12] docs: dt: convert writing-bindings.txt to ReST
+Date:   Mon,  2 Mar 2020 08:59:37 +0100
+Message-Id: <00ea462a2db1a9b4fd188e0100c52fdf0d68aaf0.1583135507.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583135507.git.mchehab+huawei@kernel.org>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use __maybe_unused for power management related functions instead
-of #if CONFIG_PM_SLEEP to simplify the code.
+- Add a SPDX header;
+- Adjust document and section titles;
+- Mark literal blocks as such;
+- Add it to bindings/index.rst.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
-Changes since V1:
-	- fix typo of commit message, simply->simplify.
----
- drivers/thermal/imx_thermal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/index.rst                | 1 +
+ .../{writing-bindings.txt => writing-bindings.rst}         | 7 +++++++
+ 2 files changed, 8 insertions(+)
+ rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (92%)
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index bb6754a..e75dda5 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -878,8 +878,7 @@ static int imx_thermal_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
+index 6b87875a049c..3837b17c234f 100644
+--- a/Documentation/devicetree/bindings/index.rst
++++ b/Documentation/devicetree/bindings/index.rst
+@@ -9,3 +9,4 @@ Device Tree
  
--#ifdef CONFIG_PM_SLEEP
--static int imx_thermal_suspend(struct device *dev)
-+static int __maybe_unused imx_thermal_suspend(struct device *dev)
- {
- 	struct imx_thermal_data *data = dev_get_drvdata(dev);
- 	struct regmap *map = data->tempmon;
-@@ -900,7 +899,7 @@ static int imx_thermal_suspend(struct device *dev)
- 	return 0;
- }
+    ABI
+    submitting-patches
++   writing-bindings
+diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.rst
+similarity index 92%
+rename from Documentation/devicetree/bindings/writing-bindings.txt
+rename to Documentation/devicetree/bindings/writing-bindings.rst
+index ca024b9c7433..45ff426d0019 100644
+--- a/Documentation/devicetree/bindings/writing-bindings.txt
++++ b/Documentation/devicetree/bindings/writing-bindings.rst
+@@ -1,4 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============================================================
+ DOs and DON'Ts for designing and writing Devicetree bindings
++============================================================
  
--static int imx_thermal_resume(struct device *dev)
-+static int __maybe_unused imx_thermal_resume(struct device *dev)
- {
- 	struct imx_thermal_data *data = dev_get_drvdata(dev);
- 	struct regmap *map = data->tempmon;
-@@ -918,7 +917,6 @@ static int imx_thermal_resume(struct device *dev)
+ This is a list of common review feedback items focused on binding design. With
+ every rule, there are exceptions and bindings have many gray areas.
+@@ -8,6 +12,7 @@ Documentation/devicetree/bindings/submitting-patches.rst
  
- 	return 0;
- }
--#endif
  
- static SIMPLE_DEV_PM_OPS(imx_thermal_pm_ops,
- 			 imx_thermal_suspend, imx_thermal_resume);
+ Overall design
++==============
+ 
+ - DO attempt to make bindings complete even if a driver doesn't support some
+   features. For example, if a device has an interrupt, then include the
+@@ -32,6 +37,7 @@ Overall design
+ 
+ 
+ Properties
++==========
+ 
+ - DO make 'compatible' properties specific. DON'T use wildcards in compatible
+   strings. DO use fallback compatibles when devices are the same as or a subset
+@@ -53,6 +59,7 @@ Properties
+ 
+ 
+ Board/SoC .dts Files
++====================
+ 
+ - DO put all MMIO devices under a bus node and not at the top-level.
+ 
 -- 
-2.7.4
+2.21.1
 
