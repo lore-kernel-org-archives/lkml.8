@@ -2,260 +2,132 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3EAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864E4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09D522B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2BC22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhPvEOjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCBRp6 (ORCPT
+        id S1727362AbgCBRqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:45:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:35744 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbgCBRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:45:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E1B82F;
-        Mon,  2 Mar 2020 09:45:57 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 733353F6C4;
-        Mon,  2 Mar 2020 09:45:55 -0800 (PST)
-Date:   Mon, 2 Mar 2020 17:45:53 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        anshuman.khandual@arm.com,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: Linux-next-20200302: arm64 build failed
-Message-ID: <20200302174553.GC4166275@arrakis.emea.arm.com>
-References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
- <20200302104726.GA7995@willie-the-truck>
- <20200302135443.GA24831@linux.ibm.com>
+        Mon, 2 Mar 2020 12:46:50 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:34664 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgCBRqt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:46:49 -0500
+Received: by mail-vk1-f193.google.com with SMTP id w67so64161vkf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wRqcBb5NeC8MFmcr1zGXioEPHZAa7v+ogkQOpmNZPmY=;
+        b=bhPvEOjmCSdagKL7wbSNn+LctUqd1mSHmEn2xDEvGzkuiK6UcHtyC+lxQPBpQlis9b
+         MH79TeTlsFO7qPTBa6z4411JqMqW02pV/UZzr7nzeLdlB06ZAyi+pqcIdU9APksPYo90
+         nUEWiNOWR0xD7j7ZSZMY7pDlZNRy4e+PnpIbfx6SKAz25tzKMc0nQ5KgTJhLyI0UbjFR
+         H3wO7m6+wqBA2WjrG8+3fwWwHTSsGKwniZhDKBbmB9ntCpx4qOEDeojx6XTsRw3deXyz
+         rGSuijN9djreVn1bWwoVZMSunjpo6Cp14oV/CsDb92SZz4nWSLWY6P94qaqIttgdND+9
+         GVoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wRqcBb5NeC8MFmcr1zGXioEPHZAa7v+ogkQOpmNZPmY=;
+        b=MVVkw7cBTLmD3Wcr5DXYnB+K0r3loF24thicyIulP0/ye8Q8ZXOgP0e7h3+0b0dRb8
+         /8vBnrGlg60moTkz+hUKREZNQ6wJiiZpqGKLTYgE8u2TzSF9bjgasuJhWlpb272xb9N/
+         hc4JuwGyLz/yPbEFGYQqrl/fnZ2E6C/jRDEuFRaq+iEPAc0QMx0wXoGUldC1PsgBs4Fc
+         fEgjBRbPbdQKIaXLXE0OWLhswOc4fJo++XLlkqYLqIBVuqC1Birwe3o/3l5TpFGPrfbd
+         Ss3Lt0BgMH9fekmSHfbpqTwqdjUubUwVfTR/0E2jfO9a21NQ+TI5VLLfCLMs4Dw7YWbL
+         tM4A==
+X-Gm-Message-State: ANhLgQ1pcb5Z1v+p0jtXsJuXu8xqR9TODpXIy3EjxQOegllx6e5KnWAn
+        y73xKdzaROQStw8Zkh4Lcxqx9vL3sZZfmIK1auWd2A==
+X-Google-Smtp-Source: ADFU+vvI4v1XSZF009wAi9uAcVVON3h+bKuIxN4MJslrz6LFmkBZ04IXzw5whl+Td9/Njl7w5J59jkiRYYRU3oMTDDU=
+X-Received: by 2002:a1f:5385:: with SMTP id h127mr542849vkb.56.1583171207966;
+ Mon, 02 Mar 2020 09:46:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302135443.GA24831@linux.ibm.com>
+References: <20200219183231.50985-1-balejs@google.com> <20200229005131.GB9813@google.com>
+ <20200229184300.GA484762@carbon.DHCP.thefacebook.com> <20200301162003.GA186618@google.com>
+ <20200302165330.GA505299@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200302165330.GA505299@carbon.DHCP.thefacebook.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 2 Mar 2020 09:46:36 -0800
+Message-ID: <CAJuCfpEk4gz9YKVuRBW4E-Up_LSGWCSpyJft4y+rOjyPSa08Zg@mail.gmail.com>
+Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Marco Ballesio <balejs@google.com>, Tejun Heo <tj@kernel.org>,
+        cgroups mailinglist <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com, linux-doc@vger.kernel.org,
+        linux-pm@vger.kernel.org, Minchan Kim <minchan@google.com>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
-> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
-> > [+Anshuman and Catalin]
-> > 
-> > On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
-> > > Linux-Next 20200302 arm64 build failed due to below errors,
-> > > Suspecting patch causing this build break.
-> > > 
-> > > 87d900aef3e2  arm/arm64: add support for folded p4d page tables
-> > > 
-> > > Error log,
-> > > -------------
-> > > arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
-> > > include/linux/compiler.h:284:1: error: incompatible type for argument
-> > > 1 of 'p4d_page_paddr'
-> > >  ({         \
-> > >  ^
-> > > arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
-> > > '__phys_to_virt'
-> > >  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
-> > >                                              ^
-> > > arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
-> > >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> > >                                           ^~~~
-> > > include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
-> > >  #define READ_ONCE(x) __READ_ONCE(x, 1)
-> > >                       ^~~~~~~~~~~
-> > > arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
-> > >  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
-> > > + pud_index(addr) * sizeof(pud_t))
-> > >                                                     ^~~~~~~~~
-> > > arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
-> > > 'pud_offset_phys'
-> > >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> > >                                                ^~~~~~~~~~~~~~~
-> > > arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
-> > >    pudp = pud_offset(pgdp, addr);
-> > >           ^~~~~~~~~~
-> > 
-> > Looks like we need an implementation of unmap_hotplug_p4d_range() to
-> > walk the dummy p4d level. Unfortunately, we don't have the folded p4d
-> > patches in the arm64 tree so we'll either need a common branch or the
-> > hotplug patches will need to be dropped for the moment.
-> 
-> unmap_hotplug_p4d_range() is easy :)
-> 
-> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> Date: Mon, 2 Mar 2020 15:53:17 +0200
-> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 05ec8e5f1436..c76b11577558 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
->  	} while (addr = next, addr < end);
->  }
->  
-> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
-> +				unsigned long end, bool free_mapped)
-> +{
-> +	unsigned long next;
-> +	pgd_t *p4dp, p4d;
-> +
-> +	do {
-> +		next = p4d_addr_end(addr, end);
-> +		p4dp = p4d_offset(pgd, addr);
-> +		p4d = READ_ONCE(*p4dp);
-> +		if (p4d_none(p4d))
-> +			continue;
-> +
-> +		WARN_ON(!p4d_present(p4d));
-> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
-> +	} while (addr = next, addr < end);
-> +}
-> +
->  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
->  				bool free_mapped)
->  {
-> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
->  			continue;
->  
->  		WARN_ON(!pgd_present(pgd));
-> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
-> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
->  	} while (addr = next, addr < end);
->  }
+On Mon, Mar 2, 2020 at 8:53 AM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Sun, Mar 01, 2020 at 08:20:03AM -0800, Marco Ballesio wrote:
+> > On Sat, Feb 29, 2020 at 10:43:00AM -0800, Roman Gushchin wrote:
+> > > On Fri, Feb 28, 2020 at 04:51:31PM -0800, Marco Ballesio wrote:
+> > > > Hi all,
+> > > >
+> > > > did anyone have time to look into my proposal and, in case, are there
+> > > > any suggestions, ideas or comments about it?
+> > >
+> > > Hello, Marco!
+> > >
+> > > I'm sorry, somehow I missed the original letter.
+> > >
+> > > In general the cgroup v1 interface is considered frozen. Are there any particular
+> > > reasons why you want to extend the v1 freezer rather than use the v2 version of it?
+> > >
+> > > You don't even need to fully convert to cgroup v2 in order to do it, some v1
+> > > controllers can still be used.
+> > >
+> > > Thanks!
+> > >
+> > > Roman
+> >
+> > Hi Roman,
+> >
+> > When compared with backports of v2 features and their dependency chains, this
+> > patch would be easier to carry in Android common. The potential is to have
+> > killability for frozen processes on hw currently in use.
+>
 
-Thanks Mike. With the additional diff below, I can get it to build with
-and without the p4d clean-up patches in -next. If Anshuman confirms that
-they work, I can add them on top of the arm64 for-next/memory-hotremove
-branch
+Hi Roman,
 
-----------8<------------------------
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 56bd9227937f..2faf11860097 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -816,7 +816,7 @@ static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
- 	} while (addr = next, addr < end);
- }
- 
--static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
-+static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
- 				    unsigned long end, bool free_mapped)
- {
- 	unsigned long next;
-@@ -824,7 +824,7 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
- 
- 	do {
- 		next = pud_addr_end(addr, end);
--		pudp = pud_offset(pgdp, addr);
-+		pudp = pud_offset(p4dp, addr);
- 		pud = READ_ONCE(*pudp);
- 		if (pud_none(pud))
- 			continue;
-@@ -848,15 +848,15 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
- 	} while (addr = next, addr < end);
- }
- 
--static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
--				unsigned long end, bool free_mapped)
-+static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
-+				    unsigned long end, bool free_mapped)
- {
- 	unsigned long next;
--	pgd_t *p4dp, p4d;
-+	p4d_t *p4dp, p4d;
- 
- 	do {
- 		next = p4d_addr_end(addr, end);
--		p4dp = p4d_offset(pgd, addr);
-+		p4dp = p4d_offset(pgdp, addr);
- 		p4d = READ_ONCE(*p4dp);
- 		if (p4d_none(p4d))
- 			continue;
-@@ -961,7 +961,7 @@ static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
- 	free_hotplug_pgtable_page(virt_to_page(pmdp));
- }
- 
--static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
-+static void free_empty_pud_table(p4d_t *p4dp, unsigned long addr,
- 				 unsigned long end, unsigned long floor,
- 				 unsigned long ceiling)
- {
-@@ -970,7 +970,7 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
- 
- 	do {
- 		next = pud_addr_end(addr, end);
--		pudp = pud_offset(pgdp, addr);
-+		pudp = pud_offset(p4dp, addr);
- 		pud = READ_ONCE(*pudp);
- 		if (pud_none(pud))
- 			continue;
-@@ -990,17 +990,36 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
- 	 * entries are empty. Overlap with other regions have been
- 	 * handled by the floor/ceiling check.
- 	 */
--	pudp = pud_offset(pgdp, 0UL);
-+	pudp = pud_offset(p4dp, 0UL);
- 	for (i = 0; i < PTRS_PER_PUD; i++) {
- 		if (!pud_none(READ_ONCE(pudp[i])))
- 			return;
- 	}
- 
--	pgd_clear(pgdp);
-+	p4d_clear(p4dp);
- 	__flush_tlb_kernel_pgtable(start);
- 	free_hotplug_pgtable_page(virt_to_page(pudp));
- }
- 
-+static void free_empty_p4d_table(pgd_t *pgdp, unsigned long addr,
-+				 unsigned long end, unsigned long floor,
-+				 unsigned long ceiling)
-+{
-+	p4d_t *p4dp, p4d;
-+	unsigned long next;
-+
-+	do {
-+		next = p4d_addr_end(addr, end);
-+		p4dp = p4d_offset(pgdp, addr);
-+		p4d = READ_ONCE(*p4dp);
-+		if (p4d_none(p4d))
-+			continue;
-+
-+		WARN_ON(!p4d_present(p4d));
-+		free_empty_pud_table(p4dp, addr, next, floor, ceiling);
-+	} while (addr = next, addr < end);
-+}
-+
- static void free_empty_tables(unsigned long addr, unsigned long end,
- 			      unsigned long floor, unsigned long ceiling)
- {
-@@ -1015,7 +1034,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
- 			continue;
- 
- 		WARN_ON(!pgd_present(pgd));
--		free_empty_pud_table(pgdp, addr, next, floor, ceiling);
-+		free_empty_p4d_table(pgdp, addr, next, floor, ceiling);
- 	} while (addr = next, addr < end);
- }
- #endif
+> I see...
+>
+> The implementation looks good to me, but I really not sure if adding new control files
+> to cgroup v1 is a good idea at this point. Are there any plans in the Android world
+> to move forward to cgroup v2? If not, why not?
+
+There are plans to prototype that and gradually move from cgroups v1
+to v2 at least for some cgroup controllers (the ones that can use
+unified hierarchy). Creating an additional per-process cgroup v2
+hierarchy only for freezer would be a high price to pay today. In the
+future when we migrate some controllers to v2 the price will be
+amortized and we will probably be able to do that.
+
+> If there are any specific issues/dependencies, let's discuss and resolve them.
+>
+> Thanks!
+>
+> Roman
+
+Thanks,
+Suren.
