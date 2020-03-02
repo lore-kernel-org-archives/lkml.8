@@ -2,108 +2,192 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D85C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FCAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6FB2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583170308;
-	bh=U5WKU/pprjnHH97LPx4qGkM2g9gzbITvZ1LBuOzwtSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ytFhMt9nsSwJd/80bE97C0Gp8tcWBAyHr23+0dRtm/RGLCWMAIhHP3RzSGyB8eiY2
-	 HYaaQn/Pjo9UZFwYW9krWExS/wa7jU+FJAi7yBKuvGD+9Iuqg6MUTdHqmMYnbTgPoP
-	 GXMkQ9gzxDasCufwVg5n5aDZZ9JOfyA7fIS7ZIgE=
+	by mail.kernel.org (Postfix) with ESMTP id 6B9062146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbgCBRbr (ORCPT
+        id S1727195AbgCBRcw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:31:47 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33071 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgCBRbr (ORCPT
+        Mon, 2 Mar 2020 12:32:52 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726451AbgCBRcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:31:47 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a20so80661otl.0;
-        Mon, 02 Mar 2020 09:31:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nceDhubgEx2PRo1oS71egJ8r44PsaL0PBb2aHnuBV9I=;
-        b=ssTHS2vNiRSr6ckobTQ9XZ6wQrsCnSTANQJ0Qz1/MpYkowb1TIQ8hN+OJy8oXmMCCT
-         mMnc8VxCZxCJdCiU+0iPUtrAOCvH1kwBlKTsUkj+pUa8XyXFcuAiut1bjs/JOHQFo3wZ
-         GM2Jsuhovd7htVPGlqse2Pc0LRmktNVDrPMwIppYWHGHzYcxsuLbG1MIy27fBX2knxdr
-         pJUcDCwuROVKzFmxhjCNsYVHTx0Y/2YDR5Rd2yIkMD3v5+6Dc+Ypw1eRpe4chfoSg3mS
-         pRkX1PU4sQqm1BwL97Rp9ZN4xOQSxVXxLbktNo+CBe6JVLmUx0m887/bImjWptAZ5xCc
-         A/Tw==
-X-Gm-Message-State: ANhLgQ1QAylhsVQMb0sa6Bq3Dn/Le/tpSE9u2rCnRJwgzJwDXGPfXRZ7
-        PQDBv41hALnnWOk7VuMByA==
-X-Google-Smtp-Source: ADFU+vsYNpUcWht2oZZ77lQyyjdI3vzZC8UuGlF/X5L1TTRZKoMYgTgmHOsRz1GxawFY8cTJ/sMouw==
-X-Received: by 2002:a9d:6ad1:: with SMTP id m17mr236956otq.198.1583170306360;
-        Mon, 02 Mar 2020 09:31:46 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s23sm1523341oie.0.2020.03.02.09.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:31:45 -0800 (PST)
-Received: (nullmailer pid 13106 invoked by uid 1000);
-        Mon, 02 Mar 2020 17:31:45 -0000
-Date:   Mon, 2 Mar 2020 11:31:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH v3] of: overlay: log the error cause on resolver failure
-Message-ID: <20200302173145.GA13073@bogus>
-References: <20200228084027.10797-1-luca@lucaceresoli.net>
+        Mon, 2 Mar 2020 12:32:51 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022HKmgJ132357
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:32:51 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmqa2x7x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:32:50 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Mon, 2 Mar 2020 17:32:49 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 17:32:45 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HWiiV45220140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 17:32:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31EB34C040;
+        Mon,  2 Mar 2020 17:32:44 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1ECB4C04A;
+        Mon,  2 Mar 2020 17:32:43 +0000 (GMT)
+Received: from localhost (unknown [9.199.48.41])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 17:32:43 +0000 (GMT)
+Date:   Mon, 02 Mar 2020 23:02:42 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: eh_frame confusion
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
+        <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
+In-Reply-To: <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228084027.10797-1-luca@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20030217-0016-0000-0000-000002EC5DC4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030217-0017-0000-0000-0000334FA18A
+Message-Id: <1583169883.zo43kx69lm.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 09:40:27 +0100, Luca Ceresoli wrote:
-> When a DT overlay has a node label that is not present in the live
-> devicetree symbols table, this error is printed:
+Naveen N. Rao wrote:
+> Rasmus Villemoes wrote:
+>> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
+>> to gcc-8 all object files now end up having .eh_frame section. For
+>> vmlinux, that's not a problem, because they all get discarded in
+>> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
+>> modules, which doesn't seem to be useful - given that everything worked
+>> just fine with gcc-7, and I don't see anything in the module loader that
+>> handles .eh_frame.
+>> 
+>> The reason I care is that my target has a rather tight rootfs budget,
+>> and the .eh_frame section seem to occupy 10-30% of the file size
+>> (obviously very depending on the particular module).
+>> 
+>> Comparing the .foo.o.cmd files, I don't see change in options that might
+>> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
+>> is apparently no longer supported in gcc-8). Both before and after, there's
+>> 
+>> -fno-dwarf2-cfi-asm
+>> 
+>> about which gcc's documentation says
+>> 
+>> '-fno-dwarf2-cfi-asm'
+>>      Emit DWARF unwind info as compiler generated '.eh_frame' section
+>>      instead of using GAS '.cfi_*' directives.
+>> 
+>> Looking into where that comes from got me even more confused, because
+>> both arm and unicore32 say
+>> 
+>> # Never generate .eh_frame
+>> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
+>> 
+>> while the ppc32 case at hand says
+>> 
+>> # FIXME: the module load should be taught about the additional relocs
+>> # generated by this.
+>> # revert to pre-gcc-4.4 behaviour of .eh_frame
 > 
->   OF: resolver: overlay phandle fixup failed: -22
->   create_overlay: Failed to create overlay (err=-22)
+> Michael opened a task to look into this recently and I had spent some 
+> time last week on this. The original commit/discussion adding 
+> -fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
+> handled by our module loader:
+> http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
 > 
-> which does not help much in finding the node label that caused the problem
-> and fix the overlay source.
+> However, that is now handled thanks to commit 9f751b82b491d:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
 > 
-> Add an error message with the name of the node label that caused the
-> error. The new output is:
+> I did a test build and a simple module loaded fine, so I think 
+> -fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
+> some breakages with it. Michael?
 > 
->   OF: resolver: node label 'gpio9' not found in live devicetree symbols table
->   OF: resolver: overlay phandle fixup failed: -22
->   create_overlay: Failed to create overlay (err=-22)
+>> 
+>> but prior to gcc-8, .eh_frame didn't seem to get generated anyway.
+>> 
+>> Can .eh_frame sections be discarded for modules (on ppc32 at least), or
+>> is there some magic that makes them necessary when building with gcc-8?
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> 
-> ---
-> 
-> Changed in v3:
->  - add only the message from v1, but as reworded by Frank
-> 
-> Changed in v2:
->  - add a message for each error path that does not have one yet
-> ---
->  drivers/of/resolver.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> As Segher points out, it looks like we need to add 
+> -fno-asynchronous-unwind-tables. Most other architectures seem to use 
+> that too.
 
-Applied, thanks.
+Can you check if the below patch works? I am yet to test this in more 
+detail, but would be good to know the implications for ppc32.
 
-Rob
+- Naveen
+
+
+---
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index f35730548e42..5b5bf98b8217 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -239,10 +239,7 @@ KBUILD_CFLAGS += $(call cc-option,-mno-vsx)
+ KBUILD_CFLAGS += $(call cc-option,-mno-spe)
+ KBUILD_CFLAGS += $(call cc-option,-mspe=no)
+ 
+-# FIXME: the module load should be taught about the additional relocs
+-# generated by this.
+-# revert to pre-gcc-4.4 behaviour of .eh_frame
+-KBUILD_CFLAGS  += $(call cc-option,-fno-dwarf2-cfi-asm)
++KBUILD_CFLAGS  += $(call cc-option,-fno-asynchronous-unwind-tables)
+ 
+ # Never use string load/store instructions as they are
+ # often slow when they are implemented at all
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index e147bbdc12cd..d43b0b18137c 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -25,6 +25,7 @@ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+ 
+ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
++       -fasynchronous-unwind-tables \
+        -Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+ asflags-y := -D__VDSO32__ -s
+ 
+diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
+index 32ebb3522ea1..b2cbb5c49bad 100644
+--- a/arch/powerpc/kernel/vdso64/Makefile
++++ b/arch/powerpc/kernel/vdso64/Makefile
+@@ -13,6 +13,7 @@ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+ 
+ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
++       -fasynchronous-unwind-tables \
+        -Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
+ asflags-y := -D__VDSO64__ -s
+ 
+ 
+
