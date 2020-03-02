@@ -2,144 +2,60 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAF3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90000C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B1A21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qbLLolwo"
+	by mail.kernel.org (Postfix) with ESMTP id 68E7B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgCBVBk (ORCPT
+        id S1726780AbgCBVE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:01:40 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.73]:43600 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbgCBVBj (ORCPT
+        Mon, 2 Mar 2020 16:04:58 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:56396 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725911AbgCBVE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:01:39 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 3988013C1F5
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:01:37 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8sC1jZb6R8vkB8sC1jTljE; Mon, 02 Mar 2020 15:01:37 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zN3rMtGrk/Zs5GdX97JZqsBoFoWxHWo9zxihuTDfHA0=; b=qbLLolwoTYSiwhnOJDcHHRchiL
-        X8Tnxyqk7vYdE/ErRr7J2QChPJTT/FCLEt5Zhl3g5breiKvoIbPjoKG0wqeyfWAgqcn4hoS8XPSBg
-        YfI7ZLZnQpDJAKaYtQOkYcx7rmrqPEMx+LKNoB8G9p/1q7TiVEXhslR1w3id/Zkkfvn/+LzJkro2O
-        qe3CzdrzteN1gu1PKoS8Kmi7yPj+svFQSC5ZR8TDGQk4kJ5TqnNrx7AyAvX7o5oBcyAHPmka3XsOq
-        8/2/Xq/jcnYZp6WL2Ffjn0yRldfDiU3zIOW3qWcH+eiJn7hIYv/mco1DZWUS653vmbxdCoNPjeHmb
-        QS1sO7GA==;
-Received: from [201.166.169.19] (port=16672 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8sBz-0004O8-4B; Mon, 02 Mar 2020 15:01:35 -0600
-Date:   Mon, 2 Mar 2020 15:04:37 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "mlxsw@mellanox.com David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: mlxfw: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302210437.GA30285@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.169.19
-X-Source-L: No
-X-Exim-ID: 1j8sBz-0004O8-4B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.169.19]:16672
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 2 Mar 2020 16:04:58 -0500
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from asmaa@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 2 Mar 2020 23:04:51 +0200
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 022L4o2k010194;
+        Mon, 2 Mar 2020 16:04:50 -0500
+Received: (from asmaa@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 022L4nQX016153;
+        Mon, 2 Mar 2020 16:04:49 -0500
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/1] gpio: add driver for Mellanox BlueField 2 GPIO controller
+Date:   Mon,  2 Mar 2020 16:04:45 -0500
+Message-Id: <cover.1583182325.git.Asmaa@mellanox.com>
+X-Mailer: git-send-email 2.1.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+This patch adds support for the GPIO controller used by Mellanox BlueFIeld
+2 SOCs.
+This patch addresses the following issues:
+1) Make mlxbf2_gpio_lock_acquire and mlxbf2_gpio_lock_release symmetrical
+2) renamed mlxbf2_gpio_state to mlxbf2_gpio_context
+3) removed unnecessary informational message.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Asmaa Mnebhi (1):
+  gpio: add driver for Mellanox BlueField 2 GPIO controller
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+ drivers/gpio/Kconfig       |   7 +
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-mlxbf2.c | 335 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 343 insertions(+)
+ create mode 100644 drivers/gpio/gpio-mlxbf2.c
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c     | 2 +-
- drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
-index 79057af4fe99..5d9ddf36fb4e 100644
---- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
-+++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
-@@ -496,7 +496,7 @@ mlxfw_mfa2_file_component_tlv_get(const struct mlxfw_mfa2_file *mfa2_file,
- 
- struct mlxfw_mfa2_comp_data {
- 	struct mlxfw_mfa2_component comp;
--	u8 buff[0];
-+	u8 buff[];
- };
- 
- static const struct mlxfw_mfa2_tlv_component_descriptor *
-diff --git a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
-index 33c971190bba..2014a5de5a01 100644
---- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
-+++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
-@@ -11,7 +11,7 @@ struct mlxfw_mfa2_tlv {
- 	u8 version;
- 	u8 type;
- 	__be16 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- static inline const struct mlxfw_mfa2_tlv *
 -- 
-2.25.0
+2.1.2
 
