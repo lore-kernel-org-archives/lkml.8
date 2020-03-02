@@ -2,335 +2,124 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097F5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E08C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C246E21739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21B2214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NoIsAX9N"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ssu40JyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgCBMP4 (ORCPT
+        id S1727820AbgCBMRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:15:56 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39054 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbgCBMPz (ORCPT
+        Mon, 2 Mar 2020 07:17:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbgCBMRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:15:55 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s2so4492800pgv.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:15:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=04Y0QGN7QCNFy16gBa2npNGYM+2yIkIAXjrVBWFK53c=;
-        b=NoIsAX9N+Mjc9N7i/faCoRIZumFsiqZtLnMcxHuPGUz3paTvM3VWHlwoysYzbiy5bk
-         cRogdXnPD4J+lSV6lQ7ZETglIjzVeRYw2HZUJf6gb8TEOCYUXKxUVj4CI/muDk9jzDm0
-         vFQdl+LAyqLuXi/oqz/A2Oi338hm0zxlKxfLE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=04Y0QGN7QCNFy16gBa2npNGYM+2yIkIAXjrVBWFK53c=;
-        b=YcZZP8cl8z5RbMjI+wzn8PtJEhwWX/e1O1SAsTvxC7os/1xUOzExhO5yZEf41AOiqF
-         rvPDiek258wX9WZXBQ3dKIhuSNsDtwg4Epq+urodcAV2+emTva4rAVy5vbNE8hFunrrw
-         ZDOnZxsM5wDaLDnR2jZtHaB9NqoWFZ+0L93/hGEZ/OqMooSq4D+AKCiGAYKx/y79YiXq
-         ICBn+FL1cmjSxs7lDpktsI3/cEZMo1CA4pif3zvL1h7uLbArKKUVGgeTdmztgVd9NdpX
-         KdsFYVZOxegDYPkjqlDHi9pyyV3dmOMyQf0r+9XXZTClRHowZM3Qde6mH+dUU6EBKQ3p
-         haCw==
-X-Gm-Message-State: APjAAAWQ0Gmb+NbaZHxukfSQhF8pYT2z8C776A98lHtoijB02FmAm13q
-        i0W4lldudcDUnjrtxZV6m0vJcA==
-X-Google-Smtp-Source: APXvYqy5PYaI33jZOyZi6y1LA1Kx8Cxk4tv+VM4k7JfIA8pA44GC2+T/GzO3RpG9YSM83XdiezpJ0A==
-X-Received: by 2002:a65:5b04:: with SMTP id y4mr19928039pgq.25.1583151354026;
-        Mon, 02 Mar 2020 04:15:54 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:30f2:7a9c:387e:6c7])
-        by smtp.gmail.com with ESMTPSA id h10sm20796287pfo.181.2020.03.02.04.15.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 04:15:53 -0800 (PST)
-From:   David Stevens <stevensd@chromium.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Stevens <stevensd@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: [PATCH v2 4/4] drm/virtio: Support virtgpu exported resources
-Date:   Mon,  2 Mar 2020 21:15:24 +0900
-Message-Id: <20200302121524.7543-5-stevensd@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200302121524.7543-1-stevensd@chromium.org>
-References: <20200302121524.7543-1-stevensd@chromium.org>
+        Mon, 2 Mar 2020 07:17:00 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022CE5HG092421;
+        Mon, 2 Mar 2020 12:16:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=saQf8udrO5ljQAJSWGGKFC+TWXSS0LQVNPjAb1EGFzg=;
+ b=Ssu40JyAUe51lbVP3kGL7jIf+XTK/q7y1tlhtqOFLQNeRDv1tXnE6DzJFh6W0M+2BeXL
+ 2NSMa6g8s66QNbGsW3+p2vC/+Px46zIBHFLCc1B+u00jxxnL4ZiaDUhkByiyL85a7tHl
+ 2FN8mx2sTM+JGzRv+nZU8ugrFgnPLBwkqy2cv5tmvWS+Ct+vGoVR6N1vNzjKwC8UNWNW
+ iXDfoAoXhiMES/+oftcE9lb0nWgblVS5blvH6NSYr6/dSfbE5q5phRIIVUMDq3BppxHv
+ nDKbzMVpuV/ES+qXMkCGSFZxbl0Gz4SmRYHxo68M8iwFs/e74Tz1FS84a3LYsTMAD+F7 cQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yffwqfbu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 12:16:56 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022CD7Ch091345;
+        Mon, 2 Mar 2020 12:16:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2yg1gv073e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 12:16:55 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 022CGrex000594;
+        Mon, 2 Mar 2020 12:16:54 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Mar 2020 04:16:52 -0800
+Subject: Re: [PATCH] block: keep bdi->io_pages in sync with max_sectors_kb for
+ stacked devices
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <158290150891.4423.13566449569964563258.stgit@buzz>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <7133c4fb-38d5-cf1f-e259-e12b50efcb32@oracle.com>
+Date:   Mon, 2 Mar 2020 20:16:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158290150891.4423.13566449569964563258.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=18 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=18
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003020093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for UUID-based resource sharing mechanism to virtgpu. This
-implements the new virtgpu commands and hooks them up to dma-buf's
-get_uuid callback.
+On 2/28/20 10:51 PM, Konstantin Khlebnikov wrote:
+> Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+> size based on read-ahead setting") removes unneeded split of read requests.
+> 
+> Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they setup
+> limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+> Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
+> 
+> This patch updates io_pages after merging limits in disk_stack_limits().
+> 
+> Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+> the same problem for device-mapper devices, this one fixes MD RAIDs.
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  block/blk-settings.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index c8eda2e7b91e..66c45fd79545 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -664,6 +664,8 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+>  		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+>  		       top, bottom);
+>  	}
+> +
+> +	t->backing_dev_info->io_pages = t->limits.max_sectors >> (PAGE_SHIFT-9);
+>  }
+>  EXPORT_SYMBOL(disk_stack_limits);
+>  
+> 
 
-Signed-off-by: David Stevens <stevensd@chromium.org>
----
- drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 ++
- drivers/gpu/drm/virtio/virtgpu_drv.h   | 19 ++++++++
- drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
- drivers/gpu/drm/virtio/virtgpu_prime.c | 48 ++++++++++++++++++--
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 62 ++++++++++++++++++++++++++
- 5 files changed, 133 insertions(+), 3 deletions(-)
+Nitpick.. (PAGE_SHIFT - 9)
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index ab4bed78e656..776e6667042e 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -165,6 +165,7 @@ static unsigned int features[] = {
- 	VIRTIO_GPU_F_VIRGL,
- #endif
- 	VIRTIO_GPU_F_EDID,
-+	VIRTIO_GPU_F_RESOURCE_UUID,
- };
- static struct virtio_driver virtio_gpu_driver = {
- 	.feature_table = features,
-@@ -202,7 +203,9 @@ static struct drm_driver driver = {
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_mmap = drm_gem_prime_mmap,
-+	.gem_prime_export = virtgpu_gem_prime_export,
- 	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
-+	.gem_prime_get_uuid = virtgpu_gem_prime_get_uuid,
- 
- 	.gem_create_object = virtio_gpu_create_object,
- 	.fops = &virtio_gpu_driver_fops,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index af9403e1cf78..4be84de73d86 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -49,6 +49,11 @@
- #define DRIVER_MINOR 1
- #define DRIVER_PATCHLEVEL 0
- 
-+#define UUID_NOT_INITIALIZED 0
-+#define UUID_INITIALIZING 1
-+#define UUID_INITIALIZED 2
-+#define UUID_INITIALIZATION_FAILED 3
-+
- struct virtio_gpu_object_params {
- 	uint32_t format;
- 	uint32_t width;
-@@ -75,6 +80,9 @@ struct virtio_gpu_object {
- 
- 	bool dumb;
- 	bool created;
-+
-+	int uuid_state;
-+	uuid_t uuid;
- };
- #define gem_to_virtio_gpu_obj(gobj) \
- 	container_of((gobj), struct virtio_gpu_object, base.base)
-@@ -196,6 +204,7 @@ struct virtio_gpu_device {
- 	bool has_virgl_3d;
- 	bool has_edid;
- 	bool has_indirect;
-+	bool has_resource_assign_uuid;
- 
- 	struct work_struct config_changed_work;
- 
-@@ -206,6 +215,8 @@ struct virtio_gpu_device {
- 	struct virtio_gpu_drv_capset *capsets;
- 	uint32_t num_capsets;
- 	struct list_head cap_cache;
-+
-+	spinlock_t resource_export_lock;
- };
- 
- struct virtio_gpu_fpriv {
-@@ -338,6 +349,10 @@ void virtio_gpu_dequeue_fence_func(struct work_struct *work);
- void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev);
- void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev);
- 
-+int
-+virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
-+				    struct virtio_gpu_object *bo);
-+
- /* virtio_gpu_display.c */
- void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
- void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev);
-@@ -366,6 +381,10 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
- 			     struct virtio_gpu_object **bo_ptr,
- 			     struct virtio_gpu_fence *fence);
- /* virtgpu_prime.c */
-+struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-+					 int flags);
-+int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
-+			       uuid_t *uuid);
- struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct drm_device *dev, struct dma_buf_attachment *attach,
- 	struct sg_table *sgt);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 4009c2f97d08..5a2aeb6d2f35 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -134,6 +134,7 @@ int virtio_gpu_init(struct drm_device *dev)
- 	vgdev->dev = dev->dev;
- 
- 	spin_lock_init(&vgdev->display_info_lock);
-+	spin_lock_init(&vgdev->resource_export_lock);
- 	ida_init(&vgdev->ctx_id_ida);
- 	ida_init(&vgdev->resource_ida);
- 	init_waitqueue_head(&vgdev->resp_wq);
-@@ -162,6 +163,9 @@ int virtio_gpu_init(struct drm_device *dev)
- 	if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
- 		vgdev->has_indirect = true;
- 	}
-+	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_UUID)) {
-+		vgdev->has_resource_assign_uuid = true;
-+	}
- 
- 	DRM_INFO("features: %cvirgl %cedid\n",
- 		 vgdev->has_virgl_3d ? '+' : '-',
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-index 050d24c39a8f..12ceda34b4f9 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -26,9 +26,51 @@
- 
- #include "virtgpu_drv.h"
- 
--/* Empty Implementations as there should not be any other driver for a virtual
-- * device that might share buffers with virtgpu
-- */
-+int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
-+			       uuid_t *uuid)
-+{
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-+	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
-+
-+	// The state should have changed when the buffer was exported.
-+	WARN_ON(bo->uuid_state == UUID_NOT_INITIALIZED);
-+
-+	wait_event(vgdev->resp_wq, bo->uuid_state != UUID_INITIALIZING);
-+	if (bo->uuid_state != UUID_INITIALIZED)
-+		return -ENODEV;
-+
-+	uuid_copy(uuid, &bo->uuid);
-+
-+	return 0;
-+}
-+
-+struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-+					 int flags)
-+{
-+	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-+	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
-+	bool needs_init = false;
-+	int ret = 0;
-+
-+	if (vgdev->has_resource_assign_uuid) {
-+		spin_lock(&vgdev->resource_export_lock);
-+		if (bo->uuid_state == UUID_NOT_INITIALIZED) {
-+			bo->uuid_state = UUID_INITIALIZING;
-+			needs_init = true;
-+		}
-+		spin_unlock(&vgdev->resource_export_lock);
-+
-+		if (needs_init) {
-+			ret = virtio_gpu_cmd_resource_assign_uuid(vgdev, bo);
-+			if (ret)
-+				return ERR_PTR(ret);
-+		}
-+	} else {
-+		bo->uuid_state = UUID_INITIALIZATION_FAILED;
-+	}
-+
-+	return drm_gem_prime_export(obj, flags);
-+}
- 
- struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct drm_device *dev, struct dma_buf_attachment *attach,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index cfe9c54f87a3..e692098fc573 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -1111,3 +1111,65 @@ void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
- 	memcpy(cur_p, &output->cursor, sizeof(output->cursor));
- 	virtio_gpu_queue_cursor(vgdev, vbuf);
- }
-+
-+static void virtio_gpu_cmd_resource_uuid_cb(struct virtio_gpu_device *vgdev,
-+					    struct virtio_gpu_vbuffer *vbuf)
-+{
-+	struct virtio_gpu_resp_resource_uuid *resp =
-+		(struct virtio_gpu_resp_resource_uuid *)vbuf->resp_buf;
-+	struct virtio_gpu_object *obj =
-+		(struct virtio_gpu_object *)vbuf->data_buf;
-+	uint32_t resp_type = le32_to_cpu(resp->hdr.type);
-+
-+	/*
-+	 * Keeps the data_buf, which points to this virtio_gpu_object, from
-+	 * getting kfree'd after this cb returns.
-+	 */
-+	vbuf->data_buf = NULL;
-+
-+	spin_lock(&vgdev->resource_export_lock);
-+	WARN_ON(obj->uuid_state != UUID_INITIALIZING);
-+
-+	if (resp_type == VIRTIO_GPU_RESP_OK_RESOURCE_UUID &&
-+			obj->uuid_state == UUID_INITIALIZING) {
-+		memcpy(&obj->uuid.b, resp->uuid, sizeof(obj->uuid.b));
-+		obj->uuid_state = UUID_INITIALIZED;
-+	} else {
-+		obj->uuid_state = UUID_INITIALIZATION_FAILED;
-+	}
-+	spin_unlock(&vgdev->resource_export_lock);
-+
-+	drm_gem_object_put_unlocked(&obj->base.base);
-+	wake_up_all(&vgdev->resp_wq);
-+}
-+
-+int
-+virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
-+				    struct virtio_gpu_object *bo)
-+{
-+	struct virtio_gpu_resource_assign_uuid *cmd_p;
-+	struct virtio_gpu_vbuffer *vbuf;
-+	struct virtio_gpu_resp_resource_uuid *resp_buf;
-+
-+	resp_buf = kzalloc(sizeof(*resp_buf), GFP_KERNEL);
-+	if (!resp_buf) {
-+		spin_lock(&vgdev->resource_export_lock);
-+		bo->uuid_state = UUID_INITIALIZATION_FAILED;
-+		spin_unlock(&vgdev->resource_export_lock);
-+		return -ENOMEM;
-+	}
-+
-+	cmd_p = virtio_gpu_alloc_cmd_resp(vgdev,
-+		virtio_gpu_cmd_resource_uuid_cb, &vbuf, sizeof(*cmd_p),
-+		sizeof(struct virtio_gpu_resp_resource_uuid), resp_buf);
-+	memset(cmd_p, 0, sizeof(*cmd_p));
-+
-+	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_ASSIGN_UUID);
-+	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
-+
-+	/* Reuse the data_buf pointer for the object pointer. */
-+	vbuf->data_buf = bo;
-+	drm_gem_object_get(&bo->base.base);
-+	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
-+	return 0;
-+}
--- 
-2.25.0.265.gbab2e86ba0-goog
 
