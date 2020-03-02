@@ -2,174 +2,140 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8240C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51620C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFFE214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583159262;
-	bh=bwldCJFhtgQ0re9versBSIOVc4YnNXHNL/us8dW9rR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uUzRkC+h2rWrW2XjU+m7LI3IEtSjvJjb/Da7XDthrCVbi7/iI7oxztgL25ZeVSGW4
-	 IBbWePWfm5Y2RzbINzZnwTKwv9BHvz80OemSetpUyV2RGB10hBgd6VPG0iAd4ohU/O
-	 MxINvcYsIdo80seEAK6ZozklzchRxh7I11qPv3tM=
+	by mail.kernel.org (Postfix) with ESMTP id 21D81214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCBO1l (ORCPT
+        id S1727316AbgCBO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:27:41 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35685 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgCBO1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:27:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m3so10859557wmi.0;
-        Mon, 02 Mar 2020 06:27:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wTQwmZBRvHVWlOUwzt39lRwPZP1PXvP9AI5qWhdX6Ho=;
-        b=lLViyt6ws2rVSQMulUT7Rfa1FZFjt8+5nMdc+4CsyhJ/OXLPhJNd5E83cUo2hLJSzv
-         cbKXLUjn8TfFQdKwX8z2Vs9sX4oit7HUVugFY/CnCYboMZvzRR64F+V0Jucd9SUCotNb
-         SiX16geHmZQe1NgY+x+xGdiWwO7dcTMzdGiHGJxLKaAOKKn165ai7cZxCq09PNuoI+YJ
-         QUEqNT04CV9wCGEbgoI+LHQYMFYYfPacXCJy8nB1XhGZRRU9qlWpdECwZtgOaH0m6jNN
-         QnaU252nqM1tRusiWizMVYXZp4E3Vu9WpQqr2Q06aleEu1NRbZxLjHe0uX/pOFOCO8lz
-         r1QQ==
-X-Gm-Message-State: APjAAAW+ri+Nvb558E+IGOYbajfs79kNDhAezDThccJSXi7bdDZkLUZP
-        BDFYytGzrxqo+Ttd9IfXWdw=
-X-Google-Smtp-Source: APXvYqwd+CHYryhKK2gAxaRfzTEgpelHGrh9Fbdww7O5/Nv7QJcXytR5reYcK2kbmxXWpKlqYuNkmw==
-X-Received: by 2002:a1c:6884:: with SMTP id d126mr19396061wmc.38.1583159259142;
-        Mon, 02 Mar 2020 06:27:39 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id v16sm10493929wrp.84.2020.03.02.06.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 06:27:38 -0800 (PST)
-Date:   Mon, 2 Mar 2020 15:27:37 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH v1 08/11] mm/memory_hotplug: Introduce
- offline_and_remove_memory()
-Message-ID: <20200302142737.GP4380@dhcp22.suse.cz>
-References: <20200302134941.315212-1-david@redhat.com>
- <20200302134941.315212-9-david@redhat.com>
+        Mon, 2 Mar 2020 09:28:07 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2495 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727053AbgCBO2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:28:06 -0500
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id B68A47C0738F4A9E4DA7;
+        Mon,  2 Mar 2020 14:28:04 +0000 (GMT)
+Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 2 Mar 2020 14:28:04 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 2 Mar 2020 15:28:03 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Mon, 2 Mar 2020 15:28:03 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+Thread-Topic: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+Thread-Index: AQHV3/kpNT3OoKRF00CRxabm/9u1E6gU8McAgADT8jCAH5syAIAAFKYQ
+Date:   Mon, 2 Mar 2020 14:28:03 +0000
+Message-ID: <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
+References: <20200210100048.21448-1-roberto.sassu@huawei.com>
+         <20200210100048.21448-3-roberto.sassu@huawei.com>
+         <1581373420.5585.920.camel@linux.ibm.com>
+         <6955307747034265bd282bf68c368f34@huawei.com>
+ <1583156506.8544.60.camel@linux.ibm.com>
+In-Reply-To: <1583156506.8544.60.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302134941.315212-9-david@redhat.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 02-03-20 14:49:38, David Hildenbrand wrote:
-> virtio-mem wants to offline and remove a memory block once it unplugged
-> all subblocks (e.g., using alloc_contig_range()). Let's provide
-> an interface to do that from a driver. virtio-mem already supports to
-> offline partially unplugged memory blocks. Offlining a fully unplugged
-> memory block will not require to migrate any pages. All unplugged
-> subblocks are PageOffline() and have a reference count of 0 - so
-> offlining code will simply skip them.
-> 
-> All we need is an interface to offline and remove the memory from kernel
-> module context, where we don't have access to the memory block devices
-> (esp. find_memory_block() and device_offline()) and the device hotplug
-> lock.
-> 
-> To keep things simple, allow to only work on a single memory block.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  include/linux/memory_hotplug.h |  1 +
->  mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f4d59155f3d4..a98aa16dbfa1 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -311,6 +311,7 @@ extern void try_offline_node(int nid);
->  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
->  extern int remove_memory(int nid, u64 start, u64 size);
->  extern void __remove_memory(int nid, u64 start, u64 size);
-> +extern int offline_and_remove_memory(int nid, u64 start, u64 size);
->  
->  #else
->  static inline bool is_mem_section_removable(unsigned long pfn,
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index ab1c31e67fd1..d0d337918a15 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1818,4 +1818,41 @@ int remove_memory(int nid, u64 start, u64 size)
->  	return rc;
->  }
->  EXPORT_SYMBOL_GPL(remove_memory);
-> +
-> +/*
-> + * Try to offline and remove a memory block. Might take a long time to
-> + * finish in case memory is still in use. Primarily useful for memory devices
-> + * that logically unplugged all memory (so it's no longer in use) and want to
-> + * offline + remove the memory block.
-> + */
-> +int offline_and_remove_memory(int nid, u64 start, u64 size)
-> +{
-> +	struct memory_block *mem;
-> +	int rc = -EINVAL;
-> +
-> +	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
-> +	    size != memory_block_size_bytes())
-> +		return rc;
-> +
-> +	lock_device_hotplug();
-> +	mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
-> +	if (mem)
-> +		rc = device_offline(&mem->dev);
-> +	/* Ignore if the device is already offline. */
-> +	if (rc > 0)
-> +		rc = 0;
-> +
-> +	/*
-> +	 * In case we succeeded to offline the memory block, remove it.
-> +	 * This cannot fail as it cannot get onlined in the meantime.
-> +	 */
-> +	if (!rc) {
-> +		rc = try_remove_memory(nid, start, size);
-> +		WARN_ON_ONCE(rc);
-> +	}
-> +	unlock_device_hotplug();
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(offline_and_remove_memory);
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
-> -- 
-> 2.24.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
+em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAyLCAyMDIwIDI6NDIg
+UE0NCj4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT47DQo+IEph
+bWVzLkJvdHRvbWxleUBIYW5zZW5QYXJ0bmVyc2hpcC5jb207DQo+IGphcmtrby5zYWtraW5lbkBs
+aW51eC5pbnRlbC5jb207IERtaXRyeSBLYXNhdGtpbg0KPiA8ZG1pdHJ5Lmthc2F0a2luQGdtYWls
+LmNvbT4NCj4gQ2M6IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3Vy
+aXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT47IHN0
+YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzhdIGltYTog
+U3dpdGNoIHRvIGltYV9oYXNoX2FsZ28gZm9yIGJvb3QNCj4gYWdncmVnYXRlDQo+IA0KPiBPbiBU
+dWUsIDIwMjAtMDItMTEgYXQgMTA6MDkgKzAwMDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiANCj4gUGxlYXNlIGZpbmQvdXNlIGEgbWFp
+bGVyIHRoYXQgZG9lc24ndCBpbmNsdWRlIHRoaXMganVuay4NCg0KSSB3aWxsIGRvLiBJIGRpZG4n
+dCBoYXZlIHRoZSB0aW1lIHlldC4NCg0KPiA+ID4gT24gTW9uLCAyMDIwLTAyLTEwIGF0IDExOjAw
+ICswMTAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4gPiBib290X2FnZ3JlZ2F0ZSBpcyB0
+aGUgZmlyc3QgZW50cnkgb2YgSU1BIG1lYXN1cmVtZW50IGxpc3QuIEl0cyBwdXJwb3NlDQo+IGlz
+DQo+ID4gPiA+IHRvIGxpbmsgcHJlLWJvb3QgbWVhc3VyZW1lbnRzIHRvIElNQSBtZWFzdXJlbWVu
+dHMuIEFzIElNQSB3YXMNCj4gPiA+IGRlc2lnbmVkIHRvDQo+ID4gPiA+IHdvcmsgd2l0aCBhIFRQ
+TSAxLjIsIHRoZSBTSEExIFBDUiBiYW5rIHdhcyBhbHdheXMgc2VsZWN0ZWQuDQo+ID4gPiA+DQo+
+ID4gPiA+IEN1cnJlbnRseSwgZXZlbiBpZiBhIFRQTSAyLjAgaXMgdXNlZCwgdGhlIFNIQTEgUENS
+IGJhbmsgaXMgc2VsZWN0ZWQuDQo+ID4gPiA+IEhvd2V2ZXIsIHRoZSBhc3N1bXB0aW9uIHRoYXQg
+dGhlIFNIQTEgUENSIGJhbmsgaXMgYWx3YXlzIGF2YWlsYWJsZSBpcw0KPiBub3QNCj4gPiA+ID4g
+Y29ycmVjdCwgYXMgUENSIGJhbmtzIGNhbiBiZSBzZWxlY3RlZCB3aXRoIHRoZSBQQ1JfQWxsb2Nh
+dGUoKSBUUE0NCj4gPiA+IGNvbW1hbmQuDQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgcGF0Y2ggdHJp
+ZXMgdG8gdXNlIGltYV9oYXNoX2FsZ28gYXMgaGFzaCBhbGdvcml0aG0gZm9yDQo+ID4gPiBib290
+X2FnZ3JlZ2F0ZS4NCj4gPiA+ID4gSWYgbm8gUENSIGJhbmsgdXNlcyB0aGF0IGFsZ29yaXRobSwg
+dGhlIHBhdGNoIHRyaWVzIHRvIGZpbmQgdGhlIFNIQTI1Ng0KPiBQQ1INCj4gPiA+ID4gYmFuayAo
+d2hpY2ggaXMgbWFuZGF0b3J5IGluIHRoZSBUQ0cgUEMgQ2xpZW50IHNwZWNpZmljYXRpb24pLg0K
+PiA+ID4NCj4gPiA+IFVwIHRvIGhlcmUsIHRoZSBwYXRjaCBkZXNjcmlwdGlvbiBtYXRjaGVzIHRo
+ZSBjb2RlLg0KPiA+ID4gPiBJZiBhbHNvIHRoaXMNCj4gPiA+ID4gYmFuayBpcyBub3QgZm91bmQs
+IHRoZSBwYXRjaCBzZWxlY3RzIHRoZSBmaXJzdCBvbmUuIElmIHRoZSBUUE0gYWxnb3JpdGhtDQo+
+ID4gPiA+IG9mIHRoYXQgYmFuayBpcyBub3QgbWFwcGVkIHRvIGEgY3J5cHRvIElELCBib290X2Fn
+Z3JlZ2F0ZSBpcyBzZXQgdG8NCj4gemVyby4NCj4gPiA+DQo+ID4gPiBUaGlzIGNvbW1lbnQgYW5k
+IHRoZSBvbmUgaW5saW5lIGFyZSBsZWZ0IG92ZXIgZnJvbSBwcmV2aW91cyB2ZXJzaW9uLg0KPiA+
+DQo+ID4gSGkgTWltaQ0KPiA+DQo+ID4gYWN0dWFsbHkgdGhlIGNvZGUgZG9lcyB3aGF0IGlzIGRl
+c2NyaWJlZCBhYm92ZS4gYmFua19pZHggaXMgaW5pdGlhbGx5DQo+ID4gc2V0IHRvIHplcm8gYW5k
+IHJlbWFpbnMgYXMgaXQgaXMgaWYgdGhlcmUgaXMgbm8gUENSIGJhbmsgZm9yIHRoZSBkZWZhdWx0
+DQo+ID4gSU1BIGFsZ29yaXRobSBvciBTSEEyNTYuDQo+IA0KPiBTb3JyeSBmb3IgdGhlIGRlbGF5
+IGluIGNvbnRpbnVpbmcgdG8gcmV2aWV3IHRoaXMgcGF0Y2ggc2V0LiDCoEl0IHRvb2sgYQ0KPiB3
+aGlsZSB0byB3cml0ZSBpbWEtZXZtLXV0aWxzIHJlZ3Jlc3Npb24gdGVzdHMgZm9yIGl0Lg0KPiAN
+Cj4gRG1pdHJ5IGFuZCB5b3Ugd2VyZSB0aGUgb25lcyB0aGF0IGluaXRpYXRlZCBpbWEtZXZtLXV0
+aWxzLCBzYXlpbmcNCj4gdGhlcmUgc2hvdWxkIGEgc2luZ2xlIHBhY2thZ2UgZm9yIHNpZ25pbmcg
+ZmlsZXMgYW5kIGludGVncml0eSB0ZXN0aW5nLg0KPiDCoFRoZSBmZWF0dXJlcyBpbiBpbWEtZXZt
+LXV0aWxzIHNob3VsZCByZWZsZWN0IHdoYXQgaXMgYWN0dWFsbHkNCj4gdXBzdHJlYW1lZCBpbiB0
+aGUga2VybmVsLiDCoChDdXJyZW50bHkgdGhlcmUgYXJlIGEgZmV3IGV4cGVyaW1lbnRhbA0KPiBm
+ZWF0dXJlcyB3aGljaCB3ZXJlIG5ldmVyIHVwc3RyZWFtZWQuIMKgSSdkIGxpa2UgdG8gcmVtb3Zl
+IHRoZW0sIGJ1dCBhbQ0KPiBhIGJpdCBjb25jZXJuZWQgdGhhdCB0aGV5IGFyZSBiZWluZyB1c2Vk
+LikgwqBJJ2QgYXBwcmVjaWF0ZSB5b3VyIGhlbHANCj4gaW4ga2VlcGluZyBpbWEtZXZtLXV0aWxz
+IHVwIHRvIGRhdGUuIMKgSXQgd2lsbCBoZWxwIHNpbXBsaWZ5DQo+IHVwc3RyZWFtaW5nIG5ldyBr
+ZXJuZWwgZmVhdHVyZXMuDQo+IA0KPiBNeSBpbml0aWFsIHBhdGNoIGF0dGVtcHRlZCB0byB1c2Ug
+YW55IGNvbW1vbiBUUE0gYW5kIGtlcm5lbCBoYXNoDQo+IGFsZ29yaXRobSB0byBjYWxjdWxhdGUg
+dGhlIGJvb3RfYWdncmVnYXRlLiDCoFRoZSBkaXNjdXNzaW9uIHdpdGggSmFtZXMNCj4gd2FzIHBy
+ZXR0eSBjbGVhciwgd2hpY2ggeW91IGV2ZW4gc3RhdGVkIGluIHRoZSBDaGFuZ2Vsb2cuIMKgRWl0
+aGVyIHdlDQo+IHVzZSB0aGUgSU1BIGRlZmF1bHQgaGFzaCBhbGdvcml0aG0sIFNIQTI1NiBmb3Ig
+VFBNIDIuMCBvciBTSEExIGZvciBUUE0NCj4gMS4yIGZvciB0aGUgYm9vdC1hZ2dyZWdhdGUuDQoN
+Ck9rLCBJIGRpZG4ndCB1bmRlcnN0YW5kIGZ1bGx5LiBJIHRob3VnaHQgd2Ugc2hvdWxkIHVzZSB0
+aGUgZGVmYXVsdCBJTUENCmFsZ29yaXRobSBhbmQgc2VsZWN0IFNIQTI1NiBhcyBmYWxsYmFjayBj
+aG9pY2UgZm9yIFRQTSAyLjAgaWYgdGhlcmUgaXMgbm8NClBDUiBiYW5rIGZvciBkZWZhdWx0IGFs
+Z29yaXRobS4gSSBhZGRpdGlvbmFsbHkgaW1wbGVtZW50ZWQgdGhlIGxvZ2ljIHRvDQpzZWxlY3Qg
+dGhlIGZpcnN0IFBDUiBiYW5rIGlmIHRoZSBTSEEyNTYgUENSIGJhbmsgaXMgbm90IGF2YWlsYWJs
+ZSBidXQgSSBjYW4NCnJlbW92ZSBpdC4NCg0KU0hBMjU2IHNob3VsZCBiZSB0aGUgbWluaW11bSBy
+ZXF1aXJlbWVudCBmb3IgYm9vdCBhZ2dyZWdhdGUuIFRoZQ0KYWR2YW50YWdlIG9mIHVzaW5nIHRo
+ZSBkZWZhdWx0IElNQSBhbGdvcml0aG0gaXMgdGhhdCBpdCB3aWxsIGJlIHBvc3NpYmxlIHRvDQpz
+ZWxlY3Qgc3Ryb25nZXIgYWxnb3JpdGhtcyB3aGVuIHRoZXkgYXJlIHN1cHBvcnRlZCBieSB0aGUg
+VFBNLiBXZSBtaWdodA0KaW50cm9kdWNlIGEgbmV3IG9wdGlvbiB0byBzcGVjaWZ5IG9ubHkgdGhl
+IGFsZ29yaXRobSBmb3IgYm9vdCBhZ2dyZWdhdGUsDQpsaWtlIEphbWVzIHN1Z2dlc3RlZCB0byBz
+dXBwb3J0IGVtYmVkZGVkIHN5c3RlbXMuIExldCBtZSBrbm93IHdoaWNoDQpvcHRpb24geW91IHBy
+ZWZlci4NCg0KVGhhbmtzDQoNClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2Vs
+ZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFu
+LCBTaGkgWWFubGkNCg==
