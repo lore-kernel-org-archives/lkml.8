@@ -2,89 +2,113 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8525C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A948B20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84189217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sR5HyV6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgCBPBm (ORCPT
+        id S1727389AbgCBPE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:01:42 -0500
-Received: from muru.com ([72.249.23.125]:58448 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgCBPBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:01:42 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 664C6809F;
-        Mon,  2 Mar 2020 15:02:25 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 07:01:37 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 1/3] drm/omap: Prepare DSS for probing without legacy
- platform data
-Message-ID: <20200302150137.GP37466@atomide.com>
-References: <20200224191230.30972-1-tony@atomide.com>
- <20200224191230.30972-2-tony@atomide.com>
- <20200224233111.gkctx27usfxj2wgz@earth.universe>
- <20200224234333.GD37466@atomide.com>
- <20200227174424.GI37466@atomide.com>
- <8b27dba3-2e2b-84ce-0927-685f4bfe3ab2@ti.com>
+        Mon, 2 Mar 2020 10:04:26 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39196 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgCBPEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:04:25 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o15so12109723ljg.6;
+        Mon, 02 Mar 2020 07:04:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OsxgYgsKphJDyuRREvQcBCxW+LOMW9YuhqtTDzyIanc=;
+        b=sR5HyV6oXBFgipsb3ANiMlO3m5ZKXcTJRG44spcXmrm3FDiSyFsOPjc1oCYcz0S4+q
+         Zy0/Wy3Vyznt+BF7js7FKTYwQHUP6+u8VXht705SHRioh9qBs0fxgZK6fMpyHC6E8Icq
+         6jKE8GIroACzzGUyBr/hl9Ku0PBXswtudX1McI/vS0QunxqBkUqjO4ajROAj8u1PFGWT
+         KbJdJ1I/m6E/pfW1Tbv97cXQPFOI9R5qxrZb1Meo2e7t6yhSl7cuCAV0HiDS/mafPBti
+         pHMECofq9Qlgc+n6zvkJOfqkIxm+JrvidRotdWKWwJMZ+HszfSo9YLgka0NB8ZC7FQSK
+         FERw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OsxgYgsKphJDyuRREvQcBCxW+LOMW9YuhqtTDzyIanc=;
+        b=H7Nc338xnCeRcp/R6GyxmtIrO5gr0UVEPYfjd+6c7pci5hVCzrHJ+/mRewYbDcnGlc
+         TA8Pa9hJHwT39xp85a9lexnUuyNYmn0NdfKQ/0P8PgGbB5kR1n08kKlwFuMsSlzU8QHo
+         /wh77SgN1unRmxz3uCCSx1+BmkmOgUbwPMW+KMXdQO4dp51q7L9D6ouWIGraRrxXbF+U
+         wnkkwGjT73b6cnk6plDzSCAMjLShL4S59LnUOoTlVv3tURqEG1UWPEl7lj0R0NnWMfdu
+         ZQDIP9PaBXa1MvSAYts+5m/W4qGyaPrEJPjKu3WJR/nwDy/icbTNxbF3TPiFrxSAonYr
+         KOmQ==
+X-Gm-Message-State: ANhLgQ3bJkXl1h8656zSKrqcmdNHYYM+ZGgkkmaSg+aNQ3rrn4EAJMvk
+        P9DiGmHudI6EZNzJyM+yaFGPcvlv
+X-Google-Smtp-Source: ADFU+vtiyeT++BmeCxJab16/JiA7Sq6GAi7V95VfEd1lChxPAqxfx6XOoQi/iC91aKCTY3perxTq0w==
+X-Received: by 2002:a05:651c:2c9:: with SMTP id f9mr4667824ljo.85.1583161462499;
+        Mon, 02 Mar 2020 07:04:22 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id r15sm11141676ljh.11.2020.03.02.07.04.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:04:21 -0800 (PST)
+Subject: Re: [PATCH v1] media: staging: tegra-vde: Use
+ devm_platform_ioremap_resource_byname()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+References: <20200227180915.9541-1-digetx@gmail.com>
+ <20200302080456.GD4140@kadam>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d748bf2c-e38c-dabb-59ad-39e14813e40a@gmail.com>
+Date:   Mon, 2 Mar 2020 18:04:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b27dba3-2e2b-84ce-0927-685f4bfe3ab2@ti.com>
+In-Reply-To: <20200302080456.GD4140@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [200302 10:29]:
-> On 27/02/2020 19:44, Tony Lindgren wrote:
+02.03.2020 11:04, Dan Carpenter пишет:
+> On Thu, Feb 27, 2020 at 09:09:15PM +0300, Dmitry Osipenko wrote:
+>> This helps to make code cleaner a tad.
 > 
-> > > > FWIW, I dropped omapdss-boot-init.c in my patch series updating DSI
-> > > > code to use common panel infrastructure, so this will conflict.
-> > > 
-> > > Hey that's great :) Sounds like we can set up an immutable branch
-> > > for just this $subject patch against v5.6-rc1 to resolve the
-> > > conflict. I can set it up for Tomi or Tomi can set it up for me,
-> > > whichever Tomi prefers.
-> > 
-> > Do you want me to send you a pull request for just this one patch
-> > against v5.6-rc1?
+> Please don't start the commit message in the middle of a sentence.
+
+Could you please clarify what do you mean by the "middle of a sentence"?
+The commit's message doesn't sound "middle" to me at all.
+
+> It looks like this for some of us:
 > 
-> It's probably easier if Sebastian drops the removal patch, and instead
-> creates a patch that removes the panel-dsi-cm from
-> omapdss_of_fixups_whitelist. That change should not conflict, and
-> effectively makes the omapdss-boot-init.c a no-op.
-> 
-> We can then remove the file later.
+> https://marc.info/?l=linux-driver-devel&m=158282701430176&w=2
 
-OK for resolving the merge commit that works too.
+This link points to this patch, I don't quite understand what you're
+trying to convey here.
 
-Tomi, so do you care to ack the $subject patch though so I can set
-up an immutable branch for us for the $subject patch?
+> I generally read the subject or the full commit message but seldom
+> both.
 
-Or Tomi, do you want to set up an immutable branch for me for the
-$subject patch?
+The commit's title describes the change briefly, while the message gives
+a rational for the change. Usually reviewer should consult the code
+changes themselves for more details.
 
-Regards,
+Do you have some kind of a email filter that shows only the commit's
+message? Otherwise I'm not sure what's the problem.
 
-Tony
+> Otherwise the patch looks very good.
 
+Thanks
