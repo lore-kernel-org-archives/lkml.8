@@ -2,89 +2,147 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCE1C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A82C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C417246B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n5wPZ1Vd"
+	by mail.kernel.org (Postfix) with ESMTP id CD29B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCBJ4f (ORCPT
+        id S1727593AbgCBJ5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:56:35 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51430 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCBJ4e (ORCPT
+        Mon, 2 Mar 2020 04:57:20 -0500
+Received: from mx04.melco.co.jp ([192.218.140.144]:56378 "EHLO
+        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgCBJ5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:56:34 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D308854A;
-        Mon,  2 Mar 2020 10:56:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583142993;
-        bh=QXED3Ldnro9xx/8nL5IJOBDjr3YPn6bHKN3OhtIpvmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n5wPZ1VdS6fljZ7Lehb9ytqdKfYGKbOyZ3DUFJMTWi73z+KctZRKi2Gd6sI1n+ou/
-         77JwsuI7Kctrnb8KOUqdMpdKoVIRmxrmkPvSphJ8WmicJTgz0ljoTpBLB4e957LFFQ
-         ccOjRe/9yVbQagjkeBISR49uHOll9JNI9T3HjiPc=
-Date:   Mon, 2 Mar 2020 11:56:08 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 03/11] drm/bridge: dw-hdmi: Plug atomic state hooks to
- the default implementation
-Message-ID: <20200302095608.GH11960@pendragon.ideasonboard.com>
-References: <20200206191834.6125-1-narmstrong@baylibre.com>
- <20200206191834.6125-4-narmstrong@baylibre.com>
+        Mon, 2 Mar 2020 04:57:20 -0500
+Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
+        by mx04.melco.co.jp (Postfix) with ESMTP id 85D453A398E;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from mr04.melco.co.jp (unknown [127.0.0.1])
+        by mr04.imss (Postfix) with ESMTP id 48WFtQ3R5hzRk9s;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr04.melco.co.jp (Postfix) with ESMTP id 48WFtQ36lTzRk9l;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48WFtQ2js7zRkFV;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48WFtQ2CcFzRk86;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 0229vINH027655;
+        Mon, 2 Mar 2020 18:57:18 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 1D34317E075;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 07A3617E073;
+        Mon,  2 Mar 2020 18:57:18 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 0229vH0s007040;
+        Mon, 2 Mar 2020 18:57:17 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] staging: exfat: clean up d_entry rebuilding.
+Date:   Mon,  2 Mar 2020 18:57:15 +0900
+Message-Id: <20200302095716.64155-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206191834.6125-4-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Clean up d_entry rebuilding in exfat_rename_file() and move_file().
 
-Thank you for the patch.
+-Replace memcpy of d_entry with structure copy.
+-Change to use the value already stored in fid.
 
-On Thu, Feb 06, 2020 at 08:18:26PM +0100, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+ drivers/staging/exfat/exfat_core.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-How about adding a commit message ?
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 051001f77dd4..fec4a4bcd1fe 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -2494,6 +2494,9 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
->  }
->  
->  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
-> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> +	.atomic_reset = drm_atomic_helper_bridge_reset,
->  	.attach = dw_hdmi_bridge_attach,
->  	.detach = dw_hdmi_bridge_detach,
->  	.enable = dw_hdmi_bridge_enable,
-
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index ceaea1ba1a83..374a4fe183f5 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -2285,12 +2285,10 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
+ 			return -ENOENT;
+ 		}
+ 
+-		memcpy((void *)epnew, (void *)epold, DENTRY_SIZE);
+-		if (exfat_get_entry_type(epnew) == TYPE_FILE) {
+-			exfat_set_entry_attr(epnew,
+-					     exfat_get_entry_attr(epnew) |
+-					     ATTR_ARCHIVE);
++		*epnew = *epold;
++		if (fid->type == TYPE_FILE) {
+ 			fid->attr |= ATTR_ARCHIVE;
++			exfat_set_entry_attr(epnew, fid->attr);
+ 		}
+ 		exfat_buf_modify(sb, sector_new);
+ 		exfat_buf_unlock(sb, sector_old);
+@@ -2306,7 +2304,7 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
+ 			return -ENOENT;
+ 		}
+ 
+-		memcpy((void *)epnew, (void *)epold, DENTRY_SIZE);
++		*epnew = *epold;
+ 		exfat_buf_modify(sb, sector_new);
+ 		exfat_buf_unlock(sb, sector_old);
+ 
+@@ -2319,11 +2317,9 @@ s32 exfat_rename_file(struct inode *inode, struct chain_t *p_dir, s32 oldentry,
+ 				       num_old_entries);
+ 		fid->entry = newentry;
+ 	} else {
+-		if (exfat_get_entry_type(epold) == TYPE_FILE) {
+-			exfat_set_entry_attr(epold,
+-					     exfat_get_entry_attr(epold) |
+-					     ATTR_ARCHIVE);
++		if (fid->type == TYPE_FILE) {
+ 			fid->attr |= ATTR_ARCHIVE;
++			exfat_set_entry_attr(epold, fid->attr);
+ 		}
+ 		exfat_buf_modify(sb, sector_old);
+ 		exfat_buf_unlock(sb, sector_old);
+@@ -2387,11 +2383,10 @@ s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
+ 		return -ENOENT;
+ 	}
+ 
+-	memcpy((void *)epnew, (void *)epmov, DENTRY_SIZE);
+-	if (exfat_get_entry_type(epnew) == TYPE_FILE) {
+-		exfat_set_entry_attr(epnew, exfat_get_entry_attr(epnew) |
+-				     ATTR_ARCHIVE);
++	*epnew = *epmov;
++	if (fid->type == TYPE_FILE) {
+ 		fid->attr |= ATTR_ARCHIVE;
++		exfat_set_entry_attr(epnew, fid->attr);
+ 	}
+ 	exfat_buf_modify(sb, sector_new);
+ 	exfat_buf_unlock(sb, sector_mov);
+@@ -2406,7 +2401,7 @@ s32 move_file(struct inode *inode, struct chain_t *p_olddir, s32 oldentry,
+ 		return -ENOENT;
+ 	}
+ 
+-	memcpy((void *)epnew, (void *)epmov, DENTRY_SIZE);
++	*epnew = *epmov;
+ 	exfat_buf_modify(sb, sector_new);
+ 	exfat_buf_unlock(sb, sector_mov);
+ 
 -- 
-Regards,
+2.25.1
 
-Laurent Pinchart
