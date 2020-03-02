@@ -2,103 +2,110 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAD4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE80C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E847D24682
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B046E2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583157795;
+	bh=8N2Mc/Um3OEaU1RMIQM/fu45nXNFYk6+yaiS/vEmObk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=INfB+ZYegiKXsOR3sp0XWTbnIfzCIeWElXgLCI7n9o2ZndTA2YK5MoVegqd0BRERb
+	 bgr7E3TPTAIpkPDS4IGThPnbkkjS9LS6zNXS3sas+7atn0NWJNY4qCc5uYvMyfCJsM
+	 m/u4hZqUpLETTYLZPcEeZtdyTE8XPL6aubZTmi4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCBOAI (ORCPT
+        id S1727072AbgCBODO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:00:08 -0500
-Received: from smtprelay0208.hostedemail.com ([216.40.44.208]:60038 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726204AbgCBOAI (ORCPT
+        Mon, 2 Mar 2020 09:03:14 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39048 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgCBODO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:00:08 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 25330181D2FC2;
-        Mon,  2 Mar 2020 14:00:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bite50_580e7f13ad457
-X-Filterd-Recvd-Size: 3161
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  2 Mar 2020 14:00:04 +0000 (UTC)
-Message-ID: <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
-Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
- copy_from_user()
-From:   Joe Perches <joe@perches.com>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Todd Kjos <tkjos@google.com>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Jann Horn <jannh@google.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Mar 2020 05:58:33 -0800
-In-Reply-To: <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
-References: <20200302130430.201037-1-glider@google.com>
-         <20200302130430.201037-2-glider@google.com>
-         <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
-         <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 2 Mar 2020 09:03:14 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so12750392wrn.6;
+        Mon, 02 Mar 2020 06:03:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z+UglYKv1Dwx2e9r/aDCnJWSItXjpOM15W1jiZYfefY=;
+        b=k8ibSYJfZIjWpokZexvmy9Tj8CRVHdGfFNGLIaR/hdN67UdLuIm1Jlc51F0+W6n0Je
+         wtEU1l3fHJ+jK6iadBJJbNOuGzlEib5M7jqcKGx22f1lPyAMJvRL7QMRrO3HCxyxa720
+         a1+uKYIYMtiyH9qzRY6bv67RCJHN7cBAlR+hcHTczsP1v2sHZTB99VsOM/AsqcHdJ5dC
+         UYL7t+Ib7dFlv5Obt6ENpELMBRGuXHKkWUy3cxttqNDLHfwl9+01I7kFj6NK08Ohdb6F
+         HCkL+bVZNVIsr/8zmlVQu8XhUKX+DFufY0SciPeqdfPuFgfaY/5/5tGOGjrY2KD/f08Y
+         UJRQ==
+X-Gm-Message-State: APjAAAUSpMw+fmjadJ35AGG8iUYh/rxcBENDS6BaOUKuee5BCKrEZex5
+        8YkBmus3LlDYstOWmvGOujs=
+X-Google-Smtp-Source: APXvYqzNlCJ57BpY/mMPxIq3KUzXka2/8lIi9TR4CaC2Gp0sGaxqiJbgkHNQYdBVahmYIfvhPV/tig==
+X-Received: by 2002:adf:fe0a:: with SMTP id n10mr23857788wrr.229.1583157792337;
+        Mon, 02 Mar 2020 06:03:12 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id j4sm17021673wrr.0.2020.03.02.06.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 06:03:11 -0800 (PST)
+Date:   Mon, 2 Mar 2020 15:03:09 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 01/11] ACPI: NUMA: export pxm_to_node
+Message-ID: <20200302140309.GM4380@dhcp22.suse.cz>
+References: <20200302134941.315212-1-david@redhat.com>
+ <20200302134941.315212-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302134941.315212-2-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 14:25 +0100, Alexander Potapenko wrote:
-> On Mon, Mar 2, 2020 at 2:11 PM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2020-03-02 at 14:04 +0100, glider@google.com wrote:
-> > > Certain copy_from_user() invocations in binder.c are known to
-> > > unconditionally initialize locals before their first use, like e.g. in
-> > > the following case:
-> > []
-> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > []
-> > > @@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
-> > > 
-> > >               case BC_TRANSACTION_SG:
-> > >               case BC_REPLY_SG: {
-> > > -                     struct binder_transaction_data_sg tr;
-> > > +                     struct binder_transaction_data_sg tr __no_initialize;
-> > > 
-> > >                       if (copy_from_user(&tr, ptr, sizeof(tr)))
-> > 
-> > I fail to see any value in marking tr with __no_initialize
-> > when it's immediately written to by copy_from_user.
+On Mon 02-03-20 14:49:31, David Hildenbrand wrote:
+> Will be needed by virtio-mem to identify the node from a pxm.
+
+No objection to export the symbol. But it is almost always better to add
+the export in the patch that actually uses it. The intention is much
+more clear that way.
+
+> Acked-by: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com> # for the export
+
+> ---
+>  drivers/acpi/numa/srat.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> This is being done exactly because it's immediately written to by copy_to_user()
-> Clang is currently unable to figure out that copy_to_user() initializes memory.
-> So building the kernel with CONFIG_INIT_STACK_ALL=y basically leads to
-> the following code:
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 47b4969d9b93..5be5a977da1b 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -35,6 +35,7 @@ int pxm_to_node(int pxm)
+>  		return NUMA_NO_NODE;
+>  	return pxm_to_node_map[pxm];
+>  }
+> +EXPORT_SYMBOL(pxm_to_node);
+>  
+>  int node_to_pxm(int node)
+>  {
+> -- 
+> 2.24.1
 > 
->   struct binder_transaction_data_sg tr;
->   memset(&tr, 0xAA, sizeof(tr));
->   if (copy_from_user(&tr, ptr, sizeof(tr))) {...}
-> 
-> This unnecessarily slows the code down, so we add __no_initialize to
-> prevent the compiler from emitting the redundant initialization.
 
-So?  CONFIG_INIT_STACK_ALL by design slows down code.
-
-This marking would likely need to be done for nearly all
-3000+ copy_from_user entries.
-
-Why not try to get something done on the compiler side
-to mark the function itself rather than the uses?
-
-
-
+-- 
+Michal Hocko
+SUSE Labs
