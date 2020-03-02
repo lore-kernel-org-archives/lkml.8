@@ -2,131 +2,122 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4F1C3F2E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A2C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11640246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137118;
-	bh=Wsekl1TItVvD3INJBbJmeaHL8C61RFnhJoja63XF3zA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j1azXUNCEwm/J7ed/6N5TVFQhBkC9xiTwnTLbdd/JZGnDUtA8RmgwBBPYYFubrqbE
-	 UyRyITFNB2Mc0/bkuwwbSloeV1ZqVHB2AcI2VMckAegFBlllCl8+9LpLwoLNEBR5Xr
-	 cytJN/91dDUbovHn+qy94+cRHvsnj3e3tJhDRxpQ=
+	by mail.kernel.org (Postfix) with ESMTP id 98121246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCBISg (ORCPT
+        id S1726621AbgCBIS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:18:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:16:21 -0500
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C319246E2;
-        Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583136979;
-        bh=Wsekl1TItVvD3INJBbJmeaHL8C61RFnhJoja63XF3zA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=baLPp7dUT1VRau+gkYzv1kLgn4sFkgTEX0DN9u/QE7zuFzE9uiOh1k4orY3yFtVwn
-         g0Xo3geIpWNq+a9qh9rxu+poUVIidpmVJy/PDGZnsh877k3RRRiWQ9difIIcPuKnQO
-         pL/AgIQjTM4fPBkGt8exOR80Nxbn0Lhl0FB1OtTQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003yD-IS; Mon, 02 Mar 2020 09:16:17 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 21/42] docs: scsi: convert lpfc.txt to ReST
-Date:   Mon,  2 Mar 2020 09:15:54 +0100
-Message-Id: <48c13184b77ba61ed4fd7c235816fdb8e7530664.1583136624.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
-References: <cover.1583136624.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 03:18:27 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56506 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727806AbgCBISY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:18:24 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BEDB48D133E4FD5F10B3;
+        Mon,  2 Mar 2020 16:18:17 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
+ 16:18:09 +0800
+Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
+ SGI callbacks
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-9-maz@kernel.org>
+ <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+ <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
+ <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
+ <3d725ede-6631-59fb-1a10-9fb9890f3df6@huawei.com>
+ <dd9f1224b3b21ad793862406bd8855ba@kernel.org>
+ <54c52057161f925c818446953050c951@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <4f8f3958-2976-b0a7-8d17-440ecaba0fc8@huawei.com>
+Date:   Mon, 2 Mar 2020 16:18:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <54c52057161f925c818446953050c951@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/scsi/index.rst              |  1 +
- Documentation/scsi/{lpfc.txt => lpfc.rst} | 16 +++++++---------
- 2 files changed, 8 insertions(+), 9 deletions(-)
- rename Documentation/scsi/{lpfc.txt => lpfc.rst} (93%)
+On 2020/3/2 3:00, Marc Zyngier wrote:
+> On 2020-02-28 19:37, Marc Zyngier wrote:
+>> On 2020-02-20 03:11, Zenghui Yu wrote:
+> 
+>>> Do we really need to grab the vpe_lock for those which are belong to
+>>> the same irqchip with its_vpe_set_affinity()? The IRQ core code should
+>>> already ensure the mutual exclusion among them, wrong?
+>>
+>> I've been trying to think about that, but jet-lag keeps getting in the 
+>> way.
+>> I empirically think that you are right, but I need to go and check the 
+>> various
+>> code paths to be sure. Hopefully I'll have a bit more brain space next 
+>> week.
+> 
+> So I slept on it and came back to my senses. The only case we actually need
+> to deal with is when an affinity change impacts *another* interrupt.
+> 
+> There is only two instances of this issue:
+> 
+> - vLPIs have their *physical* affinity impacted by the affinity of the
+>    vPE. Their virtual affinity is of course unchanged, but the physical
+>    one becomes important with direct invalidation. Taking a per-VPE lock
+>    in such context should address the issue.
+> 
+> - vSGIs have the exact same issue, plus the matter of requiring some
+>    *extra* one when reading the pending state, which requires a RMW
+>    on two different registers. This requires an extra per-RD lock.
 
-diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index c40050ac3b32..22427511e227 100644
---- a/Documentation/scsi/index.rst
-+++ b/Documentation/scsi/index.rst
-@@ -25,5 +25,6 @@ Linux SCSI Subsystem
-    hptiop
-    libsas
-    link_power_management_policy
-+   lpfc
- 
-    scsi_transport_srp/figures
-diff --git a/Documentation/scsi/lpfc.txt b/Documentation/scsi/lpfc.rst
-similarity index 93%
-rename from Documentation/scsi/lpfc.txt
-rename to Documentation/scsi/lpfc.rst
-index 5741ea8aa88a..6e217e82b9b9 100644
---- a/Documentation/scsi/lpfc.txt
-+++ b/Documentation/scsi/lpfc.rst
-@@ -1,10 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
--LPFC Driver Release Notes:
-+=========================
-+LPFC Driver Release Notes
-+=========================
- 
--=============================================================================
- 
--
--                               IMPORTANT:
-+.. important::
- 
-   Starting in the 8.0.17 release, the driver began to be targeted strictly
-   toward the upstream kernel. As such, we removed #ifdefs for older kernels
-@@ -22,9 +23,6 @@ LPFC Driver Release Notes:
-   Please heed these dependencies....
- 
- 
--   ********************************************************************
--
--
- The following information is provided for additional background on the
- history of the driver as we push for upstream acceptance.
- 
-@@ -64,6 +62,7 @@ Cable pull and temporary device Loss:
- 
- 
- Kernel Support
-+==============
- 
-   This source package is targeted for the upstream kernel only. (See notes
-   at the top of this file). It relies on interfaces that are slowing
-@@ -77,7 +76,6 @@ Kernel Support
- 
- 
- Patches
-+=======
- 
-   Thankfully, at this time, patches are not needed.
--
--
--- 
-2.21.1
+Agreed with both!
+
+> 
+> My original patch was stupidly complex, and the irq_desc lock is
+> perfectly enough to deal with anything that only affects the interrupt
+> state itself.
+> 
+> GICv4 + direct invalidation for vLPIs breaks this by bypassing the
+> serialization initially provided by the ITS, as the RD is completely
+> out of band. The per-vPE lock brings back this serialization.
+> 
+> I've updated the branch, which seems to run OK on D05. I still need
+> to run the usual tests on the FVP model though.
+
+I have pulled the latest branch and it looks good to me, except for
+one remaining concern:
+
+GICR_INV{LPI, ALL}R + GICR_SYNCR can also be accessed concurrently
+by multiple direct invalidation, should we also use the per-RD lock
+to ensure mutual exclusion?  It looks not so harmful though, as this
+will only increase one's polling time against the Busy bit (in my view).
+
+But I point it out again for confirmation.
+
+
+Thanks,
+Zenghui
 
