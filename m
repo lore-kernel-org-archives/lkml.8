@@ -2,166 +2,95 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF35C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3261BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DA92166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E042166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sazxwk4o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhgdW1px"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbgCBL3y (ORCPT
+        id S1727589AbgCBLaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:29:54 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34190 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgCBL3y (ORCPT
+        Mon, 2 Mar 2020 06:30:14 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:35449 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgCBLaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:29:54 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 11so9637384qkd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:29:53 -0800 (PST)
+        Mon, 2 Mar 2020 06:30:13 -0500
+Received: by mail-wr1-f74.google.com with SMTP id w18so5695617wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:30:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h0Fuv3v/Qpfe7SqDVP/B7XBJ3fTGbrxdPJa80K2tHaI=;
-        b=Sazxwk4oSdJXcL6gVo+VQCHI1bZZzad9P2BpI0a567CcOw8uHu6FGoU5FmFIjRIs1j
-         jszO10ynRnrcbC1zmg6noV1N/C6oewlnt8ahlmMyxcRX3hdA5nSYxiNVyv+cEwuSd1qM
-         SPfESMs33MMYlLSJWnQ51+CevBgTlzoke11tgZJFbQdmieiKDYXB+3VgFoxPL95o+8aN
-         DFZr7pUauaw2YU13h8IsfFQcJou7qu64h+0F0gV7DcoUkGE7M5Q7sdpOdjgzllIbT8aX
-         N/49GJ3gow2Ix83dy+3nA9iaSC6nwZMgNbWE3oTrPAEO2n+Hr3SYP49HmVnAoCgmxQ63
-         IW3A==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q1I2RKn1Spku5PepO4sKWFq3j0yL+8kFK015J9Szlg0=;
+        b=hhgdW1pxLD06YKoTAOyhOOfXmdrhQnocpCiNC+sZVWf00u78Xx5+jw9fXqhlHPJxTn
+         E9gFz33mmj1u5d6T5L1Sp2+9DpLDtMQikp8DHBLfUrCqdleO9BCK7MFWRA4DLEmPaoor
+         H/dRouNteRsBjBlFqXUtaC9NSGBtor2Qvv30TJGlsY6jBvWIrRtsErxRZ+hPIr56a9QT
+         qzKKaZW21q1Jouw40dFeCb4N9tHpvl7KVnz78uu9/eb5WmOLnIYdRkmtN5RYB6pamNxW
+         xK9qmo2rmGBoNZll9bJakQX+q6jt360fWardBNyQT4Z4SGUDb388Kt2s7CgE5lGnDFwc
+         xb4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h0Fuv3v/Qpfe7SqDVP/B7XBJ3fTGbrxdPJa80K2tHaI=;
-        b=WWGA7Qag7vQofWOFup3fssViMWpgCZKj7qof6qHRl3Km2c43y/sqXSlr4KodP1YfTV
-         w7ZYyhzM7zHR3b8dVTwThMWDxSXQlGqxdaJZwEcfSv2zgC1EhyeQyfsM3MIGQADJdrv6
-         lX4D9lUT8FdnCS43OqSL4lvPhLr3DXcRyePtnRiEQafvHF3xym93/7/JDbij/pvyvFje
-         R+Ch+ESMjB4qp7eo7wbpnA8Ugud447PghSv7PsrL/SSTgaWX2VBFGqJKxd45sq3QWWvn
-         p9iMgGywrEXBIFAIsmwxa+1Ehh4RyZnqsfXOICknF9cLJVcs9naUCZFtGze5yGcp55c4
-         UiQw==
-X-Gm-Message-State: APjAAAV2m5rvWMr6UyAVefvUz1L6u3ImeroHUQi2EK/ZXN/sIyF4TbXB
-        h3EF6yAmWaiq9f+iAT0TmGneCV1dNC1T50tzd0eavfIhgyg=
-X-Google-Smtp-Source: APXvYqx2MDaR51I9fDjR+lnrTLZO5+C0iQ8iSMhMTRigSri8CSF4mFnpRIVFZCte1EqYN2MBVvi/HLgqJhWi/AYYTio=
-X-Received: by 2002:ae9:e003:: with SMTP id m3mr16126112qkk.250.1583148592977;
- Mon, 02 Mar 2020 03:29:52 -0800 (PST)
-MIME-Version: 1.0
-References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 2 Mar 2020 12:29:41 +0100
-Message-ID: <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
-Subject: Re: WARNING: bad unlock balance in ovl_llseek
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q1I2RKn1Spku5PepO4sKWFq3j0yL+8kFK015J9Szlg0=;
+        b=WY092JK21FHs7Ho3hG5wp+sejiKM/xob6+kPDmCxftNVUI9Sz1DJFQZfYvsP/IYzp4
+         ZbfmW/fsZdEG3jx/4p2CF3jv+INJWNns/A9xrfat7UqFaywiAUTTCkP5CZxDKVG9LlKv
+         GdsnHQ6JyZZUur7LOCLGFdlFRxe+4Lm+AIJx52g504EPqhHQDoJ5g+3vtSUru3DZFjCW
+         QYnFtfTxdR3Z/maNly6w4QSUfEzKD7ZvT/5Qpl+7EVou/mJs60jF85LYouauz2YPlzEb
+         txclDi9YEyn7HqPEZ3t8xDyikATQUn3HNgBqIJxdYbunk+pIyGmFMvjZGMlOdoe8m56z
+         BSUw==
+X-Gm-Message-State: APjAAAVkyT0XGpUIptHSA+qQsEs5Tg+hAQDnXF0PnJcTttn0QwLf5XF6
+        9kjKNcGg9bsJK5gb7AZ4taykOzw4dg==
+X-Google-Smtp-Source: APXvYqzpDynIsY8fG28WGbWTomC5tcCOPYkZH/xJbbk/HHjiU7jyCTRfq/ZhpTijXyjDMUmAWsPVpE8eWQ==
+X-Received: by 2002:adf:fa50:: with SMTP id y16mr19928038wrr.79.1583148610099;
+ Mon, 02 Mar 2020 03:30:10 -0800 (PST)
+Date:   Mon,  2 Mar 2020 12:29:39 +0100
+Message-Id: <20200302112939.8068-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] threads: Update PID limit comment according to futex UAPI change
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 12:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
->
-> On Sun, Mar 1, 2020 at 9:13 PM syzbot
-> <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f8788d86 Linux 5.6-rc3
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
-> >
->
-> Dmitry,
->
-> There is something strange about the C repro.
-> It passes an invalid address for the first arg of mount syscall:
->
->     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
->             0x20000100ul);
->
-> With this address mount syscall returns -EFAULT on my system.
-> I fixed this manually, but repro did not trigger the reported bug on my system.
+The futex UAPI changed back in commit 76b81e2b0e22 ("[PATCH] lightweight
+robust futexes updates 2"), which landed in v2.6.17: FUTEX_TID_MASK is now
+0x3fffffff instead of 0x1fffffff. Update the corresponding comment in
+include/linux/threads.h.
 
-Hi Amir,
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ include/linux/threads.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is not strange in the context of fuzzer, it's goal is to pass
-random data. Generally if it says 0x400000ul, that's what it is, don't
-fix it, or you are running a different program that may not reproduce
-the bug. If syzbot attaches a reproducer, the bug was triggered by
-precisely this program.
+diff --git a/include/linux/threads.h b/include/linux/threads.h
+index 3086dba525e20..18d5a74bcc3dd 100644
+--- a/include/linux/threads.h
++++ b/include/linux/threads.h
+@@ -29,7 +29,7 @@
+ 
+ /*
+  * A maximum of 4 million PIDs should be enough for a while.
+- * [NOTE: PID/TIDs are limited to 2^29 ~= 500+ million, see futex.h.]
++ * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
+  */
+ #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+ 	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-The reason why it passes non-pointers here is we think the src
-argument of overlay mount is unused:
-https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/sys/linux/filesystem.txt#L12
-If it's not true, it needs to be fixed (or almost all overlay mounts
-fail with EFAULT during fuzzing).
-
-
-> > The bug was bisected to:
-> >
-> > commit b1f9d3858f724ed45b279b689fb5b400d91352e3
-> > Author: Amir Goldstein <amir73il@gmail.com>
-> > Date:   Sat Dec 21 09:42:29 2019 +0000
-> >
-> >     ovl: use ovl_inode_lock in ovl_llseek()
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
-> > Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
-> >
-> > =====================================
-> > WARNING: bad unlock balance detected!
-> > 5.6.0-rc3-syzkaller #0 Not tainted
-> > -------------------------------------
-> > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
-> > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
-> > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
-> > but there are no more locks to release!
-> >
->
-> This is strange. I don't see how that can happen nor how my change would
-> have caused this regression. If anything, the lock chance may have brought
-> a bug in stack file ops to light, but don't see the bug.
->
-> The repro is multi-threaded but when I ran the repro, a single thread did:
-> - open lower file (pre copy up)
-> - lchown file (copy up)
-> - llseek the open file (so llseek is on a temporary ovl_open_realfile())
->
-> Perhaps when bug was triggered ops above were executed by different
-> threads?
-
-Perfectly possible.
-
-> Dmitry, I may have asked this before - how hard would it be to attach an
-> strace of the repro to a bug report?
-
-This is tracked in https://github.com/google/syzkaller/issues/197 but
-no progress so far.
-What exactly were the main pain points in this case? But note that
-strace is not atomic with actual execution, so it may lead you down
-even worse rabbit hole...
