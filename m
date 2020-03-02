@@ -2,92 +2,154 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13196C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F41C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83BA2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A3C2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCBR5A (ORCPT
+        id S1727385AbgCBR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:57:00 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:34122 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727237AbgCBR5A (ORCPT
+        Mon, 2 Mar 2020 12:57:42 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41900 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgCBR5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:57:00 -0500
-Received: (qmail 4289 invoked by uid 2102); 2 Mar 2020 12:56:59 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Mar 2020 12:56:59 -0500
-Date:   Mon, 2 Mar 2020 12:56:59 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Elver <elver@google.com>
-cc:     linux-kernel@vger.kernel.org, <kasan-dev@googlegroups.com>,
-        <parri.andrea@gmail.com>, <will@kernel.org>,
-        <peterz@infradead.org>, <boqun.feng@gmail.com>,
-        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
-        <luc.maranget@inria.fr>, <paulmck@kernel.org>, <akiyks@gmail.com>,
-        <dlustig@nvidia.com>, <joel@joelfernandes.org>,
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3] tools/memory-model/Documentation: Fix "conflict"
- definition
-In-Reply-To: <20200302172101.157917-1-elver@google.com>
-Message-ID: <Pine.LNX.4.44L0.2003021256130.1555-100000@iolanthe.rowland.org>
+        Mon, 2 Mar 2020 12:57:42 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022HpmGk021165;
+        Mon, 2 Mar 2020 12:57:35 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbf2emc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 12:57:34 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 022Hu7G8020505;
+        Mon, 2 Mar 2020 17:57:33 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2yffk645n0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 17:57:33 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HvWpg55378334
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 17:57:32 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27F9AC6062;
+        Mon,  2 Mar 2020 17:57:32 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F9F9C6057;
+        Mon,  2 Mar 2020 17:57:31 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.68.102])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 17:57:30 +0000 (GMT)
+Subject: Re: [PATCH v5 2/3] tpm: ibmvtpm: Wait for buffer to be set before
+ proceeding
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+References: <20200228030330.18081-1-stefanb@linux.vnet.ibm.com>
+ <20200228030330.18081-3-stefanb@linux.vnet.ibm.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <fa5101bb-9ea3-3825-67b6-a227a696abc9@linux.vnet.ibm.com>
+Date:   Mon, 2 Mar 2020 12:57:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20200228030330.18081-3-stefanb@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020, Marco Elver wrote:
 
-> The definition of "conflict" should not include the type of access nor
-> whether the accesses are concurrent or not, which this patch addresses.
-> The definition of "data race" remains unchanged.
-> 
-> The definition of "conflict" as we know it and is cited by various
-> papers on memory consistency models appeared in [1]: "Two accesses to
-> the same variable conflict if at least one is a write; two operations
-> conflict if they execute conflicting accesses."
-> 
-> The LKMM as well as the C11 memory model are adaptations of
-> data-race-free, which are based on the work in [2]. Necessarily, we need
-> both conflicting data operations (plain) and synchronization operations
-> (marked). For example, C11's definition is based on [3], which defines a
-> "data race" as: "Two memory operations conflict if they access the same
-> memory location, and at least one of them is a store, atomic store, or
-> atomic read-modify-write operation. In a sequentially consistent
-> execution, two memory operations from different threads form a type 1
-> data race if they conflict, at least one of them is a data operation,
-> and they are adjacent in <T (i.e., they may be executed concurrently)."
-> 
-> [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
->     Programs that Share Memory", 1988.
-> 	URL: http://snir.cs.illinois.edu/listed/J21.pdf
-> 
-> [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
->     Multiprocessors", 1993.
-> 	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
-> 
-> [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
->     Model", 2008.
-> 	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+On 2/27/20 10:03 PM, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
+>
+> Synchronize with the results from the CRQs before continuing with
+> the initialization. This avoids trying to send TPM commands while
+> the rtce buffer has not been allocated, yet.
+>
+> This patch fixes an existing race condition that may occurr if the
+> hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
+> request sent during initialization and therefore the ibmvtpm->rtce_buf
+> has not been allocated at the time the first TPM command is sent.
+>
+> Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 > ---
-> v3:
-> * Apply Alan's suggestion.
-> * s/two race candidates/race candidates/
+>   drivers/char/tpm/tpm_ibmvtpm.c | 9 +++++++++
+>   drivers/char/tpm/tpm_ibmvtpm.h | 1 +
+>   2 files changed, 10 insertions(+)
+>
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+> index 78cc52690177..eee566eddb35 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -571,6 +571,7 @@ static irqreturn_t ibmvtpm_interrupt(int irq, void *vtpm_instance)
+>   	 */
+>   	while ((crq = ibmvtpm_crq_get_next(ibmvtpm)) != NULL) {
+>   		ibmvtpm_crq_process(crq, ibmvtpm);
+> +		wake_up_interruptible(&ibmvtpm->crq_queue.wq);
+>   		crq->valid = 0;
+>   		smp_wmb();
+>   	}
+> @@ -618,6 +619,7 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>   	}
+>
+>   	crq_q->num_entry = CRQ_RES_BUF_SIZE / sizeof(*crq_q->crq_addr);
+> +	init_waitqueue_head(&crq_q->wq);
+>   	ibmvtpm->crq_dma_handle = dma_map_single(dev, crq_q->crq_addr,
+>   						 CRQ_RES_BUF_SIZE,
+>   						 DMA_BIDIRECTIONAL);
+> @@ -670,6 +672,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>   	if (rc)
+>   		goto init_irq_cleanup;
+>
+> +	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
+> +				ibmvtpm->rtce_buf != NULL,
+> +				HZ)) {
+> +		dev_err(dev, "Initialization failed\n");
+> +		goto init_irq_cleanup;
+> +	}
+> +
+>   	return tpm_chip_register(chip);
+>   init_irq_cleanup:
+>   	do {
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.h b/drivers/char/tpm/tpm_ibmvtpm.h
+> index 7983f1a33267..b92aa7d3e93e 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.h
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.h
+> @@ -26,6 +26,7 @@ struct ibmvtpm_crq_queue {
+>   	struct ibmvtpm_crq *crq_addr;
+>   	u32 index;
+>   	u32 num_entry;
+> +	wait_queue_head_t wq;
+>   };
+>
+>   struct ibmvtpm_dev {
 
-Looks good!
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
 
-Alan
+Thanks & Regards,
+
+      - Nayna
+
 
