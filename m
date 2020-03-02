@@ -2,196 +2,98 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCDAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE5CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0779420842
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583176056;
-	bh=QGcsFJqfxX2CH6Jn461c3OOCYIcfNyPBNlEZzre/Bs4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eNSwNDucE9YpOnzrJk8ACu4J5WajqAMAjwjohNkDcIxbqHaKkAWQ/ZgCjrEqRfzju
-	 DFrUb3eqT6+DnOAn6skQzm02BHm6noQ3GTCtjIkKj3w68HwBrlYpb2okIOxWL0jVd0
-	 9XHxBWP/4mdctJxLEZiodCS6FoPeETcgxkQlp+/k=
+	by mail.kernel.org (Postfix) with ESMTP id B478A20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jGUWW+rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCBTHf (ORCPT
+        id S1727545AbgCBTIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:07:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727126AbgCBTHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:07:34 -0500
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864A42166E;
-        Mon,  2 Mar 2020 19:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583176053;
-        bh=QGcsFJqfxX2CH6Jn461c3OOCYIcfNyPBNlEZzre/Bs4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ykR8CdMFysZ8qQKYbVC0iSlyGhLnHUned5fbfqhUuTRZtoSA1q2vlelSnA8KQ9mUq
-         e9Ci76+mzNKMuVuYs6OGGFhlCSN4w1+vJcuAghJn21a95hoO9FvfZWjCw/vzxqJvkh
-         8RN7sgPrYXUROt8gz0e9vLVnhyCMLGkSgzsZPLaU=
-Received: by mail-qv1-f46.google.com with SMTP id r15so434470qve.3;
-        Mon, 02 Mar 2020 11:07:33 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3Zasxy8E0hxwCYSAlCu0CkI0CdautPsV4etk35g+vvSRqSNQGR
-        wKYZ3MRnR4+I9G24C2idblr7cUPVF+Nun3i39A==
-X-Google-Smtp-Source: ADFU+vvCdpNqkg16UxszbJIrHJ1wuxjnyVExPclx0f5KeRY5ngJkUGlO8evCVafaGIBFxh51ZQLB+9Wh+KhHUfvbs1Y=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr776291qvn.79.1583176052684;
- Mon, 02 Mar 2020 11:07:32 -0800 (PST)
+        Mon, 2 Mar 2020 14:08:07 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:32893 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBTIH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:08:07 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m7so215937pjs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 11:08:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XbS5Oui71TzDSP82zad1HNkPWeQrHZfwLOAk3ttkqPM=;
+        b=jGUWW+rrTuCc++AiLH0Jj9vkPATEZ//4C63+YRSjlqzn0c9jqq4hDPQi9tXbitIv1u
+         VqLGvPBomCXeewRdCAdzEyMMfvVOASIDci+cn6Mwmiy7QcN2kn9HshsT7n6CqANjidbX
+         SjMtuzQjlBNN7ykH6uerE16g6C1o2QAx56ymw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XbS5Oui71TzDSP82zad1HNkPWeQrHZfwLOAk3ttkqPM=;
+        b=sJt2DcJHMk2WSLpUd0Hfo4Ooi9Cj+WKbqCeLCQ1/ndNMSeh+1RGoJpP7UMHmphizdd
+         9EFSJ8gRlBpUDAE6eFCveNMd4tbSR/A8U8A8cVEblleIi19GK3/zGQ5WseQBe4PJXlUr
+         muBCj/cVRG1vb6jcAA4vlPKv2vd/uYXy8Ayv6Bar5O7G198dMBt3Ndhp6IWifdq4Mv1B
+         ZEUdFhJsy8a2LkZ1Ge6ozvGQ8vhRKOVtcHa3YCZ/9WPp9JYuZ8kNJ+NqLl1lAjUwdfNz
+         O9inm+iFWV7s31bU9kYVhhIIOrTcy7Iko+qVK9rI0YoXMKU9U2GBokT7yDVOCzKaePIu
+         T0hQ==
+X-Gm-Message-State: ANhLgQ3jZQAVPF0+oxV+GVp1ELxkYtT+/YY++OG49ta4ZYyrHTVcwa9k
+        js/nnhRDgeEKl1fEzZI0db5HrQ==
+X-Google-Smtp-Source: ADFU+vs45YCE/A4RV+RfdPn7aH+3QF9x3z2I7E6FgPpDlVlxqDee5DDZoCBVOcK9O/y13IEDwk7Adg==
+X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr572385plz.54.1583176084467;
+        Mon, 02 Mar 2020 11:08:04 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r3sm14623739pfq.126.2020.03.02.11.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 11:08:03 -0800 (PST)
+Date:   Mon, 2 Mar 2020 11:08:02 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [RFC PATCH 09/11] kallsyms: hide layout and expose seed
+Message-ID: <202003021107.38017F90@keescook>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-10-kristen@linux.intel.com>
+ <202002060428.08B14F1@keescook>
+ <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
+ <CAG48ez2SucOZORUhHNxt-9juzqcWjTZRD9E_PhP51LpH1UqeLg@mail.gmail.com>
+ <41d7049cb704007b3cd30a3f48198eebb8a31783.camel@linux.intel.com>
 MIME-Version: 1.0
-References: <20200301174636.63446-1-paul@crapouillou.net> <20200301174636.63446-2-paul@crapouillou.net>
- <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com> <1583173481.3.0@crapouillou.net>
-In-Reply-To: <1583173481.3.0@crapouillou.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 2 Mar 2020 13:07:20 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
-Message-ID: <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41d7049cb704007b3cd30a3f48198eebb8a31783.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 12:25 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi Rob,
->
->
-> Le lun., mars 2, 2020 at 11:06, Rob Herring <robh+dt@kernel.org> a
-> =C3=A9crit :
-> > On Sun, Mar 1, 2020 at 11:47 AM Paul Cercueil <paul@crapouillou.net>
-> > wrote:
-> >>
-> >
-> > Well, this flew into linux-next quickly and breaks 'make
-> > dt_binding_check'... Please drop, revert or fix quickly.
->
-> For my defense I said to merge "provided Rob acks it" ;)
->
-> >>  Convert the ingenic,tcu.txt file to YAML.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>   .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ----------
-> >>   .../bindings/timer/ingenic,tcu.yaml           | 235
-> >> ++++++++++++++++++
-> >>   2 files changed, 235 insertions(+), 138 deletions(-)
-> >>   delete mode 100644
-> >> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> >>   create mode 100644
-> >> Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
-> >
-> >
-> >>  diff --git
-> >> a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
-> >> b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
-> >>  new file mode 100644
-> >>  index 000000000000..1ded3b4762bb
-> >>  --- /dev/null
-> >>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
-> >>  @@ -0,0 +1,235 @@
-> >>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>  +%YAML 1.2
-> >>  +---
-> >>  +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
-> >>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>  +
-> >>  +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree bindings
-> >>  +
-> >>  +description: |
-> >>  +  For a description of the TCU hardware and drivers, have a look at
-> >>  +  Documentation/mips/ingenic-tcu.rst.
-> >>  +
-> >>  +maintainers:
-> >>  +  - Paul Cercueil <paul@crapouillou.net>
-> >>  +
-> >>  +properties:
-> >>  +  $nodename:
-> >>  +    pattern: "^timer@.*"
-> >
-> > '.*' is redundant.
-> >
-> >>  +
-> >>  +  "#address-cells":
-> >>  +    const: 1
-> >>  +
-> >>  +  "#size-cells":
-> >>  +    const: 1
-> >>  +
-> >>  +  "#clock-cells":
-> >>  +    const: 1
-> >>  +
-> >>  +  "#interrupt-cells":
-> >>  +    const: 1
-> >>  +
-> >>  +  interrupt-controller: true
-> >>  +
-> >>  +  ranges: true
-> >>  +
-> >>  +  compatible:
-> >>  +    items:
-> >>  +      - enum:
-> >>  +        - ingenic,jz4740-tcu
-> >>  +        - ingenic,jz4725b-tcu
-> >>  +        - ingenic,jz4770-tcu
-> >>  +        - ingenic,x1000-tcu
-> >>  +      - const: simple-mfd
-> >
-> > This breaks several examples in dt_binding_check because this schema
-> > will be applied to every 'simple-mfd' node. You need a custom select
-> > entry that excludes 'simple-mfd'. There should be several examples in
-> > tree to copy.
->
-> Why would it be applied to all 'single-mfd' nodes?
+On Mon, Mar 02, 2020 at 11:01:56AM -0800, Kristen Carlson Accardi wrote:
+> On Thu, 2020-02-06 at 20:27 +0100, Jann Horn wrote:
+> > https://codesearch.debian.net/search?q=%2Fproc%2Fkallsyms&literal=1
+> 
+> I looked through some of these packages as Jann suggested, and it seems
+> like there are several that are using /proc/kallsyms to look for
+> specific symbol names to determine whether some feature has been
+> compiled into the kernel. This practice seems dubious to me, knowing
+> that many kernel symbol names can be changed at any time, but
+> regardless seems to be fairly common.
 
-single-mfd?
+Cool, so a sorted censored list is fine for non-root. Would root users
+break on a symbol-name-sorted view? (i.e. are two lists needed or can we
+stick to one?)
 
-The way the tool decides to apply a schema or not is my matching on
-any of the compatible strings (or node name if no compatible
-specified). You can override this with 'select'.
-
-> Doesn't what I wrote
-> specify that it needs one of ingenic,*-tcu _and_ simple-mfd?
-
-Yes, but matching is on any of them. You need to add:
-
-select:
-  properties:
-    compatible:
-      contains:
-        enum:
-          - ingenic,jz4740-tcu
-          - ingenic,jz4725b-tcu
-          - ingenic,jz4770-tcu
-          - ingenic,x1000-tcu
-  required:
-    - compatible
-
-> I'm not sure I understand what you mean.
->
-> I did grep for 'single-mfd' in all YAML files in Documentation/ and
-> nothing really stands out.
-
-I guess even without the typo it was harder to find an example than I thoug=
-ht.
-
-Note that I think I'll make the tool exclude 'simple-mfd', but it will
-take some time for users to update so you still need to fix this.
-
-Rob
+-- 
+Kees Cook
