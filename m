@@ -2,154 +2,113 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2102FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93053C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59A221739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6904721739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FPSeLrB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgCBXAs (ORCPT
+        id S1726891AbgCBXCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:00:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:3395 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgCBXAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:00:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:00:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="258130650"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 15:00:45 -0800
-Date:   Tue, 3 Mar 2020 07:01:28 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [kbuild-all] Re: [PATCH 3/3] proc: Remove the now unnecessary
- internal mount of proc
-Message-ID: <20200302230128.GE5513@intel.com>
-References: <87r1yeqxbp.fsf_-_@x220.int.ebiederm.org>
- <202002291137.px8YXKJI%lkp@intel.com>
- <8736auov5g.fsf@x220.int.ebiederm.org>
+        Mon, 2 Mar 2020 18:02:10 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38266 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCBXCJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:02:09 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so549593pgh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:02:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=alU+BgvFGo59yM0O+ldee5pOjl7Ty1NQ+17QZiMtzMo=;
+        b=FPSeLrB7GcxGD/0n0DkgZRMYdBUiZeQ+laPMlp2Pb3icU44iK9eIgS7nJheSVzUk4x
+         XzQrD4vw1cKLDfSG7T4p+rZUN5/fWPWf5odYIvQHZz0B3JCIvnVMia0pRtb1FtCenogk
+         e82T6ScsKsm8DbFN0db3OAll3/2xdOIMdHVxU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=alU+BgvFGo59yM0O+ldee5pOjl7Ty1NQ+17QZiMtzMo=;
+        b=Z6/SnCLYs3K5mJbtOMyfL3ezwiABs5aDkakDLA9hlpHFv3ZLoQEtjh3mUCkg5MFypA
+         eY8CbbLMJOp8/SStqt2HHaDS63Q1HgBzq8GJ7tLuYVrWPSpPs8Gt1LFljzKxWkBMW5xD
+         wJJFEqdZ9D5evg4jucxpHCKRYprwPXcTg/PUOmgV1MvjJ5Fyokya5FRuxBZdpV7eVbGz
+         gxxZYY+ZLCORrizFXAOnUBmhTe0F3rZ9lIXIc7XnRA4KVI5qG3H7QbDkv6X3BpdVi7nu
+         qPUSBBAnpmUy00Us20olaoDkakx20Oi8NndA0r05d0K4hfmgZy54jNhYJvOYl8v6FpLl
+         a8hw==
+X-Gm-Message-State: ANhLgQ3rfL9CqKzgca/xq9dKARhwIDEZ3haiTjr9nkiX5HKBYXxezIqy
+        XAX/n81OPUQOsRj72dU3NwTjuw==
+X-Google-Smtp-Source: ADFU+vvaMShTu4H+Bx5ShEjs077RseA1NzW7/myf8UYsI/g5oF2fIvhSkSOhJhD1EMHTIgkyXbQ4Ug==
+X-Received: by 2002:aa7:8bc1:: with SMTP id s1mr1226128pfd.215.1583190127144;
+        Mon, 02 Mar 2020 15:02:07 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v29sm22024356pgc.72.2020.03.02.15.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 15:02:06 -0800 (PST)
+Date:   Mon, 2 Mar 2020 15:02:05 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Patricia Alfonso <trishalfonso@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
+Message-ID: <202003021500.9E0FEE1BEF@keescook>
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <CACT4Y+Z_fGz2zVpco4kuGOVeCK=jv4zH0q9Uj5Hv5TAFxY3yRg@mail.gmail.com>
+ <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
+ <CACT4Y+YTNZRfKLH1=FibrtGj34MY=naDJY6GWVnpMvgShSLFhg@mail.gmail.com>
+ <CAGXu5jKbpbH4sm4sv-74iHa+VzWuvF5v3ci7R-KVt+StRpMESg@mail.gmail.com>
+ <CAFd5g47OHZ-6Fao+JOMES+aPd2vyWXSS0zKCkSwL6XczN4R7aQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8736auov5g.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFd5g47OHZ-6Fao+JOMES+aPd2vyWXSS0zKCkSwL6XczN4R7aQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 10:49:15PM -0600, Eric W. Biederman wrote:
-> kbuild test robot <lkp@intel.com> writes:
+On Mon, Mar 02, 2020 at 02:36:48PM -0800, Brendan Higgins wrote:
+> On Mon, Mar 2, 2020 at 9:52 AM Kees Cook <keescook@chromium.org> wrote:
+> > I'm all for unittests (I have earlier kind-of-unit-tests in
+> > lib/test_user_copy.c lib/test_overflow.c etc), but most of LKDTM is
 > 
-> > Hi "Eric,
-> >
-> > Thank you for the patch! Yet something to improve:
+> <Minor tangent (sorry)>
 > 
-> Dear kbuild robot,
+> I took a brief look at lib/test_user_copy.c, it looks like it doesn't
+> use TAP formatted output. How do you feel about someone converting
+> them over to use KUnit? If nothing else, it would be good getting all
+> the unit-ish tests to output in the same format.
 > 
-> Yep. You got it the wrong base.  I will see about using --base
-thanks for the feedback, we will also take a look to see
-how to better identify the base automatically.
+> I proposed converting over some of the runtime tests over to KUnit as
+> a LKMP project (Linux Kernel Mentorship Program) here:
+> 
+> https://wiki.linuxfoundation.org/lkmp/lkmp_project_list#convert_runtime_tests_to_kunit_tests
+> 
+> I am curious what you think about this.
+> 
+> </Minor tangent>
 
-> if I repost, or have another patchset that so clearly needs
-> to be applied on top of a non-default base.
-> 
-> Thank you for writing me how to do that.
-> 
-> Eric
-> 
-> 
-> > [auto build test ERROR on uml/linux-next]
-> > [also build test ERROR on linux/master kees/for-next/pstore linus/master v5.6-rc3 next-20200228]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Eric-W-Biederman/proc-Actually-honor-the-mount-options/20200229-100926
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git linux-next
-> > config: x86_64-defconfig (attached as .config)
-> > compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
-> > reproduce:
-> >         # save the attached .config to linux build tree
-> >         make ARCH=x86_64 
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    fs/proc/base.c: In function 'proc_flush_task':
-> >>> fs/proc/base.c:3217:33: error: 'struct pid_namespace' has no member named 'proc_mnt'; did you mean 'proc_self'?
-> >       proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
-> >                                     ^~~~~~~~
-> >                                     proc_self
-> >
-> > vim +3217 fs/proc/base.c
-> >
-> > ^1da177e4c3f41 Linus Torvalds    2005-04-16  3180  
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3181  /**
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3182   * proc_flush_task -  Remove dcache entries for @task from the /proc dcache.
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3183   * @task: task that should be flushed.
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3184   *
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3185   * When flushing dentries from proc, one needs to flush them from global
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3186   * proc (proc_mnt) and from all the namespaces' procs this task was seen
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3187   * in. This call is supposed to do all of this job.
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3188   *
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3189   * Looks in the dcache for
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3190   * /proc/@pid
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3191   * /proc/@tgid/task/@pid
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3192   * if either directory is present flushes it and all of it'ts children
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3193   * from the dcache.
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3194   *
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3195   * It is safe and reasonable to cache /proc entries for a task until
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3196   * that task exits.  After that they just clog up the dcache with
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3197   * useless entries, possibly causing useful dcache entries to be
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3198   * flushed instead.  This routine is proved to flush those useless
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3199   * dcache entries at process exit time.
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3200   *
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3201   * NOTE: This routine is just an optimization so it does not guarantee
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3202   *       that no dcache entries will exist at process exit time it
-> > 0895e91d60ef9b Randy Dunlap      2007-10-21  3203   *       just makes it very unlikely that any will persist.
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3204   */
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3205  
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3206  void proc_flush_task(struct task_struct *task)
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3207  {
-> > 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3208  	int i;
-> > 9b4d1cbef8f41a Oleg Nesterov     2009-09-22  3209  	struct pid *pid, *tgid;
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3210  	struct upid *upid;
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3211  
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3212  	pid = task_pid(task);
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3213  	tgid = task_tgid(task);
-> > 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3214  
-> > 9fcc2d15b14894 Eric W. Biederman 2007-11-14  3215  	for (i = 0; i <= pid->level; i++) {
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3216  		upid = &pid->numbers[i];
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18 @3217  		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
-> > 9b4d1cbef8f41a Oleg Nesterov     2009-09-22  3218  					tgid->numbers[i].nr);
-> > 130f77ecb2e7d5 Pavel Emelyanov   2007-10-18  3219  	}
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3220  }
-> > 60347f6716aa49 Pavel Emelyanov   2007-10-18  3221  
-> >
-> > :::::: The code at line 3217 was first introduced by commit
-> > :::::: 130f77ecb2e7d5ac3e53e620f55e374f4a406b20 pid namespaces: make proc_flush_task() actually from entries from multiple namespaces
-> >
-> > :::::: TO: Pavel Emelyanov <xemul@openvz.org>
-> > :::::: CC: Linus Torvalds <torvalds@woody.linux-foundation.org>
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+Yes please! Anything that helps these tests get more exposure/wider
+testing is good. (That said, I don't want to lose any of the existing
+diagnostic messages -- _adding_ TAP would be lovely.)
+
+-- 
+Kees Cook
