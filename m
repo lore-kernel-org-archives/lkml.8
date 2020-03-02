@@ -2,407 +2,190 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A64C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DDC20842
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Cun2n6OK"
+	by mail.kernel.org (Postfix) with ESMTP id CA3182166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgCBTIN (ORCPT
+        id S1727593AbgCBTJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:08:13 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:58364 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgCBTIN (ORCPT
+        Mon, 2 Mar 2020 14:09:16 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:41114 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgCBTJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:08:13 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 25a61BBHKfSEBt0787ei52j8Li18LJhSbIVdfR++kTxSS0ZFiYZ3OZy+GNFEmbWdz7A3p9amLM
- WyXAFvSSkxx2Ex8S77a5WSkwSHkkJfzwkQbZsozzW87OJbI95cBVIAp8IlXwZDQIawmh6tYupv
- Xysm7Krir2yRftqts3MzlHqwb4AeTX1XLWl0GXQWvhGnYoxqqAlWqC7lEIa5YB2Se5OjOwS9zE
- aD8hN/JaWuO7SUe0Nr0LlBhGBcwSSKYUUf+K7OPoZZcFhm0ha7csuUBYe3X3M7TUwIHPbE9R7P
- bd4=
-X-IronPort-AV: E=Sophos;i="5.70,507,1574146800"; 
-   d="scan'208";a="68560239"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 12:08:11 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Mar 2020 11:07:59 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 2 Mar 2020 11:07:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OfOjWShQvq9wN+Af5BsBrw6zaphSzQ1+oaaTcs/mSjlxeXA9EvIzmKK/0rwGqB7qf5Yh4jmztMk1WIM6/5NqJ6Cya0FxsLjKA8Ayn2F3IXbXnxVZiY24msCxjNVDS1nOQQHUNqVxMEm4Ur6QEqZzklaXqCzsjdv3Yi0CkqMbxKl2Q3RZn7cwUKgOTH6nD3rmx3nuPJgtAF7v1ZS35hk9EA8+mQ+vOtnbVxP7ZX12sCJydC5r21Y6/AxVxMfTSUp0Z2gxMAT5KMFH6mqKptHzz4Uay1K1DlO3H2HHOpdITnXF3n6S54/iGRN8s8GCEP7pMNReBUayCiOU/rzgY008AA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/gwj1lewlxCZuz128eBqYG52vJvp4tGNB6R+jDwK7r0=;
- b=Anp1xhwsmSzQMv95A10pA8Z2h81m5jA4JbTnfAXQ+GYSe941D3TttpYh2+GIIht3Iqg7a373dTtjlTeXEWfFmSYEOZHtf3CQ+edJTiN0EvpOLbS+chgRhMrPEeIcDGCjNw/j/FmnhGgHD4J0QdVx9trRab/oAog+2trVInLbixkT8b4YSFGXXMtog3sTbmQeyrEX18l67VrbNe51BodEIJST2LKsXJhoMjYA73VllR6VZRnkQa3f6ka76lel77n/AxpfeTnqO7VrMPqGZVwOJz9h01Ye/guhTtPQLKSKd5eCfF2v8ppQfds0eo8MKgyaFN/lNE8+hdFVmmsajxwZew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/gwj1lewlxCZuz128eBqYG52vJvp4tGNB6R+jDwK7r0=;
- b=Cun2n6OKwy38J3ufkV/6EWmYh6y2XZ3hzrMvsVcA+rTAdW2DxyiV/TRjaX57H3cuaa8+pR+lnAteBj+qK7rEx1W6RiZ14qDjTisqocumN8hNTvq52mugANzIuqeYcKyNo7egAMGnDZWuEcPi9LmiEIrWdjeIQHChspuytJIDTLI=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
- by MN2PR11MB4142.namprd11.prod.outlook.com (2603:10b6:208:135::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
- 2020 18:07:53 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 18:07:53 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <bbrezillon@kernel.org>, <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <matthias.bgg@gmail.com>, <vz@mleia.com>,
-        <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
-        <john.garry@huawei.com>, <tglx@linutronix.de>,
-        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
-        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
-        <swboyd@chromium.org>, <opensource@jilayne.com>,
-        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
-        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 14/23] mtd: spi-nor: Move Macronix bits out of core.c
-Thread-Topic: [PATCH 14/23] mtd: spi-nor: Move Macronix bits out of core.c
-Thread-Index: AQHV8L19HP3cY3GvdkWxB5UapEKh2w==
-Date:   Mon, 2 Mar 2020 18:07:52 +0000
-Message-ID: <20200302180730.1886678-15-tudor.ambarus@microchip.com>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4f43afd0-015d-4762-19c3-08d7bed4a0bf
-x-ms-traffictypediagnostic: MN2PR11MB4142:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4142F051D74CF0EBF160EF6AF0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(36756003)(26005)(66446008)(107886003)(6486002)(186003)(2616005)(4326008)(478600001)(6512007)(91956017)(64756008)(66946007)(2906002)(71200400001)(76116006)(8936002)(316002)(86362001)(54906003)(6506007)(66556008)(5660300002)(66476007)(7406005)(1076003)(7416002)(81156014)(81166006)(110136005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: c2VpvChI3girNijLyFizMAdzMZU9SvbH6mqgrTxAyh8AAXcRXRJxMW8UXoQKpUvQ/83vs3mBTXCHN713YF+yEbo0wAFdpU33clElOGZPixnY/DdFoj7J4CyJSqcrMaeu1eZPcojoH/dfJFHoghqOlzwvLkCPJ1sxPlUDPPqExW9/gntujzVBzabc578t1pxxOA7RO0LejRYfv7qSNh3GJv7oDoRIhip+7n4Z7rHzwNkmO6fmZ/pAMDHzBTcunO70uqQTrpux+KpnEt5e9+myqRM6F/K3S+WCpzShqFAkFHC0TW84FpUX/umFTOasLCmilJXMrGnZt7voQHkYzoHZxcqo8SI8H6PGa/T+S9bTwBe90geQwwFQ/lHp5O9acIdfYHhGG1feVyXHVn8/BhPcDKTmSjzC8FnGnTzzRha4sTSmZzGrfS7dDvPiIV3s/kbM
-x-ms-exchange-antispam-messagedata: KP6hzj5kwUWWtFf4PZahsEpZ1K6lkfPz645tmXR7u6fZkYonIaufZgpvDVHpwbOybZqwpn4BXfqE1JGVXJJN+ggVgvAEGfHWxTIM/eJE1nCwjh1K3wBrdxginUkrz8/EsFB4Wa8LtmBlF+lLYVj+Gg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 14:09:16 -0500
+Received: by mail-io1-f72.google.com with SMTP id n15so444358iog.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 11:09:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7npg9knZWi2ugFm6fusxk5+E+5/cR+9pt+PLR8BrWY8=;
+        b=dqgGxk2nx1AasHl0BPmPWT/7IGdjZ3Y7dBJzVi3VW19eAQDJtuiMJ4UQDdtT5q8Cf3
+         VRkZn7H+pBR3++kauaH7zPs4dCiKiBh4zVps7jFkID6xm4MF29B/WqFsZhy3zSHRg1ff
+         62+lMXXz/ak4LNfgo5n4bDf0hdgph4FLe9kyEYM6pQ+3vtF4YC33Ny35wbUxfuLesMfz
+         N53LUxHSymiqreDR5o37GhRSdW227wuqHn8Ff9ZLInVeAOszqQIpcN/B5CFUyYdYSeGq
+         WcZUqYF1c15KDibNP63VJIkkI/PuUOpezSNwCGNT8PE7imc48gWUWPNffqefwmjVxO8R
+         PEWg==
+X-Gm-Message-State: ANhLgQ32N1rxF3QkU6BfNszTZsY9ZcZvqJIoKfFLl5e7mlc5b22i5GRB
+        q/p1K4R8SMtF25pZB9SgW/rIoaIt/BZODZUZF2dHG6u98Rd+
+X-Google-Smtp-Source: ADFU+vtqfJorUl9RSyFXcBA9L34wwi7PU6/k7E3cw5PwiysS/ospyxs+EuwJrBrwvF+B5jkzYEtYcQfYUfBKFdm1aijSRvyk8w5D
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f43afd0-015d-4762-19c3-08d7bed4a0bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:07:52.6632
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 41CZ+FLZJcpK/so1+0jE7aXdk+veURya04JCeQUkbVGJi+yp1xgmg4/dPPGHi1N4KepF1Z5JBx92sLs1FMOWyHqj/JMCPL41BGAl3rF3lm0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
+X-Received: by 2002:a05:6602:2cce:: with SMTP id j14mr843248iow.23.1583176155259;
+ Mon, 02 Mar 2020 11:09:15 -0800 (PST)
+Date:   Mon, 02 Mar 2020 11:09:15 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000059e701059fe3ec2f@google.com>
+Subject: INFO: task hung in rdma_destroy_id
+From:   syzbot <syzbot+0abbad99bee187cf63d4@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+Hello,
 
-Create a SPI NOR manufacturer driver for Macronix chips, and move the
-Macronix definitions outside of core.c.
+syzbot found the following crash on:
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=160452c3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=0abbad99bee187cf63d4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0abbad99bee187cf63d4@syzkaller.appspotmail.com
+
+INFO: task syz-executor.5:27890 blocked for more than 143 seconds.
+      Not tainted 5.6.0-rc3-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.5  D28072 27890  11077 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:3380 [inline]
+ __schedule+0x934/0x1f90 kernel/sched/core.c:4080
+ schedule+0xdc/0x2b0 kernel/sched/core.c:4154
+ schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+ do_wait_for_common kernel/sched/completion.c:83 [inline]
+ __wait_for_common kernel/sched/completion.c:104 [inline]
+ wait_for_common kernel/sched/completion.c:115 [inline]
+ wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+ rdma_destroy_id+0x680/0xdd0 drivers/infiniband/core/cma.c:1850
+ ucma_close+0x115/0x310 drivers/infiniband/core/ucma.c:1762
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x416011
+Code: 49 89 fc 48 83 e7 0f 48 81 cf f0 00 00 00 49 8d 43 04 4c 39 d0 0f 83 ec 00 00 00 41 88 38 90 49 c1 ec 04 48 39 d6 74 5d 49 83 <f9> 08 73 48 0f b6 02 48 89 cf 4c 89 c9 48 d3 e0 49 09 c4 90 48 8d
+RSP: 002b:00007ffe941054c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416011
+RDX: 0000001b2fe20000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00000000b9fbf2f5 R09: 00000000b9fbf2f9
+R10: 00007ffe941055a0 R11: 0000000000000293 R12: 000000000076c920
+R13: 000000000076c920 R14: 0000000000264fc6 R15: 000000000076bfcc
+
+Showing all locks held in the system:
+2 locks held by kworker/u4:2/99:
+ #0: ffff8880ae937558 (&rq->lock){-.-.}, at: newidle_balance+0xa28/0xe80 kernel/sched/fair.c:10219
+ #1: ffffc90001217dc0 ((work_completion)(&(&bat_priv->nc.work)->work)){+.+.}, at: process_one_work+0x917/0x17a0 kernel/workqueue.c:2239
+1 lock held by khungtaskd/1135:
+ #0: ffffffff89bac340 (rcu_read_lock){....}, at: debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5333
+2 locks held by rsyslogd/10884:
+ #0: ffff88809b6e6ba0 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110 fs/file.c:821
+ #1: ffffffff89ba13f8 (logbuf_lock){-.-.}, at: is_bpf_image_address+0x0/0x290 kernel/bpf/trampoline.c:86
+2 locks held by getty/11006:
+ #0: ffff888094516090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc9000184b2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11007:
+ #0: ffff888094714090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc9000185b2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11008:
+ #0: ffff8880906b4090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc9000186b2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11009:
+ #0: ffff888092b2c090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc9000187b2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11010:
+ #0: ffff88807bf93090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc900017e72e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11011:
+ #0: ffff88808599f090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc9000188b2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/11012:
+ #0: ffff8880a2abd090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffffc900017db2e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1135 Comm: khungtaskd Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+ arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+ trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+ watchdog+0xb11/0x10c0 kernel/hung_task.c:289
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 99 Comm: kworker/u4:2 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:31 [inline]
+RIP: 0010:atomic_read include/asm-generic/atomic-instrumented.h:27 [inline]
+RIP: 0010:rcu_dynticks_curr_cpu_in_eqs+0x7a/0xb0 kernel/rcu/tree.c:301
+Code: ec e8 51 00 4c 89 e2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 14 02 4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 17 <8b> 83 d8 00 00 00 48 83 c4 08 5b 41 5c 5d d1 e8 83 f0 01 83 e0 01
+RSP: 0018:ffffc90001217c98 EFLAGS: 00000246
+RAX: 0000000000000003 RBX: ffff8880ae938300 RCX: ffffffff816226d4
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880ae9383d8
+RBP: ffffc90001217cb0 R08: 1ffff11015d2707b R09: ffffed1015d2707c
+R10: ffffed1015d2707b R11: ffff8880ae9383db R12: ffff8880ae9383d8
+R13: 0000000000000363 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 000000009b725000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ rcu_is_watching+0x10/0x30 kernel/rcu/tree.c:919
+ rcu_read_unlock include/linux/rcupdate.h:651 [inline]
+ batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:411 [inline]
+ batadv_nc_worker+0x480/0x760 net/batman-adv/network-coding.c:718
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
 ---
- drivers/mtd/spi-nor/Makefile   |  1 +
- drivers/mtd/spi-nor/core.c     | 69 +-----------------------
- drivers/mtd/spi-nor/core.h     |  1 +
- drivers/mtd/spi-nor/macronix.c | 98 ++++++++++++++++++++++++++++++++++
- 4 files changed, 101 insertions(+), 68 deletions(-)
- create mode 100644 drivers/mtd/spi-nor/macronix.c
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 5c849f104cc4..c94798987801 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -9,4 +9,5 @@ spi-nor-objs			+=3D fujitsu.o
- spi-nor-objs			+=3D gigadevice.o
- spi-nor-objs			+=3D intel.o
- spi-nor-objs			+=3D issi.o
-+spi-nor-objs			+=3D macronix.o
- obj-$(CONFIG_MTD_SPI_NOR)	+=3D spi-nor.o
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index d781cb9af182..9d0e0fc5af45 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -2005,31 +2005,6 @@ int spi_nor_sr2_bit7_quad_enable(struct spi_nor *nor=
-)
- 	return 0;
- }
-=20
--static int
--mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
--			    const struct sfdp_parameter_header *bfpt_header,
--			    const struct sfdp_bfpt *bfpt,
--			    struct spi_nor_flash_parameter *params)
--{
--	/*
--	 * MX25L25635F supports 4B opcodes but MX25L25635E does not.
--	 * Unfortunately, Macronix has re-used the same JEDEC ID for both
--	 * variants which prevents us from defining a new entry in the parts
--	 * table.
--	 * We need a way to differentiate MX25L25635E and MX25L25635F, and it
--	 * seems that the F version advertises support for Fast Read 4-4-4 in
--	 * its BFPT table.
--	 */
--	if (bfpt->dwords[BFPT_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
--		nor->flags |=3D SNOR_F_4B_OPCODES;
--
--	return 0;
--}
--
--static struct spi_nor_fixups mx25l25635_fixups =3D {
--	.post_bfpt =3D mx25l25635_post_bfpt_fixups,
--};
--
- /* NOTE: double check command sets and memory organization when you add
-  * more nor chips.  This current list focusses on newer chips, which
-  * have been converging on command sets which including JEDEC ID.
-@@ -2042,39 +2017,6 @@ static struct spi_nor_fixups mx25l25635_fixups =3D {
-  * old entries may be missing 4K flag.
-  */
- static const struct flash_info spi_nor_ids[] =3D {
--	/* Macronix */
--	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
--	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
--	{ "mx25l4005a",  INFO(0xc22013, 0, 64 * 1024,   8, SECT_4K) },
--	{ "mx25l8005",   INFO(0xc22014, 0, 64 * 1024,  16, 0) },
--	{ "mx25l1606e",  INFO(0xc22015, 0, 64 * 1024,  32, SECT_4K) },
--	{ "mx25l3205d",  INFO(0xc22016, 0, 64 * 1024,  64, SECT_4K) },
--	{ "mx25l3255e",  INFO(0xc29e16, 0, 64 * 1024,  64, SECT_4K) },
--	{ "mx25l6405d",  INFO(0xc22017, 0, 64 * 1024, 128, SECT_4K) },
--	{ "mx25u2033e",  INFO(0xc22532, 0, 64 * 1024,   4, SECT_4K) },
--	{ "mx25u3235f",	 INFO(0xc22536, 0, 64 * 1024,  64,
--			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
--	{ "mx25u4035",   INFO(0xc22533, 0, 64 * 1024,   8, SECT_4K) },
--	{ "mx25u8035",   INFO(0xc22534, 0, 64 * 1024,  16, SECT_4K) },
--	{ "mx25u6435f",  INFO(0xc22537, 0, 64 * 1024, 128, SECT_4K) },
--	{ "mx25l12805d", INFO(0xc22018, 0, 64 * 1024, 256, 0) },
--	{ "mx25l12855e", INFO(0xc22618, 0, 64 * 1024, 256, 0) },
--	{ "mx25r3235f",  INFO(0xc22816, 0, 64 * 1024,  64,
--			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
--	{ "mx25u12835f", INFO(0xc22538, 0, 64 * 1024, 256,
--			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
--	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512,
--			 SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
--			 .fixups =3D &mx25l25635_fixups },
--	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_O=
-PCODES) },
--	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
--			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
--	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
--	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | S=
-PI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
--	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_DUA=
-L_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
--	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048, SECT_4K | SPI_NOR_DUA=
-L_READ | SPI_NOR_QUAD_READ) },
--	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048, SPI_NOR_QUAD_READ) },
--
- 	/* Micron <--> ST Micro */
- 	{ "n25q016a",	 INFO(0x20bb15, 0, 64 * 1024,   32, SECT_4K | SPI_NOR_QUAD_=
-READ) },
- 	{ "n25q032",	 INFO(0x20ba16, 0, 64 * 1024,   64, SPI_NOR_QUAD_READ) },
-@@ -2311,6 +2253,7 @@ static const struct spi_nor_manufacturer *manufacture=
-rs[] =3D {
- 	&spi_nor_gigadevice,
- 	&spi_nor_intel,
- 	&spi_nor_issi,
-+	&spi_nor_macronix,
- };
-=20
- static const struct flash_info *
-@@ -3090,12 +3033,6 @@ static int spi_nor_setup(struct spi_nor *nor,
- 	return nor->params.setup(nor, hwcaps);
- }
-=20
--static void macronix_set_default_init(struct spi_nor *nor)
--{
--	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
--	nor->params.set_4byte =3D spi_nor_en4_ex4_set_4byte;
--}
--
- static void sst_set_default_init(struct spi_nor *nor)
- {
- 	nor->flags |=3D SNOR_F_HAS_LOCK;
-@@ -3123,10 +3060,6 @@ static void spi_nor_manufacturer_init_params(struct =
-spi_nor *nor)
- {
- 	/* Init flash parameters based on MFR */
- 	switch (JEDEC_MFR(nor->info)) {
--	case SNOR_MFR_MACRONIX:
--		macronix_set_default_init(nor);
--		break;
--
- 	case SNOR_MFR_ST:
- 	case SNOR_MFR_MICRON:
- 		st_micron_set_default_init(nor);
-diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index b4ed9acbef63..9af3a701de95 100644
---- a/drivers/mtd/spi-nor/core.h
-+++ b/drivers/mtd/spi-nor/core.h
-@@ -175,6 +175,7 @@ extern const struct spi_nor_manufacturer spi_nor_fujits=
-u;
- extern const struct spi_nor_manufacturer spi_nor_gigadevice;
- extern const struct spi_nor_manufacturer spi_nor_intel;
- extern const struct spi_nor_manufacturer spi_nor_issi;
-+extern const struct spi_nor_manufacturer spi_nor_macronix;
-=20
- int spi_nor_write_enable(struct spi_nor *nor);
- int spi_nor_write_disable(struct spi_nor *nor);
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.=
-c
-new file mode 100644
-index 000000000000..1ae609c44676
---- /dev/null
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2005, Intec Automation Inc.
-+ * Copyright (C) 2014, Freescale Semiconductor, Inc.
-+ */
-+
-+#include <linux/mtd/spi-nor.h>
-+
-+#include "core.h"
-+
-+static int
-+mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
-+			    const struct sfdp_parameter_header *bfpt_header,
-+			    const struct sfdp_bfpt *bfpt,
-+			    struct spi_nor_flash_parameter *params)
-+{
-+	/*
-+	 * MX25L25635F supports 4B opcodes but MX25L25635E does not.
-+	 * Unfortunately, Macronix has re-used the same JEDEC ID for both
-+	 * variants which prevents us from defining a new entry in the parts
-+	 * table.
-+	 * We need a way to differentiate MX25L25635E and MX25L25635F, and it
-+	 * seems that the F version advertises support for Fast Read 4-4-4 in
-+	 * its BFPT table.
-+	 */
-+	if (bfpt->dwords[BFPT_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
-+		nor->flags |=3D SNOR_F_4B_OPCODES;
-+
-+	return 0;
-+}
-+
-+static struct spi_nor_fixups mx25l25635_fixups =3D {
-+	.post_bfpt =3D mx25l25635_post_bfpt_fixups,
-+};
-+
-+static const struct flash_info macronix_parts[] =3D {
-+	/* Macronix */
-+	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
-+	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
-+	{ "mx25l4005a",  INFO(0xc22013, 0, 64 * 1024,   8, SECT_4K) },
-+	{ "mx25l8005",   INFO(0xc22014, 0, 64 * 1024,  16, 0) },
-+	{ "mx25l1606e",  INFO(0xc22015, 0, 64 * 1024,  32, SECT_4K) },
-+	{ "mx25l3205d",  INFO(0xc22016, 0, 64 * 1024,  64, SECT_4K) },
-+	{ "mx25l3255e",  INFO(0xc29e16, 0, 64 * 1024,  64, SECT_4K) },
-+	{ "mx25l6405d",  INFO(0xc22017, 0, 64 * 1024, 128, SECT_4K) },
-+	{ "mx25u2033e",  INFO(0xc22532, 0, 64 * 1024,   4, SECT_4K) },
-+	{ "mx25u3235f",	 INFO(0xc22536, 0, 64 * 1024,  64,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ) },
-+	{ "mx25u4035",   INFO(0xc22533, 0, 64 * 1024,   8, SECT_4K) },
-+	{ "mx25u8035",   INFO(0xc22534, 0, 64 * 1024,  16, SECT_4K) },
-+	{ "mx25u6435f",  INFO(0xc22537, 0, 64 * 1024, 128, SECT_4K) },
-+	{ "mx25l12805d", INFO(0xc22018, 0, 64 * 1024, 256, 0) },
-+	{ "mx25l12855e", INFO(0xc22618, 0, 64 * 1024, 256, 0) },
-+	{ "mx25r3235f",  INFO(0xc22816, 0, 64 * 1024,  64,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ) },
-+	{ "mx25u12835f", INFO(0xc22538, 0, 64 * 1024, 256,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ) },
-+	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512,
-+			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
-+		.fixups =3D &mx25l25635_fixups },
-+	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512,
-+			      SECT_4K | SPI_NOR_4B_OPCODES) },
-+	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ) },
-+	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
-+	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024,
-+			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			      SPI_NOR_4B_OPCODES) },
-+	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-+	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ) },
-+	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048,
-+			      SPI_NOR_QUAD_READ) },
-+};
-+
-+static void macronix_default_init(struct spi_nor *nor)
-+{
-+	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
-+	nor->params.set_4byte =3D spi_nor_en4_ex4_set_4byte;
-+}
-+
-+static const struct spi_nor_fixups macronix_fixups =3D {
-+	.default_init =3D macronix_default_init,
-+};
-+
-+const struct spi_nor_manufacturer spi_nor_macronix =3D {
-+	.name =3D "macronix",
-+	.parts =3D macronix_parts,
-+	.nparts =3D ARRAY_SIZE(macronix_parts),
-+	.fixups =3D &macronix_fixups,
-+};
---=20
-2.23.0
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
