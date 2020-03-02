@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461E9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAA7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157582469C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BFC246BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="m5C12GRO"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="XA+y5KXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgCBJjT (ORCPT
+        id S1727558AbgCBJjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:39:19 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:38062 "EHLO
+        Mon, 2 Mar 2020 04:39:15 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:37952 "EHLO
         zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgCBJjO (ORCPT
+        with ESMTP id S1727107AbgCBJjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:39:14 -0500
+        Mon, 2 Mar 2020 04:39:13 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 1513D27E083D;
-        Mon,  2 Mar 2020 10:39:13 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DD37B27E080F;
+        Mon,  2 Mar 2020 10:39:10 +0100 (CET)
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id VjQZ6XBHqgnt; Mon,  2 Mar 2020 10:39:12 +0100 (CET)
+        with ESMTP id l8JP-bNK42nl; Mon,  2 Mar 2020 10:39:10 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 981DC27E0840;
-        Mon,  2 Mar 2020 10:39:12 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 981DC27E0840
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 3FC7727E079B;
+        Mon,  2 Mar 2020 10:39:10 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 3FC7727E079B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1583141952;
-        bh=W+DBp3Kdqtq/tZ/GwGHqju2JIwVWvf3NKbxPUqbSl0U=;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1583141950;
+        bh=BOhOpru18Of74fw47ZNccGiGJomWkztVNB+6BbXS6HY=;
         h=From:To:Date:Message-Id;
-        b=m5C12GROg4L7Huuk9KbevfVcjP5fFuW5IhoA2fYRJn7x4ICmpowKefnkN9KndB49E
-         OtuITiNlvjFvBAtbbFb9o7fu4UfNI+Vm0b08E924B9D5fIdHt7YvK7OAbsiDR+ULxr
-         3vHa9U0sko72xL+ouajRgbe85Zepceq4An7S7mgQ=
+        b=XA+y5KXxRJ7eFxhlm9UvDU2NZq9O0ELJdtQT+NeIj7Afl+m1WyqGuTHd4Ii5vKUd6
+         52Y74XZSE6hoDVlWMCFzpz1j/MWKEkh2WFflGHXbcpej+WGJ3X8GV+NFGl+MZClLwP
+         RhIclI6WA+3xV4Ad3LsRiz5xLFnDUECAemVLdbSE=
 X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id FJxtIRFFr0pO; Mon,  2 Mar 2020 10:39:12 +0100 (CET)
+        with ESMTP id g0bbFj1eC0uq; Mon,  2 Mar 2020 10:39:10 +0100 (CET)
 Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 76BF627E083D;
-        Mon,  2 Mar 2020 10:39:12 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 24F3827E035B;
+        Mon,  2 Mar 2020 10:39:10 +0100 (CET)
 From:   Clement Leger <cleger@kalray.eu>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -66,9 +66,9 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Clement Leger <cleger@kalray.eu>
-Subject: [PATCH v5 4/8] remoteproc: Add elf helpers to access elf64 and elf32 fields
-Date:   Mon,  2 Mar 2020 10:38:58 +0100
-Message-Id: <20200302093902.27849-5-cleger@kalray.eu>
+Subject: [PATCH v5 1/8] remoteproc: Use size_t type for len in da_to_va
+Date:   Mon,  2 Mar 2020 10:38:55 +0100
+Message-Id: <20200302093902.27849-2-cleger@kalray.eu>
 X-Mailer: git-send-email 2.15.0.276.g89ea799
 In-Reply-To: <20200302093902.27849-1-cleger@kalray.eu>
 References: <20200210162209.23149-1-cleger@kalray.eu>
@@ -78,122 +78,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-elf32 and elf64 mainly differ by their types. In order to avoid
-copy/pasting the whole loader code, generate static inline functions
-which will access values according to the elf class. It allows to
-keep a common loader basis.
-In order to accommodate both elf types sizes, the maximum size for a
-elf header member is chosen using the maximum value of the field for
-both elf class.
+With upcoming changes in elf loader for elf64 support, section size will
+be a u64. When used with da_to_va, this will potentially lead to
+overflow if using the current "int" type for len argument. Change
+da_to_va prototype to use a size_t for len and fix all users of this
+function.
 
 Signed-off-by: Clement Leger <cleger@kalray.eu>
 ---
- drivers/remoteproc/remoteproc_elf_helpers.h | 96 +++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
+ drivers/remoteproc/imx_rproc.c           | 11 ++++++-----
+ drivers/remoteproc/keystone_remoteproc.c |  4 ++--
+ drivers/remoteproc/qcom_q6v5_adsp.c      |  2 +-
+ drivers/remoteproc/qcom_q6v5_mss.c       |  2 +-
+ drivers/remoteproc/qcom_q6v5_pas.c       |  2 +-
+ drivers/remoteproc/qcom_q6v5_wcss.c      |  2 +-
+ drivers/remoteproc/qcom_wcnss.c          |  2 +-
+ drivers/remoteproc/remoteproc_core.c     |  2 +-
+ drivers/remoteproc/remoteproc_internal.h |  2 +-
+ drivers/remoteproc/st_slim_rproc.c       |  4 ++--
+ drivers/remoteproc/wkup_m3_rproc.c       |  4 ++--
+ include/linux/remoteproc.h               |  2 +-
+ 12 files changed, 20 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_elf_helpers.h b/drivers/remoteproc/remoteproc_elf_helpers.h
-new file mode 100644
-index 000000000000..4b6be7b6bf4d
---- /dev/null
-+++ b/drivers/remoteproc/remoteproc_elf_helpers.h
-@@ -0,0 +1,96 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Remote processor elf helpers defines
-+ *
-+ * Copyright (C) 2020 Kalray, Inc.
-+ */
-+
-+#ifndef REMOTEPROC_ELF_LOADER_H
-+#define REMOTEPROC_ELF_LOADER_H
-+
-+#include <linux/elf.h>
-+#include <linux/types.h>
-+
-+/**
-+ * fw_elf_get_class - Get elf class
-+ * @fw: the ELF firmware image
-+ *
-+ * Note that we use and elf32_hdr to access the class since the start of the
-+ * struct is the same for both elf class
-+ *
-+ * Return: elf class of the firmware
-+ */
-+static inline u8 fw_elf_get_class(const struct firmware *fw)
-+{
-+	struct elf32_hdr *ehdr = (struct elf32_hdr *)fw->data;
-+
-+	return ehdr->e_ident[EI_CLASS];
-+}
-+
-+static inline void elf_hdr_init_ident(struct elf32_hdr *hdr, u8 class)
-+{
-+	memcpy(hdr->e_ident, ELFMAG, SELFMAG);
-+	hdr->e_ident[EI_CLASS] = class;
-+	hdr->e_ident[EI_DATA] = ELFDATA2LSB;
-+	hdr->e_ident[EI_VERSION] = EV_CURRENT;
-+	hdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
-+}
-+
-+/* Generate getter and setter for a specific elf struct/field */
-+#define ELF_GEN_FIELD_GET_SET(__s, __field, __type) \
-+static inline __type elf_##__s##_get_##__field(u8 class, const void *arg) \
-+{ \
-+	if (class == ELFCLASS32) \
-+		return (__type) ((const struct elf32_##__s *) arg)->__field; \
-+	else \
-+		return (__type) ((const struct elf64_##__s *) arg)->__field; \
-+} \
-+static inline void elf_##__s##_set_##__field(u8 class, void *arg, \
-+					     __type value) \
-+{ \
-+	if (class == ELFCLASS32) \
-+		((struct elf32_##__s *) arg)->__field = (__type) value; \
-+	else \
-+		((struct elf64_##__s *) arg)->__field = (__type) value; \
-+}
-+
-+ELF_GEN_FIELD_GET_SET(hdr, e_entry, u64)
-+ELF_GEN_FIELD_GET_SET(hdr, e_phnum, u16)
-+ELF_GEN_FIELD_GET_SET(hdr, e_shnum, u16)
-+ELF_GEN_FIELD_GET_SET(hdr, e_phoff, u64)
-+ELF_GEN_FIELD_GET_SET(hdr, e_shoff, u64)
-+ELF_GEN_FIELD_GET_SET(hdr, e_shstrndx, u16)
-+ELF_GEN_FIELD_GET_SET(hdr, e_machine, u16)
-+ELF_GEN_FIELD_GET_SET(hdr, e_type, u16)
-+ELF_GEN_FIELD_GET_SET(hdr, e_version, u32)
-+ELF_GEN_FIELD_GET_SET(hdr, e_ehsize, u32)
-+ELF_GEN_FIELD_GET_SET(hdr, e_phentsize, u16)
-+
-+ELF_GEN_FIELD_GET_SET(phdr, p_paddr, u64)
-+ELF_GEN_FIELD_GET_SET(phdr, p_vaddr, u64)
-+ELF_GEN_FIELD_GET_SET(phdr, p_filesz, u64)
-+ELF_GEN_FIELD_GET_SET(phdr, p_memsz, u64)
-+ELF_GEN_FIELD_GET_SET(phdr, p_type, u32)
-+ELF_GEN_FIELD_GET_SET(phdr, p_offset, u64)
-+ELF_GEN_FIELD_GET_SET(phdr, p_flags, u32)
-+ELF_GEN_FIELD_GET_SET(phdr, p_align, u64)
-+
-+ELF_GEN_FIELD_GET_SET(shdr, sh_size, u64)
-+ELF_GEN_FIELD_GET_SET(shdr, sh_offset, u64)
-+ELF_GEN_FIELD_GET_SET(shdr, sh_name, u32)
-+ELF_GEN_FIELD_GET_SET(shdr, sh_addr, u64)
-+
-+#define ELF_STRUCT_SIZE(__s) \
-+static inline unsigned long elf_size_of_##__s(u8 class) \
-+{ \
-+	if (class == ELFCLASS32)\
-+		return sizeof(struct elf32_##__s); \
-+	else \
-+		return sizeof(struct elf64_##__s); \
-+}
-+
-+ELF_STRUCT_SIZE(shdr)
-+ELF_STRUCT_SIZE(phdr)
-+ELF_STRUCT_SIZE(hdr)
-+
-+#endif /* REMOTEPROC_ELF_LOADER_H */
+diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+index 3e72b6f38d4b..8957ed271d20 100644
+--- a/drivers/remoteproc/imx_rproc.c
++++ b/drivers/remoteproc/imx_rproc.c
+@@ -186,7 +186,7 @@ static int imx_rproc_stop(struct rproc *rproc)
+ }
+ 
+ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
+-			       int len, u64 *sys)
++			       size_t len, u64 *sys)
+ {
+ 	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+ 	int i;
+@@ -203,19 +203,19 @@ static int imx_rproc_da_to_sys(struct imx_rproc *priv, u64 da,
+ 		}
+ 	}
+ 
+-	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%x\n",
++	dev_warn(priv->dev, "Translation failed: da = 0x%llx len = 0x%zx\n",
+ 		 da, len);
+ 	return -ENOENT;
+ }
+ 
+-static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct imx_rproc *priv = rproc->priv;
+ 	void *va = NULL;
+ 	u64 sys;
+ 	int i;
+ 
+-	if (len <= 0)
++	if (len == 0)
+ 		return NULL;
+ 
+ 	/*
+@@ -235,7 +235,8 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+ 		}
+ 	}
+ 
+-	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
++	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%zx va = 0x%p\n",
++		da, len, va);
+ 
+ 	return va;
+ }
+diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
+index 5c4658f00b3d..cd266163a65f 100644
+--- a/drivers/remoteproc/keystone_remoteproc.c
++++ b/drivers/remoteproc/keystone_remoteproc.c
+@@ -246,7 +246,7 @@ static void keystone_rproc_kick(struct rproc *rproc, int vqid)
+  * can be used either by the remoteproc core for loading (when using kernel
+  * remoteproc loader), or by any rpmsg bus drivers.
+  */
+-static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct keystone_rproc *ksproc = rproc->priv;
+ 	void __iomem *va = NULL;
+@@ -255,7 +255,7 @@ static void *keystone_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+ 	size_t size;
+ 	int i;
+ 
+-	if (len <= 0)
++	if (len == 0)
+ 		return NULL;
+ 
+ 	for (i = 0; i < ksproc->num_mems; i++) {
+diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+index e953886b2eb7..2b01f2282062 100644
+--- a/drivers/remoteproc/qcom_q6v5_adsp.c
++++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+@@ -270,7 +270,7 @@ static int adsp_stop(struct rproc *rproc)
+ 	return ret;
+ }
+ 
+-static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *adsp_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+ 	int offset;
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 471128a2e723..3401a17f8ce6 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1148,7 +1148,7 @@ static int q6v5_stop(struct rproc *rproc)
+ 	return 0;
+ }
+ 
+-static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *q6v5_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct q6v5 *qproc = rproc->priv;
+ 	int offset;
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index db4b3c4bacd7..4e89d04673a4 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -159,7 +159,7 @@ static int adsp_stop(struct rproc *rproc)
+ 	return ret;
+ }
+ 
+-static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *adsp_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+ 	int offset;
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index f93e1e4a1cc0..f1924b740a10 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -406,7 +406,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 	return 0;
+ }
+ 
+-static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 	int offset;
+diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+index dc135754bb9c..0c7afd038f0d 100644
+--- a/drivers/remoteproc/qcom_wcnss.c
++++ b/drivers/remoteproc/qcom_wcnss.c
+@@ -287,7 +287,7 @@ static int wcnss_stop(struct rproc *rproc)
+ 	return ret;
+ }
+ 
+-static void *wcnss_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *wcnss_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
+ 	int offset;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 307df98347ba..5ab094fc1b55 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -185,7 +185,7 @@ EXPORT_SYMBOL(rproc_va_to_pa);
+  * here the output of the DMA API for the carveouts, which should be more
+  * correct.
+  */
+-void *rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct rproc_mem_entry *carveout;
+ 	void *ptr = NULL;
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index 493ef9262411..58580210575c 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -50,7 +50,7 @@ void rproc_exit_sysfs(void);
+ void rproc_free_vring(struct rproc_vring *rvring);
+ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+ 
+-void *rproc_da_to_va(struct rproc *rproc, u64 da, int len);
++void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
+ phys_addr_t rproc_va_to_pa(void *cpu_addr);
+ int rproc_trigger_recovery(struct rproc *rproc);
+ 
+diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
+index 04492fead3c8..09bcb4d8b9e0 100644
+--- a/drivers/remoteproc/st_slim_rproc.c
++++ b/drivers/remoteproc/st_slim_rproc.c
+@@ -174,7 +174,7 @@ static int slim_rproc_stop(struct rproc *rproc)
+ 	return 0;
+ }
+ 
+-static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct st_slim_rproc *slim_rproc = rproc->priv;
+ 	void *va = NULL;
+@@ -191,7 +191,7 @@ static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+ 		}
+ 	}
+ 
+-	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%pK\n",
++	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%zx va = 0x%pK\n",
+ 		da, len, va);
+ 
+ 	return va;
+diff --git a/drivers/remoteproc/wkup_m3_rproc.c b/drivers/remoteproc/wkup_m3_rproc.c
+index 3984e585c847..b9349d684258 100644
+--- a/drivers/remoteproc/wkup_m3_rproc.c
++++ b/drivers/remoteproc/wkup_m3_rproc.c
+@@ -80,14 +80,14 @@ static int wkup_m3_rproc_stop(struct rproc *rproc)
+ 	return 0;
+ }
+ 
+-static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++static void *wkup_m3_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ {
+ 	struct wkup_m3_rproc *wkupm3 = rproc->priv;
+ 	void *va = NULL;
+ 	int i;
+ 	u32 offset;
+ 
+-	if (len <= 0)
++	if (len == 0)
+ 		return NULL;
+ 
+ 	for (i = 0; i < WKUPM3_MEM_MAX; i++) {
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 16ad66683ad0..89215798eaea 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -374,7 +374,7 @@ struct rproc_ops {
+ 	int (*start)(struct rproc *rproc);
+ 	int (*stop)(struct rproc *rproc);
+ 	void (*kick)(struct rproc *rproc, int vqid);
+-	void * (*da_to_va)(struct rproc *rproc, u64 da, int len);
++	void * (*da_to_va)(struct rproc *rproc, u64 da, size_t len);
+ 	int (*parse_fw)(struct rproc *rproc, const struct firmware *fw);
+ 	int (*handle_rsc)(struct rproc *rproc, u32 rsc_type, void *rsc,
+ 			  int offset, int avail);
 -- 
 2.15.0.276.g89ea799
 
