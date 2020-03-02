@@ -2,105 +2,92 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03167C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B7321739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE51E20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:49:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UH5EmQ8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCBNsY (ORCPT
+        id S1727007AbgCBNt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:48:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:32932 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgCBNsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:48:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90C8E2F;
-        Mon,  2 Mar 2020 05:48:23 -0800 (PST)
-Received: from [10.163.1.119] (unknown [10.163.1.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83AAE3F534;
-        Mon,  2 Mar 2020 05:48:16 -0800 (PST)
-Subject: Re: Linux-next-20200302: arm64 build failed
-To:     Will Deacon <will@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        catalin.marinas@arm.com
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        rppt@linux.ibm.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
- <20200302104726.GA7995@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d2d8d359-3e48-b5b7-2944-be3d54ba1d32@arm.com>
-Date:   Mon, 2 Mar 2020 19:18:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 2 Mar 2020 08:49:26 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52065 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgCBNt0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:49:26 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a132so1283266wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=pDQHChPAvHbaHiAh1rx2hc7lXXqfrv2AqyVIgjj3sL4=;
+        b=UH5EmQ8xNHA0Plu/McRn1qzyUYWuxXbSKQ2Os9L0yoktOYu7tCx3sdJI7YWZDxYoHd
+         +YL3OEUKvM/W7hKB41X+4FFEjSxBJAVk5gdh5ny/LUcvZAIIrr1B3WQhGeUbo8nhyhjJ
+         YErz9cLbumJ9EU8Q1wTQxX1Bo4aRM5DcDqFGnmdskcTtTl60EykI71bjpWhvL433KI6k
+         1zp5xmHgz0vxdOb2LAhL2niLWDwbVPa+UYR0WaVrxCd+4X1KV0gISqCbaTXsch8ZTvpP
+         2pSH5mZIJxey3CFXFP6hifTlnIokOwzOBrOrJD7jVSHNogev7ThF6WI4H0vnNCqvkDfL
+         J1iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pDQHChPAvHbaHiAh1rx2hc7lXXqfrv2AqyVIgjj3sL4=;
+        b=FghGD/79j67E+yxSlYpz8Hxtf2l+i2E04I0AjlfcYzJXifIub0uRQlVn23DLWqi/XT
+         PPfdHgjmObGXWbNVBNdunAH3Nz8xfGmQk1dAjRvNHEgVxLT4UllXyYUtT5y9n3V1lski
+         NHExUGAkNtqvGnMAGhEcyowBzbCJYzXkVkxN3JRCJl5PsyIjb5rzt/g9WGuoh+7dOEhC
+         QNtrSKgdbw97mjcSLlldGlNhcDA67uXqUWC6r+NBmkYUwvyxfeWgUq7VCgO8qr1SKVlr
+         q1RiqJPpcLfV2TTZbO910oufaiHpMzjgCU1mFh5wM6CEXpNvNKrD5qMTRvuCsuFsQwWS
+         7FDg==
+X-Gm-Message-State: ANhLgQ2REJgLTgv2rjFORN2+Cr+M4i/HwT28qCXOpEf6j90SGTLREN6j
+        dK00vYU96NgZQ33MKnOGLHJ9lQ==
+X-Google-Smtp-Source: ADFU+vvG6MBPGRkXYyxVAEaRWeNUehBlIcQSHO6fOGOEKIiRp511b6KjpX5fIWmrSFxV9Fue65UAYA==
+X-Received: by 2002:a1c:2d88:: with SMTP id t130mr7393177wmt.68.1583156963877;
+        Mon, 02 Mar 2020 05:49:23 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h10sm16163783wml.18.2020.03.02.05.49.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 05:49:23 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson-g12b: fix N2/VIM3 audio card model names
+In-Reply-To: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
+References: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
+Date:   Mon, 02 Mar 2020 14:49:22 +0100
+Message-ID: <7h8skisw7x.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302104726.GA7995@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
+> This is largely cosmetic, but Odroid N2 and Khadas VIM3 are G12B devices so
+> correct the card model names to reflect this.
+>
+> Fixes: aa7d5873bf6e ("arm64: dts: meson-g12b-odroid-n2: add sound card")
+> Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
 
-On 03/02/2020 04:17 PM, Will Deacon wrote:
-> [+Anshuman and Catalin]
-> 
-> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
->> Linux-Next 20200302 arm64 build failed due to below errors,
->> Suspecting patch causing this build break.
->>
->> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
->>
->> Error log,
->> -------------
->> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
->> include/linux/compiler.h:284:1: error: incompatible type for argument
->> 1 of 'p4d_page_paddr'
->>  ({         \
->>  ^
->> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
->> '__phys_to_virt'
->>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
->>                                              ^
->> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
->>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->>                                           ^~~~
->> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
->>  #define READ_ONCE(x) __READ_ONCE(x, 1)
->>                       ^~~~~~~~~~~
->> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
->>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
->> + pud_index(addr) * sizeof(pud_t))
->>                                                     ^~~~~~~~~
->> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
->> 'pud_offset_phys'
->>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->>                                                ^~~~~~~~~~~~~~~
->> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
->>    pudp = pud_offset(pgdp, addr);
->>           ^~~~~~~~~~
-> 
-> Looks like we need an implementation of unmap_hotplug_p4d_range() to
-> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
-> patches in the arm64 tree so we'll either need a common branch or the
-> hotplug patches will need to be dropped for the moment.
+nit: no blank lines between Fixes tags and others (cf
 
-If we decide to get a common branch, will try to get this sorted with
-an unmap_hotplug_p4d_range() implementation as you have suggested.
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 
-> 
-> Will
-> 
+Queued for v5.7,
+
+Thanks for the cleanup,
+
+Kevin
