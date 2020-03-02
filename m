@@ -2,121 +2,94 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529F9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E47C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D7B2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XbsezIDM"
+	by mail.kernel.org (Postfix) with ESMTP id C261824673
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583191747;
+	bh=ahpf1EotaEJQRqpkKyEK6/B8hTNM1TIvzQevKfubgFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FSKaxu20oq2gH8cHhLf4R5v4tJcKsDI/KNDo8WqfsgyACWh6C0gUYa07vh0RBu7V5
+	 +HrJLWYi4rRwNDjiqkA+t6SoaRVvVODsqBet10ebubohYp0R2JvItVH5cfla9O5lo8
+	 YSBk0WgcDviKjn+IcD3Fz0zlPpfbLnPwYlvJ82m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgCBXZg (ORCPT
+        id S1726871AbgCBX3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:25:36 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58635 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgCBXZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:25:36 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Wbq12bG1z9sSN;
-        Tue,  3 Mar 2020 10:25:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583191533;
-        bh=y2qlCjjTFOCCt5mgeBh0PcMBGGz27m+6/Ieaf0dvbCM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XbsezIDMZSPyNhHGAtO/4cUhjJ2wlTdbMgb0FOM9aD+HCJir8pZo+r+wECIDhIGYN
-         LVYkq8/nmTGToZAh2A8B6Bd3b2S3daJM4xcDE0LmoDRFYbKt/9nAfPir75Xw9v3Wts
-         3A7EM8LlbG0TABFfXSN6FbTqM27Rl+IriFMLbNQJsZ3+WEYZBAgOVNAdnPgDBM7QOl
-         F7mHdxJ5tjSALnJ55RNqvnJZuQ6rAp0P+AE0KBQAxGP9aUaMa3BGxjtVJ7DK5K+qez
-         UR9ulfxasPX3nsxfsvmFXcsCC+bb35E2tq1TXUxTArjXMWdNHPVwl7T+61qBEYM48I
-         1vZpEOh/OFvPg==
-Date:   Tue, 3 Mar 2020 10:25:23 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: linux-next: manual merge of the jc_docs tree with Linus' tree
-Message-ID: <20200303102523.0b3b4e52@canb.auug.org.au>
+        Mon, 2 Mar 2020 18:29:06 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42668 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBX3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:29:06 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so1124292otd.9;
+        Mon, 02 Mar 2020 15:29:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NS6hER+VVAnGHZWWvDFXB42+gq+sW8+/QdX9Qb/AI7g=;
+        b=UsFYuuv3MJ6SQ3Vecp60psP+Csx6U2ujet35Mu/CoAtwIwXTB40vRLlC6/ziZgN2bM
+         8mIL7YzTDC9w+C2DIp4JMEViUV3opXYqGvmIhZs/XMYp78QYgnfNtSCN+AH5ReYwcg7i
+         qnAi2MdDQRHZeXMnW4w8RNobgHnly5jr/yWeFYPkpa+9iLrEnMJ7D3F7lcjWSRKVBj+W
+         68QuToTGhmKCfjLf50ufawvesQg9kF+JA5aRQyuWdup3EHnDTUEBkdbZZr/XppOK/rak
+         NMrorLCycPbhqYG6bcLcGJUKUjNdoVTIdKEy7Ry9QnO6YsuiDoHlKNNZTUhpBCyPUIqD
+         bppQ==
+X-Gm-Message-State: ANhLgQ2l5caFyrVve9U/3UrOPuAJzDORrvpcFpYc6UMU6X2LGlGEJFjw
+        yFtG5JuwFZAXe29BVYC9zg==
+X-Google-Smtp-Source: ADFU+vsUt55eBcvqYE0rSpf9oRYffX/uXs52slphFkLEkbKH37ioBPr+eiRmTNq+O9nX9CF5FnnZAQ==
+X-Received: by 2002:a9d:6446:: with SMTP id m6mr1231470otl.122.1583191745239;
+        Mon, 02 Mar 2020 15:29:05 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m69sm7061077otc.78.2020.03.02.15.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 15:29:04 -0800 (PST)
+Received: (nullmailer pid 4498 invoked by uid 1000);
+        Mon, 02 Mar 2020 23:29:03 -0000
+Date:   Mon, 2 Mar 2020 17:29:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v11 2/6] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200302232903.GA4460@bogus>
+References: <20200228081441.88179-1-jitao.shi@mediatek.com>
+ <20200228081441.88179-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ua05MdXoOqRfMvbYTbMkgEv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228081441.88179-3-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ua05MdXoOqRfMvbYTbMkgEv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 28 Feb 2020 16:14:37 +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-Hi all,
-
-Today's linux-next merge of the jc_docs tree got a conflict in:
-
-  Documentation/filesystems/zonefs.rst
-
-between commit:
-
-  4c5fd3b791a0 ("zonefs: fix documentation typos etc.")
-
-from Linus' tree and commit:
-
-  9a6108124c1d ("docs: filesystems: convert zonefs.txt to ReST")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/filesystems/zonefs.rst
-index d54fa98ac158,7e733e751e98..000000000000
---- a/Documentation/filesystems/zonefs.rst
-+++ b/Documentation/filesystems/zonefs.rst
-@@@ -301,7 -308,8 +308,8 @@@ Mount option
- =20
-  zonefs define the "errors=3D<behavior>" mount option to allow the user to=
- specify
-  zonefs behavior in response to I/O errors, inode size inconsistencies or =
-zone
- -condition chages. The defined behaviors are as follow:
- +condition changes. The defined behaviors are as follow:
-+=20
-  * remount-ro (default)
-  * zone-ro
-  * zone-offline
-
---Sig_/ua05MdXoOqRfMvbYTbMkgEv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5dleMACgkQAVBC80lX
-0GxTygf9GQA6rR4DPbEoVrs2TwZKZXskfqiyMRQXc/T5RlG70D6to4IUFVHOuYAv
-bubD8mJjPkoAfkXSVX2WrGqgMWlemTcG7fuE3y2CMP60JpTs9/zvJCGkoclmMjhG
-L4THZfK3LWHDQQTDkFxw05svfw5LVkX5v3iD/LlrZHyLXzdr7xLkAfGCwPIl8LzU
-3spp/P10mF7Fbhxx/FJGvv3HJfK0dirxlBO+jvMJ8l3Atwamtw4Alw5S5Kdhkgfv
-gA8O704xX7EwHYn3VGeHRhAo9aG8C83sBRvg/UHiIdcAMza4MINVnnd4o6x9+dUf
-2prvZHjJppnkFzP4uwbj5FfEcFPP4g==
-=bhy6
------END PGP SIGNATURE-----
-
---Sig_/ua05MdXoOqRfMvbYTbMkgEv--
+Acked-by: Rob Herring <robh@kernel.org>
