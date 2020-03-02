@@ -2,104 +2,151 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E26C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E864C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054CA24677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A8E24677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:55:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="CPr77l7k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUKoQ2qI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCBFys (ORCPT
+        id S1726918AbgCBFzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:54:48 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40581 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBFys (ORCPT
+        Mon, 2 Mar 2020 00:55:19 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33430 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBFzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:54:48 -0500
-Received: by mail-ua1-f67.google.com with SMTP id t20so3183031uao.7
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:54:46 -0800 (PST)
+        Mon, 2 Mar 2020 00:55:19 -0500
+Received: by mail-pg1-f194.google.com with SMTP id m5so1036259pgg.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:55:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xaVFZKXkYwadGJPmxWSyTrfKN4QDA7x77UvzbDi6hYw=;
-        b=CPr77l7kD5D+rAiwuZyWv8zJQjAQzrZ2SaX5O2HwQfDvb7nfHwgMHYMKB/gDZFMkU/
-         hp4j50gGKIAeYlYuClcTqi6vwyt/nf3iceTzGL7aNCOe3LpLnTo9xxtuLd9s2u4emmki
-         d1AiObF/E9n73EjuUtApBgiVqckrKAiE4IJ9mgutkBLgyp1BcRCAOnONvw3fteUiFVVA
-         79dkuS2hylinTvRyOh14/8EHEGPAfdVK7ZHcHofybDXihzL9HSjGPKukITYYTxHjSHKM
-         FpUcaY+ypDV92ZR62HEp5QvYKo4CTQEDvovh+34M5achweW6EW8YfmTOkPv+29Hd5ZeG
-         YvUQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/rugZxpdMgFuggpknIjg9upbTqeu96rVvKelMnBJ9UA=;
+        b=AUKoQ2qIej++uMhL6Cg9bs9r0hCEdWT28c5rZpygXGbAUxGgH6pqibzWYMpM6cc7/T
+         Hhu3Jn7w73pVCQZWpU0wBqzMfTezwvpaOvnbE/5bVsZoEml3Wo2JbYgkn3NaZB30zSqy
+         fzoLCy4Beb8LUmmrcpVkPayAEYqs8zNb3ZMrimukA9XfsiZ9yiZU08Ww7Vl3w3yVuLse
+         doj2aTd77l8pXdi6IXiROq+tghT/WVtVfz+M4+hqy9Ivwt8T8ry/cbrHfgSUOLkhA3i8
+         lN/Wxw0A41YK7IkLkgnGBFmuH20k2rF+D0p5Ej/4MS5phnLcZKDYo/Nc1e8CzZhHe78w
+         ifhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xaVFZKXkYwadGJPmxWSyTrfKN4QDA7x77UvzbDi6hYw=;
-        b=bZEBrYPfdcSFTotUA8tujWogTHyaKP+9+j6LOoFI/+qs72nbM3CFDh7balBJSsStWE
-         aIsq7Ms96NHf5d6DBi0fcf1UcNW1upLVVpxRwq3zHpWviqgZu4/cvsg+uQuL885IFjRm
-         yHQaQSc3NYAsN45cdkoMMGVLmdGkF1ByPnoVj2g8APb9gXT17hUx6xMxwQiMKwa8Hw4Z
-         yxc8WT+cEvt8wmLh2pUeDIcGOrHOb6Zx27x8JPYfwa5JlTSAAMmPxNqI43DmzL5kOTSf
-         Xg/gBAlkf/6pjw2NUd3jNorhQzM4JIFVX5c7JSc7l64vmCCXpNFszcj/sSBZ2qGzultO
-         6r+w==
-X-Gm-Message-State: ANhLgQ3cNyd71OnJaIQNQxTrBeRTD3pfNTE7WEQmjlsRQ0Pxp2mCI3zy
-        JcW9Xo0U7r5hiyGVSgnueNBFshD6v3+cRGsqvv666Q==
-X-Google-Smtp-Source: ADFU+vtnQNxDfyhIydJNfyBpdE0lGq6GsJ6tyObK59DOF5xuyYZSJgq3fkaYxljupt7e3lTfBookfoG23Ynd14+Qjt0=
-X-Received: by 2002:ab0:2758:: with SMTP id c24mr6576762uap.94.1583128485802;
- Sun, 01 Mar 2020 21:54:45 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/rugZxpdMgFuggpknIjg9upbTqeu96rVvKelMnBJ9UA=;
+        b=kAH/DRiHeDtEkbk5uga7xkb455lbTc5HX+OumKlJmKmFQDR2ZeNoIHUlF9A7ytzB/6
+         aEMcG3PwH7ZnlmI4f3FLg41n/GRIpCjef2f9dFLvc2UrLcMAUhrzXLnF8WdAA0f1blXx
+         JOEEWtbAIPwLMLf/3D52/UUC1n0PkYTe7Z+FvyB6O+DUgErxXVpxK9ueSHG+V8tYKSvL
+         LqZe4/N4gF5c62RKMspifxfKS2ECsxWxhITTVXpviiOZKlexLySQbzk5F65tSRF3RV5O
+         S63h2grw7/sLrm0nxp6w/xdaPEscu5S1/XvTaYs0Acsz6iu+a9gO41vi/6YkcYZQQVe9
+         3uNA==
+X-Gm-Message-State: APjAAAUH7JDNANfVl1GndOD0wbtVSmlZWk40+jaJRrPMMeQgPoCkV91p
+        G0ZZZ/I+JuCOwyd4XQEhtz5z
+X-Google-Smtp-Source: APXvYqxY0x55nq3fyRV03uQtfT196Q9JIOy5IBWGxH31mgiNHSafdj+D6Pob7Gp23ZUNY1EY8VbmHw==
+X-Received: by 2002:a65:668c:: with SMTP id b12mr17983339pgw.14.1583128518463;
+        Sun, 01 Mar 2020 21:55:18 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:683:b69c:15d:29bf:12ee:d853])
+        by smtp.gmail.com with ESMTPSA id i15sm278975pfk.115.2020.03.01.21.55.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Mar 2020 21:55:17 -0800 (PST)
+Date:   Mon, 2 Mar 2020 11:25:10 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/2] net: qrtr: Fix FIXME related to qrtr_ns_init()
+Message-ID: <20200302055510.GB23607@Mani-XPS-13-9360>
+References: <20200302032527.552916-1-bjorn.andersson@linaro.org>
+ <20200302032527.552916-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
-In-Reply-To: <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 2 Mar 2020 13:53:56 +0800
-Message-ID: <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302032527.552916-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Drake <drake@endlessm.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=8828=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:43=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wr=
-ote:
-> > The purpose of this series of update of the ACPI EC driver is to make i=
-ts
-> > initialization more straightforward.
-> >
-> > They fix a couple of issues, clean up some things, remove redundant cod=
-e etc.
-> >
-> > Please refer to the changelogs of individual patches for details.
-> >
-> > For easier access, the series is available in the git branch at
-> >
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> >  acpi-ec-work
-> >
-> > on top of 5.6-rc3.
->
-> Jian-Hong, can you please test this on Asus UX434DA?
-> Check if the screen brightness hotkeys are still working after these chan=
-ges.
+On Sun, Mar 01, 2020 at 07:25:27PM -0800, Bjorn Andersson wrote:
+> The 2 second delay before calling qrtr_ns_init() meant that the remote
+> processors would register as endpoints in qrtr and the say_hello() call
+> would therefor broadcast the outgoing HELLO to them. With the HELLO
+> handshake corrected this delay is no longer needed.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  net/qrtr/ns.c   | 2 +-
+>  net/qrtr/qrtr.c | 6 +-----
+>  net/qrtr/qrtr.h | 2 +-
+>  3 files changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
+> index e3f11052b5f6..cfd4bd07a62b 100644
+> --- a/net/qrtr/ns.c
+> +++ b/net/qrtr/ns.c
+> @@ -693,7 +693,7 @@ static void qrtr_ns_data_ready(struct sock *sk)
+>  	queue_work(qrtr_ns.workqueue, &qrtr_ns.work);
+>  }
+>  
+> -void qrtr_ns_init(struct work_struct *work)
+> +void qrtr_ns_init(void)
+>  {
+>  	struct sockaddr_qrtr sq;
+>  	int ret;
+> diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+> index 423310896285..313d3194018a 100644
+> --- a/net/qrtr/qrtr.c
+> +++ b/net/qrtr/qrtr.c
+> @@ -1263,11 +1263,7 @@ static int __init qrtr_proto_init(void)
+>  		return rc;
+>  	}
+>  
+> -	/* FIXME: Currently, this 2s delay is required to catch the NEW_SERVER
+> -	 * messages from routers. But the fix could be somewhere else.
+> -	 */
+> -	INIT_DELAYED_WORK(&qrtr_ns_work, qrtr_ns_init);
+> -	schedule_delayed_work(&qrtr_ns_work, msecs_to_jiffies(2000));
+> +	qrtr_ns_init();
+>  
 
-Hi Rafael,
+You forgot to remove the below instances of delayed_work:
 
-Thanks for your patches, but we found an issue:
-The laptops like ASUS UX434DA's screen brightness hotkeys work before
-this patch series.  However, the hotkeys are failed with the patch
-"ACPI: EC: Unify handling of event handler installation failures".
+#include <linux/workqueue.h>
+struct delayed_work qrtr_ns_work;
+cancel_delayed_work_sync(&qrtr_ns_work);
 
-Jian-Hong Pan
+Other than that,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+>  	return rc;
+>  }
+> diff --git a/net/qrtr/qrtr.h b/net/qrtr/qrtr.h
+> index 53a237a28971..dc2b67f17927 100644
+> --- a/net/qrtr/qrtr.h
+> +++ b/net/qrtr/qrtr.h
+> @@ -29,7 +29,7 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep);
+>  
+>  int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len);
+>  
+> -void qrtr_ns_init(struct work_struct *work);
+> +void qrtr_ns_init(void);
+>  
+>  void qrtr_ns_remove(void);
+>  
+> -- 
+> 2.24.0
+> 
