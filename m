@@ -2,123 +2,153 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC98C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0718C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3CB22B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Btl64gHC"
+	by mail.kernel.org (Postfix) with ESMTP id C47DC24677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCBVvX (ORCPT
+        id S1727103AbgCBVv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:51:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39281 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCBVvU (ORCPT
+        Mon, 2 Mar 2020 16:51:26 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:46332 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgCBVvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:51:20 -0500
-Received: by mail-pf1-f193.google.com with SMTP id l7so362167pff.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:51:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A14QEnluAfy61zPlyOAgKgUKJNYdcdSbcWS256De/Mg=;
-        b=Btl64gHCqFESo8nzkD/TMtxRWNCqZzrgYn6cwLdnuYB9TEEF7ir6cyZWBScRS44MWv
-         TqFMv6lRCB7Mr39FnCTNoC+kxmXGcgFA5Tz6d64AOb5+4tVWJQ79oPnC9H56lGREje9f
-         MaS+L9jfToyMU1snIAbPtXgt+O6zUA3X6LQltJ2L+A1BUtrNEwD7gx1mkMhfAqM2ASUB
-         Phg4lSUI5S/a7fRw61fSdgk5Fiwxkxf1XZJCoL2B7c4vXZAvJ6asxaT1yif77FlTTAiv
-         UK1A+dkkNbxmM+5+uRgC1TnNbaKXbq8GP90rQ1iIfmduAOdgA12H27iqUIXb3GoJ5xLw
-         tUhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A14QEnluAfy61zPlyOAgKgUKJNYdcdSbcWS256De/Mg=;
-        b=HyzQGIL+QjZM7uzsaUKzZQSCmgjocXOM0bKbNAEitnrQj73lcOBN+x/qN6e/gCXq5c
-         SpT/WdYutoVIortf4xXiwadfbqFzFw2Ys1d6QnzsDt9UJDR2lsaoiTYBWbjcox507T2z
-         PMKs1LtbXgKbNMW4Q2EEn3TnVW+cBE0w+avdeROzBaFJ4N38d2cb5dR11P2hZRTJSh0b
-         Vc3xq+h0hsu+iVXcJt3DVnyL3rSMbMEocrl5PVEmNoko10PtURnuOPXXc8IpqCskS+6R
-         mxiTSOkxYKtPA+OqueWqc/USOdRt7CWgYR3+fTM738andXMkEPDYaZpdm25ejXzk+YuO
-         rOnA==
-X-Gm-Message-State: ANhLgQ3C+SGXRHvAgyNngTBUg332YThhl8wdClBHIarrBuntt1zaDx/B
-        lxxiQmKBVKi+yG08y2YY3VYfGEDsg+QFAUhIS217Lg==
-X-Google-Smtp-Source: ADFU+vsFiOsjnufNSWTYa5s4zkSsIXKEXTdX92uVw2XZoiuJmVru8rWfMLLCbtJLYVcGqCWGnrQZTfKtxW3jnd4ik6M=
-X-Received: by 2002:a63:4d6:: with SMTP id 205mr916704pge.10.1583185878849;
- Mon, 02 Mar 2020 13:51:18 -0800 (PST)
+        Mon, 2 Mar 2020 16:51:25 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j8sy9-0001uo-3P; Mon, 02 Mar 2020 14:51:21 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j8sy8-0000vB-BX; Mon, 02 Mar 2020 14:51:20 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+        <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+        <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
+        <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74zmfc9.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87k142lpfz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfmloir.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Mon, 02 Mar 2020 15:49:09 -0600
+In-Reply-To: <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Mon, 2 Mar 2020 17:13:31 +0000")
+Message-ID: <87v9nmjulm.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200302213402.9650-1-natechancellor@gmail.com>
-In-Reply-To: <20200302213402.9650-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 2 Mar 2020 13:51:07 -0800
-Message-ID: <CAKwvOdn8SgY-C1YRGOcCnTn84MHHGirkDHPfg=mCONmUV_wqSQ@mail.gmail.com>
-Subject: Re: [PATCH] coresight: cti: Remove unnecessary NULL check in cti_sig_type_name
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1j8sy8-0000vB-BX;;;mid=<87v9nmjulm.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19moPzbn5KKuED00hBojlLEmyr3UzUKtvY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 1:34 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/hwtracing/coresight/coresight-cti-sysfs.c:948:11: warning:
-> address of array 'grp->sig_types' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (grp->sig_types) {
->         ~~  ~~~~~^~~~~~~~~
-> 1 warning generated.
->
-> sig_types is at the end of a struct so it cannot be NULL.
->
-> Fixes: 85b6684eab65 ("coresight: cti: Add connection information to sysfs")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/914
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-Yep, GCC and Clang both eliminate the false case as impossible:
-https://godbolt.org/z/tjbDqR
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  drivers/hwtracing/coresight/coresight-cti-sysfs.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> On 3/2/20 5:17 PM, Eric W. Biederman wrote:
+>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>> 
+>>> On 3/2/20 4:57 PM, Eric W. Biederman wrote:
+>>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>>>>
+>>>>>
+>>>>> I tried this with s/EACCESS/EACCES/.
+>>>>>
+>>>>> The test case in this patch is not fixed, but strace does not freeze,
+>>>>> at least with my setup where it did freeze repeatable.
+>>>>
+>>>> Thanks, That is what I was aiming at.
+>>>>
+>>>> So we have one method we can pursue to fix this in practice.
+>>>>
+>>>>> That is
+>>>>> obviously because it bypasses the cred_guard_mutex.  But all other
+>>>>> process that access this file still freeze, and cannot be
+>>>>> interrupted except with kill -9.
+>>>>>
+>>>>> However that smells like a denial of service, that this
+>>>>> simple test case which can be executed by guest, creates a /proc/$pid/mem
+>>>>> that freezes any process, even root, when it looks at it.
+>>>>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
+>>>>
+>>>> Yes.  Your the test case in your patch a variant of the original
+>>>> problem.
+>>>>
+>>>>
+>>>> I have been staring at this trying to understand the fundamentals of the
+>>>> original deeper problem.
+>>>>
+>>>> The current scope of cred_guard_mutex in exec is because being ptraced
+>>>> causes suid exec to act differently.  So we need to know early if we are
+>>>> ptraced.
+>>>>
+>>>
+>>> It has a second use, that it prevents two threads entering execve,
+>>> which would probably result in disaster.
+>> 
+>> Exec can fail with an error code up until de_thread.  de_thread causes
+>> exec to fail with the error code -EAGAIN for the second thread to get
+>> into de_thread.
+>> 
+>> So no.  The cred_guard_mutex is not needed for that case at all.
+>> 
 >
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> index abb7f492c2cb..214d6552b494 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> @@ -945,10 +945,8 @@ cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
->         int idx = 0;
->         struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
->
-> -       if (grp->sig_types) {
-> -               if (used_count < grp->nr_sigs)
-> -                       idx = grp->sig_types[used_count];
-> -       }
-> +       if (used_count < grp->nr_sigs)
-> +               idx = grp->sig_types[used_count];
->         return sig_type_names[idx];
->  }
->
-> --
+> Okay, but that will reset current->in_execve, right?
 
+Absolutely.
 
--- 
-Thanks,
-~Nick Desaulniers
+The error handling kicks in and exec_binprm fails with a negative
+return code.  Then __do_excve_file cleans up and clears
+current->in_execve.
+
+Eric
