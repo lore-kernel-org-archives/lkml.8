@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947EEC3F2D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896A5C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68875246B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6103C2468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137062;
-	bh=4a4S5kJaWHjHlpmrc68T5FTFIJzAj8bHB4TYgHYD3iY=;
+	s=default; t=1583137066;
+	bh=6sbFKCi8a4l1ayl3j3LXRMPY+oORPvV1Q6kKCVDtBHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGQ/QeVQ0dbV/90BMzwjHcVyEnLJVOrqmQlglIEiyb8Yww94d83aKU6yLsUwN7njn
-	 Qr4bUdlIMNrxhF+ExxEdhGujKioxXgEdovIMPg1roagSomS6jvALkrC29XRLhdtzkV
-	 Tz0+NnYqurW7la3Ia8Ggkbp51UpZz41quau10Piw=
+	b=SxsGBKWppqtzn1CLSr0P6vY5L7O/n6ZHocwZzafsmcU3SdJM6vNF7JaOy8TX4qc3q
+	 iSY81ZbgAaHVbaQ/trkS9B3DPyHNP9YBidvLyyBqlu+NNH5H1oAhTQYX2ip65yekLO
+	 1fPao63wxoYSD7GYs86l9xSH/+wA0iZidYz4cH/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgCBIQX (ORCPT
+        id S1727708AbgCBIRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:16:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 03:17:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgCBIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:16:20 -0500
+        id S1727261AbgCBIQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:16:22 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09237246BE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9459D246EF;
         Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583136979;
-        bh=4a4S5kJaWHjHlpmrc68T5FTFIJzAj8bHB4TYgHYD3iY=;
+        bh=6sbFKCi8a4l1ayl3j3LXRMPY+oORPvV1Q6kKCVDtBHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BK9G92s16vEfR45VhMUPyHZnzmSf9It/HN6BriRW01xol4KQp99jyDIArgmC9J6Gs
-         VZaOSFginfpEiMuuSuK7Gnq1L5UigoN1BkDG991V1aGgIRDG2c7L7T1YtPxshQjiXz
-         Dn3fgyTbf34ySeKvvvWc3sszVLvuALtPxdx/csLY=
+        b=gDeKl8gdujGQ6fnznI0yr3ojjOccyj9f3EQhcwni+2YHRMCpgVHBQoNYXHH3qZtqb
+         KkCl4OoqqygLMzI00kmxPHdzIkQwyb4irU/QO8PHOFJcxmOjh2UIhieNXJSQlhq9mS
+         mbtm9KS/Vp33AJwlH7QmmI8tI0Pg4ppJ+V8FAVnA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003xI-7p; Mon, 02 Mar 2020 09:16:17 +0100
+        id 1j8gFN-0003yl-NY; Mon, 02 Mar 2020 09:16:17 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 09/42] docs: scsi: convert bfa.txt to ReST
-Date:   Mon,  2 Mar 2020 09:15:42 +0100
-Message-Id: <6660d0f83ddae2ab8efb31c39f9c220fc132e9d4.1583136624.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH 27/42] docs: scsi: convert scsi-changer.txt to ReST
+Date:   Mon,  2 Mar 2020 09:16:00 +0100
+Message-Id: <433d073fa982174a19783c2e59412b724e2cf946.1583136624.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
 References: <cover.1583136624.git.mchehab+huawei@kernel.org>
@@ -61,101 +64,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/scsi/{bfa.txt => bfa.rst} | 28 +++++++++++++++++--------
- Documentation/scsi/index.rst            |  1 +
- 2 files changed, 20 insertions(+), 9 deletions(-)
- rename Documentation/scsi/{bfa.txt => bfa.rst} (72%)
+ Documentation/scsi/index.rst                  |  1 +
+ .../{scsi-changer.txt => scsi-changer.rst}    | 36 ++++++++++---------
+ drivers/scsi/Kconfig                          |  2 +-
+ 3 files changed, 22 insertions(+), 17 deletions(-)
+ rename Documentation/scsi/{scsi-changer.txt => scsi-changer.rst} (87%)
 
-diff --git a/Documentation/scsi/bfa.txt b/Documentation/scsi/bfa.rst
-similarity index 72%
-rename from Documentation/scsi/bfa.txt
-rename to Documentation/scsi/bfa.rst
-index 3cc4d80d6092..3abc0411857d 100644
---- a/Documentation/scsi/bfa.txt
-+++ b/Documentation/scsi/bfa.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================================
- Linux driver for Brocade FC/FCOE adapters
--
-+=========================================
- 
- Supported Hardware
- ------------------
-@@ -7,8 +10,9 @@ Supported Hardware
- bfa 3.0.2.2 driver supports all Brocade FC/FCOE adapters. Below is a list of
- adapter models with corresponding PCIIDs.
- 
--	PCIID		  	Model
--
-+	===================	===========================================
-+	PCIID			Model
-+	===================	===========================================
- 	1657:0013:1657:0014	425 4Gbps dual port FC HBA
- 	1657:0013:1657:0014	825 8Gbps PCIe dual port FC HBA
- 	1657:0013:103c:1742	HP 82B 8Gbps PCIedual port FC HBA
-@@ -26,6 +30,7 @@ adapter models with corresponding PCIIDs.
- 
- 	1657:0022:1657:0024	1860 16Gbps FC HBA
- 	1657:0022:1657:0022	1860 10Gbps CNA - FCOE
-+	===================	===========================================
- 
- 
- Firmware download
-@@ -37,9 +42,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
- 
- and then click following respective util package link:
- 
--	Version			Link
--
-+	=========	=======================================================
-+	Version		Link
-+	=========	=======================================================
- 	v3.0.0.0	Linux Adapter Firmware package for RHEL 6.2, SLES 11SP2
-+	=========	=======================================================
- 
- 
- Configuration & Management utility download
-@@ -52,9 +59,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
- 
- and then click following respective util package link
- 
--	Version			Link
--
-+	=========	=======================================================
-+	Version		Link
-+	=========	=======================================================
- 	v3.0.2.0	Linux Adapter Firmware package for RHEL 6.2, SLES 11SP2
-+	=========	=======================================================
- 
- 
- Documentation
-@@ -69,10 +78,11 @@ http://www.brocade.com/services-support/drivers-downloads/adapters/Linux.page
- and use the following inbox and out-of-box driver version mapping to find
- the corresponding documentation:
- 
-+	=============		==================
- 	Inbox Version		Out-of-box Version
--
-+	=============		==================
- 	v3.0.2.2		v3.0.0.0
--
-+	=============		==================
- 
- Support
- -------
 diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index c0b66763515f..1e37227f3536 100644
+index 29e211ee9145..635a3b3c5e90 100644
 --- a/Documentation/scsi/index.rst
 +++ b/Documentation/scsi/index.rst
-@@ -13,5 +13,6 @@ Linux SCSI Subsystem
-    aha152x
-    aic79xx
-    aic7xxx
-+   bfa
+@@ -31,5 +31,6 @@ Linux SCSI Subsystem
+    NinjaSCSI
+    ppa
+    qlogicfas
++   scsi-changer
  
     scsi_transport_srp/figures
+diff --git a/Documentation/scsi/scsi-changer.txt b/Documentation/scsi/scsi-changer.rst
+similarity index 87%
+rename from Documentation/scsi/scsi-changer.txt
+rename to Documentation/scsi/scsi-changer.rst
+index ade046ea7c17..ab60e7e61a6c 100644
+--- a/Documentation/scsi/scsi-changer.txt
++++ b/Documentation/scsi/scsi-changer.rst
+@@ -1,4 +1,6 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
++========================================
+ README for the SCSI media changer driver
+ ========================================
+ 
+@@ -28,15 +30,17 @@ The SCSI changer model is complex, compared to - for example - IDE-CD
+ changers. But it allows to handle nearly all possible cases. It knows
+ 4 different types of changer elements:
+ 
+-  media transport - this one shuffles around the media, i.e. the
++  ===============   ==================================================
++  media transport   this one shuffles around the media, i.e. the
+                     transport arm.  Also known as "picker".
+-  storage         - a slot which can hold a media.
+-  import/export   - the same as above, but is accessible from outside,
++  storage           a slot which can hold a media.
++  import/export     the same as above, but is accessible from outside,
+                     i.e. there the operator (you !) can use this to
+                     fill in and remove media from the changer.
+ 		    Sometimes named "mailslot".
+-  data transfer   - this is the device which reads/writes, i.e. the
++  data transfer     this is the device which reads/writes, i.e. the
+ 		    CD-ROM / Tape / whatever drive.
++  ===============   ==================================================
+ 
+ None of these is limited to one: A huge Jukebox could have slots for
+ 123 CD-ROM's, 5 CD-ROM readers (and therefore 6 SCSI ID's: the changer
+@@ -131,24 +135,23 @@ timeout_init=<seconds>
+ timeout_move=<seconds>
+ 	timeout for all other commands (default: 120).
+ 
+-dt_id=<id1>,<id2>,...
+-dt_lun=<lun1>,<lun2>,...
++dt_id=<id1>,<id2>,... / dt_lun=<lun1>,<lun2>,...
+ 	These two allow to specify the SCSI ID and LUN for the data
+ 	transfer elements.  You likely don't need this as the jukebox
+ 	should provide this information.  But some devices don't ...
+ 
+-vendor_firsts=
+-vendor_counts=
+-vendor_labels=
++vendor_firsts=, vendor_counts=, vendor_labels=
+ 	These insmod options can be used to tell the driver that there
+ 	are some vendor-specific element types.  Grundig for example
+ 	does this.  Some jukeboxes have a printer to label fresh burned
+ 	CDs, which is addressed as element 0xc000 (type 5).  To tell the
+-	driver about this vendor-specific element, use this:
++	driver about this vendor-specific element, use this::
++
+ 		$ insmod ch			\
+ 			vendor_firsts=0xc000	\
+ 			vendor_counts=1		\
+ 			vendor_labels=printer
++
+ 	All three insmod options accept up to four comma-separated
+ 	values, this way you can configure the element types 5-8.
+ 	You likely need the SCSI specs for the device in question to
+@@ -162,13 +165,15 @@ Credits
+ I wrote this driver using the famous mailing-patches-around-the-world
+ method.  With (more or less) help from:
+ 
+-	Daniel Moehwald <moehwald@hdg.de>
+-	Dane Jasper <dane@sonic.net>
+-	R. Scott Bailey <sbailey@dsddi.eds.com>
+-	Jonathan Corbet <corbet@lwn.net>
++	- Daniel Moehwald <moehwald@hdg.de>
++	- Dane Jasper <dane@sonic.net>
++	- R. Scott Bailey <sbailey@dsddi.eds.com>
++	- Jonathan Corbet <corbet@lwn.net>
+ 
+ Special thanks go to
+-	Martin Kuehne <martin.kuehne@bnbt.de>
++
++	- Martin Kuehne <martin.kuehne@bnbt.de>
++
+ for a old, second-hand (but full functional) cdrom jukebox which I use
+ to develop/test driver and tools now.
+ 
+@@ -176,5 +181,4 @@ Have fun,
+ 
+    Gerd
+ 
+--- 
+ Gerd Knorr <kraxel@bytesex.org>
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index d34c682e94cf..6cb9abb0898d 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -149,7 +149,7 @@ config CHR_DEV_SCH
+ 	  don't need this for those tiny 6-slot cdrom changers.  Media
+ 	  changers are listed as "Type: Medium Changer" in /proc/scsi/scsi.
+ 	  If you have such hardware and want to use it with linux, say Y
+-	  here.  Check <file:Documentation/scsi/scsi-changer.txt> for details.
++	  here.  Check <file:Documentation/scsi/scsi-changer.rst> for details.
+ 	
+ 	  If you want to compile this as a module ( = code which can be
+ 	  inserted in and removed from the running kernel whenever you want),
 -- 
 2.21.1
 
