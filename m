@@ -2,86 +2,185 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501FCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41F1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2CD20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583156820;
-	bh=a1BACQXPcb+DJZC7lutMRq4QISkW84jXrjYL5Ekag0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DbIt0yoMBX/Dg/Us/hlEUMnUq0/b4TgDhBi+zm+Wg1aApRZNtcCIOEoc0PMtAbeLy
-	 a3CKYHjvyL+wPs3Dasce6xjn1a7IRy9f0gesZN4+oSnOCp/MrWCIqdqUiGwAMSkGs6
-	 v2fuP3qHhQIBPaVv+3oJk/pwONEocJJjZaezA4pc=
+	by mail.kernel.org (Postfix) with ESMTP id 7B48620870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCBNq7 (ORCPT
+        id S1727072AbgCBNr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:46:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44922 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgCBNq6 (ORCPT
+        Mon, 2 Mar 2020 08:47:59 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40452 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCBNr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:46:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n7so4755026wrt.11;
-        Mon, 02 Mar 2020 05:46:57 -0800 (PST)
+        Mon, 2 Mar 2020 08:47:59 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j80so8308811oih.7;
+        Mon, 02 Mar 2020 05:47:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EsNI7T8fx9/zJXjOHaygab/3xTyRqQbHWTw10t+dBzA=;
-        b=jZZiwCACFxH1dWhm1nAaqz/yKHB7KknhPpSizcZguUpTair8VZuvNld6PdLyqo9uMH
-         VC5PFVLz3nYJT4Af2BJA7gam3vS3rFpLSJvFumgWCJy0RxA2KFHjUh+M4140Sk+YH64O
-         HEqZr7E57HSROrw4ZfnvRYqKu84pmKSc2O9s1Dzl0XclO3AibWqkYEAtg+Jn4b4ckwbY
-         ulNGxRXlDIcR/vfLaY37y10GGYXPMKc3sgcDn8v8CHEvqdsHWCq1jJuuNd6v7Fsn0OYA
-         18sK8C4I97WRv3mx9TnwjGdMix8FOTp20C//OlgOhonvNichSIjJ4x8THVi/KVTtYgdM
-         3nzw==
-X-Gm-Message-State: ANhLgQ1IeTfJ6SSFkme+reMSANyEb8sR7JWeKUo5aEbJswPpIjm71zyY
-        QGya1Ax74E7stqsbbMkxRq4FhUYF
-X-Google-Smtp-Source: ADFU+vsk/lNuhHwpxpNwBVIC3coW7NDluM9AGC/3y86Bm7OKnhdIXSzQoDViXc7JHCsYkjCUFwi+xQ==
-X-Received: by 2002:a5d:5643:: with SMTP id j3mr9174610wrw.337.1583156816652;
-        Mon, 02 Mar 2020 05:46:56 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z2sm23174843wrq.95.2020.03.02.05.46.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 05:46:55 -0800 (PST)
-Date:   Mon, 2 Mar 2020 14:46:55 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
- FOLL_PIN pages"
-Message-ID: <20200302134655.GL4380@dhcp22.suse.cz>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
- <20200228154322.329228-3-imbrenda@linux.ibm.com>
- <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=hDB6s0mVsZWzKBwRcoxWaZ6NA1lo5wdAr0u5W26z+JE=;
+        b=l7lEazKyQVeciw9mD3hG4uS9EcNZal43Dm/bjnNbtFxOho88NmwV/MA/pT0i4jm10G
+         C62bU3uM3yssel+KV6MuuQ0s04TOtlZei43OW4IVHcCQck18guI6n3dqJjVWc4mZLFOH
+         +3gftezsVSWTJAavu70R3FlMq57a+FfGhLBTDpaIXYuXdKZqFRx4JAFHkFvVBA+4kmM+
+         b/wGKwygSzFIjH2cWvm9ZC12TJkvBLPKFedq+hQi1W/B3LGfHNl3sWxl9jZhokqzDDSO
+         RHMArxl4MNlrOSfuTvBKCbHbQwGC2AfIj9GMBkV0G/W5u9FZgKYmErWePrwV1kTfDYFN
+         noiA==
+X-Gm-Message-State: APjAAAW9w8SbAk/qn3mHjjY16D/GgUgCWD5sUGVLvzlQGd2BYIM/dUyG
+        ohbm7X6ZSkj5vb9Je+Fdkq8RiUsHCF/edyOna/sX1A==
+X-Google-Smtp-Source: APXvYqzWVp9IhNwDI2+UTTrugW/SFZ+bbTayj2vr/BAzNkK7k45D30xX4RP/S0TypGTtAOrugGLKPdfWiiTIxXsXYzM=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr11048818oia.148.1583156877859;
+ Mon, 02 Mar 2020 05:47:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+ <20200302134011.GA3717@pflmari>
+In-Reply-To: <20200302134011.GA3717@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 14:47:46 +0100
+Message-ID: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 28-02-20 15:08:35, John Hubbard wrote:
-[...]
-> (Aside: I'm using the linux-next commit hash. How does one get the correct hash before
-> it goes to mainline? I guess maintainer scripts fix all those up?)
+Hi Alex,
 
-There is no such maging going on AFAIK. Please just do not use sha1 from
-linux-next unless it is really clear that those are not going to change.
-So essentially everything from mmotm is out of question.
+On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Mon, Mar 02, 2020 13:28:13 +0100:
+> > On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
+> > <alexander.riesen@cetitec.com> wrote:
+> > > Not sure if all variants of the Salvator board have the HDMI decoder
+> > > chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
+> > > Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
+> > > are placed in the board file.
+> >
+> > Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
+> >
+> > > I do assume though that all Salvator variants have the CLK_C clock line
+> > > hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
+> > > clocks provided by the R-Car sound system.
+> >
+> > Yes, both Salvator-X and Salvator-XS have it wired that way.
+>
+> Ok, seems like I can move that part into the common file as well.
+> Integrations of ADV7482 and R-Car which use salvator-common.dts can still
+> redefine the endpoint settings in their board files, right?
+
+Indeed.
+
+> > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > @@ -322,6 +322,10 @@
+> > >         clock-frequency = <22579200>;
+> > >  };
+> > >
+> > > +&audio_clk_c {
+> > > +       clock-frequency = <12288000>;
+> > > +};
+> >
+> > Does the ADV7482 always generate a 12.288 MHz clock signal?
+> > Or is this programmable?
+>
+> Oops. It looks like it is and the value is derived from the sampling rate
+> (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+
+Where are these hardcoded in the board file?
+Even if they are, technically this is a clock output of the ADC7482.
+
+> > > video-receiver@70 {
+> > >     compatible = "adi,adv7482";
+> > > ...
+> > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
+> > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
+> >
+> > The above declares the Audio CLK C to be a clock input of the ADV7482, while
+> > it is an output.
+>
+> I would gladly give it right direction if I *really* understood what I was
+> doing...
+
+:-)
+
+> > Furthermore, the DT bindings do not document that clocks can be specified.
+>
+> Should the DT bindings document that the clock cannot be specified than?
+
+It currently does say so, as it doesn't list "clocks" in its properties section.
+
+> > > @@ -686,7 +700,8 @@
+> > >         };
+> > >
+> > >         sound_pins: sound {
+> > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+> > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
+> > > +                        "ssi4_data";
+> >
+> > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
+>
+> I'll add them.
+> As the device seems to function even without thoes, does this mean the pins in
+> the group are used "on demand" by whatever needs them?
+
+Probably the SCK4/WS4 functions are the reset-state defaults.
+
+> > > @@ -760,8 +775,18 @@
+> > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+> > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+> > >                  <&audio_clk_a>, <&cs2000>,
+> > > -                <&audio_clk_c>,
+> >
+> > Why remove it? This is the list of clock inputs, not outputs.
+>
+> ...probably because I was thinking the specification was exactly the other way
+> around.
+>
+> Does a "clocks = ..." statement always mean input clocks?
+
+Yes it does.
+If a device has clock outputs and is thus a clock provider, it should
+have a #clock-cells property, and this should be documented in the bindings.
+
+A clock consumer will refer to clocks of a provider using the "clocks"
+property, specifying a clock specifier (phandle and zero or more indices)
+for each clock referenced.
+
+> I shall correct that and re-test (might take a while, I don't have the
+> hardware anymore).
+
+Oops.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Michal Hocko
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
