@@ -2,126 +2,282 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4AFC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC0FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922252166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E0D2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8MDuyeI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B17OkTtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgCBLa5 (ORCPT
+        id S1727648AbgCBLcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:30:57 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49707 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727717AbgCBLa5 (ORCPT
+        Mon, 2 Mar 2020 06:32:14 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46015 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgCBLcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:30:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583148656;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9IY3G3KV70/MnD62Hf8Yen6UaJhR5WJT6Ca0OFN7E5g=;
-        b=B8MDuyeIkF/GyAxbW3nghzCV/D91RiuW3z7ERGXP1u6Ys7H4H6cbNOZRm5IRwh4Y8OTeCH
-        cxJOX4tr78sY01V8sdRYkXRkrDl6obASvB3dJpv2jz5VRAEsfCFKQbGkNM+Ywb4X7CqdW/
-        CJMIdFRkVLs1yYKurNDEedYIWL/bVow=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-edjuqXfzMkSDux5kDW0btQ-1; Mon, 02 Mar 2020 06:30:53 -0500
-X-MC-Unique: edjuqXfzMkSDux5kDW0btQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B24A800053;
-        Mon,  2 Mar 2020 11:30:51 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C842A1001B2C;
-        Mon,  2 Mar 2020 11:30:48 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-References: <96563.1582901612@warthog.procyon.org.uk>
-        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
-Date:   Mon, 02 Mar 2020 12:30:47 +0100
-In-Reply-To: <20200228152427.rv3crd7akwdhta2r@wittgenstein> (Christian
-        Brauner's message of "Fri, 28 Feb 2020 16:24:27 +0100")
-Message-ID: <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 2 Mar 2020 06:32:13 -0500
+Received: by mail-lf1-f66.google.com with SMTP id d27so4606444lfq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/kQf81rwzljo+6gF4uOJIiK/FdkF076Jj7P20yuqrLY=;
+        b=B17OkTtp58QXZK66qMZ3R/xgCcUxh1WTGqlRJA4NBLKFm5HNCmkQTqrLWPlS7zyUOU
+         PdFBTIsnNFLqSqLVG+qjflvau4hKviTljbIm703H5NufbaNClc4JocUGpC784KVuvgDj
+         oAbCzJVQAjRZkmh+BLaLsdWpS1HJCNPeaf78CQljahHy70U4mXY9yhR7eSI1wuLDFzVf
+         mLI0p7pezu1i7B5xxGzWdQSMuKxdwI72jz9sw2hn0LUtRb5lXBRN2LbcaEV6xohNmjBG
+         heV7uZoDEeOpl9wQHnH83Nd/AmhAGErJywZExJ7uu+dUEtcjhEEdLCvrnCrBszMGzTlG
+         PcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/kQf81rwzljo+6gF4uOJIiK/FdkF076Jj7P20yuqrLY=;
+        b=XucsMN0ANQbWfwmpe1qzM/zHHm/vYGjnXppvoU+SykPJ6U2pLBJEGRTGCY5+gC8X27
+         CE9DIpSsAo3B5edFwzklqH2mqEtHvV8CBkt5iszbcxIteDBpLKqhW+NJBt8Oqs8rw60d
+         9UFBiLVm1vjqca60p7Mk3tJ8ktXrE99y814cRGMUhb1T2t11q+gxeWSUJcLStwX+Jlo+
+         GYAuaKpyiVcZYNUcbDlTvjsXmub903PdLj4McwxXhj//c6kilxcLmh/Vnm1uCAxeTNNy
+         uVn+iKmuTXWpdmaY+4NtuThhNTAT6h3/C46IqUiAJUVLWaaTa4wgN+Iq8ZFW60twumoV
+         5CZg==
+X-Gm-Message-State: ANhLgQ1+jUFG5yt7nicVCbwkdXPewVVnMaU0yHxzznsppsL49wfRyOpl
+        YYzCzn3+TrVnhX+SXcwallI8LpXCsGqq0ebclTlMWQ==
+X-Google-Smtp-Source: ADFU+vsWDngGp/y/+N0BEtKvcE+Ul5m5tiJ5cWskMSsuRvEDURGi1Kwqgt/FF6WgEtxeLaXKCdROxSjiAAqgvk6brJk=
+X-Received: by 2002:a19:5508:: with SMTP id n8mr10644269lfe.105.1583148729807;
+ Mon, 02 Mar 2020 03:32:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
+ <CA+G9fYtYqEbH9AUtVr744BKxLq0s1YuD=_kT9Ej=85dteHME4Q@mail.gmail.com> <CANRm+CyYLQ45wK86odRcDNpQfpgytnH-2qKoChi6w90byN624w@mail.gmail.com>
+In-Reply-To: <CANRm+CyYLQ45wK86odRcDNpQfpgytnH-2qKoChi6w90byN624w@mail.gmail.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 2 Mar 2020 12:31:58 +0100
+Message-ID: <CADYN=9L3BeL+dfqO8BoNzRPHMWwM=a4kuwN9GD361egowFEhyw@mail.gmail.com>
+Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, oupton@google.com,
+        Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
-
-> [Cc Florian since that ends up on libc's table sooner or later...]
-
-I'm not sure what you are after here =E2=80=A6
-
-> On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
->>=20=09
->> I've been told that RESOLVE_* flags, which can be found in linux/openat2=
-.h,
->> should be used instead of the equivalent AT_* flags for new system calls=
-.  Is
->> this the case?
+On Mon, 2 Mar 2020 at 08:21, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
-> Imho, it would make sense to use RESOLVE_* flags for new system calls
-> and afair this was the original intention.
-> The alternative is that RESOLVE_* flags are special to openat2(). But
-> that seems strange, imho. The semantics openat2() has might be very
-> useful for new system calls as well which might also want to support
-> parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
-> flags mirroring the new RESOLVE_* flags or we end up adding new
-> RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
-> possibility I vote for RESOLVE_* flags going forward. The have better
-> naming too imho.
+> On Mon, 2 Mar 2020 at 13:39, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Mon, 2 Mar 2020 at 00:33, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > >
+> > > Linus,
+> > >
+> > > The following changes since commit a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
+> > >
+> > >   KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
+> > >
+> > > are available in the git repository at:
+> > >
+> > >   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> > >
+> > > for you to fetch changes up to 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
+> > >
+> > >   KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
+> > >
+> > > ----------------------------------------------------------------
+> > > More bugfixes, including a few remaining "make W=1" issues such
+> > > as too large frame sizes on some configurations.  On the
+> > > ARM side, the compiler was messing up shadow stacks between
+> > > EL1 and EL2 code, which is easily fixed with __always_inline.
+> > >
+> > > ----------------------------------------------------------------
+> > > Christian Borntraeger (1):
+> > >       KVM: let declaration of kvm_get_running_vcpus match implementation
+> > >
+> > > Erwan Velu (1):
+> > >       kvm: x86: Limit the number of "kvm: disabled by bios" messages
+> > >
+> > > James Morse (3):
+> > >       KVM: arm64: Ask the compiler to __always_inline functions used at HYP
+> > >       KVM: arm64: Define our own swab32() to avoid a uapi static inline
+> > >       arm64: Ask the compiler to __always_inline functions used by KVM at HYP
+> > >
+> > > Jeremy Cline (1):
+> > >       KVM: arm/arm64: Fix up includes for trace.h
+> > >
+> > > Mark Rutland (1):
+> > >       kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
+> > >
+> > > Oliver Upton (1):
+> > >       KVM: VMX: check descriptor table exits on instruction emulation
+> > >
+> > > Paolo Bonzini (4):
+> > >       KVM: SVM: allocate AVIC data structures based on kvm_amd module parameter
+> > >       KVM: allow disabling -Werror
+> > >       KVM: x86: avoid useless copy of cpufreq policy
+> > >       Merge tag 'kvmarm-fixes-5.6-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
+> > >
+> > > Valdis Kletnieks (1):
+> > >       KVM: x86: allow compiling as non-module with W=1
+> > >
+> > > Wanpeng Li (2):
+> > >       KVM: Introduce pv check helpers
+> > >       KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
+> >
+> > Kernel panic noticed on latest Linux mainline kernel.
+> > qemu_x86_64 boot failed due to kernel panic.
+> > Please investigate this problem.
+> >
 >
-> An argument against this could be that we might end up causing more
-> confusion for userspace due to yet another set of flags. But maybe this
-> isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
-> When we introduce a new syscall userspace will have to add support for
-> it anyway.
+> Just give a quick shot. https://lkml.org/lkml/2020/3/2/78
 
-I missed the start of the dicussion and what this is about, sorry.
+I gave it a quick test and it worked.
 
-Regarding open flags, I think the key point for future APIs is to avoid
-using the set of flags for both control of the operation itself
-(O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
-resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
-help code that has to re-create an equivalent descriptor.  The operation
-flags are largely irrelevant to that if you can get the descriptor by
-other means.
+Cheers,
+Anders
 
->>  (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the defaul=
-t, but
->>      only RESOLVE_NO_SYMLINKS exists.
 >
-> I'd be very much in favor of not following symlinks being the default.
-> That's usually a source of a lot of security issues.
-
-But that's inconsistent with the rest of the system.  And for example,
-if you make /etc/resolv.conf a symbolic link, a program which uses a new
-I/O library (with the new interfaces) will not be able to read it.
-
-AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
-so it's relatively little protection.
-
-Thanks,
-Florian
-
+> > Meanwhile we will also investigate by using git bisect to identify bad patch.
+> >
+> > /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic \
+> >  -net nic,model=virtio,macaddr=DE:AD:BE:EF:66:05 -net tap \
+> > -m 1024 -monitor none -kernel
+> > bzImage--5.5+git0+98d54f81e3-r0-intel-corei7-64-20200301225337-2502.bin
+> > \
+> > --append "root=/dev/sda  rootwait console=ttyS0,115200" \
+> >  -hda rpb-console-image-lkft-intel-corei7-64-20200301225337-2502.rootfs.ext4 \
+> >  -m 4096 -smp 4 -nographic \
+> >  -drive format=qcow2,file=lava-guest.qcow2,media=disk,if=virtio,id=lavatest
+> >
+> > [    0.000000] Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
+> > 7.3.0 (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
+> > <trim>
+> > [    0.762542] kvm: no hardware support
+> > [    0.763123] BUG: kernel NULL pointer dereference, address: 000000000000028c
+> > [    0.763425] #PF: supervisor read access in kernel mode
+> > [    0.763425] #PF: error_code(0x0000) - not-present page
+> > [    0.763425] PGD 0 P4D 0
+> > [    0.763425] Oops: 0000 [#1] SMP NOPTI
+> > [    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
+> > [    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> > BIOS 1.12.0-1 04/01/2014
+> > [    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
+> > [    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
+> > 0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
+> > 41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
+> > c1 43
+> > [    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
+> > [    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
+> > [    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
+> > [    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
+> > [    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > [    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
+> > [    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
+> > knlGS:0000000000000000
+> > [    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
+> > [    0.763425] Call Trace:
+> > [    0.763425]  cpufreq_cpu_put+0x15/0x20
+> > [    0.763425]  kvm_arch_init+0x1f6/0x2b0
+> > [    0.763425]  kvm_init+0x31/0x290
+> > [    0.763425]  ? svm_check_processor_compat+0xd/0xd
+> > [    0.763425]  ? svm_check_processor_compat+0xd/0xd
+> > [    0.763425]  svm_init+0x21/0x23
+> > [    0.763425]  do_one_initcall+0x61/0x2f0
+> > [    0.763425]  ? rdinit_setup+0x30/0x30
+> > [    0.763425]  ? rcu_read_lock_sched_held+0x4f/0x80
+> > [    0.763425]  kernel_init_freeable+0x219/0x279
+> > [    0.763425]  ? rest_init+0x250/0x250
+> > [    0.763425]  kernel_init+0xe/0x110
+> > [    0.763425]  ret_from_fork+0x27/0x50
+> > [    0.763425] Modules linked in:
+> > [    0.763425] CR2: 000000000000028c
+> > [    0.763425] ---[ end trace 239abf40c55c409b ]---
+> > [    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
+> > [    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
+> > 0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
+> > 41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
+> > c1 43
+> > [    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
+> > [    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
+> > [    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
+> > [    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
+> > [    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > [    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
+> > [    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
+> > knlGS:0000000000000000
+> > [    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
+> > [    0.763425] BUG: sleeping function called from invalid context at
+> > /usr/src/kernel/include/linux/percpu-rwsem.h:38
+> > [    0.763425] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
+> > 1, name: swapper/0
+> > [    0.763425] INFO: lockdep is turned off.
+> > [    0.763425] irq event stamp: 696816
+> > [    0.763425] hardirqs last  enabled at (696815):
+> > [<ffffffff98c929d1>] _raw_read_unlock_irqrestore+0x31/0x50
+> > [    0.763425] hardirqs last disabled at (696816):
+> > [<ffffffff97e01f3b>] trace_hardirqs_off_thunk+0x1a/0x1c
+> > [    0.763425] softirqs last  enabled at (696776):
+> > [<ffffffff99000338>] __do_softirq+0x338/0x43a
+> > [    0.763425] softirqs last disabled at (696769):
+> > [<ffffffff97f045e8>] irq_exit+0xb8/0xc0
+> > [    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G      D
+> >   5.6.0-rc4 #1
+> > [    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> > BIOS 1.12.0-1 04/01/2014
+> > [    0.763425] Call Trace:
+> > [    0.763425]  dump_stack+0x7a/0xa5
+> > [    0.763425]  ___might_sleep+0x163/0x250
+> > [    0.763425]  __might_sleep+0x4a/0x80
+> > [    0.763425]  exit_signals+0x33/0x2d0
+> > [    0.763425]  do_exit+0xb6/0xcf0
+> > [    0.763425]  ? kernel_init_freeable+0x219/0x279
+> > [    0.763425]  ? rest_init+0x250/0x250
+> > [    0.763425]  rewind_stack_do_exit+0x17/0x20
+> > [    0.763425] Kernel panic - not syncing: Attempted to kill init!
+> > exitcode=0x00000009
+> >
+> >
+> > metadata:
+> >   git branch: master
+> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> >   git describe: v5.6-rc4
+> >   kernel-config:
+> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2502/config
+> >
+> > git log --online
+> > 98d54f81e36b (HEAD -> master, tag: v5.6-rc4, origin/master,
+> > origin/HEAD) Linux 5.6-rc4
+> > e70869821a46 Merge tag 'ext4_for_linus_stable' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4
+> > f853ed90e2e4 Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+> > 86f7e90ce840 KVM: VMX: check descriptor table exits on instruction emulation
+> > fb279f4e2386 Merge branch 'i2c/for-current-fixed' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
+> > 37b0b6b8b99c ext4: potential crash on allocation error in
+> > ext4_alloc_flex_bg_array()
+> > 38b17afb0ebb macintosh: therm_windtunnel: fix regression when
+> > instantiating devices
+> > 6c5d91124929 jbd2: fix data races at struct journal_head
+> > 7557c1b3f715 Merge tag 'scsi-fixes' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> >
+> >
+> > ref:
+> > https://lkft.validation.linaro.org/scheduler/job/1261774#L461
+> > https://lkft.validation.linaro.org/scheduler/job/1261816#L477
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
