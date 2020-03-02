@@ -2,126 +2,80 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFEFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79B6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BE521739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qom4XfIY"
+	by mail.kernel.org (Postfix) with ESMTP id A839B21739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCBKeP (ORCPT
+        id S1727578AbgCBKeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:34:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32121 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727095AbgCBKeO (ORCPT
+        Mon, 2 Mar 2020 05:34:31 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42735 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbgCBKeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:34:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583145253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TnovkU9TRaPZCsU6BNaYIoozjytGGGEjCSLnwzS1uVA=;
-        b=Qom4XfIYlPAe26Iv3RL2ycfMdoAfIBT2+t+tGfEBK0kATwmuuBqSn7BznabOaYN6kjMJRp
-        p/xvVtYBAIdqeyKlWUSRtZ845xeuBwBjUZ3O7iF2sA8AIW6xusbfxL4+r8mCThlkTMp/k0
-        sgZylRqGaEPEtellIPLGYrT/WTcVgrE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-65-tECFLaW-PiulY-HJ6apnyg-1; Mon, 02 Mar 2020 05:34:10 -0500
-X-MC-Unique: tECFLaW-PiulY-HJ6apnyg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81C8410824EE;
-        Mon,  2 Mar 2020 10:34:07 +0000 (UTC)
-Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97F465DA2C;
-        Mon,  2 Mar 2020 10:34:03 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 11:34:00 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200302103400.vk3cki7agfq2zhpv@ws.net.home>
-References: <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
- <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
- <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
- <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
- <20200228122712.GA3013026@kroah.com>
- <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
+        Mon, 2 Mar 2020 05:34:31 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1j8iP7-0005zu-RZ; Mon, 02 Mar 2020 11:34:29 +0100
+Subject: Re: [PATCH 2/3] ARM: dts: stm32: add STM32MP1-based Linux Automation
+ MC-1 board
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+ <20200226143826.1146-2-a.fatoum@pengutronix.de>
+ <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <f5f1b526-efc6-5ff9-d443-b30fd6a4579e@pengutronix.de>
+Date:   Mon, 2 Mar 2020 11:34:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <244a4502-03e0-836c-2ce2-7fa6cef3c188@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 05:24:23PM +0100, Miklos Szeredi wrote:
-> ned-By: MIMEDefang 2.78 on 10.11.54.4
-> 
-> On Fri, Feb 28, 2020 at 1:27 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> 
-> > > Superblocks and mounts could get enumerated by a unique identifier.
-> > > mnt_id seems to be good for mounts, s_dev may or may not be good for
-> > > superblock, but  s_id (as introduced in this patchset) could be used
-> > > instead.
-> >
-> > So what would the sysfs tree look like with this?
-> 
-> For a start something like this:
-> 
-> mounts/$MOUNT_ID/
->   parent -> ../$PARENT_ID
->   super -> ../../supers/$SUPER_ID
->   root: path from mount root to fs root (could be optional as usually
-> they are the same)
->   mountpoint -> $MOUNTPOINT
->   flags: mount flags
->   propagation: mount propagation
->   children/$CHILD_ID -> ../../$CHILD_ID
-> 
->  supers/$SUPER_ID/
->    type: fstype
->    source: mount source (devname)
->    options:
+Hello,
 
-What about use-cases where I have no ID, but I have mountpoint path
-(e.g. "umount /foo")?  In this case I have to go to open() + fsinfo()
-and then sysfs does not make sense for me, right?
+On 3/2/20 11:06 AM, Alexandre Torgue wrote:
+>> +&ethernet0 {
+> 
+> you could follow alphabetic ordering (I find it easier to read, but just my opinion).
 
-    Karel
+>> +&pinctrl {
+> 
+> Pin groups are currently defined in stm32mp15-pinctrl.dtsi. You could move this part.
+
+>> +&m4_rproc {
+> 
+> you could follow alphabetic ordering.
+
+Will do.
+
+Cheers,
+Ahmad
 
 -- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
