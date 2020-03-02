@@ -2,78 +2,139 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDB8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D1FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469B42146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042892146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCBQLa (ORCPT
+        id S1727126AbgCBQMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:11:30 -0500
-Received: from david.siemens.de ([192.35.17.14]:39428 "EHLO david.siemens.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgCBQLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:11:30 -0500
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 022GBMiU029281
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 17:11:22 +0100
-Received: from [139.25.68.37] ([139.25.68.37])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 022GBM7R009884;
-        Mon, 2 Mar 2020 17:11:22 +0100
-To:     x86 <x86@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: x2apic_wrmsr_fence vs. Intel manual
-Message-ID: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
-Date:   Mon, 2 Mar 2020 17:11:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 11:12:41 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34317 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgCBQMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:12:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j16so10285685otl.1;
+        Mon, 02 Mar 2020 08:12:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IBU1ngp7AZThDbUbO+cKAdOQ9eyjciNaYONj1CU5V7s=;
+        b=Us9zSfUJl5C9CRN4cvegRENR/wzVQDIMXSA7wWrhque0TUD2q68OBHFXX7OW50bj1o
+         SSdAfmZ47/Lht6W2GDXx7y013dBuK/OtbD/vprh0Hgj0fuea3Tb5Ds2XAltAKCIHJudU
+         tysxxQBWAcz+ua38NcC2HQHG3ZsW1iU6L7lBA5MJQ/PjQn005BuRWxh0+He0mQoU8AaP
+         K2MQwovpU24MMPg7RTgipWgamdIlI9i9HqE2TyHy1zgp9EsXmd5EOQtsnFiZDBLs+uUR
+         nxjaFU8Jv3u/pP0w86OEQCsCFGkpvGovGCTV7qPrrgLMx9jmGKBkPxoenciskDcSONOP
+         B3SQ==
+X-Gm-Message-State: ANhLgQ3b9KR+klb0ynt1K2v435HpvV0cU2vsGH/Euf2iu5mtJ7uSCPJS
+        zV4bIeMEP0iJksE8ycGPNf+czcpyAbNQ6DxeK58=
+X-Google-Smtp-Source: ADFU+vvg6cWqaPv6sfkzgh4uXnbYNGWltt0N4bOdGNKjXE/BLlkVjwI45QAekHnzDWDL4MznTQXJzZftVEs/EUTFqwg=
+X-Received: by 2002:a05:6830:1e9c:: with SMTP id n28mr623596otr.107.1583165559752;
+ Mon, 02 Mar 2020 08:12:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com> <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 17:12:05 +0100
+Message-ID: <CAMuHMdV9v-7eRqi3JjcNaOBpRrC2-gLDCizYOJwhQCjZiLr5dA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device buswidth
+To:     John Garry <john.garry@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi John,
 
-as I generated a nice bug around fence vs. x2apic icr writes, I studied 
-the kernel code and the Intel manual in this regard more closely. But 
-there is a discrepancy:
+Thanks for your patch!
 
-arch/x86/include/asm/apic.h:
+On Fri, Feb 28, 2020 at 4:23 PM John Garry <john.garry@huawei.com> wrote:
+> Currently ACPI firmware description for a SPI device does not have any
+> method to describe the data buswidth on the board.
+>
+> So even through the controller and device may support higher modes than
+> standard SPI, it cannot be assumed that the board does - as such, that
+> device is limited to standard SPI in such a circumstance.
 
-/*
- * Make previous memory operations globally visible before
- * sending the IPI through x2apic wrmsr. We need a serializing instruction or
- * mfence for this.
- */
-static inline void x2apic_wrmsr_fence(void)
-{
-        asm volatile("mfence" : : : "memory");
-}
+Indeed.
 
-Intel SDM, 10.12.3 MSR Access in x2APIC Mode:
+> As a workaround, allow the controller driver supply buswidth override bits,
+> which are used inform the core code that the controller driver knows the
+> buswidth supported on that board for that device.
 
-"A WRMSR to an APIC register may complete before all preceding stores 
-are globally visible; software can prevent this by inserting a 
-serializing instruction or the sequence MFENCE;LFENCE before the WRMSR."
+I feel this is a bit dangerous, and might bite us one day.
 
-The former dates back to ce4e240c279a, but that commit does not mention 
-why lfence is not needed. Did the manual read differently back then? Or 
-why are we safe? To my reading of lfence, it also has a certain 
-instruction serializing effect that mfence does not have.
+> A host controller driver might know this info from DMI tables, for example.
 
-Jan
+Can't acpi_register_spi_device() obtain that info from DMI tables,
+to avoid contaminating the generic code?
+
+> Signed-off-by: John Garry <john.garry@huawei.com>
+
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct spi_controller *ctlr)
+>         spi->dev.bus = &spi_bus_type;
+>         spi->dev.release = spidev_release;
+>         spi->cs_gpio = -ENOENT;
+> +       spi->mode = ctlr->buswidth_override_bits;
+
+This could just be moved to acpi_register_spi_device(), right?
+
+>
+>         spin_lock_init(&spi->statistics.lock);
+>
+> @@ -2181,9 +2182,10 @@ static acpi_status acpi_register_spi_device(struct spi_controller *ctlr,
+>                 return AE_NO_MEMORY;
+>         }
+>
+> +
+>         ACPI_COMPANION_SET(&spi->dev, adev);
+>         spi->max_speed_hz       = lookup.max_speed_hz;
+> -       spi->mode               = lookup.mode;
+> +       spi->mode               |= lookup.mode;
+>         spi->irq                = lookup.irq;
+>         spi->bits_per_word      = lookup.bits_per_word;
+>         spi->chip_select        = lookup.chip_select;
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 6d16ba01ff5a..600e3793303e 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -481,6 +481,9 @@ struct spi_controller {
+>         /* spi_device.mode flags understood by this controller driver */
+>         u32                     mode_bits;
+>
+> +       /* spi_device.mode flags override flags for this controller */
+> +       u32                     buswidth_override_bits;
+
+And I'd be happy if we could avoid adding this here ;-)
+
+> +
+>         /* bitmask of supported bits_per_word for transfers */
+>         u32                     bits_per_word_mask;
+>  #define SPI_BPW_MASK(bits) BIT((bits) - 1)
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
