@@ -2,196 +2,128 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D015C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C01EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0ED2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD1D22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sLI3Lp5o"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aSNe+g53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgCBLdh (ORCPT
+        id S1727691AbgCBLgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:33:37 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35988 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725996AbgCBLdg (ORCPT
+        Mon, 2 Mar 2020 06:36:05 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64872 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgCBLgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:33:36 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022BXSbO002288;
-        Mon, 2 Mar 2020 12:33:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=LK5Rc8fBCqHr4BrNiCRui/DbI9k5MYuzFQ9Jui1JyFw=;
- b=sLI3Lp5o/9lux+MHY5cQrtsLRwzk8UtSEuOmUJR9jTL+3BcMaZv+FvP9jWer0XxJwBEa
- 23mrkhjt1Pn43RrXHr29cvumJuI/c095CsOQ7LfFhVISkSnUYOf45hDgTVAM2WkpT242
- THaOk5W66Gs5eP5dMi4X0rJbMjNjnZlbM1MKBbc6SOlOpZpjHnfiYFRQ6K4tLKqVuwlc
- CIbDk/Zm9VlDnl7RqiVsmGUzuNENCbNLlrohj3kse3rpikFILCvfeCOsgsM+L/uDmApe
- d0j2RDOzrE5vyvX22Op4u16PqWHMmEMSqn/MtGc+f+KXmxgUdm8+84v6HP2ktq+rwQhF oA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yffqpk3wf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 12:33:28 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09E99100034;
-        Mon,  2 Mar 2020 12:33:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F252F2BEC69;
-        Mon,  2 Mar 2020 12:33:16 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar 2020 12:33:16
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCHv2 3/5] i2c: i2c-stm32f7: add a new st,stm32mp15-i2c compatible
-Date:   Mon, 2 Mar 2020 12:33:16 +0100
-Message-ID: <1583148796-24285-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 2 Mar 2020 06:36:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583148965; x=1614684965;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=oC+sHqqor/YXZFufFO4f+Vkq6AmhWnj6RaFndViWmTI=;
+  b=aSNe+g53E0+IbcRa3RBNdiYcbZzJY/WqwYk0fVcOOCxIbMzIs4W23ayj
+   RW1MfHLY8xdGQ0U+/AdUmKouG068JIqVb1wVPYFnKzZtaUucUXXHFt9nh
+   ieYqGfBvsgGnbcl4xleork7axJUbHZVxFNkjk18uaR4jZ4woP9W91ZpA3
+   4=;
+IronPort-SDR: NFgSqvTchRtrH2OgxPCJhIR+IpWvawBTDEEkLI9AM+1mDBmz/Dl7tM6DwOfUffA0lKp3u/9af3
+ cwnogZa21mBg==
+X-IronPort-AV: E=Sophos;i="5.70,506,1574121600"; 
+   d="scan'208";a="28575233"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Mar 2020 11:35:58 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 89BE9249F0D;
+        Mon,  2 Mar 2020 11:35:48 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 2 Mar 2020 11:35:47 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.74) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 2 Mar 2020 11:35:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.com>
+CC:     SeongJae Park <sjpark@amazon.de>, <aarcange@redhat.com>,
+        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/14] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 2 Mar 2020 12:35:12 +0100
+Message-ID: <20200302113512.8880-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200224123047.32506-1-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
+X-Originating-IP: [10.43.161.74]
+X-ClientProxiedBy: EX13D04UWA004.ant.amazon.com (10.43.160.234) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new stm32mp15 specific compatible to handle FastMode+
-registers handling which is different on the stm32mp15 compared
-to the stm32f7 or stm32h7.
-Indeed, on the stm32mp15, the FastMode+ set and clear registers
-are separated while on the other platforms (F7 or H7) the control
-is done in a unique register.
+Hello,
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-----
-v2: adapt struct stm32f7_i2c_dev fmp register variable naming (regmap_ -> fmp_)
----
- drivers/i2c/busses/i2c-stm32f7.c | 39 +++++++++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 6 deletions(-)
+On Mon, 24 Feb 2020 13:30:33 +0100 SeongJae Park <sjpark@amazon.com> wrote:
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index cfe6d790a8fc..8fe7f8caf91b 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -223,6 +223,7 @@ struct stm32f7_i2c_spec {
-  * @fall_time: Fall time (ns)
-  * @dnf: Digital filter coefficient (0-16)
-  * @analog_filter: Analog filter delay (On/Off)
-+ * @fmp_clr_offset: Fast Mode Plus clear register offset from set register
-  */
- struct stm32f7_i2c_setup {
- 	enum stm32_i2c_speed speed;
-@@ -232,6 +233,7 @@ struct stm32f7_i2c_setup {
- 	u32 fall_time;
- 	u8 dnf;
- 	bool analog_filter;
-+	u32 fmp_clr_offset;
- };
- 
- /**
-@@ -303,7 +305,8 @@ struct stm32f7_i2c_msg {
-  * @dma: dma data
-  * @use_dma: boolean to know if dma is used in the current transfer
-  * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-- * @fmp_reg: register address for setting Fast Mode Plus bits
-+ * @fmp_sreg: register address for setting Fast Mode Plus bits
-+ * @fmp_creg: register address for clearing Fast Mode Plus bits
-  * @fmp_mask: mask for Fast Mode Plus bits in set register
-  * @wakeup_src: boolean to know if the device is a wakeup source
-  */
-@@ -328,7 +331,8 @@ struct stm32f7_i2c_dev {
- 	struct stm32_i2c_dma *dma;
- 	bool use_dma;
- 	struct regmap *regmap;
--	u32 fmp_reg;
-+	u32 fmp_sreg;
-+	u32 fmp_creg;
- 	u32 fmp_mask;
- 	bool wakeup_src;
- };
-@@ -386,6 +390,14 @@ static const struct stm32f7_i2c_setup stm32f7_setup = {
- 	.analog_filter = STM32F7_I2C_ANALOG_FILTER_ENABLE,
- };
- 
-+static const struct stm32f7_i2c_setup stm32mp15_setup = {
-+	.rise_time = STM32F7_I2C_RISE_TIME_DEFAULT,
-+	.fall_time = STM32F7_I2C_FALL_TIME_DEFAULT,
-+	.dnf = STM32F7_I2C_DNF_DEFAULT,
-+	.analog_filter = STM32F7_I2C_ANALOG_FILTER_ENABLE,
-+	.fmp_clr_offset = 0x40,
-+};
-+
- static inline void stm32f7_i2c_set_bits(void __iomem *reg, u32 mask)
- {
- 	writel_relaxed(readl_relaxed(reg) | mask, reg);
-@@ -1837,14 +1849,25 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
- static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
- 					  bool enable)
- {
-+	int ret;
-+
- 	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
- 	    IS_ERR_OR_NULL(i2c_dev->regmap))
- 		/* Optional */
- 		return 0;
- 
--	return regmap_update_bits(i2c_dev->regmap, i2c_dev->fmp_reg,
--				  i2c_dev->fmp_mask,
--				  enable ? i2c_dev->fmp_mask : 0);
-+	if (i2c_dev->fmp_sreg == i2c_dev->fmp_creg)
-+		ret = regmap_update_bits(i2c_dev->regmap,
-+					 i2c_dev->fmp_sreg,
-+					 i2c_dev->fmp_mask,
-+					 enable ? i2c_dev->fmp_mask : 0);
-+	else
-+		ret = regmap_write(i2c_dev->regmap,
-+				   enable ? i2c_dev->fmp_sreg :
-+					    i2c_dev->fmp_creg,
-+				   i2c_dev->fmp_mask);
-+
-+	return ret;
- }
- 
- static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
-@@ -1859,10 +1882,13 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
- 		return 0;
- 
- 	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1,
--					 &i2c_dev->fmp_reg);
-+					 &i2c_dev->fmp_sreg);
- 	if (ret)
- 		return ret;
- 
-+	i2c_dev->fmp_creg = i2c_dev->fmp_sreg +
-+			       i2c_dev->setup.fmp_clr_offset;
-+
- 	return of_property_read_u32_index(np, "st,syscfg-fmp", 2,
- 					  &i2c_dev->fmp_mask);
- }
-@@ -2262,6 +2288,7 @@ static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
- 
- static const struct of_device_id stm32f7_i2c_match[] = {
- 	{ .compatible = "st,stm32f7-i2c", .data = &stm32f7_setup},
-+	{ .compatible = "st,stm32mp15-i2c", .data = &stm32mp15_setup},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32f7_i2c_match);
--- 
-2.7.4
--
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> Introduction
+> ============
+> 
+> Memory management decisions can be improved if finer data access information is
+> available.  However, because such finer information usually comes with higher
+> overhead, most systems including Linux forgives the potential improvement and
+> rely on only coarse information or some light-weight heuristics.  The
+> pseudo-LRU and the aggressive THP promotions are such examples.
+> 
+> A number of experimental data access pattern awared memory management
+> optimizations (refer to 'Appendix A' for more details) say the sacrifices are
+> huge.  However, none of those has successfully adopted to Linux kernel mainly
+> due to the absence of a scalable and efficient data access monitoring
+> mechanism.  Refer to 'Appendix B' to see the limitations of existing memory
+> monitoring mechanisms.
+> 
+> DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
+> enough to be used for the DRAM level memory management (a straightforward
+> DAMON-based optimization achieved up to 2.55x speedup), 2) light-weight enough
+> to be applied online (compared to a straightforward access monitoring scheme,
+> DAMON is up to 94.242.42x lighter) and 3) keeps predefined upper-bound overhead
+> regardless of the size of target workloads (thus scalable).  Refer to 'Appendix
+> C' if you interested in how it is possible.
+> 
+> DAMON has mainly designed for the kernel's memory management mechanisms.
+> However, because it is implemented as a standalone kernel module and provides
+> several interfaces, it can be used by a wide range of users including kernel
+> space programs, user space programs, programmers, and administrators.  DAMON
+> is now supporting the monitoring only, but it will also provide simple and
+> convenient data access pattern awared memory managements by itself.  Refer to
+> 'Appendix D' for more detailed expected usages of DAMON.
+
+I have posted this patchset once per week, but skip this week because there
+were no comments in last week and therefore made no change in the patchset.
+
+I think I answered to all previous comments and fixed all bugs previously
+found.  May I ask some more comments or reviews?  If I missed something or
+doing wrong, please let me know.
+
+
+Thanks,
+SeongJae Park
+
+[...]
