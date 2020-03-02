@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68726C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59ACB2467B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BA424677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCBX60 (ORCPT
+        id S1727742AbgCBX6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:58:26 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25519 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:58:24 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25520 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727499AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:57:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384746"
+   d="scan'208";a="243384737"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 41/66] KVM: x86: Move XSAVES CPUID adjust to VMX's KVM cpu cap update
-Date:   Mon,  2 Mar 2020 15:56:44 -0800
-Message-Id: <20200302235709.27467-42-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 38/66] KVM: x86: Introduce kvm_cpu_caps to replace runtime CPUID masking
+Date:   Mon,  2 Mar 2020 15:56:41 -0800
+Message-Id: <20200302235709.27467-39-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,98 +49,403 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the clearing of the XSAVES CPUID bit into VMX, which has a separate
-VMCS control to enable XSAVES in non-root, to eliminate the last ugly
-renmant of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
-pattern in the common CPUID handling code.
+Calculate the CPUID masks for KVM_GET_SUPPORTED_CPUID at load time using
+what is effectively a KVM-adjusted copy of boot_cpu_data, or more
+precisely, the x86_capability array in boot_cpu_data.
 
-Drop ->xsaves_supported(), CPUID adjustment was the only user.
+In terms of KVM support, the vast majority of CPUID feature bits are
+constant, and *all* feature support is known at KVM load time.  Rather
+than apply boot_cpu_data, which is effectively read-only after init,
+at runtime, copy it into a KVM-specific array and use *that* to mask
+CPUID registers.
+
+In additional to consolidating the masking, kvm_cpu_caps can be adjusted
+by SVM/VMX at load time and thus eliminate all feature bit manipulation
+in ->set_supported_cpuid().
+
+Opportunistically clean up a few warts:
+
+  - Replace bare "unsigned" with "unsigned int" when a feature flag is
+    captured in a local variable, e.g. f_nx.
+
+  - Sort the CPUID masks by function, index and register (alphabetically
+    for registers, i.e. EBX comes before ECX/EDX).
+
+  - Remove the superfluous /* cpuid 7.0.ecx */ comments.
 
 No functional change intended.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 -
- arch/x86/kvm/cpuid.c            | 4 ----
- arch/x86/kvm/svm.c              | 6 ------
- arch/x86/kvm/vmx/vmx.c          | 5 ++++-
- 4 files changed, 4 insertions(+), 12 deletions(-)
+ arch/x86/kvm/cpuid.c | 231 +++++++++++++++++++++++--------------------
+ arch/x86/kvm/cpuid.h |  19 ++++
+ arch/x86/kvm/x86.c   |   2 +
+ 3 files changed, 144 insertions(+), 108 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 449695788351..f5b49fa6f066 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1169,7 +1169,6 @@ struct kvm_x86_ops {
- 	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
- 		enum exit_fastpath_completion *exit_fastpath);
- 
--	bool (*xsaves_supported)(void);
- 	bool (*umip_emulated)(void);
- 	bool (*pt_supported)(void);
- 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index e26644d8280b..1c361a65ee03 100644
+index c2e70cd0dbf1..f0b6885d2415 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -634,10 +634,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 			goto out;
+@@ -24,6 +24,13 @@
+ #include "trace.h"
+ #include "pmu.h"
  
- 		cpuid_entry_mask(entry, CPUID_D_1_EAX);
--
--		if (!kvm_x86_ops->xsaves_supported())
--			cpuid_entry_clear(entry, X86_FEATURE_XSAVES);
--
- 		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
- 			entry->ebx = xstate_required_size(supported_xcr0, true);
- 		else
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 8ce07f6ebe8e..a1317e72824d 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -6084,11 +6084,6 @@ static bool svm_rdtscp_supported(void)
- 	return boot_cpu_has(X86_FEATURE_RDTSCP);
++/*
++ * Unlike "struct cpuinfo_x86.x86_capability", kvm_cpu_caps doesn't need to be
++ * aligned to sizeof(unsigned long) because it's not accessed via bitops.
++ */
++u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
++EXPORT_SYMBOL_GPL(kvm_cpu_caps);
++
+ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
+ {
+ 	int feature_bit = 0;
+@@ -259,7 +266,121 @@ static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
+ {
+ 	u32 *reg = cpuid_entry_get_reg(entry, leaf * 32);
+ 
+-	*reg &= boot_cpu_data.x86_capability[leaf];
++	BUILD_BUG_ON(leaf >= ARRAY_SIZE(kvm_cpu_caps));
++	*reg &= kvm_cpu_caps[leaf];
++}
++
++static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
++{
++	reverse_cpuid_check(leaf);
++	kvm_cpu_caps[leaf] &= mask;
++}
++
++void kvm_set_cpu_caps(void)
++{
++	unsigned int f_nx = is_efer_nx() ? F(NX) : 0;
++#ifdef CONFIG_X86_64
++	unsigned int f_gbpages = F(GBPAGES);
++	unsigned int f_lm = F(LM);
++#else
++	unsigned int f_gbpages = 0;
++	unsigned int f_lm = 0;
++#endif
++
++	BUILD_BUG_ON(sizeof(kvm_cpu_caps) >
++		     sizeof(boot_cpu_data.x86_capability));
++
++	memcpy(&kvm_cpu_caps, &boot_cpu_data.x86_capability,
++	       sizeof(kvm_cpu_caps));
++
++	kvm_cpu_cap_mask(CPUID_1_ECX,
++		/*
++		 * NOTE: MONITOR (and MWAIT) are emulated as NOP, but *not*
++		 * advertised to guests via CPUID!
++		 */
++		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
++		0 /* DS-CPL, VMX, SMX, EST */ |
++		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
++		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
++		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
++		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
++		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
++		F(F16C) | F(RDRAND)
++	);
++
++	kvm_cpu_cap_mask(CPUID_1_EDX,
++		F(FPU) | F(VME) | F(DE) | F(PSE) |
++		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
++		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SEP) |
++		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
++		F(PAT) | F(PSE36) | 0 /* PSN */ | F(CLFLUSH) |
++		0 /* Reserved, DS, ACPI */ | F(MMX) |
++		F(FXSR) | F(XMM) | F(XMM2) | F(SELFSNOOP) |
++		0 /* HTT, TM, Reserved, PBE */
++	);
++
++	kvm_cpu_cap_mask(CPUID_7_0_EBX,
++		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
++		F(BMI2) | F(ERMS) | 0 /*INVPCID*/ | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
++		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
++		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
++		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | 0 /*INTEL_PT*/
++	);
++
++	kvm_cpu_cap_mask(CPUID_7_ECX,
++		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
++		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
++		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
++		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
++	);
++	/* Set LA57 based on hardware capability. */
++	if (cpuid_ecx(7) & F(LA57))
++		kvm_cpu_cap_set(X86_FEATURE_LA57);
++
++	kvm_cpu_cap_mask(CPUID_7_EDX,
++		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
++		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
++		F(MD_CLEAR)
++	);
++
++	kvm_cpu_cap_mask(CPUID_7_1_EAX,
++		F(AVX512_BF16)
++	);
++
++	kvm_cpu_cap_mask(CPUID_D_1_EAX,
++		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES)
++	);
++
++	kvm_cpu_cap_mask(CPUID_8000_0001_ECX,
++		F(LAHF_LM) | F(CMP_LEGACY) | 0 /*SVM*/ | 0 /* ExtApicSpace */ |
++		F(CR8_LEGACY) | F(ABM) | F(SSE4A) | F(MISALIGNSSE) |
++		F(3DNOWPREFETCH) | F(OSVW) | 0 /* IBS */ | F(XOP) |
++		0 /* SKINIT, WDT, LWP */ | F(FMA4) | F(TBM) |
++		F(TOPOEXT) | F(PERFCTR_CORE)
++	);
++
++	kvm_cpu_cap_mask(CPUID_8000_0001_EDX,
++		F(FPU) | F(VME) | F(DE) | F(PSE) |
++		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
++		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
++		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
++		F(PAT) | F(PSE36) | 0 /* Reserved */ |
++		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
++		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
++		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW)
++	);
++
++	kvm_cpu_cap_mask(CPUID_8000_0008_EBX,
++		F(CLZERO) | F(XSAVEERPTR) |
++		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
++		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
++	);
++
++	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
++		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
++		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
++		F(PMM) | F(PMM_EN)
++	);
  }
  
--static bool svm_xsaves_supported(void)
--{
--	return boot_cpu_has(X86_FEATURE_XSAVES);
--}
--
- static bool svm_umip_emulated(void)
+ struct kvm_cpuid_array {
+@@ -339,48 +460,13 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+ 
+ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
  {
- 	return false;
-@@ -7459,7 +7454,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.cpuid_update = svm_cpuid_update,
+-	unsigned f_la57;
+-
+-	/* cpuid 7.0.ebx */
+-	const u32 kvm_cpuid_7_0_ebx_x86_features =
+-		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
+-		F(BMI2) | F(ERMS) | 0 /*INVPCID*/ | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
+-		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
+-		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
+-		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | 0 /*INTEL_PT*/;
+-
+-	/* cpuid 7.0.ecx*/
+-	const u32 kvm_cpuid_7_0_ecx_x86_features =
+-		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+-		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+-		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+-		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+-
+-	/* cpuid 7.0.edx*/
+-	const u32 kvm_cpuid_7_0_edx_x86_features =
+-		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+-		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+-		F(MD_CLEAR);
+-
+-	/* cpuid 7.1.eax */
+-	const u32 kvm_cpuid_7_1_eax_x86_features =
+-		F(AVX512_BF16);
+-
+ 	switch (entry->index) {
+ 	case 0:
+ 		entry->eax = min(entry->eax, 1u);
+-		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+ 		/* TSC_ADJUST is emulated */
+ 		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+-
+-		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+-		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+ 		cpuid_entry_mask(entry, CPUID_7_ECX);
+-		/* Set LA57 based on hardware capability. */
+-		entry->ecx |= f_la57;
+-
+-		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_7_EDX);
+ 		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+ 			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+@@ -395,7 +481,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ 		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+ 		break;
+ 	case 1:
+-		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
++		cpuid_entry_mask(entry, CPUID_7_1_EAX);
+ 		entry->ebx = 0;
+ 		entry->ecx = 0;
+ 		entry->edx = 0;
+@@ -414,72 +500,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ {
+ 	struct kvm_cpuid_entry2 *entry;
+ 	int r, i, max_idx;
+-	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+-#ifdef CONFIG_X86_64
+-	unsigned f_gbpages = F(GBPAGES);
+-	unsigned f_lm = F(LM);
+-#else
+-	unsigned f_gbpages = 0;
+-	unsigned f_lm = 0;
+-#endif
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
  
- 	.rdtscp_supported = svm_rdtscp_supported,
--	.xsaves_supported = svm_xsaves_supported,
- 	.umip_emulated = svm_umip_emulated,
- 	.pt_supported = svm_pt_supported,
+-	/* cpuid 1.edx */
+-	const u32 kvm_cpuid_1_edx_x86_features =
+-		F(FPU) | F(VME) | F(DE) | F(PSE) |
+-		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+-		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SEP) |
+-		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+-		F(PAT) | F(PSE36) | 0 /* PSN */ | F(CLFLUSH) |
+-		0 /* Reserved, DS, ACPI */ | F(MMX) |
+-		F(FXSR) | F(XMM) | F(XMM2) | F(SELFSNOOP) |
+-		0 /* HTT, TM, Reserved, PBE */;
+-	/* cpuid 0x80000001.edx */
+-	const u32 kvm_cpuid_8000_0001_edx_x86_features =
+-		F(FPU) | F(VME) | F(DE) | F(PSE) |
+-		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+-		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+-		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+-		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+-		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+-		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
+-		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW);
+-	/* cpuid 1.ecx */
+-	const u32 kvm_cpuid_1_ecx_x86_features =
+-		/* NOTE: MONITOR (and MWAIT) are emulated as NOP,
+-		 * but *not* advertised to guests via CPUID ! */
+-		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+-		0 /* DS-CPL, VMX, SMX, EST */ |
+-		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+-		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
+-		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+-		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+-		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+-		F(F16C) | F(RDRAND);
+-	/* cpuid 0x80000001.ecx */
+-	const u32 kvm_cpuid_8000_0001_ecx_x86_features =
+-		F(LAHF_LM) | F(CMP_LEGACY) | 0 /*SVM*/ | 0 /* ExtApicSpace */ |
+-		F(CR8_LEGACY) | F(ABM) | F(SSE4A) | F(MISALIGNSSE) |
+-		F(3DNOWPREFETCH) | F(OSVW) | 0 /* IBS */ | F(XOP) |
+-		0 /* SKINIT, WDT, LWP */ | F(FMA4) | F(TBM) |
+-		F(TOPOEXT) | F(PERFCTR_CORE);
+-
+-	/* cpuid 0x80000008.ebx */
+-	const u32 kvm_cpuid_8000_0008_ebx_x86_features =
+-		F(CLZERO) | F(XSAVEERPTR) |
+-		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+-		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
+-
+-	/* cpuid 0xC0000001.edx */
+-	const u32 kvm_cpuid_C000_0001_edx_x86_features =
+-		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
+-		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
+-		F(PMM) | F(PMM_EN);
+-
+-	/* cpuid 0xD.1.eax */
+-	const u32 kvm_cpuid_D_1_eax_x86_features =
+-		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES);
+-
+ 	/* all calls to cpuid_count() should be made on the same cpu */
+ 	get_cpu();
  
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6f68d5e694e0..208a40e89a3f 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7156,6 +7156,10 @@ static __init void vmx_set_cpu_caps(void)
- 	    boot_cpu_has(X86_FEATURE_OSPKE))
- 		kvm_cpu_cap_set(X86_FEATURE_PKU);
+@@ -495,9 +517,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = min(entry->eax, 0x1fU);
+ 		break;
+ 	case 1:
+-		entry->edx &= kvm_cpuid_1_edx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_1_EDX);
+-		entry->ecx &= kvm_cpuid_1_ecx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_1_ECX);
+ 		/* we support x2apic emulation even if host does not support
+ 		 * it since we emulate x2apic in software */
+@@ -607,7 +627,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		if (!entry)
+ 			goto out;
  
-+	/* CPUID 0xD.1 */
-+	if (!vmx_xsaves_supported())
-+		kvm_cpu_cap_clear(X86_FEATURE_XSAVES);
+-		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+ 
+ 		if (!kvm_x86_ops->xsaves_supported())
+@@ -691,9 +710,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = min(entry->eax, 0x8000001f);
+ 		break;
+ 	case 0x80000001:
+-		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
+-		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
+ 		break;
+ 	case 0x80000007: /* Advanced power management */
+@@ -712,7 +729,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 			g_phys_as = phys_as;
+ 		entry->eax = g_phys_as | (virt_as << 8);
+ 		entry->edx = 0;
+-		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_8000_0008_EBX);
+ 		/*
+ 		 * AMD has separate bits for each SPEC_CTRL bit.
+@@ -755,7 +771,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = min(entry->eax, 0xC0000004);
+ 		break;
+ 	case 0xC0000001:
+-		entry->edx &= kvm_cpuid_C000_0001_edx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_C000_0001_EDX);
+ 		break;
+ 	case 3: /* Processor serial number */
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index de3c6c365a5a..b899ba4bc918 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -6,6 +6,9 @@
+ #include <asm/cpu.h>
+ #include <asm/processor.h>
+ 
++extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
++void kvm_set_cpu_caps(void);
 +
- 	/* CPUID 0x80000001 */
- 	if (!cpu_has_vmx_rdtscp())
- 		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
-@@ -7956,7 +7960,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ int kvm_update_cpuid(struct kvm_vcpu *vcpu);
+ struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+ 					      u32 function, u32 index);
+@@ -254,4 +257,20 @@ static inline bool cpuid_fault_enabled(struct kvm_vcpu *vcpu)
+ 		  MSR_MISC_FEATURES_ENABLES_CPUID_FAULT;
+ }
  
- 	.check_intercept = vmx_check_intercept,
- 	.handle_exit_irqoff = vmx_handle_exit_irqoff,
--	.xsaves_supported = vmx_xsaves_supported,
- 	.umip_emulated = vmx_umip_emulated,
- 	.pt_supported = vmx_pt_supported,
++static __always_inline void kvm_cpu_cap_clear(unsigned int x86_feature)
++{
++	unsigned int x86_leaf = x86_feature / 32;
++
++	reverse_cpuid_check(x86_leaf);
++	kvm_cpu_caps[x86_leaf] &= ~__feature_bit(x86_feature);
++}
++
++static __always_inline void kvm_cpu_cap_set(unsigned int x86_feature)
++{
++	unsigned int x86_leaf = x86_feature / 32;
++
++	reverse_cpuid_check(x86_leaf);
++	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
++}
++
+ #endif
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index e3598fe171a5..b032fd144073 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9560,6 +9560,8 @@ int kvm_arch_hardware_setup(void)
+ {
+ 	int r;
  
++	kvm_set_cpu_caps();
++
+ 	r = kvm_x86_ops->hardware_setup();
+ 	if (r != 0)
+ 		return r;
 -- 
 2.24.1
 
