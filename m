@@ -2,139 +2,150 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4143C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665A4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3F92146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4375D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCBSKZ (ORCPT
+        id S1727359AbgCBSNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:10:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:32971 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727255AbgCBSKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:10:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 10:10:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="258037919"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 10:10:07 -0800
-Message-ID: <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Mon, 02 Mar 2020 10:09:19 -0800
-In-Reply-To: <20200229143644.GA1129@zn.tnic>
-References: <20200228121724.GA25261@zn.tnic>
-         <89bcab262d6dad4c08c4a21e522796fea2320db3.camel@intel.com>
-         <20200228162359.GC25261@zn.tnic>
-         <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
-         <20200228172202.GD25261@zn.tnic>
-         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
-         <20200228183131.GE25261@zn.tnic>
-         <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
-         <20200228214742.GF25261@zn.tnic>
-         <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
-         <20200229143644.GA1129@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 2 Mar 2020 13:13:14 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:36275 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgCBSNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:13:13 -0500
+Received: by mail-il1-f200.google.com with SMTP id v14so338524ilq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:13:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=enaO3WnemnSAhq2pBNyk9x5WY6fbVpF5APw5359ae28=;
+        b=sMNTuSoDcMnjbKl/DL3AXHCwLoy18yxg5oMkSU70auLq0tpniq9lFbyvdPPayg0M4c
+         8bQwJKwrE6rLR8WeOfjFUuXLAYOExNwP05WiISa7VRphYQyUepUm6xWSZDvabWoShhrZ
+         XFFk3xh4/1sOPQdKT82Q88rORp5X3Ukf1JayJnDeN2UnKraTzPmTqd8WX6t+NgRieV/D
+         19uVF4Ci9Xdrl7P9If+GxMFngYZKeGQRdCfqiZkjauBxltehGBtsSct8Je1+woV4qvwj
+         bN9DqlGURzlQBC+obLgClUy1SC/yG+If7Elax0a1b3R66MPXT723WdhJ0Nk78EuUko6s
+         jsNQ==
+X-Gm-Message-State: ANhLgQ1gdhPVjhhWqD0WWhiNNt9hP/lxhcY5m6I4A4ZJRUvQffBT4Meg
+        jkNgPZe51ChI2FEJ7xHD+mrgZszzKQO/tY1EXDQaUiOtgyko
+X-Google-Smtp-Source: ADFU+vsLu/ggNeHFlojmtvyYhvgRezTV9RK5MMXPUdgC2Jz/xKZa9eAKDgJEBOOJ/lpziGymDNnFsn2/6B+gDZhw/T56ptLnL8MK
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:d207:: with SMTP id q7mr663366iob.49.1583172792602;
+ Mon, 02 Mar 2020 10:13:12 -0800 (PST)
+Date:   Mon, 02 Mar 2020 10:13:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ebdc39059fe32327@google.com>
+Subject: memory leak in nf_tables_parse_netdev_hooks (2)
+From:   syzbot <syzbot+a2ff6fa45162a5ed4dd3@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-29 at 15:36 +0100, Borislav Petkov wrote:
-> On Fri, Feb 28, 2020 at 02:13:29PM -0800, Yu-cheng Yu wrote:
-> > If the XSAVES buffer already has current data (i.e. TIF_NEED_FPU_LOAD is
-> > set), then skip copy_xregs_to_kernel().  This happens when the task was
-> > context-switched out and has not returned to user-mode.
-> 
-> So I got tired of this peacemeal game back'n'forth and went and did your
-> work for ya.
-> 
-> First of all, on my fairly new KBL test box, the context size is almost
-> a kB:
-> 
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
-> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-> [    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
-> [    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
-> [    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
-> 
-> Then, I added this ontop of your patchset:
-> 
-> diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-> index 0d3e06a772b0..2e57b8d79c0e 100644
-> --- a/arch/x86/kernel/fpu/signal.c
-> +++ b/arch/x86/kernel/fpu/signal.c
-> @@ -337,6 +337,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
->          */
->         fpregs_lock();
->         if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
-> +               trace_printk("!NEED_FPU_LOAD, size: %d, supervisor: 0x%llx\n",
-> +                            size, xfeatures_mask_supervisor());
->                 if (xfeatures_mask_supervisor())
->                         copy_xregs_to_kernel(&fpu->state.xsave);
->                 set_thread_flag(TIF_NEED_FPU_LOAD);
-> 
-> and traced a fairly boring kernel build workload where the kernel
-> .config is not even a distro one but a tailored for this machine.
-> 
-> Which means, it took 3m35.058s to build and the trace buffer had 53973
-> entries like this one:
-> 
-> bash-1211  [002] ...1   648.238585: __fpu__restore_sig: !NEED_FPU_LOAD, size: 1092, supervisor: 0x0
-> 
-> which means I have
-> 
-> 53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
-> 
-> And this only during this single workload - I don't even wanna imagine
-> what that number would be if it were a huge, overloaded box with a
-> signal heavy workload.
-> 
-> And all this overhead to save 16 + 24 bytes supervisor states and throw
-> away the rest up to 960 bytes each time.
-> 
-> Err, I don't think so.
+Hello,
 
-This patch serves supervisor states that has not been saved prior to
-sigreturn.  CET state is in sigcontext and does not need to be saved here.
+syzbot found the following crash on:
 
-We can drop this for now, and for new supervisor states, replace
-copy_xregs_to_kernel() with a callback that saves only necessary
-information.
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10060a2de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6951e37c8d613538
+dashboard link: https://syzkaller.appspot.com/bug?extid=a2ff6fa45162a5ed4dd3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15acfa81e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172f9d09e00000
 
-I will send out v3.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a2ff6fa45162a5ed4dd3@syzkaller.appspotmail.com
 
-Yu-cheng
+executing program
+BUG: memory leak
+unreferenced object 0xffff88810b2b2080 (size 96):
+  comm "syz-executor089", pid 7270, jiffies 4294941532 (age 13.520s)
+  hex dump (first 32 bytes):
+    00 21 2b 0b 81 88 ff ff 40 06 37 1a 81 88 ff ff  .!+.....@.7.....
+    20 47 c7 82 ff ff ff ff 00 60 2e 2a 81 88 ff ff   G.......`.*....
+  backtrace:
+    [<00000000f3a29219>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000f3a29219>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000f3a29219>] slab_alloc mm/slab.c:3320 [inline]
+    [<00000000f3a29219>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<000000005471dca6>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005471dca6>] nft_netdev_hook_alloc+0x3f/0xd0 net/netfilter/nf_tables_api.c:1653
+    [<00000000547b3e6d>] nf_tables_parse_netdev_hooks+0xaa/0x220 net/netfilter/nf_tables_api.c:1702
+    [<000000005c4bc909>] nf_tables_flowtable_parse_hook net/netfilter/nf_tables_api.c:6097 [inline]
+    [<000000005c4bc909>] nf_tables_newflowtable+0x407/0x930 net/netfilter/nf_tables_api.c:6297
+    [<000000004e57b3ed>] nfnetlink_rcv_batch+0x353/0x8c0 net/netfilter/nfnetlink.c:433
+    [<0000000095bbce6c>] nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+    [<0000000095bbce6c>] nfnetlink_rcv+0x189/0x1c0 net/netfilter/nfnetlink.c:561
+    [<000000002a197f31>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<000000002a197f31>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1329
+    [<000000002fe97501>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1918
+    [<0000000072a2eef7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000072a2eef7>] sock_sendmsg+0x54/0x70 net/socket.c:672
+    [<0000000049691ba6>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
+    [<00000000466e69b2>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
+    [<0000000086270dd0>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
+    [<000000001b2586e4>] __do_sys_sendmsg net/socket.c:2439 [inline]
+    [<000000001b2586e4>] __se_sys_sendmsg net/socket.c:2437 [inline]
+    [<000000001b2586e4>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
+    [<0000000005b8b511>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+    [<000000005e09659b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b2b2100 (size 96):
+  comm "syz-executor089", pid 7270, jiffies 4294941532 (age 13.520s)
+  hex dump (first 32 bytes):
+    40 06 37 1a 81 88 ff ff 80 20 2b 0b 81 88 ff ff  @.7...... +.....
+    20 47 c7 82 ff ff ff ff 00 e0 1d 25 81 88 ff ff   G.........%....
+  backtrace:
+    [<00000000f3a29219>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000f3a29219>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000f3a29219>] slab_alloc mm/slab.c:3320 [inline]
+    [<00000000f3a29219>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<000000005471dca6>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005471dca6>] nft_netdev_hook_alloc+0x3f/0xd0 net/netfilter/nf_tables_api.c:1653
+    [<00000000547b3e6d>] nf_tables_parse_netdev_hooks+0xaa/0x220 net/netfilter/nf_tables_api.c:1702
+    [<000000005c4bc909>] nf_tables_flowtable_parse_hook net/netfilter/nf_tables_api.c:6097 [inline]
+    [<000000005c4bc909>] nf_tables_newflowtable+0x407/0x930 net/netfilter/nf_tables_api.c:6297
+    [<000000004e57b3ed>] nfnetlink_rcv_batch+0x353/0x8c0 net/netfilter/nfnetlink.c:433
+    [<0000000095bbce6c>] nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+    [<0000000095bbce6c>] nfnetlink_rcv+0x189/0x1c0 net/netfilter/nfnetlink.c:561
+    [<000000002a197f31>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<000000002a197f31>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1329
+    [<000000002fe97501>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1918
+    [<0000000072a2eef7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<0000000072a2eef7>] sock_sendmsg+0x54/0x70 net/socket.c:672
+    [<0000000049691ba6>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2343
+    [<00000000466e69b2>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2397
+    [<0000000086270dd0>] __sys_sendmsg+0x80/0xf0 net/socket.c:2430
+    [<000000001b2586e4>] __do_sys_sendmsg net/socket.c:2439 [inline]
+    [<000000001b2586e4>] __se_sys_sendmsg net/socket.c:2437 [inline]
+    [<000000001b2586e4>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2437
+    [<0000000005b8b511>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+    [<000000005e09659b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
