@@ -2,89 +2,102 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7320CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4305B2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583170454;
-	bh=wjMTRnUNd5cJ8OEoiePT84V0U+qJX4Fb84bHAssH9NA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=afijW4Np5n7NCl7pQsqaJ6FinjJb3qNEYRCPP/VH+143d1+kCndipsoKMkTlHd7Kx
-	 HLHNoYbc8xa209S6FDkcphDHrUUi200EJlrGsrmrvRndiKK/QPGk5sCOpwXnwm9S1V
-	 8QR043uBexctCIVZigfnC+wn2/Z/8U5Am5RdanFk=
+	by mail.kernel.org (Postfix) with ESMTP id 6C87D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:35:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upJzOjhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCBReN (ORCPT
+        id S1727255AbgCBRfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgCBReM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:34:12 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F068024673;
-        Mon,  2 Mar 2020 17:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583170452;
-        bh=wjMTRnUNd5cJ8OEoiePT84V0U+qJX4Fb84bHAssH9NA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gDUE5EstDFLUx2qaO9VtZKSx5YA7OnyHA3ToCrC7+hGQmgXCRKgUCMuFcKfZ7UFVM
-         T9cgRoCN9U2ndcvhFdDEh0XKdQRF9DQ/YnjZmTrokHPRnwq9GRJh9+CmOOvZwM0E4W
-         FYnhSt7dWIQ6cZ3l1uvXW9kwfYiG3BLQikpVduMU=
-Received: by mail-qk1-f182.google.com with SMTP id h22so472311qke.5;
-        Mon, 02 Mar 2020 09:34:11 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2YbrXda2jjGC+EJG06ikcjbqlS9Ly9uom6VEkVG96FaCRnHGMd
-        Pw88Zdw2WfaROW93ChbVFNlIWrGSEA8WpyAU/Q==
-X-Google-Smtp-Source: ADFU+vv2zWP8LALxPle+rVBTCPBLOKpVAdTyCE+9q1Ly5nHm6dinZB6UfLzBu790RZYPm3z9Smvto7izyi0pefOej3A=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr386773qkg.152.1583170451093;
- Mon, 02 Mar 2020 09:34:11 -0800 (PST)
+        Mon, 2 Mar 2020 12:35:42 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39351 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgCBRfm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:35:42 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n30so230588lfh.6;
+        Mon, 02 Mar 2020 09:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Ye8JOMYu3KUEXBI9a+PVBJSVB7KxcW9KKrC8f1zJ54=;
+        b=upJzOjhy2lmZxP8hF0aSUpHPT2GOtAEt6zE+bWnSG8tiy++hsjpnb9IQ+Ej3uAkWmz
+         oidV/ihLP2ybcvf7eDhIe1XTpIqfux/6tL/jQo7p6/8bJtUcsNhD++wV3wntbflRjpwt
+         aaIQ4fbY+AExrfOY9kpydmvdEJoLx/gpGXdzbMzoxS/A6rRCL/olqoZtCsbaF+Le6OC0
+         h4fk4tojHsMItBo+5Qny+aC2ScsYamcl6mDFlR8y1XSm36cu092AC3XfjdM3iV98Falq
+         USmRq5GznBBWLmsE3+gqMeXrY1/VQnARfM6BrGbHZBeFYyC6Qu/WLEkqo4IHnhGr8jFV
+         T0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Ye8JOMYu3KUEXBI9a+PVBJSVB7KxcW9KKrC8f1zJ54=;
+        b=r9OWGW4ZNODuYeR0NwWMkM4oRdQyYlalBMXDx6jX7f8R3o5tVg7caLbCm4pCoZmmuh
+         +hYFCm/2QbQftlAZnyr4YogHJQ7UpHQPPEJYenHIERIZiopuUoiXK4QOVWrfFmm7qVSO
+         5kSq2Y7cDWkZc8/iav97QIHI/sAaZt8GKF3YSB1rZi88Sc/5j5lqF//k+Qhab65mE8yp
+         cBnGVn8IWBkGg33CfbVb10ZtYUN1v2NMpClmizzMH94/dKMf16acpSbzNGakfMlgWaVU
+         l08RGReq/rA/b8+M9MOUJCJwGZy/eg7Hc1rF4XIEByK4nAbbMq+R88WTCzq2iqzj8yvg
+         2TeQ==
+X-Gm-Message-State: ANhLgQ1Pc+MrkJs3SS09o+7ZK3l7NTv7rn5/6xwxLaQoQhsGy+GW7B4K
+        rENic2WRKyzGyzCbAtFnoQZmsCJU
+X-Google-Smtp-Source: ADFU+vvBvSsw+grH09drAKkAsqMI2RyWtkWYoGftLUpOYmEd3fzMzeIjfNxKWlIxUhVItQb3hNwH5A==
+X-Received: by 2002:a19:230d:: with SMTP id j13mr111585lfj.189.1583170539899;
+        Mon, 02 Mar 2020 09:35:39 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id u6sm1534403lff.35.2020.03.02.09.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 09:35:39 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] i2c: tegra: Make timeout error more informative
+Date:   Mon,  2 Mar 2020 20:35:12 +0300
+Message-Id: <20200302173512.2743-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1582863389-3118-1-git-send-email-frowand.list@gmail.com> <db823e84-5d59-374f-c616-e67819d62406@gmail.com>
-In-Reply-To: <db823e84-5d59-374f-c616-e67819d62406@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 2 Mar 2020 11:33:59 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKxGdyU0G2soehcGLeGxJFw1Zrm8b8Zem3Jb6aLgJUhyA@mail.gmail.com>
-Message-ID: <CAL_JsqKxGdyU0G2soehcGLeGxJFw1Zrm8b8Zem3Jb6aLgJUhyA@mail.gmail.com>
-Subject: Re: [PATCH] of: unittest: make gpio overlay test dependent on CONFIG_OF_GPIO
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alan Tull <atull@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Hi Rob,
->
-> On 2/27/20 10:16 PM, frowand.list@gmail.com wrote:
-> > From: Frank Rowand <frank.rowand@sony.com>
-> >
-> > Randconfig testing found compile errors in drivers/of/unittest.c if
-> > CONFIG_GPIOLIB is not set because CONFIG_OF_GPIO depends on
-> > CONFIG_GPIOLIB.  Make the gpio overlay test depend on CONFIG_OF_GPIO.
-> >
-> > No code is modified, it is only moved to a different location and
-> > protected with #ifdef CONFIG_OF_GPIO.  An empty
-> > of_unittest_overlay_gpio() is added in the #else.
->
-> Should I have used your 'next' or 'for-next' branch for the commit id:
->
-> Fixes: f4056e705b2e ("of: unittest: add overlay gpio test to catch gpio hog problem")
+The I2C timeout error message doesn't tell us what exactly failed and some
+I2C client drivers do not clarify the error either. Adding WARN_ON_ONCE()
+results in a stacktrace being dumped into KMSG, which is very useful for
+debugging purposes.
 
-Yes, I added it.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index cbc2ad49043e..b2bb19e05248 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1245,7 +1245,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 
+ 	tegra_i2c_mask_irq(i2c_dev, int_mask);
+ 
+-	if (time_left == 0) {
++	if (WARN_ON_ONCE(time_left == 0)) {
+ 		dev_err(i2c_dev->dev, "i2c transfer timed out\n");
+ 		tegra_i2c_init(i2c_dev, true);
+ 		return -ETIMEDOUT;
+-- 
+2.25.1
+
