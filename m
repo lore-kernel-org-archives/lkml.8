@@ -2,146 +2,183 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA81C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F4C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077C82080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EW5Vv5n+"
+	by mail.kernel.org (Postfix) with ESMTP id 7586821775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgCBOzk (ORCPT
+        id S1727335AbgCBO5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:55:40 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:35975 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgCBOzk (ORCPT
+        Mon, 2 Mar 2020 09:57:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727170AbgCBO5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:55:40 -0500
-Received: by mail-qv1-f65.google.com with SMTP id r15so223439qve.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:55:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=0CpiaNQchpE16G6mANWZwg+nmZTjaWwL7tiiRnj9aPM=;
-        b=EW5Vv5n+D0f0UsNthc3h71t87hgxrDN6gLEo145hhbKf1ajrmajo6rJt7kavSWyTI4
-         bwFu8iNIAvoYKIEv0cktWcTI9/Q9uAh1K90YRpoh5HVSi9rTkn+38cDLnym8EYTWoj7M
-         UeXwTAzvd0DPluF4XF47pUItLYvHwLRfs1xPlCszLhOBe0rfX7mMcpK9GMfZnLYqEjZ1
-         YuwzI86DbYmLFUH2sf7aoUW3SOzF/xjx+R/ywSCGVKhZAETGtpnBO/wigsvwNawBBkZL
-         N9XT5679xeiVdnlgYDkZ1pwIOmIc5h5TlEJVg22wnyICC3B1QnHtfIquma1hlc5/4S21
-         Cszg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=0CpiaNQchpE16G6mANWZwg+nmZTjaWwL7tiiRnj9aPM=;
-        b=aoGnemvx9mVbdAO1KOJ0JgxvbaZ4cAH1wkTtBfqbtQp2Neuf25vDXf/PduqxyEa/bI
-         v3/QtfM4VK1RZdmhfr28NeA3NwxQuE54rlktHn+xr1gtEl2eP7TR0ZnwQ3rxNFs+/zEU
-         YmVsKjxPqzZWRs+4+xq/sYEqv9q/1g8ZRA8giNeIwoZ756dTZaQMmzeMSCYM87IsVPu5
-         zFM9AZR2DV3ey5tsglTkwnazRnO0Sw6m8Sgxlab7FmUJGA2ZDSOft09LztfZiR8MWW92
-         Br2At5N4sexgHHl7BEly5ecpckeIHh2jLBgyvn7d9R6fJUFQH3ua5hdY21G4QxOvvZ6H
-         5b5Q==
-X-Gm-Message-State: ANhLgQ2Yl+IRt4nNvXKAJ8lcNW9rEmOsQw6uSi4O4ZvTgUu+kwYRELAa
-        QuFHuzRvfXpNZ5K3CQl+NVP3QsJYwzo=
-X-Google-Smtp-Source: ADFU+vvesLUwxRNmnURWg/vjPlfWrJWFNvK8XeqM6VCnKNj4HaX0n3ghYn5mnBDLZQGi3ALvgQtHAg==
-X-Received: by 2002:ad4:5288:: with SMTP id v8mr6695869qvr.120.1583160939125;
-        Mon, 02 Mar 2020 06:55:39 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id i132sm10353996qke.41.2020.03.02.06.55.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 06:55:38 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C8F03403AD; Mon,  2 Mar 2020 11:55:35 -0300 (-03)
-Date:   Mon, 2 Mar 2020 11:55:35 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Mon, 2 Mar 2020 09:57:09 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EtFoO078364
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 09:57:08 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbev8tx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:57:08 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Mar 2020 14:57:06 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 14:57:01 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022Ev0Pt23396720
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 14:57:00 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A225AE051;
+        Mon,  2 Mar 2020 14:57:00 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08EFBAE053;
+        Mon,  2 Mar 2020 14:56:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.229.179])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 14:56:58 +0000 (GMT)
+Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf parse-events: Use asprintf() instead of strncpy() for
- tracepoints
-Message-ID: <20200302145535.GA28183@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date:   Mon, 02 Mar 2020 09:56:58 -0500
+In-Reply-To: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
+References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+         <1583160524.8544.91.camel@linux.ibm.com>
+         <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Url:  http://acmel.wordpress.com
+X-TM-AS-GCONF: 00
+x-cbid: 20030214-0020-0000-0000-000003AF9FA8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030214-0021-0000-0000-00002207CB39
+Message-Id: <1583161018.8544.96.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 2020-03-02 at 15:52 +0100, Ard Biesheuvel wrote:
+> On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >
+> > On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
+> > > Every time a new architecture defines the IMA architecture specific
+> > > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> > > include file needs to be updated. To avoid this "noise", this patch
+> > > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> > > the different architectures to select it.
+> > >
+> > > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> > > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > ---
+> > >  arch/powerpc/Kconfig           | 2 +-
+> > >  arch/s390/Kconfig              | 1 +
+> > >  arch/x86/Kconfig               | 1 +
+> > >  include/linux/ima.h            | 3 +--
+> > >  security/integrity/ima/Kconfig | 9 +++++++++
+> > >  5 files changed, 13 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > > index 497b7d0b2d7e..b8ce1b995633 100644
+> > > --- a/arch/powerpc/Kconfig
+> > > +++ b/arch/powerpc/Kconfig
+> > > @@ -246,6 +246,7 @@ config PPC
+> > >       select SYSCTL_EXCEPTION_TRACE
+> > >       select THREAD_INFO_IN_TASK
+> > >       select VIRT_TO_BUS                      if !PPC64
+> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if PPC_SECURE_BOOT
+> > >       #
+> > >       # Please keep this list sorted alphabetically.
+> > >       #
+> > > @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
+> > >       prompt "Enable secure boot support"
+> > >       bool
+> > >       depends on PPC_POWERNV
+> > > -     depends on IMA_ARCH_POLICY
+> > >       help
+> > >         Systems with firmware secure boot enabled need to define security
+> > >         policies to extend secure boot to the OS. This config allows a user
+> > > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> > > index 8abe77536d9d..90ff3633ade6 100644
+> > > --- a/arch/s390/Kconfig
+> > > +++ b/arch/s390/Kconfig
+> > > @@ -195,6 +195,7 @@ config S390
+> > >       select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> > >       select SWIOTLB
+> > >       select GENERIC_ALLOCATOR
+> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > >
+> > >
+> > >  config SCHED_OMIT_FRAME_POINTER
+> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > index beea77046f9b..cafa66313fe2 100644
+> > > --- a/arch/x86/Kconfig
+> > > +++ b/arch/x86/Kconfig
+> > > @@ -230,6 +230,7 @@ config X86
+> > >       select VIRT_TO_BUS
+> > >       select X86_FEATURE_NAMES                if PROC_FS
+> > >       select PROC_PID_ARCH_STATUS             if PROC_FS
+> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
+> >
+> > Not everyone is interested in enabling IMA or requiring IMA runtime
+> > policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
+> > still left up to the person building the kernel.  As a result, I'm
+> > seeing the following warning, which is kind of cool.
+> >
+> > WARNING: unmet direct dependencies detected for
+> > IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
+> >   Selected by [y]:
+> >   - X86 [=y] && EFI [=y]
+> >
+> > Ard, Michael, Martin, just making sure this type of warning is
+> > acceptable before upstreaming this patch.  I would appreciate your
+> > tags.
+> >
+> 
+> Ehm, no, warnings like these are not really acceptable. It means there
+> is an inconsistency in the way the Kconfig dependencies are defined.
+> 
+> Does this help:
+> 
+>   select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+> 
+> ?
 
-	Noticed this with gcc 10 on fedora rawhide:
+Yes, that's fine for x86.  Michael, Martin, do you want something
+similar or would you prefer actually selecting IMA_ARCH_POLICY?
 
-In file included from /usr/include/string.h:495,
-                 from util/parse-events.h:12,
-                 from util/parse-events.c:18:
-In function ‘strncpy’,
-    inlined from ‘tracepoint_id_to_path’ at util/parse-events.c:271:5:
-/usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ offset [275, 511] from the object at ‘sys_dirent’ is out of the bounds of referenced subobject ‘d_name’ with type ‘char[256]’ at offset 19 [-Werror=array-bounds]
-  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from /usr/include/dirent.h:61,
-                 from util/parse-events.c:5:
-util/parse-events.c: In function ‘tracepoint_id_to_path’:
-/usr/include/bits/dirent.h:33:10: note: subobject ‘d_name’ declared here
-   33 |     char d_name[256];  /* We must not include limits.h! */
-      |          ^~~~~~
-In file included from /usr/include/string.h:495,
-                 from util/parse-events.h:12,
-                 from util/parse-events.c:18:
-In function ‘strncpy’,
-    inlined from ‘tracepoint_id_to_path’ at util/parse-events.c:273:5:
-/usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ offset [275, 511] from the object at ‘evt_dirent’ is out of the bounds of referenced subobject ‘d_name’ with type ‘char[256]’ at offset 19 [-Werror=array-bounds]
-  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from /usr/include/dirent.h:61,
-                 from util/parse-events.c:5:
-util/parse-events.c: In function ‘tracepoint_id_to_path’:
-/usr/include/bits/dirent.h:33:10: note: subobject ‘d_name’ declared here
-   33 |     char d_name[256];  /* We must not include limits.h! */
-      |          ^~~~~~
-  CC       /tmp/build/perf/util/call-path.o
+Mimi
 
-So I replaced it with asprintf to make the code shorter, use a bit less
-memory and deal with the above problem, ok?
-
-- Arnaldo
-
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c01ba6f8fdad..a14995835d85 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -257,21 +257,15 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 				path = zalloc(sizeof(*path));
- 				if (!path)
- 					return NULL;
--				path->system = malloc(MAX_EVENT_LENGTH);
--				if (!path->system) {
-+				if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
- 					free(path);
- 					return NULL;
- 				}
--				path->name = malloc(MAX_EVENT_LENGTH);
--				if (!path->name) {
-+				if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
- 					zfree(&path->system);
- 					free(path);
- 					return NULL;
- 				}
--				strncpy(path->system, sys_dirent->d_name,
--					MAX_EVENT_LENGTH);
--				strncpy(path->name, evt_dirent->d_name,
--					MAX_EVENT_LENGTH);
- 				return path;
- 			}
- 		}
