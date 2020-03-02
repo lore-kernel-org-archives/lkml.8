@@ -2,129 +2,98 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F11C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6218C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50082246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vL0VVsua"
+	by mail.kernel.org (Postfix) with ESMTP id 925DA246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCBJQm (ORCPT
+        id S1727124AbgCBJRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:16:42 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51163 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgCBJQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:16:41 -0500
-Received: by mail-pj1-f66.google.com with SMTP id nm14so1432561pjb.0;
-        Mon, 02 Mar 2020 01:16:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ndch3h4URTloyii1gSOs74b+yGmOg265tPn81wcSc2E=;
-        b=vL0VVsuaaoEsbUHMmRXA6lfSc7FopuGlr36i0AXnSjtq/HXbT/8a6v2h2NFzs7jmga
-         DQNmZYmIN2qjCn4v4UprQ1hhz87Li5nLtHphVK3d096BA9X8u9jvsl+X1E12z9uDygY0
-         tDZeDZt7dIcEa5iu/48Zcj9kqwt/Afy8lQ2vPLl7eyAB1mcmVl07n5BrFg1XH9SvUM4V
-         cODnqdSWYkDAaS9/SYbnZvwG7/Jwq9o5rMX/rJPp73ybLwKm3V2HM/o4EREpet7DoAG4
-         6ELWoIXedXfCwuV2u4nSq8sFAeFOZrb5Dfj1fao4CFdutyOVFG77o0e8I3Wc9gSbNNju
-         9spQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ndch3h4URTloyii1gSOs74b+yGmOg265tPn81wcSc2E=;
-        b=JtaB7Ms0nEuhvdP93a6hJUvzuveUZVF7UmB5QFjwRpWfwDw5l+VfEUn78J1DXQgUCm
-         PPM5hqRJq8hzfNSHB5SWkVFnIk4lBHedNWQlz3xapvNef4abD65N8noAM2sUCIscGg/I
-         qzmu8YNcW/d17tV4Ag4YDsPRbCu/Oa/g5YoK/sW0LxZ1javGScWgqQrXKTyConxspMP+
-         YnDqTg+0i43T+8I7R88bLtMFvYn6EJDnSaOo3KpQ1Zgm/uhbxXME0ezxICqIf4xHODYU
-         UMPxZXnQQA/ml2oBPP4jWrJKyTpaTUz8IY9LbqnMX5FrW4xUFnDWfw+6g7PTn1GG3X2H
-         VDSQ==
-X-Gm-Message-State: APjAAAXOMqsAKA9A/r9cwroLADx8KV3+JA8FSPBBsyiyJh/DQog4iJy0
-        7+r8sha8z6i2zHGZiR2Km9Y=
-X-Google-Smtp-Source: APXvYqxYIsfqZ+2k8oz/ngUWeeMoVuDFCKNrgGHaEoCYv0tsPO+VuDwJwr+REUi3DbiXhJ5trOFulQ==
-X-Received: by 2002:a17:902:8ec9:: with SMTP id x9mr17070699plo.182.1583140599577;
-        Mon, 02 Mar 2020 01:16:39 -0800 (PST)
-Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
-        by smtp.gmail.com with ESMTPSA id p18sm21513722pjo.3.2020.03.02.01.16.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 01:16:38 -0800 (PST)
-Date:   Mon, 2 Mar 2020 18:16:35 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Guo Ren <guoren@kernel.org>, Brian Cain <bcain@codeaurora.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sam Creasey <sammy@sammy.net>, Michal Simek <monstr@monstr.eu>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/special: Create generic fallbacks for pte_special()
- and pte_mkspecial()
-Message-ID: <20200302091635.GK7926@lianli.shorne-pla.net>
-References: <1583114190-7678-1-git-send-email-anshuman.khandual@arm.com>
+        Mon, 2 Mar 2020 04:17:43 -0500
+Received: from mga14.intel.com ([192.55.52.115]:47928 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgCBJRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:17:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 01:17:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,506,1574150400"; 
+   d="scan'208";a="351500767"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 02 Mar 2020 01:17:39 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 02 Mar 2020 11:17:38 +0200
+Date:   Mon, 2 Mar 2020 11:17:38 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benson Leung <bleung@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH v2 5/9] usb: roles: Provide the switch drivers handle to
+ the switch in the API
+Message-ID: <20200302091738.GB22243@kuha.fi.intel.com>
+References: <20200224121406.2419-1-heikki.krogerus@linux.intel.com>
+ <20200224121406.2419-6-heikki.krogerus@linux.intel.com>
+ <20200224131442.GA5365@b29397-desktop>
+ <20200302062302.GE3834@b29397-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583114190-7678-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20200302062302.GE3834@b29397-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 07:26:30AM +0530, Anshuman Khandual wrote:
+On Mon, Mar 02, 2020 at 06:22:59AM +0000, Peter Chen wrote:
+> > > @@ -613,9 +613,10 @@ static enum usb_role ci_usb_role_switch_get(struct device *dev)
+> > >  	return role;
+> > >  }
+> > >  
+> > > -static int ci_usb_role_switch_set(struct device *dev, enum usb_role role)
+> > > +static int ci_usb_role_switch_set(struct usb_role_switch *sw,
+> > > +				  enum usb_role role)
+> > >  {
+> > > -	struct ci_hdrc *ci = dev_get_drvdata(dev);
+> > > +	struct ci_hdrc *ci = usb_role_switch_get_drvdata(sw);
+> > >  	struct ci_hdrc_cable *cable = NULL;
+> > >  	enum usb_role current_role = ci_role_to_usb_role(ci);
+> > >  	enum ci_role ci_role = usb_role_to_ci_role(role);
+> > > @@ -1118,6 +1119,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+> > >  	}
+> > >  
+> > >  	if (ci_role_switch.fwnode) {
+> > > +		ci_role_switch.driver_data = ci;
+> 
+> And chipidea code, better change it like cdns3's, otherwise, the
+> switch desc for all controllers have the same driver_data.
 
-> diff --git a/arch/openrisc/include/asm/pgtable.h b/arch/openrisc/include/asm/pgtable.h
-> index 248d22d8faa7..7f3fb9ceb083 100644
-> --- a/arch/openrisc/include/asm/pgtable.h
-> +++ b/arch/openrisc/include/asm/pgtable.h
-> @@ -236,8 +236,6 @@ static inline int pte_write(pte_t pte) { return pte_val(pte) & _PAGE_WRITE; }
->  static inline int pte_exec(pte_t pte)  { return pte_val(pte) & _PAGE_EXEC; }
->  static inline int pte_dirty(pte_t pte) { return pte_val(pte) & _PAGE_DIRTY; }
->  static inline int pte_young(pte_t pte) { return pte_val(pte) & _PAGE_ACCESSED; }
-> -static inline int pte_special(pte_t pte) { return 0; }
-> -static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
->  
->  static inline pte_t pte_wrprotect(pte_t pte)
->  {
+That I'll skip after all...
 
-For openrisc bits:
+Note that since the context of the switch descriptor is always copied
+during registration, the driver_data is not going to be the same for
+every switch.
 
-Acked-by: Stafford Horne <shorne@gmail.com>
- 
+The structure is actually filled in two separate functions, so the
+change is not straightforward. We can still change that of course, but
+it's out side the scope of this series, so it needs to be done
+separately.
+
+
+thanks,
+
+-- 
+heikki
