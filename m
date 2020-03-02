@@ -2,87 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFEDC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D848C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087DA2083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECFF2083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCBLLH (ORCPT
+        id S1727627AbgCBLLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:11:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:59520 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 06:11:20 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24667 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgCBLLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:11:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 728572F;
-        Mon,  2 Mar 2020 03:11:06 -0800 (PST)
-Received: from e107533-lin.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458203F6CF;
-        Mon,  2 Mar 2020 03:11:05 -0800 (PST)
-Date:   Mon, 2 Mar 2020 11:10:57 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
-Cc:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
-Message-ID: <20200302111038.GA16218@e107533-lin.cambridge.arm.com>
-References: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
- <20200228104034.GB26973@bogus>
- <678F3D1BB717D949B966B68EAEB446ED341F2AE2@DGGEMM506-MBS.china.huawei.com>
+        id S1725996AbgCBLLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 06:11:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 03:11:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,506,1574150400"; 
+   d="scan'208";a="412243946"
+Received: from aorourk1-mobl.ger.corp.intel.com (HELO localhost) ([10.251.86.123])
+  by orsmga005.jf.intel.com with ESMTP; 02 Mar 2020 03:11:17 -0800
+Date:   Mon, 2 Mar 2020 13:11:16 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v5 2/3] tpm: ibmvtpm: Wait for buffer to be set before
+ proceeding
+Message-ID: <20200302111116.GB3979@linux.intel.com>
+References: <20200228030330.18081-1-stefanb@linux.vnet.ibm.com>
+ <20200228030330.18081-3-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED341F2AE2@DGGEMM506-MBS.china.huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200228030330.18081-3-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 01:41:47AM +0000, Zengtao (B) wrote:
-> > -----Original Message-----
-> > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> > Sent: Friday, February 28, 2020 6:41 PM
-> > To: Zengtao (B)
-> > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> > linux-kernel@vger.kernel.org; Sudeep Holla
-> > Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
-> >
-> > On Fri, Feb 28, 2020 at 04:35:45PM +0800, Zeng Tao wrote:
-> > > Currently there are only 10 bytes to store the cpu-topology info.
-> > > That is:
-> > > snprintf(buffer, 10, "cluster%d",i);
-> > > snprintf(buffer, 10, "thread%d",i);
-> > > snprintf(buffer, 10, "core%d",i);
-> > >
-> > > In the boundary test, if the cluster number exceeds 100, there will be a
-> >
-> > I don't understand you mention of 100 in particular above. I can see
-> > issue
-> > if there are cluster with more than 2-digit id. Though highly unlikely for
-> > now, but I don't have objection to the patch.
-> >
->
-> The same meaning, more than 2-digit id equals to more than 100, right?
+On Thu, Feb 27, 2020 at 10:03:29PM -0500, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com> > 
+> Synchronize with the results from the CRQs before continuing with
+> the initialization. This avoids trying to send TPM commands while
+> the rtce buffer has not been allocated, yet.
+> 
+> This patch fixes an existing race condition that may occurr if the
+> hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
+> request sent during initialization and therefore the ibmvtpm->rtce_buf
+> has not been allocated at the time the first TPM command is sent.
+> 
+> Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> ---
+>  drivers/char/tpm/tpm_ibmvtpm.c | 9 +++++++++
+>  drivers/char/tpm/tpm_ibmvtpm.h | 1 +
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+> index 78cc52690177..eee566eddb35 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -571,6 +571,7 @@ static irqreturn_t ibmvtpm_interrupt(int irq, void *vtpm_instance)
+>  	 */
+>  	while ((crq = ibmvtpm_crq_get_next(ibmvtpm)) != NULL) {
+>  		ibmvtpm_crq_process(crq, ibmvtpm);
+> +		wake_up_interruptible(&ibmvtpm->crq_queue.wq);
+>  		crq->valid = 0;
+>  		smp_wmb();
+>  	}
+> @@ -618,6 +619,7 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>  	}
+>  
+>  	crq_q->num_entry = CRQ_RES_BUF_SIZE / sizeof(*crq_q->crq_addr);
+> +	init_waitqueue_head(&crq_q->wq);
+>  	ibmvtpm->crq_dma_handle = dma_map_single(dev, crq_q->crq_addr,
+>  						 CRQ_RES_BUF_SIZE,
+>  						 DMA_BIDIRECTIONAL);
+> @@ -670,6 +672,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>  	if (rc)
+>  		goto init_irq_cleanup;
+>  
+> +	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
+> +				ibmvtpm->rtce_buf != NULL,
+> +				HZ)) {
+> +		dev_err(dev, "Initialization failed\n");
 
-Yes. May be it is obvious but I prefer to word the commit message accordingly.
-Mention of 100 specifically makes at-least me think something very specific
-to 100 and not applicable for any more than 2-digit number.
+I'd change this something more descriptive "CRQ response timed out".
 
-> Here 100 is for from tester/user perspective.
-> And we found this issue when test with QEMU.
-
-OK.
-
---
-Regards,
-Sudeep
+/Jarkko
