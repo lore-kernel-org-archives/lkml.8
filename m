@@ -2,123 +2,155 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1632CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53954C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D880E246BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+DXo/4Q"
+	by mail.kernel.org (Postfix) with ESMTP id 28D6C246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCBI6j (ORCPT
+        id S1727176AbgCBI7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:58:39 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43392 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBI6j (ORCPT
+        Mon, 2 Mar 2020 03:59:06 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:56988 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgCBI7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:58:39 -0500
-Received: by mail-lf1-f67.google.com with SMTP id s23so7324503lfs.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:58:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Al5IFuoY2rtnym3clzN0RNUtkS0nsC5av4BTRm+2H8=;
-        b=s+DXo/4QB+gzeWecrfZeKjqe+Xn6/LZLwpd0Cm8a4dB5lSDFfBVny//mDtHl1R/ai8
-         3zYOJwaHiw3RUktuC7V69MDGGfL9r3ODivQhmIs9Ai6nASDMOWfrQzqsEMDwuu0xlDq7
-         jVajW5Wq0jZPWwjlhXf5Zw2G/7d+ykOVa9twrUwY/pSIiNebSJcnhLe0ERcCXgHhFD+d
-         VNaIIOZUBRJvTs1GRk/t35WpDjgFhPR9hG/DA/W+daYuaGNNxt7FTMeYXuU6sKuAf2N+
-         WhgSUixDeoDy5jb7ZHjTQt7W0xbrAisaBWZ0Xe8fn9Ipbfy0IdoK9NTqBaRSAR3zlHZU
-         jRkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Al5IFuoY2rtnym3clzN0RNUtkS0nsC5av4BTRm+2H8=;
-        b=Iz2HkczNkxq/MRbugdMEpiVtb9RApQlzBrWcIj7lTkP6dvZmAhUTH1HPqK/0OLuiQx
-         MhRxFoMu6yDY21UeR6Ivs63/9nnHr7OH6u7pjBtdhJYFct/VmwI6ki/CMweriK7sHBPe
-         8HQHagpGit+1MYBkPWtc2AgGFc+iDK1hMVhjGny/mg7K1Gax0V8uQJQHNlYUB0D56/ON
-         uGOD1TSBSH7K6fKBUwz4czw51cs0ySmX+JvcEdqfnZrkBkx/tJEwlXmFiK5+rHcR17cc
-         8B+hrLcxmjz3tbrwE8d9d/RP/d8u5vD8Q2toJRRQCybApZo6nkmbrEBi3ZuQ6KJmOhEs
-         1A/Q==
-X-Gm-Message-State: ANhLgQ2nCiXK9gO2DXDUSwJ+mm4lYi9PfvBj/ISQuKlJ+4+/IHzFJDe0
-        7W1BIPBJjEbV08VuDCGQ5BMWv6QxxckOqgaRRfjeVA==
-X-Google-Smtp-Source: ADFU+vsfA5pYmFGJV50ALCmK9XG6w4XRbq54i4YJwt2GzCZisxPtols/qSbqZqDlSvdlO2myf6Uo6NfLAsAVuWjSkNo=
-X-Received: by 2002:ac2:4d16:: with SMTP id r22mr9484343lfi.74.1583139517083;
- Mon, 02 Mar 2020 00:58:37 -0800 (PST)
-MIME-Version: 1.0
-References: <1583133336-7832-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1583133336-7832-1-git-send-email-wanpengli@tencent.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 2 Mar 2020 14:28:25 +0530
-Message-ID: <CA+G9fYvnHwNHpkkEG951VcTBCVuvfMP98WDHf04dVy7K=E4pLg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: X86: Fix dereference null cpufreq policy
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+        Mon, 2 Mar 2020 03:59:05 -0500
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1j8gub-0001rk-M0; Mon, 02 Mar 2020 02:58:54 -0600
+Message-ID: <2a7cf26aa11adf43ec4f29ab733afc695039633c.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     =?UTF-8?Q?=E7=8E=8B=E6=96=87=E8=99=8E?= <wenhu.wang@vivo.com>
+Cc:     wangwenhu <wenhu.pku@gmail.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, Rai Harninder <harninder.rai@nxp.com>
+Date:   Mon, 02 Mar 2020 02:58:52 -0600
+In-Reply-To: <AKMA9QAgCCx9CEivazbGIap-.3.1583124159966.Hmail.wenhu.wang@vivo.com>
+References: <AKMA9QAgCCx9CEivazbGIap-.3.1583124159966.Hmail.wenhu.wang@vivo.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, wenhu.pku@gmail.com, galak@kernel.crashing.org, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, trivial@kernel.org, harninder.rai@nxp.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM configurable
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 12:48, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Naresh Kamboju reported:
->
->    Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
->   (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
->    kvm: no hardware support
->    BUG: kernel NULL pointer dereference, address: 000000000000028c
->    #PF: supervisor read access in kernel mode
->    #PF: error_code(0x0000) - not-present page
->    PGD 0 P4D 0
->    Oops: 0000 [#1] SMP NOPTI
->    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
->    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
->   04/01/2014
->    RIP: 0010:kobject_put+0x12/0x1c0
->    Call Trace:
->     cpufreq_cpu_put+0x15/0x20
->     kvm_arch_init+0x1f6/0x2b0
->     kvm_init+0x31/0x290
->     ? svm_check_processor_compat+0xd/0xd
->     ? svm_check_processor_compat+0xd/0xd
->     svm_init+0x21/0x23
->     do_one_initcall+0x61/0x2f0
->     ? rdinit_setup+0x30/0x30
->     ? rcu_read_lock_sched_held+0x4f/0x80
->     kernel_init_freeable+0x219/0x279
->     ? rest_init+0x250/0x250
->     kernel_init+0xe/0x110
->     ret_from_fork+0x27/0x50
->    Modules linked in:
->    CR2: 000000000000028c
->    ---[ end trace 239abf40c55c409b ]---
->    RIP: 0010:kobject_put+0x12/0x1c0
->
-> cpufreq policy which is get by cpufreq_cpu_get() can be NULL if it is failure,
-> this patch takes care of it.
->
-> Fixes: aaec7c03de (KVM: x86: avoid useless copy of cpufreq policy)
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+On Mon, 2020-03-02 at 12:42 +0800, 王文虎 wrote:
+> 发件人：Scott Wood <oss@buserror.net>
+> 发送日期：2020-03-01 07:12:58
+> 收件人："王文虎" <wenhu.wang@vivo.com>
+> 抄送人：wangwenhu <wenhu.pku@gmail.com>,Kumar Gala <galak@kernel.crashing.org>,B
+> enjamin Herrenschmidt <benh@kernel.crashing.org>,Paul Mackerras <
+> paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,
+> linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org,
+> trivial@kernel.org,Rai Harninder <harninder.rai@nxp.com>
+> 主题：Re: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM configurable>On
+> Tue, 2020-01-21 at 14:38 +0800, 王文虎 wrote:
+> > > 发件人：Scott Wood <oss@buserror.net>
+> > > 发送日期：2020-01-21 13:49:59
+> > > 收件人："王文虎" <wenhu.wang@vivo.com>
+> > > 抄送人：wangwenhu <wenhu.pku@gmail.com>,Kumar Gala <
+> > > galak@kernel.crashing.org>,B
+> > > enjamin Herrenschmidt <benh@kernel.crashing.org>,Paul Mackerras <
+> > > paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,
+> > > linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org,
+> > > trivial@kernel.org,Rai Harninder <harninder.rai@nxp.com>
+> > > 主题：Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM configurable>On
+> > > Tue, 2020-01-21 at 13:20 +0800, 王文虎 wrote:
+> > > > > From: Scott Wood <oss@buserror.net>
+> > > > > Date: 2020-01-21 11:25:25
+> > > > > To:  wangwenhu <wenhu.pku@gmail.com>,Kumar Gala <
+> > > > > galak@kernel.crashing.org>,
+> > > > > Benjamin Herrenschmidt <benh@kernel.crashing.org>,Paul Mackerras <
+> > > > > paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,
+> > > > > linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org
+> > > > > Cc:  trivial@kernel.org,wenhu.wang@vivo.com,Rai Harninder <
+> > > > > harninder.rai@nxp.com>
+> > > > > Subject: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM
+> > > > > configurable>On Mon, 2020-01-20 at 06:43 -0800, wangwenhu wrote:
+> > > > > > > From: wangwenhu <wenhu.wang@vivo.com>
+> > > > > > > 
+> > > > > > > When generating .config file with menuconfig on Freescale BOOKE
+> > > > > > > SOC, FSL_85XX_CACHE_SRAM is not configurable for the lack of
+> > > > > > > description in the Kconfig field, which makes it impossible
+> > > > > > > to support L2Cache-Sram driver. Add a description to make it
+> > > > > > > configurable.
+> > > > > > > 
+> > > > > > > Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
+> > > > > > 
+> > > > > > The intent was that drivers using the SRAM API would select the
+> > > > > > symbol.  What
+> > > > > > is the use case for selecting it manually?
+> > > > > > 
+> > > > > 
+> > > > > With a repository of multiple products(meaning different defconfigs)
+> > > > > and
+> > > > > multiple
+> > > > > developers, the Kconfigs of the Kernel Source Tree change
+> > > > > frequently. So
+> > > > > the
+> > > > > "make menuconfig"
+> > > > > process is needed for defconfigs' re-generating or updating for the
+> > > > > complexity of dependencies
+> > > > > between different features defined in the Kconfigs.
+> > > > 
+> > > > That doesn't answer my question of how the SRAM code would be useful
+> > > > other
+> > > > than to some other driver that uses the API (which would use
+> > > > "select").  There
+> > > > is no userspace API.  You could use the kernel command line to
+> > > > configure
+> > > > the
+> > > > SRAM but you need to get the address of it for it to be useful.
+> > > > 
+> > > 
+> > > Like you've asked below, via /dev/mem or direct calling within the
+> > > Kernel.
+> > > And they are not submitted yes, under development.
+> > 
+> > If they are calling within the kernel, then whatever driver that is should
+> > select FSL_85XX_CACHE_SRAM.  Directly accessing /dev/mem without any way
+> > for
+> > the kernel to advertise where it is or which parts of SRAM are available
+> > for
+> > use sounds like a bad idea.
+> > 
+> 
+> Yes, definitely. So like we enable the moulde which should selet 
+> FSL_85XX_CACHE_SRAM to build vmlinux, FSL_85XX_CACHE_SRAM 
+> could not be seleted because of the Kconfig definition problem 
+> which I am trying to fix now.  So would you please merge the patch 
+> for the convenience of later works depending on the driver.
 
-Applied this patch and test boot pass.
+Sorry, I don't think it's something that should be enabled by itself with
+nothing using the allocators.  Suppose we took this patch, and people enabled
+it and accessed it via /dev/mem.  Then suppose a driver is patched to allocate
+some sram and use it.  They'd be stepping on each others' toes undetected.
 
-- Naresh
+If you want to expose it to userspace, add code that allocates some or all of
+the sram and make it something userspace can mmap.  Or, if nothing's going to
+use them, remove the allocators and export the entire thing to userspace
+(again via an sram-specific mappable rather than /dev/mem).
+
+-Scott
+
+
