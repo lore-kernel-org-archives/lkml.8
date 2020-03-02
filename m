@@ -2,165 +2,120 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4911FC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA1CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D0521D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A1421D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n8wx694Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgCBJvr (ORCPT
+        id S1727517AbgCBJyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:51:47 -0500
-Received: from m177126.mail.qiye.163.com ([123.58.177.126]:3377 "EHLO
-        m177126.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCBJvr (ORCPT
+        Mon, 2 Mar 2020 04:54:13 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50012 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgCBJyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:51:47 -0500
-Received: from vivo.com (wm-5 [127.0.0.1])
-        by m177126.mail.qiye.163.com (Hmail) with ESMTP id BF86B182DD1;
-        Mon,  2 Mar 2020 17:51:40 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AKwA*ABoCIJ9vbaCjM1qLqoO.3.1583142700761.Hmail.wenhu.wang@vivo.com>
-To:     Scott Wood <oss@buserror.net>
-Cc:     wangwenhu <wenhu.pku@gmail.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org, Rai Harninder <harninder.rai@nxp.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gcG93ZXJwYy9LY29uZmlnOiBNYWtlIEZTTF84NVhYX0NBQ0hFX1NSQU0gY29uZmlndXJhYmxl?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <2a7cf26aa11adf43ec4f29ab733afc695039633c.camel@buserror.net>
+        Mon, 2 Mar 2020 04:54:12 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0229rlXE038637;
+        Mon, 2 Mar 2020 03:53:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583142827;
+        bh=MaPO+Y+GFt8NojyCTT0VA83fEm+Nn1m3L1ToA+6WYhk=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=n8wx694Zu850t8rho+LltUhbikx5WUkA5L6N7d1S0Uxo+N7tAk8V8nj0E6CsXohLq
+         V0yjLlqMWSuyTlFVIkSZM5CTsb/W7QhWErbHvvYfpoHA9QJCi4pXF5uPoVfTviXUle
+         Sw3XNYzuziw8iYcrh0aXMLK5Yy4mY7Rh06njFALE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0229rkWa040407
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Mar 2020 03:53:47 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 03:53:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 03:53:46 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0229rjSg028864;
+        Mon, 2 Mar 2020 03:53:46 -0600
+Date:   Mon, 2 Mar 2020 15:23:45 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR
+ capability
+Message-ID: <20200302095343.3yec6inur52vx6bg@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+ <20200226093703.19765-2-p.yadav@ti.com>
+ <20200227171147.32cc6fcf@collabora.com>
+ <20200227162842.GE4062@sirena.org.uk>
+ <CAMuHMdWMCDzQm0tjpybJZyHy4imbC9NqRXP5d4C0xgxQx-Pf8g@mail.gmail.com>
+ <20200227164425.GF4062@sirena.org.uk>
+ <CAMuHMdV_1RfGFgDjJYzAnGd_x57zSwjZd8si=UTPp8ksgdwYGA@mail.gmail.com>
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 2 Mar 2020 17:51:40 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Mon, 2 Mar 2020 17:51:40 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVMSU1CQkJMTkJNTE9LTFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTktKSEhOS0pLN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6MAw6UTo5FDgyMUINGRo4ETZKCjcKFDRVSFVKTkNISk9JTEtJQkhMVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQUpLTEJCNwY+
-X-HM-Tid: 0a709aa886fa6458kursbf86b182dd1
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV_1RfGFgDjJYzAnGd_x57zSwjZd8si=UTPp8ksgdwYGA@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5Y+R5Lu25Lq677yaU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4K5Y+R6YCB5pel5pyf77ya
-MjAyMC0wMy0wMiAxNjo1ODo1MgrmlLbku7bkurrvvJoi546L5paH6JmOIiA8d2VuaHUud2FuZ0B2
-aXZvLmNvbT4K5oqE6YCB5Lq677yad2FuZ3dlbmh1IDx3ZW5odS5wa3VAZ21haWwuY29tPixLdW1h
-ciBHYWxhIDxnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnPixCZW5qYW1pbiBIZXJyZW5zY2htaWR0
-IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFja2VycmFzIDxwYXVsdXNAc2FtYmEu
-b3JnPixNaWNoYWVsIEVsbGVybWFuIDxtcGVAZWxsZXJtYW4uaWQuYXU+LGxpbnV4cHBjLWRldkBs
-aXN0cy5vemxhYnMub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsdHJpdmlhbEBrZXJu
-ZWwub3JnLFJhaSBIYXJuaW5kZXIgPGhhcm5pbmRlci5yYWlAbnhwLmNvbT4K5Li76aKY77yaUmU6
-IFtQQVRDSF0gcG93ZXJwYy9LY29uZmlnOiBNYWtlIEZTTF84NVhYX0NBQ0hFX1NSQU0gY29uZmln
-dXJhYmxlPk9uIE1vbiwgMjAyMC0wMy0wMiBhdCAxMjo0MiArMDgwMCwg546L5paH6JmOIHdyb3Rl
-Ogo+PiDlj5Hku7bkurrvvJpTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pgo+PiDlj5HpgIHm
-l6XmnJ/vvJoyMDIwLTAzLTAxIDA3OjEyOjU4Cj4+IOaUtuS7tuS6uu+8miLnjovmlofomY4iIDx3
-ZW5odS53YW5nQHZpdm8uY29tPgo+PiDmioTpgIHkurrvvJp3YW5nd2VuaHUgPHdlbmh1LnBrdUBn
-bWFpbC5jb20+LEt1bWFyIEdhbGEgPGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc+LEIKPj4gZW5q
-YW1pbiBIZXJyZW5zY2htaWR0IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFja2Vy
-cmFzIDwKPj4gcGF1bHVzQHNhbWJhLm9yZz4sTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFu
-LmlkLmF1PiwKPj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcsbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZywKPj4gdHJpdmlhbEBrZXJuZWwub3JnLFJhaSBIYXJuaW5kZXIgPGhhcm5p
-bmRlci5yYWlAbnhwLmNvbT4KPj4g5Li76aKY77yaUmU6IFJlOiBbUEFUQ0hdIHBvd2VycGMvS2Nv
-bmZpZzogTWFrZSBGU0xfODVYWF9DQUNIRV9TUkFNIGNvbmZpZ3VyYWJsZT5Pbgo+PiBUdWUsIDIw
-MjAtMDEtMjEgYXQgMTQ6MzggKzA4MDAsIOeOi+aWh+iZjiB3cm90ZToKPj4gPiA+IOWPkeS7tuS6
-uu+8mlNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+Cj4+ID4gPiDlj5HpgIHml6XmnJ/vvJoy
-MDIwLTAxLTIxIDEzOjQ5OjU5Cj4+ID4gPiDmlLbku7bkurrvvJoi546L5paH6JmOIiA8d2VuaHUu
-d2FuZ0B2aXZvLmNvbT4KPj4gPiA+IOaKhOmAgeS6uu+8mndhbmd3ZW5odSA8d2VuaHUucGt1QGdt
-YWlsLmNvbT4sS3VtYXIgR2FsYSA8Cj4+ID4gPiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnPixC
-Cj4+ID4gPiBlbmphbWluIEhlcnJlbnNjaG1pZHQgPGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZz4s
-UGF1bCBNYWNrZXJyYXMgPAo+PiA+ID4gcGF1bHVzQHNhbWJhLm9yZz4sTWljaGFlbCBFbGxlcm1h
-biA8bXBlQGVsbGVybWFuLmlkLmF1PiwKPj4gPiA+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsCj4+ID4gPiB0cml2aWFsQGtlcm5lbC5v
-cmcsUmFpIEhhcm5pbmRlciA8aGFybmluZGVyLnJhaUBueHAuY29tPgo+PiA+ID4g5Li76aKY77ya
-UmU6IFtQQVRDSF0gcG93ZXJwYy9LY29uZmlnOiBNYWtlIEZTTF84NVhYX0NBQ0hFX1NSQU0gY29u
-ZmlndXJhYmxlPk9uCj4+ID4gPiBUdWUsIDIwMjAtMDEtMjEgYXQgMTM6MjAgKzA4MDAsIOeOi+aW
-h+iZjiB3cm90ZToKPj4gPiA+ID4gPiBGcm9tOiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0
-Pgo+PiA+ID4gPiA+IERhdGU6IDIwMjAtMDEtMjEgMTE6MjU6MjUKPj4gPiA+ID4gPiBUbzogIHdh
-bmd3ZW5odSA8d2VuaHUucGt1QGdtYWlsLmNvbT4sS3VtYXIgR2FsYSA8Cj4+ID4gPiA+ID4gZ2Fs
-YWtAa2VybmVsLmNyYXNoaW5nLm9yZz4sCj4+ID4gPiA+ID4gQmVuamFtaW4gSGVycmVuc2NobWlk
-dCA8YmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnPixQYXVsIE1hY2tlcnJhcyA8Cj4+ID4gPiA+ID4g
-cGF1bHVzQHNhbWJhLm9yZz4sTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PiwK
-Pj4gPiA+ID4gPiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZyxsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnCj4+ID4gPiA+ID4gQ2M6ICB0cml2aWFsQGtlcm5lbC5vcmcsd2VuaHUud2Fu
-Z0B2aXZvLmNvbSxSYWkgSGFybmluZGVyIDwKPj4gPiA+ID4gPiBoYXJuaW5kZXIucmFpQG54cC5j
-b20+Cj4+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gcG93ZXJwYy9LY29uZmlnOiBNYWtl
-IEZTTF84NVhYX0NBQ0hFX1NSQU0KPj4gPiA+ID4gPiBjb25maWd1cmFibGU+T24gTW9uLCAyMDIw
-LTAxLTIwIGF0IDA2OjQzIC0wODAwLCB3YW5nd2VuaHUgd3JvdGU6Cj4+ID4gPiA+ID4gPiA+IEZy
-b206IHdhbmd3ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4gPiA+ID4gPiA+ID4gCj4+ID4g
-PiA+ID4gPiA+IFdoZW4gZ2VuZXJhdGluZyAuY29uZmlnIGZpbGUgd2l0aCBtZW51Y29uZmlnIG9u
-IEZyZWVzY2FsZSBCT09LRQo+PiA+ID4gPiA+ID4gPiBTT0MsIEZTTF84NVhYX0NBQ0hFX1NSQU0g
-aXMgbm90IGNvbmZpZ3VyYWJsZSBmb3IgdGhlIGxhY2sgb2YKPj4gPiA+ID4gPiA+ID4gZGVzY3Jp
-cHRpb24gaW4gdGhlIEtjb25maWcgZmllbGQsIHdoaWNoIG1ha2VzIGl0IGltcG9zc2libGUKPj4g
-PiA+ID4gPiA+ID4gdG8gc3VwcG9ydCBMMkNhY2hlLVNyYW0gZHJpdmVyLiBBZGQgYSBkZXNjcmlw
-dGlvbiB0byBtYWtlIGl0Cj4+ID4gPiA+ID4gPiA+IGNvbmZpZ3VyYWJsZS4KPj4gPiA+ID4gPiA+
-ID4gCj4+ID4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IHdhbmd3ZW5odSA8d2VuaHUud2FuZ0B2
-aXZvLmNvbT4KPj4gPiA+ID4gPiA+IAo+PiA+ID4gPiA+ID4gVGhlIGludGVudCB3YXMgdGhhdCBk
-cml2ZXJzIHVzaW5nIHRoZSBTUkFNIEFQSSB3b3VsZCBzZWxlY3QgdGhlCj4+ID4gPiA+ID4gPiBz
-eW1ib2wuICBXaGF0Cj4+ID4gPiA+ID4gPiBpcyB0aGUgdXNlIGNhc2UgZm9yIHNlbGVjdGluZyBp
-dCBtYW51YWxseT8KPj4gPiA+ID4gPiA+IAo+PiA+ID4gPiA+IAo+PiA+ID4gPiA+IFdpdGggYSBy
-ZXBvc2l0b3J5IG9mIG11bHRpcGxlIHByb2R1Y3RzKG1lYW5pbmcgZGlmZmVyZW50IGRlZmNvbmZp
-Z3MpCj4+ID4gPiA+ID4gYW5kCj4+ID4gPiA+ID4gbXVsdGlwbGUKPj4gPiA+ID4gPiBkZXZlbG9w
-ZXJzLCB0aGUgS2NvbmZpZ3Mgb2YgdGhlIEtlcm5lbCBTb3VyY2UgVHJlZSBjaGFuZ2UKPj4gPiA+
-ID4gPiBmcmVxdWVudGx5LiBTbwo+PiA+ID4gPiA+IHRoZQo+PiA+ID4gPiA+ICJtYWtlIG1lbnVj
-b25maWciCj4+ID4gPiA+ID4gcHJvY2VzcyBpcyBuZWVkZWQgZm9yIGRlZmNvbmZpZ3MnIHJlLWdl
-bmVyYXRpbmcgb3IgdXBkYXRpbmcgZm9yIHRoZQo+PiA+ID4gPiA+IGNvbXBsZXhpdHkgb2YgZGVw
-ZW5kZW5jaWVzCj4+ID4gPiA+ID4gYmV0d2VlbiBkaWZmZXJlbnQgZmVhdHVyZXMgZGVmaW5lZCBp
-biB0aGUgS2NvbmZpZ3MuCj4+ID4gPiA+IAo+PiA+ID4gPiBUaGF0IGRvZXNuJ3QgYW5zd2VyIG15
-IHF1ZXN0aW9uIG9mIGhvdyB0aGUgU1JBTSBjb2RlIHdvdWxkIGJlIHVzZWZ1bAo+PiA+ID4gPiBv
-dGhlcgo+PiA+ID4gPiB0aGFuIHRvIHNvbWUgb3RoZXIgZHJpdmVyIHRoYXQgdXNlcyB0aGUgQVBJ
-ICh3aGljaCB3b3VsZCB1c2UKPj4gPiA+ID4gInNlbGVjdCIpLiAgVGhlcmUKPj4gPiA+ID4gaXMg
-bm8gdXNlcnNwYWNlIEFQSS4gIFlvdSBjb3VsZCB1c2UgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUg
-dG8KPj4gPiA+ID4gY29uZmlndXJlCj4+ID4gPiA+IHRoZQo+PiA+ID4gPiBTUkFNIGJ1dCB5b3Ug
-bmVlZCB0byBnZXQgdGhlIGFkZHJlc3Mgb2YgaXQgZm9yIGl0IHRvIGJlIHVzZWZ1bC4KPj4gPiA+
-ID4gCj4+ID4gPiAKPj4gPiA+IExpa2UgeW91J3ZlIGFza2VkIGJlbG93LCB2aWEgL2Rldi9tZW0g
-b3IgZGlyZWN0IGNhbGxpbmcgd2l0aGluIHRoZQo+PiA+ID4gS2VybmVsLgo+PiA+ID4gQW5kIHRo
-ZXkgYXJlIG5vdCBzdWJtaXR0ZWQgeWVzLCB1bmRlciBkZXZlbG9wbWVudC4KPj4gPiAKPj4gPiBJ
-ZiB0aGV5IGFyZSBjYWxsaW5nIHdpdGhpbiB0aGUga2VybmVsLCB0aGVuIHdoYXRldmVyIGRyaXZl
-ciB0aGF0IGlzIHNob3VsZAo+PiA+IHNlbGVjdCBGU0xfODVYWF9DQUNIRV9TUkFNLiAgRGlyZWN0
-bHkgYWNjZXNzaW5nIC9kZXYvbWVtIHdpdGhvdXQgYW55IHdheQo+PiA+IGZvcgo+PiA+IHRoZSBr
-ZXJuZWwgdG8gYWR2ZXJ0aXNlIHdoZXJlIGl0IGlzIG9yIHdoaWNoIHBhcnRzIG9mIFNSQU0gYXJl
-IGF2YWlsYWJsZQo+PiA+IGZvcgo+PiA+IHVzZSBzb3VuZHMgbGlrZSBhIGJhZCBpZGVhLgo+PiA+
-IAo+PiAKPj4gWWVzLCBkZWZpbml0ZWx5LiBTbyBsaWtlIHdlIGVuYWJsZSB0aGUgbW91bGRlIHdo
-aWNoIHNob3VsZCBzZWxldCAKPj4gRlNMXzg1WFhfQ0FDSEVfU1JBTSB0byBidWlsZCB2bWxpbnV4
-LCBGU0xfODVYWF9DQUNIRV9TUkFNIAo+PiBjb3VsZCBub3QgYmUgc2VsZXRlZCBiZWNhdXNlIG9m
-IHRoZSBLY29uZmlnIGRlZmluaXRpb24gcHJvYmxlbSAKPj4gd2hpY2ggSSBhbSB0cnlpbmcgdG8g
-Zml4IG5vdy4gIFNvIHdvdWxkIHlvdSBwbGVhc2UgbWVyZ2UgdGhlIHBhdGNoIAo+PiBmb3IgdGhl
-IGNvbnZlbmllbmNlIG9mIGxhdGVyIHdvcmtzIGRlcGVuZGluZyBvbiB0aGUgZHJpdmVyLgo+Cj5T
-b3JyeSwgSSBkb24ndCB0aGluayBpdCdzIHNvbWV0aGluZyB0aGF0IHNob3VsZCBiZSBlbmFibGVk
-IGJ5IGl0c2VsZiB3aXRoCj5ub3RoaW5nIHVzaW5nIHRoZSBhbGxvY2F0b3JzLiAgU3VwcG9zZSB3
-ZSB0b29rIHRoaXMgcGF0Y2gsIGFuZCBwZW9wbGUgZW5hYmxlZAo+aXQgYW5kIGFjY2Vzc2VkIGl0
-IHZpYSAvZGV2L21lbS4gIFRoZW4gc3VwcG9zZSBhIGRyaXZlciBpcyBwYXRjaGVkIHRvIGFsbG9j
-YXRlCj5zb21lIHNyYW0gYW5kIHVzZSBpdC4gIFRoZXknZCBiZSBzdGVwcGluZyBvbiBlYWNoIG90
-aGVycycgdG9lcyB1bmRldGVjdGVkLgo+ClJpZ2h0LCBhbmQgbWF5YmUgaSBkaWQgbm90IGV4cGxh
-aW4gaXQgY2xlYXI6IEkgbWVhbiB0aGF0IHdlIGFyZSBkZXZlbG9waW5nCm1vZHVsZXMgYm90aCBp
-biBrZXJuZWwgd2hpY2ggY2FsbCB0aGUgaW50ZXJmYWNlcyBvZiBGU0xfODVYWF9DQUNIRV9TUkFN
-IApkaXJlY3RseSwgYW5kIGluIHVzZXIgc3BhY2Ugd2hpY2ggaXMgYSBmdXJ0aGVyIGNvbnNpZGVy
-YXRpb24gdXBvbiB0aGUgd29yawp3ZSBoYXZlIGRvbmUuIENhdXNlIHdlIGhhdmUgbm90IGV4cG9y
-dGVkIHRoZSBjb2RlIHVuZGVyIGRldmVsb3BpbmcsIGl0IApzZWVtcyBsaWtlIHRoYXQgbm90aGlu
-ZyB1c2VzIEZTTF84NVhYX0NBQ0hFX1NSQU0uCgo+SWYgeW91IHdhbnQgdG8gZXhwb3NlIGl0IHRv
-IHVzZXJzcGFjZSwgYWRkIGNvZGUgdGhhdCBhbGxvY2F0ZXMgc29tZSBvciBhbGwgb2YKPnRoZSBz
-cmFtIGFuZCBtYWtlIGl0IHNvbWV0aGluZyB1c2Vyc3BhY2UgY2FuIG1tYXAuICBPciwgaWYgbm90
-aGluZydzIGdvaW5nIHRvCj51c2UgdGhlbSwgcmVtb3ZlIHRoZSBhbGxvY2F0b3JzIGFuZCBleHBv
-cnQgdGhlIGVudGlyZSB0aGluZyB0byB1c2Vyc3BhY2UKPihhZ2FpbiB2aWEgYW4gc3JhbS1zcGVj
-aWZpYyBtYXBwYWJsZSByYXRoZXIgdGhhbiAvZGV2L21lbSkuCgpBcyBmb3IgL2Rldi9tZW0sIGl0
-IHdhcyBvbmUgb2Ygb3VyIGNob2ljZXMgZXZlciBidXQgbm93IGEgdXNlci1zcGFjZSAKZHJpdmVy
-IGlzIHByZWZlcnJlZCBmb3IgZnVydGhlciBjb25zaWRlcmF0aW9uLiBCdXQgY3VycmVudGx5LCB0
-aGUgZnVuY3Rpb25hbGl0eSAKdGhhdCBkaXJlY3RseSBjYWxscyB0aGUgaW5zdGVyZmFjZXMgb2Yg
-RlNMXzg1WFhfQ0FDSEVfU1JBTSBoYXZlIGJlZW4gCnVuZGVyIGRldmVsb3BpbmcgZm9yIGNvdXBs
-ZXMgb2YgZGF5cyBhbmQgd291bGQgYmUgZXhwb3J0ZWQgaW4gdGhlIGZ1dHVyZS4gClRoZXkgd291
-bGQgYmUgdXNlZCBvbiBody1wbGF0Zm9ybXMgbGlrZSBQUENlNTAwLgoKSnVzdCBzb21lIHRpbWUg
-aXQgdGFrZXMuIAoKRG8geW91IG1lYW4gdGhlIGV4cG9ydGluZyBpcyBhIHByZS1jb25kaXRpb24/
-IElmIG5vdCwgdGhlIG1lcmdlIHdvdWxkIApkbyBhIGZhdm9yIGZvciB0aGUgY29udmVuaWVuY2Uu
-CgpXZW5odQogCj4KPi1TY290dAo+Cj4KDQoNCg==
+On 27/02/20 06:03PM, Geert Uytterhoeven wrote:
+> Hi Mark,
+> 
+> On Thu, Feb 27, 2020 at 5:44 PM Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Feb 27, 2020 at 05:40:31PM +0100, Geert Uytterhoeven wrote:
+> > > On Thu, Feb 27, 2020 at 5:28 PM Mark Brown <broonie@kernel.org> wrote:
+> > > > It's what we do for other properties, and if this is anything like the
+> > > > other things adding extra wiring you can't assume that the ability to
+> > > > use the feature for TX implies RX.
+> >
+> > > Double Transfer Rate uses the same wire.
+> >
+> > But is it still on either the TX or RX signals?
+> 
+> E.g. good old Spansion S25FL512S supports single/dual/quad DDR, but
+> apparently only for read, not write.
+> Other FLASHes may support both directions. I guess.
+
+The flash datasheet says under section 9.4 (Read Memory Array Commands):
+
+  Some commands transfer address and data on both the rising edge and 
+  falling edge of SCK. These are called Double Data Rate (DDR) commands.
+
+Since the address is transferred in DDR mode, both Tx and Rx signals use 
+DDR.
+
+So, unless we have a flash that supports a mode like 1S-1S-8D, we don't 
+really need two properties.
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
