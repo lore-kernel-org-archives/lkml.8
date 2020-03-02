@@ -2,678 +2,196 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517A7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D260C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3FF2469C
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB6524699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HOLsZRju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCBBgL (ORCPT
+        id S1726775AbgCBBkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 20:36:11 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38075 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726562AbgCBBgK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 20:36:10 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 194C97E946A;
-        Mon,  2 Mar 2020 12:36:04 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j8a02-0005W8-C2; Mon, 02 Mar 2020 12:36:02 +1100
-Date:   Mon, 2 Mar 2020 12:36:02 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V5 06/12] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200302013602.GG10776@dread.disaster.area>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
- <20200227052442.22524-7-ira.weiny@intel.com>
- <20200302012644.GF10776@dread.disaster.area>
+        Sun, 1 Mar 2020 20:40:36 -0500
+Received: from mail-am6eur05hn2226.outbound.protection.outlook.com ([52.101.152.226]:60576
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbgCBBkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 20:40:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TEFXFI3T6NA6HuRGn5S1Eakpa5JF+36ldj5CHmV9qdrdMfWgoizJuUs+YZS8iP9UZjf68MKeyz5A5dgAkFKP/e0BvcqQR5YLXpLSsKY6gXhjoq6sJ2ALEUExdVBRigTdBIi9pprJbJdWH3anFk6Ys2xv1vmObrimVw74TpmEA6pMVnFBrynUSfKSK1k9KJdNHKorFJjwIpzCZ2bsULYK8xtgebJG+VX+fhc9FYkdqEIUxNfxyapb22IW2s/AdnYNpImv55HUZI15zCxa7lmJZIRHCcWlmdwyvIP6fPMDLJQ/cgE5BmIbQPHZcmhylvqm2+J87aSn1B56VmM1h03ecg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2ImO1cOZ65sfQgsppZIv20tIPoNepj2SbWDg9LSRoko=;
+ b=ociKTbaDFasUlyAbxEyKaSto5pw5QVvxqZKCW2RL9ON4nxPuXSCY4yi1H1fopzzFwOxZ1YSqG2Ssxf02fLlU/6wIW3gcc7rZJo9X/8A6TZaBYbRQMxOPOBOLSOY28ONIA09knc96lOUNADxDEUNXLodGjcHB3ayfnCcLlg64dfD/G+gC6jz66EbOwZqBbw7JZn6oh/K8Zr9W7UHU5VA5hke7wuz1oczh0xvMq19087DSooZDjQ/zttEQ9BkVRiERK458KB41nwBBy+uXNAIwewI2KNharfNQtCVpyT9eM/o/rzCjCca3K9cAeXE0HzItCNISsbi5bwaejW2/zBPTqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2ImO1cOZ65sfQgsppZIv20tIPoNepj2SbWDg9LSRoko=;
+ b=HOLsZRjuq4u6AaQ5uYu0adWB602+5j86uuoWjIQkND4ThpRCHetm6tU66fyOyt7kb9P3uyckCsB8aZAuDI1C1RLOSi+A9MGed8tssBR/jQEmjZY/31gmqxy/D+YHs7e/kpg/w3tx+bcNYoN0NTHfYAt8pwwEv8ZE2P4//MhiqDk=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4308.eurprd04.prod.outlook.com (52.134.91.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.16; Mon, 2 Mar 2020 01:40:31 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 01:40:31 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: RE: [PATCH v2 00/14] ARM: imx7ulp: add cpufreq using cpufreq-dt
+Thread-Topic: [PATCH v2 00/14] ARM: imx7ulp: add cpufreq using cpufreq-dt
+Thread-Index: AQHV5vtt9q1uPmk0BESPnzoSAIGwTqg0mA0A
+Date:   Mon, 2 Mar 2020 01:40:30 +0000
+Message-ID: <AM0PR04MB4481FF78BB300729E59D6D8C88E70@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6e3729ab-59e9-42d1-60c3-08d7be4ab19f
+x-ms-traffictypediagnostic: AM0PR04MB4308:|AM0PR04MB4308:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB43083DB35792FD11BBF26DBB88E70@AM0PR04MB4308.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:SPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(186003)(44832011)(6506007)(2906002)(966005)(478600001)(26005)(86362001)(33656002)(7416002)(71200400001)(81166006)(81156014)(8936002)(110136005)(54906003)(316002)(4326008)(8676002)(52536014)(7696005)(64756008)(76116006)(55016002)(66476007)(9686003)(66446008)(66556008)(66946007)(556354011);DIR:OUT;SFP:1501;SCL:5;SRVR:AM0PR04MB4308;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dbOwP8GLFO1jyv51v4oaViT7XsfvmQ+ZW3aHcvz2S2GyiI6/UNWN6S0WfZB2nkyn+vde03dsFEIiECJ5Hfhg193lYhoVZS8rQjsQLEx/cNtXVDqSiCbrnkxaDGRdlTkNI2xlkpyzbeMHKG4m75T1krJ7b53b/WgyrXAfZGDr9uxaYVSbpRaJ2IQhj6VX/vXDEBOOPcL4zt1rt4Rb4Q9XhYSd4HSjGKUNNP1Sf6ydHv0CjIeY5511ELMaFGNANNqyaITgo6ywt9h1CUrQ3vig5kXbq2VdbYsZNcQN62OdOpGeX/A2thY/IFGXqC64UuOZzZtY/neFpNdAAhVBp8vUZSBA5uvSK3TcO6cIJ6DX8VAIJMeHjetGVYoOHbpot/cCN7burKkIudtE0GfagUnPptvmlcvyFEapWkcsjUOWp+SIfZnxaHbOIsj9cuS/e+K5/0J628DjeGlV7AXwpE4oZ/Ih35oFyRVbINZ0x7qUeZkEIgvGEF0ub4i545IPZu+T42lQJSDreagcmksSitqj4tNXUg3xmcWAzrHoDE2QUWanK86u7YvMzu2+HSk4aY059ZqNh3IQciP1WQOemTPQ1FGpgxkGQqMjLNzyCXByDh51fUJ8Ua5VZqiY4783FkTW0zkgTjKJ/8KSsmCHMv3OAn5bJY+v8KTXX+0quoLlquVs9ht73MFw+9gQ/opF3TQVoLulERHEYP9AFsTxQhzbpLwlgXT88BPJyDNe2nVDoQhQXV/dq665ZGMGa96QndXGEmsRi+G8okLv65jQ+gkWQTcYYwB3TSMntANzbhf1KJChLSHr6q2XY0li4iBZNI6PcJY0B/+7VvNfqDGYWZoeBUC9YesHJ6eD0tXnZaZmBWo=
+x-ms-exchange-antispam-messagedata: 7kb8+dX0+z1dHySLn5TGA3RuhjUYQifKAFu/0RH9psKV5IJ7B1QxzoC7bsfkFdvGu9M7JJiO+YURvbm9Q+aA+TEVK/AEOs1Qgu0dVkeoxSn5JDfw0+QuYuGyhO3KI3JeHsEzeSzSbSfEXSoRoGp33w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="4Ckj6UjgE2iN1+kY"
-Content-Disposition: inline
-In-Reply-To: <20200302012644.GF10776@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=SS2py6AdgQ4A:10 a=7-415B0cAAAA:8
-        a=rGxbxzf4koUqW12_8dsA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19
-        a=CjuIK1q_8ugA:10 a=20KFwNOVAAAA:8 a=v-gsBvOia3DiEux-IwgA:9
-        a=pUglIknb_-KEOjkPfI0A:9 a=SfCetT9bQnuQAJUP:21 a=HiPI2jbP1wO4qq58:21
-        a=biEYGPWJfzWAr4FL6Ov7:22
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e3729ab-59e9-42d1-60c3-08d7be4ab19f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 01:40:31.1784
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ep0PvzWrN4X1ARWuMvrJo1jw9vUFVzUyJPL6ytmh58CiI7IGN4khPGtSCOtbjYmZyh3bq6QROPdBlT6r2lMJgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4308
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shawn,
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Subject: [PATCH v2 00/14] ARM: imx7ulp: add cpufreq using cpufreq-dt
 
-On Mon, Mar 02, 2020 at 12:26:44PM +1100, Dave Chinner wrote:
-> >  	/*
-> > diff --git a/mm/filemap.c b/mm/filemap.c
-> > index 1784478270e1..3a7863ba51b9 100644
-> > --- a/mm/filemap.c
-> > +++ b/mm/filemap.c
-> > @@ -2293,6 +2293,8 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-> >  		 * and return.  Otherwise fallthrough to buffered io for
-> >  		 * the rest of the read.  Buffered reads will not work for
-> >  		 * DAX files, so don't bother trying.
-> > +		 *
-> > +		 * IS_DAX is protected under ->read_iter lock
-> >  		 */
-> >  		if (retval < 0 || !count || iocb->ki_pos >= size ||
-> >  		    IS_DAX(inode))
-> 
-> This check is in the DIO path, be we can't do DIO on DAX enabled
-> files to begin with, so we can only get here if S_DAX is not set on
-> the file.
-> 
-> Further, if IOCB_DIRECT is set, neither ext4 nor XFS call
-> generic_file_read_iter(); they run the iomap_dio_rw() path directly
-> instead. Only ext2 calls generic_file_read_iter() to do direct IO,
-> so it's the only filesystem that needs this IS_DAX() check in it.
-> 
-> I think we should fix ext2 to be implemented like ext4 and XFS -
-> they implement the buffered IO fallback, should it be required,
-> themselves and never use generic_file_read_iter() for direct IO.
-> 
-> That would allow us to add this to generic_file_read_iter():
-> 
-> 	if (WARN_ON_ONCE(IS_DAX(inode))
-> 		return -EINVAL;
-> 
-> to indicate that this should never be called directly on a DAX
-> capable filesystem. This places all the responsibility for managing
-> DAX behaviour on the filesystem, which then allows us to reason more
-> solidly about how the filesystem IO paths use and check the S_DAX
-> flag.
-> 
-> i.e. changing the on-disk flag already locks out the filesystem IO
-> path via the i_rwsem(), and all the filesystem IO paths (buffered,
-> direct IO and dax) are serialised by this flag. Hence we can check
-> once in the filesystem path once we have the i_rwsem held and
-> know that S_DAX will not change until we release it.
-> 
-> ..... and now I realise what I was sitting on the fence about....
-> 
-> I don't like the aops locking in call_read/write_iter() because it
-> is actually redundant: the filesystem should be doing the necessary
-> locking in the IO path via the i_rwsem to prevent S_DAX from
-> changing while it is doing the IO.
-> 
-> IOWs, we need to restructure the locking inside the filesystem
-> read_iter and write_iter methods so that the i_rwsem protects the
-> S_DAX flag from changing dynamically. They all do:
-> 
-> 	if (dax)
-> 		do_dax_io()
-> 	if (direct)
-> 		do_direct_io()
-> 	do_buffered_io()
-> 
-> And then we take the i_rwsem inside each of those functions and do
-> the IO. What we actually need to do is something like this:
-> 
-> 	inode_lock_shared()
-> 	if (dax)
-> 		do_dax_io()
-> 	if (direct)
-> 		do_direct_io()
-> 	do_buffered_io()
-> 	inode_unlock_shared()
-> 
-> And remove the inode locking from inside the individual IO methods
-> themselves. It's a bit more complex than this because buffered
-> writes require exclusive locking, but this completely removes the
-> need for holding an aops lock over these methods.
-> 
-> I've attached a couple of untested patches (I've compiled them, so
-> they must be good!) to demonstrate what I mean for the XFS IO path.
-> The read side removes a heap of duplicate code, but the write side
-> is .... unfortunately complex. Have to think about that more.
+Is it possible for you to pick up patch 1~8, 12? Or any comments?
 
-And now with patches...
+Thanks,
+Peng.
 
-Cheers,
+>=20
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> V2:
+>  Per Stephen's comments, I drop the cpuv2 clk code, and find another
+> solution to change ARM clk  Included get_intermediate/target_intermedate
+> for cpufreq-dt  Add i.MX7ULP intermedidate implementation.
+>  Per Fabio's comments, disallow HSRUN when LDO enabled.
+>  Add dt-bindings and pmc node
+>=20
+> V1:
+>  https://patchwork.kernel.org/patch/11364609/
+>=20
+> This patchset aims to use cpufreq-dt for i.MX7ULP to avoid plaform specif=
+ic
+> cpufreq driver. i.MX7ULP has some specicial requirements to change ARM
+> core clock, see patch 11/13,
+> "cpufreq: imx-cpufreq-dt: support i.MX7ULP"
+>=20
+> Patch [1,2]/13: add pmc bindings and node. We need read pmc registers
+>   to get system info.
+> Patch [3-6]/13: i.MX7ULP clk pfd/pll code change to make sure to get the
+>   expected pfd output clk. For RUN/HSRUN clock, we use API
+>   imx_clk_hw_cpu to make sure RUN or HSRUN could not shutdown clock
+> output.
+>=20
+> Patch [7-8]/13: Make sure we could run into HSRUN mode and not when LDO
+>   enabled.
+>=20
+> Patch 9/13: let cpufred-dt could have get_intermediate/target_intermediat=
+e
+>   hooks to allow platform specific freq set.
+>=20
+> Patch [10-12]/13: i.MX7ULP cpufreq support
+>=20
+> Patch 13/13: Test dts, should not apply.
+>=20
+> For rpmsg/vitio part, I have posted patchset, if you wanna rpmsg regulato=
+r:
+> https://patchwork.kernel.org/cover/11390481/
+>=20
+> Anson Huang (1):
+>   clk: imx: Fix division by zero warning on pfdv2
+>=20
+> Peng Fan (13):
+>   dt-bindings: fsl: add i.MX7ULP PMC binding doc
+>   ARM: dts: imx7ulp: add pmc node
+>   clk: imx: pfdv2: switch to use determine_rate
+>   clk: imx: pfdv2: determine best parent rate
+>   clk: imx: pllv4: use prepare/unprepare
+>   clk: imx7ulp: make it easy to change ARM core clk
+>   ARM: imx: imx7ulp: support HSRUN mode
+>   ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
+>   cpufreq: dt: Allow platform specific intermediate callbacks
+>   cpufreq: Add i.MX7ULP to cpufreq-dt-platdev blacklist
+>   cpufreq: imx-cpufreq-dt: support i.MX7ULP
+>   ARM: imx7ulp: enable cpufreq
+>   [Do not Apply] ARM: dts: imx7ulp: add cpu OPP points
+>=20
+>  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 +++++++++
+>  arch/arm/boot/dts/imx7ulp.dtsi                     | 38 ++++++++++
+>  arch/arm/mach-imx/common.h                         |  1 +
+>  arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14 +++-
+>  arch/arm/mach-imx/mach-imx7ulp.c                   |  3 +
+>  arch/arm/mach-imx/pm-imx7ulp.c                     | 25 +++++++
+>  drivers/clk/imx/clk-imx7ulp.c                      |  6 +-
+>  drivers/clk/imx/clk-pfdv2.c                        | 61
+> +++++++++++-----
+>  drivers/clk/imx/clk-pllv4.c                        | 12 ++--
+>  drivers/cpufreq/cpufreq-dt-platdev.c               |  1 +
+>  drivers/cpufreq/cpufreq-dt.c                       |  4 ++
+>  drivers/cpufreq/cpufreq-dt.h                       |  4 ++
+>  drivers/cpufreq/imx-cpufreq-dt.c                   | 83
+> +++++++++++++++++++++-
+>  include/dt-bindings/clock/imx7ulp-clock.h          |  5 +-
+>  14 files changed, 257 insertions(+), 32 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+>=20
+> --
+> 2.16.4
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
-
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=xfs-io-s_dax-locking
-
-xfs: pulling read IO path locking up to protect S_DAX checks
-
-From: Dave Chinner <dchinner@redhat.com>
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_file.c | 77 +++++++++++++++++--------------------------------------
- 1 file changed, 24 insertions(+), 53 deletions(-)
-
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index b8a4a3f29b36..7d31a0e76b68 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -176,28 +176,12 @@ xfs_file_dio_aio_read(
- 	struct kiocb		*iocb,
- 	struct iov_iter		*to)
- {
--	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
--	size_t			count = iov_iter_count(to);
--	ssize_t			ret;
--
--	trace_xfs_file_direct_read(ip, count, iocb->ki_pos);
--
--	if (!count)
--		return 0; /* skip atime */
-+	trace_xfs_file_direct_read(XFS_I(file_inode(iocb->ki_filp)),
-+					iov_iter_count(to), iocb->ki_pos);
- 
- 	file_accessed(iocb->ki_filp);
--
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
--	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL,
-+	return iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL,
- 			is_sync_kiocb(iocb));
--	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
--
--	return ret;
- }
- 
- static noinline ssize_t
-@@ -205,27 +189,12 @@ xfs_file_dax_read(
- 	struct kiocb		*iocb,
- 	struct iov_iter		*to)
- {
--	struct xfs_inode	*ip = XFS_I(iocb->ki_filp->f_mapping->host);
--	size_t			count = iov_iter_count(to);
--	ssize_t			ret = 0;
--
--	trace_xfs_file_dax_read(ip, count, iocb->ki_pos);
--
--	if (!count)
--		return 0; /* skip atime */
--
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
--
--	ret = dax_iomap_rw(iocb, to, &xfs_read_iomap_ops);
--	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
-+	trace_xfs_file_dax_read(XFS_I(file_inode(iocb->ki_filp)),
-+					iov_iter_count(to), iocb->ki_pos);
- 
- 	file_accessed(iocb->ki_filp);
--	return ret;
-+	return dax_iomap_rw(iocb, to, &xfs_read_iomap_ops);
-+
- }
- 
- STATIC ssize_t
-@@ -233,21 +202,10 @@ xfs_file_buffered_aio_read(
- 	struct kiocb		*iocb,
- 	struct iov_iter		*to)
- {
--	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
--	ssize_t			ret;
--
--	trace_xfs_file_buffered_read(ip, iov_iter_count(to), iocb->ki_pos);
-+	trace_xfs_file_buffered_read(XFS_I(file_inode(iocb->ki_filp)),
-+					iov_iter_count(to), iocb->ki_pos);
- 
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
--	ret = generic_file_read_iter(iocb, to);
--	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
--
--	return ret;
-+	return generic_file_read_iter(iocb, to);
- }
- 
- STATIC ssize_t
-@@ -256,7 +214,8 @@ xfs_file_read_iter(
- 	struct iov_iter		*to)
- {
- 	struct inode		*inode = file_inode(iocb->ki_filp);
--	struct xfs_mount	*mp = XFS_I(inode)->i_mount;
-+	struct xfs_inode	*ip = XFS_I(inode);
-+	struct xfs_mount	*mp = ip->i_mount;
- 	ssize_t			ret = 0;
- 
- 	XFS_STATS_INC(mp, xs_read_calls);
-@@ -264,6 +223,16 @@ xfs_file_read_iter(
- 	if (XFS_FORCED_SHUTDOWN(mp))
- 		return -EIO;
- 
-+	if (!iov_iter_count(to))
-+		return 0; /* skip atime */
-+
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
-+			return -EAGAIN;
-+	} else {
-+		xfs_ilock(ip, XFS_IOLOCK_SHARED);
-+	}
-+
- 	if (IS_DAX(inode))
- 		ret = xfs_file_dax_read(iocb, to);
- 	else if (iocb->ki_flags & IOCB_DIRECT)
-@@ -271,6 +240,8 @@ xfs_file_read_iter(
- 	else
- 		ret = xfs_file_buffered_aio_read(iocb, to);
- 
-+	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
-+
- 	if (ret > 0)
- 		XFS_STATS_ADD(mp, xs_read_bytes, ret);
- 	return ret;
-
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=xfs-io-s_dax-write-locking
-
-xfs: pull write IO locking up to protect S_DAX
-
-From: Dave Chinner <dchinner@redhat.com>
-
-Much more complex than the read side because of all the lock
-juggling we for the different types of writes and all the various
-metadata updates a write might need prior to dispatching the data
-IO.
-
-Not really happy about the way the high level logic turned out;
-could probably be make cleaner and smarter with a bit more thought.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_file.c | 205 ++++++++++++++++++++++++++++++------------------------
- 1 file changed, 115 insertions(+), 90 deletions(-)
-
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 7d31a0e76b68..b7c2bb09b945 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -250,9 +250,9 @@ xfs_file_read_iter(
- /*
-  * Common pre-write limit and setup checks.
-  *
-- * Called with the iolocked held either shared and exclusive according to
-- * @iolock, and returns with it held.  Might upgrade the iolock to exclusive
-- * if called for a direct write beyond i_size.
-+ * Called without the iolocked held, but will lock it according to @iolock, and
-+ * returns with it held on both success and error.  Might upgrade the iolock to
-+ * exclusive if called for a direct write beyond i_size.
-  */
- STATIC ssize_t
- xfs_file_aio_write_checks(
-@@ -268,6 +268,13 @@ xfs_file_aio_write_checks(
- 	bool			drained_dio = false;
- 	loff_t			isize;
- 
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!xfs_ilock_nowait(ip, *iolock))
-+			return -EAGAIN;
-+	} else {
-+		xfs_ilock(ip, *iolock);
-+	}
-+
- restart:
- 	error = generic_write_checks(iocb, from);
- 	if (error <= 0)
-@@ -325,7 +332,7 @@ xfs_file_aio_write_checks(
- 			drained_dio = true;
- 			goto restart;
- 		}
--	
-+
- 		trace_xfs_zero_eof(ip, isize, iocb->ki_pos - isize);
- 		error = iomap_zero_range(inode, isize, iocb->ki_pos - isize,
- 				NULL, &xfs_buffered_write_iomap_ops);
-@@ -449,19 +456,14 @@ static const struct iomap_dio_ops xfs_dio_write_ops = {
-  * Returns with locks held indicated by @iolock and errors indicated by
-  * negative return values.
-  */
--STATIC ssize_t
--xfs_file_dio_aio_write(
-+static int
-+xfs_file_dio_write_lock_mode(
- 	struct kiocb		*iocb,
- 	struct iov_iter		*from)
- {
--	struct file		*file = iocb->ki_filp;
--	struct address_space	*mapping = file->f_mapping;
--	struct inode		*inode = mapping->host;
-+	struct inode		*inode = file_inode(iocb->ki_filp);
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	struct xfs_mount	*mp = ip->i_mount;
--	ssize_t			ret = 0;
--	int			unaligned_io = 0;
--	int			iolock;
- 	size_t			count = iov_iter_count(from);
- 	struct xfs_buftarg      *target = xfs_inode_buftarg(ip);
- 
-@@ -478,35 +480,37 @@ xfs_file_dio_aio_write(
- 	 */
- 	if ((iocb->ki_pos & mp->m_blockmask) ||
- 	    ((iocb->ki_pos + count) & mp->m_blockmask)) {
--		unaligned_io = 1;
-+		if (iocb->ki_flags & IOCB_NOWAIT) {
-+			/* unaligned dio always waits, bail */
-+			return -EAGAIN;
-+		}
- 
- 		/*
- 		 * We can't properly handle unaligned direct I/O to reflink
- 		 * files yet, as we can't unshare a partial block.
- 		 */
- 		if (xfs_is_cow_inode(ip)) {
--			trace_xfs_reflink_bounce_dio_write(ip, iocb->ki_pos, count);
-+			trace_xfs_reflink_bounce_dio_write(ip, iocb->ki_pos,
-+							count);
- 			return -EREMCHG;
- 		}
--		iolock = XFS_IOLOCK_EXCL;
--	} else {
--		iolock = XFS_IOLOCK_SHARED;
--	}
--
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		/* unaligned dio always waits, bail */
--		if (unaligned_io)
--			return -EAGAIN;
--		if (!xfs_ilock_nowait(ip, iolock))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, iolock);
-+		return XFS_IOLOCK_EXCL;
- 	}
-+	return XFS_IOLOCK_SHARED;
-+}
- 
--	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
--	if (ret)
--		goto out;
--	count = iov_iter_count(from);
-+STATIC ssize_t
-+xfs_file_dio_aio_write(
-+	struct kiocb		*iocb,
-+	struct iov_iter		*from,
-+	int			iolock)
-+{
-+	struct inode		*inode = file_inode(iocb->ki_filp);
-+	struct xfs_inode	*ip = XFS_I(inode);
-+	struct xfs_mount	*mp = ip->i_mount;
-+	ssize_t			ret = 0;
-+	bool			unaligned_io = 0;
-+	size_t			count = iov_iter_count(from);
- 
- 	/*
- 	 * If we are doing unaligned IO, we can't allow any other overlapping IO
-@@ -515,7 +519,9 @@ xfs_file_dio_aio_write(
- 	 * iolock if we had to take the exclusive lock in
- 	 * xfs_file_aio_write_checks() for other reasons.
- 	 */
--	if (unaligned_io) {
-+	if ((iocb->ki_pos & mp->m_blockmask) ||
-+	    ((iocb->ki_pos + count) & mp->m_blockmask)) {
-+		unaligned_io = true;
- 		inode_dio_wait(inode);
- 	} else if (iolock == XFS_IOLOCK_EXCL) {
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
-@@ -530,7 +536,6 @@ xfs_file_dio_aio_write(
- 	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
- 			   &xfs_dio_write_ops,
- 			   is_sync_kiocb(iocb) || unaligned_io);
--out:
- 	xfs_iunlock(ip, iolock);
- 
- 	/*
-@@ -544,26 +549,15 @@ xfs_file_dio_aio_write(
- static noinline ssize_t
- xfs_file_dax_write(
- 	struct kiocb		*iocb,
--	struct iov_iter		*from)
-+	struct iov_iter		*from,
-+	int			iolock)
- {
--	struct inode		*inode = iocb->ki_filp->f_mapping->host;
-+	struct inode		*inode = file_inode(iocb->ki_filp);
- 	struct xfs_inode	*ip = XFS_I(inode);
--	int			iolock = XFS_IOLOCK_EXCL;
- 	ssize_t			ret, error = 0;
- 	size_t			count;
- 	loff_t			pos;
- 
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, iolock))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, iolock);
--	}
--
--	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
--	if (ret)
--		goto out;
--
- 	pos = iocb->ki_pos;
- 	count = iov_iter_count(from);
- 
-@@ -573,7 +567,6 @@ xfs_file_dax_write(
- 		i_size_write(inode, iocb->ki_pos);
- 		error = xfs_setfilesize(ip, pos, ret);
- 	}
--out:
- 	xfs_iunlock(ip, iolock);
- 	if (error)
- 		return error;
-@@ -590,26 +583,13 @@ xfs_file_dax_write(
- STATIC ssize_t
- xfs_file_buffered_aio_write(
- 	struct kiocb		*iocb,
--	struct iov_iter		*from)
-+	struct iov_iter		*from,
-+	int			iolock,
-+	bool			flush_on_enospc)
- {
--	struct file		*file = iocb->ki_filp;
--	struct address_space	*mapping = file->f_mapping;
--	struct inode		*inode = mapping->host;
-+	struct inode		*inode = file_inode(iocb->ki_filp);
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	ssize_t			ret;
--	int			enospc = 0;
--	int			iolock;
--
--	if (iocb->ki_flags & IOCB_NOWAIT)
--		return -EOPNOTSUPP;
--
--write_retry:
--	iolock = XFS_IOLOCK_EXCL;
--	xfs_ilock(ip, iolock);
--
--	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
--	if (ret)
--		goto out;
- 
- 	/* We can write back this queue in page reclaim */
- 	current->backing_dev_info = inode_to_bdi(inode);
-@@ -617,8 +597,6 @@ xfs_file_buffered_aio_write(
- 	trace_xfs_file_buffered_write(ip, iov_iter_count(from), iocb->ki_pos);
- 	ret = iomap_file_buffered_write(iocb, from,
- 			&xfs_buffered_write_iomap_ops);
--	if (likely(ret >= 0))
--		iocb->ki_pos += ret;
- 
- 	/*
- 	 * If we hit a space limit, try to free up some lingering preallocated
-@@ -629,34 +607,35 @@ xfs_file_buffered_aio_write(
- 	 * also behaves as a filter to prevent too many eofblocks scans from
- 	 * running at the same time.
- 	 */
--	if (ret == -EDQUOT && !enospc) {
-+	if (ret == -EDQUOT && flush_on_enospc) {
-+		int	made_progress;
-+
- 		xfs_iunlock(ip, iolock);
--		enospc = xfs_inode_free_quota_eofblocks(ip);
--		if (enospc)
--			goto write_retry;
--		enospc = xfs_inode_free_quota_cowblocks(ip);
--		if (enospc)
--			goto write_retry;
--		iolock = 0;
--	} else if (ret == -ENOSPC && !enospc) {
-+		made_progress = xfs_inode_free_quota_eofblocks(ip);
-+		if (made_progress)
-+			return -EAGAIN;
-+		made_progress = xfs_inode_free_quota_cowblocks(ip);
-+		if (made_progress)
-+			return -EAGAIN;
-+		return ret;
-+	}
-+	if (ret == -ENOSPC && flush_on_enospc) {
- 		struct xfs_eofblocks eofb = {0};
- 
--		enospc = 1;
- 		xfs_flush_inodes(ip->i_mount);
- 
- 		xfs_iunlock(ip, iolock);
- 		eofb.eof_flags = XFS_EOF_FLAGS_SYNC;
- 		xfs_icache_free_eofblocks(ip->i_mount, &eofb);
- 		xfs_icache_free_cowblocks(ip->i_mount, &eofb);
--		goto write_retry;
-+		return -EAGAIN;
- 	}
- 
- 	current->backing_dev_info = NULL;
--out:
--	if (iolock)
--		xfs_iunlock(ip, iolock);
--
-+	xfs_iunlock(ip, iolock);
- 	if (ret > 0) {
-+		iocb->ki_pos += ret;
-+
- 		XFS_STATS_ADD(ip->i_mount, xs_write_bytes, ret);
- 		/* Handle various SYNC-type writes */
- 		ret = generic_write_sync(iocb, ret);
-@@ -675,6 +654,8 @@ xfs_file_write_iter(
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	ssize_t			ret;
- 	size_t			ocount = iov_iter_count(from);
-+	int			iolock;
-+	bool			flush_on_enospc = true;
- 
- 	XFS_STATS_INC(ip->i_mount, xs_write_calls);
- 
-@@ -684,22 +665,66 @@ xfs_file_write_iter(
- 	if (XFS_FORCED_SHUTDOWN(ip->i_mount))
- 		return -EIO;
- 
--	if (IS_DAX(inode))
--		return xfs_file_dax_write(iocb, from);
--
--	if (iocb->ki_flags & IOCB_DIRECT) {
-+	/*
-+	 * Set up the initial locking state - only direct IO uses shared locking
-+	 * for writes, and buffered IO does not support IOCB_NOWAIT.
-+	 */
-+relock:
-+	if (IS_DAX(inode)) {
-+		iolock = XFS_IOLOCK_EXCL;
-+	} else if (iocb->ki_flags & IOCB_DIRECT) {
- 		/*
- 		 * Allow a directio write to fall back to a buffered
- 		 * write *only* in the case that we're doing a reflink
- 		 * CoW.  In all other directio scenarios we do not
- 		 * allow an operation to fall back to buffered mode.
- 		 */
--		ret = xfs_file_dio_aio_write(iocb, from);
--		if (ret != -EREMCHG)
--			return ret;
-+		iolock = xfs_file_dio_write_lock_mode(iocb, from);
-+		if (iolock == -EREMCHG) {
-+			iocb->ki_flags &= ~IOCB_DIRECT;
-+			iolock = XFS_IOLOCK_EXCL;
-+		}
-+		if (iolock < 0)
-+			return iolock;
-+	} else if (iocb->ki_flags & IOCB_NOWAIT) {
-+		/* buffered writes do not support IOCB_NOWAIT */
-+		return -EOPNOTSUPP;
-+	} else {
-+		iolock = XFS_IOLOCK_EXCL;
- 	}
- 
--	return xfs_file_buffered_aio_write(iocb, from);
-+	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
-+	if (ret) {
-+		xfs_iunlock(ip, iolock);
-+		return ret;
-+	}
-+
-+	/*
-+	 * If the IO mode switched while we were locking meaning we hold
-+	 * the wrong lock type right now, start again.
-+	 */
-+	if ((IS_DAX(inode) || !(iocb->ki_flags & IOCB_DIRECT)) &&
-+	    iolock != XFS_IOLOCK_EXCL) {
-+		xfs_iunlock(ip, iolock);
-+		goto relock;
-+	}
-+
-+	if (IS_DAX(inode)) {
-+		ret = xfs_file_dax_write(iocb, from, iolock);
-+	} else if (iocb->ki_flags & IOCB_DIRECT) {
-+		ret = xfs_file_dio_aio_write(iocb, from, iolock);
-+		ASSERT(ret != -EREMCHG);
-+	} else {
-+		ret = xfs_file_buffered_aio_write(iocb, from, iolock,
-+						flush_on_enospc);
-+		if (ret == -EAGAIN && flush_on_enospc) {
-+			/* inode already unlocked, but need another attempt */
-+			flush_on_enospc = false;
-+			goto relock;
-+		}
-+		ASSERT(ret != -EAGAIN);
-+	}
-+	return ret;
- }
- 
- static void
-
---4Ckj6UjgE2iN1+kY--
