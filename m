@@ -2,157 +2,130 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48491C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B204246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TtZmHYRh"
+	by mail.kernel.org (Postfix) with ESMTP id 25C27246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgCBHdi (ORCPT
+        id S1726845AbgCBHfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:33:38 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30298 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725446AbgCBHdh (ORCPT
+        Mon, 2 Mar 2020 02:35:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23998 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbgCBHfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:33:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583134416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f/0vJrA0gSRXpSGqk2auYaBWDuiqdzsus4s2o4cmNQw=;
-        b=TtZmHYRhXikv9HEKl9voE/A7Uich/dMq71dDFXESLbbuPQsOq+QqkTVYRNpKe3M34mD46C
-        vPDptrhynQJbOeMNJbaEwiyAbGuW/By6vUxOUhydVab2JGFOsM/fBx+4Rlfo0q6eR02S6B
-        vPEHNOYpOXWJFS1V/I+ftFTQhtaPLQM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-Xu9wmJbdN0aVu9qOt9lCnw-1; Mon, 02 Mar 2020 02:33:35 -0500
-X-MC-Unique: Xu9wmJbdN0aVu9qOt9lCnw-1
-Received: by mail-wm1-f72.google.com with SMTP id g26so1652474wmk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:33:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f/0vJrA0gSRXpSGqk2auYaBWDuiqdzsus4s2o4cmNQw=;
-        b=Q+gphpAAB8b3Y1R+zpLKU2s+zvGQDf0OWk/2rEXJbAletTjqCe/O6mwEF8Xg8JHpSC
-         iiet61bOSD/hQAfZiO0Ija15NSnWGUrDSBTNZDmSq/+wgkhCK0MdGzRZdpAegnTRcY6z
-         pCNaGYbKLQh921z08GpykdP1onWAulkYoZsPEQO3xz7ZKyt1e4Fbw7GFXTIh9iRVHllH
-         /PIyXK7BNfzaoquM2EjoMM86eYpPutLX+zjY1ZWlfz+qlB9gfDgUkikkN1IH7DtKBynj
-         hbbWilMyVmjlZii9vpZ/rr2MzFnoUenBaJrC74CKqNFyUDOAQ6RiosxylTpNtjyh3wBr
-         bXWw==
-X-Gm-Message-State: APjAAAWjNbfwd1XlKIwqUAH/5g1lBFK33kak7rsyF4r3g4iMcpXP2zAm
-        DSoPnhPnlBZC1Ojju0DbVeGbdk1Vid40drSyBwymMca1PSKDK9khLwvffh/6mCFbAr0KIZr3YgF
-        UAA/+IQL7ZzwympX/Aum0YlYp
-X-Received: by 2002:a5d:4a10:: with SMTP id m16mr13624760wrq.333.1583134414204;
-        Sun, 01 Mar 2020 23:33:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz/RlDZ/wAqfk74aj3rp7qtdfZnYqBJ07tcCbHIfQ3JwdzeVvOLfYGeLgpyzPQWX+NFfQSKtw==
-X-Received: by 2002:a5d:4a10:: with SMTP id m16mr13624728wrq.333.1583134413960;
-        Sun, 01 Mar 2020 23:33:33 -0800 (PST)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c4sm14145502wml.7.2020.03.01.23.33.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 23:33:33 -0800 (PST)
-Date:   Mon, 2 Mar 2020 08:33:32 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
+        Mon, 2 Mar 2020 02:35:39 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0227Y4wn108155
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 02:35:38 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfmyqcvw0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:35:38 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 2 Mar 2020 07:35:36 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 07:35:28 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0227ZRU642860844
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 07:35:27 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64329A404D;
+        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D5A7A4051;
+        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
+Received: from [9.102.43.192] (unknown [9.102.43.192])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 760FCA00BE;
+        Mon,  2 Mar 2020 18:35:18 +1100 (AEDT)
+Subject: Re: [PATCH v3 26/27] powerpc/powernv/pmem: Expose the firmware
+ version in sysfs
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v6 6/7] mm/madvise: employ mmget_still_valid for write
- lock
-Message-ID: <20200302073332.gn7lvhxmmv5pupyq@butterfly.localdomain>
-References: <20200219014433.88424-1-minchan@kernel.org>
- <20200219014433.88424-7-minchan@kernel.org>
- <CAJuCfpE=7aqwegMb5i3EwWb=xcphXSNE33dCCUvt=WS0Sr-wfg@mail.gmail.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-27-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 2 Mar 2020 18:35:20 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpE=7aqwegMb5i3EwWb=xcphXSNE33dCCUvt=WS0Sr-wfg@mail.gmail.com>
+In-Reply-To: <20200221032720.33893-27-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030207-0008-0000-0000-0000035840C9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030207-0009-0000-0000-00004A796B51
+Message-Id: <2253010d-c7ad-347b-4668-d5f1a95d3f1e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_01:2020-02-28,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=649 malwarescore=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
-
-On Fri, Feb 28, 2020 at 03:19:55PM -0800, Suren Baghdasaryan wrote:
-> On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
-> >
-> > From: Oleksandr Natalenko <oleksandr@redhat.com>
-> >
-> > Do the very same trick as we already do since 04f5866e41fb. KSM hints
-> > will require locking mmap_sem for write since they modify vm_flags, so
-> > for remote KSM hinting this additional check is needed.
-> >
-> > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > ---
-> >  mm/madvise.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index f6d9b9e66243..c55a18fe71f9 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> >         if (write) {
-> >                 if (down_write_killable(&mm->mmap_sem))
-> >                         return -EINTR;
-> > +               if (current->mm != mm && !mmget_still_valid(mm))
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> mmget_still_valid() seems pretty light-weight, so why not just use
-> that without checking that the mm belongs to the current process
-> first?
+> This information will be used by ndctl in userspace to help users identify
+> the device.
 
-I'd keep the checks separate to a) do not functionally change current->mm
-== mm case; b) clearly separate the intention to call
-mmget_still_valid() only for remote access (using mmget_still_valid()
-for current->mm == mm does not make any sense here, IMO, since there's
-no possibility of expecting a core dump at this point); c) ease the job for
-reviewer once mmget_still_valid() is scheduled to be removed (I hope it
-eventually goes away indeed).
+You should include the information from the subject line in the body of 
+the commit message too.
 
-> 
-> > +                       goto skip_mm;
-> >         } else {
-> >                 down_read(&mm->mmap_sem);
-> >         }
-> > @@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> >         }
-> >  out:
-> >         blk_finish_plug(&plug);
-> > +skip_mm:
-> >         if (write)
-> >                 up_write(&mm->mmap_sem);
-> >         else
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
-> 
+I think this patch could probably be squashed in with the last one.
 
 -- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
