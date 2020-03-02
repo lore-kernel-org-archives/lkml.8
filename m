@@ -2,1241 +2,746 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,FUZZY_XPILL,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3B5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45026C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F9B2468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583133804;
-	bh=MkctqU41voyujlEKKIfYrZfsEjLueXSi9+0DDHSLkIQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=1+fOEhgZ1XhNj+DGnmZzXkPo1U7fxnkxmZPMA4Kow/BK9GeTf0HtLDsn6ZtWbaTi9
-	 6LPGnXzZsiDKxUK9+i6Fc811O0NLZ7pRa06nARN3cJLGUkX9owm06OYhGnSCVueHmt
-	 4+4+vtjGQKRaN/wAMaIj/OxSC/4RmoiYl7hTJ5Vs=
+	by mail.kernel.org (Postfix) with ESMTP id E67C52468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ivUuyLkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCBHXX (ORCPT
+        id S1726728AbgCBH0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:23:23 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33296 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgCBHXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:23:22 -0500
-Received: by mail-wr1-f68.google.com with SMTP id x7so11146884wrr.0
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:23:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=cTDDn/dtcVFWtj/8BgMdOmb5XEBV9G5Uw2VfFOz47Es=;
-        b=hFqHW1BOnE+OUbJCYgiHVfYnpW8j6sD6CTEKbUx3+Kf7fVVktYthmpn9c0Fh8JrSYm
-         nbNrRyB2cxzWu1CP5m4iCrWdJQVfbyZCcPZ+cOAy+IN54oN58TCeGXOnN9WBMoJY12Ur
-         rMkTGfHYNqK7VpEVK8K+9CmBFAqHWBCcBf1zIyx1n30RZwslha03WqP1i/o7+ikS4gHb
-         6WYEsU60I+XTMo3uKooBsUH+KzcCdGx9KUmMWmntOAGYJGmZyEHmlHSVWoB4ge9Kr1Bd
-         OKAde6SsaJuTqVN/8IYQGCNzS3zG0fDwwdfObwZQHHTz0bwYNgA4OJ+ZccBdxFMnU9H4
-         1niw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding
-         :user-agent;
-        bh=cTDDn/dtcVFWtj/8BgMdOmb5XEBV9G5Uw2VfFOz47Es=;
-        b=cVVt4YcvJBGZWSRdH7gJCiv+QUgi1DIIAV+EZ12t5jLY8uxQWnaPVKa7Pg3O6C+fNZ
-         BMgYxC9jodukJqFZe8LuG/no8AWAPwk88U8lbnAJvPzokXLAzgakJj+DgTLK6hrFoy/l
-         lxSSODLlbEhauug8GaWB4xbcXLlcnE9FmaQ/r3o3/aV3XhEVq3i9qlW+ehE6T8Bt+tai
-         m82Xvn6AHWtHTGGXmluv4wnmMekM5lIFHhtasMlPfmVau1x/R09CK7BpiyvJIRLxSiSv
-         l/16uV3iKb/zLIdoLp/luOm3foqQcM0wjd4EnqcJeW0lPtlt2H9J+xfPAe92nxMcHMUn
-         d2Bw==
-X-Gm-Message-State: APjAAAV/m2K+ngEOb2jiUGZHplP3KPfKRkfreg3b9TzB6c/DYsftrU0V
-        cTuzjh6bx4yoj4h8ktOdXsY=
-X-Google-Smtp-Source: APXvYqyWDbU7rhdcFqtG5UuRXF5X7G6hpEn/slvfVGfStmfzEvNCgWwP9OAp9JRudRMM98bAQRpsqQ==
-X-Received: by 2002:adf:fe0a:: with SMTP id n10mr21836462wrr.229.1583133797420;
-        Sun, 01 Mar 2020 23:23:17 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id z64sm4127365wmg.35.2020.03.01.23.23.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 23:23:16 -0800 (PST)
-Date:   Mon, 2 Mar 2020 08:23:14 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] perf fixes
-Message-ID: <20200302072314.GA89045@gmail.com>
+        Mon, 2 Mar 2020 02:26:04 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55607 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCBH0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:26:04 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WBWq1lSrz9sP7;
+        Mon,  2 Mar 2020 18:25:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583133959;
+        bh=NPdV1H59xjQZlVPQn9F0VgNLU5axRC+QhQDNYEbh3YU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ivUuyLkgYLOQHY7EGPkTK943+sxd7mQOPOahK8lv+SqER9e4TUbmfdOhkhnrmkN7w
+         IYoyU2rf8UtztUcH8qiPF+xjjUwuB1f8csAko7Hc6uNkYMWwC/BOXT5Y3rpvb2cnAE
+         45JUCft6WExXhH5J6dhQDp0TRUxXe03Hmg7ncv721t4Gv9mttMynB0fnVlnPaWtGus
+         4CiqMinHlLCAqT7YxFFUHqIzK4Nx321O5xq5gA5VMntkwtVkaFCzVbwwuGEeXCzp/Y
+         EzENDTga9ap4NzZTZVqNALGJ/p0ejtT/nYcitpZhgqV9P6e/uYQ/oTHeAOem4AC4xO
+         fzIy+KAO6bjjQ==
+Date:   Mon, 2 Mar 2020 18:25:52 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Mar 2
+Message-ID: <20200302182552.724cf197@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/W4iODFD83xzHojtNLQWylwv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+--Sig_/W4iODFD83xzHojtNLQWylwv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please pull the latest perf-urgent-for-linus git tree from:
+Hi all,
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+Changes since 20200228:
 
-   # HEAD: 7977fed974d60a72733243cf54d7955cd6dccd91 Merge tag 'perf-urgent-for-mingo-5.6-20200228' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
+The kvm-fixes tree gained a conflict against Linus' tree.
 
-No kernel side changes, the rest is tooling fixes plus two tooling 
-cleanups that were committed late in the merge window alongside the perf 
-annotate fixes, delayed by Arnaldo's European trip.
+The amlogic tree lost its build failure.
 
- Thanks,
+The drm tree with gained a conflict against the drm-misc-fixes tree.
 
-	Ingo
+The keys tree gained a semantic conflict against the block tree.
 
------------------->
-Adrian Hunter (2):
-      perf arm-spe: Fix endless record after being terminated
-      perf auxtrace: Add auxtrace_record__read_finish()
+The akpm tree gained a build failure for which I applied a patch.
 
-Arnaldo Carvalho de Melo (4):
-      perf bpf: Remove bpf/ subdir from bpf.h headers used to build bpf events
-      perf arch powerpc: Sync powerpc syscall.tbl with the kernel sources
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-      tools headers UAPI: Update tools's copy of kvm.h headers
+Non-merge commits (relative to Linus' tree): 4924
+ 4819 files changed, 182983 insertions(+), 100653 deletions(-)
 
-He Zhe (1):
-      perf probe: Check return value of strlist__add() for -ENOMEM
+----------------------------------------------------------------------------
 
-Ravi Bangoria (12):
-      perf annotate/tui: Re-render title bar after switching back from script browser
-      perf annotate: Fix --show-total-period for tui/stdio2
-      perf annotate: Fix --show-nr-samples for tui/stdio2
-      perf config: Introduce perf_config_u8()
-      perf annotate: Make perf config effective
-      perf annotate: Prefer cmdline option over default config
-      perf annotate: Fix perf config option description
-      perf config: Document missing config options
-      perf annotate: Remove privsize from symbol__annotate() args
-      perf annotate: Simplify disasm_line allocation and freeing code
-      perf annotate: Align struct annotate_args
-      perf annotate: Fix segfault with source toggle
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
 
-Thomas Richter (1):
-      perf test: Fix test trace+probe_vfs_getname.sh on s390
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig and htmldocs. And finally, a simple boot test
+of the powerpc pseries_le_defconfig kernel in qemu (with and without
+kvm enabled).
 
-Wei Li (3):
-      perf intel-pt: Fix endless record after being terminated
-      perf intel-bts: Fix endless record after being terminated
-      perf cs-etm: Fix endless record after being terminated
+Below is a summary of the state of the merge.
 
+I am currently merging 314 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
 
- tools/arch/x86/include/asm/msr-index.h             |   2 +
- tools/arch/x86/include/uapi/asm/kvm.h              |   1 +
- tools/perf/Documentation/perf-config.txt           |  74 +++++++-
- tools/perf/arch/arm/util/cs-etm.c                  |  18 +-
- tools/perf/arch/arm64/util/arm-spe.c               |  17 +-
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |   2 +
- tools/perf/arch/x86/util/intel-bts.c               |  17 +-
- tools/perf/arch/x86/util/intel-pt.c                |  17 +-
- tools/perf/builtin-annotate.c                      |   4 +-
- tools/perf/builtin-probe.c                         |   6 +-
- tools/perf/builtin-report.c                        |   2 +-
- tools/perf/builtin-top.c                           |   4 +-
- tools/perf/include/bpf/pid_filter.h                |   2 +-
- tools/perf/include/bpf/stdio.h                     |   2 +-
- tools/perf/include/bpf/unistd.h                    |   2 +-
- tools/perf/tests/shell/lib/probe_vfs_getname.sh    |   2 +-
- tools/perf/ui/browsers/annotate.c                  |  19 +-
- tools/perf/ui/gtk/annotate.c                       |   2 +-
- tools/perf/util/annotate.c                         | 194 ++++++++-------------
- tools/perf/util/annotate.h                         |   9 +-
- tools/perf/util/auxtrace.c                         |  22 ++-
- tools/perf/util/auxtrace.h                         |   6 +
- tools/perf/util/config.c                           |  12 ++
- tools/perf/util/config.h                           |   1 +
- tools/perf/util/probe-file.c                       |  28 ++-
- 25 files changed, 251 insertions(+), 214 deletions(-)
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
 
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index ebe1685e92dd..d5e517d1c3dd 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -512,6 +512,8 @@
- #define MSR_K7_HWCR			0xc0010015
- #define MSR_K7_HWCR_SMMLOCK_BIT		0
- #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
-+#define MSR_K7_HWCR_IRPERF_EN_BIT	30
-+#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
- #define MSR_K7_FID_VID_CTL		0xc0010041
- #define MSR_K7_FID_VID_STATUS		0xc0010042
- 
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index 503d3f42da16..3f3f780c8c65 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -390,6 +390,7 @@ struct kvm_sync_regs {
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
- #define KVM_STATE_NESTED_EVMCS		0x00000004
-+#define KVM_STATE_NESTED_MTF_PENDING	0x00000008
- 
- #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index c4dd23c4b478..8ead55593984 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -239,7 +239,6 @@ buildid.*::
- 		set buildid.dir to /dev/null. The default is $HOME/.debug
- 
- annotate.*::
--	These options work only for TUI.
- 	These are in control of addresses, jump function, source code
- 	in lines of assembly code from a specific program.
- 
-@@ -269,6 +268,8 @@ annotate.*::
- 		│        mov    (%rdi),%rdx
- 		│              return n;
- 
-+		This option works with tui, stdio2 browsers.
-+
-         annotate.use_offset::
- 		Basing on a first address of a loaded function, offset can be used.
- 		Instead of using original addresses of assembly code,
-@@ -287,6 +288,8 @@ annotate.*::
- 
- 		             368:│  mov    0x8(%r14),%rdi
- 
-+		This option works with tui, stdio2 browsers.
-+
- 	annotate.jump_arrows::
- 		There can be jump instruction among assembly code.
- 		Depending on a boolean value of jump_arrows,
-@@ -306,6 +309,8 @@ annotate.*::
- 		│1330:   mov    %r15,%r10
- 		│1333:   cmp    %r15,%r14
- 
-+		This option works with tui browser.
-+
-         annotate.show_linenr::
- 		When showing source code if this option is 'true',
- 		line numbers are printed as below.
-@@ -325,6 +330,8 @@ annotate.*::
- 		│                     array++;
- 		│             }
- 
-+		This option works with tui, stdio2 browsers.
-+
-         annotate.show_nr_jumps::
- 		Let's see a part of assembly code.
- 
-@@ -335,6 +342,8 @@ annotate.*::
- 
- 		│1 1382:   movb   $0x1,-0x270(%rbp)
- 
-+		This option works with tui, stdio2 browsers.
-+
-         annotate.show_total_period::
- 		To compare two records on an instruction base, with this option
- 		provided, display total number of samples that belong to a line
-@@ -348,11 +357,30 @@ annotate.*::
- 
- 		99.93 │      mov    %eax,%eax
- 
-+		This option works with tui, stdio2, stdio browsers.
-+
-+	annotate.show_nr_samples::
-+		By default perf annotate shows percentage of samples. This option
-+		can be used to print absolute number of samples. Ex, when set as
-+		false:
-+
-+		Percent│
-+		 74.03 │      mov    %fs:0x28,%rax
-+
-+		When set as true:
-+
-+		Samples│
-+		     6 │      mov    %fs:0x28,%rax
-+
-+		This option works with tui, stdio2, stdio browsers.
-+
- 	annotate.offset_level::
- 		Default is '1', meaning just jump targets will have offsets show right beside
- 		the instruction. When set to '2' 'call' instructions will also have its offsets
- 		shown, 3 or higher will show offsets for all instructions.
- 
-+		This option works with tui, stdio2 browsers.
-+
- hist.*::
- 	hist.percentage::
- 		This option control the way to calculate overhead of filtered entries -
-@@ -490,6 +518,12 @@ top.*::
- 		column by default.
- 		The default is 'true'.
- 
-+	top.call-graph::
-+		This is identical to 'call-graph.record-mode', except it is
-+		applicable only for 'top' subcommand. This option ONLY setup
-+		the unwind method. To enable 'perf top' to actually use it,
-+		the command line option -g must be specified.
-+
- man.*::
- 	man.viewer::
- 		This option can assign a tool to view manual pages when 'help'
-@@ -517,6 +551,16 @@ record.*::
- 		But if this option is 'no-cache', it will not update the build-id cache.
- 		'skip' skips post-processing and does not update the cache.
- 
-+	record.call-graph::
-+		This is identical to 'call-graph.record-mode', except it is
-+		applicable only for 'record' subcommand. This option ONLY setup
-+		the unwind method. To enable 'perf record' to actually use it,
-+		the command line option -g must be specified.
-+
-+	record.aio::
-+		Use 'n' control blocks in asynchronous (Posix AIO) trace writing
-+		mode ('n' default: 1, max: 4).
-+
- diff.*::
- 	diff.order::
- 		This option sets the number of columns to sort the result.
-@@ -566,6 +610,11 @@ trace.*::
- 		"libbeauty", the default, to use the same argument beautifiers used in the
- 		strace-like sys_enter+sys_exit lines.
- 
-+ftrace.*::
-+	ftrace.tracer::
-+		Can be used to select the default tracer. Possible values are
-+		'function' and 'function_graph'.
-+
- llvm.*::
- 	llvm.clang-path::
- 		Path to clang. If omit, search it from $PATH.
-@@ -610,6 +659,29 @@ scripts.*::
- 	The script gets the same options passed as a full perf script,
- 	in particular -i perfdata file, --cpu, --tid
- 
-+convert.*::
-+
-+	convert.queue-size::
-+		Limit the size of ordered_events queue, so we could control
-+		allocation size of perf data files without proper finished
-+		round events.
-+
-+intel-pt.*::
-+
-+	intel-pt.cache-divisor::
-+
-+	intel-pt.mispred-all::
-+		If set, Intel PT decoder will set the mispred flag on all
-+		branches.
-+
-+auxtrace.*::
-+
-+	auxtrace.dumpdir::
-+		s390 only. The directory to save the auxiliary trace buffer
-+		can be changed using this option. Ex, auxtrace.dumpdir=/tmp.
-+		If the directory does not exist or has the wrong file type,
-+		the current directory is used.
-+
- SEE ALSO
- --------
- linkperf:perf[1]
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 2898cfdf8fe1..941f814820b8 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -858,21 +858,6 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- 	free(ptr);
- }
- 
--static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct cs_etm_recording *ptr =
--			container_of(itr, struct cs_etm_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
--			return perf_evlist__enable_event_idx(ptr->evlist,
--							     evsel, idx);
--	}
--
--	return -EINVAL;
--}
--
- struct auxtrace_record *cs_etm_record_init(int *err)
- {
- 	struct perf_pmu *cs_etm_pmu;
-@@ -892,6 +877,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	}
- 
- 	ptr->cs_etm_pmu			= cs_etm_pmu;
-+	ptr->itr.pmu			= cs_etm_pmu;
- 	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
- 	ptr->itr.recording_options	= cs_etm_recording_options;
- 	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
-@@ -901,7 +887,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
- 	ptr->itr.reference		= cs_etm_reference;
- 	ptr->itr.free			= cs_etm_recording_free;
--	ptr->itr.read_finish		= cs_etm_read_finish;
-+	ptr->itr.read_finish		= auxtrace_record__read_finish;
- 
- 	*err = 0;
- 	return &ptr->itr;
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index eba6541ec0f1..8d6821d9c3f6 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -158,20 +158,6 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
- 	free(sper);
- }
- 
--static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct arm_spe_recording *sper =
--			container_of(itr, struct arm_spe_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(sper->evlist, evsel) {
--		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
--			return perf_evlist__enable_event_idx(sper->evlist,
--							     evsel, idx);
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu)
- {
-@@ -189,12 +175,13 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 	}
- 
- 	sper->arm_spe_pmu = arm_spe_pmu;
-+	sper->itr.pmu = arm_spe_pmu;
- 	sper->itr.recording_options = arm_spe_recording_options;
- 	sper->itr.info_priv_size = arm_spe_info_priv_size;
- 	sper->itr.info_fill = arm_spe_info_fill;
- 	sper->itr.free = arm_spe_recording_free;
- 	sper->itr.reference = arm_spe_reference;
--	sper->itr.read_finish = arm_spe_read_finish;
-+	sper->itr.read_finish = auxtrace_record__read_finish;
- 	sper->itr.alignment = 0;
- 
- 	*err = 0;
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 43f736ed47f2..35b61bfc1b1a 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -517,3 +517,5 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	nospu	clone3				ppc_clone3
-+437	common	openat2				sys_openat2
-+438	common	pidfd_getfd			sys_pidfd_getfd
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index 27d9e214d068..26cee1052179 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -413,20 +413,6 @@ static int intel_bts_find_snapshot(struct auxtrace_record *itr, int idx,
- 	return err;
- }
- 
--static int intel_bts_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_bts_recording *btsr =
--			container_of(itr, struct intel_bts_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(btsr->evlist, evsel) {
--		if (evsel->core.attr.type == btsr->intel_bts_pmu->type)
--			return perf_evlist__enable_event_idx(btsr->evlist,
--							     evsel, idx);
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_bts_recording_init(int *err)
- {
- 	struct perf_pmu *intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-@@ -447,6 +433,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	}
- 
- 	btsr->intel_bts_pmu = intel_bts_pmu;
-+	btsr->itr.pmu = intel_bts_pmu;
- 	btsr->itr.recording_options = intel_bts_recording_options;
- 	btsr->itr.info_priv_size = intel_bts_info_priv_size;
- 	btsr->itr.info_fill = intel_bts_info_fill;
-@@ -456,7 +443,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	btsr->itr.find_snapshot = intel_bts_find_snapshot;
- 	btsr->itr.parse_snapshot_options = intel_bts_parse_snapshot_options;
- 	btsr->itr.reference = intel_bts_reference;
--	btsr->itr.read_finish = intel_bts_read_finish;
-+	btsr->itr.read_finish = auxtrace_record__read_finish;
- 	btsr->itr.alignment = sizeof(struct branch);
- 	return &btsr->itr;
- }
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 20df442fdf36..7eea4fd7ce58 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -1166,20 +1166,6 @@ static u64 intel_pt_reference(struct auxtrace_record *itr __maybe_unused)
- 	return rdtsc();
- }
- 
--static int intel_pt_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_pt_recording *ptr =
--			container_of(itr, struct intel_pt_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->intel_pt_pmu->type)
--			return perf_evlist__enable_event_idx(ptr->evlist, evsel,
--							     idx);
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_pt_recording_init(int *err)
- {
- 	struct perf_pmu *intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-@@ -1200,6 +1186,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	}
- 
- 	ptr->intel_pt_pmu = intel_pt_pmu;
-+	ptr->itr.pmu = intel_pt_pmu;
- 	ptr->itr.recording_options = intel_pt_recording_options;
- 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
- 	ptr->itr.info_fill = intel_pt_info_fill;
-@@ -1209,7 +1196,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	ptr->itr.find_snapshot = intel_pt_find_snapshot;
- 	ptr->itr.parse_snapshot_options = intel_pt_parse_snapshot_options;
- 	ptr->itr.reference = intel_pt_reference;
--	ptr->itr.read_finish = intel_pt_read_finish;
-+	ptr->itr.read_finish = auxtrace_record__read_finish;
- 	/*
- 	 * Decoding starts at a PSB packet. Minimum PSB period is 2K so 4K
- 	 * should give at least 1 PSB per sample.
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index ff61795a4d13..6c0a0412502e 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -566,6 +566,8 @@ int cmd_annotate(int argc, const char **argv)
- 	if (ret < 0)
- 		return ret;
- 
-+	annotation_config__init(&annotate.opts);
-+
- 	argc = parse_options(argc, argv, options, annotate_usage, 0);
- 	if (argc) {
- 		/*
-@@ -605,8 +607,6 @@ int cmd_annotate(int argc, const char **argv)
- 	if (ret < 0)
- 		goto out_delete;
- 
--	annotation_config__init();
--
- 	symbol_conf.try_vmlinux_path = true;
- 
- 	ret = symbol__init(&annotate.session->header.env);
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 26bc5923e6b5..70548df2abb9 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -449,7 +449,8 @@ static int perf_del_probe_events(struct strfilter *filter)
- 		ret = probe_file__del_strlist(kfd, klist);
- 		if (ret < 0)
- 			goto error;
--	}
-+	} else if (ret == -ENOMEM)
-+		goto error;
- 
- 	ret2 = probe_file__get_events(ufd, filter, ulist);
- 	if (ret2 == 0) {
-@@ -459,7 +460,8 @@ static int perf_del_probe_events(struct strfilter *filter)
- 		ret2 = probe_file__del_strlist(ufd, ulist);
- 		if (ret2 < 0)
- 			goto error;
--	}
-+	} else if (ret2 == -ENOMEM)
-+		goto error;
- 
- 	if (ret == -ENOENT && ret2 == -ENOENT)
- 		pr_warning("\"%s\" does not hit any event.\n", str);
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 9483b3f0cae3..72a12b69f120 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1507,7 +1507,7 @@ int cmd_report(int argc, const char **argv)
- 			symbol_conf.priv_size += sizeof(u32);
- 			symbol_conf.sort_by_name = true;
- 		}
--		annotation_config__init();
-+		annotation_config__init(&report.annotation_opts);
- 	}
- 
- 	if (symbol__init(&session->header.env) < 0)
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 8affcab75604..f6dd1a63f159 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -143,7 +143,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 		return err;
- 	}
- 
--	err = symbol__annotate(&he->ms, evsel, 0, &top->annotation_opts, NULL);
-+	err = symbol__annotate(&he->ms, evsel, &top->annotation_opts, NULL);
- 	if (err == 0) {
- 		top->sym_filter_entry = he;
- 	} else {
-@@ -1683,7 +1683,7 @@ int cmd_top(int argc, const char **argv)
- 	if (status < 0)
- 		goto out_delete_evlist;
- 
--	annotation_config__init();
-+	annotation_config__init(&top.annotation_opts);
- 
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
- 	status = symbol__init(NULL);
-diff --git a/tools/perf/include/bpf/pid_filter.h b/tools/perf/include/bpf/pid_filter.h
-index 607189a315b2..6e61c4bdf548 100644
---- a/tools/perf/include/bpf/pid_filter.h
-+++ b/tools/perf/include/bpf/pid_filter.h
-@@ -3,7 +3,7 @@
- #ifndef _PERF_BPF_PID_FILTER_
- #define _PERF_BPF_PID_FILTER_
- 
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- #define pid_filter(name) pid_map(name, bool)
- 
-diff --git a/tools/perf/include/bpf/stdio.h b/tools/perf/include/bpf/stdio.h
-index 7ca6fa5463ee..316af5b2ff35 100644
---- a/tools/perf/include/bpf/stdio.h
-+++ b/tools/perf/include/bpf/stdio.h
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- struct bpf_map SEC("maps") __bpf_stdout__ = {
-        .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
-diff --git a/tools/perf/include/bpf/unistd.h b/tools/perf/include/bpf/unistd.h
-index d1a35b6c649d..ca7877f9a976 100644
---- a/tools/perf/include/bpf/unistd.h
-+++ b/tools/perf/include/bpf/unistd.h
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: LGPL-2.1
- 
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- static int (*bpf_get_current_pid_tgid)(void) = (void *)BPF_FUNC_get_current_pid_tgid;
- 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 7cb99b433888..c2cc42daf924 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -14,7 +14,7 @@ add_probe_vfs_getname() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
- 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-+		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
- 	fi
- }
- 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index badbddbb30f8..9023267e5643 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -754,10 +754,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"?             Search string backwards\n");
- 			continue;
- 		case 'r':
--			{
--				script_browse(NULL, NULL);
--				continue;
--			}
-+			script_browse(NULL, NULL);
-+			annotate_browser__show(&browser->b, title, help);
-+			continue;
- 		case 'k':
- 			notes->options->show_linenr = !notes->options->show_linenr;
- 			break;
-@@ -834,13 +833,13 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			map_symbol__annotation_dump(ms, evsel, browser->opts);
- 			continue;
- 		case 't':
--			if (notes->options->show_total_period) {
--				notes->options->show_total_period = false;
--				notes->options->show_nr_samples = true;
--			} else if (notes->options->show_nr_samples)
--				notes->options->show_nr_samples = false;
-+			if (symbol_conf.show_total_period) {
-+				symbol_conf.show_total_period = false;
-+				symbol_conf.show_nr_samples = true;
-+			} else if (symbol_conf.show_nr_samples)
-+				symbol_conf.show_nr_samples = false;
- 			else
--				notes->options->show_total_period = true;
-+				symbol_conf.show_total_period = true;
- 			annotation__update_column_widths(notes);
- 			continue;
- 		case 'c':
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index 22cc240f7371..35f9641bf670 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -174,7 +174,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	if (ms->map->dso->annotate_warned)
- 		return -1;
- 
--	err = symbol__annotate(ms, evsel, 0, &annotation__default_options, NULL);
-+	err = symbol__annotate(ms, evsel, &annotation__default_options, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
- 		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ca73fb74ad03..0ea95be84b3b 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1143,93 +1143,70 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- }
- 
- struct annotate_args {
--	size_t			 privsize;
--	struct arch		*arch;
--	struct map_symbol	 ms;
--	struct evsel	*evsel;
-+	struct arch		  *arch;
-+	struct map_symbol	  ms;
-+	struct evsel		  *evsel;
- 	struct annotation_options *options;
--	s64			 offset;
--	char			*line;
--	int			 line_nr;
-+	s64			  offset;
-+	char			  *line;
-+	int			  line_nr;
- };
- 
--static void annotation_line__delete(struct annotation_line *al)
-+static void annotation_line__init(struct annotation_line *al,
-+				  struct annotate_args *args,
-+				  int nr)
- {
--	void *ptr = (void *) al - al->privsize;
-+	al->offset = args->offset;
-+	al->line = strdup(args->line);
-+	al->line_nr = args->line_nr;
-+	al->data_nr = nr;
-+}
- 
-+static void annotation_line__exit(struct annotation_line *al)
-+{
- 	free_srcline(al->path);
- 	zfree(&al->line);
--	free(ptr);
- }
- 
--/*
-- * Allocating the annotation line data with following
-- * structure:
-- *
-- *    --------------------------------------
-- *    private space | struct annotation_line
-- *    --------------------------------------
-- *
-- * Size of the private space is stored in 'struct annotation_line'.
-- *
-- */
--static struct annotation_line *
--annotation_line__new(struct annotate_args *args, size_t privsize)
-+static size_t disasm_line_size(int nr)
- {
- 	struct annotation_line *al;
--	struct evsel *evsel = args->evsel;
--	size_t size = privsize + sizeof(*al);
--	int nr = 1;
--
--	if (perf_evsel__is_group_event(evsel))
--		nr = evsel->core.nr_members;
- 
--	size += sizeof(al->data[0]) * nr;
--
--	al = zalloc(size);
--	if (al) {
--		al = (void *) al + privsize;
--		al->privsize   = privsize;
--		al->offset     = args->offset;
--		al->line       = strdup(args->line);
--		al->line_nr    = args->line_nr;
--		al->data_nr    = nr;
--	}
--
--	return al;
-+	return (sizeof(struct disasm_line) + (sizeof(al->data[0]) * nr));
- }
- 
- /*
-  * Allocating the disasm annotation line data with
-  * following structure:
-  *
-- *    ------------------------------------------------------------
-- *    privsize space | struct disasm_line | struct annotation_line
-- *    ------------------------------------------------------------
-+ *    -------------------------------------------
-+ *    struct disasm_line | struct annotation_line
-+ *    -------------------------------------------
-  *
-  * We have 'struct annotation_line' member as last member
-  * of 'struct disasm_line' to have an easy access.
-- *
-  */
- static struct disasm_line *disasm_line__new(struct annotate_args *args)
- {
- 	struct disasm_line *dl = NULL;
--	struct annotation_line *al;
--	size_t privsize = args->privsize + offsetof(struct disasm_line, al);
-+	int nr = 1;
- 
--	al = annotation_line__new(args, privsize);
--	if (al != NULL) {
--		dl = disasm_line(al);
-+	if (perf_evsel__is_group_event(args->evsel))
-+		nr = args->evsel->core.nr_members;
- 
--		if (dl->al.line == NULL)
--			goto out_delete;
-+	dl = zalloc(disasm_line_size(nr));
-+	if (!dl)
-+		return NULL;
- 
--		if (args->offset != -1) {
--			if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
--				goto out_free_line;
-+	annotation_line__init(&dl->al, args, nr);
-+	if (dl->al.line == NULL)
-+		goto out_delete;
- 
--			disasm_line__init_ins(dl, args->arch, &args->ms);
--		}
-+	if (args->offset != -1) {
-+		if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
-+			goto out_free_line;
-+
-+		disasm_line__init_ins(dl, args->arch, &args->ms);
- 	}
- 
- 	return dl;
-@@ -1248,7 +1225,8 @@ void disasm_line__free(struct disasm_line *dl)
- 	else
- 		ins__delete(&dl->ops);
- 	zfree(&dl->ins.name);
--	annotation_line__delete(&dl->al);
-+	annotation_line__exit(&dl->al);
-+	free(dl);
- }
- 
- int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name)
-@@ -2149,13 +2127,12 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
- 	annotation__calc_percent(notes, evsel, symbol__size(sym));
- }
- 
--int symbol__annotate(struct map_symbol *ms, struct evsel *evsel, size_t privsize,
-+int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 		     struct annotation_options *options, struct arch **parch)
- {
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
--		.privsize	= privsize,
- 		.evsel		= evsel,
- 		.options	= options,
- 	};
-@@ -2644,6 +2621,8 @@ void annotation__set_offsets(struct annotation *notes, s64 size)
- 	struct annotation_line *al;
- 
- 	notes->max_line_len = 0;
-+	notes->nr_entries = 0;
-+	notes->nr_asm_entries = 0;
- 
- 	list_for_each_entry(al, &notes->src->source, node) {
- 		size_t line_len = strlen(al->line);
-@@ -2790,7 +2769,7 @@ int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	struct symbol *sym = ms->sym;
- 	struct rb_root source_line = RB_ROOT;
- 
--	if (symbol__annotate(ms, evsel, 0, opts, NULL) < 0)
-+	if (symbol__annotate(ms, evsel, opts, NULL) < 0)
- 		return -1;
- 
- 	symbol__calc_percent(sym, evsel);
-@@ -2915,9 +2894,9 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 			percent = annotation_data__percent(&al->data[i], percent_type);
- 
- 			obj__set_percent_color(obj, percent, current_entry);
--			if (notes->options->show_total_period) {
-+			if (symbol_conf.show_total_period) {
- 				obj__printf(obj, "%11" PRIu64 " ", al->data[i].he.period);
--			} else if (notes->options->show_nr_samples) {
-+			} else if (symbol_conf.show_nr_samples) {
- 				obj__printf(obj, "%6" PRIu64 " ",
- 						   al->data[i].he.nr_samples);
- 			} else {
-@@ -2931,8 +2910,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 			obj__printf(obj, "%-*s", pcnt_width, " ");
- 		else {
- 			obj__printf(obj, "%-*s", pcnt_width,
--					   notes->options->show_total_period ? "Period" :
--					   notes->options->show_nr_samples ? "Samples" : "Percent");
-+					   symbol_conf.show_total_period ? "Period" :
-+					   symbol_conf.show_nr_samples ? "Samples" : "Percent");
- 		}
- 	}
- 
-@@ -3070,7 +3049,7 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 	if (perf_evsel__is_group_event(evsel))
- 		nr_pcnt = evsel->core.nr_members;
- 
--	err = symbol__annotate(ms, evsel, 0, options, parch);
-+	err = symbol__annotate(ms, evsel, options, parch);
- 	if (err)
- 		goto out_free_offsets;
- 
-@@ -3094,69 +3073,46 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 	return err;
- }
- 
--#define ANNOTATION__CFG(n) \
--	{ .name = #n, .value = &annotation__default_options.n, }
--
--/*
-- * Keep the entries sorted, they are bsearch'ed
-- */
--static struct annotation_config {
--	const char *name;
--	void *value;
--} annotation__configs[] = {
--	ANNOTATION__CFG(hide_src_code),
--	ANNOTATION__CFG(jump_arrows),
--	ANNOTATION__CFG(offset_level),
--	ANNOTATION__CFG(show_linenr),
--	ANNOTATION__CFG(show_nr_jumps),
--	ANNOTATION__CFG(show_nr_samples),
--	ANNOTATION__CFG(show_total_period),
--	ANNOTATION__CFG(use_offset),
--};
--
--#undef ANNOTATION__CFG
--
--static int annotation_config__cmp(const void *name, const void *cfgp)
--{
--	const struct annotation_config *cfg = cfgp;
--
--	return strcmp(name, cfg->name);
--}
--
--static int annotation__config(const char *var, const char *value,
--			    void *data __maybe_unused)
-+static int annotation__config(const char *var, const char *value, void *data)
- {
--	struct annotation_config *cfg;
--	const char *name;
-+	struct annotation_options *opt = data;
- 
- 	if (!strstarts(var, "annotate."))
- 		return 0;
- 
--	name = var + 9;
--	cfg = bsearch(name, annotation__configs, ARRAY_SIZE(annotation__configs),
--		      sizeof(struct annotation_config), annotation_config__cmp);
--
--	if (cfg == NULL)
--		pr_debug("%s variable unknown, ignoring...", var);
--	else if (strcmp(var, "annotate.offset_level") == 0) {
--		perf_config_int(cfg->value, name, value);
--
--		if (*(int *)cfg->value > ANNOTATION__MAX_OFFSET_LEVEL)
--			*(int *)cfg->value = ANNOTATION__MAX_OFFSET_LEVEL;
--		else if (*(int *)cfg->value < ANNOTATION__MIN_OFFSET_LEVEL)
--			*(int *)cfg->value = ANNOTATION__MIN_OFFSET_LEVEL;
-+	if (!strcmp(var, "annotate.offset_level")) {
-+		perf_config_u8(&opt->offset_level, "offset_level", value);
-+
-+		if (opt->offset_level > ANNOTATION__MAX_OFFSET_LEVEL)
-+			opt->offset_level = ANNOTATION__MAX_OFFSET_LEVEL;
-+		else if (opt->offset_level < ANNOTATION__MIN_OFFSET_LEVEL)
-+			opt->offset_level = ANNOTATION__MIN_OFFSET_LEVEL;
-+	} else if (!strcmp(var, "annotate.hide_src_code")) {
-+		opt->hide_src_code = perf_config_bool("hide_src_code", value);
-+	} else if (!strcmp(var, "annotate.jump_arrows")) {
-+		opt->jump_arrows = perf_config_bool("jump_arrows", value);
-+	} else if (!strcmp(var, "annotate.show_linenr")) {
-+		opt->show_linenr = perf_config_bool("show_linenr", value);
-+	} else if (!strcmp(var, "annotate.show_nr_jumps")) {
-+		opt->show_nr_jumps = perf_config_bool("show_nr_jumps", value);
-+	} else if (!strcmp(var, "annotate.show_nr_samples")) {
-+		symbol_conf.show_nr_samples = perf_config_bool("show_nr_samples",
-+								value);
-+	} else if (!strcmp(var, "annotate.show_total_period")) {
-+		symbol_conf.show_total_period = perf_config_bool("show_total_period",
-+								value);
-+	} else if (!strcmp(var, "annotate.use_offset")) {
-+		opt->use_offset = perf_config_bool("use_offset", value);
- 	} else {
--		*(bool *)cfg->value = perf_config_bool(name, value);
-+		pr_debug("%s variable unknown, ignoring...", var);
- 	}
-+
- 	return 0;
- }
- 
--void annotation_config__init(void)
-+void annotation_config__init(struct annotation_options *opt)
- {
--	perf_config(annotation__config, NULL);
--
--	annotation__default_options.show_total_period = symbol_conf.show_total_period;
--	annotation__default_options.show_nr_samples   = symbol_conf.show_nr_samples;
-+	perf_config(annotation__config, opt);
- }
- 
- static unsigned int parse_percent_type(char *str1, char *str2)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 455403e8fede..001258601a37 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -83,8 +83,6 @@ struct annotation_options {
- 	     full_path,
- 	     show_linenr,
- 	     show_nr_jumps,
--	     show_nr_samples,
--	     show_total_period,
- 	     show_minmax_cycle,
- 	     show_asm_raw,
- 	     annotate_src;
-@@ -141,7 +139,6 @@ struct annotation_line {
- 	u64			 cycles;
- 	u64			 cycles_max;
- 	u64			 cycles_min;
--	size_t			 privsize;
- 	char			*path;
- 	u32			 idx;
- 	int			 idx_asm;
-@@ -309,7 +306,7 @@ static inline int annotation__cycles_width(struct annotation *notes)
- 
- static inline int annotation__pcnt_width(struct annotation *notes)
- {
--	return (notes->options->show_total_period ? 12 : 7) * notes->nr_events;
-+	return (symbol_conf.show_total_period ? 12 : 7) * notes->nr_events;
- }
- 
- static inline bool annotation_line__filter(struct annotation_line *al, struct annotation *notes)
-@@ -352,7 +349,7 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
- void symbol__annotate_zero_histograms(struct symbol *sym);
- 
- int symbol__annotate(struct map_symbol *ms,
--		     struct evsel *evsel, size_t privsize,
-+		     struct evsel *evsel,
- 		     struct annotation_options *options,
- 		     struct arch **parch);
- int symbol__annotate2(struct map_symbol *ms,
-@@ -413,7 +410,7 @@ static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
- }
- #endif
- 
--void annotation_config__init(void);
-+void annotation_config__init(struct annotation_options *opt);
- 
- int annotate_parse_percent_type(const struct option *opt, const char *_str,
- 				int unset);
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index eb087e7df6f4..3571ce72ca28 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -629,8 +629,10 @@ int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts)
- {
--	if (itr)
-+	if (itr) {
-+		itr->evlist = evlist;
- 		return itr->recording_options(itr, evlist, opts);
-+	}
- 	return 0;
- }
- 
-@@ -664,6 +666,24 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 	return -EINVAL;
- }
- 
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
-+{
-+	struct evsel *evsel;
-+
-+	if (!itr->evlist || !itr->pmu)
-+		return -EINVAL;
-+
-+	evlist__for_each_entry(itr->evlist, evsel) {
-+		if (evsel->core.attr.type == itr->pmu->type) {
-+			if (evsel->disabled)
-+				return 0;
-+			return perf_evlist__enable_event_idx(itr->evlist, evsel,
-+							     idx);
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
- /*
-  * Event record size is 16-bit which results in a maximum size of about 64KiB.
-  * Allow about 4KiB for the rest of the sample record, to give a maximum
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 749d72cd9c7b..e58ef160b599 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -29,6 +29,7 @@ struct record_opts;
- struct perf_record_auxtrace_error;
- struct perf_record_auxtrace_info;
- struct events_stats;
-+struct perf_pmu;
- 
- enum auxtrace_error_type {
-        PERF_AUXTRACE_ERROR_ITRACE  = 1,
-@@ -322,6 +323,8 @@ struct auxtrace_mmap_params {
-  * @read_finish: called after reading from an auxtrace mmap
-  * @alignment: alignment (if any) for AUX area data
-  * @default_aux_sample_size: default sample size for --aux sample option
-+ * @pmu: associated pmu
-+ * @evlist: selected events list
-  */
- struct auxtrace_record {
- 	int (*recording_options)(struct auxtrace_record *itr,
-@@ -346,6 +349,8 @@ struct auxtrace_record {
- 	int (*read_finish)(struct auxtrace_record *itr, int idx);
- 	unsigned int alignment;
- 	unsigned int default_aux_sample_size;
-+	struct perf_pmu *pmu;
-+	struct evlist *evlist;
- };
- 
- /**
-@@ -537,6 +542,7 @@ int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
- 				   struct auxtrace_mmap *mm,
- 				   unsigned char *data, u64 *head, u64 *old);
- u64 auxtrace_record__reference(struct auxtrace_record *itr);
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx);
- 
- int auxtrace_index__auxtrace_event(struct list_head *head, union perf_event *event,
- 				   off_t file_offset);
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 0bc9c4d7fdc5..ef38eba56ed0 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -374,6 +374,18 @@ int perf_config_int(int *dest, const char *name, const char *value)
- 	return 0;
- }
- 
-+int perf_config_u8(u8 *dest, const char *name, const char *value)
-+{
-+	long ret = 0;
-+
-+	if (!perf_parse_long(value, &ret)) {
-+		bad_config(name);
-+		return -1;
-+	}
-+	*dest = ret;
-+	return 0;
-+}
-+
- static int perf_config_bool_or_int(const char *name, const char *value, int *is_bool)
- {
- 	int ret;
-diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
-index bd0a5897c76a..c10b66dde2f3 100644
---- a/tools/perf/util/config.h
-+++ b/tools/perf/util/config.h
-@@ -29,6 +29,7 @@ typedef int (*config_fn_t)(const char *, const char *, void *);
- int perf_default_config(const char *, const char *, void *);
- int perf_config(config_fn_t fn, void *);
- int perf_config_int(int *dest, const char *, const char *);
-+int perf_config_u8(u8 *dest, const char *name, const char *value);
- int perf_config_u64(u64 *dest, const char *, const char *);
- int perf_config_bool(const char *, const char *);
- int config_error_nonbool(const char *);
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 5003ba403345..0f5fda11675f 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -301,10 +301,15 @@ int probe_file__get_events(int fd, struct strfilter *filter,
- 		p = strchr(ent->s, ':');
- 		if ((p && strfilter__compare(filter, p + 1)) ||
- 		    strfilter__compare(filter, ent->s)) {
--			strlist__add(plist, ent->s);
-+			ret = strlist__add(plist, ent->s);
-+			if (ret == -ENOMEM) {
-+				pr_err("strlist__add failed with -ENOMEM\n");
-+				goto out;
-+			}
- 			ret = 0;
- 		}
- 	}
-+out:
- 	strlist__delete(namelist);
- 
- 	return ret;
-@@ -511,7 +516,11 @@ static int probe_cache__load(struct probe_cache *pcache)
- 				ret = -EINVAL;
- 				goto out;
- 			}
--			strlist__add(entry->tevlist, buf);
-+			ret = strlist__add(entry->tevlist, buf);
-+			if (ret == -ENOMEM) {
-+				pr_err("strlist__add failed with -ENOMEM\n");
-+				goto out;
-+			}
- 		}
- 	}
- out:
-@@ -672,7 +681,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
- 		command = synthesize_probe_trace_command(&tevs[i]);
- 		if (!command)
- 			goto out_err;
--		strlist__add(entry->tevlist, command);
-+		ret = strlist__add(entry->tevlist, command);
-+		if (ret == -ENOMEM) {
-+			pr_err("strlist__add failed with -ENOMEM\n");
-+			goto out_err;
-+		}
-+
- 		free(command);
- 	}
- 	list_add_tail(&entry->node, &pcache->entries);
-@@ -853,9 +867,15 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
- 			break;
- 		}
- 
--		strlist__add(entry->tevlist, buf);
-+		ret = strlist__add(entry->tevlist, buf);
-+
- 		free(buf);
- 		entry = NULL;
-+
-+		if (ret == -ENOMEM) {
-+			pr_err("strlist__add failed with -ENOMEM\n");
-+			break;
-+		}
- 	}
- 	if (entry) {
- 		list_del_init(&entry->node);
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (fb279f4e2386 Merge branch 'i2c/for-current-fixed' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging fixes/master (eb239a5f369f evh_bytechan: fix out of bounds accesses)
+Merging kbuild-current/fixes (29795de0d242 Merge tag 'pci-v5.6-fixes-2' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci)
+Merging arc-current/for-curr (3b00b042eeaa ARC: Replace <linux/clk-provider=
+.h> by <linux/of_clk.h>)
+Merging arm-current/fixes (89604523a76e ARM: 8961/2: Fix Kbuild issue cause=
+d by per-task stack protector GCC plugin)
+Merging arm-soc-fixes/arm/fixes (b6a79b417f54 Merge tag 'arm-soc/for-5.6/de=
+vicetree-fixes' of https://github.com/Broadcom/stblinux into arm/fixes)
+Merging arm64-fixes/for-next/fixes (dcde237319e6 mm: Avoid creating virtual=
+ address aliases in brk()/mmap()/mremap())
+Merging m68k-current/for-linus (6aabc1facdb2 m68k: Implement copy_thread_tl=
+s())
+Merging powerpc-fixes/fixes (cb0cc635c7a9 powerpc: Include .BTF section)
+Merging s390-fixes/fixes (f8788d86ab28 Linux 5.6-rc3)
+Merging sparc/master (11648b8339f8 sparc64: fix adjtimex regression)
+Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
+Merging net/master (52c0d4e306ca net: dsa: sja1105: Don't destroy not-yet-c=
+reated xmit_worker)
+Merging bpf/master (542bf38f11d1 mailmap: Update email address)
+Merging ipsec/master (edf0d283d988 ipv6: xfrm6_tunnel.c: Use built-in RCU l=
+ist checking)
+Merging netfilter/master (a2f2ef4a54c0 net/smc: check for valid ib_client_d=
+ata)
+Merging ipvs/master (c24b75e0f923 ipvs: move old_secure_tcp into struct net=
+ns_ipvs)
+Merging wireless-drivers/master (a9149d243f25 iwlwifi: mvm: Do not require =
+PHY_SKU NVM section for 3168 devices)
+Merging mac80211/master (3614d05b5e6b Merge tag 'mac80211-for-net-2020-02-2=
+4' of git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211)
+Merging rdma-fixes/for-rc (6affca140cbe RDMA/rw: Fix error flow during RDMA=
+ context initialization)
+Merging sound-current/for-linus (c37c0ab02956 ALSA: hda/realtek - Fix a reg=
+ression for mute led on Lenovo Carbon X1)
+Merging sound-asoc-fixes/for-linus (77434a2d4a6f Merge branch 'asoc-5.6' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (d29456d34def Merge branch 'regmap-5.6' into=
+ regmap-linus)
+Merging regulator-fixes/for-linus (d45cab88373e Merge branch 'regulator-5.6=
+' into regulator-linus)
+Merging spi-fixes/for-linus (c11e44fe006d Merge branch 'spi-5.6' into spi-l=
+inus)
+Merging pci-current/for-linus (5901b51f3e5d MAINTAINERS: Correct Cadence PC=
+I driver path)
+Merging driver-core.current/driver-core-linus (ae91c9256549 debugfs: remove=
+ return value of debugfs_create_regset32())
+Merging tty.current/tty-linus (e8c75a30a23c vt: selection, push sel_lock up)
+Merging usb.current/usb-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging usb-gadget-fixes/fixes (42cd5ffe46c1 usb: dwc3: debug: fix string p=
+osition formatting mixup with ret and len)
+Merging usb-serial-fixes/usb-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging usb-chipidea-fixes/ci-for-usb-stable (16009db47c51 usb: chipidea: u=
+dc: workaround for endpoint conflict issue)
+Merging phy/fixes (be4e3c737eeb phy: mapphone-mdm6600: Fix timeouts by addi=
+ng wake-up handling)
+Merging staging.current/staging-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging char-misc.current/char-misc-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging soundwire-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging thunderbolt-fixes/fixes (f8788d86ab28 Linux 5.6-rc3)
+Merging input-current/for-linus (3dbae1553897 Input: cyapa - replace zero-l=
+ength array with flexible-array member)
+Merging crypto-current/master (c9cc0517bba9 crypto: chacha20poly1305 - prev=
+ent integer overflow on large input)
+Merging ide/master (94f2630b1897 Merge tag '5.6-rc-small-smb3-fix-for-stabl=
+e' of git://git.samba.org/sfrench/cifs-2.6)
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (ef89d0545132 selftests/rseq: Fix out-of-tree=
+ compilation)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (25962e1a7f1d dmaengine: imx-sdma: Fix the ev=
+ent id check to include RX event for UART6)
+Merging backlight-fixes/for-backlight-fixes (219d54332a09 Linux 5.4)
+Merging mtd-fixes/mtd/fixes (def9d2780727 Linux 5.5-rc7)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (d171c45da874 media: hantro: Fix broken media c=
+ontroller links)
+Merging reset-fixes/reset/fixes (b460e0a9e240 reset: intel: add unspecified=
+ HAS_IOMEM dependency)
+Merging mips-fixes/mips-fixes (8e029eb0bcd6 MIPS: Fix CONFIG_MIPS_CMDLINE_D=
+TB_EXTEND handling)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (697b4f1603e7 Merge branch 'omap-for-v5.6/fixes-rc=
+3' into fixes)
+Merging kvm-fixes/master (86f7e90ce840 KVM: VMX: check descriptor table exi=
+ts on instruction emulation)
+CONFLICT (content): Merge conflict in arch/x86/kvm/Makefile
+Merging kvms390-fixes/master (5ef8acbdd687 KVM: nVMX: Emulate MTF when perf=
+orming instruction emulation)
+Merging hwmon-fixes/hwmon (deddc9e8c0e0 hwmon: (pmbus/xdpe12284) Add callba=
+ck for vout limits conversion)
+Merging nvdimm-fixes/libnvdimm-fixes (96222d53842d dax: pass NOWAIT flag to=
+ iomap_apply)
+Merging btrfs-fixes/next-fixes (5db834fa2a2b Merge branch 'misc-5.6' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (bf4498ad3f9a tmpfs: deny and force are not huge mo=
+unt options)
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (f8788d86ab28 Linux 5.6-rc3)
+Merging samsung-krzk-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging devicetree-fixes/dt/linus (51a21e0e7baf dt-bindings: Fix dtc warnin=
+gs in examples)
+Merging scsi-fixes/fixes (03264ddde245 scsi: compat_ioctl: cdrom: Replace .=
+ioctl with .compat_ioctl in four appropriate places)
+Merging drm-fixes/drm-fixes (f091bf39700d Merge tag 'drm-intel-fixes-2020-0=
+2-27' of git://anongit.freedesktop.org/drm/drm-intel into drm-fixes)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (8e9a400c706e Merge tag 'gvt-f=
+ixes-2020-02-26' of https://github.com/intel/gvt-linux into drm-intel-fixes)
+Merging mmc-fixes/fixes (9051db381fab mmc: sdhci-msm: Mark sdhci_msm_cqe_di=
+sable static)
+Merging rtc-fixes/rtc-fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging gnss-fixes/gnss-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging hyperv-fixes/hyperv-fixes (af42d3466bdc Linux 5.4-rc8)
+Merging soc-fsl-fixes/fix (5674a92ca4b7 soc/fsl/qe: Fix an error code in qe=
+_pin_request())
+Merging risc-v-fixes/fixes (1a6f47b970cb riscv: Change code model of module=
+ to medany to improve data accessing)
+Merging pidfd-fixes/fixes (186e28a18aeb selftests: pidfd: Add pidfd_fdinfo_=
+test in .gitignore)
+Merging fpga-fixes/fixes (dec43da46f63 fpga: altera-ps-spi: Fix getting of =
+optional confd gpio)
+Merging spdx/spdx-linus (bb6d3fb354c5 Linux 5.6-rc1)
+Merging gpio-intel-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl-intel-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging erofs-fixes/fixes (d1eef1c61974 Linux 5.5-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (6be7e0733548 drm/virtio: fix m=
+map page attributes)
+Merging kspp-gustavo/for-next/kspp (d5180902be1c firmware: google: vpd: Rep=
+lace zero-length array with flexible-array member)
+Merging kbuild/for-next (098d44ffed27 kbuild: remove cc-option switch from =
+-Wframe-larger-than=3D)
+Merging compiler-attributes/compiler-attributes (54ecb8f7028c Linux 5.4-rc1)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (89bb6e2ac940 ARM/dma-mapping: merge __dma_sup=
+ported into arm_dma_supported)
+Merging asm-generic/master (060dc911501f nds32: fix build failure caused by=
+ page table folding updates)
+Merging arc/for-next (def9d2780727 Linux 5.5-rc7)
+Merging arm/for-next (c0cf33e910fe Merge branches 'fixes' and 'misc' into f=
+or-next)
+Merging arm64/for-next/core (9687d8c82a8a Merge branches 'for-next/memory-h=
+otremove', 'for-next/arm_sdei' and 'for-next/misc' into for-next/core)
+Merging arm-perf/for-next/perf (8703317ae576 drivers/perf: hisi: update the=
+ sccl_id/ccl_id for certain HiSilicon platform)
+Merging arm-soc/for-next (ae96efdad49d ARM: Document merges)
+Merging amlogic/for-next (80e3ca9ddabf Merge branch 'v5.7/drivers' into tmp=
+/aml-rebuild)
+Merging aspeed/for-next (de285b938cf3 ARM: dts: aspeed: ast2600: Fix SCU IR=
+Q controller nodes)
+Merging at91/at91-next (e9c02c092dc5 Merge branches 'at91-soc', 'at91-dt' a=
+nd 'at91-defconfig' into at91-next)
+Merging imx-mxs/for-next (48b4bfe7105f Merge branch 'imx/defconfig' into fo=
+r-next)
+Merging keystone/next (a1766a49fc90 Merge tag 'drivers_soc_for_5.6' into ne=
+xt)
+Merging mediatek/for-next (00862b8de3aa Merge branch 'v5.6-next/soc' into f=
+or-next)
+Merging mvebu/for-next (c0d03b53ef47 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (553792054c44 Merge branch 'omap-for-v5.7/accelerator=
+s' into for-next)
+Merging qcom/for-next (21b265038f22 Merge branches 'arm64-for-5.7', 'arm64-=
+defconfig-for-5.7', 'defconfig-for-5.7', 'drivers-for-5.7' and 'dts-for-5.7=
+' into for-next)
+Merging raspberrypi/for-next (ec3d259408ce ARM: bcm2835_defconfig: add supp=
+ort for Raspberry Pi4)
+Merging realtek/for-next (45698e00d5a9 Merge branch 'v5.6/dt' into next)
+Merging renesas/next (ddd8444ef822 Merge branch 'renesas-arm-dt-for-v5.7' i=
+nto renesas-next)
+Merging reset/reset/next (4e0b9bc98c4a dt-bindings: reset: meson: add gxl i=
+nternal dac reset)
+Merging rockchip/for-next (e815aa4ec694 Merge branch 'v5.7-armsoc/soc' into=
+ for-next)
+Merging samsung-krzk/for-next (2c3956ea5f5a Merge branch 'next/dt' into for=
+-next)
+Merging scmi/for-linux-next (6143a33281e2 Merge branch 'for-next/scmi' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into for-li=
+nux-next)
+Merging sunxi/sunxi/for-next (8944fe117069 Merge branch 'sunxi/dt-for-5.7' =
+into sunxi/for-next)
+Merging tegra/for-next (56568eebf45e Merge branch for-5.7/arm64/dt into for=
+-next)
+Merging clk/clk-next (7c45519cbf92 Merge branch 'clk-phase-errors' into clk=
+-next)
+Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (f8f35a5806f3 csky: Fixup init_fpu compile warning =
+with __init)
+Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
+ize_t etc. to posix_types.h)
+Merging ia64/next (240b62d381fe ia64: remove stale paravirt leftovers)
+Merging m68k/for-next (dff527e7a0a8 m68k: Switch to asm-generic/hardirq.h)
+Merging m68knommu/for-next (f8788d86ab28 Linux 5.6-rc3)
+Merging microblaze/next (519fa60b6007 microblaze: Use asm generic cmpxchg.h=
+ for !SMP case)
+Merging mips/mips-next (bea176fb39ec MIPS: reduce print level for cache inf=
+ormation)
+Merging nds32/next (d785c5a324cd nds32: configs: Cleanup CONFIG_CROSS_COMPI=
+LE)
+Merging nios2/for-next (051d75d3bb31 MAINTAINERS: Update Ley Foon Tan's ema=
+il address)
+Merging openrisc/for-next (fc74d7166005 openrisc: use mmgrab)
+Merging parisc-hd/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging powerpc/next (71c3a888cbca Merge tag 'powerpc-5.6-1' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/powerpc/linux)
+Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
+es)
+Merging soc-fsl/next (6a7f10c79574 soc: fsl: dpio: fix dereference of point=
+er p before null check)
+Merging risc-v/for-next (4aa8ab7e6967 RISC-V: Stop using LOCAL for the uacc=
+ess fixups)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (701dc81e7412 s390/mm: remove fake numa support)
+Merging sh/sh-next (a193018e5290 sh: add missing EXPORT_SYMBOL() for __dela=
+y)
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (d65197ad5249 um: Fix time-travel=3Dinf-cpu with xor=
+/raid6)
+Merging xtensa/xtensa-for-next (362961f4063f Merge branch 'xtensa-5.6-fixes=
+' into xtensa-for-next)
+Merging fscrypt/master (edc440e3d27f fscrypt: improve format of no-key name=
+s)
+Merging afs/afs-next (4fe171bb81b1 afs: Remove set but not used variable 'r=
+et')
+Merging btrfs/for-next (5a0a38f59535 Merge branch 'for-next-next-v5.6-20200=
+228' into for-next-20200228)
+Merging ceph/master (3b20bc2fe4c0 ceph: noacl mount option is effectively i=
+gnored)
+Merging cifs/for-next (b1c698b64f81 cifs: potential unintitliazed error cod=
+e in cifs_getattr())
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (2c2a7552dd64 ecryptfs: replace BUG_ON with error han=
+dling code)
+Merging erofs/dev (bb6d3fb354c5 Linux 5.6-rc1)
+Merging ext3/for_next (bc36dfffd5f3 ext2: Silence lockdep warning about rec=
+laim under xattr_sem)
+Merging ext4/dev (9db176bceb5c ext4: fix mount failure with quota configure=
+d as module)
+Merging f2fs/dev (eb699deb0727 f2fs: fix inconsistent comments)
+Merging fsverity/fsverity (da3a3da4e6c6 fs-verity: use u64_to_user_ptr())
+Merging fuse/for-next (3e8cb8b2eaeb fuse: fix stack use after return)
+Merging jfs/jfs-next (802a5017ffb2 jfs: remove unused MAXL2PAGES)
+Merging nfs/linux-next (63623fd44972 Merge tag 'for-linus' of git://git.ker=
+nel.org/pub/scm/virt/kvm/kvm)
+Merging nfs-anna/linux-next (5d63944f8206 NFSv4: Ensure the delegation cred=
+ is pinned when we call delegreturn)
+Merging nfsd/nfsd-next (3d96208c30f8 sunrpc: expiry_time should be seconds =
+not timeval)
+Merging orangefs/for-next (9f198a2ac543 help_next should increase position =
+index)
+Merging overlayfs/overlayfs-next (c2e87fd93396 ovl: allow remote upper)
+Merging ubifs/linux-next (fe357dbae113 ubi: Fix an error pointer dereferenc=
+e in error handling code)
+Merging v9fs/9p-next (79fb9216b7be 9p: Remove unneeded semicolon)
+Merging xfs/for-next (cdbcf82b86ea xfs: fix xfs_buf_ioerror_alert location =
+reporting)
+Merging zonefs/for-next (0dda2ddb7ded zonefs: select FS_IOMAP)
+Merging iomap/iomap-for-next (243145bc4336 fs: Fix page_mkwrite off-by-one =
+errors)
+Merging djw-vfs/vfs-for-next (3253d9d09337 splice: only read in as much inf=
+ormation as there is pipe buffer space)
+Merging file-locks/locks-next (98ca480a8f22 locks: print unsigned ino in /p=
+roc/locks)
+Merging vfs/for-next (0fd169576648 fs: Add VirtualBox guest shared folder (=
+vboxsf) support)
+Merging printk/for-next (d34f14ae521f Merge branch 'for-5.7-preferred-conso=
+le' into for-next)
+Merging pci/next (daf98fffe4dc Merge branch 'pci/misc')
+Merging pstore/for-next/pstore (6c871b7314dd pstore: pstore_ftrace_seq_next=
+ should increase position index)
+Merging hid/for-next (530c6c3b37e2 Merge branch 'for-5.6/upstream-fixes' in=
+to for-next)
+Merging i2c/i2c/for-next (05511e399c9f Merge branch 'i2c/for-current' into =
+i2c/for-next)
+Merging i3c/i3c/next (cd851485ef29 i3c: master: Replace zero-length array w=
+ith flexible-array member)
+Merging dmi/master (6eaaa9e89719 firmware/dmi: Report DMI Bios & EC firmwar=
+e release)
+Merging hwmon-staging/hwmon-next (75ce99ed1ec8 hwmon: (lm73) Add support fo=
+r of_match_table)
+Merging jc_docs/docs-next (ef45e78fdc11 docs: kref: Clarify the use of two =
+kref_put() in example code)
+Merging v4l-dvb/master (bd59f412d17f media: vsp1: tidyup VI6_HGT_LBn_H() ma=
+cro)
+Merging v4l-dvb-next/master (54ecb8f7028c Linux 5.4-rc1)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (41690e07dd11 Merge branch 'pm-devfreq' into linux-ne=
+xt)
+Merging cpufreq-arm/cpufreq/arm/linux-next (a30f8a91f3c2 cpufreq: imx-cpufr=
+eq-dt: Add "cpu-supply" property check)
+Merging cpupower/cpupower (bb6d3fb354c5 Linux 5.6-rc1)
+Merging opp/opp/linux-next (03758d60265c opp: Replace list_kref with a loca=
+l counter)
+Merging thermal/thermal/linux-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (67f8e65e4fc1 firewire: net: remove set but not u=
+sed variable 'guid')
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (65a166201552 RDMA/bnxt_re: Using vmalloc requires in=
+cluding vmalloc.h)
+Merging net-next/master (68e2c37690b0 Merge branch 'hsr-several-code-cleanu=
+p-for-hsr-module')
+Merging bpf-next/master (812285fa5ab1 Merge branch 'bpf_sk_storage_via_inet=
+_diag')
+Merging ipsec-next/master (dda520c4d462 ESP: Export esp_output_fill_trailer=
+ function)
+Merging mlx5-next/mlx5-next (339ffae598ed net/mlx5e: Replace zero-length ar=
+ray with flexible-array member)
+Merging netfilter-next/master (d5110b5d84d3 netfilter: cleanup unused macro)
+Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
+s)
+CONFLICT (content): Merge conflict in drivers/nfc/st21nfca/se.c
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (932183aa35c6 mwifiex: change license =
+text from MARVELL to NXP)
+Merging bluetooth/master (b63882549b2b Bluetooth: btqca: Fix the NVM baudra=
+te tag offcet for wcn3991)
+Merging mac80211-next/master (a862889b18ba cfg80211: fix documentation form=
+at)
+Merging gfs2/for-next (cc44457f1629 gfs2: leaf_dealloc needs to allocate on=
+e more revoke)
+Merging mtd/mtd/next (4575243c5c17 Merge tag 'nand/for-5.6' into mtd/next)
+Merging nand/nand/next (d85339d9ea26 mtd: onenand: Rename omap2 driver to a=
+void a build warning)
+Merging spi-nor/spi-nor/next (df5c21002cf4 mtd: spi-nor: use spi-mem dirmap=
+ API)
+Merging crypto/master (1b44f93eb3e5 crypto: hisilicon - remove redundant as=
+signment of pointer ctx)
+Merging drm/drm-next (60347451ddb0 Merge tag 'drm-misc-next-2020-02-27' of =
+git://anongit.freedesktop.org/drm/drm-misc into drm-next)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/virtio/virtgpu_object=
+.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/i915_scheduler.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/gt/intel_lrc.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/display/intel_dd=
+i.c
+Merging amdgpu/drm-next (8b4b27328db7 drm/amdgpu/display: Fix Pollock Varia=
+nt Detection)
+Merging drm-intel/for-linux-next (9a40bddd47ca drm/i915/gt: Expose heartbea=
+t interval via sysfs)
+Merging drm-tegra/drm/tegra/for-next (98ae41adb252 gpu: host1x: Set DMA dir=
+ection only for DMA-mapped buffer objects)
+Merging drm-misc/for-linux-next (e1cf35b94c5f drm/edid: fix building error)
+Merging drm-msm/msm-next (5f9935f514d6 drm/msm: Fix error about comments wi=
+thin a comment block)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (4d24376370fb gpu: ipu-v3: image-convert: only=
+ sample into the next tile if necessary)
+Merging etnaviv/etnaviv/next (f56f1579a094 drm/etnaviv: add hwdb entry for =
+gc400 found in STM32)
+Merging regmap/for-next (d29456d34def Merge branch 'regmap-5.6' into regmap=
+-linus)
+Merging sound/for-next (2948f4a4e583 Merge branch 'topic/usb-uac2-effect-un=
+it' into for-next)
+Merging sound-asoc/for-next (6941b0b5f919 Merge branch 'asoc-5.7' into asoc=
+-next)
+Merging modules/modules-next (0f74226649fb kernel: module: Replace zero-len=
+gth array with flexible-array member)
+Merging input/next (c5ccf2ad3d33 Input: synaptics-rmi4 - switch to reduced =
+reporting mode)
+Merging block/for-next (93574fb8f912 Merge branch 'for-5.7/io_uring' into f=
+or-next)
+Merging device-mapper/for-next (ee27d2d1756b dm: bump version of core and v=
+arious targets)
+Merging pcmcia/pcmcia-next (71705c611263 PCMCIA/i82092: remove #if 0 block)
+Merging mmc/next (b6559a9563d6 mmc: host: hsq: Add missing MODULE_LICENSE()=
+ and MODULE_DESCRIPTION())
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (1129d6145ed5 mfd: Add support for Azoteq IQS620A/=
+621/622/624/625)
+Merging backlight/for-backlight-next (7af43a76695d backlight: qcom-wled: Fi=
+x unsigned comparison to zero)
+Merging battery/for-next (1c5dfc5e3f2d power: supply: sc27xx: Add POWER_SUP=
+PLY_PROP_CHARGE_NOW attribute)
+Merging regulator/for-next (d7a4716caa7b Merge branch 'regulator-5.7' into =
+regulator-next)
+Merging security/next-testing (3e27a33932df security: remove duplicated inc=
+lude from security.h)
+Merging apparmor/apparmor-next (01df52d726b5 apparmor: remove duplicate che=
+ck of xattrs on profile attachment.)
+Merging integrity/next-integrity (5780b9abd530 ima: add sm3 algorithm to ha=
+sh algorithm configuration list)
+Merging keys/keys-next (43672cf93c6d Merge branch 'notifications-pipe-core'=
+ into keys-next)
+CONFLICT (content): Merge conflict in fs/pipe.c
+Applying: io_uring: fix up for get_pipe_info() API change
+Merging selinux/next (e3e0b582c321 selinux: remove unused initial SIDs and =
+improve handling)
+CONFLICT (content): Merge conflict in security/selinux/hooks.c
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (bb6d3fb354c5 Linux 5.6-rc1)
+Merging tpmdd/next (2ba1c47a6b8c tpm_tis_spi: use new 'delay' structure for=
+ SPI transfer delays)
+Merging watchdog/master (44144c809e39 watchdog: da9062: Add dependency on I=
+2C)
+Merging iommu/next (7a0363e7a048 Merge branches 'arm/qcom', 'x86/amd', 'vir=
+tio' and 'core' into next)
+Merging vfio/next (7b5372ba04ca vfio: platform: fix __iomem in vfio_platfor=
+m_amdxgbe.c)
+Merging audit/next (70b3eeed49e8 audit: CONFIG_CHANGE don't log internal bo=
+okkeeping as an event)
+Merging devicetree/for-next (c1507cf22782 dt-bindings: power: apmu: Convert=
+ to json-schema)
+Merging mailbox/mailbox-for-next (c6c6bc6ea9fc mailbox: imx: add support fo=
+r imx v1 mu)
+Merging spi/for-next (afa690fc5bc5 Merge branch 'spi-5.7' into spi-next)
+Merging tip/auto-latest (56b81fd77d2e Merge branch 'perf/urgent')
+Merging clockevents/timers/drivers/next (186a0ea50b1e dt-bindings: timer: C=
+onvert ingenic,tcu.txt to YAML)
+Merging edac/edac-for-next (ffa9a9758be2 Merge branch 'edac-urgent' into ed=
+ac-for-next)
+Merging irqchip/irq/irqchip-next (5186a6cc3ef5 irqchip/gic-v3-its: Rename V=
+PENDBASER/VPROPBASER accessors)
+Merging ftrace/for-next (2910b5aa6f54 bootconfig: Fix CONFIG_BOOTTIME_TRACI=
+NG dependency issue)
+Merging rcu/rcu/next (36dcdec0f468 Documentation/locking/atomic: Add a litm=
+us test smp_mb__after_atomic())
+Merging kvm/linux-next (a93236fcbe1d KVM: s390: rstify new ioctls in api.rs=
+t)
+Merging kvm-arm/next (e43f1331e2ef arm64: Ask the compiler to __always_inli=
+ne functions used by KVM at HYP)
+Merging kvm-ppc/kvm-ppc-next (fd24a8624eb2 KVM: PPC: Book3S PR: Fix -Werror=
+=3Dreturn-type build failure)
+Merging kvms390/next (cc674ef252f4 KVM: s390: introduce module parameter kv=
+m.use_gisa)
+Merging xen-tip/linux-next (cf6e914a6b40 xen: Replace zero-length array wit=
+h flexible-array member)
+Merging percpu/for-next (9391e7a9a1e2 Merge branch 'for-5.6' into for-next)
+Merging workqueues/for-next (1cd27003497a workqueue: don't use wq_select_un=
+bound_cpu() for bound works)
+Merging drivers-x86/for-next (8d92e160dd8f platform/x86: Kconfig: Fix a typ=
+o)
+Merging chrome-platform/for-next (42cd0ab476e2 platform/chrome: cros_ec: Qu=
+ery EC protocol version if EC transitions between RO/RW)
+Merging hsi/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging leds/for-next (dd47a83453e4 leds: pwm: convert to atomic PWM API)
+Merging ipmi/for-next (b5b746bc0a6f drivers: char: ipmi: ipmi_msghandler: P=
+ass lockdep expression to RCU lists)
+Merging driver-core/driver-core-next (99c73ce158a4 drivers base/arch_topolo=
+gy: Reformat topology_get_[cpu/freq]_scale() function name)
+Merging usb/usb-next (24e6aea4801b Merge 5.6-rc3 into usb-next)
+Merging usb-gadget/next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging usb-serial/usb-next (0a68ec3d8a2c USB: serial: f81232: set F81534A =
+serial port with RS232 mode)
+Merging usb-chipidea-next/ci-for-usb-next (cbdfbda4a166 usb: chipidea: otg:=
+ handling vbus disconnect event occurred during system suspend)
+Merging phy-next/next (909a5c78de91 phy: qcom: qmp: Add SDM845 QHP PCIe PHY)
+Merging tty/tty-next (ba08cf452f34 Merge 5.6-rc3 into tty-next)
+Merging char-misc/char-misc-next (1f836f5b10f2 Merge 5.6-rc3 into char-misc=
+-next)
+Merging extcon/extcon-next (87ccafd3bd64 extcon: palmas: Hide error message=
+s if gpio returns -EPROBE_DEFER)
+Merging soundwire/next (ed29a0a67267 Merge branch 'topic/asoc' into next)
+Merging thunderbolt/next (3084ea9ea889 thunderbolt: icm: Replace zero-lengt=
+h array with flexible-array member)
+Merging staging/staging-next (c85f15519d45 Merge 5.6-rc3 into staging-next)
+Merging mux/for-next (f356d58c3a04 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (e729c8ef5a3f interconnect: Handle memory allocation e=
+rrors)
+Merging slave-dma/next (4721e67698cd dmaengine: idxd: remove set but unused=
+ 'rc')
+Merging cgroup/for-next (9bd5910d7f3d selftests/cgroup: add tests for cloni=
+ng into cgroups)
+Merging scsi/for-next (214527ada4ee Merge branch 'misc' into for-next)
+Merging scsi-mkp/for-next (c892193c1ec5 scsi: iscsi: Add support for asynch=
+ronous iSCSI session destruction)
+Merging vhost/linux-next (370e2c82a4a5 vhost: use batched version by defaul=
+t)
+Merging rpmsg/for-next (5a87e60312a9 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Merging gpio/for-next (27a2a9a4fa1f Merge branch 'devel' into for-next)
+Merging gpio-brgl/gpio/for-next (5371d69ff013 gpiolib: fix bitmap operation=
+s related to line event watching)
+Merging gpio-intel/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl/for-next (e683f2fbe1bc Merge branch 'devel' into for-next)
+Merging pinctrl-intel/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl-samsung/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pwm/for-next (9871abffc810 pwm: Remove set but not set variable 'pw=
+m')
+Merging userns/for-next (a13ae6971599 proc: Dentry flushing without proc_mn=
+t)
+Merging ktest/for-next (9b5f852ae20d ktest: Make default build option oldco=
+nfig not randconfig)
+Merging random/dev (e00d996a4317 random: fix data races at timer_rand_state)
+Merging kselftest/next (3032e3a7c7e3 selftests/resctrl: Add the test in MAI=
+NTAINERS)
+Merging y2038/y2038 (c4e71212a245 Revert "drm/etnaviv: reject timeouts with=
+ tv_nsec >=3D NSEC_PER_SEC")
+Merging livepatching/for-next (d28b4c1b2b3d Merge branch 'for-5.6/selftests=
+' into for-next)
+Merging coresight/next (5d647ed7b352 Update MAINTAINERS to add reviewer for=
+ CoreSight)
+Merging rtc/rtc-next (4594d082dbe6 rtc: zynqmp: Clear alarm interrupt statu=
+s before interrupt enable)
+Merging nvdimm/libnvdimm-for-next (7b27a8622f80 libnvdimm/e820: Retrieve an=
+d populate correct 'target_node' info)
+Merging at24/at24/for-next (4837621cd61e eeprom: at24: add TPF0001 ACPI ID =
+for 24c1024 device)
+Merging ntb/ntb-next (1ef512b16bc8 NTB: Fix an error in get link status)
+Merging kspp/for-next/kspp (c79f46a28239 Linux 5.5-rc5)
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (f8788d86ab28 Linux 5.6-rc3)
+Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
+lues)
+CONFLICT (content): Merge conflict in drivers/fsi/Kconfig
+Merging slimbus/for-next (526eaf5d08a2 slimbus: Use the correct style for S=
+PDX License Identifier)
+Merging nvmem/for-next (8daa31303194 nvmem: release the write-protect pin)
+Merging xarray/xarray (d8e93e3f22d9 XArray: Optimise xas_sibling() if !CONF=
+IG_XARRAY_MULTI)
+Merging hyperv/hyperv-next (54e19d34011f hv_utils: Add the support of hiber=
+nation)
+Merging auxdisplay/auxdisplay (54ecb8f7028c Linux 5.4-rc1)
+Merging kgdb/kgdb/for-next (5ea771abd5a3 kdb: Censor attempts to set PROMPT=
+ without ENABLE_MEM_READ)
+Merging pidfd/for-next (8d19f1c8e193 prctl: PR_{G,S}ET_IO_FLUSHER to suppor=
+t controlling memory reclaim)
+Merging devfreq/devfreq-next (d4aaf8643cff PM / devfreq: Fix a typo in a co=
+mment)
+Merging hmm/hmm (fdf8822d38ed mm/mmu_notifier: prevent unpaired invalidate_=
+start and invalidate_end)
+Merging fpga/for-next (2fb2e7cdfbb0 arm64: dts: agilex: correct service lay=
+er driver's compatible value)
+Merging kunit/test (bb6d3fb354c5 Linux 5.6-rc1)
+Merging cel/cel-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging generic-ioremap/for-next (4bdc0d676a64 remove ioremap_nocache and d=
+evm_ioremap_nocache)
+Merging kunit-next/kunit (be886ba90cce kunit: run kunit_tool from any direc=
+tory)
+Merging akpm-current/current (646a810fca01 ubsan: include bug type in repor=
+t header)
+CONFLICT (content): Merge conflict in init/main.c
+CONFLICT (content): Merge conflict in arch/microblaze/include/asm/Kbuild
+CONFLICT (content): Merge conflict in arch/m68k/include/asm/Kbuild
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: drivers/dma/tegra20-apb-dma.c: fix platform_get_irq.cocci warnings
+Applying: mm/frontswap: mark various intentional data races
+Applying: mm/page_io: mark various intentional data races
+Applying: mm-page_io-mark-various-intentional-data-races-v2
+Applying: mm/swap_state: mark various intentional data races
+Applying: mm/kmemleak: annotate various data races obj->ptr
+Applying: mm/filemap.c: fix a data race in filemap_fault()
+Applying: mm/swapfile: fix and annotate various data races
+Applying: mm-swapfile-fix-and-annotate-various-data-races-v2
+Applying: mm/page_counter: fix various data races at memsw
+Applying: mm/memcontrol: fix a data race in scan count
+Applying: mm/list_lru: fix a data race in list_lru_count_one
+Applying: mm/mempool: fix a data race in mempool_free()
+Applying: mm/util.c: annotate an data race at vm_committed_as
+Applying: mm/rmap: annotate a data race at tlb_flush_batched
+Applying: mm: annotate a data race in page_zonenum()
+Applying: mm/memory.c: refactor insert_page to prepare for batched-lock ins=
+ert
+Applying: mm: bring sparc pte_index() semantics inline with other platforms
+Applying: mm: define pte_index as macro for x86
+Applying: mm/memory.c: add vm_insert_pages()
+Applying: mm-add-vm_insert_pages-fix
+Applying: add missing page_count() check to vm_insert_pages().
+Applying: mm: vm_insert_pages() checks if pte_index defined
+Applying: net-zerocopy: use vm_insert_pages() for tcp rcv zerocopy
+Applying: net-zerocopy-use-vm_insert_pages-for-tcp-rcv-zerocopy-fix
+Applying: arm/arm64: add support for folded p4d page tables
+Applying: h8300: remove usage of __ARCH_USE_5LEVEL_HACK
+Applying: hexagon: remove __ARCH_USE_5LEVEL_HACK
+Applying: ia64: add support for folded p4d page tables
+Applying: nios2: add support for folded p4d page tables
+Applying: openrisc: add support for folded p4d page tables
+Applying: powerpc/32: drop get_pteptr()
+Applying: powerpc: add support for folded p4d page tables
+Applying: sh: fault: modernize printing of kernel messages
+Applying: sh: drop __pXd_offset() macros that duplicate pXd_index() ones
+Applying: sh: add support for folded p4d page tables
+Applying: unicore32: remove __ARCH_USE_5LEVEL_HACK
+Applying: asm-generic: remove pgtable-nop4d-hack.h
+Applying: mm: remove __ARCH_HAS_5LEVEL_HACK and include/asm-generic/5level-=
+fixup.h
+Applying: fs/seq_file.c: seq_read(): add info message about buggy .next fun=
+ctions
+Applying: kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Applying: ipc/util.c: sysvipc_find_ipc() should increase position index
+Applying: drivers/tty/serial/sh-sci.c: suppress warning
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (7d2daaa594ce drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+Applying: fix for "powerpc: add support for folded p4d page tables"
+
+--Sig_/W4iODFD83xzHojtNLQWylwv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5ctQAACgkQAVBC80lX
+0GzM7Qf7B38DkdbtYK7CAXvmGNHXbcVMbQCxEU0MGB9mJT/0zKIidIM5HAz90IOt
+3FrkivmF9XlkutxedD2F1yF7TZRU172fKwoYz7m9x23KPK1LoUnVo4p5rzM3RnPR
+rU5Og2kvFzVzBTsK6r3Sqz+y7sz8ZNJQWDCKVZWFwn6SkQ/mansiFBx/6bhI555a
+AprcUyD6QVgoo9iHSa9FaLZ1qjtGL/mbsI4FPJYdw2yKjWTNYmEvgR+1hlbEUbp4
+wpeBYwgs5yVQuJSRRpkpr5U9IHAzpAMMGgajFj2Hv+RC4am15ifHuRSMM9bn4cfq
+A2Xz7TMWZiwzW5U2znPfwpCK6y4vMg==
+=b243
+-----END PGP SIGNATURE-----
+
+--Sig_/W4iODFD83xzHojtNLQWylwv--
