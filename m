@@ -2,125 +2,115 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F281FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957F0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F6A20842
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661C120842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJY60AId"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FHqugw6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCBS1S (ORCPT
+        id S1727445AbgCBS2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:27:18 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43890 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgCBS1S (ORCPT
+        Mon, 2 Mar 2020 13:28:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34856 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBS2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:27:18 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v22so694227qtp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:27:17 -0800 (PST)
+        Mon, 2 Mar 2020 13:28:17 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m3so133195wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AWwDkiCd/ctqkBTPM4wpothOhW3ATtEOMhU4tACy/gU=;
-        b=NJY60AIdhxPtQBDb4ShyRUWtzDICgnaRki5JXb4eTypSmDkE3/MMesL1vzoH3AEb76
-         mCj+TX2IgcF7HDHwReJ/MOZmA/WHuIAoqDLBnQKnVD+ziS3GFBXe3XVX3ySXhHAsA3bE
-         oNZhJNhmnr8HhtrGdOuuheS8RiRQSyAb2jnzV8jF/eoQwn7Bmab8eplQfCOGk5JNvgHq
-         HaVBpPWZusCYAlENNz7AA/mgVeW2XCaWUHL7JeOS8FZ3aqg1wRA3ZbO0aMliC6pnFShX
-         jcBFBH9LBTxUZzHlmX9N9cuRVhWOsOrRyQgW4c16tXQBEuC+8lBLfa7P3VYHKRqnl5Ia
-         l11Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DVVfeNHnLShVmNI+xo5NmA/CGXvIx1qRNWkzr1ndFCk=;
+        b=FHqugw6NwLRZm5V4+dSVNR4BiQEdtOjVfEaDWjKYTBxVezrgu0n7cY2wAZOYxQbjc2
+         9LZJvyDGtZUmy407Lg0G7/vdxZ3t5lGc/HAW3BzX01VYMSE+/y/5eNUHRsC+DUFK3FQB
+         q7fnPvss9SToolOIafdH66a2StOhVFEBc/8ydld89rK1fC+E3tZdCLmj/jInPEb7hzuh
+         CMJSP0HQ/UGUWIbdejqZ0t6a7OC7rUcLb8HCQQuQTx2I6iuTgn2jiL0FFf1qx+DRRp59
+         SJxC3qGcToJ2EyglhlVyy9y64xq58xaFoPnfjN6P5/FqOr2TkG0laSaPh/2bi9IrHs5I
+         m82A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AWwDkiCd/ctqkBTPM4wpothOhW3ATtEOMhU4tACy/gU=;
-        b=jouJTFcLm3aDUoXaoUos5y7kSaTu1DGLmoRcd8Eujh7nPyDbwaAcNPESHkVoQGjHY/
-         XGaJ/uOrrJfWn8jzuxYNHKG/0vcoj0Kx8XOsnpYH8IlbaA8j8Mnq8o3J8oqdjisgzZ7D
-         TcNk44uJqlz4QZyQwTxT478BvpFL3Dk8tOYJDnstc/jij/QhFzYRodB5MuW0uyeCI4MB
-         KB6iaHZ/L+F3O6NY8NsWHDVdOq6+HnFpJvtw74G1Py/rs6RIukYSZca3DeoP65Qg7zn9
-         wgRALXVAMUL7ueNixrW1TuVi7jJg+yzPcHMmV9PlR3QC1cFgVtS9zeU9ob2T09Ol2s+J
-         0Row==
-X-Gm-Message-State: ANhLgQ3XnQ2KoYIa7UE4FveWf63rnF0wS4qJ+iV4rdPsuiEktYgJlygI
-        QnAPsJjRCy2D2BXL9b73Cry2cm/R7bQ=
-X-Google-Smtp-Source: ADFU+vvq99P5/qq8Hro8o7kIp2H1TBhv9xV621DHdB0YfBTPRF0XivuL8OpKl4cJvoSVSzmD+G/tPg==
-X-Received: by 2002:ac8:3430:: with SMTP id u45mr957445qtb.381.1583173636543;
-        Mon, 02 Mar 2020 10:27:16 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x184sm6426337qkb.128.2020.03.02.10.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 10:27:15 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EF4D7403AD; Mon,  2 Mar 2020 15:27:13 -0300 (-03)
-Date:   Mon, 2 Mar 2020 15:27:13 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf parse-events: Use asprintf() instead of strncpy()
- for tracepoints
-Message-ID: <20200302182713.GA10335@kernel.org>
-References: <20200302145535.GA28183@kernel.org>
- <20200302152741.GA263077@krava>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DVVfeNHnLShVmNI+xo5NmA/CGXvIx1qRNWkzr1ndFCk=;
+        b=q2FZf7vdMcfLEefwSgsXaeLVBHNRKmGUFpOC+r7mKUPautbrWvjCVNuONe1ORsZCby
+         W3llviGvaXl0a2yPhzTkEzbVaEJo2XuCtlKPQ3gRwK4DK/GSO4DAsWmrm5QTcr3VUxiM
+         ENMQkh5klFfwz850vAgWJmZfYT/nI5v5hDEr6gzcm8pdpB3ueMtzzyrWaFIf6Evu0/yO
+         nciRDMmnFcRLPi6QPzeAKL3sP+TLb9HsZyEWMA3tfqyKzBo6HloTO1Qsyuw+uQDcL/Ku
+         FoD20erK1PeNzrINw6m43e62LCY6FVaOEQsjQXKakoyx+ee2BYOWdSQEUsTdEvkMtvGR
+         jWbw==
+X-Gm-Message-State: ANhLgQ362Vx5x0arQK0JBfhOnc+utx86F5MYoElFOcZgnqcjtrAjJyVe
+        iPMFMsDKNx9gEbVMJz6UABpeWbjYADhSmlrTFnreog==
+X-Google-Smtp-Source: ADFU+vtPQGvrqx3+71+klizKiHy1WgLnxvxSsIbkpUsLQ/5J3j0JDtAVV5bqIdO+NSaFCVMRb3H9+kQUCa4EGai01ew=
+X-Received: by 2002:a1c:7907:: with SMTP id l7mr309755wme.37.1583173694833;
+ Mon, 02 Mar 2020 10:28:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302152741.GA263077@krava>
-X-Url:  http://acmel.wordpress.com
+References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-2-glider@google.com>
+ <20200302173852.GB109022@kroah.com>
+In-Reply-To: <20200302173852.GB109022@kroah.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 2 Mar 2020 19:28:03 +0100
+Message-ID: <CAG_fn=WvA44J5fN=3i0WoOa-TK=1CqSrdCtR_ceZX0AzUM5s5A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to copy_from_user()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Todd Kjos <tkjos@google.com>, Kees Cook <keescook@chromium.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Jann Horn <jannh@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 02, 2020 at 04:27:41PM +0100, Jiri Olsa escreveu:
-> On Mon, Mar 02, 2020 at 11:55:35AM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> SNIP
-> 
-> >       |          ^~~~~~
-> >   CC       /tmp/build/perf/util/call-path.o
-> > 
-> > So I replaced it with asprintf to make the code shorter, use a bit less
-> > memory and deal with the above problem, ok?
-> > 
-> > - Arnaldo
-> > 
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index c01ba6f8fdad..a14995835d85 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -257,21 +257,15 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
-> >  				path = zalloc(sizeof(*path));
-> >  				if (!path)
-> >  					return NULL;
-> > -				path->system = malloc(MAX_EVENT_LENGTH);
-> > -				if (!path->system) {
-> > +				if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
-> >  					free(path);
-> >  					return NULL;
-> >  				}
-> > -				path->name = malloc(MAX_EVENT_LENGTH);
-> > -				if (!path->name) {
-> > +				if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
-> >  					zfree(&path->system);
-> >  					free(path);
-> >  					return NULL;
-> >  				}
-> > -				strncpy(path->system, sys_dirent->d_name,
-> > -					MAX_EVENT_LENGTH);
-> > -				strncpy(path->name, evt_dirent->d_name,
-> > -					MAX_EVENT_LENGTH);
-> 
-> looks good to me, and we can probably remove MAX_EVENT_LENGTH as well?
+On Mon, Mar 2, 2020 at 6:38 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Mar 02, 2020 at 02:04:29PM +0100, glider@google.com wrote:
+> > Certain copy_from_user() invocations in binder.c are known to
+> > unconditionally initialize locals before their first use, like e.g. in
+> > the following case:
+> >
+> >       struct binder_transaction_data tr;
+> >       if (copy_from_user(&tr, ptr, sizeof(tr)))
+> >               return -EFAULT;
+> >
+> > In such cases enabling CONFIG_INIT_STACK_ALL leads to insertion of
+> > redundant locals initialization that the compiler fails to remove.
+> > To work around this problem till Clang can deal with it, we apply
+> > __no_initialize to local Binder structures.
+>
+> I would like to see actual benchmark numbers showing this is
+> needed/useful otherwise it's going to just be random people adding this
+> marking to random places with no real reason.
+This were lib[hw]binder_benchmarks.
+I will update patch description with benchmark data.
+> thanks,
+>
+> greg k-h
 
-I left it there, we can remove it if the need arises, this code is not
-that exercised from what I could look.
 
-- Arnaldo
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
