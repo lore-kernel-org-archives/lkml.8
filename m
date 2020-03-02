@@ -2,137 +2,316 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3089BC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3FAC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0941024695
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583130271;
-	bh=9jUnB3/sZ7LknoR3lndv96Isnwnjwrth62SxdiQTLrY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mzPIkwDty7D4feQ6K/zZRXfrokCO/TIgFxb19QkAVZDwqRweU8hVDf3PEwOVZ65Hj
-	 a9Tt+bjyHl46AZLT4znql4BcnYsWWPW3ahiObKkH64T66rZ+hiyFdJkAqgN9pmzZuN
-	 qNHRPqeHc8qO+GXC3Pl2nMM+w79Buor8AQlSkGd8=
+	by mail.kernel.org (Postfix) with ESMTP id 2024424695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EKe/my2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCBGY3 (ORCPT
+        id S1726859AbgCBG0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:24:29 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:57551 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgCBGY3 (ORCPT
+        Mon, 2 Mar 2020 01:26:19 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:63686 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgCBG0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:24:29 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 0226NfKm030880;
-        Mon, 2 Mar 2020 15:23:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0226NfKm030880
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583130222;
-        bh=dLJGtmHzi5rst42jrQBM/khBnOAWWgwO3JKYbMyi3SY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wXI8SixO3CUvqd8AYVrMt7G+hfKz0IVxwN0p18hqHfohg8yKa9CyUxgeXoP56ZgpW
-         gRSP6bv707i9VnWAzNWrLntE9VW6VwKICgs/yonfXEO87yZYlFfVxrsidy5l3kZy5b
-         dz7SEhGG+qi4N3tof/mCPfKTnuVxD92Exp3WA+bmMH7hQD9Mizy3qwAfCXeQAQzhfO
-         CRqp6QU2pPqP1Nh5xy8JxvQnKy+SE/MMzM5FS8xoYuODjvxb4bSrP7Ia40ZT1VG719
-         TlnJ6zEXbVvSIxi0CqBN3gKhC6fzm4KKO9RU5A9wqcrBElQ3ZKo9dQaDl3O8zxE8Wc
-         5QQIL5jrt3/HA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 1/2] kconfig: allow symbols implied by y to become m
-Date:   Mon,  2 Mar 2020 15:23:39 +0900
-Message-Id: <20200302062340.21453-1-masahiroy@kernel.org>
+        Mon, 2 Mar 2020 01:26:19 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200302062616epoutp016f1c48be40b509a25611172f98e45c9a~4aLBw2gzf2122921229epoutp01W
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:26:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200302062616epoutp016f1c48be40b509a25611172f98e45c9a~4aLBw2gzf2122921229epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583130376;
+        bh=1JassymyZWgXEYwox6M2rkXySq4efOfNw2fYegjjaOA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=EKe/my2m5lD68tdhCoEaL/XXFSg0VBWv9UiTN0PsLwTPY3Fz9P+qZy94kLgrsK4s6
+         +SqyB0+gRJIlv7uEtXpNHWzqhWx8l+HHtpLICDRYhlpQDlG0L1gbRJD8VepMY8Er2J
+         /9Cv8UFTGTEzwdXtFSkg/y4B5cqM8xSSvkT8cUMk=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200302062615epcas1p2ec79b5b0f16a34d49e14be3c7f8a03a8~4aLBWwc3s2684626846epcas1p2G;
+        Mon,  2 Mar 2020 06:26:15 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 48W9Bt1bRXzMqYkl; Mon,  2 Mar
+        2020 06:26:14 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0D.E7.52419.607AC5E5; Mon,  2 Mar 2020 15:26:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200302062613epcas1p2969203b10bc3b7c41e0d4ffe9a08a3e9~4aK-rHJmi2684626846epcas1p29;
+        Mon,  2 Mar 2020 06:26:13 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200302062613epsmtrp1cc70a01f3b9c6ab283936b4a0876cafb~4aK-qT4H31398513985epsmtrp1n;
+        Mon,  2 Mar 2020 06:26:13 +0000 (GMT)
+X-AuditID: b6c32a37-59fff7000001ccc3-b6-5e5ca706eae3
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        65.EA.06569.507AC5E5; Mon,  2 Mar 2020 15:26:13 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200302062613epsmtip2679ebaabdd72de19642449fd98eaa527~4aK-hW0gL2393223932epsmtip2V;
+        Mon,  2 Mar 2020 06:26:13 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        linkinjeon@gmail.com, Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v14 00/14] add the latest exfat driver
+Date:   Mon,  2 Mar 2020 15:21:31 +0900
+Message-Id: <20200302062145.1719-1-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmri7b8pg4g7tf2S3+TjrGbtG8eD2b
+        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyYXm8x8fRvJost/46wWlx6/4HF4vzf46wO3B6/f01i
+        9Ng56y67x/65a9g9dt9sYPPo27KK0ePzJjmPQ9vfsHlsevKWKYAjKscmIzUxJbVIITUvOT8l
+        My/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+hQJYWyxJxSoFBAYnGxkr6dTVF+
+        aUmqQkZ+cYmtUmpBSk6BoUGBXnFibnFpXrpecn6ulaGBgZEpUGVCTsb3G9PYC1baV3T8ncTa
+        wHjXsIuRk0NCwETi9LPpTF2MXBxCAjsYJV7PvMkG4XxilLhw8SNU5hujxL3GvWwwLX3nnjFD
+        JPYySjycfZMZruXwr0tALRwcbALaEn+2iII0iAhIS5zpvwQ2iVmggUmi+UATO0hCWMBMonFR
+        IzOIzSKgKvFl6z8WEJtXwFpi+eMrzBDb5CVWbzgAtkBCYAebxLI9W6ESLhIXW3czQtjCEq+O
+        b2GHsKUkXva3sYMcISFQLfFxP1R5B6PEi++2ELaxxM31G1hBSpgFNCXW79KHCCtK7Pw9F2wi
+        swCfxLuvPawQU3glOtqEIEpUJfouHWaCsKUluto/QC31kPh+sAUcPkICsRKT5rezTWCUnYWw
+        YAEj4ypGsdSC4tz01GLDAmPkSNrECE58WuY7GDec8znEKMDBqMTDu+N5dJwQa2JZcWXuIUYJ
+        DmYlEV5fTqAQb0piZVVqUX58UWlOavEhRlNg2E1klhJNzgcm5bySeENTI2NjYwsTM3MzU2Ml
+        cd6HkZpxQgLpiSWp2ampBalFMH1MHJxSDYzT2oPjtM9st/90yZsp6aQI0+vrB6LTv/Fv3Lnu
+        rfqEOWcbf/6//WQZe/T52fc1Hrzae/91ndpnhneVB1amhl40aN8SoHDX329J9E2nhU6TdR9+
+        fr1Z2WaiwNY5XdwGEQvvFG731asumb527pT7FfvMavJiYjYH/fzQ9eH/4b+paf+Onwuxvqi0
+        WYmlOCPRUIu5qDgRAMMl6UqSAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLLMWRmVeSWpSXmKPExsWy7bCSvC7r8pg4gwsLdC3+TjrGbtG8eD2b
+        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyYXm8x8fRvJost/46wWlx6/4HF4vzf46wO3B6/f01i
+        9Ng56y67x/65a9g9dt9sYPPo27KK0ePzJjmPQ9vfsHlsevKWKYAjissmJTUnsyy1SN8ugSvj
+        +41p7AUr7Ss6/k5ibWC8a9jFyMkhIWAi0XfuGXMXIxeHkMBuRom5rR1sEAlpiWMnzgAlOIBs
+        YYnDh4shaj4wSnxb/IwNJM4moC3xZ4soSLkIUPmZ/ktMIDXMAj1MEp+nLGYCSQgLmEk0Lmpk
+        BrFZBFQlvmz9xwJi8wpYSyx/fIUZYpe8xOoNB5gnMPIsYGRYxSiZWlCcm55bbFhglJdarlec
+        mFtcmpeul5yfu4kRHIhaWjsYT5yIP8QowMGoxMO743l0nBBrYllxZe4hRgkOZiURXl9OoBBv
+        SmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQZG32WKR87ZzVrV
+        Nv2kQ8bEvVzTtJIMDPP1lN9XaXD9Wbv+FTPfJVuR6lXpK36yvNre+8/rOsdte4Y6UcZ/s1Zy
+        rmbl2MtqfiGopfL7G5WS+V/93jyQ7ko9Vq6V3jk5ZQmbya+as/GLlkQahPhsEym6Uc8Tf/rD
+        5uNmi4WOL4mfZJYVatm5SEhciaU4I9FQi7moOBEAXktvUUACAAA=
+X-CMS-MailID: 20200302062613epcas1p2969203b10bc3b7c41e0d4ffe9a08a3e9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200302062613epcas1p2969203b10bc3b7c41e0d4ffe9a08a3e9
+References: <CGME20200302062613epcas1p2969203b10bc3b7c41e0d4ffe9a08a3e9@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'imply' keyword restricts a symbol to y or n, excluding m
-when it is implied by y. This is the original behavior since
-commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword").
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-However, the author of the 'imply' keyword, Nicolas Pitre, stated
-that the 'imply' keyword should not impose any restrictions. [1]
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-I agree, and want to get rid of this tricky behavior.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-[1]: https://lkml.org/lkml/2020/2/19/714
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+v14:
+ - update file system parameter handling. 
 
- Documentation/kbuild/kconfig-language.rst | 12 +++++++++++-
- scripts/kconfig/symbol.c                  |  5 +----
- 2 files changed, 12 insertions(+), 5 deletions(-)
+v13:
+ - rcu-delay unloading nls, freeing upcase table and sbi.
+ - Switch to ->free_inode().
+ - Push rcu_barrier() from deactivate_locked_super() to filesystems.
+ - Remove unused variables in exfat_sb_info structure.
 
-diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-index d0111dd26410..d4d988aea679 100644
---- a/Documentation/kbuild/kconfig-language.rst
-+++ b/Documentation/kbuild/kconfig-language.rst
-@@ -173,7 +173,7 @@ applicable everywhere (see syntax).
- 	===		===		=============	==============
- 	n		y		n		N/m/y
- 	m		y		m		M/y/n
--	y		y		y		Y/n
-+	y		y		y		Y/m/n
- 	y		n		*		N
- 	===		===		=============	==============
- 
-@@ -181,6 +181,16 @@ applicable everywhere (see syntax).
-   ability to hook into a secondary subsystem while allowing the user to
-   configure that subsystem out without also having to unset these drivers.
- 
-+  Note: If the combination of FOO=y and BAR=m causes a link error,
-+  you can guard the function call with IS_REACHABLE()::
-+
-+	foo_init()
-+	{
-+		if (IS_REACHABLE(CONFIG_BAZ))
-+			baz_register(&foo);
-+		...
-+	}
-+
- - limiting menu display: "visible if" <expr>
- 
-   This attribute is only applicable to menu blocks, if the condition is
-diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-index 8d38b700b314..b101ef3c377a 100644
---- a/scripts/kconfig/symbol.c
-+++ b/scripts/kconfig/symbol.c
-@@ -401,8 +401,7 @@ void sym_calc_value(struct symbol *sym)
- 				sym_warn_unmet_dep(sym);
- 			newval.tri = EXPR_OR(newval.tri, sym->rev_dep.tri);
- 		}
--		if (newval.tri == mod &&
--		    (sym_get_type(sym) == S_BOOLEAN || sym->implied.tri == yes))
-+		if (newval.tri == mod && sym_get_type(sym) == S_BOOLEAN)
- 			newval.tri = yes;
- 		break;
- 	case S_STRING:
-@@ -484,8 +483,6 @@ bool sym_tristate_within_range(struct symbol *sym, tristate val)
- 		return false;
- 	if (sym->visible <= sym->rev_dep.tri)
- 		return false;
--	if (sym->implied.tri == yes && val == mod)
--		return false;
- 	if (sym_is_choice_value(sym) && sym->visible == yes)
- 		return val == yes;
- 	return val >= sym->rev_dep.tri && val <= sym->visible;
+v12:
+ - Merge the #12 patch into the #11 patch.
+ - Remove an incorrect comment about time_offset mount option.
+
+v11:
+ - Use current_time instead of ktime_get_real_ts64.
+ - Add i_crtime in exfat inode.
+ - Drop the clamping min/max timestamp.
+ - Merge exfat_init_file_entry into exfat_init_dir_entry.
+ - Initialize the msec fields in exfat_init_dir_entry.
+ - Change timestamps written to disk always get stored in UTC instead of
+   active timezone.
+ - Update EXFAT_DEFAULT_IOCHARSET description in Kconfig.
+ - exfat_get/set_entry_time() take a time_ms argument.
+
+v10:
+ - Make PBR structures as packed structure.
+ - Fix build error on 32 bit system.
+ - Change L suffix of UNIX_SECS_2108 macro with LL suffix to work
+   on both 32/64bit system.
+ - Rework exfat time handling.
+ - Don't warp exfat specification URLs.
+ - Add _FS suffix to config name.
+ - Remove case_sensitive mount option.
+ - iocharset=utf8 mount option work as utf8 option.
+ - Rename the misleading nls names to corresponding ones.
+ - Fix wrong header guard name of exfat_fs.h.
+ - Remove the unneeded braces of macros in exfat_fs.h.
+ - Move the ondisk values to exfat_raw.h
+ - Put the operators at the previous line in exfat_cluster_to_sector().
+ - Braces of EXFAT_DELETE macro would outside the ~.
+ - Directly use exfat dentry field name.
+ - Add EXFAT_CLUSTERS_UNTRACKED macro.
+ - Remove both sets of inner braces in exfat_set_vol_flags().
+ - Replace is_reserved_cluster() with an explicit check
+   for EXFAT_EOF_CLUSTER.
+ - Initialize superblock s_time_gran/max/min.
+ - Clean-up exfat_bmap and exfat_get_block().
+ - Fix wrong boundlen to avoid potential buffer overflow
+   in exfat_convert_char_to_ucs2().
+ - Process length value as 1 when conversion is failed.
+ - Replace union exfat_timezone with masking the valid bit.
+ - Change exfat_cmp_uniname() with exfat_uniname_ncmp().
+ - Remove struct exfat_timestamp.
+ - Add atime update support.
+ - Add time_offset mount option.
+ - Remove unneeded CLUSTER_32 macro.
+ - Process utf16 surrogate pair as one character.
+ - Rename MUST_ZERO_LEN to PBR64_RESERVED_LEN.
+ - Simplify is_exfat function by just using memchr_inv().
+ - Remove __exfat_init_name_hash.
+ - Remove exfat_striptail_len.
+ - Split dentry ops for the utf8 vs non-utf8 cases.
+
+v9:
+ - Add support time zone.
+ - Fix data past EOF resulting from fsx testsuite.
+ - Remove obsolete comments in __exfat_resolve_path().
+ - Remove unused file attributes macros.
+ - Remove unneeded #if BITS_PER_LONG.
+
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
+
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
+
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
+
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
+
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
+
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add fat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  MAINTAINERS: add exfat filesystem
+  staging: exfat: make staging/exfat and fs/exfat mutually exclusive
+
+Valdis Kletnieks (1):
+  exfat: update file system parameter handling
+
+ MAINTAINERS                   |    7 +
+ drivers/staging/exfat/Kconfig |    2 +-
+ fs/Kconfig                    |    3 +-
+ fs/Makefile                   |    1 +
+ fs/exfat/Kconfig              |   21 +
+ fs/exfat/Makefile             |    8 +
+ fs/exfat/balloc.c             |  280 +++++++
+ fs/exfat/cache.c              |  325 ++++++++
+ fs/exfat/dir.c                | 1238 ++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h           |  519 ++++++++++++
+ fs/exfat/exfat_raw.h          |  184 +++++
+ fs/exfat/fatent.c             |  463 +++++++++++
+ fs/exfat/file.c               |  360 ++++++++
+ fs/exfat/inode.c              |  671 +++++++++++++++
+ fs/exfat/misc.c               |  163 ++++
+ fs/exfat/namei.c              | 1448 +++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c                |  831 +++++++++++++++++++
+ fs/exfat/super.c              |  722 ++++++++++++++++
+ 18 files changed, 7244 insertions(+), 2 deletions(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
 -- 
 2.17.1
 
