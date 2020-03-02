@@ -2,85 +2,121 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032E8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7FBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70D422B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500B22465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u+qSa8jx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QIqvcU5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgCBM4i (ORCPT
+        id S1727857AbgCBM6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:56:38 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:46123 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727810AbgCBM4b (ORCPT
+        Mon, 2 Mar 2020 07:58:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47328 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727595AbgCBM6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:56:31 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583153791; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=UksUc8DJnc1aYd/SBMqGZD14Ha68l6nAiWZPU19ssZA=; b=u+qSa8jxKEgSsiPv19H3K0JeXdjb3ycE3WXl54GBRoecXscwEe0oP5cQX1nrCK2oC9ra5i7w
- iUBNjsZObM4D+ihcu9JBbPzmW1VusamQ/ZPddv4eiYjyds1Yns8CmpkPH10VzQv0AJlalPX/
- MJPy+zzQX2gIHYqVoJMepuvwS1M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5d026b.7f9835405500-smtp-out-n01;
- Mon, 02 Mar 2020 12:56:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2E655C447A3; Mon,  2 Mar 2020 12:56:11 +0000 (UTC)
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 2 Mar 2020 07:58:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583153920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LTxEf2HmtzFDT3ha5LPaBAQb1RviQ7eD1aAzs0lLt8U=;
+        b=QIqvcU5KgQTGiCf6R2i20AVZilT7hmhMFLfVCjAxG8nyFjdXCiZtHq0gJ8W6SVfYiIkqZb
+        +KOXYpJAnDsygPv5yKrlb8j4tpfl2ADKOyM3GDVYUObi1NhbX0SqQETvhh8eG1zk+6KOmd
+        ypeycTBFGIySkFvmshlQynQ2Ya6RMNg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-94-sSzsPTQ8OfSI0JAbas9ugg-1; Mon, 02 Mar 2020 07:58:38 -0500
+X-MC-Unique: sSzsPTQ8OfSI0JAbas9ugg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD000C43383;
-        Mon,  2 Mar 2020 12:56:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD000C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1 0/2] Add support for WLED5
-Date:   Mon,  2 Mar 2020 18:25:36 +0530
-Message-Id: <1583153739-19170-1-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CA5B8017DF;
+        Mon,  2 Mar 2020 12:58:37 +0000 (UTC)
+Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2751519C4F;
+        Mon,  2 Mar 2020 12:58:07 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 13:58:05 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools: Fix realloc() use in fdarray__grow()
+Message-ID: <20200302125805.GB204976@krava>
+References: <20200229162607.6000-1-jannh@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200229162607.6000-1-jannh@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, WLED driver supports only WLED4 peripherals that is present
-on pmi8998 and pm660L. This patch series  converts the existing WLED4
-bindings from .txt to .yaml format and adds the support for WLED5 peripheral
-that is present on PM8150L.
+On Sat, Feb 29, 2020 at 05:26:07PM +0100, Jann Horn wrote:
+> If `entries != NULL`, then `fda->entries` has been freed, so whatever
+> happens afterwards, we must store `entries` in `fda->entries`.
+> If we bail out at the second realloc(), the new allocation will be bigger
+> than what fda->nr_alloc says, but that's fine.
+> 
+> Fixes: 2171a9256862 ("tools lib fd array: Allow associating an integer cookie with each entry")
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
+> To the maintainer:
+> I'm not sure about the etiquette for using CC stable in
+> patches for somewhat theoretical issues in userland tools;
+> feel free to tack a CC stable onto this if you think it
+> should go into stable.
+> 
+>  tools/lib/api/fd/array.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> index 58d44d5eee31..acf8eca1a94a 100644
+> --- a/tools/lib/api/fd/array.c
+> +++ b/tools/lib/api/fd/array.c
+> @@ -27,15 +27,13 @@ int fdarray__grow(struct fdarray *fda, int nr)
+>  
+>  	if (entries == NULL)
+>  		return -ENOMEM;
+> +	fda->entries = entries;
+>  
+>  	priv = realloc(fda->priv, psize);
+> -	if (priv == NULL) {
+> -		free(entries);
 
-PM8150L WLED supports the following.
-    - Two modulators and each sink can use any of the modulator
-    - Multiple CABC selection options
-    - Multiple brightness width selection (12 bits to 15 bits)
+so we are sure we always call fdarray__exit even
+if we fail in here?  if that's the case then
 
-Kiran Gunda (2):
-  backlight: qcom-wled: convert the wled bindings to .yaml format
-  backlight: qcom-wled: Add support for WLED5 peripheral in PM8150L
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
- .../bindings/leds/backlight/qcom-wled.txt          | 154 -------
- .../bindings/leds/backlight/qcom-wled.yaml         | 223 ++++++++++
- drivers/video/backlight/qcom-wled.c                | 463 ++++++++++++++++++---
- 3 files changed, 636 insertions(+), 204 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+thanks,
+jirka
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+> +	if (priv == NULL)
+>  		return -ENOMEM;
+> -	}
+>  
+>  	fda->nr_alloc = nr_alloc;
+> -	fda->entries  = entries;
+>  	fda->priv     = priv;
+>  	return 0;
+>  }
+> -- 
+> 2.25.0
+> 
+
