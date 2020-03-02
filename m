@@ -2,127 +2,260 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7EBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3EAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35EA214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqYRGb9r"
+	by mail.kernel.org (Postfix) with ESMTP id B09D522B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgCBRpI (ORCPT
+        id S1727414AbgCBRp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:45:08 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33129 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCBRpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:45:08 -0500
-Received: by mail-il1-f196.google.com with SMTP id r4so283859iln.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:45:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sboKaEzAb8dDo8ic4Txr+gqE6z2BPnl5/jyRIrg2YGs=;
-        b=vqYRGb9r7GpichkDcc8O4hlFY3pp72EXr8zLy4oOuHUN9wWnR8g5FD1EvQfGOVvqkY
-         sRuF1ADlrISNDfp5JyFqoNVDLijFdF7aFGLcAaWcfNq4oe0r6gU9hLFYpuT1ickVklCn
-         CLdpu7ULXNDWB9LlrtmXXRyNXJV7rolmIRoH8Ul0nXYVzZ3M0hpPq6Bsr3VdXLXBHVUP
-         FENYOFAJwEpnilVvYgKSOV/FOVjGchZD2DwFoJ+v23lmQOhqLzX2VjFcvj9QRFgQpLX5
-         BwfvicC0Ih7eg5Lp2vOptMvGRAEWXlh57bcb/4UJhBVhkn0Y2oOvC8ny6tDMLTYib2os
-         /Z5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sboKaEzAb8dDo8ic4Txr+gqE6z2BPnl5/jyRIrg2YGs=;
-        b=Ubs2EqyLL/ln5G8T8Mbba46/Y44b1sVf50RZVwLfXnYvkAvAFwMj5frKxJip9G9Zz/
-         i3ECFwVKFdXB5SFblm/US28a6lLm0pMCCDdebZseTSzFhb6zZDq16O3HSwt1UN8s/mIH
-         DGvEFPED7wBv71xLq+kP/HO15eEE/nSy375gNTupOzjH4ibDdmTO3JUhIuxzTB+tWQnG
-         xwJsQsiiKOTklxwJX+8lvD+0+MVw8SU0794OcWqz1XY5j7t8Oq5fAlZG5B1FWkFEww2u
-         w3YLIKG+x2liguC3phSEVOX9XWdMUt+fAoT44GGMFdq8kqhCQm4hbJiB3zBVnYJ1bpl7
-         q74A==
-X-Gm-Message-State: ANhLgQ15fCd2Y8CajB4ND7shYLtqmgsa/mnxFAZpw20XGCvS5IwiR/Xv
-        Cu8JTLjUUlr/LRKEYnkI6cnsMBjTkyJ/LR/eqylGOvaQ
-X-Google-Smtp-Source: ADFU+vu0psz60mr8tK59SdVhE45L5RTpGteOpOydAzRFmNEUtHC65Ad33Ww3KbZbMBtK+aWWHY777/OBZyi95ecGDI8=
-X-Received: by 2002:a05:6e02:eb4:: with SMTP id u20mr708304ilj.57.1583171107274;
- Mon, 02 Mar 2020 09:45:07 -0800 (PST)
+        Mon, 2 Mar 2020 12:45:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:35744 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727196AbgCBRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:45:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E1B82F;
+        Mon,  2 Mar 2020 09:45:57 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 733353F6C4;
+        Mon,  2 Mar 2020 09:45:55 -0800 (PST)
+Date:   Mon, 2 Mar 2020 17:45:53 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        anshuman.khandual@arm.com,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: Linux-next-20200302: arm64 build failed
+Message-ID: <20200302174553.GC4166275@arrakis.emea.arm.com>
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
+ <20200302135443.GA24831@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200228110804.25822-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20200228110804.25822-1-nikita.shubin@maquefel.me>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 2 Mar 2020 10:44:56 -0700
-Message-ID: <CANLsYkyDsJaxO_37qTjEP+aeQju8W2+jhHFRF7+oifBMqJqyng@mail.gmail.com>
-Subject: Re: [PATCH] remoteproc: error on kick missing
-To:     nikita.shubin@maquefel.me
-Cc:     Nikita Shubin <NShubin@topcon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302135443.GA24831@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikita,
-
-On Fri, 28 Feb 2020 at 04:07, <nikita.shubin@maquefel.me> wrote:
->
-> From: Nikita Shubin <NShubin@topcon.com>
->
-> .kick method not set in rproc_ops will result in:
->
-> 8<--- cut here ---
-> Unable to handle kernel NULL pointer dereference
->
-> in rproc_virtio_notify, after firmware loading.
-
-There wasn't any kernel stack trace?  What platform was this observed
-on? I'm afraid we won't be able to move forward with this patch
-without one, or more information on what is happening.
-
->
-> refuse to register an rproc-induced virtio device if no kick method was
-> defined for rproc.
->
-> Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
+> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
+> > [+Anshuman and Catalin]
+> > 
+> > On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+> > > Linux-Next 20200302 arm64 build failed due to below errors,
+> > > Suspecting patch causing this build break.
+> > > 
+> > > 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+> > > 
+> > > Error log,
+> > > -------------
+> > > arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+> > > include/linux/compiler.h:284:1: error: incompatible type for argument
+> > > 1 of 'p4d_page_paddr'
+> > >  ({         \
+> > >  ^
+> > > arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+> > > '__phys_to_virt'
+> > >  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+> > >                                              ^
+> > > arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+> > >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+> > >                                           ^~~~
+> > > include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+> > >  #define READ_ONCE(x) __READ_ONCE(x, 1)
+> > >                       ^~~~~~~~~~~
+> > > arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+> > >  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+> > > + pud_index(addr) * sizeof(pud_t))
+> > >                                                     ^~~~~~~~~
+> > > arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+> > > 'pud_offset_phys'
+> > >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+> > >                                                ^~~~~~~~~~~~~~~
+> > > arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+> > >    pudp = pud_offset(pgdp, addr);
+> > >           ^~~~~~~~~~
+> > 
+> > Looks like we need an implementation of unmap_hotplug_p4d_range() to
+> > walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+> > patches in the arm64 tree so we'll either need a common branch or the
+> > hotplug patches will need to be dropped for the moment.
+> 
+> unmap_hotplug_p4d_range() is easy :)
+> 
+> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> Date: Mon, 2 Mar 2020 15:53:17 +0200
+> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  drivers/remoteproc/remoteproc_virtio.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index 8c07cb2ca8ba..31a62a0b470e 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
->         struct rproc_mem_entry *mem;
->         int ret;
->
-> +       if (rproc->ops->kick == NULL) {
-> +               ret = -EINVAL;
-> +               dev_err(dev, ".kick method not defined for %s",
-> +                               rproc->name);
-> +               goto out;
-> +       }
-
-I think it would be better to use WARN_ONCE() in rproc_virtio_notify()
-than prevent a virtio device from being added.  But again I will need
-more information on this case to know for sure.
-
-Thanks,
-Mathieu
-
+>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 05ec8e5f1436..c76b11577558 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>  	} while (addr = next, addr < end);
+>  }
+>  
+> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+> +				unsigned long end, bool free_mapped)
+> +{
+> +	unsigned long next;
+> +	pgd_t *p4dp, p4d;
 > +
->         /* Try to find dedicated vdev buffer carveout */
->         mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
->         if (mem) {
-> --
-> 2.24.1
->
+> +	do {
+> +		next = p4d_addr_end(addr, end);
+> +		p4dp = p4d_offset(pgd, addr);
+> +		p4d = READ_ONCE(*p4dp);
+> +		if (p4d_none(p4d))
+> +			continue;
+> +
+> +		WARN_ON(!p4d_present(p4d));
+> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+> +	} while (addr = next, addr < end);
+> +}
+> +
+>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>  				bool free_mapped)
+>  {
+> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>  			continue;
+>  
+>  		WARN_ON(!pgd_present(pgd));
+> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
+> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+>  	} while (addr = next, addr < end);
+>  }
+
+Thanks Mike. With the additional diff below, I can get it to build with
+and without the p4d clean-up patches in -next. If Anshuman confirms that
+they work, I can add them on top of the arm64 for-next/memory-hotremove
+branch
+
+----------8<------------------------
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 56bd9227937f..2faf11860097 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -816,7 +816,7 @@ static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+ 	} while (addr = next, addr < end);
+ }
+ 
+-static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
++static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+ 				    unsigned long end, bool free_mapped)
+ {
+ 	unsigned long next;
+@@ -824,7 +824,7 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+ 
+ 	do {
+ 		next = pud_addr_end(addr, end);
+-		pudp = pud_offset(pgdp, addr);
++		pudp = pud_offset(p4dp, addr);
+ 		pud = READ_ONCE(*pudp);
+ 		if (pud_none(pud))
+ 			continue;
+@@ -848,15 +848,15 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+ 	} while (addr = next, addr < end);
+ }
+ 
+-static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+-				unsigned long end, bool free_mapped)
++static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
++				    unsigned long end, bool free_mapped)
+ {
+ 	unsigned long next;
+-	pgd_t *p4dp, p4d;
++	p4d_t *p4dp, p4d;
+ 
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+-		p4dp = p4d_offset(pgd, addr);
++		p4dp = p4d_offset(pgdp, addr);
+ 		p4d = READ_ONCE(*p4dp);
+ 		if (p4d_none(p4d))
+ 			continue;
+@@ -961,7 +961,7 @@ static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
+ 	free_hotplug_pgtable_page(virt_to_page(pmdp));
+ }
+ 
+-static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
++static void free_empty_pud_table(p4d_t *p4dp, unsigned long addr,
+ 				 unsigned long end, unsigned long floor,
+ 				 unsigned long ceiling)
+ {
+@@ -970,7 +970,7 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
+ 
+ 	do {
+ 		next = pud_addr_end(addr, end);
+-		pudp = pud_offset(pgdp, addr);
++		pudp = pud_offset(p4dp, addr);
+ 		pud = READ_ONCE(*pudp);
+ 		if (pud_none(pud))
+ 			continue;
+@@ -990,17 +990,36 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
+ 	 * entries are empty. Overlap with other regions have been
+ 	 * handled by the floor/ceiling check.
+ 	 */
+-	pudp = pud_offset(pgdp, 0UL);
++	pudp = pud_offset(p4dp, 0UL);
+ 	for (i = 0; i < PTRS_PER_PUD; i++) {
+ 		if (!pud_none(READ_ONCE(pudp[i])))
+ 			return;
+ 	}
+ 
+-	pgd_clear(pgdp);
++	p4d_clear(p4dp);
+ 	__flush_tlb_kernel_pgtable(start);
+ 	free_hotplug_pgtable_page(virt_to_page(pudp));
+ }
+ 
++static void free_empty_p4d_table(pgd_t *pgdp, unsigned long addr,
++				 unsigned long end, unsigned long floor,
++				 unsigned long ceiling)
++{
++	p4d_t *p4dp, p4d;
++	unsigned long next;
++
++	do {
++		next = p4d_addr_end(addr, end);
++		p4dp = p4d_offset(pgdp, addr);
++		p4d = READ_ONCE(*p4dp);
++		if (p4d_none(p4d))
++			continue;
++
++		WARN_ON(!p4d_present(p4d));
++		free_empty_pud_table(p4dp, addr, next, floor, ceiling);
++	} while (addr = next, addr < end);
++}
++
+ static void free_empty_tables(unsigned long addr, unsigned long end,
+ 			      unsigned long floor, unsigned long ceiling)
+ {
+@@ -1015,7 +1034,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
+ 			continue;
+ 
+ 		WARN_ON(!pgd_present(pgd));
+-		free_empty_pud_table(pgdp, addr, next, floor, ceiling);
++		free_empty_p4d_table(pgdp, addr, next, floor, ceiling);
+ 	} while (addr = next, addr < end);
+ }
+ #endif
