@@ -2,331 +2,140 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021C6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DA82173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA24B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCBU6u convert rfc822-to-8bit (ORCPT
+        id S1726780AbgCBVAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:58:50 -0500
-Received: from mga07.intel.com ([134.134.136.100]:14134 "EHLO mga07.intel.com"
+        Mon, 2 Mar 2020 16:00:05 -0500
+Received: from gecko.sbs.de ([194.138.37.40]:33531 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgCBU6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:58:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 12:58:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="262915303"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Mar 2020 12:58:49 -0800
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 2 Mar 2020 12:58:49 -0800
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.2]) by
- fmsmsx115.amr.corp.intel.com ([169.254.4.81]) with mapi id 14.03.0439.000;
- Mon, 2 Mar 2020 12:58:49 -0800
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
-CC:     Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
-        "smasetty@codeaurora.org" <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>, Sean Paul <sean@poorly.run>
-Subject: RE: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
- objects
-Thread-Topic: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
- objects
-Thread-Index: AQHV8NPlMBHxtuqcFk6x//p6aZDLUag1x50A
-Date:   Mon, 2 Mar 2020 20:58:48 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663F4FDE244@FMSMSX108.amr.corp.intel.com>
-References: <1583182067-16530-1-git-send-email-jcrouse@codeaurora.org>
- <1583182067-16530-3-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1583182067-16530-3-git-send-email-jcrouse@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725911AbgCBVAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:00:05 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 022Kxcb9030366
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 21:59:39 +0100
+Received: from [139.25.68.37] ([139.25.68.37])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 022Kxc3c022116;
+        Mon, 2 Mar 2020 21:59:38 +0100
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
+ is out-of-range
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
+ <20200302204940.GG6244@linux.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <25cf56fc-3bed-fa1b-f8e3-62ac58663e09@siemens.com>
+Date:   Mon, 2 Mar 2020 21:59:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200302204940.GG6244@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Jordan Crouse
->Sent: Monday, March 2, 2020 3:48 PM
->To: linux-arm-msm@vger.kernel.org
->Cc: Douglas Anderson <dianders@chromium.org>; David Airlie
-><airlied@linux.ie>; freedreno@lists.freedesktop.org;
->smasetty@codeaurora.org; linux-kernel@vger.kernel.org; dri-
->devel@lists.freedesktop.org; Stephen Boyd <swboyd@chromium.org>; Ruhl,
->Michael J <michael.j.ruhl@intel.com>; Sean Paul <sean@poorly.run>
->Subject: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
->objects
->
->The GMU has very few memory allocations and uses a flat memory space so
->there is no good reason to go out of our way to bypass the DMA APIs which
->were basically designed for this exact scenario.
->
->v4: Use dma_alloc_wc()
+On 02.03.20 21:49, Sean Christopherson wrote:
+> On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
+>> On 02.03.20 20:57, Sean Christopherson wrote:
+>>> Rework kvm_cpuid() to query entry->function when adjusting the output
+>>> values so that the original function (in the aptly named "function") is
+>>> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+>>> trace the max function for a range instead of the requested function if
+>>> the requested function is out-of-range and an entry for the max function
+>>> exists.
+>>>
+>>> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+>>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> Cc: Jim Mattson <jmattson@google.com>
+>>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>>   arch/x86/kvm/cpuid.c | 15 +++++++--------
+>>>   1 file changed, 7 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>> index b1c469446b07..6be012937eba 100644
+>>> --- a/arch/x86/kvm/cpuid.c
+>>> +++ b/arch/x86/kvm/cpuid.c
+>>> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+>>>   	return max && function <= max->eax;
+>>>   }
+>>> +/* Returns true if the requested leaf/function exists in guest CPUID. */
+>>>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	       u32 *ecx, u32 *edx, bool check_limit)
+>>>   {
+>>> -	u32 function = *eax, index = *ecx;
+>>> +	const u32 function = *eax, index = *ecx;
+>>>   	struct kvm_cpuid_entry2 *entry;
+>>> -	struct kvm_cpuid_entry2 *max;
+>>>   	bool found;
+>>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	 */
+>>>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+>>>   	    !cpuid_function_in_range(vcpu, function)) {
+>>> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> -		if (max) {
+>>> -			function = max->eax;
+>>> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> -		}
+>>> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> +		if (entry)
+>>> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+>>>   	}
+>>>   	if (entry) {
+>>>   		*eax = entry->eax;
+>>>   		*ebx = entry->ebx;
+>>>   		*ecx = entry->ecx;
+>>>   		*edx = entry->edx;
+>>> -		if (function == 7 && index == 0) {
+>>> +
+>>> +		if (entry->function == 7 && index == 0) {
+>>>   			u64 data;
+>>>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+>>>   			    (data & TSX_CTRL_CPUID_CLEAR))
+>>>
+>>
+>> What about the !entry case below this? It was impacted by the function
+>> capping so far, not it's no longer.
+> 
+> Hmm, the only way the output would be different is in a really contrived
+> scenario where userspace doesn't provide an entry for the max basic leaf.
 
-The patch and the update look good to me.
+I think I've seen that, a cap to 0x10, with QEMU and '-cpu host# when 
+providing intentionally bogus values to cpuid.
 
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Jan
 
-Mike
+> 
+> The !entry path can only be reached with "orig_function != function" if
+> orig_function is out of range and there is no entry for the max basic leaf.
+> The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
+> and to take effect with !entry would require there to be a CPUID.max.1 but
+> not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
+> userspace input and IMO can be ignored.
+> 
 
->v3: Set the dma mask correctly and use dma_addr_t for the iova type
->v2: Pass force_dma false to of_dma_configure to require that the DMA
->region be set up and return error from of_dma_configure to fail probe.
->
->Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
->---
->
-> drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 113 ++++---------------------------
->---
-> drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   6 +-
-> 2 files changed, 12 insertions(+), 107 deletions(-)
->
->diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->index 748cd37..dd51dd0 100644
->--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->@@ -2,6 +2,7 @@
-> /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
->
-> #include <linux/clk.h>
->+#include <linux/dma-mapping.h>
-> #include <linux/interconnect.h>
-> #include <linux/pm_domain.h>
-> #include <linux/pm_opp.h>
->@@ -920,21 +921,10 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->
-> static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct
->a6xx_gmu_bo *bo)
-> {
->-	int count, i;
->-	u64 iova;
->-
-> 	if (IS_ERR_OR_NULL(bo))
-> 		return;
->
->-	count = bo->size >> PAGE_SHIFT;
->-	iova = bo->iova;
->-
->-	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
->-		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
->-		__free_pages(bo->pages[i], 0);
->-	}
->-
->-	kfree(bo->pages);
->+	dma_free_wc(gmu->dev, bo->size, bo->virt, bo->iova);
-> 	kfree(bo);
-> }
->
->@@ -942,7 +932,6 @@ static struct a6xx_gmu_bo
->*a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
-> 		size_t size)
-> {
-> 	struct a6xx_gmu_bo *bo;
->-	int ret, count, i;
->
-> 	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
-> 	if (!bo)
->@@ -950,86 +939,14 @@ static struct a6xx_gmu_bo
->*a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
->
-> 	bo->size = PAGE_ALIGN(size);
->
->-	count = bo->size >> PAGE_SHIFT;
->+	bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova,
->GFP_KERNEL);
->
->-	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
->-	if (!bo->pages) {
->+	if (!bo->virt) {
-> 		kfree(bo);
-> 		return ERR_PTR(-ENOMEM);
-> 	}
->
->-	for (i = 0; i < count; i++) {
->-		bo->pages[i] = alloc_page(GFP_KERNEL);
->-		if (!bo->pages[i])
->-			goto err;
->-	}
->-
->-	bo->iova = gmu->uncached_iova_base;
->-
->-	for (i = 0; i < count; i++) {
->-		ret = iommu_map(gmu->domain,
->-			bo->iova + (PAGE_SIZE * i),
->-			page_to_phys(bo->pages[i]), PAGE_SIZE,
->-			IOMMU_READ | IOMMU_WRITE);
->-
->-		if (ret) {
->-			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU
->buffer object\n");
->-
->-			for (i = i - 1 ; i >= 0; i--)
->-				iommu_unmap(gmu->domain,
->-					bo->iova + (PAGE_SIZE * i),
->-					PAGE_SIZE);
->-
->-			goto err;
->-		}
->-	}
->-
->-	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
->-		pgprot_writecombine(PAGE_KERNEL));
->-	if (!bo->virt)
->-		goto err;
->-
->-	/* Align future IOVA addresses on 1MB boundaries */
->-	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
->-
-> 	return bo;
->-
->-err:
->-	for (i = 0; i < count; i++) {
->-		if (bo->pages[i])
->-			__free_pages(bo->pages[i], 0);
->-	}
->-
->-	kfree(bo->pages);
->-	kfree(bo);
->-
->-	return ERR_PTR(-ENOMEM);
->-}
->-
->-static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
->-{
->-	int ret;
->-
->-	/*
->-	 * The GMU address space is hardcoded to treat the range
->-	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
->-	 * between the GMU and the CPU will live in this space
->-	 */
->-	gmu->uncached_iova_base = 0x60000000;
->-
->-
->-	gmu->domain = iommu_domain_alloc(&platform_bus_type);
->-	if (!gmu->domain)
->-		return -ENODEV;
->-
->-	ret = iommu_attach_device(gmu->domain, gmu->dev);
->-
->-	if (ret) {
->-		iommu_domain_free(gmu->domain);
->-		gmu->domain = NULL;
->-	}
->-
->-	return ret;
-> }
->
-> /* Return the 'arc-level' for the given frequency */
->@@ -1289,10 +1206,6 @@ void a6xx_gmu_remove(struct a6xx_gpu
->*a6xx_gpu)
->
-> 	a6xx_gmu_memory_free(gmu, gmu->hfi);
->
->-	iommu_detach_device(gmu->domain, gmu->dev);
->-
->-	iommu_domain_free(gmu->domain);
->-
-> 	free_irq(gmu->gmu_irq, gmu);
-> 	free_irq(gmu->hfi_irq, gmu);
->
->@@ -1313,7 +1226,13 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
->struct device_node *node)
->
-> 	gmu->dev = &pdev->dev;
->
->-	of_dma_configure(gmu->dev, node, true);
->+	/* Pass force_dma false to require the DT to set the dma region */
->+	ret = of_dma_configure(gmu->dev, node, false);
->+	if (ret)
->+		return ret;
->+
->+	/* Set the mask after the of_dma_configure() */
->+	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
->
-> 	/* Fow now, don't do anything fancy until we get our feet under us */
-> 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
->@@ -1325,11 +1244,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
->struct device_node *node)
-> 	if (ret)
-> 		goto err_put_device;
->
->-	/* Set up the IOMMU context bank */
->-	ret = a6xx_gmu_memory_probe(gmu);
->-	if (ret)
->-		goto err_put_device;
->-
-> 	/* Allocate memory for for the HFI queues */
-> 	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
-> 	if (IS_ERR(gmu->hfi))
->@@ -1375,11 +1289,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
->struct device_node *node)
-> err_memory:
-> 	a6xx_gmu_memory_free(gmu, gmu->hfi);
->
->-	if (gmu->domain) {
->-		iommu_detach_device(gmu->domain, gmu->dev);
->-
->-		iommu_domain_free(gmu->domain);
->-	}
-> 	ret = -ENODEV;
->
-> err_put_device:
->diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
->b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
->index 2af91ed..4af65a3 100644
->--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
->+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
->@@ -12,8 +12,7 @@
-> struct a6xx_gmu_bo {
-> 	void *virt;
-> 	size_t size;
->-	u64 iova;
->-	struct page **pages;
->+	dma_addr_t iova;
-> };
->
-> /*
->@@ -49,9 +48,6 @@ struct a6xx_gmu {
-> 	int hfi_irq;
-> 	int gmu_irq;
->
->-	struct iommu_domain *domain;
->-	u64 uncached_iova_base;
->-
-> 	struct device *gxpd;
->
-> 	int idle_level;
->--
->2.7.4
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
