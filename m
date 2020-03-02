@@ -2,184 +2,340 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30010C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2286C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0227422B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E95E214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nb2CEkZX"
+	dkim=pass (2048-bit key) header.d=zzywysm.com header.i=@zzywysm.com header.b="EdNN1/xG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCBRlo (ORCPT
+        id S1727491AbgCBRlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:41:44 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36389 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgCBRlm (ORCPT
+        Mon, 2 Mar 2020 12:41:52 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:37985 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbgCBRlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:41:42 -0500
-Received: by mail-yw1-f66.google.com with SMTP id y72so601266ywg.3;
-        Mon, 02 Mar 2020 09:41:41 -0800 (PST)
+        Mon, 2 Mar 2020 12:41:51 -0500
+Received: by mail-oi1-f173.google.com with SMTP id 2so50539oiz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:41:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dYlMCFEFqOMadOO8IzsSF9BCCu0uVYKw4ttVJjvihz0=;
-        b=nb2CEkZXcfXtjfKHIGZMNZJPzPN2c5kHU5Fg9XdUWimVElcJtdjh2A7+zv60C/i9pJ
-         8yRcMh815pLGqOJdx5dYFY2fsPmz7qvqLxwKMQ5UL7X0q+JP95rOvRxcEmNy6q4CNf/m
-         C5QnVoh80VVruTlj/BuU/fq6EGnu63P41zlYsFxv6eh+S7wXKhwlW0Op0w+9mk2RQNuU
-         cFsVRUahJMQK3Dib27Xm5BxyPVybJQeH++kSH79o12bY3j1PTkSCyhwEEi0XRNqDNHy1
-         dryssjqF7zUhKHLCMvv14dzqbRnWZUOkyR5l3pdbraJ/L8G0lnyjk+mQbe50Lg6q4m6S
-         xkaA==
+        d=zzywysm.com; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :to;
+        bh=pGEDNg9R3GdB2T1XjdxsXxmg8kulRQ7/yI1wNxH8hx4=;
+        b=EdNN1/xGpaYMau6oBYHzvLs8e5yWihTuyLuTdet3u2kuAgLcoX9J22Y/lu8sF1r6XO
+         Q+sEXAWavzmz3QceSi54v4yfwDke+zoWQHzXURbgZC5v4jgNpmrmck3/N09SB3CLfG98
+         d6XNTARK1tlmS1x9rqSAjoNE55RbVIIKqXvkbTFDaDUa7De20PEYYG4egkmTsAn/cYju
+         2CnqJkJbCHB7D59uz/SC19zbTIrnnMV5+otH+sTwPy905mMfulEz6ge9jiuQ1SE9RlqB
+         vqm4rZDxSpr65JDBZBz1g7zIpWhR/Hq4v7FqFx/KfgIq6akjd7PWGtv3rkGqw+s/shQg
+         ajrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dYlMCFEFqOMadOO8IzsSF9BCCu0uVYKw4ttVJjvihz0=;
-        b=pY9sB7bOuSPPy4Q8mGgOiMNPLkZQj21oH+/RSGS4/2njX0O28Z72xsIR3MmjRRAjYo
-         bO8eTdA5p1H6V791Vv+o1rSBGpK6Pkt+iKumAmKF7cbqv9y5Zqj20OXINu3Q08QaPsKP
-         TuUhWdA0qKeTWKb7Ihox/IB3Q378hnkXHC9o7BJ4ZQWbRNn6VG79xJ1B9BQk0f2nsD3+
-         94OyRli7clJh9oPtAqCpHiUuwmBpJD3AWK3JxqvCgvQuvZ1QJQIIBOGkeccbBXVaGnRu
-         cyPIYjtjxn92SCaWVzxnARYz0Owu2LDus/O+HzLsOAFyAJEjH9IvBm4OnXKlRSljJXXi
-         p8YA==
-X-Gm-Message-State: ANhLgQ2jjVXUsYEHIFTrFcm6vl+ShK73ObKZbiYOYC31NniwXwv7iSbG
-        RBHsxUJqFEJ1oNedTNgmAkc=
-X-Google-Smtp-Source: ADFU+vvaOwr52RxWLXDEfPTsHqlNlLjGEZWIP4dr8yNuQgd02OjLw5GbYYNFr0RxFTnS8szXqb3D8A==
-X-Received: by 2002:a81:4417:: with SMTP id r23mr488559ywa.240.1583170900590;
-        Mon, 02 Mar 2020 09:41:40 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id q63sm4834263ywg.106.2020.03.02.09.41.39
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:to;
+        bh=pGEDNg9R3GdB2T1XjdxsXxmg8kulRQ7/yI1wNxH8hx4=;
+        b=iX3XPHzaOAbOjaurEsPloza0ZEqV9NlWgk+OwMTszcwDkjUxe2wuI/Zyvtzg59MTOh
+         wfpcsmkB5m7sTVgVVFgsfqztdQjBqiPM7GaohfbsietuqB/Q0cTafQrhhezP5hFT0DAS
+         RMsgoZSrvyhRtfnkcznShZy4qCI3Ug6gSr26ud/wbxIfSkrwWGeDGYx6D4PPQqPf6krc
+         72oShsZAFby5jmcEJR215tmAGonZmRfzMFg+qxtLwmqnHkjpJt+Z3LsQkZCVVhgX3s8n
+         PXb00XPEAWgBvJ0mL4+xFxblBXjweYh0Hv9g+xOMsr5RwnLZrk6yTj3WI4rwd8mA19Yf
+         qBdA==
+X-Gm-Message-State: ANhLgQ3EiikGuI4+Lve6oBX++Ulkmp/WsHBMZIxtXx5qdAqBjXjJwMO1
+        CEQIScvEr6+5soQYc1gk1s9LHAA1LWs=
+X-Google-Smtp-Source: ADFU+vuCLRcbANUD635mQ5qdPFQ/dm+VZN9VVnEQAOy9975z8l8tPp56x6/p0phdkw+3lAEi+17n3Q==
+X-Received: by 2002:aca:fd94:: with SMTP id b142mr156171oii.11.1583170909760;
+        Mon, 02 Mar 2020 09:41:49 -0800 (PST)
+Received: from [10.19.49.2] (ec2-3-17-74-181.us-east-2.compute.amazonaws.com. [3.17.74.181])
+        by smtp.gmail.com with ESMTPSA id l1sm6583126oic.22.2020.03.02.09.41.48
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 09:41:40 -0800 (PST)
-Subject: Re: [PATCH v3 0/7] kunit: create a centralized executor to dispatch
- all KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
-        keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, linux-um@lists.infradead.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20200228012036.15682-1-brendanhiggins@google.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <da91797a-8640-12c7-8265-94586aacfa4c@gmail.com>
-Date:   Mon, 2 Mar 2020 11:41:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200228012036.15682-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 02 Mar 2020 09:41:49 -0800 (PST)
+From:   Zzy Wysm <zzy@zzywysm.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Linux Warning Report - 5.6-rc4
+Message-Id: <8F0DCA86-7B91-409C-83D7-06E334B8845B@zzywysm.com>
+Date:   Mon, 2 Mar 2020 11:41:47 -0600
+To:     linux-kernel@vger.kernel.org
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 7:20 PM, Brendan Higgins wrote:
-> ## TL;DR
-> 
-> This patchset adds a centralized executor to dispatch tests rather than
-> relying on late_initcall to schedule each test suite separately along
-> with a couple of new features that depend on it.
-> 
-> Also, sorry for the delay in getting this new revision out. I have been
-> really busy for the past couple weeks.
-> 
-> ## What am I trying to do?
-> 
-> Conceptually, I am trying to provide a mechanism by which test suites
-> can be grouped together so that they can be reasoned about collectively.
-> The last two of three patches in this series add features which depend
-> on this:
-> 
-> PATCH 5/7 Prints out a test plan[1] right before KUnit tests are run;
->           this is valuable because it makes it possible for a test
->           harness to detect whether the number of tests run matches the
->           number of tests expected to be run, ensuring that no tests
->           silently failed. The test plan includes a count of tests that
->           will run. With the centralized executor, the tests are located
->           in a single data structure and thus can be counted.
-> 
-> PATCH 6/7 Add a new kernel command-line option which allows the user to
->           specify that the kernel poweroff, halt, or reboot after
->           completing all KUnit tests; this is very handy for running
->           KUnit tests on UML or a VM so that the UML/VM process exits
->           cleanly immediately after running all tests without needing a
->           special initramfs. The centralized executor provides a
->           definitive point when all tests have completed and the
->           poweroff, halt, or reboot could occur.
-> 
-> In addition, by dispatching tests from a single location, we can
-> guarantee that all KUnit tests run after late_init is complete, which
-> was a concern during the initial KUnit patchset review (this has not
-> been a problem in practice, but resolving with certainty is nevertheless
-> desirable).
-> 
-> Other use cases for this exist, but the above features should provide an
-> idea of the value that this could provide.
-> 
-> ## Changes since last revision:
-> - On patch 7/7, I added some additional wording around the
->   kunit_shutdown command line option explaining that it runs after
->   built-in tests as suggested by Frank.
-> - On the coverletter, I improved some wording and added a missing link.
->   I also specified the base-commit for the series.
+Another week, another release candidate.
 
-> - Frank asked for some changes to the documentation; however, David is
->   taking care of that in a separate patch[2], so I did not make those
->   changes here. There will be some additional changes necessary
->   after David's patch is applied.
+This week a warning was fixed by Adam Williamson in commit=20
+03264ddde2453f6877a7d637d84068079632a3c5.  Thanks Adam!
 
-Making the documentation changes after David's patches sounds like
-a good plan to me.
+We are down to 32 warnings in the defconfig.
 
--Frank
+zzy
 
-> 
-> Alan Maguire (1):
->   kunit: test: create a single centralized executor for all tests
-> 
-> Brendan Higgins (5):
->   vmlinux.lds.h: add linker section for KUnit test suites
->   arch: um: add linker section for KUnit test suites
->   init: main: add KUnit to kernel init
->   kunit: test: add test plan to KUnit TAP format
->   Documentation: Add kunit_shutdown to kernel-parameters.txt
-> 
-> David Gow (1):
->   kunit: Add 'kunit_shutdown' option
-> 
->  .../admin-guide/kernel-parameters.txt         |  8 ++
->  arch/um/include/asm/common.lds.S              |  4 +
->  include/asm-generic/vmlinux.lds.h             |  8 ++
->  include/kunit/test.h                          | 82 ++++++++++++-------
->  init/main.c                                   |  4 +
->  lib/kunit/Makefile                            |  3 +-
->  lib/kunit/executor.c                          | 71 ++++++++++++++++
->  lib/kunit/test.c                              | 11 ---
->  tools/testing/kunit/kunit_kernel.py           |  2 +-
->  tools/testing/kunit/kunit_parser.py           | 76 ++++++++++++++---
->  .../test_is_test_passed-all_passed.log        |  1 +
->  .../test_data/test_is_test_passed-crash.log   |  1 +
->  .../test_data/test_is_test_passed-failure.log |  1 +
->  13 files changed, 218 insertions(+), 54 deletions(-)
->  create mode 100644 lib/kunit/executor.c
-> 
-> 
-> base-commit: a2f0b878c3ca531a1706cb2a8b079cea3b17bafc
-> 
-> [1] https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
-> [2] https://patchwork.kernel.org/patch/11383635/
-> 
+
+zzy@esquivalience:~/linux-5.6-rc4$ make -j4 KCFLAGS=3D"-Wall -Wextra =
+-Wno-unused-parameter -Wno-missing-field-initializers" > =
+build_log_5.6-rc4
+kernel/time/hrtimer.c:120:21: warning: initialized field overwritten =
+[-Woverride-init]
+  120 |  [CLOCK_REALTIME] =3D HRTIMER_BASE_REALTIME,
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:120:21: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[0]=E2=80=99)
+kernel/time/hrtimer.c:121:22: warning: initialized field overwritten =
+[-Woverride-init]
+  121 |  [CLOCK_MONOTONIC] =3D HRTIMER_BASE_MONOTONIC,
+      |                      ^~~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:121:22: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[1]=E2=80=99)
+kernel/time/hrtimer.c:122:21: warning: initialized field overwritten =
+[-Woverride-init]
+  122 |  [CLOCK_BOOTTIME] =3D HRTIMER_BASE_BOOTTIME,
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:122:21: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[7]=E2=80=99)
+kernel/time/hrtimer.c:123:17: warning: initialized field overwritten =
+[-Woverride-init]
+  123 |  [CLOCK_TAI]  =3D HRTIMER_BASE_TAI,
+      |                 ^~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:123:17: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[11]=E2=80=99)
+arch/x86/kernel/jump_label.c:61:1: warning: =E2=80=98inline=E2=80=99 is =
+not at beginning of declaration [-Wold-style-declaration]
+   61 | static void inline __jump_label_transform(struct jump_entry =
+*entry,
+      | ^~~~~~
+kernel/trace/blktrace.c: In function =E2=80=98__trace_note_message=E2=80=99=
+:
+kernel/trace/blktrace.c:145:63: warning: parameter =E2=80=98blkcg=E2=80=99=
+ set but not used [-Wunused-but-set-parameter]
+  145 | void __trace_note_message(struct blk_trace *bt, struct blkcg =
+*blkcg,
+      |                                                 =
+~~~~~~~~~~~~~~^~~~~
+In file included from kernel/bpf/core.c:21:
+kernel/bpf/core.c: In function =E2=80=98___bpf_prog_run=E2=80=99:
+./include/linux/filter.h:863:3: warning: cast between incompatible =
+function types from =E2=80=98u64 (*)(u64,  u64,  u64,  u64,  u64)=E2=80=99=
+ {aka =E2=80=98long long unsigned int (*)(long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+long long unsigned int)=E2=80=99} to =E2=80=98u64 (*)(u64,  u64,  u64,  =
+u64,  u64,  const struct bpf_insn *)=E2=80=99 {aka =E2=80=98long long =
+unsigned int (*)(long long unsigned int,  long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+const struct bpf_insn *)=E2=80=99} [-Wcast-function-type]
+  863 |  ((u64 (*)(u64, u64, u64, u64, u64, const struct bpf_insn *)) \
+      |   ^
+kernel/bpf/core.c:1513:13: note: in expansion of macro =
+=E2=80=98__bpf_call_base_args=E2=80=99
+ 1513 |   BPF_R0 =3D (__bpf_call_base_args + insn->imm)(BPF_R1, BPF_R2,
+      |             ^~~~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c: In function =E2=80=98bpf_patch_call_args=E2=80=99:
+./include/linux/filter.h:863:3: warning: cast between incompatible =
+function types from =E2=80=98u64 (*)(u64,  u64,  u64,  u64,  u64)=E2=80=99=
+ {aka =E2=80=98long long unsigned int (*)(long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+long long unsigned int)=E2=80=99} to =E2=80=98u64 (*)(u64,  u64,  u64,  =
+u64,  u64,  const struct bpf_insn *)=E2=80=99 {aka =E2=80=98long long =
+unsigned int (*)(long long unsigned int,  long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+const struct bpf_insn *)=E2=80=99} [-Wcast-function-type]
+  863 |  ((u64 (*)(u64, u64, u64, u64, u64, const struct bpf_insn *)) \
+      |   ^
+kernel/bpf/core.c:1704:3: note: in expansion of macro =
+=E2=80=98__bpf_call_base_args=E2=80=99
+ 1704 |   __bpf_call_base_args;
+      |   ^~~~~~~~~~~~~~~~~~~~
+In file included from ./include/linux/capability.h:16,
+                 from security/commoncap.c:5:
+security/commoncap.c: In function =E2=80=98cap_prctl_drop=E2=80=99:
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1145:7: note: in expansion of macro =E2=80=98cap_vali=
+d=E2=80=99
+ 1145 |  if (!cap_valid(cap))
+      |       ^~~~~~~~~
+security/commoncap.c: In function =E2=80=98cap_task_prctl=E2=80=99:
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1175:8: note: in expansion of macro =E2=80=98cap_vali=
+d=E2=80=99
+ 1175 |   if (!cap_valid(arg2))
+      |        ^~~~~~~~~
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1260:10: note: in expansion of macro =
+=E2=80=98cap_valid=E2=80=99
+ 1260 |   if (((!cap_valid(arg3)) | arg4 | arg5))
+      |          ^~~~~~~~~
+drivers/video/fbdev/core/fbmon.c: In function =E2=80=98get_monspecs=E2=80=99=
+:
+drivers/video/fbdev/core/fbmon.c:812:47: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  812 |   DPRINTK("      Configurable signal level\n");
+      |                                               ^
+drivers/video/fbdev/core/fbmon.c:842:24: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  842 |   DPRINTK("variable\n");
+      |                        ^
+drivers/video/fbdev/core/fbmon.c:847:24: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  847 |   DPRINTK("variable\n");
+      |                        ^
+fs/posix_acl.c: In function =E2=80=98get_acl=E2=80=99:
+fs/posix_acl.c:127:22: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+  127 |   /* fall through */ ;
+      |                      ^
+drivers/tty/vt/keyboard.c: In function =E2=80=98k_fn=E2=80=99:
+drivers/tty/vt/keyboard.c:740:22: warning: comparison is always true due =
+to limited range of data type [-Wtype-limits]
+  740 |  if ((unsigned)value < ARRAY_SIZE(func_table)) {
+      |                      ^
+drivers/acpi/scan.c: In function =E2=80=98acpi_bus_get_wakeup_device_flags=
+=E2=80=99:
+drivers/acpi/scan.c:903:43: warning: suggest braces around empty body in =
+an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  903 |     "error in _DSW or _PSW evaluation\n"));
+      |                                           ^
+drivers/acpi/acpi_processor.c: In function =
+=E2=80=98acpi_processor_errata_piix4=E2=80=99:
+drivers/acpi/acpi_processor.c:133:67: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  133 |       "Bus master activity detection (BM-IDE) erratum =
+enabled\n"));
+      |                                                                  =
+ ^
+drivers/acpi/acpi_processor.c:136:54: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  136 |       "Type-F DMA livelock erratum (C3 disabled)\n"));
+      |                                                      ^
+drivers/acpi/acpi_processor.c: In function =
+=E2=80=98acpi_processor_get_info=E2=80=99:
+drivers/acpi/acpi_processor.c:251:49: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  251 |       "No bus mastering arbitration control\n"));
+      |                                                 ^
+drivers/acpi/processor_pdc.c: In function =E2=80=98acpi_processor_eval_pdc=
+=E2=80=99:
+drivers/acpi/processor_pdc.c:136:65: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  136 |       "Could not evaluate _PDC, using legacy perf. =
+control.\n"));
+      |                                                                 =
+^
+In file included from drivers/ata/ahci.c:35:
+drivers/ata/ahci.h:384:16: warning: initialized field overwritten =
+[-Woverride-init]
+  384 |  .can_queue  =3D AHCI_MAX_CMDS,   \
+      |                ^~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:384:16: note: (near initialization for =
+=E2=80=98ahci_sht.can_queue=E2=80=99)
+  384 |  .can_queue  =3D AHCI_MAX_CMDS,   \
+      |                ^~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:388:17: warning: initialized field overwritten =
+[-Woverride-init]
+  388 |  .sdev_attrs  =3D ahci_sdev_attrs
+      |                 ^~~~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:388:17: note: (near initialization for =
+=E2=80=98ahci_sht.sdev_attrs=E2=80=99)
+  388 |  .sdev_attrs  =3D ahci_sdev_attrs
+      |                 ^~~~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/usb/core/sysfs.c: In function =E2=80=98usb_create_sysfs_intf_files=
+=E2=80=99:
+drivers/usb/core/sysfs.c:1266:3: warning: suggest braces around empty =
+body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 1266 |   ; /* We don't actually care if the function fails. */
+      |   ^
+drivers/input/mouse/synaptics.c: In function =
+=E2=80=98synaptics_process_packet=E2=80=99:
+drivers/input/mouse/synaptics.c:1105:6: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 1105 |      ;   /* Nothing, treat a pen as a single finger */
+      |      ^
+drivers/md/md.c: In function =E2=80=98bind_rdev_to_array=E2=80=99:
+drivers/md/md.c:2438:27: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 2438 |   /* failure here is OK */;
+      |                           ^
+drivers/md/md.c: In function =E2=80=98slot_store=E2=80=99:
+drivers/md/md.c:3200:28: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 3200 |    /* failure here is OK */;
+      |                            ^
+drivers/md/md.c: In function =E2=80=98remove_and_add_spares=E2=80=99:
+drivers/md/md.c:9045:29: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 9045 |     /* failure here is OK */;
+      |                             ^
+drivers/hid/hid-lgff.c: In function =E2=80=98hid_lgff_play=E2=80=99:
+drivers/hid/hid-lgff.c:65:24: warning: comparison of unsigned expression =
+< 0 is always false [-Wtype-limits]
+   65 | #define CLAMP(x) if (x < 0) x =3D 0; if (x > 0xff) x =3D 0xff
+      |                        ^
+drivers/hid/hid-lgff.c:86:3: note: in expansion of macro =E2=80=98CLAMP=E2=
+=80=99
+   86 |   CLAMP(left);
+      |   ^~~~~
+drivers/hid/hid-lgff.c:65:24: warning: comparison of unsigned expression =
+< 0 is always false [-Wtype-limits]
+   65 | #define CLAMP(x) if (x < 0) x =3D 0; if (x > 0xff) x =3D 0xff
+      |                        ^
+drivers/hid/hid-lgff.c:87:3: note: in expansion of macro =E2=80=98CLAMP=E2=
+=80=99
+   87 |   CLAMP(right);
+      |   ^~~~~
+lib/errname.c:15:67: warning: initialized field overwritten =
+[-Woverride-init]
+   15 | #define E(err) [err + BUILD_BUG_ON_ZERO(err <=3D 0 || err > =
+300)] =3D "-" #err
+      |                                                                  =
+ ^~~
+lib/errname.c:172:2: note: in expansion of macro =E2=80=98E=E2=80=99
+  172 |  E(EDEADLK), /* EDEADLOCK */
+      |  ^
+lib/errname.c:15:67: note: (near initialization for =E2=80=98names_0[35]=E2=
+=80=99)
+   15 | #define E(err) [err + BUILD_BUG_ON_ZERO(err <=3D 0 || err > =
+300)] =3D "-" #err
+      |                                                                  =
+ ^~~
+lib/errname.c:172:2: note: in expansion of macro =E2=80=98E=E2=80=99
+  172 |  E(EDEADLK), /* EDEADLOCK */
+      |  ^
+lib/radix-tree.c: In function =E2=80=98set_iter_tags=E2=80=99:
+lib/radix-tree.c:1134:15: warning: comparison is always false due to =
+limited range of data type [-Wtype-limits]
+ 1134 |  if (tag_long < RADIX_TREE_TAG_LONGS - 1) {
+      |               ^
 
