@@ -2,102 +2,100 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D5C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61FFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01942086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD81F20866
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCBT6C (ORCPT
+        id S1727234AbgCBT6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:58:02 -0500
-Received: from mga05.intel.com ([192.55.52.43]:30422 "EHLO mga05.intel.com"
+        Mon, 2 Mar 2020 14:58:30 -0500
+Received: from fieldses.org ([173.255.197.46]:35990 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgCBT5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:57:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="438404978"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and Hypervisor ranges
-Date:   Mon,  2 Mar 2020 11:57:32 -0800
-Message-Id: <20200302195736.24777-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200302195736.24777-1-sean.j.christopherson@intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+        id S1726118AbgCBT6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:58:30 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E642C89A; Mon,  2 Mar 2020 14:58:29 -0500 (EST)
+Date:   Mon, 2 Mar 2020 14:58:29 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] sunrpc: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200302195829.GD1149@fieldses.org>
+References: <20200228132323.GA20181@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228132323.GA20181@embeddedor>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend the mask in cpuid_function_in_range() for finding the "class" of
-the function to 0xfffffff00.  While there is no official definition of
-what constitutes a class, e.g. arguably bits 31:16 should be the class
-and bits 15:0 the functions within that class, the Hypervisor logic
-effectively uses bits 31:8 as the class by virtue of checking for
-different bases in increments of 0x100, e.g. KVM advertises its CPUID
-functions starting at 0x40000100 when HyperV features are advertised at
-the default base of 0x40000000.
+On Fri, Feb 28, 2020 at 07:23:23AM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
 
-Masking against 0x80000000 only handles basic and extended leafs, which
-results in Centaur and Hypervisor range checks being performed against
-the basic CPUID range, e.g. if CPUID.0x40000000.EAX=0x4000000A and there
-is no entry for CPUID.0x40000006, then function 0x40000006 would be
-incorrectly reported as out of bounds.
+I don't understand the quoted sentences at all.  But I assume you're
+telling me that sizeof(struct svc_deferred_req) won't be changed by this
+patch, so, good, applied.  Thanks!
 
-The bad range check doesn't cause function problems for any known VMM
-because out-of-range semantics only come into play if the exact entry
-isn't found, and VMMs either support a very limited Hypervisor range,
-e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
-room for undefined leafs) or explicitly defines gaps to be zero, e.g.
-Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
-limits (the latter comes into play when providing HyperV features).
+--b.
 
-The bad behavior can be visually confirmed by dumping CPUID output in
-the guest when running Qemu with a stable TSC, as Qemu extends the limit
-of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-without defining zeroed entries for 0x40000002 - 0x4000000f.
-
-Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/cpuid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 6be012937eba..c320126e0118 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -993,7 +993,7 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
- {
- 	struct kvm_cpuid_entry2 *max;
- 
--	max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
-+	max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00u, 0);
- 	return max && function <= max->eax;
- }
- 
--- 
-2.24.1
-
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  include/linux/sunrpc/svc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 1afe38eb33f7..7f0a83451bc0 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -380,7 +380,7 @@ struct svc_deferred_req {
+>  	struct cache_deferred_req handle;
+>  	size_t			xprt_hlen;
+>  	int			argslen;
+> -	__be32			args[0];
+> +	__be32			args[];
+>  };
+>  
+>  struct svc_process_info {
+> -- 
+> 2.25.0
