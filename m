@@ -2,132 +2,106 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A430C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC01C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AF4214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023E8214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="c5+T4h6f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXBL9v6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCBMTN (ORCPT
+        id S1727874AbgCBMTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:19:13 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:14642 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgCBMTM (ORCPT
+        Mon, 2 Mar 2020 07:19:41 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44062 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbgCBMTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:19:12 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 753DA27DD7
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:10:06 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8jtejS8tdRP4z8jtejq1h4; Mon, 02 Mar 2020 06:10:06 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SI9L7t5+PJPUj9nJSrkM4IY5Y4jla0GxFqwLN6bviuM=; b=c5+T4h6ffuTf0aWn7ux1BWA2Yr
-        hXkYlM9AjdbBIi5V8XZ/z7/oJTlLFZD3hICBaLLQxSZsxdNO2l2p9fTi6H/tkYjDOVu27Vb1N3PVG
-        rR/bFcR6cy/wJSWeRqkqD/6hzBKvr6B4R/ri4yqKX6FDWzDi1IeijJ0ZEW3y3RkCU6S6+STp3nxzk
-        oLWU6DHq5LzuRD38CkYfEPOR8XA8iH8FsVTSkU4ThnNUsYHSilhei9giFG+PueTQHtpbXUaISmIf+
-        9wJrUdx5mzYFXYPT0RE6/tYIOi5shFMXPYpxwaRf+Nx8ZmJgGHjxNEy78a2JYwmBtaH4acM0wTp0R
-        AzhRR0Ew==;
-Received: from [201.166.157.38] (port=42262 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8jrV-003wUT-JF; Mon, 02 Mar 2020 06:07:54 -0600
-Date:   Mon, 2 Mar 2020 06:10:51 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        "GR-Linux-NIC-Dev@marvell.com David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] bna: bnad: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302121051.GA28820@embeddedor>
+        Mon, 2 Mar 2020 07:19:41 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g19so13005657eds.11;
+        Mon, 02 Mar 2020 04:19:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=G/f6M+HBAL4DqhW0c1p6bk4sytP2vYJy/i55zifn5Jk=;
+        b=KXBL9v6wyp6mGHBavSEyUHPC7wdx5NE9+19vaHLaQPb6Ln6uPjQLYM6gkPhEIy7LbZ
+         zjR/je8Rualwm5StcN/6KtHwZAygVAPkHHufletcymi5MBwT/JtvVTlBQWkvNxgSNWL2
+         btjgci44eHkrXqZiKqqZfO3ukli+j6gc/3T8FBnUiWRVo+WqVppV/tJQt2sxxYp5C8oO
+         3jbk8nBHvrTVAcYJUqq9YuKyNbzeBUpcgEnXMkj6sZGJDxshQ7fHBufzvj2RV5QUQezE
+         YHZKOkuTpDhTfQjSOToHoFC6hMFj4FSPWJr3ByOOsOVQ2EN6obPxD0dSknI1n4UP2vZ7
+         dF8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=G/f6M+HBAL4DqhW0c1p6bk4sytP2vYJy/i55zifn5Jk=;
+        b=UbMQ4oTzgR/gYkh++TPlHcpQnMnwV17CcgKRWhsJzehuYpZNlTYmDCWF7ru3I7KIZY
+         njxb54aVV5NUaQo+O/dzGOwI0co68EUDsrKlqbiig6BqlMFBnULCeEwcZySXsHZdWI53
+         rJbEt1kJCzN9rq/kA+IsO/DiWNQHFs8LuCNFtD+EtcE9ZU+I5bIsDcKfYqzaSq7dsb00
+         JQCzVLBZsSCEfE5u/old56Hf3alvEImB0mYnIpK3Dm0drAgT491Oh7RZTmDG6LWxZfo8
+         oX22uSGWo48HdqiVdCv+6iitKYTH62iigvEmZbSnDTqXPY0gBbKhElMgpBG/pVVqbuED
+         hsMw==
+X-Gm-Message-State: ANhLgQ1jAVYEDBUrzGkKxJE2+BT7/iv5Lb9CwhJreZDEwOj9mUicl+Os
+        xThhA8oAPLsorpwBZnirz7DzF9woevK2sJyZs18+
+X-Google-Smtp-Source: ADFU+vvc/UCNpbkJV2EIc9o+6JskdV54r70wFEAdITkyCL/3CMdTefLpyOzqHlscsZu6AjkA+qVd42CsAvWgIimb5x4=
+X-Received: by 2002:a50:9f68:: with SMTP id b95mr770815edf.96.1583151579669;
+ Mon, 02 Mar 2020 04:19:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.157.38
-X-Source-L: No
-X-Exim-ID: 1j8jrV-003wUT-JF
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.157.38]:42262
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Date:   Mon, 2 Mar 2020 20:19:28 +0800
+Message-ID: <CAB5KdOZwZUvgmHX5C53SBU0WttEF4wBFpgqiGahD2OkojQJZ-Q@mail.gmail.com>
+Subject: [PATCH] KVM: SVM: Fix svm the vmexit error_code of WRMSR
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, x86@kernel.org
+Cc:     hpa@zytor.com, bp@alien8.de, "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "joro@8bytes.org" <joro@8bytes.org>, jmattson@google.com,
+        wanpengli@tencent.com, "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+ From 1f755f75dfd73ad7cabb0e0f43e9993dd9f69120 Mon Sep 17 00:00:00 2001
+From: Haiwei Li <lihaiwei@tencent.com>
+Date: Mon, 2 Mar 2020 19:19:59 +0800
+Subject: [PATCH] KVM: SVM: Fix svm the vmexit error_code of WRMSR
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+In svm, exit_code of write_msr is not EXIT_REASON_MSR_WRITE which
+belongs to vmx.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+According to amd manual, SVM_EXIT_MSR(7ch) is the exit_code of VMEXIT_MSR
+due to RDMSR or WRMSR access to protected MSR. Additionally, the processor
+indicates in the VMCB's EXITINFO1 whether a RDMSR(EXITINFO1=0) or
+WRMSR(EXITINFO1=1) was intercepted.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
 ---
- drivers/net/ethernet/brocade/bna/bnad.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  arch/x86/kvm/svm.c | 3 ++-
+  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/brocade/bna/bnad.h b/drivers/net/ethernet/brocade/bna/bnad.h
-index 492a02d54f14..bfa58b40dc3f 100644
---- a/drivers/net/ethernet/brocade/bna/bnad.h
-+++ b/drivers/net/ethernet/brocade/bna/bnad.h
-@@ -253,7 +253,7 @@ struct bnad_rx_unmap_q {
- 	int			alloc_order;
- 	u32			map_size;
- 	enum bnad_rxbuf_type	type;
--	struct bnad_rx_unmap	unmap[0] ____cacheline_aligned;
-+	struct bnad_rx_unmap	unmap[] ____cacheline_aligned;
- };
- 
- #define BNAD_PCI_DEV_IS_CAT2(_bnad) \
--- 
-2.25.0
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index fd3fc9f..ef71755 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6296,7 +6296,8 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu
+*vcpu,
+         enum exit_fastpath_completion *exit_fastpath)
+  {
+         if (!is_guest_mode(vcpu) &&
+-               to_svm(vcpu)->vmcb->control.exit_code ==
+EXIT_REASON_MSR_WRITE)
++               (to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR) &&
++               (to_svm(vcpu)->vmcb->control.exit_info_1 & 1))
+                 *exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+  }
 
+--
+1.8.3.1
