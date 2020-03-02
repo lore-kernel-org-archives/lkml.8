@@ -2,102 +2,204 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6810C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3EDC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F43C24686
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98C024695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583177893;
-	bh=CeT8MrxmedI+zt8aOLIH3orrxcr7WWJylEIMKTJsKOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m3QgdhQT/pq/lwl+irTb+/M8Eg9UHh8/zezEQRU/CCpbg3GGOPtWR1wkeWrkZoJpT
-	 VDL4/0lkZtQ0RvbfWUohryGXl3oqooZptSQxqhZoGSNqFDZAoz83Ek6yhSz2cJSlFU
-	 afnSEMqwwaAg21s37xJuW6Y41PcSZ9LoFZrJjJ08=
+	s=default; t=1583177902;
+	bh=wBeLFspfWfguKtUhKy89pQASxgUWycUKEJG+twWE5Og=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aaiZmYr+HnKkNN0xiEDUQu83IXV88IdRbx6ynwZGsYL/Pf75KMtaCAlVl51xmYsKT
+	 rk7od44nsSEcW7ekCbiauwNKbE9MQtpFk+fRBfo9PwQwPXhEOIVdcl5VX1P1WJPpjt
+	 4ebWOR1O6e8wfD5+mixxpJKHEzHt2DOu8Srxr2UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgCBTiJ (ORCPT
+        id S1726831AbgCBTiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:38:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727716AbgCBThB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:37:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 573AB2080C;
-        Mon,  2 Mar 2020 19:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583177820;
-        bh=CeT8MrxmedI+zt8aOLIH3orrxcr7WWJylEIMKTJsKOw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u8wwXBbNVBTa/A3C4eLRYDldm8MpUPFYC5q8AuT0Y8Zb+HCK4vveOkBj+elCSV/MI
-         sOnBhrrrgb/5zAuzNiQHwpucanodU249g6298/y1KlYRydOb7HEoqBgVu/QDIDa+xI
-         uecLFtamZ9pR25O62XtbYF8Mxkp+D4Wv86EUOt2Y=
-Date:   Mon, 2 Mar 2020 20:36:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Quentin Perret <qperret@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org
-Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
- kallsyms_on_each_symbol()
-Message-ID: <20200302193658.GA272023@kroah.com>
-References: <20200221114404.14641-1-will@kernel.org>
- <20200302192811.n6o5645rsib44vco@localhost>
+        Mon, 2 Mar 2020 14:38:19 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42605 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbgCBTgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:36:52 -0500
+Received: by mail-pl1-f195.google.com with SMTP id u3so182310plr.9;
+        Mon, 02 Mar 2020 11:36:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pHysGZtRm9DpDxh7VwFObxgb2rj7KREaKfoe8EJ8zu8=;
+        b=jdVlEcSDzo3ybdd7sN6kE2OKzk9oA7bpxTLKHadgEWCMOybjQ+xvZnJGVZ7fZjEfQg
+         uMEDZ86LuVgP1Q6ZD7VtneBpW3iteqpuTrP3/PWga/dBDviAOIX7pwxJvpurzCqOj7fN
+         jQT25IdzQdbEKTplDxwjaE6/Sp8da28vTFvaqYVQXWMS/ijYzC9/vT04XJhzJeUyFmi5
+         W1dY2xG14HMz217CZrrz7AQLnie7ovjZYjeZ46ICnLv/i7QSZQi050GPkvgyUDs+oPaF
+         p9OjX1JTqSRH+dMbwMtnn3Yrjt7fT/yKlKug7rJY5AteQTiqrX7VGVvcPd+bOjNPIBRu
+         c9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=pHysGZtRm9DpDxh7VwFObxgb2rj7KREaKfoe8EJ8zu8=;
+        b=ckLOo4o0u8ITN4DCQ4XKB96swS7lcsNV2lzNaLQeuBcUJsio0oze2TSwqX3Q2pADhD
+         IvG7SKNuscIGnMBjaH6M6hkcgYDX8JQCQt//wQZYZWZW095/1G3LgRObiXL+28rVsudf
+         mtcF0Q4iWtGKoN1kcSAuZKLI8dP3Wg+7pAkdukmiwPrsvTvcz6UsoIrOWbLEBiyuXXPm
+         ZWvQ7HzfycDxtBLYyttPzgya040QCSiP2JSQRhv3urI+afnpgZNcCXONWOvNfcbVS3J7
+         /XdxMtbAaF9bveaazbRwNHjL3kkkGrimPqLQXIWcdWvKnSMeI1lo7Gj1uXdQnNk6xeCQ
+         tW9A==
+X-Gm-Message-State: ANhLgQ0zQ/YzWdnBESuVTRsRZqxy+ZqzFgakHVRssPpQlwDY6FvnzOiP
+        6tXKvwToL+N4b5ahJcUtYLw=
+X-Google-Smtp-Source: ADFU+vuNMy9czC34xQNT/3L0cavE3HOPPROCVeNfLMB3n1LQxWwOUbMYURhKYhirIyIz1qSVT3nMgQ==
+X-Received: by 2002:a17:90a:ec10:: with SMTP id l16mr37690pjy.19.1583177810150;
+        Mon, 02 Mar 2020 11:36:50 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id hg6sm35441pjb.22.2020.03.02.11.36.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 11:36:49 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        Minchan Kim <minchan@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
+Date:   Mon,  2 Mar 2020 11:36:28 -0800
+Message-Id: <20200302193630.68771-6-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200302193630.68771-1-minchan@kernel.org>
+References: <20200302193630.68771-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302192811.n6o5645rsib44vco@localhost>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 02:28:11PM -0500, Mathieu Desnoyers wrote:
-> On 21-Feb-2020 11:44:01 AM, Will Deacon wrote:
-> > Hi folks,
-> > 
-> > Despite having just a single modular in-tree user that I could spot,
-> > kallsyms_lookup_name() is exported to modules and provides a mechanism
-> > for out-of-tree modules to access and invoke arbitrary, non-exported
-> > kernel symbols when kallsyms is enabled.
-> > 
-> > This patch series fixes up that one user and unexports the symbol along
-> > with kallsyms_on_each_symbol(), since that could also be abused in a
-> > similar manner.
-> 
-> Hi,
-> 
-> I maintain a GPL kernel tracer (LTTng) since 2005 which happens to be
-> out-of-tree, even though we have made unsuccessful attempts to upstream
-> it in the past. It uses kallsyms_lookup_name() to fetch a few symbols. I
-> would be very glad to have them GPL-exported upstream rather than
-> relying on this work-around. Here is the list of symbols we would need
-> to GPL-export:
-> 
-> stack_trace_save
-> stack_trace_save_user
-> vmalloc_sync_all (CONFIG_X86)
-> get_pfnblock_flags_mask
-> disk_name
-> block_class
-> disk_type
+There is a demand[1] to support pid as well pidfd for process_madvise
+to reduce unnecessary syscall to get pidfd if the user has control of
+the target process(ie, they could guarantee the process is not gone
+or pid is not reused).
 
-I hate to ask, but why does anyone need block_class?  or disk_name or
-disk_type?  I need to put them behind a driver core namespace or
-something soon...
+This patch aims for supporting both options like waitid(2). So, the
+syscall is currently,
 
-thanks,
+	int process_madvise(int which, pid_t pid, void *addr,
+		size_t length, int advise, unsigned long flag);
 
-greg k-h
+@which is actually idtype_t for userspace libray and currently,
+it supports P_PID and P_PIDFD.
+
+[1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+
+Cc: Christian Brauner <christian@brauner.io>
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+---
+ include/linux/syscalls.h |  3 ++-
+ mm/madvise.c             | 34 ++++++++++++++++++++++------------
+ 2 files changed, 24 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e4cd2c2f8bb4..f5ada20e2943 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -876,7 +876,8 @@ asmlinkage long sys_munlockall(void);
+ asmlinkage long sys_mincore(unsigned long start, size_t len,
+ 				unsigned char __user * vec);
+ asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+-asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
++
++asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
+ 			size_t len, int behavior, unsigned long flags);
+ asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+ 			unsigned long prot, unsigned long pgoff,
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 6543f2bfc3d8..e794367f681e 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1182,11 +1182,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+ 	return do_madvise(current, current->mm, start, len_in, behavior);
+ }
+ 
+-SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
++SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
+ 		size_t, len_in, int, behavior, unsigned long, flags)
+ {
+ 	int ret;
+-	struct fd f;
+ 	struct pid *pid;
+ 	struct task_struct *task;
+ 	struct mm_struct *mm;
+@@ -1197,20 +1196,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+ 	if (!process_madvise_behavior_valid(behavior))
+ 		return -EINVAL;
+ 
+-	f = fdget(pidfd);
+-	if (!f.file)
+-		return -EBADF;
++	switch (which) {
++	case P_PID:
++		if (upid <= 0)
++			return -EINVAL;
++
++		pid = find_get_pid(upid);
++		if (!pid)
++			return -ESRCH;
++		break;
++	case P_PIDFD:
++		if (upid < 0)
++			return -EINVAL;
+ 
+-	pid = pidfd_pid(f.file);
+-	if (IS_ERR(pid)) {
+-		ret = PTR_ERR(pid);
+-		goto fdput;
++		pid = pidfd_get_pid(upid);
++		if (IS_ERR(pid))
++			return PTR_ERR(pid);
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	task = get_pid_task(pid, PIDTYPE_PID);
+ 	if (!task) {
+ 		ret = -ESRCH;
+-		goto fdput;
++		goto put_pid;
+ 	}
+ 
+ 	mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+@@ -1223,7 +1233,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+ 	mmput(mm);
+ release_task:
+ 	put_task_struct(task);
+-fdput:
+-	fdput(f);
++put_pid:
++	put_pid(pid);
+ 	return ret;
+ }
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
