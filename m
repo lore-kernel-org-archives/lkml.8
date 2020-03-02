@@ -2,83 +2,173 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14705C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1274C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA224246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB6C2469C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rBelNWMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgCBJep (ORCPT
+        id S1727386AbgCBJgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:34:45 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49410 "EHLO huawei.com"
+        Mon, 2 Mar 2020 04:36:37 -0500
+Received: from mail-eopbgr70073.outbound.protection.outlook.com ([40.107.7.73]:63430
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgCBJep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:34:45 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 39D1753B58EB3F07568D;
-        Mon,  2 Mar 2020 17:34:43 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 2 Mar 2020 17:34:32 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to avoid using uninitialized variable
-Date:   Mon, 2 Mar 2020 17:34:27 +0800
-Message-ID: <20200302093427.49796-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        id S1726674AbgCBJgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:36:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SedSrbbES3d4IfQEPyxrKVPzQAPHNxpIEOPDBC0XmygPGQpgjxKC8tsikokj5Dp6lSrzBEalqMV6iVHe6xvI21rsxQerNt0pYr3A9P+mgz4ZNbiUGC9wcy67G2Zl9lZs/LvcUZiFCfAC8yjrlgj3q0nJyOjkd9NBNKkzwrr1Ag4J96hb6LeLCMFOvrFp3Zw2HN9XEUQYGyph8eISzU42Z4kHdfXGLa4Ub9hXAujsPKNCVL2Ubu8A3ktH1Kh9t/YustkcGGomHAZ1jCe6a7qH+ev/GtQNY/o/ftIUaauUMyMVbLkjIteDCYbOhQsyfZkJpr2HeJxQY6gd8NdH5P60jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N4VTMR1y/qGwDF9Opj1UTtjSGLtdWO5PxQxFiOvuLoY=;
+ b=OiYR3VCAZlbwB9cyL6kBueHTnKJCbFOSxYL9FQlbgbMs8Vceo8knUCedapRas4cxpylSM3wwb7Lr5MwtqjYbmvvDRwzHPUMf32ykqNRH8E3MdqbHscmxK/wsGInNFi5rObYufg/KC+DNqNCqlvmNwVMLzPCblifSnnhoLn4tDjoCEgll9d8rL5fkT+dC2eu/v06Qk60Cl13vieieVK1CvJCGZi58TW2zgJcyWMGYpaZL6+sJW+o1MrsXJZwGYlzOjpamvqLZ+9991jqJGNwFI16BU2ttZfwpgigZl189RT9uGPoGM+vG92vyzTbFraoXnAO0MdudkrPEqkIaChNh/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N4VTMR1y/qGwDF9Opj1UTtjSGLtdWO5PxQxFiOvuLoY=;
+ b=rBelNWMRHvdY1Wj0T03pPHUwjejkt3xK2TeAYJ1ypIaaYHj0sgNK/+8i+kXSoZmXjAkcg3i6j+5jz1cEQvAhdH1kjLOfV6YVc4MZZL1iQpSPT4Gm/0u6F0qDgvhjjxseNG1nNhzPGDcuYOUTQ5Z9x/cANBdkV7A4XF24p30O9gU=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3552.eurprd04.prod.outlook.com (52.134.4.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Mon, 2 Mar 2020 09:36:32 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 09:36:32 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrei Botila <andrei.botila@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>
+Subject: Re: [PATCH] crypto: caam - update xts sector size for large input
+ length
+Thread-Topic: [PATCH] crypto: caam - update xts sector size for large input
+ length
+Thread-Index: AQHV7iR/GJR55F8brEiS/iBRq64oyA==
+Date:   Mon, 2 Mar 2020 09:36:32 +0000
+Message-ID: <VI1PR0402MB34851CC70E092F598E9BF32298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200228104648.18898-1-andrei.botila@oss.nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 08c672b6-2a6c-40ec-4b0e-08d7be8d3158
+x-ms-traffictypediagnostic: VI1PR0402MB3552:|VI1PR0402MB3552:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3552CEFBCD7A318E0B76120598E70@VI1PR0402MB3552.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(199004)(189003)(52536014)(5660300002)(2906002)(71200400001)(66946007)(91956017)(76116006)(66476007)(64756008)(66446008)(316002)(7696005)(66556008)(6506007)(33656002)(86362001)(54906003)(44832011)(478600001)(8936002)(26005)(186003)(9686003)(55016002)(8676002)(81166006)(4326008)(81156014)(53546011)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3552;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: S55ul4zv80yDSkwHmggKjBbriz8wSUw4SjcjTmBz68pTJ+LVCkp7KyGTE91IWUEtE+bz1N81bk3WbGSB+Nf6Vv3nR67u8ny5Jxhqxw826bzsZktTIia8K1jsEO/0OyJzJCPGIUAHbCiunNtMCoItKb7rXLOUHuZ0z0FZw0Gnkc4XFW02a2eUPlVrG7FCKevfJ8AY7XcFrMFGFfuydG4PavqnGbO/dGrFBY50/V+nC6yTcSYEiMrI6ZcdEPwUkGFzdIwPRMlXfZJ0e/NbkziYgicrf8fFQqbmxzNI1gXy3RfbQvvzLOXVItfd3m5lRw0fk2nXsCRxAVCZ/Yt4Xtc7t+DbBomXq2FXqT3hM1ctr6K4TFfXgjLmJZv4DhunqeXbxGeRQV7oJe9PoFvLPIiLDMQIENgWN3ipadui+eBp/Ekfa+9f9s1rlU9dWAh0WmQf
+x-ms-exchange-antispam-messagedata: b1gwwWdTlZ8bg0ArvcjwWU5oMshxsd7S4ISivJbECXX9L18NQcf6EzNvBxNXKBtQfOcP20cuh7OCYlhWxNhpxexChyd3Ey+pXU4YwslVzh/mt5utiX+43aRBVnntVDy4KaxqLDQ4+nfCqCRYXXQdLQ==
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08c672b6-2a6c-40ec-4b0e-08d7be8d3158
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 09:36:32.2781
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xRsThamCcsSl5TzGVxYY/M5O4+kbVgEhDN1kZrHVwAey91IpEapYnxKBI5Xt6d/vGSCCtXHO4K5f34qmLPv5Zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3552
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In f2fs_vm_page_mkwrite(), if inode is compress one, and current mmapped
-page locates in compressed cluster, we have to call f2fs_get_dnode_of_data()
-to get its physical block address before f2fs_wait_on_block_writeback().
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/file.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 09164c6a1d39..caa7ca42791f 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -106,10 +106,18 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- 		err = f2fs_get_block(&dn, page->index);
- 		f2fs_put_dnode(&dn);
- 		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
--		if (err) {
--			unlock_page(page);
--			goto out_sem;
--		}
-+	}
-+
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+	if (!need_alloc) {
-+		set_new_dnode(&dn, inode, NULL, NULL, 0);
-+		err = f2fs_get_dnode_of_data(&dn, page->index, LOOKUP_NODE);
-+		f2fs_put_dnode(&dn);
-+	}
-+#endif
-+	if (err) {
-+		unlock_page(page);
-+		goto out_sem;
- 	}
- 
- 	f2fs_wait_on_page_writeback(page, DATA, false, true);
--- 
-2.18.0.rc1
-
++ dm-devel=0A=
+=0A=
+On 2/28/2020 12:47 PM, Andrei Botila (OSS) wrote:=0A=
+> From: Andrei Botila <andrei.botila@nxp.com>=0A=
+> =0A=
+> Since in the software implementation of XTS-AES there is=0A=
+> no notion of sector every input length is processed the same way.=0A=
+> CAAM implementation has the notion of sector which causes different=0A=
+> results between the software implementation and the one in CAAM=0A=
+> for input lengths bigger than 512 bytes.=0A=
+> Increase sector size to maximum value on 16 bits.=0A=
+> =0A=
+> Fixes: c6415a6016bf ("crypto: caam - add support for acipher xts(aes)")=
+=0A=
+> Cc: <stable@vger.kernel.org> # v4.12+=0A=
+> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
+> ---=0A=
+> This patch needs to be applied from v4.12+ because dm-crypt has added sup=
+port=0A=
+> for 4K sector size at that version. The commit was=0A=
+> 8f0009a225171 ("dm-crypt: optionally support larger encryption sector siz=
+e").=0A=
+> =0A=
+>  drivers/crypto/caam/caamalg_desc.c | 16 ++++++++++++++--=0A=
+>  1 file changed, 14 insertions(+), 2 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/crypto/caam/caamalg_desc.c b/drivers/crypto/caam/caa=
+malg_desc.c=0A=
+> index aa9ccca67045..8ebbbd28b1f7 100644=0A=
+> --- a/drivers/crypto/caam/caamalg_desc.c=0A=
+> +++ b/drivers/crypto/caam/caamalg_desc.c=0A=
+> @@ -1518,7 +1518,13 @@ EXPORT_SYMBOL(cnstr_shdsc_skcipher_decap);=0A=
+>   */=0A=
+>  void cnstr_shdsc_xts_skcipher_encap(u32 * const desc, struct alginfo *cd=
+ata)=0A=
+>  {=0A=
+> -	__be64 sector_size =3D cpu_to_be64(512);=0A=
+> +	/*=0A=
+> +	 * Set sector size to a big value, practically disabling=0A=
+> +	 * sector size segmentation in xts implementation. We cannot=0A=
+> +	 * take full advantage of this HW feature with existing=0A=
+> +	 * crypto API / dm-crypt SW architecture.=0A=
+> +	 */=0A=
+> +	__be64 sector_size =3D cpu_to_be64(BIT(15));=0A=
+>  	u32 *key_jump_cmd;=0A=
+>  =0A=
+>  	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);=0A=
+> @@ -1571,7 +1577,13 @@ EXPORT_SYMBOL(cnstr_shdsc_xts_skcipher_encap);=0A=
+>   */=0A=
+>  void cnstr_shdsc_xts_skcipher_decap(u32 * const desc, struct alginfo *cd=
+ata)=0A=
+>  {=0A=
+> -	__be64 sector_size =3D cpu_to_be64(512);=0A=
+> +	/*=0A=
+> +	 * Set sector size to a big value, practically disabling=0A=
+> +	 * sector size segmentation in xts implementation. We cannot=0A=
+> +	 * take full advantage of this HW feature with existing=0A=
+> +	 * crypto API / dm-crypt SW architecture.=0A=
+> +	 */=0A=
+> +	__be64 sector_size =3D cpu_to_be64(BIT(15));=0A=
+>  	u32 *key_jump_cmd;=0A=
+>  =0A=
+>  	init_sh_desc(desc, HDR_SHARE_SERIAL | HDR_SAVECTX);=0A=
+> =0A=
+=0A=
