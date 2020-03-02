@@ -4,20 +4,20 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A15C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4655D24677
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92832467E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgCCAAp (ORCPT
+        id S1727608AbgCCABA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:00:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:17170 "EHLO mga03.intel.com"
+        Mon, 2 Mar 2020 19:01:00 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17173 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbgCBX51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727388AbgCBX51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:57:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:24 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384792"
+   d="scan'208";a="243384786"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 56/66] KVM: x86: Check for Intel PT MSR virtualization using KVM cpu caps
-Date:   Mon,  2 Mar 2020 15:56:59 -0800
-Message-Id: <20200302235709.27467-57-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 54/66] KVM: x86: Use KVM cpu caps to detect MSR_TSC_AUX virt support
+Date:   Mon,  2 Mar 2020 15:56:57 -0800
+Message-Id: <20200302235709.27467-55-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,49 +49,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kvm_cpu_cap_has() to check for Intel PT when processing the list of
-virtualized MSRs to pave the way toward removing ->pt_supported().
+Check for MSR_TSC_AUX virtualization via kvm_cpu_cap_has() and drop
+->rdtscp_supported().
+
+Note, vmx_rdtscp_supported() needs to hang around a tiny bit longer due
+other usage in VMX code.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 -
+ arch/x86/kvm/svm.c              | 6 ------
+ arch/x86/kvm/vmx/vmx.c          | 3 ---
+ arch/x86/kvm/x86.c              | 2 +-
+ 4 files changed, 1 insertion(+), 11 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index eecc6afdd9a6..25d9a0d45cc6 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1149,7 +1149,6 @@ struct kvm_x86_ops {
+ 	int (*get_tdp_level)(struct kvm_vcpu *vcpu);
+ 	u64 (*get_mt_mask)(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
+ 	int (*get_lpage_level)(void);
+-	bool (*rdtscp_supported)(void);
+ 
+ 	void (*set_tdp_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
+ 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index d351007eb7f9..692b8ffdbad3 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6070,11 +6070,6 @@ static int svm_get_lpage_level(void)
+ 	return PT_PDPE_LEVEL;
+ }
+ 
+-static bool svm_rdtscp_supported(void)
+-{
+-	return boot_cpu_has(X86_FEATURE_RDTSCP);
+-}
+-
+ static bool svm_pt_supported(void)
+ {
+ 	return false;
+@@ -7439,7 +7434,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 
+ 	.cpuid_update = svm_cpuid_update,
+ 
+-	.rdtscp_supported = svm_rdtscp_supported,
+ 	.pt_supported = svm_pt_supported,
+ 
+ 	.set_supported_cpuid = svm_set_supported_cpuid,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d5a5e8f987c8..f168da6f9b89 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7935,9 +7935,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.get_lpage_level = vmx_get_lpage_level,
+ 
+ 	.cpuid_update = vmx_cpuid_update,
+-
+-	.rdtscp_supported = vmx_rdtscp_supported,
+-
+ 	.set_supported_cpuid = vmx_set_supported_cpuid,
+ 
+ 	.has_wbinvd_exit = cpu_has_vmx_wbinvd_exit,
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e2c3f1b69e25..9b8764255455 100644
+index df0c1b387400..e2c3f1b69e25 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5205,23 +5205,23 @@ static void kvm_init_msr_list(void)
+@@ -5200,7 +5200,7 @@ static void kvm_init_msr_list(void)
+ 				continue;
+ 			break;
+ 		case MSR_TSC_AUX:
+-			if (!kvm_x86_ops->rdtscp_supported())
++			if (!kvm_cpu_cap_has(X86_FEATURE_RDTSCP))
+ 				continue;
  			break;
  		case MSR_IA32_RTIT_CTL:
- 		case MSR_IA32_RTIT_STATUS:
--			if (!kvm_x86_ops->pt_supported())
-+			if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT))
- 				continue;
- 			break;
- 		case MSR_IA32_RTIT_CR3_MATCH:
--			if (!kvm_x86_ops->pt_supported() ||
-+			if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT) ||
- 			    !intel_pt_validate_hw_cap(PT_CAP_cr3_filtering))
- 				continue;
- 			break;
- 		case MSR_IA32_RTIT_OUTPUT_BASE:
- 		case MSR_IA32_RTIT_OUTPUT_MASK:
--			if (!kvm_x86_ops->pt_supported() ||
-+			if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT) ||
- 				(!intel_pt_validate_hw_cap(PT_CAP_topa_output) &&
- 				 !intel_pt_validate_hw_cap(PT_CAP_single_range_output)))
- 				continue;
- 			break;
- 		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
--			if (!kvm_x86_ops->pt_supported() ||
-+			if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT) ||
- 				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
- 				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
- 				continue;
 -- 
 2.24.1
 
