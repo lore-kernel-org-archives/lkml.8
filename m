@@ -2,118 +2,132 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4593AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4C0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C432468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD802468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dy70itIE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DRENygLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCBIML (ORCPT
+        id S1727060AbgCBIPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:12:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45800 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgCBIML (ORCPT
+        Mon, 2 Mar 2020 03:15:21 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47434 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgCBIPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:12:11 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so5178966pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uiixe7VTNTZjkUXMFLMDS3Y2pxtxz+Vh1/ihMtzRMVI=;
-        b=dy70itIEAmsCXfVzSU650FzvkKJIOE5y7NgZ20qW+FcP3TMQoXjNc4LKo1uoaGAjOG
-         XQr00jxsE1FYlOikWvxQ+JdGKnZsY6Oe8nTptzDegixpcrCTQt8JVdZgWo1M4nIjvOm/
-         1M5sNFKs5l2TFEc3D3vzGRFgXBCapHNzI4mRLN/rQHmOgTIDXx6rTxuOvhu3DE2ujvuQ
-         5mMjG9xWRNFfo1NPFFelDNebQUJLc1TcDljcE+Cb7VbwsesYfMzipP1IszHEsj0WPYNo
-         25FfPMb4quuCAB2u2oU8eDPLyyqjkZUopZZ3bu21vrad2b9H1+/4odT0geHvtywDaoxT
-         CfRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uiixe7VTNTZjkUXMFLMDS3Y2pxtxz+Vh1/ihMtzRMVI=;
-        b=jJpzcO1DtO6g+40mwMVkAm4DUuF0uNKmk6h3Qb57K6vgST6hdswf32wyrYtB4Sj3J2
-         6EyWe9D/mQ7Fw4YsUwOkJ1IBBwFNurzTB2nJ1ZQnG6OrThKXqNdrv0mCmWpgtxnc31qb
-         9zOkyhYi4YDp/VvvOWptjlVrh/bGXM/8uTNRdHWBX2sD6XAuhF/Yhuo4yiGjx79qkwwm
-         AIgk3/Y+vX433KV/MLBzVqOXxROitNRP6QgMkSkVLYmkvN2L/Ph7cO7eKb0uIExNs5DA
-         jz9PYVorG2y+EuAYKLHj3h6I/9Rbmni+YhnRCyzq4c0vVqcfIWxRBChVwTSaTzRcR3sq
-         i46A==
-X-Gm-Message-State: APjAAAVnhOnl9HiMojYz77btsOZEN1vZmNPE9gtoLbeNYMOKg/jX/C+Q
-        j/b9Ft5vo/b2u9KnYJmKV993CA==
-X-Google-Smtp-Source: APXvYqwPqXg9y4z1RZRMwnewbFTvr4F0/qjs0khbEDYRPehQH4P/51Sz/t9mRLOPFtgea4hWxFraaA==
-X-Received: by 2002:a63:4555:: with SMTP id u21mr18083511pgk.66.1583136730489;
-        Mon, 02 Mar 2020 00:12:10 -0800 (PST)
-Received: from localhost ([122.167.24.230])
-        by smtp.gmail.com with ESMTPSA id x4sm15178437pgi.76.2020.03.02.00.12.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 00:12:09 -0800 (PST)
-Date:   Mon, 2 Mar 2020 13:42:07 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] KVM: X86: Fix dereference null cpufreq policy
-Message-ID: <20200302081207.3kogqwxbkujqgc7z@vireshk-i7>
-References: <1583133336-7832-1-git-send-email-wanpengli@tencent.com>
- <ab51f6c9-a67d-0107-772a-7fe57a2319cf@redhat.com>
+        Mon, 2 Mar 2020 03:15:20 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0228Esbw067966;
+        Mon, 2 Mar 2020 02:14:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583136894;
+        bh=TdhMpVGavBMp+rXwCQqseldtj1O3C6Ev8oQyZs2QgMQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=DRENygLrbKRMRypHzLIXHGsOsqoyTlJ5Vkm+EKAVOcFMmK11FULvxBUIHsDLXKN+K
+         aNo3jq8jEpTzrBm/UgzqoEZeGBAui6BEtEkGbb++n3N/HIJ+K6sBoq0MpMThKZ84My
+         V/LeFhUvoK7C5lFZaA2WubDIoF2vtwevBqu9Gh70=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0228EsA4016695;
+        Mon, 2 Mar 2020 02:14:54 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 02:14:54 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 02:14:54 -0600
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0228EnLq073051;
+        Mon, 2 Mar 2020 02:14:50 -0600
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+ <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Message-ID: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Date:   Mon, 2 Mar 2020 13:46:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab51f6c9-a67d-0107-772a-7fe57a2319cf@redhat.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-03-20, 08:55, Paolo Bonzini wrote:
-> On 02/03/20 08:15, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> > 
-> > cpufreq policy which is get by cpufreq_cpu_get() can be NULL if it is failure,
-> > this patch takes care of it.
-> > 
-> > Fixes: aaec7c03de (KVM: x86: avoid useless copy of cpufreq policy)
-> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> 
-> My bad, I checked kobject_put but didn't check that kobj is first in
-> struct cpufreq_policy.
-> 
-> I think we should do this in cpufreq_cpu_put or, even better, move the
-> kobject struct first in struct cpufreq_policy.  Rafael, Viresh, any
-> objection?
-> 
-> Paolo
-> 
-> >  		policy = cpufreq_cpu_get(cpu);
-> > -		if (policy && policy->cpuinfo.max_freq)
-> > -			max_tsc_khz = policy->cpuinfo.max_freq;
-> > +		if (policy) {
-> > +			if (policy->cpuinfo.max_freq)
-> > +				max_tsc_khz = policy->cpuinfo.max_freq;
-> > +			cpufreq_cpu_put(policy);
-> > +		}
+Marc,
 
-I think this change makes sense and I am not sure why should we even
-try to support cpufreq_cpu_put(NULL).
+On 26/02/20 2:40 pm, Faiz Abbas wrote:
+> Hi Marc,
+> 
+> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>>> Hi Rob,
+>>>
+>>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>>> before they can be used. Model this GPIO lines as an optional
+>>>>> fixed-regulator node. Document bindings for the same.
+>>>>>
+>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>>  1 file changed, 3 insertions(+)
+>>>>
+>>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>>
+>>> Ok.
+>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>>  			  for details.
+>>>>> +
+>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>>
+>>>> The supply for a transceiver should go in the transceiver node.
+>>>>
+>>>
+>>> Marc, while I have you here, do you agree with this?
+>>
+>> I'll look into the details later today.
+>>
+> 
+> Sure. Be sure to take another look at my attempt to use the transceiver
+> with a phy driver some time ago.
+> 
+> https://lore.kernel.org/patchwork/patch/1006238/
+> 
 
--- 
-viresh
+Do you have any comments?
+
+Thanks,
+Faiz
