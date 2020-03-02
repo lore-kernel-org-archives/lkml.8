@@ -2,140 +2,177 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF433C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F2FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5D32146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Qr8r2Ktj"
+	by mail.kernel.org (Postfix) with ESMTP id 3EB252146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCBQBs (ORCPT
+        id S1727305AbgCBQCw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:01:48 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59512 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCBQBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:01:48 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9D35E9D0;
-        Mon,  2 Mar 2020 17:01:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583164905;
-        bh=8xsW9GAR0aM5jgCKtEVOt61W0h7SwaVnM/ckN7MbJKA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qr8r2Ktj7KXelyNGWtC/to2sGwhKDEtdoFo80PR1O/jmYLYEffTuv81qeyshUYH3T
-         QqJ1IF3L1qpPhjheuw6vM8MGVil2R1hXt9Cm1ZmidXNKxyn9uQvWYN/kfA/dvf837W
-         262ZSoS48nk+e4FkoT9Xr2V0tFJzu31ay1LSzKDQ=
-Date:   Mon, 2 Mar 2020 18:01:21 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] drm/bridge: dw-hdmi: set mtmdsclock for deep
- color
-Message-ID: <20200302160121.GR11960@pendragon.ideasonboard.com>
-References: <20200206191834.6125-1-narmstrong@baylibre.com>
- <20200206191834.6125-2-narmstrong@baylibre.com>
- <20200302090527.GB11960@pendragon.ideasonboard.com>
- <a5b6d1f2-8f1c-ae3f-529d-baf7f4cecbe9@baylibre.com>
+        Mon, 2 Mar 2020 11:02:52 -0500
+Received: from mail-oln040092075088.outbound.protection.outlook.com ([40.92.75.88]:31362
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727030AbgCBQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:02:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=je2RXnG16y7NtkPWMF1zyTw5A33hyaZklCJPpq2ssSJno+cm3UGWwnoP4UWF8XLgHj0kc9Q2kidPh0ttod03kCAYm9L2umMtrvoGsVoUH+z+lifyTzUy6NHJYsp0hMrMuz5aRV3ghBrUDzh4nuveB2YSgkWGEubOHLYpadSpU9cKXpvI+LHob56TDaiVs3MyIUpqyVOGk94tq80p8rEIpLOhVTaPuk342FCdSqRg8mMR1s7PgERsiA4UJrQQF1BKR8TaUjDQX5derZeG5bCqEx8cWNnTNfFZ+uDCHywB8QQ2QpPrac21SnFvvAHbEnpL80fIhlf9QY948BLsaXMUBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ugYMYDjtDWGkDUB+qcm3BpyPM1qsEjY4td3FtEgCv5o=;
+ b=KEdz1wAqCyGKNR6LMG8VWFYrUTImppcPYJMExRojR2pMQqWx6qN6d150pMyvf7JP1JFohfCD05GfFCtbih5qKtKt3BxRGyFxj/72MAMkzKO0yeH3BSc0W5lO/LmIWZSqkVG7fGwCqBG6zboB9kM1ExmuRMCbs0U+zwf/807q35+6p+nvZXGBoycVgbEM4qAcHukLa8ZCU8q+q9mmjqVVc4PRZbITk0MjC2/rAv9661whhfTtO+1mj1jedLYk9c4GgMhkhvw8cGajtK/R4kAof/7kHQpjPaePhg5WpVBgNgmLYhuH6RGWKJ0rkN7SGXaxv1dun17epIypmJuX9ddc2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB3EUR04FT028.eop-eur04.prod.protection.outlook.com
+ (2a01:111:e400:7e0c::39) by
+ DB3EUR04HT086.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0c::111)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
+ 2020 16:02:46 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.24.58) by
+ DB3EUR04FT028.mail.protection.outlook.com (10.152.24.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 16:02:46 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 16:02:46 +0000
+Received: from [192.168.1.101] (92.77.140.102) by FRYP281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 16:02:45 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Topic: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Index: AQHV8AjGwZG4WijWc0+aQpdADP+q6qg02ufjgACXoYCAAASqH4AAAMAA
+Date:   Mon, 2 Mar 2020 16:02:46 +0000
+Message-ID: <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+ <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+ <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
+ <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74zmfc9.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87k142lpfz.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: FRYP281CA0013.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::23)
+ To AM6PR03MB5170.eurprd03.prod.outlook.com (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:EE7FB4A1F22E77C5C75377EF02B552EB133B89EE617356F5276311CEA1CF0AD8;UpperCasedChecksum:496B99C73651966DAA91F10A28864B699E97B29E8D02E46B5F5DE04D6DB6FF0D;SizeAsReceived:9310;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [kSYEysC4SiccGesrCrUHP0/d1EvB53nl]
+x-microsoft-original-message-id: <dd57f56a-436e-067b-66e5-d2b8d6465139@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 616d6ef6-bc85-4308-8d3a-08d7bec32617
+x-ms-traffictypediagnostic: DB3EUR04HT086:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eEK+e5KAclWlOlAAn8XMCi95cq3q9/R7QdS9DM4ouOxM70qm4UKOk4cm+9tzQBoIW8rQbjKhc5hh6EVO9IRLzeM2YMN44TvQgPy7ge7MwSQoxh3/5voQCMWCMXOF9ZVOtu7Sfjx2UZiK+Xa67hEdgX0uxD98uddpwGxcCyP4qi37WwHzWT5r5dZmVDEuZXe+
+x-ms-exchange-antispam-messagedata: ohDQMtYLuVYlPaKhrZLlFUvPCsox8rDD54wuxyD6Ka1bHs2ImLJaxG7p6YlusvReXllRwXlxHEwEKfaJCg1MNBUQJ3pWXEKTQYbEN01VDWz+662eMoMTCCzgFzIEDKse+sIzjsVuAsbuiLVRMcR7IA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <B4FA37A5D9EF064A8F106F1FF744B0E3@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a5b6d1f2-8f1c-ae3f-529d-baf7f4cecbe9@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 616d6ef6-bc85-4308-8d3a-08d7bec32617
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 16:02:46.6050
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3EUR04HT086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
- 
-On Mon, Mar 02, 2020 at 04:54:17PM +0100, Neil Armstrong wrote:
-> On 02/03/2020 10:05, Laurent Pinchart wrote:
-> > On Thu, Feb 06, 2020 at 08:18:24PM +0100, Neil Armstrong wrote:
-> >> From: Jonas Karlman <jonas@kwiboo.se>
-> >>
-> >> Configure the correct mtmdsclock for deep colors to prepare support
-> >> for 10, 12 & 16bit output.
-> >>
-> >> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> ---
-> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 17 +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> >> index 67fca439bbfb..9e0927d22db6 100644
-> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> >> @@ -1818,9 +1818,26 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
-> >>  
-> >>  	dev_dbg(hdmi->dev, "final pixclk = %d\n", vmode->mpixelclock);
-> > 
-> > Nitpicking a bit, I would change
-> > 
-> > -	vmode->mtmdsclock = vmode->mpixelclock = mode->clock * 1000;
-> > +	vmode->mpixelclock = mode->clock * 1000;
-> > 
-> > above, and here add
-> > 
-> > 	vmode->mtmdsclock = vmode->mpixelclock;
-> > 
-> > to keep all mtmdsclock calculation in a single place.
-> > 
-> >> +	if (!hdmi_bus_fmt_is_yuv422(hdmi->hdmi_data.enc_out_bus_format)) {
-> >> +		switch (hdmi_bus_fmt_color_depth(
-> >> +				hdmi->hdmi_data.enc_out_bus_format)) {
-> >> +		case 16:
-> >> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 2;
-> > 
-> > Both mpixelclock and mtmdsclock are unsigned int. Is the cast to u64
-> > needed ?
-> > 
-> > On a separate but related note, what does the 'm' in tmdsclock stand for
-> > ? It seems to originate from the 'm' prefix for mpixelclock, which has
-> > been there from the start. Unless there's a good reason for the prefix,
-> > renaming mtmdsclock to tmds_clock (and handling the other fields in the
-> > hdmi_vmode structure similarly) would increase clarity I think.
-> > 
-> >> +			break;
-> >> +		case 12:
-> >> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 3 / 2;
-> >> +			break;
-> >> +		case 10:
-> >> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 5 / 4;
-> >> +			break;
-> >> +		}
-> >> +	}
-> >> +
-> >>  	if (hdmi_bus_fmt_is_yuv420(hdmi->hdmi_data.enc_out_bus_format))
-> >>  		vmode->mtmdsclock /= 2;
-> >>  
-> >> +	dev_dbg(hdmi->dev, "final tmdsclk = %d\n", vmode->mtmdsclock);
-> > 
-> > s/tmdsclk/tmdsclock/ to match the field name ?
-> > 
-> >> +
-> >>  	/* Set up HDMI_FC_INVIDCONF */
-> >>  	inv_val = (hdmi->hdmi_data.hdcp_enable ||
-> >>  		   (dw_hdmi_support_scdc(hdmi) &&
-> > 
+
+
+On 3/2/20 4:57 PM, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 > 
-> I fixed the calculus and the cast, but I'll rename the mtmdsclock in a following patch.
+>>
+>> I tried this with s/EACCESS/EACCES/.
+>>
+>> The test case in this patch is not fixed, but strace does not freeze,
+>> at least with my setup where it did freeze repeatable.
 > 
-> is it ok for you ?
+> Thanks, That is what I was aiming at.
+> 
+> So we have one method we can pursue to fix this in practice.
+> 
+>> That is
+>> obviously because it bypasses the cred_guard_mutex.  But all other
+>> process that access this file still freeze, and cannot be
+>> interrupted except with kill -9.
+>>
+>> However that smells like a denial of service, that this
+>> simple test case which can be executed by guest, creates a /proc/$pid/mem
+>> that freezes any process, even root, when it looks at it.
+>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
+> 
+> Yes.  Your the test case in your patch a variant of the original
+> problem.
+> 
+> 
+> I have been staring at this trying to understand the fundamentals of the
+> original deeper problem.
+> 
+> The current scope of cred_guard_mutex in exec is because being ptraced
+> causes suid exec to act differently.  So we need to know early if we are
+> ptraced.
+> 
 
-Sure, works for me.
+It has a second use, that it prevents two threads entering execve,
+which would probably result in disaster.
 
--- 
-Regards,
-
-Laurent Pinchart
+> If that case did not exist we could reduce the scope of the
+> cred_guard_mutex in exec to where your patch puts the cred_change_mutex.
+> 
+> I am starting to think reworking how we deal with ptrace and exec is the
+> way to solve this problem.
+> 
+> Eric
+> 
