@@ -2,209 +2,153 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89DFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48530C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F8221775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E5721D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCqdoYQZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjBc7d6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCBQcH (ORCPT
+        id S1727398AbgCBQc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:32:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21254 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727142AbgCBQcE (ORCPT
+        Mon, 2 Mar 2020 11:32:56 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40200 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgCBQc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:32:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583166721;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SV2DzgE7/GVCHxe1MyF7cvm3oaLFW5XDl1ckEgBzooo=;
-        b=NCqdoYQZL20c7X1lccXyd9rFhgGzAs0YLSxhxoignPEdj8FVhm664oE5fcx8rCezfjvz2N
-        QphHI+1iNCc5Hb3aaRQSb6IwPlw+40W0VSWAgfavI9wGC4/aqrkNcuLKrXTpK8qVo9u9NZ
-        VgLmwmq235BoXIA9hGTjjbsfAe+ZP+w=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-S5q1sz_lN5Or8acYYFbJag-1; Mon, 02 Mar 2020 11:31:58 -0500
-X-MC-Unique: S5q1sz_lN5Or8acYYFbJag-1
-Received: by mail-wr1-f70.google.com with SMTP id d9so6017222wrv.21
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:31:57 -0800 (PST)
+        Mon, 2 Mar 2020 11:32:56 -0500
+Received: by mail-vk1-f194.google.com with SMTP id c129so3121115vkh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:32:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6G1UATj4krZxsCknjrQEeeFai91FPwBe7XfsjRuVvR4=;
+        b=gjBc7d6YnjDc2NB2v1tqHbdmYRA6US1Zc4Bwdfw5pIWhSmmK+Bim0XXVC967za6mwx
+         ttu/8XEIGHY+D5pOwYhrSNHH/c4SoLvoncF5LehwoF40RSVQ9t9odVgxLiDlcLjFr8Qf
+         uXYk5vh3osEyjqmPttQL18i1ib4MEU32Qt3I2R3oe2JnmiK3Jik/inzsusGzwGnwm8pV
+         s1va7f8IYUZ7uLxzJUgWIyTWYsii4w3rsSFeFJeDn2VTka/qdtcbcgiRxqnQuUa+AYgx
+         0sFVAYTtpPKHuI2iqRu7GbzoyP3paHDugM7UXOnTi6wNwOQFMIQx2OSWfFXbxa+LWAu3
+         a1yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SV2DzgE7/GVCHxe1MyF7cvm3oaLFW5XDl1ckEgBzooo=;
-        b=jZ7bCxMVeIUue5XKXdCeIN0jsorBDxjn6lfMFtBBZAywJpTc2GKthCTZ4X9/7Z/gRZ
-         MpW4tSEQol2Jb+2PHXAH8ozEV/wdMdOW5FuTZEX+6amJwITcCBHKOniriD7vy27/2Ffm
-         GxITL+DsjUPJTj4tW+fEHtf48Cdwfn8pqfzm+Qy8ohf8WIF0gwaL0z6txI/J4oIrgP92
-         Jaoo1b42xOFYojBbOYykwB348StkRfu5k5q9+NwUNQRu8NgOg2Q/pCEdMF/jmzqOSY1n
-         TzDfQO6mxdYUvNUlR4g8fvxH5lntSvIBGGGzM0i7YESQ3xgInYwYXUSP1lGYRZbpPEYc
-         HzoQ==
-X-Gm-Message-State: ANhLgQ1mScQvd/3qK/xMPXIl6McJqgXP29fhh1imkQ70dsZAA/a7THEM
-        hlBIdgnefNfQX7wWOmo1c5GKbUe3wflfKKEqvDea7WxiT9nrh9q3Qv91FiHGndgSEfDNcxRqqxw
-        ysdC3/YYe3mVuGDQjssuj/wY0
-X-Received: by 2002:a1c:ba87:: with SMTP id k129mr244106wmf.102.1583166716825;
-        Mon, 02 Mar 2020 08:31:56 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuwUWhJ3l7EnEnCkmDlth1oK52o+owEznQwr9Yr2mH+gmpSnrmjs+4wXh/972NER3NftmL04w==
-X-Received: by 2002:a1c:ba87:: with SMTP id k129mr244074wmf.102.1583166716453;
-        Mon, 02 Mar 2020 08:31:56 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.85.6])
-        by smtp.gmail.com with ESMTPSA id i4sm16121618wmd.23.2020.03.02.08.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 08:31:55 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
-To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d94a44f0-7fed-b5e4-49e8-6dd1b89185db@redhat.com>
-Date:   Mon, 2 Mar 2020 17:31:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6G1UATj4krZxsCknjrQEeeFai91FPwBe7XfsjRuVvR4=;
+        b=C76lyQeKK04YKRQSbJOPAADPGneciSHE7jzY6VVXvfJqm+AKyOncjADlywVjwGEP1X
+         jDy0e1EKvCzF/u/hy3owMyUPNWjxcfZZ+EwObCV/C7+F9q7OPk4i5CyZ30jT9++JFLIh
+         YIs0Pe5AtXj35yl4xIpqs7hvniXgDJPeb2YNfbDygtUIdiqO4VLTlMgCJsQ5XPWDephF
+         Am/X6F7HvbYXzQxQTyr5Y7sa44WFjFQO5AyNHJ5j0LC1+cWA67S2DtMJK1/DzQAa45Nm
+         nZryie9GXkv/WUre6x+ERqTR0laHNXz/oMNA4KDXhNG6MvOz/0+e/QAJIJS4JGAcZSlh
+         k/aw==
+X-Gm-Message-State: ANhLgQ2TFb8LQJMejAqCekJZz4BaUDdbM7zfuWFaQU+co6OHPbbYwyQ0
+        jvjKhmXDUneuJU4pzhlDU6g0+20Xig+7OG8Bpi+cmQ==
+X-Google-Smtp-Source: ADFU+vudr5OddUJOm/nCflCRNBR8hUNIZhkJyQ8IXmQMh0kL9nYnxmTqjHWz5AHVu0pL2BiPYiLALTBK7m4MdHvpN+w=
+X-Received: by 2002:ac5:c914:: with SMTP id t20mr334096vkl.37.1583166775011;
+ Mon, 02 Mar 2020 08:32:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200219014433.88424-1-minchan@kernel.org> <20200219014433.88424-7-minchan@kernel.org>
+ <CAJuCfpE=7aqwegMb5i3EwWb=xcphXSNE33dCCUvt=WS0Sr-wfg@mail.gmail.com> <20200302073332.gn7lvhxmmv5pupyq@butterfly.localdomain>
+In-Reply-To: <20200302073332.gn7lvhxmmv5pupyq@butterfly.localdomain>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Mon, 2 Mar 2020 08:32:44 -0800
+Message-ID: <CAJuCfpE++EUbmhmr6+iutFk5Nd3teXy5Xr0y735LP25ciNKKcQ@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] mm/madvise: employ mmget_still_valid for write lock
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 04:21, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the value of
-> vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not copied to
-> userspace by copy_to_user() from call site. Also cpuid->nent is not updated
-> to indicate how many entries were retrieved on success case. So this ioctl
-> is straight up broken. And in fact, it's not used anywhere. So it should be
-> deprecated.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/cpuid.c           | 20 --------------------
->  arch/x86/kvm/cpuid.h           |  3 ---
->  arch/x86/kvm/x86.c             | 16 ++--------------
->  include/uapi/linux/kvm.h       |  1 +
->  tools/include/uapi/linux/kvm.h |  1 +
->  5 files changed, 4 insertions(+), 37 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..5e041a1282b8 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->  	return r;
->  }
->  
-> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
-> -			      struct kvm_cpuid2 *cpuid,
-> -			      struct kvm_cpuid_entry2 __user *entries)
-> -{
-> -	int r;
-> -
-> -	r = -E2BIG;
-> -	if (cpuid->nent < vcpu->arch.cpuid_nent)
-> -		goto out;
-> -	r = -EFAULT;
-> -	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
-> -			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
-> -		goto out;
-> -	return 0;
-> -
-> -out:
-> -	cpuid->nent = vcpu->arch.cpuid_nent;
-> -	return r;
-> -}
-> -
->  static __always_inline void cpuid_mask(u32 *word, int wordnum)
->  {
->  	reverse_cpuid_check(wordnum);
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 7366c618aa04..76555de38e1b 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
->  int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->  			      struct kvm_cpuid2 *cpuid,
->  			      struct kvm_cpuid_entry2 __user *entries);
-> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
-> -			      struct kvm_cpuid2 *cpuid,
-> -			      struct kvm_cpuid_entry2 __user *entries);
->  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->  	       u32 *ecx, u32 *edx, bool check_limit);
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ddd1d296bd20..a6d99abedb2c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4295,21 +4295,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->  					      cpuid_arg->entries);
->  		break;
->  	}
-> +	/* KVM_GET_CPUID2 is deprecated, should not be used. */
->  	case KVM_GET_CPUID2: {
-> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
-> -		struct kvm_cpuid2 cpuid;
-> -
-> -		r = -EFAULT;
-> -		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
-> -			goto out;
-> -		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
-> -					      cpuid_arg->entries);
-> -		if (r)
-> -			goto out;
-> -		r = -EFAULT;
-> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
-> -			goto out;
-> -		r = 0;
-> +		r = -EINVAL;
->  		break;
->  	}
->  	case KVM_GET_MSRS: {
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4b95f9a31a2f..61524780603d 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1380,6 +1380,7 @@ struct kvm_s390_ucas_mapping {
->  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
->  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
->  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
->  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
->  /* Available with KVM_CAP_VAPIC */
->  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
-> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-> index f0a16b4adbbd..2ef719af4c57 100644
-> --- a/tools/include/uapi/linux/kvm.h
-> +++ b/tools/include/uapi/linux/kvm.h
-> @@ -1379,6 +1379,7 @@ struct kvm_s390_ucas_mapping {
->  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
->  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
->  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
->  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
->  /* Available with KVM_CAP_VAPIC */
->  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
-> 
+On Sun, Mar 1, 2020 at 11:33 PM Oleksandr Natalenko
+<oleksandr@redhat.com> wrote:
+>
+> Hello.
+>
+> On Fri, Feb 28, 2020 at 03:19:55PM -0800, Suren Baghdasaryan wrote:
+> > On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
+> > >
+> > > From: Oleksandr Natalenko <oleksandr@redhat.com>
+> > >
+> > > Do the very same trick as we already do since 04f5866e41fb. KSM hints
+> > > will require locking mmap_sem for write since they modify vm_flags, so
+> > > for remote KSM hinting this additional check is needed.
+> > >
+> > > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > > ---
+> > >  mm/madvise.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/mm/madvise.c b/mm/madvise.c
+> > > index f6d9b9e66243..c55a18fe71f9 100644
+> > > --- a/mm/madvise.c
+> > > +++ b/mm/madvise.c
+> > > @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+> > >         if (write) {
+> > >                 if (down_write_killable(&mm->mmap_sem))
+> > >                         return -EINTR;
+> > > +               if (current->mm != mm && !mmget_still_valid(mm))
+> >
+> > mmget_still_valid() seems pretty light-weight, so why not just use
+> > that without checking that the mm belongs to the current process
+> > first?
+>
+> I'd keep the checks separate to a) do not functionally change current->mm
+> == mm case; b) clearly separate the intention to call
+> mmget_still_valid() only for remote access (using mmget_still_valid()
+> for current->mm == mm does not make any sense here, IMO, since there's
+> no possibility of expecting a core dump at this point); c) ease the job for
+> reviewer once mmget_still_valid() is scheduled to be removed (I hope it
+> eventually goes away indeed).
+>
 
-Queued, thanks.
+Makes sense. Thanks!
 
-Paolo
+> >
+> > > +                       goto skip_mm;
+> > >         } else {
+> > >                 down_read(&mm->mmap_sem);
+> > >         }
+> > > @@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+> > >         }
+> > >  out:
+> > >         blk_finish_plug(&plug);
+> > > +skip_mm:
+> > >         if (write)
+> > >                 up_write(&mm->mmap_sem);
+> > >         else
+> > > --
+> > > 2.25.0.265.gbab2e86ba0-goog
+> > >
+> >
+>
+> --
+>   Best regards,
+>     Oleksandr Natalenko (post-factum)
+>     Principal Software Maintenance Engineer
+>
 
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
