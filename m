@@ -6,103 +6,111 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6E6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5598C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1D32146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53882146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCBPKw (ORCPT
+        id S1727413AbgCBPLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:10:52 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34163 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgCBPKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:10:52 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j8miV-0001DR-2G; Mon, 02 Mar 2020 15:10:47 +0000
-Date:   Mon, 2 Mar 2020 16:10:46 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-Message-ID: <20200302151046.447zgo36dmfdr2ik@wittgenstein>
-References: <96563.1582901612@warthog.procyon.org.uk>
- <20200228152427.rv3crd7akwdhta2r@wittgenstein>
- <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
- <20200302115239.pcxvej3szmricxzu@wittgenstein>
- <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
+        Mon, 2 Mar 2020 10:11:44 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2497 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726621AbgCBPLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:11:44 -0500
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id A2C0C91186757F875EB4;
+        Mon,  2 Mar 2020 15:11:42 +0000 (GMT)
+Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 2 Mar 2020 15:11:42 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 2 Mar 2020 16:11:41 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Mon, 2 Mar 2020 16:11:42 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+Thread-Topic: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+Thread-Index: AQHV3/kpNT3OoKRF00CRxabm/9u1E6gU8McAgADT8jCAH5syAIAAFKYQ///9dQCAABQMwA==
+Date:   Mon, 2 Mar 2020 15:11:41 +0000
+Message-ID: <a5e0cdc4839e478d926b90bd5ba0857c@huawei.com>
+References: <20200210100048.21448-1-roberto.sassu@huawei.com>
+         <20200210100048.21448-3-roberto.sassu@huawei.com>
+         <1581373420.5585.920.camel@linux.ibm.com>
+         <6955307747034265bd282bf68c368f34@huawei.com>
+         <1583156506.8544.60.camel@linux.ibm.com>
+         <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
+ <1583160394.8544.89.camel@linux.ibm.com>
+In-Reply-To: <1583160394.8544.89.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 01:05:04PM +0100, Christian Brauner wrote:
-> On Mon, Mar 02, 2020 at 12:52:39PM +0100, Christian Brauner wrote:
-> > On Mon, Mar 02, 2020 at 12:30:47PM +0100, Florian Weimer wrote:
-> > > * Christian Brauner:
-> > > 
-> > > > [Cc Florian since that ends up on libc's table sooner or later...]
-> > > 
-> > > I'm not sure what you are after here …
-> > 
-> > Exactly what you've commented below. Input on whether any of these
-> > changes would be either problematic if you e.g. were to implement
-> > openat() on top of openat2() in the future or if it would be problematic
-> > if we e.g. were to really deprecate AT_* flags for new syscalls.
-> > 
-> > > 
-> > > > On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
-> > > >> 	
-> > > >> I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
-> > > >> should be used instead of the equivalent AT_* flags for new system calls.  Is
-> > > >> this the case?
-> > > >
-> > > > Imho, it would make sense to use RESOLVE_* flags for new system calls
-> > > > and afair this was the original intention.
-> > > > The alternative is that RESOLVE_* flags are special to openat2(). But
-> > > > that seems strange, imho. The semantics openat2() has might be very
-> > > > useful for new system calls as well which might also want to support
-> > > > parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
-> > > > flags mirroring the new RESOLVE_* flags or we end up adding new
-> > > > RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
-> > > > possibility I vote for RESOLVE_* flags going forward. The have better
-> > > > naming too imho.
-> > > >
-> > > > An argument against this could be that we might end up causing more
-> > > > confusion for userspace due to yet another set of flags. But maybe this
-> > > > isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
-> > > > When we introduce a new syscall userspace will have to add support for
-> > > > it anyway.
-> > > 
-> > > I missed the start of the dicussion and what this is about, sorry.
-> > > 
-> > > Regarding open flags, I think the key point for future APIs is to avoid
-> > > using the set of flags for both control of the operation itself
-> > > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
-> > > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
-> 
-> Yeah, we have touched on that already and we have other APIs having
-> related problems. A clean way to avoid this problem is to require new
-> syscalls to either have two flag arguments, or - if appropriate -
-> suggest they make use of struct open_how that was implemented for
-> openat2().
-
-By the way, if we really means business wrt to: separate resolution from
-fd-property falgs then shouldn't we either require O_NOFOLLOW for
-openat2() be specified in open_how->resolve or disallow O_NOFOLLOW for
-openat2() and introduce a new RESOLVE_* variant?
-
-Christian
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
+em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAyLCAyMDIwIDM6NDcg
+UE0NCj4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT47DQo+IEph
+bWVzLkJvdHRvbWxleUBIYW5zZW5QYXJ0bmVyc2hpcC5jb207DQo+IGphcmtrby5zYWtraW5lbkBs
+aW51eC5pbnRlbC5jb207IERtaXRyeSBLYXNhdGtpbg0KPiA8ZG1pdHJ5Lmthc2F0a2luQGdtYWls
+LmNvbT4NCj4gQ2M6IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3Vy
+aXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT47IHN0
+YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzhdIGltYTog
+U3dpdGNoIHRvIGltYV9oYXNoX2FsZ28gZm9yIGJvb3QNCj4gYWdncmVnYXRlDQo+IA0KPiANCj4g
+PiA+ID4gPiBPbiBNb24sIDIwMjAtMDItMTAgYXQgMTE6MDAgKzAxMDAsIFJvYmVydG8gU2Fzc3Ug
+d3JvdGU6DQo+ID4gPiBNeSBpbml0aWFsIHBhdGNoIGF0dGVtcHRlZCB0byB1c2UgYW55IGNvbW1v
+biBUUE0gYW5kIGtlcm5lbCBoYXNoDQo+ID4gPiBhbGdvcml0aG0gdG8gY2FsY3VsYXRlIHRoZSBi
+b290X2FnZ3JlZ2F0ZS4gwqBUaGUgZGlzY3Vzc2lvbiB3aXRoIEphbWVzDQo+ID4gPiB3YXMgcHJl
+dHR5IGNsZWFyLCB3aGljaCB5b3UgZXZlbiBzdGF0ZWQgaW4gdGhlIENoYW5nZWxvZy4gwqBFaXRo
+ZXIgd2UNCj4gPiA+IHVzZSB0aGUgSU1BIGRlZmF1bHQgaGFzaCBhbGdvcml0aG0sIFNIQTI1NiBm
+b3IgVFBNIDIuMCBvciBTSEExIGZvcg0KPiBUUE0NCj4gPiA+IDEuMiBmb3IgdGhlIGJvb3QtYWdn
+cmVnYXRlLg0KPiA+DQo+ID4gT2ssIEkgZGlkbid0IHVuZGVyc3RhbmQgZnVsbHkuIEkgdGhvdWdo
+dCB3ZSBzaG91bGQgdXNlIHRoZSBkZWZhdWx0IElNQQ0KPiA+IGFsZ29yaXRobSBhbmQgc2VsZWN0
+IFNIQTI1NiBhcyBmYWxsYmFjayBjaG9pY2UgZm9yIFRQTSAyLjAgaWYgdGhlcmUgaXMgbm8NCj4g
+PiBQQ1IgYmFuayBmb3IgZGVmYXVsdCBhbGdvcml0aG0uDQo+IA0KPiBZZXMsIHByZWZlcmVuY2Ug
+aXMgZ2l2ZW4gdG8gdGhlIElNQSBkZWZhdWx0IGFsZ29yaXRobSwgYnV0IGl0IHNob3VsZA0KPiBm
+YWxsIGJhY2sgdG8gdXNpbmcgU0hBMjU2IG9yIFNIQTEsIGJhc2VkIG9uIHRoZSBUUE0uDQoNCk9r
+LiBUaGUgcGF0Y2ggYWxyZWFkeSBkb2VzIGl0IGV2ZW4gaWYgdGhlIFRQTSB2ZXJzaW9uIGlzIG5v
+dCBjaGVja2VkLg0KRm9yIFRQTSAxLjIsIGlmIHRoZSBkZWZhdWx0IGFsZ29yaXRobSBpcyBub3Qg
+U0hBMSB0aGUgcGF0Y2ggd2lsbCBzZWxlY3QNCnRoZSBmaXJzdCBQQ1IgYmFuayAoU0hBMSkuDQoN
+ClNob3VsZCBJIHNlbmQgYSBuZXcgcGF0Y2ggd2hpY2ggZXhwbGljaXRseSBjaGVja3MgdGhlIFRQ
+TSB2ZXJzaW9uPw0KDQo+ID4gSSBhZGRpdGlvbmFsbHkgaW1wbGVtZW50ZWQgdGhlIGxvZ2ljIHRv
+DQo+ID4gc2VsZWN0IHRoZSBmaXJzdCBQQ1IgYmFuayBpZiB0aGUgU0hBMjU2IFBDUiBiYW5rIGlz
+IG5vdCBhdmFpbGFibGUgYnV0IEkgY2FuDQo+ID4gcmVtb3ZlIGl0Lg0KPiA+DQo+ID4gU0hBMjU2
+IHNob3VsZCBiZSB0aGUgbWluaW11bSByZXF1aXJlbWVudCBmb3IgYm9vdCBhZ2dyZWdhdGUuIFRo
+ZQ0KPiA+IGFkdmFudGFnZSBvZiB1c2luZyB0aGUgZGVmYXVsdCBJTUEgYWxnb3JpdGhtIGlzIHRo
+YXQgaXQgd2lsbCBiZSBwb3NzaWJsZSB0bw0KPiA+IHNlbGVjdCBzdHJvbmdlciBhbGdvcml0aG1z
+IHdoZW4gdGhleSBhcmUgc3VwcG9ydGVkIGJ5IHRoZSBUUE0uIFdlDQo+IG1pZ2h0DQo+ID4gaW50
+cm9kdWNlIGEgbmV3IG9wdGlvbiB0byBzcGVjaWZ5IG9ubHkgdGhlIGFsZ29yaXRobSBmb3IgYm9v
+dCBhZ2dyZWdhdGUsDQo+ID4gbGlrZSBKYW1lcyBzdWdnZXN0ZWQgdG8gc3VwcG9ydCBlbWJlZGRl
+ZCBzeXN0ZW1zLiBMZXQgbWUga25vdyB3aGljaA0KPiA+IG9wdGlvbiB5b3UgcHJlZmVyLg0KPiAN
+Cj4gSSBkb24ndCByZW1lbWJlciBKYW1lcyBzYXlpbmcgdGhhdCwgYnV0IGlmIHRoZSBjb21tdW5p
+dHkgcmVhbGx5IHdhbnRzDQo+IHRoYXQgc3VwcG9ydCwgdGhlbiBpdCBzaG91bGQgYmUgdXBzdHJl
+YW1lZCBpbmRlcGVuZGVudGx5LCBhcyBhDQo+IHNlcGFyYXRlIHBhdGNoLiDCoExldCdzIGZpcnN0
+IGdldCB0aGUgYmFzaWNzIHdvcmtpbmcuDQoNCk9rLg0KDQpUaGFua3MNCg0KUm9iZXJ0bw0KDQpI
+VUFXRUkgVEVDSE5PTE9HSUVTIER1ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcg
+RGlyZWN0b3I6IExpIFBlbmcsIExpIEppYW4sIFNoaSBZYW5saQ0K
