@@ -2,160 +2,144 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A63C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB89C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24302173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A3B20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzCkLslX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCBWgc (ORCPT
+        id S1727097AbgCBWhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:36:32 -0500
-Received: from mga06.intel.com ([134.134.136.31]:35215 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgCBWgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:36:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 14:36:30 -0800
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="243354692"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 14:36:30 -0800
-Subject: [PATCH 5/5] ACPI: HMAT: Attach a device for each soft-reserved range
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Jeff Moyer <jmoyer@redhat.com>, peterz@infradead.org,
-        dave.hansen@linux.intel.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 02 Mar 2020 14:20:25 -0800
-Message-ID: <158318762528.2216124.10929121053790874092.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Mon, 2 Mar 2020 17:37:01 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42948 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgCBWhB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:37:01 -0500
+Received: by mail-pl1-f193.google.com with SMTP id u3so374806plr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 14:37:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w4Md8j8zd2YWszLJ5ilbEdqON4mnmjdfj7ZdSWk0uFA=;
+        b=gzCkLslXcjE5DvGXTBYEg8m27pTpEadwL3rR2WycF7BhdT0ydKD+o2TQip8TbNMkVI
+         /E60kejzEW91h8D3B8uxc3eJ/etME05K7T4nykaplWOLVz7dXkeogT97J97jUVvP77jD
+         W8/glAXkpDq327B/D/MGty6SkacKs0Op008RYQXPQ7Ru+qBVAjMUUksd+tqP5h4trgyI
+         eJYQsgbr1U/WpriL9Ha25BPRdJoKjMrkyOjY7jwefb+Rzc6UPdJLPZlpTIuGtcPQJTP2
+         VvvRlW2J+S0c9G4n3DCJmcYYP2npItu3nqsStYlzOvy70dZBJbyM9zWiucVyF9gWoZjE
+         N4fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w4Md8j8zd2YWszLJ5ilbEdqON4mnmjdfj7ZdSWk0uFA=;
+        b=dQxfCkZlXlVJpBPtMp0VL4dAyP8OtTKh2CFXAKY+5k9OR9kvucU6f/V6COKM5EF6bC
+         HsJalHshGKvOMSrtXHckmbrDDRjiTXbqZQnqQftZjxiFERyDvc9/3pxX7Z/2Lo1m/PsW
+         /jJlfJxpfXDPhyUAndlYSYWzvrnhw2B2E+kIvv7A1YlXyCG7o3LnZ4mSMxwrSgwW+0zY
+         NOnEosrdSN2ydQsCMlbFUhlHFcuRa9KGwRlwyyvzFOGOMvEjtkwafwWjxN48PS0aytFb
+         DPGIjUrK83iY3OkrxtcNi7JpZK3bjLPBj+csjG9W7HyfuzafmAv1GZge50ZP1Gmk0hvb
+         zTtw==
+X-Gm-Message-State: ANhLgQ0mXC+8QA6NRQ8RzYrwQm2ldqdcQaB+vqZjvuy7JhWv6HH3WHbM
+        uOry30jXu8LpumK1rm9eo6dvLQQ3t83wkznW+8mLYg==
+X-Google-Smtp-Source: ADFU+vvJg9TYunWwa9/vruRUJOOVxEikj7kVufuLKB2uZ8jHE55qbADssJYwm3IvxvrfibPxkmMW/caUQ/LpvYCCFKg=
+X-Received: by 2002:a17:90a:3a90:: with SMTP id b16mr184340pjc.29.1583188619857;
+ Mon, 02 Mar 2020 14:36:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <CACT4Y+Z_fGz2zVpco4kuGOVeCK=jv4zH0q9Uj5Hv5TAFxY3yRg@mail.gmail.com>
+ <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
+ <CACT4Y+YTNZRfKLH1=FibrtGj34MY=naDJY6GWVnpMvgShSLFhg@mail.gmail.com> <CAGXu5jKbpbH4sm4sv-74iHa+VzWuvF5v3ci7R-KVt+StRpMESg@mail.gmail.com>
+In-Reply-To: <CAGXu5jKbpbH4sm4sv-74iHa+VzWuvF5v3ci7R-KVt+StRpMESg@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 2 Mar 2020 14:36:48 -0800
+Message-ID: <CAFd5g47OHZ-6Fao+JOMES+aPd2vyWXSS0zKCkSwL6XczN4R7aQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Patricia Alfonso <trishalfonso@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hmem enabling in commit 'cf8741ac57ed ("ACPI: NUMA: HMAT: Register
-"soft reserved" memory as an "hmem" device")' only registered ranges to
-the hmem driver for each soft-reservation that also appeared in the
-HMAT. While this is meant to encourage platform firmware to "do the
-right thing" and publish an HMAT, the corollary is that platforms that
-fail to publish an accurate HMAT will strand memory from Linux usage.
-Additionally, the "efi_fake_mem" kernel command line option enabling
-will strand memory by default without an HMAT.
+On Mon, Mar 2, 2020 at 9:52 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, Feb 29, 2020 at 10:39 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Sat, Feb 29, 2020 at 2:56 AM Patricia Alfonso
+> > <trishalfonso@google.com> wrote:
+> > > On Thu, Feb 27, 2020 at 6:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > >
+> > > > .On Thu, Feb 27, 2020 at 3:44 AM Patricia Alfonso
+> > > > > -       pr_info("out-of-bounds in copy_from_user()\n");
+> > > > > -       unused = copy_from_user(kmem, usermem, size + 1);
+> > > >
+> > > > Why is all of this removed?
+> > > > Most of these tests are hard earned and test some special corner cases.
+> > > >
+> > > I just moved it inside IS_MODULE(CONFIG_TEST_KASAN) instead because I
+> > > don't think there is a way to rewrite this without it being a module.
+> >
+> > You mean these are unconditionally crashing the machine? If yes,
+> > please add a comment about this.
+> >
+> > Theoretically we could have a notion of "death tests" similar to gunit:
+> > https://stackoverflow.com/questions/3698718/what-are-google-test-death-tests
+> > KUnit test runner wrapper would need to spawn a separete process per
+> > each such test. Under non-KUnit test runner these should probably be
+> > disabled by default and only run if specifically requested (a-la
+> > --gunit_filter/--gunit_also_run_disabled_tests).
+> > Could also be used to test other things that unconditionally panic,
+> > e.g. +Kees may be happy for unit tests for some of the
+> > hardening/fortification features.
+> > I am not asking to bundle this with this change of course.
+>
+> A bunch of LKDTM tests can kill the system too. I collected the list
+> when building the selftest script for LKDTM:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/lkdtm/tests.txt
+>
+> I'm all for unittests (I have earlier kind-of-unit-tests in
+> lib/test_user_copy.c lib/test_overflow.c etc), but most of LKDTM is
 
-Arrange for "soft reserved" memory that goes unclaimed by HMAT entries
-to be published as raw resource ranges for the hmem driver to consume.
+<Minor tangent (sorry)>
 
-Include a module parameter to disable either this fallback behavior, or
-the hmat enabling from creating hmem devices. The module parameter
-requires the hmem device enabling to have unique name in the module
-namespace: "device_hmem".
+I took a brief look at lib/test_user_copy.c, it looks like it doesn't
+use TAP formatted output. How do you feel about someone converting
+them over to use KUnit? If nothing else, it would be good getting all
+the unit-ish tests to output in the same format.
 
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Brice Goglin <Brice.Goglin@inria.fr>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/dax/Kconfig       |    1 +
- drivers/dax/hmem/Makefile |    3 ++-
- drivers/dax/hmem/device.c |   33 +++++++++++++++++++++++++++++++++
- 3 files changed, 36 insertions(+), 1 deletion(-)
+I proposed converting over some of the runtime tests over to KUnit as
+a LKMP project (Linux Kernel Mentorship Program) here:
 
-diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-index a229f45d34aa..163edde6ba41 100644
---- a/drivers/dax/Kconfig
-+++ b/drivers/dax/Kconfig
-@@ -50,6 +50,7 @@ config DEV_DAX_HMEM
- 
- config DEV_DAX_HMEM_DEVICES
- 	depends on DEV_DAX_HMEM
-+	select NUMA_KEEP_MEMINFO if NUMA
- 	def_bool y
- 
- config DEV_DAX_KMEM
-diff --git a/drivers/dax/hmem/Makefile b/drivers/dax/hmem/Makefile
-index a9d353d0c9ed..57377b4c3d47 100644
---- a/drivers/dax/hmem/Makefile
-+++ b/drivers/dax/hmem/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_DEV_DAX_HMEM) += dax_hmem.o
--obj-$(CONFIG_DEV_DAX_HMEM_DEVICES) += device.o
-+obj-$(CONFIG_DEV_DAX_HMEM_DEVICES) += device_hmem.o
- 
-+device_hmem-y := device.o
- dax_hmem-y := hmem.o
-diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
-index 99bc15a8b031..f9c5fa8b1880 100644
---- a/drivers/dax/hmem/device.c
-+++ b/drivers/dax/hmem/device.c
-@@ -4,6 +4,9 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- 
-+static bool nohmem;
-+module_param_named(disable, nohmem, bool, 0444);
-+
- void hmem_register_device(int target_nid, struct resource *r)
- {
- 	/* define a clean / non-busy resource for the platform device */
-@@ -16,6 +19,9 @@ void hmem_register_device(int target_nid, struct resource *r)
- 	struct memregion_info info;
- 	int rc, id;
- 
-+	if (nohmem)
-+		return;
-+
- 	rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
- 			IORES_DESC_SOFT_RESERVED);
- 	if (rc != REGION_INTERSECTS)
-@@ -62,3 +68,30 @@ void hmem_register_device(int target_nid, struct resource *r)
- out_pdev:
- 	memregion_free(id);
- }
-+
-+static __init int hmem_register_one(struct resource *res, void *data)
-+{
-+	/*
-+	 * If the resource is not a top-level resource it was already
-+	 * assigned to a device by the HMAT parsing.
-+	 */
-+	if (res->parent != &iomem_resource)
-+		return 0;
-+
-+	hmem_register_device(phys_to_target_node(res->start), res);
-+
-+	return 0;
-+}
-+
-+static __init int hmem_init(void)
-+{
-+	walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
-+			IORESOURCE_MEM, 0, -1, NULL, hmem_register_one);
-+	return 0;
-+}
-+
-+/*
-+ * As this is a fallback for address ranges unclaimed by the ACPI HMAT
-+ * parsing it must be at an initcall level greater than hmat_init().
-+ */
-+late_initcall(hmem_init);
+https://wiki.linuxfoundation.org/lkmp/lkmp_project_list#convert_runtime_tests_to_kunit_tests
 
+I am curious what you think about this.
+
+</Minor tangent>
+
+> designed to be full system-behavior testing ("does the system correct
+> BUG the current thread, when some deeper system state is violated?")
+
+Makes sense.
+
+Thanks!
