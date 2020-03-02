@@ -2,126 +2,136 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56C3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0B221D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048F821739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezO+T8QR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eYGWa4no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgCBL6Z (ORCPT
+        id S1727829AbgCBL7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:58:25 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34974 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCBL6X (ORCPT
+        Mon, 2 Mar 2020 06:59:14 -0500
+Received: from gateway24.websitewelcome.com ([192.185.50.73]:29796 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727228AbgCBL7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:58:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m3so10402084wmi.0;
-        Mon, 02 Mar 2020 03:58:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iflJIvqjKSNmZN001KRyauVV1RXmgC8qmOhi3NV99NM=;
-        b=ezO+T8QRjR4ODnmGvsIE0lrcK6rPy0G8gECUFGVgsrkx9JZfsEO7a1N/l0qa1g3+3p
-         n9fZhznzVJPWvdHdzTKWt4uKBQTOsdfsAOso0ewM9QgdzzEMceDBMZsX826sdfKXe8ZG
-         B0aBxChJaMHAsWd1ZQ9PD6AajioSEiqiT+OPFhIXg5ikIs5Hf9K+OljC6iNLuYcyYOdU
-         rs66rtLbIgtaBWhiSmd6Bxd8LD5D/FBkgec5bocLw+MQ/kOHyMp0+yqKdGL3qZA+bNkv
-         8b8lTMr+fkYRhnAhL7lb5Qx3cI1OsfiGnIUStELGJr7jdeLSbvQIDJaOZtftoP+b26pI
-         U24g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iflJIvqjKSNmZN001KRyauVV1RXmgC8qmOhi3NV99NM=;
-        b=eoKvr2xkuToQfqml/TTzIsXSASnK/b+VGQMjUUTr9YiWOiFMuWt2ziv2Rp0ikjqutc
-         2F1LqCJQbtNkIMpg5VjtBll8QypU1Yj4Uzssi834xvsmD3RDyeZVM3OuJCvCxVvhPPbf
-         orqsrFFRvOOqD3fW+iCwjQhEPJB0fAwdpWE/dJ9tIiJh9XLWy6Mz1Y5TjEqNVfcqcaOG
-         fZn/8bH+KIdKprBk5Kna1k5HgK8Tf4dIK5n7YtjmK43hdxEUKI8J3vEaGfd557NxjnTe
-         JfZmW7ol1Flme6Zhb05JegNEY39gC4PFVGWIh4lQwrKLw4WfRf7GoS/EFA343gpHXQ+7
-         u4VQ==
-X-Gm-Message-State: ANhLgQ1/r8HtMt3R94foibwptxqc6Zf265PYyaxaCiyO2uTXYg0enjMt
-        6tXNuRUTFifxT6PcOP1YYSzcVnxO
-X-Google-Smtp-Source: ADFU+vuOFSIJepvCdWl91GQTBHdvvIeCtHEsEkk20T6cmsn+Xd75wm81zY1l1J8AeghRp+J1fjLtQQ==
-X-Received: by 2002:a1c:9d0d:: with SMTP id g13mr5238660wme.111.1583150300592;
-        Mon, 02 Mar 2020 03:58:20 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o16sm12653303wrj.5.2020.03.02.03.58.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 03:58:20 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: usb: dwc2: add compatible property for rk3368 usb
-Date:   Mon,  2 Mar 2020 12:58:12 +0100
-Message-Id: <20200302115812.7207-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302115812.7207-1-jbx6244@gmail.com>
-References: <20200302115812.7207-1-jbx6244@gmail.com>
+        Mon, 2 Mar 2020 06:59:14 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 2E779AE26D
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 05:59:13 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 8jj7j3WQbSl8q8jj7jgmRJ; Mon, 02 Mar 2020 05:59:13 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kzUqRBProYnJMl/U55hJEG0fvIDnfxPBZ5ML3y+DSkM=; b=eYGWa4noBm4mb5y8OEjY+SufaR
+        07Jf8aAq0TLuzMcMdPkT1DSYPUHKSA1CFiRfkhYy6QK/dKTVePx097lF+5XdhpjX6tnlT+lCiiu2C
+        cDVB72xS8EfwXX1+Kmw9g+F+DGXSwZGqjXZ0OTk2lGaCsIuqNkHVIfku7cbfIvUeaxZ+3sRaVJ+Ln
+        I5RdqywHznMQYwV7vcp1nkDqzL1EnCF6cmO8G2LH3zynVNWPW5ve4L3BAC8SBQE/wBw2X6d9TL1+y
+        V6kRuHZvLLS7eIZaoHL/tGEK8X5fOOYJSfx0/H2wZnAQYm1F7Yc/KYH6NEkq0Cq+Ps/7eH5eO+bxZ
+        2dtoezBQ==;
+Received: from [201.166.157.105] (port=42214 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j8jj4-003q5x-W0; Mon, 02 Mar 2020 05:59:11 -0600
+Date:   Mon, 2 Mar 2020 06:02:09 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drop_monitor: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200302120209.GA15699@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.157.105
+X-Source-L: No
+X-Exim-ID: 1j8jj4-003q5x-W0
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.157.105]:42214
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives these errors:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-geekbox.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3368-r88.dt.yaml: usb@ff580000: compatible:
-['rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-is not valid under any of the given schemas
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-The compatible property for rk3368 dwc2 usb was somehow never added to
-the documention. Fix this error by adding
-'rockchip,rk3368-usb', 'rockchip,rk3066-usb', 'snps,dwc2'
-to dwc2.yaml.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/uapi/linux/net_dropmon.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index e9f4cea21..14aeb67e8 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -45,6 +45,10 @@ properties:
-           - const: rockchip,rk3328-usb
-           - const: rockchip,rk3066-usb
-           - const: snps,dwc2
-+      - items:
-+          - const: rockchip,rk3368-usb
-+          - const: rockchip,rk3066-usb
-+          - const: snps,dwc2
-       - const: lantiq,arx100-usb
-       - const: lantiq,xrx200-usb
-       - items:
+diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
+index 66048cc5d7b3..67e31f329190 100644
+--- a/include/uapi/linux/net_dropmon.h
++++ b/include/uapi/linux/net_dropmon.h
+@@ -29,12 +29,12 @@ struct net_dm_config_entry {
+ 
+ struct net_dm_config_msg {
+ 	__u32 entries;
+-	struct net_dm_config_entry options[0];
++	struct net_dm_config_entry options[];
+ };
+ 
+ struct net_dm_alert_msg {
+ 	__u32 entries;
+-	struct net_dm_drop_point points[0];
++	struct net_dm_drop_point points[];
+ };
+ 
+ struct net_dm_user_msg {
 -- 
-2.11.0
+2.25.0
 
