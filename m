@@ -2,122 +2,248 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A2C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86474C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98121246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7542468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583137122;
+	bh=TYe3QSV9TWPID/dPwasRZ4lyd48T/A8F4VzFpXM3i6o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rNDSNCLxRvsuzZolqX0V68XUwW9AEiY2p5+/D0wUkZHwuKcfAzU37Tg7vNmogctIy
+	 vXVCe1HiP1ijPRzu4D5WqM070fhccNS+Mi6CzEpkQRED/TaS0+48An8s58kRJ7KdXM
+	 Atachor58th/0LBce5VrhT2I9KkxAkOdxw//51Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCBIS1 (ORCPT
+        id S1727879AbgCBISl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:18:27 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56506 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727806AbgCBISY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:18:24 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BEDB48D133E4FD5F10B3;
-        Mon,  2 Mar 2020 16:18:17 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
- 16:18:09 +0800
-Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
- SGI callbacks
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-9-maz@kernel.org>
- <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
- <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
- <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
- <3d725ede-6631-59fb-1a10-9fb9890f3df6@huawei.com>
- <dd9f1224b3b21ad793862406bd8855ba@kernel.org>
- <54c52057161f925c818446953050c951@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <4f8f3958-2976-b0a7-8d17-440ecaba0fc8@huawei.com>
-Date:   Mon, 2 Mar 2020 16:18:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 2 Mar 2020 03:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727173AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:16:21 -0500
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C9FF246D7;
+        Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583136979;
+        bh=TYe3QSV9TWPID/dPwasRZ4lyd48T/A8F4VzFpXM3i6o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VJ86OOo30dwmnFplL+Ics9T+Z9MTzZ/iVuVgUe1m20X1ST2a4jvzE2nv9U9HcfrAS
+         g9hGOI4JXHz/tHydaC52h0kCOvtwst0/mdAFs18Do+dQ/leH2iFdCvr6qf9UeQ8oDZ
+         sik0La4WyfkLrULb3VucSBdlevK2eDf20QtRrX/0=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1j8gFN-0003xv-F3; Mon, 02 Mar 2020 09:16:17 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Don Brace <don.brace@microsemi.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org
+Subject: [PATCH 17/42] docs: scsi: convert hpsa.txt to ReST
+Date:   Mon,  2 Mar 2020 09:15:50 +0100
+Message-Id: <ea58e04176d43fb7194615b145060aa04c9cf3ad.1583136624.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
+References: <cover.1583136624.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <54c52057161f925c818446953050c951@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/2 3:00, Marc Zyngier wrote:
-> On 2020-02-28 19:37, Marc Zyngier wrote:
->> On 2020-02-20 03:11, Zenghui Yu wrote:
-> 
->>> Do we really need to grab the vpe_lock for those which are belong to
->>> the same irqchip with its_vpe_set_affinity()? The IRQ core code should
->>> already ensure the mutual exclusion among them, wrong?
->>
->> I've been trying to think about that, but jet-lag keeps getting in the 
->> way.
->> I empirically think that you are right, but I need to go and check the 
->> various
->> code paths to be sure. Hopefully I'll have a bit more brain space next 
->> week.
-> 
-> So I slept on it and came back to my senses. The only case we actually need
-> to deal with is when an affinity change impacts *another* interrupt.
-> 
-> There is only two instances of this issue:
-> 
-> - vLPIs have their *physical* affinity impacted by the affinity of the
->    vPE. Their virtual affinity is of course unchanged, but the physical
->    one becomes important with direct invalidation. Taking a per-VPE lock
->    in such context should address the issue.
-> 
-> - vSGIs have the exact same issue, plus the matter of requiring some
->    *extra* one when reading the pending state, which requires a RMW
->    on two different registers. This requires an extra per-RD lock.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/scsi/{hpsa.txt => hpsa.rst} | 79 +++++++++++------------
+ Documentation/scsi/index.rst              |  1 +
+ MAINTAINERS                               |  2 +-
+ 3 files changed, 41 insertions(+), 41 deletions(-)
+ rename Documentation/scsi/{hpsa.txt => hpsa.rst} (77%)
 
-Agreed with both!
-
-> 
-> My original patch was stupidly complex, and the irq_desc lock is
-> perfectly enough to deal with anything that only affects the interrupt
-> state itself.
-> 
-> GICv4 + direct invalidation for vLPIs breaks this by bypassing the
-> serialization initially provided by the ITS, as the RD is completely
-> out of band. The per-vPE lock brings back this serialization.
-> 
-> I've updated the branch, which seems to run OK on D05. I still need
-> to run the usual tests on the FVP model though.
-
-I have pulled the latest branch and it looks good to me, except for
-one remaining concern:
-
-GICR_INV{LPI, ALL}R + GICR_SYNCR can also be accessed concurrently
-by multiple direct invalidation, should we also use the per-RD lock
-to ensure mutual exclusion?  It looks not so harmful though, as this
-will only increase one's polling time against the Busy bit (in my view).
-
-But I point it out again for confirmation.
-
-
-Thanks,
-Zenghui
+diff --git a/Documentation/scsi/hpsa.txt b/Documentation/scsi/hpsa.rst
+similarity index 77%
+rename from Documentation/scsi/hpsa.txt
+rename to Documentation/scsi/hpsa.rst
+index 891435a72fce..340e10c6e35f 100644
+--- a/Documentation/scsi/hpsa.txt
++++ b/Documentation/scsi/hpsa.rst
+@@ -1,6 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
++=========================================
+ HPSA - Hewlett Packard Smart Array driver
+------------------------------------------
++=========================================
+ 
+ This file describes the hpsa SCSI driver for HP Smart Array controllers.
+ The hpsa driver is intended to supplant the cciss driver for newer
+@@ -11,17 +13,17 @@ driver (for logical drives) AND a SCSI driver (for tape drives). This
+ complexity and eliminating that complexity is one of the reasons
+ for hpsa to exist.
+ 
+-Supported devices:
+-------------------
++Supported devices
++=================
+ 
+-Smart Array P212
+-Smart Array P410
+-Smart Array P410i
+-Smart Array P411
+-Smart Array P812
+-Smart Array P712m
+-Smart Array P711m
+-StorageWorks P1210m
++- Smart Array P212
++- Smart Array P410
++- Smart Array P410i
++- Smart Array P411
++- Smart Array P812
++- Smart Array P712m
++- Smart Array P711m
++- StorageWorks P1210m
+ 
+ Additionally, older Smart Arrays may work with the hpsa driver if the kernel
+ boot parameter "hpsa_allow_any=1" is specified, however these are not tested
+@@ -35,18 +37,20 @@ mode, each command completion requires an interrupt, while with "performant mode
+ command completions indicated by a single interrupt.
+ 
+ HPSA specific entries in /sys
+------------------------------
++=============================
+ 
+   In addition to the generic SCSI attributes available in /sys, hpsa supports
+   the following attributes:
+ 
+-  HPSA specific host attributes:
+-  ------------------------------
++HPSA specific host attributes
++=============================
+ 
+-  /sys/class/scsi_host/host*/rescan
+-  /sys/class/scsi_host/host*/firmware_revision
+-  /sys/class/scsi_host/host*/resettable
+-  /sys/class/scsi_host/host*/transport_mode
++  ::
++
++    /sys/class/scsi_host/host*/rescan
++    /sys/class/scsi_host/host*/firmware_revision
++    /sys/class/scsi_host/host*/resettable
++    /sys/class/scsi_host/host*/transport_mode
+ 
+   the host "rescan" attribute is a write only attribute.  Writing to this
+   attribute will cause the driver to scan for new, changed, or removed devices
+@@ -58,7 +62,7 @@ HPSA specific entries in /sys
+   tape drives, or entire storage boxes containing pre-configured logical drives.
+ 
+   The "firmware_revision" attribute contains the firmware version of the Smart Array.
+-  For example:
++  For example::
+ 
+ 	root@host:/sys/class/scsi_host/host4# cat firmware_revision
+ 	7.14
+@@ -78,16 +82,18 @@ HPSA specific entries in /sys
+   kexec tools to warn the user if they attempt to designate a device which is
+   unable to honor the reset_devices kernel parameter as a dump device.
+ 
+-  HPSA specific disk attributes:
+-  ------------------------------
++HPSA specific disk attributes
++-----------------------------
+ 
+-  /sys/class/scsi_disk/c:b:t:l/device/unique_id
+-  /sys/class/scsi_disk/c:b:t:l/device/raid_level
+-  /sys/class/scsi_disk/c:b:t:l/device/lunid
++  ::
++
++    /sys/class/scsi_disk/c:b:t:l/device/unique_id
++    /sys/class/scsi_disk/c:b:t:l/device/raid_level
++    /sys/class/scsi_disk/c:b:t:l/device/lunid
+ 
+   (where c:b:t:l are the controller, bus, target and lun of the device)
+ 
+-  For example:
++  For example::
+ 
+ 	root@host:/sys/class/scsi_disk/4:0:0:0/device# cat unique_id
+ 	600508B1001044395355323037570F77
+@@ -96,35 +102,28 @@ HPSA specific entries in /sys
+ 	root@host:/sys/class/scsi_disk/4:0:0:0/device# cat raid_level
+ 	RAID 0
+ 
+-HPSA specific ioctls:
+----------------------
++HPSA specific ioctls
++====================
+ 
+   For compatibility with applications written for the cciss driver, many, but
+   not all of the ioctls supported by the cciss driver are also supported by the
+   hpsa driver.  The data structures used by these are described in
+   include/linux/cciss_ioctl.h
+ 
+-  CCISS_DEREGDISK
+-  CCISS_REGNEWDISK
+-  CCISS_REGNEWD
+-
+-  The above three ioctls all do exactly the same thing, which is to cause the driver
+-  to rescan for new devices.  This does exactly the same thing as writing to the
+-  hpsa specific host "rescan" attribute.
++  CCISS_DEREGDISK, CCISS_REGNEWDISK, CCISS_REGNEWD
++	The above three ioctls all do exactly the same thing, which is to cause the driver
++	to rescan for new devices.  This does exactly the same thing as writing to the
++	hpsa specific host "rescan" attribute.
+ 
+   CCISS_GETPCIINFO
+-
+ 	Returns PCI domain, bus, device and function and "board ID" (PCI subsystem ID).
+ 
+   CCISS_GETDRIVVER
++	Returns driver version in three bytes encoded as::
+ 
+-	Returns driver version in three bytes encoded as:
+ 		(major_version << 16) | (minor_version << 8) | (subminor_version)
+ 
+-  CCISS_PASSTHRU
+-  CCISS_BIG_PASSTHRU
+-
++  CCISS_PASSTHRU, CCISS_BIG_PASSTHRU
+ 	Allows "BMIC" and "CISS" commands to be passed through to the Smart Array.
+ 	These are used extensively by the HP Array Configuration Utility, SNMP storage
+ 	agents, etc.  See cciss_vol_status at http://cciss.sf.net for some examples.
+-
+diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
+index 4b577c9e804e..b16f348bd31b 100644
+--- a/Documentation/scsi/index.rst
++++ b/Documentation/scsi/index.rst
+@@ -21,5 +21,6 @@ Linux SCSI Subsystem
+    dpti
+    FlashPoint
+    g_NCR5380
++   hpsa
+ 
+    scsi_transport_srp/figures
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 451a3f67d23a..39767eca07d9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7456,7 +7456,7 @@ M:	Don Brace <don.brace@microsemi.com>
+ L:	esc.storagedev@microsemi.com
+ L:	linux-scsi@vger.kernel.org
+ S:	Supported
+-F:	Documentation/scsi/hpsa.txt
++F:	Documentation/scsi/hpsa.rst
+ F:	drivers/scsi/hpsa*.[ch]
+ F:	include/linux/cciss*.h
+ F:	include/uapi/linux/cciss*.h
+-- 
+2.21.1
 
