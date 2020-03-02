@@ -2,123 +2,69 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE059C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E722166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="gCBpS1Km"
+	by mail.kernel.org (Postfix) with ESMTP id A33DE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583146318;
+	bh=QhrSpr4F/VHir8Gjk0KuUg34z4MvdyKSC/6orAOEeT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1i2b02uBsnuBZLtaZJTrsJ9k8oEuPKJs/gqeFSSMyoSHrtQBKDYxj/LWdpcMCyNC5
+	 5vSex4FqcG8X3YZupFj/l7hRbF0ww1xnnQS8Kn2xX9RiAFre8meUNCnu9pIMsI8Ron
+	 5x8S6xWxTV2K8EZ9wiYclQkm3ERH0/6fIrWCD7Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgCBKvz (ORCPT
+        id S1727708AbgCBKv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:51:55 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:53838 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727027AbgCBKvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:51:54 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1AEC12E09C5;
-        Mon,  2 Mar 2020 13:51:51 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id xzrWdUQQnx-pox8C8xr;
-        Mon, 02 Mar 2020 13:51:51 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1583146311; bh=c8nRtiIQTy0hYZDBROc/llu6uiBzaMtKduryGQp4LBA=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=gCBpS1KmIO8HmVRphH0wt2/ehafdwEXHTQvpI1t/jpszIVkKnQ4W8mDmJfxzFGbTD
-         nvs85msRPN7O6gHUcZeh3uWlwzUE6B10eiF2RgrFmSrxpVSSeSm7rjNGIi9gbHQR8J
-         bUuXSS0nTTxOeYwPM2hhd4BPO88uD7rmLcAssvsI=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:7cd4:25a8:c7e3:39e2])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 1HkcgWlnvl-poWebbTs;
-        Mon, 02 Mar 2020 13:51:50 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] block: keep bdi->io_pages in sync with max_sectors_kb for
- stacked devices
-To:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Cc:     linux-raid@vger.kernel.org, Song Liu <song@kernel.org>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-References: <158290150891.4423.13566449569964563258.stgit@buzz>
- <35ef813c-d5a4-8eb8-073d-9c5814266299@molgen.mpg.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <4ce1ccf2-6a7c-818d-bfe3-b9bf29e8be3e@yandex-team.ru>
-Date:   Mon, 2 Mar 2020 13:51:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 05:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727689AbgCBKv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:51:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD6B22B48;
+        Mon,  2 Mar 2020 10:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583146316;
+        bh=QhrSpr4F/VHir8Gjk0KuUg34z4MvdyKSC/6orAOEeT8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CSJj0LAt/6zmv+NRxBy9coFYVpN96bhoJ+2Yd8MYlWYa6093en9efrbDhXwq228wX
+         k8G5YKkALFqlkUK+sFLVMRsycZsvWifAFOLTLkAVhWyl/uashoPabfUMFzCptaj7XC
+         82IK5hOm5BD2ha/Gd1M9+8DRjhOxVGLdehNZtQzo=
+Date:   Mon, 2 Mar 2020 11:51:53 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] pty: define and set show_fdinfo only if procfs is
+ enabled
+Message-ID: <20200302105153.GA39968@kroah.com>
+References: <20200302104954.2812-1-tklauser@distanz.ch>
 MIME-Version: 1.0
-In-Reply-To: <35ef813c-d5a4-8eb8-073d-9c5814266299@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302104954.2812-1-tklauser@distanz.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 13.41, Paul Menzel wrote:
-> Dear Konstantin,
-> 
-> 
-> Thank you for the patch.
-> 
-> 
-> On 2020-02-28 15:51, Konstantin Khlebnikov wrote:
->> Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
->> size based on read-ahead setting") removes unneeded split of read requests.
->>
->> Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they setup
-> 
-> The verb is spelled with a space *set up*.
-> 
->> limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
->> Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
->>
->> This patch updates io_pages after merging limits in disk_stack_limits().
->>
->> Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
->> the same problem for device-mapper devices, this one fixes MD RAIDs.
-> 
-> Add a Fixes: tag?
-> 
-> Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+On Mon, Mar 02, 2020 at 11:49:53AM +0100, Tobias Klauser wrote:
+> Follow the pattern used with other *_show_fdinfo functions and only
+> define and use pty_show_fdinfo if CONFIG_PROC_FS is set.
 
-Maybe, but this isn't fatal bug. Just incomplete fix.
+if proc_fs is not set, it will not be used anyway, right?
 
-Same problem exists for non-disk BDIs. I.e. network filesystem must
-set io_pages manually if doesn't want split read requests.
+I'd rather keep #ifdef out of the .c files than add this.  How much
+memory does it save, and are you using a system without procfs that
+needs this savings?
 
-> 
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> ---
->>   block/blk-settings.c |    2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/block/blk-settings.c b/block/blk-settings.c
->> index c8eda2e7b91e..66c45fd79545 100644
->> --- a/block/blk-settings.c
->> +++ b/block/blk-settings.c
->> @@ -664,6 +664,8 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
->>   		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
->>   		       top, bottom);
->>   	}
->> +
->> +	t->backing_dev_info->io_pages = t->limits.max_sectors >> (PAGE_SHIFT-9);
->>   }
->>   EXPORT_SYMBOL(disk_stack_limits);
-> 
-> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
+thanks,
+
+greg k-h
