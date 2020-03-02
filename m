@@ -2,141 +2,122 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4407DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E75C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32521775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51735222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbgCBRJQ convert rfc822-to-8bit (ORCPT
+        id S1727385AbgCBRJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:09:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49350 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727202AbgCBRJP (ORCPT
+        Mon, 2 Mar 2020 12:09:32 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41406 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbgCBRJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:09:15 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022GtDIC067545
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:09:14 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbf1086-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:09:14 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Mon, 2 Mar 2020 17:09:11 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 17:09:09 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022H98mL57344244
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 17:09:08 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24BCD52051;
-        Mon,  2 Mar 2020 17:09:08 +0000 (GMT)
-Received: from localhost (unknown [9.199.48.41])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A98FC5204E;
-        Mon,  2 Mar 2020 17:09:07 +0000 (GMT)
-Date:   Mon, 02 Mar 2020 22:39:06 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: eh_frame confusion
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
-In-Reply-To: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
+        Mon, 2 Mar 2020 12:09:31 -0500
+Received: by mail-il1-f194.google.com with SMTP id q13so130251ile.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:09:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pY7gYt6OotnqUFf5LH33Rx81o88vShjsNxCsLlJhYP4=;
+        b=DtUzEjZ2EX4gK3h2FVa30ZrjyJn5c8NLbEZlX32xqFDizBzR9jkt1IsVoyBpkqIVBb
+         wdyaBSEsz6fj8DYUIoFStMXzGiMEJUn2lsI7FDENHK2caElhml5HIDOdryQBb8stdj9N
+         YxaE5AvIwMHeJGxU5Gb2TRUhrl93Uhn0RRAqR7q2ZTc/kcn1qqEp1/oOztL0T2j95BFZ
+         DxetxZRndHIUODo4h/EmKsTjCh8Ut0dnmnBybKbPj5zqGbXkyAbWP3Y4Kr4l3uxWJmFX
+         TAgksVEStQUML5z0Y5xDHz+lIx1OAPO6n0rEa7/clUAr3sRYIFSgC7eku6BsgxhRC6yk
+         H+Ng==
+X-Gm-Message-State: ANhLgQ1KNEmaRnJQhYyyOvxTCThoTUfj06hF961Jp21fkmu9FrLoyGtv
+        /l+wfWjYi5dpa8FRHO9mFLdLnA==
+X-Google-Smtp-Source: ADFU+vvLqUKxKaXlniz29wyCsSX4+Kp1o78dvk9pMAs2sRWuO4RBSRWjMfxc6G3wlV7VF6Vft4V9EA==
+X-Received: by 2002:a92:9c57:: with SMTP id h84mr594806ili.94.1583168970924;
+        Mon, 02 Mar 2020 09:09:30 -0800 (PST)
+Received: from google.com ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id z63sm6813088ilk.44.2020.03.02.09.09.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 09:09:30 -0800 (PST)
+Date:   Mon, 2 Mar 2020 10:09:26 -0700
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Ben Chuang <benchuanggli@gmail.com>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.chuang@genesyslogic.com.tw
+Subject: Re: [PATCH] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
+Message-ID: <20200302170926.GA59937@google.com>
+References: <20200219092900.9151-1-benchuanggli@gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20030217-0020-0000-0000-000003AFAB6F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030217-0021-0000-0000-00002207D78C
-Message-Id: <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219092900.9151-1-benchuanggli@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rasmus Villemoes wrote:
-> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
-> to gcc-8 all object files now end up having .eh_frame section. For
-> vmlinux, that's not a problem, because they all get discarded in
-> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
-> modules, which doesn't seem to be useful - given that everything worked
-> just fine with gcc-7, and I don't see anything in the module loader that
-> handles .eh_frame.
+On Wed, Feb 19, 2020 at 05:29:00PM +0800, Ben Chuang wrote:
+> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 > 
-> The reason I care is that my target has a rather tight rootfs budget,
-> and the .eh_frame section seem to occupy 10-30% of the file size
-> (obviously very depending on the particular module).
+> Enable MSI interrupt for GL9750/GL9755. Some platforms
+> do not support PCI INTx and devices can not work without
+> interrupt. Like messages below:
 > 
-> Comparing the .foo.o.cmd files, I don't see change in options that might
-> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
-> is apparently no longer supported in gcc-8). Both before and after, there's
+> [    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
+> [    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
+> [    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
+> [    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
+> [    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
 > 
-> -fno-dwarf2-cfi-asm
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> ---
+>  drivers/mmc/host/sdhci-pci-gli.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> about which gcc's documentation says
-> 
-> '-fno-dwarf2-cfi-asm'
->      Emit DWARF unwind info as compiler generated '.eh_frame' section
->      instead of using GAS '.cfi_*' directives.
-> 
-> Looking into where that comes from got me even more confused, because
-> both arm and unicore32 say
-> 
-> # Never generate .eh_frame
-> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
-> 
-> while the ppc32 case at hand says
-> 
-> # FIXME: the module load should be taught about the additional relocs
-> # generated by this.
-> # revert to pre-gcc-4.4 behaviour of .eh_frame
-
-Michael opened a task to look into this recently and I had spent some 
-time last week on this. The original commit/discussion adding 
--fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
-handled by our module loader:
-http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
-
-However, that is now handled thanks to commit 9f751b82b491d:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
-
-I did a test build and a simple module loaded fine, so I think 
--fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
-some breakages with it. Michael?
-
-> 
-> but prior to gcc-8, .eh_frame didn't seem to get generated anyway.
-> 
-> Can .eh_frame sections be discarded for modules (on ppc32 at least), or
-> is there some magic that makes them necessary when building with gcc-8?
-
-As Segher points out, it looks like we need to add 
--fno-asynchronous-unwind-tables. Most other architectures seem to use 
-that too.
-
-
-- Naveen
+> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+> index 5eea8d70a85d..ce15a05f23d4 100644
+> --- a/drivers/mmc/host/sdhci-pci-gli.c
+> +++ b/drivers/mmc/host/sdhci-pci-gli.c
+> @@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
+>  	return 0;
+>  }
+>  
+> +static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
+> +{
+> +	int ret;
+> +
+> +	ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
+> +				    PCI_IRQ_MSI | PCI_IRQ_MSIX);
+> +	if (ret < 0) {
+> +		pr_warn("%s: enable PCI MSI failed, error=%d\n",
+> +		       mmc_hostname(slot->host->mmc), ret);
+> +		return;
+> +	}
+> +
+> +	slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
+> +}
+> +
+>  static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
+>  {
+>  	struct sdhci_host *host = slot->host;
+>  
+> +	gli_pcie_enable_msi(slot);
+>  	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+>  	sdhci_enable_v4_mode(host);
+>  
+> @@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
+>  {
+>  	struct sdhci_host *host = slot->host;
+>  
+> +	gli_pcie_enable_msi(slot);
+>  	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+>  	sdhci_enable_v4_mode(host);
+>  
+Tested-by: Raul E Rangel <rrangel@chromium.org>
 
