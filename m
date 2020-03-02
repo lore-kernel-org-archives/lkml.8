@@ -7,42 +7,40 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48AEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A58C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD49B2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB192146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583165103;
-	bh=eNPfezLiilggJAa++pp3/3UvAayzi+eMFGLtn6cjd5k=;
+	s=default; t=1583165108;
+	bh=yB241pGc8+AFMvDqYJepDnhha/RkMyuVxHCiPFNECDI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rFKKgWWwkDFuEtZIhibE4Uqt4MXI0PyCHqEkkah8uxywxy+KwdZY3PwE7ia6rNWCK
-	 S/v3lbNlRzWH4hgg+Y9xSCj5xe7SAq0AweUjLQzx4acidAb1CynsGVVxEEY1ie6lyz
-	 q4NstuBOGGu0SSSYfsmd9U/Qqqylt0gU5jDrilZc=
+	b=sOMn4ZaqCNeMFvsiMyOhEvi52aTKpRM+0zJt8m9RRWPeQ1gfyasMXWZcAGkZT5pre
+	 XGoliimSJNp2ptWnRRzF6vvjE/vwNXmvmWuFtJcDIDoJKmkrA3pTZbxEQhKVJN0qKr
+	 9V62I3U2iBqPlOvHh5A8UvxrL01ZHc8zgWG092HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCBQFC (ORCPT
+        id S1727389AbgCBQFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:05:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:34626 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 11:05:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:34636 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbgCBQFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:05:02 -0500
+        id S1727226AbgCBQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:05:07 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B095C2F;
-        Mon,  2 Mar 2020 08:05:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 755AC2F;
+        Mon,  2 Mar 2020 08:05:06 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 303643F534;
-        Mon,  2 Mar 2020 08:05:01 -0800 (PST)
-Date:   Mon, 02 Mar 2020 16:04:59 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECDFC3F534;
+        Mon,  2 Mar 2020 08:05:05 -0800 (PST)
+Date:   Mon, 02 Mar 2020 16:05:04 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Applied "regulator: pwm: Don't warn on probe deferral" to the regulator tree
-In-Reply-To:  <20200302141428.14119-1-jonathanh@nvidia.com>
-Message-Id:  <applied-20200302141428.14119-1-jonathanh@nvidia.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, Linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: anatop: Improve Kconfig dependency" to the regulator tree
+In-Reply-To:  <1583150118-8014-1-git-send-email-Anson.Huang@nxp.com>
+Message-Id:  <applied-1583150118-8014-1-git-send-email-Anson.Huang@nxp.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +49,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: pwm: Don't warn on probe deferral
+   regulator: anatop: Improve Kconfig dependency
 
 has been applied to the regulator tree at
 
@@ -76,40 +74,32 @@ to this mail.
 Thanks,
 Mark
 
-From 0cd71b9a43ad80f4d9a8bfde6ec6db8daf447029 Mon Sep 17 00:00:00 2001
-From: Jon Hunter <jonathanh@nvidia.com>
-Date: Mon, 2 Mar 2020 14:14:28 +0000
-Subject: [PATCH] regulator: pwm: Don't warn on probe deferral
+From 6179b0e90cbc0117cd4ff994bc24f4ea417b11d7 Mon Sep 17 00:00:00 2001
+From: Anson Huang <Anson.Huang@nxp.com>
+Date: Mon, 2 Mar 2020 19:55:18 +0800
+Subject: [PATCH] regulator: anatop: Improve Kconfig dependency
 
-Deferred probe is an expected return value for devm_pwm_get(). Given
-that the driver deals with it properly, rather than warn on probe
-deferral, only output a message on probe deferral if debug level
-prints are enabled.
+ANATOP regulator should depend on ARCH_MXC or COMPILE_TEST.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200302141428.14119-1-jonathanh@nvidia.com
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Link: https://lore.kernel.org/r/1583150118-8014-1-git-send-email-Anson.Huang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/pwm-regulator.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/regulator/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index e74e11101fc1..638329bd0745 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -354,7 +354,11 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 	drvdata->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(drvdata->pwm)) {
- 		ret = PTR_ERR(drvdata->pwm);
--		dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
-+		if (ret == -EPROBE_DEFER)
-+			dev_dbg(&pdev->dev,
-+				"Failed to get PWM, deferring probe\n");
-+		else
-+			dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
- 		return ret;
- 	}
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index b8ae513514a8..64a39f34ef37 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -107,6 +107,7 @@ config REGULATOR_AD5398
  
+ config REGULATOR_ANATOP
+ 	tristate "Freescale i.MX on-chip ANATOP LDO regulators"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on MFD_SYSCON
+ 	help
+ 	  Say y here to support Freescale i.MX on-chip ANATOP LDOs
 -- 
 2.20.1
 
