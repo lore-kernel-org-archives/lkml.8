@@ -2,128 +2,165 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22926C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83314C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E088321739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7PhMTDH"
+	by mail.kernel.org (Postfix) with ESMTP id 6342721556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCBPgG (ORCPT
+        id S1727202AbgCBPhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:36:06 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41857 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgCBPgG (ORCPT
+        Mon, 2 Mar 2020 10:37:12 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:45268 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:36:06 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so10660078oie.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZUOEGdn5h6v06IPczIi66UOyLvx1Bz0z6upuBzYIOrQ=;
-        b=g7PhMTDH9NxeJ06pUQIIg/RkeIilz5nkHwax+23u/zcZ+SEG2prhes2Aq3p2Unr8T7
-         yasbJl0DlDjV/n6HcXhlsgbuZ12HmfRj+ZwYdYSEzIsmPq4XTHA9Q9bTriZI2vU7nciW
-         nEj6bG4pwltZRKDv36fmhhN+HLnJ+7smuky6IJEyQVlW3dVuB/4Qk7b7y1f6NUcppFDW
-         hTwip+u3og3WpnhBAfPhwG+gz+G70S2updwrUTXfOUsmo6xobx/epO+biYMEC208jJKO
-         bgxqWuYCU4mA2ykKs1oQ1i5atKD1hCJrY9Pgpat2vintzygSbiW3x0IwE4ODTv/xDm7f
-         9hZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=ZUOEGdn5h6v06IPczIi66UOyLvx1Bz0z6upuBzYIOrQ=;
-        b=IjOM73GkZEUH9u0irKBdG0QwgmVtXowTKigfvr+6ZkwP9NKsP8ZH/twbrav+1Jc93B
-         JCqzAVtmh6EkVZkJNWxGLEYHnlmzEKitTVuSgXwaaG6Fdvp5n1Q5sGrfs4/uT4RCumRe
-         PcfC6tegHFeqJkkC+wkbhg4ufOzedMcBtKs/2ftRGNBOLxJ+R0AczSwg4iAuPMvtZip3
-         5C9+XpJhCpEJV3s1GtCYyBnV63gCav6mu7AGeK0jpJ+VCPldkYffknOBsnm2hGUGnnkg
-         Bbon6DVzP18Y6NQWy8UXBIddTd0wgtXXJ0uY1G3qqFiEgpcGkVW1mOr13BmcZxURL1UZ
-         T1nw==
-X-Gm-Message-State: ANhLgQ0M/5aAFT5Su7VwMDjpPHxhpYLHeaX8IfoUNuEtY/JOHCbYgTNg
-        8NIg6hTs4C8Dx4NActiaFw==
-X-Google-Smtp-Source: ADFU+vus2EJmJvBstGS2lEYVuazQ4+UpqrUrmYQEBHAnujMK6z7RGN/mLW7f94F63q9V9d/hufoILw==
-X-Received: by 2002:a05:6808:b22:: with SMTP id t2mr71712oij.40.1583163365360;
-        Mon, 02 Mar 2020 07:36:05 -0800 (PST)
-Received: from serve.minyard.net ([47.184.164.37])
-        by smtp.gmail.com with ESMTPSA id h15sm6659601otq.67.2020.03.02.07.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 07:36:04 -0800 (PST)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:9dde:2776:ee08:1ad1])
-        by serve.minyard.net (Postfix) with ESMTPSA id 80D35180002;
-        Mon,  2 Mar 2020 15:36:04 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 09:36:03 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     John Donnelly <john.p.donnelly@oracle.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 ] ipmi_si: Fix false error about IRQ registration
-Message-ID: <20200302153603.GD3878@minyard.net>
-Reply-To: minyard@acm.org
-References: <95A6B0CD-9C09-4165-AF60-A2789C53E926@oracle.com>
+        Mon, 2 Mar 2020 10:37:12 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48WPQY1crwzQlKM;
+        Mon,  2 Mar 2020 16:37:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id 6OMBcZierEM3; Mon,  2 Mar 2020 16:37:05 +0100 (CET)
+Date:   Tue, 3 Mar 2020 02:36:57 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302153657.7k7qo4k5he2acxct@yavin>
+References: <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
+ <20200302151046.447zgo36dmfdr2ik@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z3gcdvurlvimlu7q"
 Content-Disposition: inline
-In-Reply-To: <95A6B0CD-9C09-4165-AF60-A2789C53E926@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200302151046.447zgo36dmfdr2ik@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:28:04PM -0600, John Donnelly wrote:
-> Since commit 7723f4c5ecdb ("driver core: platform: Add an error message
-> to platform_get_irq()"), platform_get_irq() will call dev_err() on an
-> error,  even though the IRQ usage in the ipmi_si driver is optional.
-> 
-> Use the platform_get_irq_optional() call to avoid the message from
-> alerting users with false alarms.
-> 
-> cc: stable@vger.kernel.org # 5.4.x
 
-This looks good to me:
+--z3gcdvurlvimlu7q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Corey Minyard <cminyard@mvista.com>
+On 2020-03-02, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> On Mon, Mar 02, 2020 at 01:05:04PM +0100, Christian Brauner wrote:
+> > On Mon, Mar 02, 2020 at 12:52:39PM +0100, Christian Brauner wrote:
+> > > On Mon, Mar 02, 2020 at 12:30:47PM +0100, Florian Weimer wrote:
+> > > > * Christian Brauner:
+> > > >=20
+> > > > > [Cc Florian since that ends up on libc's table sooner or later...]
+> > > >=20
+> > > > I'm not sure what you are after here =E2=80=A6
+> > >=20
+> > > Exactly what you've commented below. Input on whether any of these
+> > > changes would be either problematic if you e.g. were to implement
+> > > openat() on top of openat2() in the future or if it would be problema=
+tic
+> > > if we e.g. were to really deprecate AT_* flags for new syscalls.
+> > >=20
+> > > >=20
+> > > > > On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
+> > > > >> =09
+> > > > >> I've been told that RESOLVE_* flags, which can be found in linux=
+/openat2.h,
+> > > > >> should be used instead of the equivalent AT_* flags for new syst=
+em calls.  Is
+> > > > >> this the case?
+> > > > >
+> > > > > Imho, it would make sense to use RESOLVE_* flags for new system c=
+alls
+> > > > > and afair this was the original intention.
+> > > > > The alternative is that RESOLVE_* flags are special to openat2().=
+ But
+> > > > > that seems strange, imho. The semantics openat2() has might be ve=
+ry
+> > > > > useful for new system calls as well which might also want to supp=
+ort
+> > > > > parts of AT_* flags (see fsinfo()). So we either end up adding ne=
+w AT_*
+> > > > > flags mirroring the new RESOLVE_* flags or we end up adding new
+> > > > > RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
+> > > > > possibility I vote for RESOLVE_* flags going forward. The have be=
+tter
+> > > > > naming too imho.
+> > > > >
+> > > > > An argument against this could be that we might end up causing mo=
+re
+> > > > > confusion for userspace due to yet another set of flags. But mayb=
+e this
+> > > > > isn't an issue as long as we restrict RESOLVE_* flags to new sysc=
+alls.
+> > > > > When we introduce a new syscall userspace will have to add suppor=
+t for
+> > > > > it anyway.
+> > > >=20
+> > > > I missed the start of the dicussion and what this is about, sorry.
+> > > >=20
+> > > > Regarding open flags, I think the key point for future APIs is to a=
+void
+> > > > using the set of flags for both control of the operation itself
+> > > > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
+> > > > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that wo=
+uld
+> >=20
+> > Yeah, we have touched on that already and we have other APIs having
+> > related problems. A clean way to avoid this problem is to require new
+> > syscalls to either have two flag arguments, or - if appropriate -
+> > suggest they make use of struct open_how that was implemented for
+> > openat2().
+>=20
+> By the way, if we really means business wrt to: separate resolution from
+> fd-property falgs then shouldn't we either require O_NOFOLLOW for
+> openat2() be specified in open_how->resolve or disallow O_NOFOLLOW for
+> openat2() and introduce a new RESOLVE_* variant?
 
-I've included in my tree for 5.7
+I think we agreed a while ago we aren't touching O_ flags for openat2()
+because it would hamper adoption (this is the same reason we aren't
+fixing the whole O_ACCMODE mess, and O_LARGEFILE, and the arch-specific
+O_ flags, and O_TMPFILE, and __O_SYNC, and FASYNC/O_ASYNC, and
+__FMODE_EXEC and __FMODE_NONOTIFY, and ...).
 
--corey
+To be fair, we did fix O_PATH|O_TMPFILE and invalid mode combinations
+but that's only because those were fairly broken.
 
-> 
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> ---
->  drivers/char/ipmi/ipmi_si_platform.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
-> index c78127ccbc0d..638c693e17ad 100644
-> --- a/drivers/char/ipmi/ipmi_si_platform.c
-> +++ b/drivers/char/ipmi/ipmi_si_platform.c
-> @@ -194,7 +194,7 @@ static int platform_ipmi_probe(struct platform_device *pdev)
->  	else
->  		io.slave_addr = slave_addr;
->  
-> -	io.irq = platform_get_irq(pdev, 0);
-> +	io.irq = platform_get_irq_optional(pdev, 0);
->  	if (io.irq > 0)
->  		io.irq_setup = ipmi_std_irq_setup;
->  	else
-> @@ -378,7 +378,7 @@ static int acpi_ipmi_probe(struct platform_device *pdev)
->  		io.irq = tmp;
->  		io.irq_setup = acpi_gpe_irq_setup;
->  	} else {
-> -		int irq = platform_get_irq(pdev, 0);
-> +		int irq = platform_get_irq_optional(pdev, 0);
->  
->  		if (irq > 0) {
->  			io.irq = irq;
-> -- 
-> 2.20.1
-> 
+But as I mentioned in a sister mail, I do agree that allowing O_NOFOLLOW
+and RESOLVE_NO_TRAILING_SYMLINKS makes me feel a little uneasy. But
+maybe it's totally fine and I'm worrying for no reason.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--z3gcdvurlvimlu7q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXl0oFwAKCRCdlLljIbnQ
+ElnIAP9m9sYf6BaM1rn8GNQEfGPy2a9VHHurhDb+SjelDPiC7AD9E+jCX3UcZ2+5
+gTG0XVFUvphs+TqKngfX+EBNIHB8bw0=
+=N0M9
+-----END PGP SIGNATURE-----
+
+--z3gcdvurlvimlu7q--
