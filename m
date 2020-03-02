@@ -2,273 +2,202 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41699C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1FEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A021217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I26sJYzm"
+	by mail.kernel.org (Postfix) with ESMTP id AE3F021D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgCBPnZ (ORCPT
+        id S1727650AbgCBPnb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:43:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22158 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727305AbgCBPnZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:43:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583163803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Qo4Pxr25wDsmbHjtdbA7zPZqLaIR07SOw6ZNSmVJfmc=;
-        b=I26sJYzm9CNRHGizUsPde+BAMdkTPHWN5k+921Oi5r6MVAQgyP7Tr57l9gqha256VDweM4
-        2VgrqiX3QYZZBD4+pCaopzT9hZUcuCWGlxpFCsfoBt/K0T8G36rlS90C+fucbJEZAybO82
-        t0hzPzBunkkUzxDOG4k/tHVn6lRJMig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-T24ZT3OAOzWdAsMKm-q_uw-1; Mon, 02 Mar 2020 10:43:22 -0500
-X-MC-Unique: T24ZT3OAOzWdAsMKm-q_uw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90B67800D5F;
-        Mon,  2 Mar 2020 15:43:20 +0000 (UTC)
-Received: from [10.36.116.114] (ovpn-116-114.ams2.redhat.com [10.36.116.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 58B9E92D45;
-        Mon,  2 Mar 2020 15:43:11 +0000 (UTC)
-Subject: Re: [PATCH v2 3/7] mm/sparse.c: introduce a new function
- clear_subsection_map()
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        osalvador@suse.de, dan.j.williams@intel.com, mhocko@suse.com,
-        rppt@linux.ibm.com, robin.murphy@arm.com
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220043316.19668-4-bhe@redhat.com>
- <dc5ab1b1-65e2-e20f-66aa-b71d739a5b6d@redhat.com>
- <20200301052028.GN24216@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <1346f0c2-7b1f-6feb-5e9b-2854fd0022ba@redhat.com>
-Date:   Mon, 2 Mar 2020 16:43:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200301052028.GN24216@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
+        Mon, 2 Mar 2020 10:43:31 -0500
+Received: from mail-oln040092071065.outbound.protection.outlook.com ([40.92.71.65]:35899
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727305AbgCBPna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:43:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SFt7S5IqhRMS2BtfMLmzqQ6AdzISDqFm9cmLVm7Vw2BsO4Du5ViS2uIC9LPj9H2eCpk1M2BDDDsy3p8sOJlUzu2uopzLCi9Ccm5FDSzj1nWBvd+TuPAZmmz6oLW2Wfhbx9FgrHNcBGpkQu/wQVHd8a915OdiJbHQLl0YWVvotSiZb3tPUNB3QUd27n4+9zD8PojMvQVR5DREB9D9DVRV8rIFLXQq2MYrHhWeOUP06uObwUnwszddEYRAnuwmZX/sBA37mc2PSQfK7KHd6Ujtpn3jzdhOya7T4HwUAhx7Z0u0j5Loe1OwMscrVknTpn8nzhNm/CrquOGa0qTnFzxi5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aKll1uYXY/p4lporydDRyPbyHI3XYNaz0hS7oe1Ogas=;
+ b=FsvVBSbar+IL1Rxk1F67qCrt3dvGMZ6e0kyODDP51JvdmiUd/EFDnbAovWbiqx03wB6Vjqew/cX6DJNu1XnevKaxntid6vNx/uZEgkRxCfZCzTmnGtGjArby6Td7rlQVeAetihrx8gET8lIJwXybKJ245YgXNsAPd8QyYwfZ447gZENrbKYM39FuyV1F1CuECUdgIPOCMNOrat4ZP3d9/sKOW97yCAeosCt/ts8onLtTqAbOHQOXJ+o3Unhuu5B9jDygHqrKz5R0SGhNuIWjAIMMgnyvbAHyXZ2a+6cM3q4BnsGk8idlbGNcZkLicjmfp/qvgbfws1lIOeXpW4AUbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB5EUR03FT054.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:e400:7e0a::36) by
+ DB5EUR03HT063.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e0a::231)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
+ 2020 15:43:24 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.20.55) by
+ DB5EUR03FT054.mail.protection.outlook.com (10.152.20.248) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:43:24 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 15:43:24 +0000
+Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0052.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 15:43:22 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Topic: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Index: AQHV8AjGwZG4WijWc0+aQpdADP+q6qg02ufjgACXoYA=
+Date:   Mon, 2 Mar 2020 15:43:24 +0000
+Message-ID: <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+ <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+ <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
+ <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74zmfc9.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87a74zmfc9.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ZR0P278CA0052.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:1d::21) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:C65645E00256BFF0EF483D4ABF04F7ED9CADCA7DA782503334C81EE275B55748;UpperCasedChecksum:B5B02A4BC8C9B6E7E3C31595013F4DCA6C0D23C66AB23D6F5B8892FBA4152BEE;SizeAsReceived:9189;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [dyEnYHlm0P0uZkeIkkriIIvlZ6DvQ6d1]
+x-microsoft-original-message-id: <61e5cb52-cf93-3203-ad57-174abbff19af@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 293008bd-2da8-4d78-0182-08d7bec0715c
+x-ms-traffictypediagnostic: DB5EUR03HT063:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8YGYe8UrOXFcm3aSssWupgEEhVcVi9JVL1E2AABGe5vjDQjaRww+7cLsEzPLfb8+6ywdEkeCyWNtByP5r9IZy43Lxrt3a+VuWVfL1b98GWRsl95OA82pgEEiMSiH7Xn4qY+h8/BAFJt/lQKR/+R2IUce2BZZCwil4w5jWmOdVe12Au0vujeQovOjjeQM6lWd
+x-ms-exchange-antispam-messagedata: nGOltsXFW+coIa96+DJIrZYklzcnSMqhRstON9t0wQZXsG8UocU/d/wvILxFg70AO2koqTfnfvn73bVCRlWMZFHiFC1bEmNsKKc8Ofucn1WWhD7Vw+pNbvhxFR0QqeYZ62u+1cOuZTpNrhEp4FVvZw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <82B95786708D07499487862F589BAAC3@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 293008bd-2da8-4d78-0182-08d7bec0715c
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:43:24.7444
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.03.20 06:20, Baoquan He wrote:
-> On 02/28/20 at 03:36pm, David Hildenbrand wrote:
->> On 20.02.20 05:33, Baoquan He wrote:
->>> Wrap the codes which clear subsection map of one memory region from
->>> section_deactivate() into clear_subsection_map().
->>>
->>> Signed-off-by: Baoquan He <bhe@redhat.com>
->>> ---
->>>  mm/sparse.c | 46 ++++++++++++++++++++++++++++++++++++++--------
->>>  1 file changed, 38 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/mm/sparse.c b/mm/sparse.c
->>> index 977b47acd38d..df857ee9330c 100644
->>> --- a/mm/sparse.c
->>> +++ b/mm/sparse.c
->>> @@ -726,14 +726,25 @@ static void free_map_bootmem(struct page *memmap)
->>>  }
->>>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
->>>  
->>> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->>> -		struct vmem_altmap *altmap)
->>> +/**
->>> + * clear_subsection_map - Clear subsection map of one memory region
->>> + *
->>> + * @pfn - start pfn of the memory range
->>> + * @nr_pages - number of pfns to add in the region
->>> + *
->>> + * This is only intended for hotplug, and clear the related subsection
->>> + * map inside one section.
->>> + *
->>> + * Return:
->>> + * * -EINVAL	- Section already deactived.
->>> + * * 0		- Subsection map is emptied.
->>> + * * 1		- Subsection map is not empty.
->>> + */
->>
->> Less verbose please (in my preference: none and simplify return handling)
->>
->>> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
->>>  {
->>>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
->>>  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
->>>  	struct mem_section *ms = __pfn_to_section(pfn);
->>> -	bool section_is_early = early_section(ms);
->>> -	struct page *memmap = NULL;
->>>  	unsigned long *subsection_map = ms->usage
->>>  		? &ms->usage->subsection_map[0] : NULL;
->>>  
->>> @@ -744,8 +755,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->>>  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
->>>  				"section already deactivated (%#lx + %ld)\n",
->>>  				pfn, nr_pages))
->>> -		return;
->>> +		return -EINVAL;
->>> +
->>> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
->>>  
->>> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
->>> +		return 0;
->>> +
->>
->> Can we please just have a
->>
->> subsection_map_empty() instead and handle that in the caller?
->> (you can then always return true in the !VMEMMAP variant)
+On 3/2/20 7:38 AM, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 > 
-> I don't follow. Could you be more specific? or pseudo code please?
+>> This fixes a deadlock in the tracer when tracing a multi-threaded
+>> application that calls execve while more than one thread are running.
+>>
+>> I observed that when running strace on the gcc test suite, it always
+>> blocks after a while, when expect calls execve, because other threads
+>> have to be terminated.  They send ptrace events, but the strace is no
+>> longer able to respond, since it is blocked in vm_access.
+>>
+>> The deadlock is always happening when strace needs to access the
+>> tracees process mmap, while another thread in the tracee starts to
+>> execve a child process, but that cannot continue until the
+>> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
 > 
-> The old code has to handle below case in which subsection_map has been
-> cleared. And I introduce clear_subsection_map() to encapsulate all
-> subsection map realted code so that !VMEMMAP won't have to see it any
-> more.
+> I think your patch works, but I don't think to solve your case another
+> mutex is necessary.  Possibly it is justified, but I hesitate to
+> introduce yet another concept in the code.
+> 
+> Having read elsewhere in the thread that this does not solve the problem
+> Oleg has mentioned I am really hesitant to add more complexity to the
+> situation.
+> 
+> 
+> For your case there is a straight forward and local workaround.
+> 
+> When the current task is ptracing the target task don't bother with
+> cred_gaurd_mutex and ptrace_may_access in access_mm as those tests
+> have already passed.  Instead just confirm the ptrace status. AKA
+> the permission check in ptraces_access_vm.
+> 
+> I think something like this is all we need.
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index cee89229606a..b0ab98c84589 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1224,6 +1224,16 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+>  	struct mm_struct *mm;
+>  	int err;
+>  
+> +	if (task->ptrace && (current == task->parent)) {
+> +		mm = get_task_mm(task);
+> +		if ((get_dumpable(mm) != SUID_DUMP_USER) &&
+> +		    !ptracer_capable(task, mm->user_ns)) {
+> +			mmput(mm);
+> +			mm = ERR_PTR(-EACCESS);
+> +		}
+> +		return mm;
+> +	}
+> +
+>  	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
+>  	if (err)
+>  		return ERR_PTR(err);
+> 
+> Does this solve your test case?
 > 
 
-Something like this on top would be easier to understand IMHO
+I tried this with s/EACCESS/EACCES/.
+
+The test case in this patch is not fixed, but strace does not freeze,
+at least with my setup where it did freeze repeatable.  That is
+obviously because it bypasses the cred_guard_mutex.  But all other
+process that access this file still freeze, and cannot be
+interrupted except with kill -9.
+
+However that smells like a denial of service, that this
+simple test case which can be executed by guest, creates a /proc/$pid/mem
+that freezes any process, even root, when it looks at it.
+I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
 
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index dc79b00ddaaa..be5c80e9cfee 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -726,20 +726,6 @@ static void free_map_bootmem(struct page *memmap)
- }
- #endif /* CONFIG_SPARSEMEM_VMEMMAP */
- 
--/**
-- * clear_subsection_map - Clear subsection map of one memory region
-- *
-- * @pfn - start pfn of the memory range
-- * @nr_pages - number of pfns to add in the region
-- *
-- * This is only intended for hotplug, and clear the related subsection
-- * map inside one section.
-- *
-- * Return:
-- * * -EINVAL	- Section already deactived.
-- * * 0		- Subsection map is emptied.
-- * * 1		- Subsection map is not empty.
-- */
- static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
- {
- 	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
-@@ -758,11 +744,12 @@ static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
- 		return -EINVAL;
- 
- 	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-+	return 0;
-+}
- 
--	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
--		return 0;
--
--	return 1;
-+static bool is_subsection_map_empty(unsigned long pfn, unsigned long nr_pages)
-+{
-+	return bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
- }
- 
- static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-@@ -771,11 +758,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	struct mem_section *ms = __pfn_to_section(pfn);
- 	bool section_is_early = early_section(ms);
- 	struct page *memmap = NULL;
--	int rc;
--
- 
--	rc = clear_subsection_map(pfn, nr_pages);
--	if (IS_ERR_VALUE((unsigned long)rc))
-+	if (unlikely(clear_subsection_map(pfn, nr_pages)))
- 		return;
- 	/*
- 	 * There are 3 cases to handle across two configurations
-@@ -794,7 +778,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	 *
- 	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
- 	 */
--	if (!rc) {
-+	if (is_subsection_map_empty(pfn, nr_pages)) {
- 		unsigned long section_nr = pfn_to_section_nr(pfn);
- 
- 		/*
-@@ -816,7 +800,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	else
- 		depopulate_section_memmap(pfn, nr_pages, altmap);
- 
--	if (!rc)
-+	if (is_subsection_map_empty(pfn, nr_pages))
- 		ms->section_mem_map = (unsigned long)NULL;
- }
- 
-
--- 
-Thanks,
-
-David / dhildenb
-
+Bernd.
