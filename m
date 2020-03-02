@@ -2,135 +2,284 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14546C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A93C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D823221775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4DA20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:52:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMAtFQWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgCBSvr (ORCPT
+        id S1727570AbgCBSw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:51:47 -0500
-Received: from smtprelay0054.hostedemail.com ([216.40.44.54]:43130 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbgCBSvr (ORCPT
+        Mon, 2 Mar 2020 13:52:28 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52894 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBSw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:51:47 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B5653A2D9;
-        Mon,  2 Mar 2020 18:51:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: jewel38_f20ac4926518
-X-Filterd-Recvd-Size: 4745
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  2 Mar 2020 18:51:43 +0000 (UTC)
-Message-ID: <18b0d6ea5619c34ca4120a6151103dbe9bfa0cbe.camel@perches.com>
-Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
- copy_from_user()
-From:   Joe Perches <joe@perches.com>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Todd Kjos <tkjos@google.com>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Jann Horn <jannh@google.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Mar 2020 10:50:11 -0800
-In-Reply-To: <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
-References: <20200302130430.201037-1-glider@google.com>
-         <20200302130430.201037-2-glider@google.com>
-         <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
-         <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
-         <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
-         <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 2 Mar 2020 13:52:28 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so197499wmc.2;
+        Mon, 02 Mar 2020 10:52:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N+92nMqwyvyqnvBWahI9x0clg05C+2OnWX3BXzruqvI=;
+        b=AMAtFQWcB1swXshKwOXCZHsI4wxf/NlKaNf435jqL37KU7tkrKWFI5nCfgIweOg41R
+         dGoGUgQcJYAIXCmkBAu2xx5WwNLo4TNtxA7i0oxWREkcWf/f89RsJSYM6cGvlzdkhijO
+         TeS12crkWY4lDZGz/ah+6KGP+ZdfkBA4tIhIPXw44fF/AM6RnFUv2g1pJgCYM6Rca2Ca
+         XM/P0ce1+LJhjRpTs9lvoIctIBgKPLPqf/YLQeliKptWdoc7lSECKErYWX7XJDJqIeKX
+         8s8wGntRXu2bW7IVMb9HBIL93E3I8mFQzTYRyVi2S2uPJcKpquuXJ53CMfhplzaqgPiH
+         lwRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N+92nMqwyvyqnvBWahI9x0clg05C+2OnWX3BXzruqvI=;
+        b=fuQ6v274i3hjjqNBq2q9gflnnS87s5XOTxpUiARHH6kOUUIzPECrSVL4W3iOby2nB5
+         YLcSYtBUinR5nhZgYHFqT3rWG4jtW90xtSzpISVItCKuD81TAc7f0g9GitxXYO4/ToAH
+         Sd/c0EO/12z4DuHvKO6Dh8EH2UHcefJgwGkU7OkFPw5Ym8lDenAfOidCEvYCe2NAYtA/
+         0fyiMp40Tjn8MGi1BeCMWF8zNaclXHnn0yYP/deSUWb0z+mZ57ybSO7a9xVNCLvptYtE
+         NO9+pLHvLlujmVLQhs46JM4b99QyGy5at5wJegYvi/eCse2GFNzirhgUK1MadFSr+0k7
+         qNpw==
+X-Gm-Message-State: ANhLgQ2Os7sqRoa7brANuL0gjFmqaBD/GQPaNqBxjrlSoIqzzs9Yj+0D
+        6Re/aJHAuT+QbcYF4tbtI44=
+X-Google-Smtp-Source: ADFU+vtAzXMfZgJYhKEk08s9yz5pxY8gnWercSv+ePF/LN8nXjEr4J4i+e4/MztO1Ef4td9Vdpd3VQ==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr220600wmg.147.1583175143890;
+        Mon, 02 Mar 2020 10:52:23 -0800 (PST)
+Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
+        by smtp.gmail.com with ESMTPSA id t187sm474548wmt.25.2020.03.02.10.52.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 10:52:22 -0800 (PST)
+Date:   Mon, 2 Mar 2020 19:52:16 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Marco Elver <elver@google.com>
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr, paulmck@kernel.org,
+        akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3] tools/memory-model/Documentation: Fix "conflict"
+ definition
+Message-ID: <20200302185216.GA5320@andrea>
+References: <20200302172101.157917-1-elver@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302172101.157917-1-elver@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 19:17 +0100, Alexander Potapenko wrote:
-> On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2020-03-02 at 14:25 +0100, Alexander Potapenko wrote:
-> > > On Mon, Mar 2, 2020 at 2:11 PM Joe Perches <joe@perches.com> wrote:
-> > > > On Mon, 2020-03-02 at 14:04 +0100, glider@google.com wrote:
-> > > > > Certain copy_from_user() invocations in binder.c are known to
-> > > > > unconditionally initialize locals before their first use, like e.g. in
-> > > > > the following case:
-> > > > []
-> > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > > []
-> > > > > @@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
-> > > > > 
-> > > > >               case BC_TRANSACTION_SG:
-> > > > >               case BC_REPLY_SG: {
-> > > > > -                     struct binder_transaction_data_sg tr;
-> > > > > +                     struct binder_transaction_data_sg tr __no_initialize;
-> > > > > 
-> > > > >                       if (copy_from_user(&tr, ptr, sizeof(tr)))
-> > > > 
-> > > > I fail to see any value in marking tr with __no_initialize
-> > > > when it's immediately written to by copy_from_user.
-> > > 
-> > > This is being done exactly because it's immediately written to by copy_to_user()
-> > > Clang is currently unable to figure out that copy_to_user() initializes memory.
-> > > So building the kernel with CONFIG_INIT_STACK_ALL=y basically leads to
-> > > the following code:
-> > > 
-> > >   struct binder_transaction_data_sg tr;
-> > >   memset(&tr, 0xAA, sizeof(tr));
-> > >   if (copy_from_user(&tr, ptr, sizeof(tr))) {...}
-> > > 
-> > > This unnecessarily slows the code down, so we add __no_initialize to
-> > > prevent the compiler from emitting the redundant initialization.
-> > 
-> > So?  CONFIG_INIT_STACK_ALL by design slows down code.
-> Correct.
+On Mon, Mar 02, 2020 at 06:21:01PM +0100, Marco Elver wrote:
+> The definition of "conflict" should not include the type of access nor
+> whether the accesses are concurrent or not, which this patch addresses.
+> The definition of "data race" remains unchanged.
 > 
-> > This marking would likely need to be done for nearly all
-> > 3000+ copy_from_user entries.
-> Unfortunately, yes. I was just hoping to do so for a handful of hot
-> cases that we encounter, but in the long-term a compiler solution must
-> supersede them.
+> The definition of "conflict" as we know it and is cited by various
+> papers on memory consistency models appeared in [1]: "Two accesses to
+> the same variable conflict if at least one is a write; two operations
+> conflict if they execute conflicting accesses."
 > 
-> > Why not try to get something done on the compiler side
-> > to mark the function itself rather than the uses?
-> This is being worked on in the meantime as well (see
-> http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
-> Do you have any particular requisitions about how this should look on
-> the source level?
+> The LKMM as well as the C11 memory model are adaptations of
+> data-race-free, which are based on the work in [2]. Necessarily, we need
+> both conflicting data operations (plain) and synchronization operations
+> (marked). For example, C11's definition is based on [3], which defines a
+> "data race" as: "Two memory operations conflict if they access the same
+> memory location, and at least one of them is a store, atomic store, or
+> atomic read-modify-write operation. In a sequentially consistent
+> execution, two memory operations from different threads form a type 1
+> data race if they conflict, at least one of them is a data operation,
+> and they are adjacent in <T (i.e., they may be executed concurrently)."
+> 
+> [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
+>     Programs that Share Memory", 1988.
+> 	URL: http://snir.cs.illinois.edu/listed/J21.pdf
+> 
+> [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
+>     Multiprocessors", 1993.
+> 	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
+> 
+> [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
+>     Model", 2008.
+> 	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
+> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
 
-I presume something like the below when appropriate for
-automatic variables when not already initialized or modified.
----
- include/linux/uaccess.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+LGTM:
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 8a215c..3e034b5 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -138,7 +138,8 @@ _copy_to_user(void __user *, const void *, unsigned long);
- #endif
- 
- static __always_inline unsigned long __must_check
--copy_from_user(void *to, const void __user *from, unsigned long n)
-+copy_from_user(void __no_initialize *to, const void __user *from,
-+	       unsigned long n)
- {
- 	if (likely(check_copy_size(to, n, false)))
- 		n = _copy_from_user(to, from, n);
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+
+Thank you both,
+
+  Andrea
 
 
+> ---
+> v3:
+> * Apply Alan's suggestion.
+> * s/two race candidates/race candidates/
+> 
+> v2: http://lkml.kernel.org/r/20200302141819.40270-1-elver@google.com
+> * Apply Alan's suggested version.
+>   - Move "from different CPUs (or threads)" from "conflict" to "data
+>     race" definition. Update "race candidate" accordingly.
+> * Add citations to commit message.
+> 
+> v1: http://lkml.kernel.org/r/20200228164621.87523-1-elver@google.com
+> ---
+>  .../Documentation/explanation.txt             | 83 ++++++++++---------
+>  1 file changed, 45 insertions(+), 38 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index e91a2eb19592a..993f800659c6a 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -1987,28 +1987,36 @@ outcome undefined.
+>  
+>  In technical terms, the compiler is allowed to assume that when the
+>  program executes, there will not be any data races.  A "data race"
+> -occurs when two conflicting memory accesses execute concurrently;
+> -two memory accesses "conflict" if:
+> +occurs when there are two memory accesses such that:
+>  
+> -	they access the same location,
+> +1.	they access the same location,
+>  
+> -	they occur on different CPUs (or in different threads on the
+> -	same CPU),
+> +2.	at least one of them is a store,
+>  
+> -	at least one of them is a plain access,
+> +3.	at least one of them is plain,
+>  
+> -	and at least one of them is a store.
+> +4.	they occur on different CPUs (or in different threads on the
+> +	same CPU), and
+>  
+> -The LKMM tries to determine whether a program contains two conflicting
+> -accesses which may execute concurrently; if it does then the LKMM says
+> -there is a potential data race and makes no predictions about the
+> -program's outcome.
+> +5.	they execute concurrently.
+>  
+> -Determining whether two accesses conflict is easy; you can see that
+> -all the concepts involved in the definition above are already part of
+> -the memory model.  The hard part is telling whether they may execute
+> -concurrently.  The LKMM takes a conservative attitude, assuming that
+> -accesses may be concurrent unless it can prove they cannot.
+> +In the literature, two accesses are said to "conflict" if they satisfy
+> +1 and 2 above.  We'll go a little farther and say that two accesses
+> +are "race candidates" if they satisfy 1 - 4.  Thus, whether or not two
+> +race candidates actually do race in a given execution depends on
+> +whether they are concurrent.
+> +
+> +The LKMM tries to determine whether a program contains race candidates
+> +which may execute concurrently; if it does then the LKMM says there is
+> +a potential data race and makes no predictions about the program's
+> +outcome.
+> +
+> +Determining whether two accesses are race candidates is easy; you can
+> +see that all the concepts involved in the definition above are already
+> +part of the memory model.  The hard part is telling whether they may
+> +execute concurrently.  The LKMM takes a conservative attitude,
+> +assuming that accesses may be concurrent unless it can prove they
+> +are not.
+>  
+>  If two memory accesses aren't concurrent then one must execute before
+>  the other.  Therefore the LKMM decides two accesses aren't concurrent
+> @@ -2171,8 +2179,8 @@ again, now using plain accesses for buf:
+>  	}
+>  
+>  This program does not contain a data race.  Although the U and V
+> -accesses conflict, the LKMM can prove they are not concurrent as
+> -follows:
+> +accesses are race candidates, the LKMM can prove they are not
+> +concurrent as follows:
+>  
+>  	The smp_wmb() fence in P0 is both a compiler barrier and a
+>  	cumul-fence.  It guarantees that no matter what hash of
+> @@ -2326,12 +2334,11 @@ could now perform the load of x before the load of ptr (there might be
+>  a control dependency but no address dependency at the machine level).
+>  
+>  Finally, it turns out there is a situation in which a plain write does
+> -not need to be w-post-bounded: when it is separated from the
+> -conflicting access by a fence.  At first glance this may seem
+> -impossible.  After all, to be conflicting the second access has to be
+> -on a different CPU from the first, and fences don't link events on
+> -different CPUs.  Well, normal fences don't -- but rcu-fence can!
+> -Here's an example:
+> +not need to be w-post-bounded: when it is separated from the other
+> +race-candidate access by a fence.  At first glance this may seem
+> +impossible.  After all, to be race candidates the two accesses must
+> +be on different CPUs, and fences don't link events on different CPUs.
+> +Well, normal fences don't -- but rcu-fence can!  Here's an example:
+>  
+>  	int x, y;
+>  
+> @@ -2367,7 +2374,7 @@ concurrent and there is no race, even though P1's plain store to y
+>  isn't w-post-bounded by any marked accesses.
+>  
+>  Putting all this material together yields the following picture.  For
+> -two conflicting stores W and W', where W ->co W', the LKMM says the
+> +race-candidate stores W and W', where W ->co W', the LKMM says the
+>  stores don't race if W can be linked to W' by a
+>  
+>  	w-post-bounded ; vis ; w-pre-bounded
+> @@ -2380,8 +2387,8 @@ sequence, and if W' is plain then they also have to be linked by a
+>  
+>  	w-post-bounded ; vis ; r-pre-bounded
+>  
+> -sequence.  For a conflicting load R and store W, the LKMM says the two
+> -accesses don't race if R can be linked to W by an
+> +sequence.  For race-candidate load R and store W, the LKMM says the
+> +two accesses don't race if R can be linked to W by an
+>  
+>  	r-post-bounded ; xb* ; w-pre-bounded
+>  
+> @@ -2413,20 +2420,20 @@ is, the rules governing the memory subsystem's choice of a store to
+>  satisfy a load request and its determination of where a store will
+>  fall in the coherence order):
+>  
+> -	If R and W conflict and it is possible to link R to W by one
+> -	of the xb* sequences listed above, then W ->rfe R is not
+> -	allowed (i.e., a load cannot read from a store that it
+> +	If R and W are race candidates and it is possible to link R to
+> +	W by one of the xb* sequences listed above, then W ->rfe R is
+> +	not allowed (i.e., a load cannot read from a store that it
+>  	executes before, even if one or both is plain).
+>  
+> -	If W and R conflict and it is possible to link W to R by one
+> -	of the vis sequences listed above, then R ->fre W is not
+> -	allowed (i.e., if a store is visible to a load then the load
+> -	must read from that store or one coherence-after it).
+> +	If W and R are race candidates and it is possible to link W to
+> +	R by one of the vis sequences listed above, then R ->fre W is
+> +	not allowed (i.e., if a store is visible to a load then the
+> +	load must read from that store or one coherence-after it).
+>  
+> -	If W and W' conflict and it is possible to link W to W' by one
+> -	of the vis sequences listed above, then W' ->co W is not
+> -	allowed (i.e., if one store is visible to a second then the
+> -	second must come after the first in the coherence order).
+> +	If W and W' are race candidates and it is possible to link W
+> +	to W' by one of the vis sequences listed above, then W' ->co W
+> +	is not allowed (i.e., if one store is visible to a second then
+> +	the second must come after the first in the coherence order).
+>  
+>  This is the extent to which the LKMM deals with plain accesses.
+>  Perhaps it could say more (for example, plain accesses might
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
