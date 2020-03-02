@@ -2,124 +2,116 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B520AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD4CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901D621739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FD72173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583153338;
+	bh=eJffHoiJlQGhIBdIFCqltSG1M64l4OsIgM0xjDle1dQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sdfzALC4rvw9vB1jOlsNHXGTlBE+JvzzpiiOloBXXrJLlYeEibZWMFw1g113cW44s
+	 71mzU2FSX45L4FQCV91LCTyMJnVZScjrAlHWAtfDfV0sXDXATg0GYzQbc9lDwx0/7u
+	 EcerkGJesxcEN58A0zOyS2C00K6SCaiBe8oHZTl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgCBMpu (ORCPT
+        id S1727659AbgCBMs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:45:50 -0500
-Received: from mailoutvs14.siol.net ([185.57.226.205]:57400 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726654AbgCBMpu (ORCPT
+        Mon, 2 Mar 2020 07:48:57 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54958 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgCBMs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:45:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 01DE15230B1;
-        Mon,  2 Mar 2020 13:45:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id L-mXkFixs0XB; Mon,  2 Mar 2020 13:45:45 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 89B175242A5;
-        Mon,  2 Mar 2020 13:45:45 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 970E85230B1;
-        Mon,  2 Mar 2020 13:45:44 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] drm/bridge: dw-hdmi: Fix color space conversion detection
-Date:   Mon, 02 Mar 2020 13:45:44 +0100
-Message-ID: <4602894.0VBMTVartN@jernej-laptop>
-In-Reply-To: <20200302092748.GE11960@pendragon.ideasonboard.com>
-References: <20200229163043.158262-1-jernej.skrabec@siol.net> <20200229163043.158262-3-jernej.skrabec@siol.net> <20200302092748.GE11960@pendragon.ideasonboard.com>
+        Mon, 2 Mar 2020 07:48:57 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z12so11017454wmi.4;
+        Mon, 02 Mar 2020 04:48:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s+VyaNhmOd6f42VIDi6KHAKXCWAclUlFckZ+VTZz/lc=;
+        b=Vr/hs2LPI9BKFj3/9zTPftIyRnfRcK70ijX+0AqL84q9w7UEhnH1nH9AFzrqgaKNJ4
+         UoUAFN1FADPY7dSaIKlEG2WjfZXG0ka5/JW+zhThkP2oLVL4iTzDpvBlQfl0eWwmd6XF
+         Z39kQqwk5Fxy5DJLhA9bdS9BDzDstPXnYiGrlDg23/6XjMeo/o4faYyTY/O1VObwwW7Q
+         pM3GPrTEY/5cQA3Mj3lDDChuW0zok7B9saW8Cf35V3ezq9kDIKKiquL/JGa6e2jc2MGA
+         znaACA4QBHGRllLwtqVqCI66Onf4m6Zp/C9hCZoftV1KA/hnUO+Xwts5Sas4AyhsCUBM
+         F1pw==
+X-Gm-Message-State: ANhLgQ1WZDYq3CMNLVT6MBazmJZBdCArITeCOOu/XkSqQo8l0X10d6JX
+        W/ktNXv8t+/CbztMYGs/zfc=
+X-Google-Smtp-Source: ADFU+vu2qgToohf1Ho0XOtqDdOYGWkWtP/VPHfRQw8HJnTcjtKh7DPXkwvVpSUhS0/HRLDYCsIxTfA==
+X-Received: by 2002:a7b:cc69:: with SMTP id n9mr2851092wmj.175.1583153333837;
+        Mon, 02 Mar 2020 04:48:53 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z14sm28071107wru.31.2020.03.02.04.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 04:48:53 -0800 (PST)
+Date:   Mon, 2 Mar 2020 13:48:52 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH RFC v4 08/13] mm/memory_hotplug: Introduce
+ offline_and_remove_memory()
+Message-ID: <20200302124852.GJ4380@dhcp22.suse.cz>
+References: <20191212171137.13872-1-david@redhat.com>
+ <20191212171137.13872-9-david@redhat.com>
+ <20200225141134.GU22443@dhcp22.suse.cz>
+ <d1dbb687-7959-f4f1-6a64-33ee039782ef@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1dbb687-7959-f4f1-6a64-33ee039782ef@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 02. marec 2020 ob 10:27:48 CET je Laurent Pinchart napisal(a):
-> Hi Jernej,
+On Tue 25-02-20 15:27:28, David Hildenbrand wrote:
+> On 25.02.20 15:11, Michal Hocko wrote:
+> > On Thu 12-12-19 18:11:32, David Hildenbrand wrote:
+> >> virtio-mem wants to offline and remove a memory block once it unplugged
+> >> all subblocks (e.g., using alloc_contig_range()). Let's provide
+> >> an interface to do that from a driver. virtio-mem already supports to
+> >> offline partially unplugged memory blocks. Offlining a fully unplugged
+> >> memory block will not require to migrate any pages. All unplugged
+> >> subblocks are PageOffline() and have a reference count of 0 - so
+> >> offlining code will simply skip them.
+> >>
+> >> All we need an interface to trigger the "offlining" and the removing in a
+> >> single operation - to make sure the memory block cannot get onlined by
+> >> user space again before it gets removed.
+> > 
+> > Why does that matter? Is it really likely that the userspace would
+> > interfere? What would be the scenario?
 > 
-> Thank you for the patch.
+> I guess it's not that relevant after all (I think this comment dates
+> back to the times where we didn't have try_remove_memory() and could
+> actually BUG_ON() in remove_memory() if there would have been a race).
+> Can drop that part.
 > 
-> On Sat, Feb 29, 2020 at 05:30:41PM +0100, Jernej Skrabec wrote:
-> > Currently, is_color_space_conversion() compares not only color spaces
-> > but also formats. For example, function would return true if YCbCr 4:4:4
-> > and YCbCr 4:2:2 would be set. Obviously in that case color spaces are
-> > the same.
 > > 
-> > Fix that by comparing if both values represent RGB color space.
-> > 
-> > Fixes: b21f4b658df8 ("drm: imx: imx-hdmi: move imx-hdmi to
-> > bridge/dw_hdmi")
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Or is still mostly about not requiring callers to open code this general
+> > patter?
 > 
-> This isn't implemented today, but could the CSC be used to convert
-> between different YCbCr encodings ?
-
-Yes, CSC offers great flexibility, but unfortunately that also means that you 
-have as much CSC matrices as there is possible conversions. This explodes 
-quickly, especially if you convert from one YCbCr encoding to another (BT.601, 
-BT.709, BT.2020) and also considering range (full, limited). If you don't mind 
-doing some calculations in code, this becames much simpler, but doing fixed 
-point arithmetic isn't fun. Is floating point arithmetic allowed in kernel?
-
-I wrote a simple program to produce all those CSC matrices for sun4i-drm 
-driver: http://ix.io/2dak Note that it's for RGB <-> YUV conversion, but DW 
-HDMI has a bit different order. I believe it's GRB, but I'm not 100% sure.
-
-You can also do various color adjustements, like brigthness, but that would 
-also mean that you have to multiply all matrices to get final one which you can 
-then write into registers.
-
-Best regards,
-Jernej
-
+> From kernel module context, I cannot get access to the actual memory
+> block device (find_memory_block()) and call the device_unregister().
 > 
-> In any case the patch is correct based on the current implementation, so
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> > ---
-> > 
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
-> > 24965e53d351..9d7bfb1cb213 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > @@ -956,7 +956,8 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
-> > 
-> >  static int is_color_space_conversion(struct dw_hdmi *hdmi)
-> >  {
-> > 
-> > -	return hdmi->hdmi_data.enc_in_bus_format !=
-> > hdmi->hdmi_data.enc_out_bus_format; +	return
-> > hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) !=
-> > +		hdmi_bus_fmt_is_rgb(hdmi-
->hdmi_data.enc_out_bus_format);
-> > 
-> >  }
-> >  
-> >  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+> Especially, also the device hotplug lock is not exported. So this is a
+> clean helper function to be used from kernel module context. (e.g., also
+> hyper-v showed interest for using that)
 
-
-
-
+Fair enough.
+-- 
+Michal Hocko
+SUSE Labs
