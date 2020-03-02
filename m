@@ -2,183 +2,106 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4104C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3049C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83BE2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSDFqCyL"
+	by mail.kernel.org (Postfix) with ESMTP id C9FA32187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583151170;
+	bh=Lymq4yucP910jG3yAZt3+nbi5KerTQ3U6G6bpUjy4to=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zvV4nj7d5uR7fO2RpqT0owakJDizZc9HVD5E6Y3yVpWLPRX+Rm6bpAqPzsEBT5BrK
+	 8v8pb0JLXX0RqnMHSPBN6HD3E9DRs52EvYbUYfnWVn98QP+4ocHsC1TO1yHlCSaoZH
+	 ivdEOApCvZfqqLpyXetv4qzTe68L0QPo1cAsigKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCBMKu (ORCPT
+        id S1727519AbgCBMMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:10:50 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37520 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCBMKu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:10:50 -0500
-Received: by mail-io1-f65.google.com with SMTP id c17so11234297ioc.4;
-        Mon, 02 Mar 2020 04:10:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fg8CGDKXOGLLoGGvqfqqeD6aZ8g66qpYFJ5EHOq2wds=;
-        b=mSDFqCyLC3wcWDEKiseaJAhKDh2u34xcICvotR7FzhuoS1ze+CzsROn4+3lZSFhFHS
-         HftMcgbnmMNk5GFnAc+Ie1+TRl1XQQGEfhkWs+0v/xk8ASW4xW6A3dAD2KsD95ozpmE0
-         CgaLNdxk22QIkDTxo4llrYgZvez195e2FYmw+VRL/4Nm30Fc7YGZArH01NmTXSbiR97y
-         j3UDmePdiZtahPGw9+q+a8gKzPDKV90iXuvU1Zk3U2UmuBs27LxodGxicrNj4qWnoWpn
-         9HAGEH8lZ7d4Trg49o0Z8rG288Uk2vZ3Yij/ug5V0a8SjZ/swCmu/RxwqXrdM0MmXQ7x
-         LTxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fg8CGDKXOGLLoGGvqfqqeD6aZ8g66qpYFJ5EHOq2wds=;
-        b=PcYOuT8xtzEbJi8+kLjy/qa47wpMIi8OQ2ryPdfCS0iQ1PWk3TI6DE12SoYTIE8s6j
-         pAHtrs5CnEYfznIHg9KOgpmI54g87WXMkJfUpBewjqBLAdkDK7raiPRdBWFBJyc78m+f
-         9aB2DxNU5RgyDxP8TPPSc1R1Y4lAcLXF59SKjv/gUaCbCq3JwyjNthPhac7pJkOHwm0f
-         uVRJECZetR2qWQuj4iF0GmoRMforcYpFMeG1DEsyJFxgazt0c6LXwVIHVIO5nLiMRqOW
-         19joi7xSsVJjv9dMv5Os4MZf+p56Pgz7BRVHb4hflxxq8OgU40I8BC1Sq/b5eV57SxMc
-         rKHw==
-X-Gm-Message-State: APjAAAW7QDD+77YBKZVnmwZXOywlkGCW0fkOuo01cVWABik8wMLgJFaj
-        l7k93oTWJBvaoqDV95OcCgHRe3xNdbb5LRhVtzk=
-X-Google-Smtp-Source: APXvYqzc/LalXVaqrNCguatgtteYnTuRPcyk16CTg+vbh+b8kuMvYbIWjiAJvkfjN25Y2D81QpITqnoLJUov6KSXC9E=
-X-Received: by 2002:a5e:8507:: with SMTP id i7mr6642777ioj.9.1583151048170;
- Mon, 02 Mar 2020 04:10:48 -0800 (PST)
+        Mon, 2 Mar 2020 07:12:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgCBMMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:12:49 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AD112173E;
+        Mon,  2 Mar 2020 12:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583151168;
+        bh=Lymq4yucP910jG3yAZt3+nbi5KerTQ3U6G6bpUjy4to=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dzgfqg0/uVS23vSco9JoTIf3WbWIp+BhFrKQRBlscAYzmJYe1JdXz3LW0em6JDra0
+         tHlUlPG/PDhJIX9GqwoQxKCaqE0RTbt1LDJzflgr3/znEysTywuYph/kfJ5dwTwg0Y
+         onrCNZAOCAvxq/Pfy0xNMTkNhDf65AnnCIt5R2bQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j8jwE-009N9H-TY; Mon, 02 Mar 2020 12:12:47 +0000
 MIME-Version: 1.0
-References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
- <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 2 Mar 2020 14:10:36 +0200
-Message-ID: <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
-Subject: Re: WARNING: bad unlock balance in ovl_llseek
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Mar 2020 12:12:46 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        tglx@linutronix.de, jason@lakedaemon.net,
+        wanghaibin.wang@huawei.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] irqchip/gic-v4.1: Wait for completion of redistributor's
+ INVALL operation
+In-Reply-To: <20200302092145.899-1-yuzenghui@huawei.com>
+References: <20200302092145.899-1-yuzenghui@huawei.com>
+Message-ID: <c46464a4c570e4aa12231bbd5ddefc07@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 1:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Mar 2, 2020 at 12:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > On Sun, Mar 1, 2020 at 9:13 PM syzbot
-> > <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    f8788d86 Linux 5.6-rc3
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
-> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
-> > >
-> >
-> > Dmitry,
-> >
-> > There is something strange about the C repro.
-> > It passes an invalid address for the first arg of mount syscall:
-> >
-> >     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
-> >             0x20000100ul);
-> >
-> > With this address mount syscall returns -EFAULT on my system.
-> > I fixed this manually, but repro did not trigger the reported bug on my system.
->
-> Hi Amir,
->
-> This is not strange in the context of fuzzer, it's goal is to pass
-> random data. Generally if it says 0x400000ul, that's what it is, don't
-> fix it, or you are running a different program that may not reproduce
-> the bug. If syzbot attaches a reproducer, the bug was triggered by
-> precisely this program.
->
+On 2020-03-02 09:21, Zenghui Yu wrote:
+> In GICv4.1, we emulate a guest-issued INVALL command by a direct write
+> to GICR_INVALLR.  Before we finish the emulation and go back to guest,
+> let's make sure the physical invalidate operation is actually completed
+> and no stale data will be left in redistributor. Per the specification,
+> this can be achieved by polling the GICR_SYNCR.Busy bit (to zero).
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 83b1186ffcad..fc8c2970cee4 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -3784,6 +3784,8 @@ static void its_vpe_4_1_invall(struct its_vpe 
+> *vpe)
+>  	/* Target the redistributor this vPE is currently known on */
+>  	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
+>  	gic_write_lpir(val, rdbase + GICR_INVALLR);
+> +
+> +	wait_for_syncr(rdbase);
+>  }
+> 
+>  static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void 
+> *vcpu_info)
 
-What's strange it that a bug in overlay code cannot be triggered if overlay
-isn't mounted and as it is the repro couldn't mount overlayfs at all, at
-lease with my kernel config.
-The bounds check that causes mount failure is in vfs code, not in
-overlayfs code,
-so not sure what exactly went on there.
-
-
-> The reason why it passes non-pointers here is we think the src
-> argument of overlay mount is unused:
-> https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/sys/linux/filesystem.txt#L12
-> If it's not true, it needs to be fixed (or almost all overlay mounts
-> fail with EFAULT during fuzzing).
->
->
-> > > The bug was bisected to:
-> > >
-> > > commit b1f9d3858f724ed45b279b689fb5b400d91352e3
-> > > Author: Amir Goldstein <amir73il@gmail.com>
-> > > Date:   Sat Dec 21 09:42:29 2019 +0000
-> > >
-> > >     ovl: use ovl_inode_lock in ovl_llseek()
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
-> > > Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
-> > >
-> > > =====================================
-> > > WARNING: bad unlock balance detected!
-> > > 5.6.0-rc3-syzkaller #0 Not tainted
-> > > -------------------------------------
-> > > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
-> > > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
-> > > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
-> > > but there are no more locks to release!
-> > >
-> >
-> > This is strange. I don't see how that can happen nor how my change would
-> > have caused this regression. If anything, the lock chance may have brought
-> > a bug in stack file ops to light, but don't see the bug.
-> >
-> > The repro is multi-threaded but when I ran the repro, a single thread did:
-> > - open lower file (pre copy up)
-> > - lchown file (copy up)
-> > - llseek the open file (so llseek is on a temporary ovl_open_realfile())
-> >
-> > Perhaps when bug was triggered ops above were executed by different
-> > threads?
->
-> Perfectly possible.
->
-> > Dmitry, I may have asked this before - how hard would it be to attach an
-> > strace of the repro to a bug report?
->
-> This is tracked in https://github.com/google/syzkaller/issues/197 but
-> no progress so far.
-> What exactly were the main pain points in this case? But note that
-> strace is not atomic with actual execution, so it may lead you down
-> even worse rabbit hole...
-
-Sure, but it can add more insight for analysis.
+Yup, well spotted. I'll add that to the series.
 
 Thanks,
-Amir.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
