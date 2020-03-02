@@ -2,100 +2,203 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61FFC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AE5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD81F20866
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115592086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583179208;
+	bh=8I9b3PWxOxjKsgSmIz7gwtVQierxjUwDS1qzOwAIkg4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bK6ulHnJcuHFLzWpfczN6ZzyYwnDxgjsy8WF57PXOLUMc9YbEXM4XyCjuCl3lj+E1
+	 sSonoFhEjMvIBeF+CQnvGiAeL0VcAsLVi2IYwd4aWEqnt2UmIwnEySf+OJ/BUUIDIP
+	 StlAe5tNSZwbIrc0XaZ3KobU4Zwl5wBEvZKCAkIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgCBT6a (ORCPT
+        id S1726791AbgCBUAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:58:30 -0500
-Received: from fieldses.org ([173.255.197.46]:35990 "EHLO fieldses.org"
+        Mon, 2 Mar 2020 15:00:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgCBT6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:58:30 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E642C89A; Mon,  2 Mar 2020 14:58:29 -0500 (EST)
-Date:   Mon, 2 Mar 2020 14:58:29 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] sunrpc: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302195829.GD1149@fieldses.org>
-References: <20200228132323.GA20181@embeddedor>
+        id S1725446AbgCBUAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:00:06 -0500
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A7820866;
+        Mon,  2 Mar 2020 20:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583179205;
+        bh=8I9b3PWxOxjKsgSmIz7gwtVQierxjUwDS1qzOwAIkg4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zxqV84tOGhGMpUEFvUTFo+QhqFqRegWfkZXtLi5Qpa3Stop9mFoYD5UtUtYAFUCxM
+         IeQSDhVTRaZYUmFfD1VHIDj2kWxqJacaz8tGzb0vkqPRyLfydzqVmHLwf5+qU9W7fK
+         +TFDgZH111r2TAxBYGVqLIvCNIhpRVRokQUFd2nY=
+Received: by mail-qv1-f54.google.com with SMTP id o18so529566qvf.1;
+        Mon, 02 Mar 2020 12:00:05 -0800 (PST)
+X-Gm-Message-State: ANhLgQ095VLZfMfHCyrrJfVaF/2V+5dORkJHSqeuNGu+xXFwc3EBcdRh
+        ZXsFxG/4tNVbBk3odVOMdGk5xMirWGoosIc9tQ==
+X-Google-Smtp-Source: ADFU+vusF675h8yCNJpMn4SNL/PynoNZagFjavf3VPpRXJb6Y1750SQPyVIpBa7PPgGYLWINNYE9MHU4bSROzs5SH0I=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr962095qvn.79.1583179204250;
+ Mon, 02 Mar 2020 12:00:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228132323.GA20181@embeddedor>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200301174636.63446-1-paul@crapouillou.net> <20200301174636.63446-2-paul@crapouillou.net>
+ <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com>
+ <1583173481.3.0@crapouillou.net> <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
+ <1583177720.3.6@crapouillou.net>
+In-Reply-To: <1583177720.3.6@crapouillou.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 2 Mar 2020 13:59:52 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+c+RHCunZt2m4m85VztVU4L=-JYMY7B_7ADEyjJLK90g@mail.gmail.com>
+Message-ID: <CAL_Jsq+c+RHCunZt2m4m85VztVU4L=-JYMY7B_7ADEyjJLK90g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 07:23:23AM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
+On Mon, Mar 2, 2020 at 1:35 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+>
+>
+> Le lun., mars 2, 2020 at 13:07, Rob Herring <robh+dt@kernel.org> a
+> =C3=A9crit :
+> > On Mon, Mar 2, 2020 at 12:25 PM Paul Cercueil <paul@crapouillou.net>
+> > wrote:
+> >>
+> >>  Hi Rob,
+> >>
+> >>
+> >>  Le lun., mars 2, 2020 at 11:06, Rob Herring <robh+dt@kernel.org> a
+> >>  =C3=A9crit :
+> >>  > On Sun, Mar 1, 2020 at 11:47 AM Paul Cercueil
+> >> <paul@crapouillou.net>
+> >>  > wrote:
+> >>  >>
+> >>  >
+> >>  > Well, this flew into linux-next quickly and breaks 'make
+> >>  > dt_binding_check'... Please drop, revert or fix quickly.
+> >>
+> >>  For my defense I said to merge "provided Rob acks it" ;)
+> >>
+> >>  >>  Convert the ingenic,tcu.txt file to YAML.
+> >>  >>
+> >>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  >>  ---
+> >>  >>   .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ----------
+> >>  >>   .../bindings/timer/ingenic,tcu.yaml           | 235
+> >>  >> ++++++++++++++++++
+> >>  >>   2 files changed, 235 insertions(+), 138 deletions(-)
+> >>  >>   delete mode 100644
+> >>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> >>  >>   create mode 100644
+> >>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> >>  >
+> >>  >
+> >>  >>  diff --git
+> >>  >> a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> >>  >> b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> >>  >>  new file mode 100644
+> >>  >>  index 000000000000..1ded3b4762bb
+> >>  >>  --- /dev/null
+> >>  >>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> >>  >>  @@ -0,0 +1,235 @@
+> >>  >>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>  >>  +%YAML 1.2
+> >>  >>  +---
+> >>  >>  +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
+> >>  >>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>  >>  +
+> >>  >>  +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree
+> >> bindings
+> >>  >>  +
+> >>  >>  +description: |
+> >>  >>  +  For a description of the TCU hardware and drivers, have a
+> >> look at
+> >>  >>  +  Documentation/mips/ingenic-tcu.rst.
+> >>  >>  +
+> >>  >>  +maintainers:
+> >>  >>  +  - Paul Cercueil <paul@crapouillou.net>
+> >>  >>  +
+> >>  >>  +properties:
+> >>  >>  +  $nodename:
+> >>  >>  +    pattern: "^timer@.*"
+> >>  >
+> >>  > '.*' is redundant.
+> >>  >
+> >>  >>  +
+> >>  >>  +  "#address-cells":
+> >>  >>  +    const: 1
+> >>  >>  +
+> >>  >>  +  "#size-cells":
+> >>  >>  +    const: 1
+> >>  >>  +
+> >>  >>  +  "#clock-cells":
+> >>  >>  +    const: 1
+> >>  >>  +
+> >>  >>  +  "#interrupt-cells":
+> >>  >>  +    const: 1
+> >>  >>  +
+> >>  >>  +  interrupt-controller: true
+> >>  >>  +
+> >>  >>  +  ranges: true
+> >>  >>  +
+> >>  >>  +  compatible:
+> >>  >>  +    items:
+> >>  >>  +      - enum:
+> >>  >>  +        - ingenic,jz4740-tcu
+> >>  >>  +        - ingenic,jz4725b-tcu
+> >>  >>  +        - ingenic,jz4770-tcu
+> >>  >>  +        - ingenic,x1000-tcu
+> >>  >>  +      - const: simple-mfd
+> >>  >
+> >>  > This breaks several examples in dt_binding_check because this
+> >> schema
+> >>  > will be applied to every 'simple-mfd' node. You need a custom
+> >> select
+> >>  > entry that excludes 'simple-mfd'. There should be several
+> >> examples in
+> >>  > tree to copy.
+> >>
+> >>  Why would it be applied to all 'single-mfd' nodes?
+> >
+> > single-mfd?
+>
+> simple-mfd* of course, sorry.
+>
+> > The way the tool decides to apply a schema or not is my matching on
+> > any of the compatible strings (or node name if no compatible
+> > specified). You can override this with 'select'.
+> >
+> >>  Doesn't what I wrote
+> >>  specify that it needs one of ingenic,*-tcu _and_ simple-mfd?
+> >
+> > Yes, but matching is on any of them. You need to add:
+>
+> Alright, will do. Is there a reason why it's done that way? It sounds a
+> bit counter-intuitive.
 
-I don't understand the quoted sentences at all.  But I assume you're
-telling me that sizeof(struct svc_deferred_req) won't be changed by this
-patch, so, good, applied.  Thanks!
+I'm not sure how we could do it differently. We need some way to
+express 'apply this schema to a node if ...'. If we just matched on
+'compatible' schema as is, then we'd get silence if there's any error
+in 'compatible'. That can still happen, but it's reduced in the cases
+where there's more than one compatible string as only 1 has to be
+right. It's also very common that valid combinations of compatible
+strings are not documented clearly or followed correctly, so we can
+catch these errors. I wasn't a fan of having to list out compatible
+strings twice, so the tool does it for you in the common case.
 
---b.
-
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  include/linux/sunrpc/svc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 1afe38eb33f7..7f0a83451bc0 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -380,7 +380,7 @@ struct svc_deferred_req {
->  	struct cache_deferred_req handle;
->  	size_t			xprt_hlen;
->  	int			argslen;
-> -	__be32			args[0];
-> +	__be32			args[];
->  };
->  
->  struct svc_process_info {
-> -- 
-> 2.25.0
+Rob
