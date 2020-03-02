@@ -2,85 +2,65 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB508C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92662C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820172173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5K1pb1e"
+	by mail.kernel.org (Postfix) with ESMTP id 71682217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbgCBMm7 (ORCPT
+        id S1727543AbgCBMos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:42:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34031 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727228AbgCBMm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:42:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583152977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jBO8EEOjfex8u0t23SNnR9VcuJJE9A6M8SfZYPDK40Y=;
-        b=Y5K1pb1eDU1H+OS0IKuMxkUc8tvZPft1+rY27mSqT7Mi1Us+NHXC4ZII6bP6nT3b0e5bC6
-        wemE+D3jvmsImU/3UT4wjG0YRtd2LSGz1fWzzZX7gaXa8+i2OcLxPCnlejwkMhzm6Regeu
-        9WzuNbkm1B0GZY3DnfCMZjM/OU7sFmQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-VdUHncH4OyKzclJAazqbEg-1; Mon, 02 Mar 2020 07:42:56 -0500
-X-MC-Unique: VdUHncH4OyKzclJAazqbEg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9ED5F10CE780;
-        Mon,  2 Mar 2020 12:42:54 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F46B5DA2C;
-        Mon,  2 Mar 2020 12:42:52 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-References: <96563.1582901612@warthog.procyon.org.uk>
-        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
-        <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
-        <20200302115239.pcxvej3szmricxzu@wittgenstein>
-        <8736arnel9.fsf@oldenburg2.str.redhat.com>
-        <20200302121959.it3iophjavbhtoyp@wittgenstein>
-        <20200302123510.bm3a2zssohwvkaa4@wittgenstein>
-Date:   Mon, 02 Mar 2020 13:42:50 +0100
-In-Reply-To: <20200302123510.bm3a2zssohwvkaa4@wittgenstein> (Christian
-        Brauner's message of "Mon, 2 Mar 2020 13:35:10 +0100")
-Message-ID: <87y2sjlygl.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 2 Mar 2020 07:44:48 -0500
+Received: from gate.crashing.org ([63.228.1.57]:35158 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726806AbgCBMos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:44:48 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 022CigGl022511;
+        Mon, 2 Mar 2020 06:44:42 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 022Cigx2022509;
+        Mon, 2 Mar 2020 06:44:42 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 2 Mar 2020 06:44:42 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: eh_frame confusion
+Message-ID: <20200302124442.GI22482@gate.crashing.org>
+References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+On Mon, Mar 02, 2020 at 11:56:05AM +0100, Rasmus Villemoes wrote:
+> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
+> to gcc-8 all object files now end up having .eh_frame section.
 
-> One difference to openat() is that openat2() doesn't silently ignore
-> unknown flags. But I'm not sure that would matter for iplementing
-> openat() via openat2() since there are no flags that openat() knows about
-> that openat2() doesn't know about afaict. So the only risks would be
-> programs that accidently have a bit set that isn't used yet.
+Since GCC 8, we enable -fasynchronous-unwind-tables by default for
+PowerPC.  See https://gcc.gnu.org/r259298 .
 
-Will there be any new flags for openat in the future?  If not, we can
-just use a constant mask in an openat2-based implementation of openat.
+> For
+> vmlinux, that's not a problem, because they all get discarded in
+> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
+> modules, which doesn't seem to be useful - given that everything worked
+> just fine with gcc-7, and I don't see anything in the module loader that
+> handles .eh_frame.
 
-Thanks,
-Florian
+It is useful for debugging.  Not many people debug the kernel like this,
+of course.
 
+
+Segher
