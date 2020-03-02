@@ -2,124 +2,168 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48798C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69AAC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E45246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A266246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583135372;
+	bh=F7Y2CSH9Vo747TuphhHP7GKkij3BinbARb2kByPkBGQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kSBC3WP3eYCFjmNjtT2VGUo4YYkEJbhyL5NnyzcuevP1Uk2nQeioTuM6z7pMrmAZ9
+	 RBoZ6t8auM1OeTPuHR04Zn+E3AxPQm4kaaXijrAZjV9w1EMFvQaN04CcYAH0X55r4S
+	 ltNOMLg8R45dhU4RCPLbYJoJLILZROzHeH/zgyus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCBHtK (ORCPT
+        id S1727131AbgCBHtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:49:10 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:47589 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBHtK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:49:10 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j8foa-0001V1-Oy; Mon, 02 Mar 2020 07:48:36 +0000
-Date:   Mon, 2 Mar 2020 08:48:35 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH] exec: Fix a deadlock in ptrace
-Message-ID: <20200302074835.ya3qn2sc3zaxqcsp@wittgenstein>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
- <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <20200302074751.evhnq3b5zvtbaqu4@wittgenstein>
+        Mon, 2 Mar 2020 02:49:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbgCBHtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:49:31 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D17F246BB
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 07:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583135370;
+        bh=F7Y2CSH9Vo747TuphhHP7GKkij3BinbARb2kByPkBGQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jR6RNQXg06aaNBNURh/fYG5Q6Wz7Kb4sTf8GlFCbDd4NjmqBaMAqBiEJjeK/5uTFX
+         q5xG4eTBEIfUYmpjntrp7N7Si1huGRhvadIzEIvO46cFxTvr7TUBwFPe47Ai5ak0Lp
+         MG/NZwSEEcxyjwZLfi4RQoPZiNf7OkDgSnrVHsQg=
+Received: by mail-wr1-f45.google.com with SMTP id y17so11214561wrn.6
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:49:29 -0800 (PST)
+X-Gm-Message-State: APjAAAVrZFS9HDnP6vGuz3LDLB5erDVs0xpq3lTvn9eNy2JHw/btcqbV
+        qfMC1+vPh5PCgt7Er4JSJv2U1QuXsNvWR0jDTAlzEA==
+X-Google-Smtp-Source: APXvYqx/9ZnowcmE3GP8PGqMzClr8fWOKRtWHduBTkfyOxrQ5OXiHjTjSmDuZkUFF8ZWkDZA9c84jyg1A2v4CflAeWM=
+X-Received: by 2002:adf:a411:: with SMTP id d17mr20534370wra.126.1583135368426;
+ Sun, 01 Mar 2020 23:49:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200302074751.evhnq3b5zvtbaqu4@wittgenstein>
+References: <20200301230436.2246909-1-nivedita@alum.mit.edu> <20200301230436.2246909-4-nivedita@alum.mit.edu>
+In-Reply-To: <20200301230436.2246909-4-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 2 Mar 2020 08:49:17 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
+Message-ID: <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] efi/x86: Make efi32_pe_entry more readable
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 08:47:53AM +0100, Christian Brauner wrote:
-> On Sun, Mar 01, 2020 at 09:00:22PM +0100, Jann Horn wrote:
-> > On Sun, Mar 1, 2020 at 7:52 PM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > > On Sun, Mar 01, 2020 at 07:21:03PM +0100, Jann Horn wrote:
-> > > > On Sun, Mar 1, 2020 at 12:27 PM Bernd Edlinger
-> > > > <bernd.edlinger@hotmail.de> wrote:
-> > > > > The proposed solution is to have a second mutex that is
-> > > > > used in mm_access, so it is allowed to continue while the
-> > > > > dying threads are not yet terminated.
-> > > >
-> > > > Just for context: When I proposed something similar back in 2016,
-> > > > https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
-> > > > was the resulting discussion thread. At least back then, I looked
-> > > > through the various existing users of cred_guard_mutex, and the only
-> > > > places that couldn't be converted to the new second mutex were
-> > > > PTRACE_ATTACH and SECCOMP_FILTER_FLAG_TSYNC.
-> > > >
-> > > >
-> > > > The ideal solution would IMO be something like this: Decide what the
-> > > > new task's credentials should be *before* reaching de_thread(),
-> > > > install them into a second cred* on the task (together with the new
-> > > > dumpability), drop the cred_guard_mutex, and let ptrace_may_access()
-> > > > check against both. After that, some further restructuring might even
-> > >
-> > > Hm, so essentially a private ptrace_access_cred member in task_struct?
-> > 
-> > And a second dumpability field, because that changes together with the
-> > creds during execve. (Btw, currently the dumpability is in the
-> > mm_struct, but that's kinda wrong. The mm_struct is removed from a
-> > task on exit while access checks can still be performed against it, and
-> > currently ptrace_may_access() just lets the access go through in that
-> > case, which weakens the protection offered by PR_SET_DUMPABLE when
-> > used for security purposes. I think it ought to be moved over into the
-> > task_struct.)
-> > 
-> > > That would presumably also involve altering various LSM hooks to look at
-> > > ptrace_access_cred.
-> > 
-> > When I tried to implement this in the past, I changed the LSM hook to
-> > take the target task's cred* as an argument, and then called the LSM
-> > hook twice from ptrace_may_access(). IIRC having the target task's
-> > creds as an argument works for almost all the LSMs, with the exception
-> > of Yama, which doesn't really care about the target task's creds, so
-> > you have to pass in both the task_struct* and the cred*.
-> 
-> It seems we should try PoCing this.
+On Mon, 2 Mar 2020 at 00:04, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Setup a proper frame pointer in efi32_pe_entry so that it's easier to
+> calculate offsets for arguments.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/compressed/head_64.S | 57 +++++++++++++++++++++---------
+>  1 file changed, 40 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index 920daf62dac2..fabbd4c2e9f2 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -658,42 +658,65 @@ SYM_DATA(efi_is64, .byte 1)
+>         .text
+>         .code32
+>  SYM_FUNC_START(efi32_pe_entry)
+> +/*
+> + * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
+> + *                            efi_system_table_32_t *sys_table)
+> + */
+> +
+>         pushl   %ebp
+> +       movl    %esp, %ebp
+> +       pushl   %eax                            // dummy push to allocate loaded_image
+>
+> -       pushl   %ebx
+> +       pushl   %ebx                            // save callee-save registers
+>         pushl   %edi
+> +
+>         call    verify_cpu                      // check for long mode support
+> -       popl    %edi
+> -       popl    %ebx
+>         testl   %eax, %eax
+>         movl    $0x80000003, %eax               // EFI_UNSUPPORTED
+> -       jnz     3f
+> +       jnz     2f
+>
+>         call    1f
+> -1:     pop     %ebp
+> -       subl    $1b, %ebp
+> +1:     pop     %ebx
+> +       subl    $1b, %ebx
+>
+>         /* Get the loaded image protocol pointer from the image handle */
+> -       subl    $12, %esp                       // space for the loaded image pointer
+> -       pushl   %esp                            // pass its address
+> -       leal    loaded_image_proto(%ebp), %eax
+> +       leal    -4(%ebp), %eax
+> +       pushl   %eax                            // &loaded_image
+> +       leal    loaded_image_proto(%ebx), %eax
+>         pushl   %eax                            // pass the GUID address
+> -       pushl   28(%esp)                        // pass the image handle
+> +       pushl   8(%ebp)                         // pass the image handle
+>
+> -       movl    36(%esp), %eax                  // sys_table
+> +       /*
+> +        * Note the alignment of the stack frame.
+> +        *   sys_table
+> +        *   handle             <-- 16-byte aligned on entry by ABI
+> +        *   return address
+> +        *   frame pointer
+> +        *   loaded_image       <-- local variable
+> +        *   saved %ebx         <-- 16-byte aligned here
+> +        *   saved %edi
+> +        *   &loaded_image
+> +        *   &loaded_image_proto
+> +        *   handle             <-- 16-byte aligned for call to handle_protocol
+> +        */
+> +
+> +       movl    12(%ebp), %eax                  // sys_table
+>         movl    ST32_boottime(%eax), %eax       // sys_table->boottime
+>         call    *BS32_handle_protocol(%eax)     // sys_table->boottime->handle_protocol
+> -       cmp     $0, %eax
+> +       addl    $12, %esp                       // restore argument space
+> +       testl   %eax, %eax
+>         jnz     2f
+>
+> -       movl    32(%esp), %ecx                  // image_handle
+> -       movl    36(%esp), %edx                  // sys_table
+> -       movl    12(%esp), %esi                  // loaded_image
+> +       movl    8(%ebp), %ecx                   // image_handle
+> +       movl    12(%ebp), %edx                  // sys_table
+> +       movl    -4(%ebp), %esi                  // loaded_image
+>         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
+> +       movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
 
-Independent of the fix for Bernd's issue that is.
+The code that follows efi32_pe_stub_entry still expects the runtime
+displacement in %ebp, so we'll need to pass that in another way here.
+
+>         jmp     efi32_pe_stub_entry
+>
+> -2:     addl    $24, %esp
+> -3:     popl    %ebp
+> +2:     popl    %edi                            // restore callee-save registers
+> +       popl    %ebx
+> +       leave
+>         ret
+>  SYM_FUNC_END(efi32_pe_entry)
+>
+> --
+> 2.24.1
+>
