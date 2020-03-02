@@ -2,110 +2,99 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEE8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C055222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB782173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:18:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mSdaRQNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCBRR3 convert rfc822-to-8bit (ORCPT
+        id S1727413AbgCBRSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:17:29 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727268AbgCBRR3 (ORCPT
+        Mon, 2 Mar 2020 12:18:23 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39781 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbgCBRSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:17:29 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022Gu77t156916
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:17:28 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmg072sq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:17:28 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Mon, 2 Mar 2020 17:17:25 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 17:17:21 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HHK3l54722608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 17:17:21 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E35E3A4051;
-        Mon,  2 Mar 2020 17:17:20 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EC02A404D;
-        Mon,  2 Mar 2020 17:17:20 +0000 (GMT)
-Received: from localhost (unknown [9.199.48.41])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 17:17:20 +0000 (GMT)
-Date:   Mon, 02 Mar 2020 22:47:18 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: eh_frame confusion
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
-        <20200302124442.GI22482@gate.crashing.org>
-In-Reply-To: <20200302124442.GI22482@gate.crashing.org>
+        Mon, 2 Mar 2020 12:18:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so718695wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:18:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=SXg4ANPPHujnOtlOtYMneAF3xY1y0Qzs6lLnP3dZ2Eo=;
+        b=mSdaRQNlY7mufhxefFHO9E0HmiRuJqcR5IkePx8zpUI992xFIFgiMiz4Gi5sNj3NEI
+         hd9N2W+4Dsx6v7z2hXGn5kxId0G3btlLTgkiwpAyx9BHnkcH7DNgJkFwd9JeQ/SLXftl
+         +9HmX3flc+V509SOfMf1CeDGcImsWgpc1FtEXVRF59szYLbOFJ8Ac3vjMAclYY3eVBO0
+         VkaksqS/ZaI/Hkm6f1oXy+NUAJUmm7teNAIJtZaVhrPE/dpzQP5pX6HxaqApu+UnpgrR
+         m30yCONditdo/eeyfb0vTsI+hldY5qSWaLg8a86atbEOC1iqlmuPytX8k26Sb8Z2TLdZ
+         ZtTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=SXg4ANPPHujnOtlOtYMneAF3xY1y0Qzs6lLnP3dZ2Eo=;
+        b=pn8+Ag+qKhOqOunYHh4nUp9PYAVrrfjTIHGOv6oXFrREpI6Fm+jfggHuka6H9SVMXZ
+         LNKU4yIwUs6nrlbI/2P6q6HdK/AmE+5gi7G29hSVboSpY/aj7mKX6QfDJ0r+oFPENLJJ
+         2o/br07i/J4Rh5epBUED5UkCkI28ByptkuUIfSUynfQAYmmK19IV/kyJSrK2rivqTx8u
+         cl7aUf602hI6ybCgj6/wa/NiSPthXx3ocpUkOsIhdDLQ3QYV908LiCOYIDIQnkNia2vm
+         Il9r8AOmf3k8HiHJ152z5QH6Jsx1/orkD2zB/6+Qia0nffrML8YlcR25eDnKIJX8bZRX
+         TKtg==
+X-Gm-Message-State: ANhLgQ1vEtn2TAbejGskBxS11b4WE0YM0IJIqsc9pxqGO7RCmK+LxWeV
+        rr7NCzrEI2vD4IF0FNMdGaXx0Q==
+X-Google-Smtp-Source: ADFU+vsX7sylmYulhpint5DODaeUoRGQLESGv6af+LdEy2T3qLGW2WZccdCEKj2zO/+pPKdQyCoHhQ==
+X-Received: by 2002:adf:fdc2:: with SMTP id i2mr652127wrs.166.1583169499293;
+        Mon, 02 Mar 2020 09:18:19 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c2sm45867wma.39.2020.03.02.09.18.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 09:18:18 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator to FLASH_VDD
+In-Reply-To: <20200302125310.742-2-linux.amoon@gmail.com>
+References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-2-linux.amoon@gmail.com>
+Date:   Mon, 02 Mar 2020 18:18:17 +0100
+Message-ID: <7hfteqr7za.fsf@baylibre.com>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20030217-0012-0000-0000-0000038C5B92
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030217-0013-0000-0000-000021C90F71
-Message-Id: <1583169014.zvau4om8mi.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=883 clxscore=1015
- lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020115
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Segher Boessenkool wrote:
-> On Mon, Mar 02, 2020 at 11:56:05AM +0100, Rasmus Villemoes wrote:
->> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
->> to gcc-8 all object files now end up having .eh_frame section.
-> 
-> Since GCC 8, we enable -fasynchronous-unwind-tables by default for
-> PowerPC.  See https://gcc.gnu.org/r259298 .
-> 
->> For
->> vmlinux, that's not a problem, because they all get discarded in
->> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
->> modules, which doesn't seem to be useful - given that everything worked
->> just fine with gcc-7, and I don't see anything in the module loader that
->> handles .eh_frame.
-> 
-> It is useful for debugging.  Not many people debug the kernel like this,
-> of course.
+Anand Moon <linux.amoon@gmail.com> writes:
 
-I'm trying to understand if we need that. Other architectures seems to 
-pass -fasynchronous-unwind-tables only for the vdso, but disable it for 
-the kernel build. I suppose we can do the same.
+> As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
+> regulator.
 
-If using -fno-asynchronous-unwind-tables, would crash/perf have 
-problems?
+Could you please add a link to the specific schematics you used to find
+this usseu?
 
-- Naveen
+> Also add TFLASH_VDD_EN signal name to gpio pin.
 
+Your patch does not do this part.
+
+Similarily to the other patch, can you explain in more detail (including
+kernel boot logs) how the SD card is not working?
+
+I just tested with latest mainline, and the MMC driver is detecting both
+the eMMC and the SD card.
+
+Kevin
