@@ -2,155 +2,96 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6925AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E88C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4022E21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OGDWm1iE"
+	by mail.kernel.org (Postfix) with ESMTP id 6C9C1217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583159958;
+	bh=S9YX6OjPgbMI3SxRJ44ChncEyJ5JHI0lpyN8E4uSJiU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Me+QEL5kOvB/IrlRUyTz+um3DKek2c0eoHpBwyzzGGQRRG8NaM1SAh3ReHELdoSmF
+	 VJtJ7WZyKG3owOobfjSvfrqxiYFmEMgmRgpM6S/ag3cVWmp6AxSLVJ17POayAVat8g
+	 uqUpG7DrSlERQyWC8L+lxjK7rt+g3oFufIXskYMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgCBOjM (ORCPT
+        id S1727398AbgCBOjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:39:12 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39243 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgCBOjL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:39:11 -0500
-Received: by mail-io1-f67.google.com with SMTP id h3so11736806ioj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=VF4NFZmN5o/HRzGoFEDSL5KAYzABdGMBxEm52R7GbTc=;
-        b=OGDWm1iEUdp2JmA24XXx32+8bhLiI0aeWpsUVLVV08trU/8bxFz8gZA88Y0rJUoxc3
-         NX7NaMUkAkW0l27/InvwueG6kdzoO60vUELABusPUeae9iRP7pv97GXg6pkdjzMZNS32
-         kWKe+0JdNkDXnzvv/cZX/G2CTbQwau7FiskmcUWtx7DN+231YDZJ3BUBO/A0d6IMnN5c
-         ry2bRg91AZ7KKysvI3g5iwWlGqQY0/lzA4BTPUQiC/f17hnjwL3Mtmkya8AcCgymKBMd
-         L+yYDP8FsSwyNyMVts79wNcAEWGHM8U46GIKcwxc+IqUjGyFPqKwHwhZuKHfsjhSYCZ9
-         NREQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VF4NFZmN5o/HRzGoFEDSL5KAYzABdGMBxEm52R7GbTc=;
-        b=KA+3W+Zfrbz1SrTF375XPLMidN8ERycSv9JPd20Fkd3BpDpV6a0Y6He02qMXJGS7d2
-         d1Gxyd83yIYv542yHFjC/YWvRcbwrfDbRqLdGKxyU4NLJmFb9KfZMUewuf2gn+P2bVvk
-         keIyu5iV22h/M6OMCE08PfFjH4ht4VFkoTSE/5Tgd6au3NwgTVz96mdFPmoV0XZcmdMa
-         x7RWn8qUqHCOjJNThXVqbx/OHggEvQG9sAjjt0pQ8PBUkI09kBI4eQEU/56kOwa9XjHX
-         HChxonha13KGTGONU4vJaZoik3Mef00fmcozTpfAJf60hCEBqjOA5aje/Jn8L5aYGtD7
-         ls8g==
-X-Gm-Message-State: APjAAAXZaoNsoc3xRPUbM1P9gKk1otjLbynbiGSxtKJkpiCKSfE+Nu15
-        RDw6hNpMVjC34itQI7OXbk8WKHHHufE=
-X-Google-Smtp-Source: APXvYqyGxOkQmtUr5WLL2P8ZNd/bicDvtZpWSMvqDHmEvVINVFPmRv9aABrGn9xbzpIs9zlcOxWibA==
-X-Received: by 2002:a5d:8b11:: with SMTP id k17mr13402720ion.290.1583159949731;
-        Mon, 02 Mar 2020 06:39:09 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u15sm3656525iog.15.2020.03.02.06.39.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 06:39:09 -0800 (PST)
-Subject: Re: [PATCH RFC 0/9] nxt propagation + locking optimisation
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583078091.git.asml.silence@gmail.com>
- <d54ddeae-ad02-6232-36f3-86d09105c7a4@kernel.dk>
- <cab8e903-fb6f-eae5-68a6-2a467160997e@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2f974d5e-8aa4-5b12-d70e-668384b4a94c@kernel.dk>
-Date:   Mon, 2 Mar 2020 07:39:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 09:39:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727131AbgCBOjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:39:17 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAD482166E;
+        Mon,  2 Mar 2020 14:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583159956;
+        bh=S9YX6OjPgbMI3SxRJ44ChncEyJ5JHI0lpyN8E4uSJiU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CDZyD8IsBQz3OtxC4HycZ3hNtuU4udOa6Si9GzEMN1YVu+n0rBPysyWzqP/5kXoG4
+         t3L2ShtbPDuTkqZJNpO/XNu5NmPjiZh+EZPlWvOnnJg4PaDuXCcpC9Kxvwl/8znEDG
+         F9DqUHwh+TRAnlDNGko/ruh+vXpXLrzV4nP51y8A=
+Date:   Mon, 2 Mar 2020 15:39:09 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
+Message-ID: <20200302153909.4e90227d@coco.lan>
+In-Reply-To: <20200302153529.4e2429e7@collabora.com>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-6-ezequiel@collabora.com>
+        <20200302145746.3e94c1d1@coco.lan>
+        <20200302153529.4e2429e7@collabora.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <cab8e903-fb6f-eae5-68a6-2a467160997e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/20 1:33 PM, Pavel Begunkov wrote:
-> On 01/03/2020 22:14, Jens Axboe wrote:
->> On 3/1/20 9:18 AM, Pavel Begunkov wrote:
->>> There are several independent parts in the patchset, but bundled
->>> to make a point.
->>> 1-2: random stuff, that implicitly used later.
->>> 3-5: restore @nxt propagation
->>> 6-8: optimise locking in io_worker_handle_work()
->>> 9: optimise io_uring refcounting
->>>
->>> The next propagation bits are done similarly as it was before, but
->>> - nxt stealing is now at top-level, but not hidden in handlers
->>> - ensure there is no with REQ_F_DONT_STEAL_NEXT
->>>
->>> [6-8] is the reason to dismiss the previous @nxt propagation appoach,
->>> I didn't found a good way to do the same. Even though it looked
->>> clearer and without new flag.
->>>
->>> Performance tested it with link-of-nops + IOSQE_ASYNC:
->>>
->>> link size: 100
->>> orig:  501 (ns per nop)
->>> 0-8:   446
->>> 0-9:   416
->>>
->>> link size: 10
->>> orig:  826
->>> 0-8:   776
->>> 0-9:   756
->>
->> This looks nice, I'll take a closer look tomorrow or later today. Seems
->> that at least patch 2 should go into 5.6 however, so may make sense to
->> order the series like that.
+Em Mon, 2 Mar 2020 15:35:29 +0100
+Boris Brezillon <boris.brezillon@collabora.com> escreveu:
+
+> On Mon, 2 Mar 2020 14:57:46 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 > 
-> It's the first one modifying io-wq.c, so should be fine to pick from
-> the middle as is.
-
-Yep, just did.
-
->> BTW, Andres brought up a good point, and that's hashed file write works.
->> Generally they complete super fast (just copying into the page cache),
->> which means that that worker will be hammering the wq lock a lot. Since
->> work N+1 can't make any progress before N completes (since that's how
->> hashed work works), we should pull a bigger batch of these work items
->> instead of just one at the time. I think that'd potentially make a huge
->> difference for the performance of buffered writes.
+> > > +	for (j = 0; j < 3; j++) {    
+> > 
+> > Again a magic number. I guess this came from that big "M_N" table with 4
+> > elements, right? Please use a define instead of hardcoding a number
+> > here.  
 > 
-> Flashed the same thought. It should be easy enough for hashed
-> requests. Though, general batching would make us to think about
-> fairness, work stealing, etc.
+> Nope, it's unrelated to the cabac_table size, it's related to how the
+> HW accesses the P/B reflists (there are 1 P reflist, and 2 B reflists,
+> hence the 3 here).
 
-There's only the one list anyway, so the work is doing to be processed
-in order to begin with. Hence I don't think there's a lot of fairness to
-be worried about here, we're just going to be processing the existing
-work in the same order, but more efficiently. We should be getting both
-better throughput and fairness if we remove all items hashed to the same
-key for that one worker, only stopping if we encounter a non-hashed work
-or work hashed to a different key. Because if we do, if any of that
-hashed work ever needs to sleep, the next independent work can proceed
-in a different worker.
+Ah, ok!
 
-> BTW, what's the point of hashing only heads of a link? Sounds like it
-> can lead to the write-write collisions, which it tries to avoid.
+> I guess we can have a '#define NUM_REFLISTS 3'.
 
-Yeah, the linked items should be hashed as well, not sure why that isn't
-done.
+Works for me. Please use NUM_REFLISTS on a consistent way, making it 
+to reflect everywhere you might define or loop over those 3 reflists.
 
->> Just throwing it out there, since you're working in that space anyway
->> and the rewards will be much larger.
-> 
-> I will take a look, but not sure when, I yet have some hunches myself.
 
-Thanks!
-
--- 
-Jens Axboe
-
+Thanks,
+Mauro
