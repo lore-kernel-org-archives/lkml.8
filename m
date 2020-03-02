@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E35C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C6CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D743B24677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26FF2467B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgCBX6e (ORCPT
+        id S1727782AbgCBX6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:58:34 -0500
+        Mon, 2 Mar 2020 18:58:35 -0500
 Received: from mga02.intel.com ([134.134.136.20]:25521 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727490AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:57:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,9 +25,9 @@ Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384743"
+   d="scan'208";a="243384722"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 40/66] KVM: VMX: Convert feature updates from CPUID to KVM cpu caps
-Date:   Mon,  2 Mar 2020 15:56:43 -0800
-Message-Id: <20200302235709.27467-41-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 33/66] KVM: x86: Handle PKU CPUID adjustment in VMX code
+Date:   Mon,  2 Mar 2020 15:56:36 -0800
+Message-Id: <20200302235709.27467-34-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,103 +49,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the recently introduced KVM CPU caps to propagate VMX-only (kernel)
-settings to supported CPUID flags.
+Move the setting of the PKU CPUID bit into VMX to eliminate an instance
+of the undesirable "unsigned f_* = *_supported ? F(*) : 0" pattern in
+the common CPUID handling code.  Drop ->pku_supported(), CPUID
+adjustment was the only user.
+
+Note, some AMD CPUs now support PKU, but SVM doesn't yet support
+exposing it to a guest.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 56 +++++++++++++++++++++++++-----------------
- 1 file changed, 34 insertions(+), 22 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 -
+ arch/x86/kvm/cpuid.c            | 5 -----
+ arch/x86/kvm/svm.c              | 6 ------
+ arch/x86/kvm/vmx/capabilities.h | 5 -----
+ arch/x86/kvm/vmx/vmx.c          | 6 +++++-
+ 5 files changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 131f4b88d307..6f68d5e694e0 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7119,40 +7119,50 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 	}
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 96ea76e0a69f..449695788351 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1172,7 +1172,6 @@ struct kvm_x86_ops {
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 	bool (*pt_supported)(void);
+-	bool (*pku_supported)(void);
+ 
+ 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 35451ea0a690..9c2e20a76ca8 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -341,7 +341,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ {
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+ 	unsigned f_la57;
+-	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
+ 
+ 	/* cpuid 7.0.ebx */
+ 	const u32 kvm_cpuid_7_0_ebx_x86_features =
+@@ -381,10 +380,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ 		cpuid_entry_mask(entry, CPUID_7_ECX);
+ 		/* Set LA57 based on hardware capability. */
+ 		entry->ecx |= f_la57;
+-		entry->ecx |= f_pku;
+-		/* PKU is not yet implemented for shadow paging. */
+-		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+-			cpuid_entry_clear(entry, X86_FEATURE_PKU);
+ 
+ 		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_7_EDX);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index c0e0dd7acb1f..0725a67e3480 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6091,11 +6091,6 @@ static bool svm_has_wbinvd_exit(void)
+ 	return true;
  }
  
-+/*
-+ * Vendor specific emulation must be handled via ->set_supported_cpuid(), not
-+ * vmx_set_cpu_caps(), as capabilities configured during hardware_setup() are
-+ * masked against hardware/kernel support, i.e. they'd be lost.
-+ */
- static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+-static bool svm_pku_supported(void)
+-{
+-	return false;
+-}
+-
+ #define PRE_EX(exit)  { .exit_code = (exit), \
+ 			.stage = X86_ICPT_PRE_EXCEPT, }
+ #define POST_EX(exit) { .exit_code = (exit), \
+@@ -7454,7 +7449,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.xsaves_supported = svm_xsaves_supported,
+ 	.umip_emulated = svm_umip_emulated,
+ 	.pt_supported = svm_pt_supported,
+-	.pku_supported = svm_pku_supported,
+ 
+ 	.set_supported_cpuid = svm_set_supported_cpuid,
+ 
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index c00e26570198..8903475f751e 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -146,11 +146,6 @@ static inline bool vmx_umip_emulated(void)
+ 		SECONDARY_EXEC_DESC;
+ }
+ 
+-static inline bool vmx_pku_supported(void)
+-{
+-	return boot_cpu_has(X86_FEATURE_PKU);
+-}
+-
+ static inline bool cpu_has_vmx_rdtscp(void)
  {
- 	switch (entry->function) {
--	case 0x1:
--		if (nested)
--			cpuid_entry_set(entry, X86_FEATURE_VMX);
--		break;
- 	case 0x7:
--		if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
--			cpuid_entry_set(entry, X86_FEATURE_MPX);
--		if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
--			cpuid_entry_set(entry, X86_FEATURE_INVPCID);
--		if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
--		    vmx_pt_mode_is_host_guest())
--			cpuid_entry_set(entry, X86_FEATURE_INTEL_PT);
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl &
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f4efc45810b8..49a1cac7bf0c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7133,6 +7133,11 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 			cpuid_entry_set(entry, X86_FEATURE_INVPCID);
  		if (vmx_umip_emulated())
  			cpuid_entry_set(entry, X86_FEATURE_UMIP);
--
--		/* PKU is not yet implemented for shadow paging. */
--		if (enable_ept && boot_cpu_has(X86_FEATURE_PKU) &&
--		    boot_cpu_has(X86_FEATURE_OSPKE))
--			cpuid_entry_set(entry, X86_FEATURE_PKU);
--		break;
--	case 0x80000001:
--		if (!cpu_has_vmx_rdtscp())
--			cpuid_entry_clear(entry, X86_FEATURE_RDTSCP);
--		if (enable_ept && !cpu_has_vmx_ept_1g_page())
--			cpuid_entry_clear(entry, X86_FEATURE_GBPAGES);
++
++		/* PKU is not yet implemented for shadow paging. */
++		if (enable_ept && boot_cpu_has(X86_FEATURE_PKU) &&
++		    boot_cpu_has(X86_FEATURE_OSPKE))
++			cpuid_entry_set(entry, X86_FEATURE_PKU);
  		break;
  	default:
  		break;
- 	}
- }
+@@ -7933,7 +7938,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.xsaves_supported = vmx_xsaves_supported,
+ 	.umip_emulated = vmx_umip_emulated,
+ 	.pt_supported = vmx_pt_supported,
+-	.pku_supported = vmx_pku_supported,
  
-+static __init void vmx_set_cpu_caps(void)
-+{
-+	/* CPUID 0x1 */
-+	if (nested)
-+		kvm_cpu_cap_set(X86_FEATURE_VMX);
-+
-+	/* CPUID 0x7 */
-+	if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
-+		kvm_cpu_cap_set(X86_FEATURE_MPX);
-+	if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
-+		kvm_cpu_cap_set(X86_FEATURE_INVPCID);
-+	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-+	    vmx_pt_mode_is_host_guest())
-+		kvm_cpu_cap_set(X86_FEATURE_INTEL_PT);
-+
-+	/* PKU is not yet implemented for shadow paging. */
-+	if (enable_ept && boot_cpu_has(X86_FEATURE_PKU) &&
-+	    boot_cpu_has(X86_FEATURE_OSPKE))
-+		kvm_cpu_cap_set(X86_FEATURE_PKU);
-+
-+	/* CPUID 0x80000001 */
-+	if (!cpu_has_vmx_rdtscp())
-+		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
-+	if (enable_ept && !cpu_has_vmx_ept_1g_page())
-+		kvm_cpu_cap_clear(X86_FEATURE_GBPAGES);
-+}
-+
- static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
- {
- 	to_vmx(vcpu)->req_immediate_exit = true;
-@@ -7815,6 +7825,8 @@ static __init int hardware_setup(void)
- 			return r;
- 	}
+ 	.request_immediate_exit = vmx_request_immediate_exit,
  
-+	vmx_set_cpu_caps();
-+
- 	r = alloc_kvm_area();
- 	if (r)
- 		nested_vmx_hardware_unsetup();
 -- 
 2.24.1
 
