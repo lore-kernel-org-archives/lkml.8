@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3685CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946E5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F4D217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F20524677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="StJQardU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="W8SR6XUb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCBXyM (ORCPT
+        id S1726968AbgCBXzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:54:12 -0500
-Received: from gateway23.websitewelcome.com ([192.185.50.119]:23036 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726728AbgCBXyM (ORCPT
+        Mon, 2 Mar 2020 18:55:08 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.61]:26040 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726728AbgCBXzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:54:12 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 2A06B5DE08
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 17:54:11 -0600 (CST)
+        Mon, 2 Mar 2020 18:55:07 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 2E01B6EC80
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 17:55:04 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 8ut1jj7OURP4z8ut1j6tFE; Mon, 02 Mar 2020 17:54:11 -0600
+        id 8utsjom79AGTX8utsjx5MO; Mon, 02 Mar 2020 17:55:04 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,23 +36,23 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qvURSJMPyvfGaAuU7BhSbw8tNfmuyW6n6KTZpKaOI1g=; b=StJQardUfGxSBCht58tVO2YAI8
-        by5EjwR7zfxvYZUk+qbNwXlQf3ttTrUxoF94YyZdLdEIe9gNObwokOh1UEeG5IkKb/JIqET3KVcow
-        MGkUN20DeDvEj0xgTMxiSh6xthg72Oi8WdJ55u6Q0lX++ocjRjFQd+T/yaY0LCUP1FsHdUK9Z5kQ0
-        H6PcCg0N7cJdqiUL2dngQ7/ObeO4qKjwpmp5BYPCjL10SAtKjeyV99tT9h2vkdLkG3ksd2EifUrh7
-        c7aG2w2BNMr8LTFIaZ5fzo6CCi0c5ecZoFn3HihV+35PECxygwLZQQ1DUMk3kzzhnAkBG0BRu2ojm
-        8m3Y/3yQ==;
-Received: from [200.39.25.214] (port=27252 helo=[192.168.43.132])
+        bh=/dSFYZpWVwq0T06RRerWXyLAzBAZThOuuTd8z1yC3Hk=; b=W8SR6XUb7QkNKuimLokw+YWvTg
+        NLrHjR1W+DLwrN2xStpYlZRYg2feGrggRaR7ET/ToyJ3qL+WxHuoMK2COYyZHTPMyOxJMxJdlv4YQ
+        lXHrwonHK90jaN/rqfPj+oeXqb5Kf9hSLdKmsiRbbg6OJk8bE77sqGnk+Fy+1AfZL7pZZLX4KHocT
+        Sp9EQy7O8aoCSQt/x4uTGHuHpkXSZD9D28vL+6UbB8/S/7e2AW3N7PmSv022WExC3MFr3DvcLf2s3
+        nRhLv5VMlcJV9nFwuIpHc8Fm66QlzSIcUUYqZPXwcCnEYOdPKm+9K7KHahIuPk4BbOeYAkn03Njb7
+        jwD8YdWQ==;
+Received: from [200.39.25.214] (port=17332 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j8ut0-001PIj-9T; Mon, 02 Mar 2020 17:54:10 -0600
-Subject: Re: [PATCH] ocfs2: Replace zero-length array with flexible-array
- member
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200213160244.GA6088@embeddedor>
+        id 1j8utp-001Pcr-Rl; Mon, 02 Mar 2020 17:55:02 -0600
+Subject: Re: [PATCH] ext4: namei: Replace zero-length array with
+ flexible-array member
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200213160648.GA7054@embeddedor>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -97,12 +97,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <1b78acd5-2b5f-55f1-5571-73f45d3c87f7@embeddedor.com>
-Date:   Mon, 2 Mar 2020 17:57:11 -0600
+Message-ID: <6d898c2b-e1c3-0d3a-3772-765ff3803ae4@embeddedor.com>
+Date:   Mon, 2 Mar 2020 17:57:59 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200213160244.GA6088@embeddedor>
+In-Reply-To: <20200213160648.GA7054@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -114,13 +114,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.39.25.214
 X-Source-L: No
-X-Exim-ID: 1j8ut0-001PIj-9T
+X-Exim-ID: 1j8utp-001Pcr-Rl
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [200.39.25.214]:27252
+X-Source-Sender: ([192.168.43.132]) [200.39.25.214]:17332
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
+X-Email-Count: 9
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -130,13 +130,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi all,
 
-Friendly ping: Who can take this?
+Friendly ping: who can take this?
 
 Thanks
 --
 Gustavo
 
-On 2/13/20 10:02, Gustavo A. R. Silva wrote:
+On 2/13/20 10:06, Gustavo A. R. Silva wrote:
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
 > variable-length types such as these ones is a flexible array member[1][2],
@@ -167,20 +167,27 @@ On 2/13/20 10:02, Gustavo A. R. Silva wrote:
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  fs/ocfs2/journal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/ext4/namei.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index 68ba354cf361..b425f0b01dce 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -91,7 +91,7 @@ enum ocfs2_replay_state {
->  struct ocfs2_replay_map {
->  	unsigned int rm_slots;
->  	enum ocfs2_replay_state rm_state;
-> -	unsigned char rm_replay_slots[0];
-> +	unsigned char rm_replay_slots[];
+> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+> index 129d2ebae00d..77c327d904bf 100644
+> --- a/fs/ext4/namei.c
+> +++ b/fs/ext4/namei.c
+> @@ -233,13 +233,13 @@ struct dx_root
+>  		u8 unused_flags;
+>  	}
+>  	info;
+> -	struct dx_entry	entries[0];
+> +	struct dx_entry	entries[];
 >  };
 >  
->  static void ocfs2_replay_map_set_state(struct ocfs2_super *osb, int state)
+>  struct dx_node
+>  {
+>  	struct fake_dirent fake;
+> -	struct dx_entry	entries[0];
+> +	struct dx_entry	entries[];
+>  };
+>  
+>  
 > 
