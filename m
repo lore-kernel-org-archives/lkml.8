@@ -2,92 +2,187 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829ADC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54601C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAF520656
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgbV3zLq"
+	by mail.kernel.org (Postfix) with ESMTP id 2D13220656
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCBNyq (ORCPT
+        id S1727607AbgCBNyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:54:46 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33708 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgCBNyp (ORCPT
+        Mon, 2 Mar 2020 08:54:55 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53112 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727101AbgCBNyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:54:45 -0500
-Received: by mail-wr1-f68.google.com with SMTP id x7so12734942wrr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:54:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SSA2y7JF1KwXaFT7UgAFD4Lxa1+uatvFTOo8ovjOJ5s=;
-        b=SgbV3zLqhRruFTbg//tkOkORlhZct7p5ADmEHCr+I3JtyZze8/n5J8Fk1T8bL33bP3
-         l6K0FXZvvWfVpol6CE0+yv6R/wzjMR9qpYoJxln1rurxdUD0ZN56wT9v+cvoHlIQclR/
-         8d3ithsxd4mhf9z3nrvk3Rfm5qaCfz797UJEfA2UDX3NeSMVYf8dGBgdIgev0vWCiVHc
-         5W+TbyoPdhoe8FA1fw80ft9Us487c/pfdk99LIhDwfyPweSY1JG9eqL5BPqkQiCHM8Ja
-         9PeF4KfuxZRktzO9i4GQGQwMt3/0LWJS3E3MK0ZsxzTHxsyb5m1nEI7xcc1PDkvlvzDV
-         Npcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SSA2y7JF1KwXaFT7UgAFD4Lxa1+uatvFTOo8ovjOJ5s=;
-        b=CfbiuvPRTGnEQ+uaCq/JoSJ8kkTLlvax7x4M2EHU1Mpr2WvE8yQTyoxXvRVMm054k+
-         dnYWSgBy6PYA6UD3yAsPfpmUQBgXHE3mPZog+HspVMMrZWdGpLUjk5L4vhNwAea3jgB3
-         Py5twh/Kh2PiAe9qZc9w2ViiMqwjktYplX9VP4pMOPI4UyhLKSyXbeqI7Qpaw5DctvpK
-         euqOcbCbCLi3qNQpmz5p7B8RJj3fHZRH8E+yj0MQjjQbQcdv4a3BaZyoOPXCO/bb6caP
-         c0TfamAwtPpG32TZWksOqKNXQUZJaG5NBkja9SXp4AcZMgl4W9S4SQME5QW/y1xXnva2
-         6y5w==
-X-Gm-Message-State: APjAAAW5GXGJGswGGP6Wc/LX8+IujhJmpVUdZz/7GGWX4jJ35Wx+MdaT
-        xvVQEwYhGY4vlCkG5xDNwgQ=
-X-Google-Smtp-Source: APXvYqyTRQyN/aLx6e8N+a7xJD8PQBFpaACGjWgEy9fJqXILLfEaQjMZIzWAc0KJzbXzeJGgawOWvQ==
-X-Received: by 2002:a5d:4484:: with SMTP id j4mr24201388wrq.153.1583157283978;
-        Mon, 02 Mar 2020 05:54:43 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id m19sm15871308wmc.34.2020.03.02.05.54.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 05:54:43 -0800 (PST)
-Date:   Mon, 2 Mar 2020 13:54:42 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     mateusznosek0@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/vmscan.c: Clean code by removing unnecessary
- assignment
-Message-ID: <20200302135442.ouzmkr2rttxlgixa@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200229214022.11853-1-mateusznosek0@gmail.com>
+        Mon, 2 Mar 2020 08:54:55 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022DpRn5138752
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 08:54:53 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfhs3pm4q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:54:53 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 2 Mar 2020 13:54:50 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 13:54:47 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022Dskmq57475226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 13:54:46 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37EC64C046;
+        Mon,  2 Mar 2020 13:54:46 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1642B4C050;
+        Mon,  2 Mar 2020 13:54:45 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.124])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  2 Mar 2020 13:54:44 +0000 (GMT)
+Date:   Mon, 2 Mar 2020 15:54:43 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: Linux-next-20200302: arm64 build failed
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229214022.11853-1-mateusznosek0@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200302104726.GA7995@willie-the-truck>
+X-TM-AS-GCONF: 00
+x-cbid: 20030213-0020-0000-0000-000003AF9840
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030213-0021-0000-0000-00002207C383
+Message-Id: <20200302135443.GA24831@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_04:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
+ suspectscore=5 clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003020101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 10:40:22PM +0100, mateusznosek0@gmail.com wrote:
->From: Mateusz Nosek <mateusznosek0@gmail.com>
->
->Previously 0 was assigned to variable 'lruvec_size',
->but the variable was never read later.
->So the assignment can be removed.
->
->Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
+> [+Anshuman and Catalin]
+> 
+> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+> > Linux-Next 20200302 arm64 build failed due to below errors,
+> > Suspecting patch causing this build break.
+> > 
+> > 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+> > 
+> > Error log,
+> > -------------
+> > arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+> > include/linux/compiler.h:284:1: error: incompatible type for argument
+> > 1 of 'p4d_page_paddr'
+> >  ({         \
+> >  ^
+> > arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+> > '__phys_to_virt'
+> >  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+> >                                              ^
+> > arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+> >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+> >                                           ^~~~
+> > include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+> >  #define READ_ONCE(x) __READ_ONCE(x, 1)
+> >                       ^~~~~~~~~~~
+> > arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+> >  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+> > + pud_index(addr) * sizeof(pud_t))
+> >                                                     ^~~~~~~~~
+> > arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+> > 'pud_offset_phys'
+> >  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+> >                                                ^~~~~~~~~~~~~~~
+> > arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+> >    pudp = pud_offset(pgdp, addr);
+> >           ^~~~~~~~~~
+> 
+> Looks like we need an implementation of unmap_hotplug_p4d_range() to
+> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+> patches in the arm64 tree so we'll either need a common branch or the
+> hotplug patches will need to be dropped for the moment.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+unmap_hotplug_p4d_range() is easy :)
 
+From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Mon, 2 Mar 2020 15:53:17 +0200
+Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 05ec8e5f1436..c76b11577558 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+ 	} while (addr = next, addr < end);
+ }
+ 
++static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
++				unsigned long end, bool free_mapped)
++{
++	unsigned long next;
++	pgd_t *p4dp, p4d;
++
++	do {
++		next = p4d_addr_end(addr, end);
++		p4dp = p4d_offset(pgd, addr);
++		p4d = READ_ONCE(*p4dp);
++		if (p4d_none(p4d))
++			continue;
++
++		WARN_ON(!p4d_present(p4d));
++		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
++	} while (addr = next, addr < end);
++}
++
+ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+ 				bool free_mapped)
+ {
+@@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+ 			continue;
+ 
+ 		WARN_ON(!pgd_present(pgd));
+-		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
++		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+ 	} while (addr = next, addr < end);
+ }
+ 
+-- 
+2.21.1
+
+ 
+> Will
 
 -- 
-Wei Yang
-Help you, Help me
+Sincerely yours,
+Mike.
+
