@@ -2,125 +2,126 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB193C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4AFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896932166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922252166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8MDuyeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgCBLaV (ORCPT
+        id S1727758AbgCBLa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:30:21 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45960 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725996AbgCBLaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:30:20 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3BAB9B76CBB4BD4B565E;
-        Mon,  2 Mar 2020 19:30:15 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
- 19:30:05 +0800
-From:   Ye Bin <yebin10@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yebin10@huawei.com>
-Subject: [v2] vt: fix use after free in function "vc_do_resize"
-Date:   Mon, 2 Mar 2020 19:28:56 +0800
-Message-ID: <20200302112856.1101-1-yebin10@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Mon, 2 Mar 2020 06:30:57 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49707 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727717AbgCBLa5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 06:30:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583148656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9IY3G3KV70/MnD62Hf8Yen6UaJhR5WJT6Ca0OFN7E5g=;
+        b=B8MDuyeIkF/GyAxbW3nghzCV/D91RiuW3z7ERGXP1u6Ys7H4H6cbNOZRm5IRwh4Y8OTeCH
+        cxJOX4tr78sY01V8sdRYkXRkrDl6obASvB3dJpv2jz5VRAEsfCFKQbGkNM+Ywb4X7CqdW/
+        CJMIdFRkVLs1yYKurNDEedYIWL/bVow=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-edjuqXfzMkSDux5kDW0btQ-1; Mon, 02 Mar 2020 06:30:53 -0500
+X-MC-Unique: edjuqXfzMkSDux5kDW0btQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B24A800053;
+        Mon,  2 Mar 2020 11:30:51 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C842A1001B2C;
+        Mon,  2 Mar 2020 11:30:48 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+References: <96563.1582901612@warthog.procyon.org.uk>
+        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+Date:   Mon, 02 Mar 2020 12:30:47 +0100
+In-Reply-To: <20200228152427.rv3crd7akwdhta2r@wittgenstein> (Christian
+        Brauner's message of "Fri, 28 Feb 2020 16:24:27 +0100")
+Message-ID: <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix CVE-2020-8647(https://nvd.nist.gov/vuln/detail/CVE-2020-8647), detail description
-about this CVE is in bugzilla "https://bugzilla.kernel.org/show_bug.cgi?id=206359".
+* Christian Brauner:
 
-error information:
-BUG: KASan: use after free in vc_do_resize+0x49e/0xb30 at addr ffff88000016b9c0
-Read of size 2 by task syz-executor.3/24164
-page:ffffea0000005ac0 count:0 mapcount:0 mapping:          (null) index:0x0
-page flags: 0xfffff00000000()
-page dumped because: kasan: bad access detected
-CPU: 0 PID: 24164 Comm: syz-executor.3 Not tainted 3.10.0-862.14.2.1.x86_64+ #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-Call Trace:
- [<ffffffffb059f309>] dump_stack+0x1e/0x20
- [<ffffffffaf8af957>] kasan_report+0x577/0x950
- [<ffffffffaf8ae652>] __asan_load2+0x62/0x80
- [<ffffffffafe3728e>] vc_do_resize+0x49e/0xb30
- [<ffffffffafe3795c>] vc_resize+0x3c/0x60
- [<ffffffffafe1d80d>] vt_ioctl+0x16ed/0x2670
- [<ffffffffafe0089a>] tty_ioctl+0x46a/0x1a10
- [<ffffffffaf92db3d>] do_vfs_ioctl+0x5bd/0xc40
- [<ffffffffaf92e2f2>] SyS_ioctl+0x132/0x170
- [<ffffffffb05c9b1b>] system_call_fastpath+0x22/0x27
+> [Cc Florian since that ends up on libc's table sooner or later...]
 
-In function vc_do_resize:
-......
-if (vc->vc_y > new_rows) {
-	.......
-	old_origin += first_copied_row * old_row_size;
-} else
-	first_copied_row = 0;
-end = old_origin + old_row_size * min(old_rows, new_rows);
-......
-while (old_origin < end) {
-	scr_memcpyw((unsigned short *) new_origin,
-		    (unsigned short *) old_origin, rlth);
-	if (rrem)
-		scr_memsetw((void *)(new_origin + rlth),
-			    vc->vc_video_erase_char, rrem);
-	old_origin += old_row_size;
-	new_origin += new_row_size;
-}
-......
+I'm not sure what you are after here =E2=80=A6
 
-We can see that before calculate variable "end" may update variable "old_origin"
-with "old_origin += first_copied_row * old_row_size", variable "end" is equal to
-"old_origin + (first_copied_row + min(old_rows, new_rows))* old_row_size", it's
-possible that "first_copied_row + min(old_rows, new_rows)" large than "old_rows".
-So when call scr_memcpyw function cpoy data from origin buffer to new buffer in
-"while" loop, which "old_origin" may large than real old buffer end. Now, we
-calculate origin buffer end before update "old_origin" to avoid illegal memory
-access.
+> On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
+>>=20=09
+>> I've been told that RESOLVE_* flags, which can be found in linux/openat2=
+.h,
+>> should be used instead of the equivalent AT_* flags for new system calls=
+.  Is
+>> this the case?
+>
+> Imho, it would make sense to use RESOLVE_* flags for new system calls
+> and afair this was the original intention.
+> The alternative is that RESOLVE_* flags are special to openat2(). But
+> that seems strange, imho. The semantics openat2() has might be very
+> useful for new system calls as well which might also want to support
+> parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
+> flags mirroring the new RESOLVE_* flags or we end up adding new
+> RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
+> possibility I vote for RESOLVE_* flags going forward. The have better
+> naming too imho.
+>
+> An argument against this could be that we might end up causing more
+> confusion for userspace due to yet another set of flags. But maybe this
+> isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
+> When we introduce a new syscall userspace will have to add support for
+> it anyway.
 
-Reported-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- drivers/tty/vt/vt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I missed the start of the dicussion and what this is about, sorry.
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 8fa059ec6cc8..1d7217bef678 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1231,6 +1231,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	old_origin = vc->vc_origin;
- 	new_origin = (long) newscreen;
- 	new_scr_end = new_origin + new_screen_size;
-+	end = old_origin + old_row_size * min(old_rows, new_rows);
- 
- 	if (vc->vc_y > new_rows) {
- 		if (old_rows - vc->vc_y < new_rows) {
-@@ -1249,7 +1250,6 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 		old_origin += first_copied_row * old_row_size;
- 	} else
- 		first_copied_row = 0;
--	end = old_origin + old_row_size * min(old_rows, new_rows);
- 
- 	vc_uniscr_copy_area(new_uniscr, new_cols, new_rows,
- 			    get_vc_uniscr(vc), rlth/2, first_copied_row,
--- 
-2.17.2
+Regarding open flags, I think the key point for future APIs is to avoid
+using the set of flags for both control of the operation itself
+(O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
+resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
+help code that has to re-create an equivalent descriptor.  The operation
+flags are largely irrelevant to that if you can get the descriptor by
+other means.
+
+>>  (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the defaul=
+t, but
+>>      only RESOLVE_NO_SYMLINKS exists.
+>
+> I'd be very much in favor of not following symlinks being the default.
+> That's usually a source of a lot of security issues.
+
+But that's inconsistent with the rest of the system.  And for example,
+if you make /etc/resolv.conf a symbolic link, a program which uses a new
+I/O library (with the new interfaces) will not be able to read it.
+
+AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
+so it's relatively little protection.
+
+Thanks,
+Florian
 
