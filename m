@@ -2,144 +2,169 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6BDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0920C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB32824699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBkqHx1v"
+	by mail.kernel.org (Postfix) with ESMTP id 837182469C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCBAUc (ORCPT
+        id S1726764AbgCBAfF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:20:32 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33313 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgCBAUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:20:17 -0500
-Received: by mail-wr1-f67.google.com with SMTP id x7so10373971wrr.0;
-        Sun, 01 Mar 2020 16:20:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OpaKrDoeUk2RJ12slgA8fUGlWxUuM6afstpoyn/uPGg=;
-        b=NBkqHx1vHzaqb/+7HdnVMCM71Jo6uxThzQyLbrk9qz3EyFh5XxqpgqM73XK6V8+GpQ
-         wqsO/0uuA/o0f5JsHHjmtEp7EPF5IFQyki128BnDF144jNBNseLuu/mh1IGv2f+VbAiP
-         pOlTJ2SFnxZZPPLZ3qINphuZkD8fEAEhHmovTyJpdChpa6s2UqVTBKGjUJEp5xwDLnom
-         rid9758M40svjaxPzgn+bAk9PURGm9dsTU3iWpzzsiFc7DTTE30Fpu0xeQtcSbiSPwoB
-         AB3qDScJM0l0dsnK0xxvE3Zo4kpDxQVN2NpCfnxvb5cXS/FtMLblHzb78ZSv+YBtFnve
-         Vd/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OpaKrDoeUk2RJ12slgA8fUGlWxUuM6afstpoyn/uPGg=;
-        b=S64yafSf9jGdNXEeyglqQpCnovZm26WuZHETMqy1WvzCZmPrRZo4hobRH6kSRlV9FR
-         8bfPe0VowS8+EmMibuKQPYOdiXpaLYDTOGOR1a1fJsmqmPFIVRToZ6/zSwtRIYsMjTK2
-         tbT46CGFuQRXsajhmthSdeYuNWTUaYEDelusL6Pzhlx5vB4G6mWjUsIpWRRGTPEuuKvi
-         u92Kxo2LIULuaCHQKfJfSjT70Zpi/u1nHCzV+mqcEoI9zqs2R1HT7hZER4evHPVTMr7l
-         3YHwH08eBhzv+M68uthharZ+dWnjhFunOuD/NqwIvPSJAIFLSJOIij26rCkyQ55J9Ih1
-         GvCA==
-X-Gm-Message-State: APjAAAWkjlVySKhWsxMcsFBbCOenz/JMO2LVtyxZ7zvwnLuSsn+WViIJ
-        3/EfVnQI3miOlJz+6Dygf5U=
-X-Google-Smtp-Source: APXvYqxxhdIQTQNMdIrAMRWM1vH31jBETpsphfpExLQu3aTIpTz9KwOzVl6OMEpRvwMM8nLF1O1Xpw==
-X-Received: by 2002:adf:94a3:: with SMTP id 32mr19680451wrr.276.1583108415535;
-        Sun, 01 Mar 2020 16:20:15 -0800 (PST)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id k16sm25428417wrd.17.2020.03.01.16.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 16:20:15 -0800 (PST)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] spi: spi-fsl-dspi: Convert the instantiations that support it to DMA
-Date:   Mon,  2 Mar 2020 02:19:58 +0200
-Message-Id: <20200302001958.11105-7-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200302001958.11105-1-olteanv@gmail.com>
-References: <20200302001958.11105-1-olteanv@gmail.com>
+        Sun, 1 Mar 2020 19:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbgCBAfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 19:35:05 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0592468D;
+        Mon,  2 Mar 2020 00:35:03 +0000 (UTC)
+Date:   Sun, 1 Mar 2020 19:35:01 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     paulmck@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <JGross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
+ C-code
+Message-ID: <20200301193501.0a850859@oasis.local.home>
+In-Reply-To: <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
+References: <20200301193034.GY2935@paulmck-ThinkPad-P72>
+        <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Sun, 1 Mar 2020 11:39:42 -0800
+Andy Lutomirski <luto@amacapital.net> wrote:
 
-The A-011218 eDMA/DSPI erratum affects most of the older Layerscape SoCs
-with DSPI, and its workaround is a bit intrusive.
+> > On Mar 1, 2020, at 11:30 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > ﻿On Sun, Mar 01, 2020 at 10:54:23AM -0800, Andy Lutomirski wrote:  
+> >>> On Sun, Mar 1, 2020 at 10:26 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >>> 
+> >>> On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:  
+> >>>> Andy Lutomirski <luto@kernel.org> writes:  
+> >>>>> On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:  
+> >>>>>> Andy Lutomirski <luto@amacapital.net> writes:  
+> >>>>>>>> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>>>>>>> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
+> >>>>>>>> except trace_hardirq_off/on() as those trace functions do not allow to
+> >>>>>>>> attach anything AFAICT.  
+> >>>>>>> 
+> >>>>>>> Can you point to whatever makes those particular functions special?  I
+> >>>>>>> failed to follow the macro maze.  
+> >>>>>> 
+> >>>>>> Those are not tracepoints and not going through the macro maze. See
+> >>>>>> kernel/trace/trace_preemptirq.c  
+> >>>>> 
+> >>>>> That has:
+> >>>>> 
+> >>>>> void trace_hardirqs_on(void)
+> >>>>> {
+> >>>>>        if (this_cpu_read(tracing_irq_cpu)) {
+> >>>>>                if (!in_nmi())
+> >>>>>                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+> >>>>>                tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+> >>>>>                this_cpu_write(tracing_irq_cpu, 0);
+> >>>>>        }
+> >>>>> 
+> >>>>>        lockdep_hardirqs_on(CALLER_ADDR0);
+> >>>>> }
+> >>>>> EXPORT_SYMBOL(trace_hardirqs_on);
+> >>>>> NOKPROBE_SYMBOL(trace_hardirqs_on);
+> >>>>> 
+> >>>>> But this calls trace_irq_enable_rcuidle(), and that's the part of the
+> >>>>> macro maze I got lost in.  I found:
+> >>>>> 
+> >>>>> #ifdef CONFIG_TRACE_IRQFLAGS
+> >>>>> DEFINE_EVENT(preemptirq_template, irq_disable,
+> >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> >>>>>             TP_ARGS(ip, parent_ip));
+> >>>>> 
+> >>>>> DEFINE_EVENT(preemptirq_template, irq_enable,
+> >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> >>>>>             TP_ARGS(ip, parent_ip));
+> >>>>> #else
+> >>>>> #define trace_irq_enable(...)
+> >>>>> #define trace_irq_disable(...)
+> >>>>> #define trace_irq_enable_rcuidle(...)
+> >>>>> #define trace_irq_disable_rcuidle(...)
+> >>>>> #endif
+> >>>>> 
+> >>>>> But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
+> >>>>> where I got lost in the macro maze.  I looked at the gcc asm output,
+> >>>>> and there is, indeed:  
+> >>>> 
+> >>>> DEFINE_EVENT
+> >>>>  DECLARE_TRACE
+> >>>>    __DECLARE_TRACE
+> >>>>       __DECLARE_TRACE_RCU
+> >>>>         static inline void trace_##name##_rcuidle(proto)
+> >>>>            __DO_TRACE
+> >>>>               if (rcuidle)
+> >>>>                  ....
+> >>>>   
+> >>>>> But I also don't see why this is any different from any other tracepoint.  
+> >>>> 
+> >>>> Indeed. I took a wrong turn at some point in the macro jungle :)
+> >>>> 
+> >>>> So tracing itself is fine, but then if you have probes or bpf programs
+> >>>> attached to a tracepoint these use rcu_read_lock()/unlock() which is
+> >>>> obviosly wrong in rcuidle context.  
+> >>> 
+> >>> Definitely, any such code needs to use tricks similar to that of the
+> >>> tracing code.  Or instead use something like SRCU, which is OK with
+> >>> readers from idle.  Or use something like Steve Rostedt's workqueue-based
+> >>> approach, though please be very careful with this latter, lest the
+> >>> battery-powered embedded guys come after you for waking up idle CPUs
+> >>> too often.  ;-)  
+> >> 
+> >> Are we okay if we somehow ensure that all the entry code before
+> >> enter_from_user_mode() only does rcuidle tracing variants and has
+> >> kprobes off?  Including for BPF use cases?  
+> > 
+> > That would work, though if BPF used SRCU instead of RCU, this would
+> > be unnecessary.  Sadly, SRCU has full memory barriers in each of
+> > srcu_read_lock() and srcu_read_unlock(), but we are working on it.
+> > (As always, no promises!)
+> >   
+> >> It would be *really* nice if we could statically verify this, as has
+> >> been mentioned elsewhere in the thread.  It would also probably be
+> >> good enough if we could do it at runtime.  Maybe with lockdep on, we
+> >> verify rcu state in tracepoints even if the tracepoint isn't active?
+> >> And we could plausibly have some widget that could inject something
+> >> into *every* kprobeable function to check rcu state.  
+> > 
+> > Or just have at least one testing step that activates all tracepoints,
+> > but with lockdep enabled?  
+> 
+> Also kprobe.
+> 
+> I don’t suppose we could make notrace imply nokprobe.  Then all
+> kprobeable functions would also have entry/exit tracepoints, right?
 
-After this patch, there are no users of TCFQ mode that don't also
-support XSPI (previously there was LS2085A).
+There was some code before that prevented a kprobe from being allowed
+in something that was not in the ftrace mcount table (which would make
+this happen). But I think that was changed because it was too
+restrictive.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/spi/spi-fsl-dspi.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Masami?
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index c26a42f8ecbc..c357c3247232 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -147,42 +147,49 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
- 		.fifo_size		= 4,
- 	},
- 	[LS1021A] = {
-+		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
- 	},
- 	[LS1012A] = {
-+		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS1043A] = {
-+		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS1046A] = {
-+		/* Has A-011218 DMA erratum */
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS2080A] = {
--		.trans_mode		= DSPI_TCFQ_MODE,
-+		.trans_mode		= DSPI_DMA_MODE,
-+		.dma_bufsize		= 8,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
- 	},
- 	[LS2085A] = {
--		.trans_mode		= DSPI_TCFQ_MODE,
-+		.trans_mode		= DSPI_DMA_MODE,
-+		.dma_bufsize		= 8,
- 		.max_clock_factor	= 8,
- 		.fifo_size		= 4,
- 	},
- 	[LX2160A] = {
--		.trans_mode		= DSPI_TCFQ_MODE,
-+		.trans_mode		= DSPI_DMA_MODE,
-+		.dma_bufsize		= 8,
- 		.max_clock_factor	= 8,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
--- 
-2.17.1
-
+-- Steve
