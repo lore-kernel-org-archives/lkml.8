@@ -2,135 +2,153 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F51C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F351C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F9820873
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4F82465D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583184190;
+	bh=TJupXr/A9HuRmVFgG+U+VpwxHs2hBti9AoPK9ebZUzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AOmaMcy/WxXtGfXROEZ+vXWZSJWRIh1dwwmM6UHZ+8uEGIqCbsBLlH0BaDWAiNtBS
+	 5pGJNFdjLkHU2YJMgi2NE75y9Yqq3r2od8/t1jaVqp+Rf00ydKUrF5efTYSe7ctw7G
+	 7wZnljkIyuvmC8xgALtFWIXTcHyD5f1eg/oXFdAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCBVVQ (ORCPT
+        id S1726793AbgCBVXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:21:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbgCBVVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:21:16 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022LKEiJ128598
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 16:21:15 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmg0dtbd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 16:21:14 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 2 Mar 2020 21:21:11 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 21:21:09 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022LK9AD37880264
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 21:20:09 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FF295204F;
-        Mon,  2 Mar 2020 21:21:07 +0000 (GMT)
-Received: from osiris (unknown [9.145.25.181])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 0072952059;
-        Mon,  2 Mar 2020 21:21:06 +0000 (GMT)
-Date:   Mon, 2 Mar 2020 22:21:05 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
-References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
- <1583160524.8544.91.camel@linux.ibm.com>
- <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
- <1583161018.8544.96.camel@linux.ibm.com>
+        Mon, 2 Mar 2020 16:23:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbgCBVXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:23:09 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F812208C3;
+        Mon,  2 Mar 2020 21:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583184188;
+        bh=TJupXr/A9HuRmVFgG+U+VpwxHs2hBti9AoPK9ebZUzs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vpw6iZVEpj+hrQnQps894lQiOuiaovukJTkjoE6UleQvgl+paymvY9HDB+gt0KZqR
+         mpAXsQLV6lMZnV6nwsTo1bz3Zo/bYJP7df9DHYb/a870op8rH+MOdluz8GMpTYt+4C
+         Bwmmu0hDhemion6XKFQmaW9hnfJSauUlvsvB7SXg=
+Date:   Mon, 2 Mar 2020 13:23:06 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jiri Slaby <jslaby@suse.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Eric Dumazet <edumazet@google.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual
+ console
+Message-ID: <20200302212306.GA78660@gmail.com>
+References: <0000000000006663de0598d25ab1@google.com>
+ <20200224071247.283098-1-ebiggers@kernel.org>
+ <8fb00b38-abd0-6895-3ad2-85a6f05ee6cf@suse.com>
+ <20200224081913.GA299238@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583161018.8544.96.camel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20030221-0012-0000-0000-0000038C6B98
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030221-0013-0000-0000-000021C91FE8
-Message-Id: <20200302212105.GH4035@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_08:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
- lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=1
- priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020138
+In-Reply-To: <20200224081913.GA299238@sol.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 09:56:58AM -0500, Mimi Zohar wrote:
-> On Mon, 2020-03-02 at 15:52 +0100, Ard Biesheuvel wrote:
-> > On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > > index beea77046f9b..cafa66313fe2 100644
-> > > > --- a/arch/x86/Kconfig
-> > > > +++ b/arch/x86/Kconfig
-> > > > @@ -230,6 +230,7 @@ config X86
-> > > >       select VIRT_TO_BUS
-> > > >       select X86_FEATURE_NAMES                if PROC_FS
-> > > >       select PROC_PID_ARCH_STATUS             if PROC_FS
-> > > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
-> > >
-> > > Not everyone is interested in enabling IMA or requiring IMA runtime
-> > > policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
-> > > still left up to the person building the kernel.  As a result, I'm
-> > > seeing the following warning, which is kind of cool.
-> > >
-> > > WARNING: unmet direct dependencies detected for
-> > > IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > >   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
-> > >   Selected by [y]:
-> > >   - X86 [=y] && EFI [=y]
-> > >
-> > > Ard, Michael, Martin, just making sure this type of warning is
-> > > acceptable before upstreaming this patch.  I would appreciate your
-> > > tags.
-> > >
+On Mon, Feb 24, 2020 at 12:19:13AM -0800, Eric Biggers wrote:
+> On Mon, Feb 24, 2020 at 09:04:33AM +0100, Jiri Slaby wrote:
+> > > KASAN report:
+> > > 	BUG: KASAN: use-after-free in con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
+> > > 	Write of size 8 at addr ffff88806a4ec108 by task syz_vt/129
+> > > 
+> > > 	CPU: 0 PID: 129 Comm: syz_vt Not tainted 5.6.0-rc2 #11
+> > > 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+> > > 	Call Trace:
+> > > 	 [...]
+> > > 	 con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
+> > > 	 release_tty+0xa8/0x410 drivers/tty/tty_io.c:1514
+> > > 	 tty_release_struct+0x34/0x50 drivers/tty/tty_io.c:1629
+> > > 	 tty_release+0x984/0xed0 drivers/tty/tty_io.c:1789
+> > > 	 [...]
+> > > 
+> > > 	Allocated by task 129:
+> > > 	 [...]
+> > > 	 kzalloc include/linux/slab.h:669 [inline]
+> > > 	 vc_allocate drivers/tty/vt/vt.c:1085 [inline]
+> > > 	 vc_allocate+0x1ac/0x680 drivers/tty/vt/vt.c:1066
+> > > 	 con_install+0x4d/0x3f0 drivers/tty/vt/vt.c:3229
+> > > 	 tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
+> > > 	 tty_init_dev+0x94/0x350 drivers/tty/tty_io.c:1341
+> > > 	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
+> > > 	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
+> > > 	 [...]
+> > > 
+> > > 	Freed by task 130:
+> > > 	 [...]
+> > > 	 kfree+0xbf/0x1e0 mm/slab.c:3757
+> > > 	 vt_disallocate drivers/tty/vt/vt_ioctl.c:300 [inline]
+> > > 	 vt_ioctl+0x16dc/0x1e30 drivers/tty/vt/vt_ioctl.c:818
+> > > 	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
 > > 
-> > Ehm, no, warnings like these are not really acceptable. It means there
-> > is an inconsistency in the way the Kconfig dependencies are defined.
+> > That means the associated tty_port is destroyed while the tty layer
+> > still has a tty on the top of it. That is a BUG anyway.
 > > 
-> > Does this help:
+> > > Fixes: 4001d7b7fc27 ("vt: push down the tty lock so we can see what is left to tackle")
+> > > Cc: <stable@vger.kernel.org> # v3.4+
+> > > Reported-by: syzbot+522643ab5729b0421998@syzkaller.appspotmail.com
+> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > ---
+> > >  drivers/tty/vt/vt_ioctl.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+> > > index ee6c91ef1f6cf..57d681706fa85 100644
+> > > --- a/drivers/tty/vt/vt_ioctl.c
+> > > +++ b/drivers/tty/vt/vt_ioctl.c
+> > > @@ -42,7 +42,7 @@
+> > >  char vt_dont_switch;
+> > >  extern struct tty_driver *console_driver;
+> > >  
+> > > -#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+> > > +#define VT_IS_IN_USE(i)	(console_driver->ttys[i] != NULL)
+> > >  #define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
+> > >  
+> > >  /*
+> > > @@ -288,12 +288,14 @@ static int vt_disallocate(unsigned int vc_num)
+> > >  	struct vc_data *vc = NULL;
+> > >  	int ret = 0;
+> > >  
+> > > +	mutex_lock(&tty_mutex); /* synchronize with release_tty() */
+> > >  	console_lock();
 > > 
-> >   select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
-> > 
-> > ?
+> > Is this lock dependency new or pre-existing?
 > 
-> Yes, that's fine for x86.  Michael, Martin, do you want something
-> similar or would you prefer actually selecting IMA_ARCH_POLICY?
+> It's the same locking order used during release_tty().
+> 
+> > 
+> > Locking tty_mutex here does not sound quite right. What about switching
+> > vc_data to proper refcounting based on tty_port? (Instead of doing
+> > tty_port_destroy and kfree in vt_disallocate*.)
+> > 
+> 
+> How would that work?  We could make struct vc_data refcounted such that
+> VT_DISALLOCATE doesn't free it right away but rather it's freed in the next
+> con_shutdown().  But release_tty() still accesses tty->port afterwards, which is
+> part of the 'struct vc_data' that would have just been freed.
+> 
 
-For s390 something like
+Jiri, can you explain what you meant here?  I don't see how your suggestion
+would solve the problem.
 
-	select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
+Greg, any opinion?
 
-should be fine.
-
-Thanks,
-Heiko
-
+- Eric
