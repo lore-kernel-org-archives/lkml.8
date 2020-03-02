@@ -2,88 +2,80 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85031C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C349C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5521721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583179424;
-	bh=OG6hsxq+JnvpIYk2cDSDDSMD2mfKXbl0TPdfaAfzmow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sVYPDNkMJdgmU4ME188UXBuRwZuz84G6ohSR9S3kyNlX0DLnQS4x0GJ3mKmVvPD7k
-	 AtkqWPm8agZyFXDGL2B/adB8WrEnhrIuCmTFvimEejPZ0s3IFryTWvNFB7cxR/cLAZ
-	 nizcZu0a2rudyIb4FtMeawnQ8t8kCXXf2qwyZEjM=
+	by mail.kernel.org (Postfix) with ESMTP id 3514721556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:04:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ue/aRK6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCBUDn (ORCPT
+        id S1726783AbgCBUEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:03:43 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39929 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBUDn (ORCPT
+        Mon, 2 Mar 2020 15:04:52 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58048 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCBUEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:03:43 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so219870plp.6;
-        Mon, 02 Mar 2020 12:03:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x8hnni3vhDi7aIbQYbHQMlr5ZqUcPLomGxoatdX8mrA=;
-        b=G4F3ABfL+nSKdHhvHaQ8a/dXmq7YCuP27SmEv3R68C1b/0fWQwHUbpQsHRMlKMGHnM
-         Gv/xqaKL1W36ksFG0c3KV5ClumQoKaPQ+DT4NHrJS8uum2Nd6iUsLUpLIwq9nYi0q4zF
-         vi9gR3DYY9doPCxMlBxuKWJZvF5+/Rc6aLu5nlfgal1P/LPcOEbvTkUCCpWfO81sRnYT
-         M7Bo5ydXuch8tvmGlrC1xLCDDYcIUiq+Il4RiIvEXaPr1Cw4hqWzMUYyOfLuMS4iuk6o
-         Wh8qfCzUD0cJe6YP6leq2S0QJAMWxMNChdFnNwvm7LByjHc10CRJHd15D18pZDjWQrPy
-         54PQ==
-X-Gm-Message-State: ANhLgQ2fAD82FCPA15IElk1a7E4RpuuAOwHNAAdyjSx+eGTvxNFqQQV7
-        CeObhdZODRXh1AHr7jowd7A=
-X-Google-Smtp-Source: ADFU+vuYB7JzcPlCMm+BX7Ut7SC8WjNgfZ7Q/iUBFudLCFG4YiiLGj8tYwOu7drenEZPr/9oGb9n4g==
-X-Received: by 2002:a17:902:ba94:: with SMTP id k20mr776029pls.104.1583179420392;
-        Mon, 02 Mar 2020 12:03:40 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id e9sm70268pjt.16.2020.03.02.12.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 12:03:38 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D3240413C3; Mon,  2 Mar 2020 20:03:37 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 20:03:37 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, logang@deltatee.com,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] kunit: create a centralized executor to dispatch
- all KUnit tests
-Message-ID: <20200302200337.GH11244@42.do-not-panic.com>
-References: <20200228012036.15682-1-brendanhiggins@google.com>
+        Mon, 2 Mar 2020 15:04:51 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 022K4Wlp059591;
+        Mon, 2 Mar 2020 14:04:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583179472;
+        bh=+Y3We2a+Q4hi0aZQcvRc0ATDX1Fyzu0uZGt4gr+vGH4=;
+        h=From:To:CC:Subject:Date;
+        b=ue/aRK6dIJ/ROdTnjcB8sGNfu5f1hSckO97RpDTFmXNrr1YDtnPudd1ZhlAXH+rTm
+         qdTh2HsqlSRjwBSGT2bgA1obKW5Fx1hfspm1oNVTIbqq/+oz7ISeuVC+eRpfCLx6Wm
+         7CXfLmW2KcIptjDe4EaE8Xe0IAOzQQ7VGjVLLnp4=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 022K4WT6029266
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Mar 2020 14:04:32 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 14:04:31 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 14:04:31 -0600
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 022K4UtA074555;
+        Mon, 2 Mar 2020 14:04:30 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCHv2 0/4] watchdog: add TI K3 SoC watchdog support
+Date:   Mon, 2 Mar 2020 22:04:22 +0200
+Message-ID: <20200302200426.6492-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228012036.15682-1-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter,
+Hi,
 
-are you still running your cross-architecture tests? If so any chance
-you can try this for your build tests?
+Changes from v1:
 
-Brendan, do you have this code in a branch which can be merged into
-linux-next by any chance?
+- Apply the last_hw_keepalive time fix always when starting a watchdog
+- Only query fck rate during probe, not during runtime
+- Add better documentation of HW limitations for RTI watchdog under
+  driver code
+- Drop unnecessary WARN_ON
 
-  Luis
+-Tero
+
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
