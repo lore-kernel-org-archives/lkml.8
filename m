@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A15C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C557CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E4B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5BD72086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgCBT5j (ORCPT
+        id S1726947AbgCBT5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:57:39 -0500
+        Mon, 2 Mar 2020 14:57:41 -0500
 Received: from mga05.intel.com ([192.55.52.43]:30422 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgCBT5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:57:38 -0500
+        id S1726661AbgCBT5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:57:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:37 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="438404973"
+   d="scan'208";a="438404986"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:37 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:39 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function is out-of-range
-Date:   Mon,  2 Mar 2020 11:57:31 -0800
-Message-Id: <20200302195736.24777-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 4/6] KVM: x86: Drop return value from kvm_cpuid()
+Date:   Mon,  2 Mar 2020 11:57:34 -0800
+Message-Id: <20200302195736.24777-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302195736.24777-1-sean.j.christopherson@intel.com>
 References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
@@ -50,65 +50,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework kvm_cpuid() to query entry->function when adjusting the output
-values so that the original function (in the aptly named "function") is
-preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
-trace the max function for a range instead of the requested function if
-the requested function is out-of-range and an entry for the max function
-exists.
+Remove the boolean return from kvm_cpuid() now that all callers ignore
+the return value.
 
-Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+No functional change intended.
+
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/kvm_emulate.h | 2 +-
+ arch/x86/kvm/cpuid.c               | 4 +---
+ arch/x86/kvm/cpuid.h               | 2 +-
+ arch/x86/kvm/x86.c                 | 4 ++--
+ 4 files changed, 5 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
+index ded06515d30f..20a26dc792ce 100644
+--- a/arch/x86/include/asm/kvm_emulate.h
++++ b/arch/x86/include/asm/kvm_emulate.h
+@@ -220,7 +220,7 @@ struct x86_emulate_ops {
+ 			 struct x86_instruction_info *info,
+ 			 enum x86_intercept_stage stage);
+ 
+-	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
++	void (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
+ 			  u32 *ecx, u32 *edx, bool check_limit);
+ 	int (*get_cpuid_maxphyaddr)(struct x86_emulate_ctxt *ctxt);
+ 	bool (*guest_has_long_mode)(struct x86_emulate_ctxt *ctxt);
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index b1c469446b07..6be012937eba 100644
+index c320126e0118..869526930cf7 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+@@ -997,8 +997,7 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
  	return max && function <= max->eax;
  }
  
-+/* Returns true if the requested leaf/function exists in guest CPUID. */
- bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+-/* Returns true if the requested leaf/function exists in guest CPUID. */
+-bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
++void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
  	       u32 *ecx, u32 *edx, bool check_limit)
  {
--	u32 function = *eax, index = *ecx;
-+	const u32 function = *eax, index = *ecx;
- 	struct kvm_cpuid_entry2 *entry;
--	struct kvm_cpuid_entry2 *max;
- 	bool found;
- 
- 	entry = kvm_find_cpuid_entry(vcpu, function, index);
-@@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 	 */
- 	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
- 	    !cpuid_function_in_range(vcpu, function)) {
--		max = kvm_find_cpuid_entry(vcpu, 0, 0);
--		if (max) {
--			function = max->eax;
--			entry = kvm_find_cpuid_entry(vcpu, function, index);
--		}
-+		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
-+		if (entry)
-+			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+ 	const u32 function = *eax, index = *ecx;
+@@ -1049,7 +1048,6 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 		}
  	}
- 	if (entry) {
- 		*eax = entry->eax;
- 		*ebx = entry->ebx;
- 		*ecx = entry->ecx;
- 		*edx = entry->edx;
--		if (function == 7 && index == 0) {
-+
-+		if (entry->function == 7 && index == 0) {
- 			u64 data;
- 		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
- 			    (data & TSX_CTRL_CPUID_CLEAR))
+ 	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, found);
+-	return found;
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
+ 
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 7366c618aa04..5df64ff25663 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -22,7 +22,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+ 			      struct kvm_cpuid2 *cpuid,
+ 			      struct kvm_cpuid_entry2 __user *entries);
+-bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
++void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 	       u32 *ecx, u32 *edx, bool check_limit);
+ 
+ int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5467ee71c25b..bfff92fcf0d1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6203,10 +6203,10 @@ static int emulator_intercept(struct x86_emulate_ctxt *ctxt,
+ 	return kvm_x86_ops->check_intercept(emul_to_vcpu(ctxt), info, stage);
+ }
+ 
+-static bool emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
++static void emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
+ 			u32 *eax, u32 *ebx, u32 *ecx, u32 *edx, bool check_limit)
+ {
+-	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
++	kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
+ }
+ 
+ static int emulator_get_cpuid_maxphyaddr(struct x86_emulate_ctxt *ctxt)
 -- 
 2.24.1
 
