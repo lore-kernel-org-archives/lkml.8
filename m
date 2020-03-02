@@ -2,177 +2,86 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37686C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501FCC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA572187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2CD20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583156820;
+	bh=a1BACQXPcb+DJZC7lutMRq4QISkW84jXrjYL5Ekag0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DbIt0yoMBX/Dg/Us/hlEUMnUq0/b4TgDhBi+zm+Wg1aApRZNtcCIOEoc0PMtAbeLy
+	 a3CKYHjvyL+wPs3Dasce6xjn1a7IRy9f0gesZN4+oSnOCp/MrWCIqdqUiGwAMSkGs6
+	 v2fuP3qHhQIBPaVv+3oJk/pwONEocJJjZaezA4pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgCBNpD (ORCPT
+        id S1727111AbgCBNq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:45:03 -0500
-Received: from mail.fireflyinternet.com ([109.228.58.192]:56021 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727769AbgCBNpD (ORCPT
+        Mon, 2 Mar 2020 08:46:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44922 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCBNq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:45:03 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from haswell.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 20413386-1500050 
-        for multiple; Mon, 02 Mar 2020 13:44:57 +0000
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>, stable@vger.kernel.org
-Subject: [PATCH] rtc/cmos: Protect rtc_lock from interrupts
-Date:   Mon,  2 Mar 2020 13:44:55 +0000
-Message-Id: <20200302134455.318328-1-chris@chris-wilson.co.uk>
-X-Mailer: git-send-email 2.25.1
+        Mon, 2 Mar 2020 08:46:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n7so4755026wrt.11;
+        Mon, 02 Mar 2020 05:46:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EsNI7T8fx9/zJXjOHaygab/3xTyRqQbHWTw10t+dBzA=;
+        b=jZZiwCACFxH1dWhm1nAaqz/yKHB7KknhPpSizcZguUpTair8VZuvNld6PdLyqo9uMH
+         VC5PFVLz3nYJT4Af2BJA7gam3vS3rFpLSJvFumgWCJy0RxA2KFHjUh+M4140Sk+YH64O
+         HEqZr7E57HSROrw4ZfnvRYqKu84pmKSc2O9s1Dzl0XclO3AibWqkYEAtg+Jn4b4ckwbY
+         ulNGxRXlDIcR/vfLaY37y10GGYXPMKc3sgcDn8v8CHEvqdsHWCq1jJuuNd6v7Fsn0OYA
+         18sK8C4I97WRv3mx9TnwjGdMix8FOTp20C//OlgOhonvNichSIjJ4x8THVi/KVTtYgdM
+         3nzw==
+X-Gm-Message-State: ANhLgQ1IeTfJ6SSFkme+reMSANyEb8sR7JWeKUo5aEbJswPpIjm71zyY
+        QGya1Ax74E7stqsbbMkxRq4FhUYF
+X-Google-Smtp-Source: ADFU+vsk/lNuhHwpxpNwBVIC3coW7NDluM9AGC/3y86Bm7OKnhdIXSzQoDViXc7JHCsYkjCUFwi+xQ==
+X-Received: by 2002:a5d:5643:: with SMTP id j3mr9174610wrw.337.1583156816652;
+        Mon, 02 Mar 2020 05:46:56 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z2sm23174843wrq.95.2020.03.02.05.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 05:46:55 -0800 (PST)
+Date:   Mon, 2 Mar 2020 14:46:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
+ FOLL_PIN pages"
+Message-ID: <20200302134655.GL4380@dhcp22.suse.cz>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+ <20200228154322.329228-3-imbrenda@linux.ibm.com>
+ <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cmos_interrrupt() is called directly on resume paths, and by the
-irqhandler. It currently assumes that it can only be invoked directly
-from a hardirq, and so leads to the lockdep splat:
+On Fri 28-02-20 15:08:35, John Hubbard wrote:
+[...]
+> (Aside: I'm using the linux-next commit hash. How does one get the correct hash before
+> it goes to mainline? I guess maintainer scripts fix all those up?)
 
-<4>[  259.166718] WARNING: inconsistent lock state
-<4>[  259.166725] 5.6.0-rc3-CI-CI_DRM_8038+ #1 Tainted: G     U
-<4>[  259.166727] --------------------------------
-<4>[  259.166731] inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-<4>[  259.166741] rtcwake/4221 [HC0[0]:SC0[0]:HE1:SE1] takes:
-<4>[  259.166745] ffffffff82635198 (rtc_lock){?...}, at: cmos_interrupt+0x18/0x100
-<4>[  259.166768] {IN-HARDIRQ-W} state was registered at:
-<4>[  259.166780]   lock_acquire+0xa7/0x1c0
-<4>[  259.166790]   _raw_spin_lock+0x2a/0x40
-<4>[  259.166799]   cmos_interrupt+0x18/0x100
-<4>[  259.166808]   rtc_handler+0x75/0xc0
-<4>[  259.166822]   acpi_ev_fixed_event_detect+0xf9/0x132
-<4>[  259.166829]   acpi_ev_sci_xrupt_handler+0xb/0x28
-<4>[  259.166838]   acpi_irq+0x13/0x30
-<4>[  259.166849]   __handle_irq_event_percpu+0x41/0x2c0
-<4>[  259.166859]   handle_irq_event_percpu+0x2b/0x70
-<4>[  259.166868]   handle_irq_event+0x2f/0x50
-<4>[  259.166875]   handle_fasteoi_irq+0x8e/0x150
-<4>[  259.166883]   do_IRQ+0x7e/0x160
-<4>[  259.166891]   ret_from_intr+0x0/0x35
-<4>[  259.166898]   mwait_idle+0x7e/0x200
-<4>[  259.166905]   do_idle+0x1bb/0x260
-<4>[  259.166912]   cpu_startup_entry+0x14/0x20
-<4>[  259.166921]   start_secondary+0x15f/0x1b0
-<4>[  259.166929]   secondary_startup_64+0xa4/0xb0
-<4>[  259.167264] irq event stamp: 41593
-<4>[  259.167275] hardirqs last  enabled at (41593): [<ffffffff81a394e7>] _raw_spin_unlock_irqrestore+0x47/0x60
-<4>[  259.167285] hardirqs last disabled at (41592): [<ffffffff81a3926d>] _raw_spin_lock_irqsave+0xd/0x50
-<4>[  259.167296] softirqs last  enabled at (41568): [<ffffffff81e00385>] __do_softirq+0x385/0x47f
-<4>[  259.167306] softirqs last disabled at (41561): [<ffffffff810babaa>] irq_exit+0xba/0xc0
-<4>[  259.167309]
-                  other info that might help us debug this:
-<4>[  259.167312]  Possible unsafe locking scenario:
-
-<4>[  259.167314]        CPU0
-<4>[  259.167316]        ----
-<4>[  259.167319]   lock(rtc_lock);
-<4>[  259.167324]   <Interrupt>
-<4>[  259.167326]     lock(rtc_lock);
-<4>[  259.167332]
-                   *** DEADLOCK ***
-
-<4>[  259.167337] 6 locks held by rtcwake/4221:
-<4>[  259.167665]  #0: ffff888175e89408 (sb_writers#5){.+.+}, at: vfs_write+0x1a4/0x1d0
-<4>[  259.167687]  #1: ffff88816e112080 (&of->mutex){+.+.}, at: kernfs_fop_write+0xdd/0x1b0
-<4>[  259.167706]  #2: ffff888179be85e0 (kn->count#236){.+.+}, at: kernfs_fop_write+0xe6/0x1b0
-<4>[  259.167728]  #3: ffffffff82641e00 (system_transition_mutex){+.+.}, at: pm_suspend+0xb3/0x3b0
-<4>[  259.167748]  #4: ffffffff826b3ea0 (acpi_scan_lock){+.+.}, at: acpi_suspend_begin+0x47/0x80
-<4>[  259.167763]  #5: ffff888178f6b960 (&dev->mutex){....}, at: device_resume+0x92/0x1c0
-<4>[  259.167778]
-                  stack backtrace:
-<4>[  259.167788] CPU: 1 PID: 4221 Comm: rtcwake Tainted: G     U            5.6.0-rc3-CI-CI_DRM_8038+ #1
-<4>[  259.168106] Hardware name: Google Soraka/Soraka, BIOS MrChromebox-4.10 08/25/2019
-<4>[  259.168110] Call Trace:
-<4>[  259.168123]  dump_stack+0x71/0x9b
-<4>[  259.168133]  mark_lock+0x49a/0x500
-<4>[  259.168457]  ? print_shortest_lock_dependencies+0x200/0x200
-<4>[  259.168469]  __lock_acquire+0x6d4/0x15d0
-<4>[  259.168479]  ? __lock_acquire+0x460/0x15d0
-<4>[  259.168490]  lock_acquire+0xa7/0x1c0
-<4>[  259.168500]  ? cmos_interrupt+0x18/0x100
-<4>[  259.168824]  _raw_spin_lock+0x2a/0x40
-<4>[  259.168834]  ? cmos_interrupt+0x18/0x100
-<4>[  259.168843]  cmos_interrupt+0x18/0x100
-<4>[  259.169159]  cmos_resume+0x1fd/0x290
-<4>[  259.169174]  ? __acpi_pm_set_device_wakeup+0x24/0x100
-<4>[  259.169498]  pnp_bus_resume+0x5e/0x90
-<4>[  259.169509]  ? pnp_bus_suspend+0x10/0x10
-<4>[  259.169518]  dpm_run_callback+0x64/0x280
-<4>[  259.169530]  device_resume+0xd4/0x1c0
-<4>[  259.169540]  ? dpm_watchdog_set+0x60/0x60
-<4>[  259.169860]  dpm_resume+0x106/0x410
-<4>[  259.169870]  ? dpm_resume_early+0x38c/0x3e0
-<4>[  259.169881]  dpm_resume_end+0x8/0x10
-<4>[  259.170195]  suspend_devices_and_enter+0x16f/0xbe0
-<4>[  259.170211]  ? rcu_read_lock_sched_held+0x4d/0x80
-<4>[  259.170528]  pm_suspend+0x344/0x3b0
-<4>[  259.170542]  state_store+0x78/0xe0
-<4>[  259.170559]  kernfs_fop_write+0x112/0x1b0
-<4>[  259.170579]  vfs_write+0xb9/0x1d0
-<4>[  259.170896]  ksys_write+0x9f/0xe0
-<4>[  259.170907]  do_syscall_64+0x4f/0x220
-<4>[  259.170918]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-<4>[  259.171229] RIP: 0033:0x7f9b4f3cb154
-<4>[  259.171240] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
-<4>[  259.171245] RSP: 002b:00007ffc057ce438 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-<4>[  259.171253] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f9b4f3cb154
-<4>[  259.171257] RDX: 0000000000000004 RSI: 000055f4b3d185a0 RDI: 000000000000000a
-<4>[  259.171572] RBP: 000055f4b3d185a0 R08: 000055f4b3d165e0 R09: 00007f9b4fab7740
-<4>[  259.171576] R10: 000055f4b3d14010 R11: 0000000000000246 R12: 000055f4b3d16500
-<4>[  259.171580] R13: 0000000000000004 R14: 00007f9b4f6a32a0 R15: 00007f9b4f6a2760
-
-Fixes: c6d3a278cc12 ("rtc: cmos: acknowledge ACPI driven wake alarms upon resume")
-Fixes: 311ee9c151ad ("rtc: cmos: allow using ACPI for RTC alarm instead of HPET")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: <stable@vger.kernel.org> # v4.18+
----
- drivers/rtc/rtc-cmos.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index b795fe4cbd2e..7754225c6f9d 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -651,8 +651,9 @@ static irqreturn_t cmos_interrupt(int irq, void *p)
- {
- 	u8		irqstat;
- 	u8		rtc_control;
-+	unsigned long	flags;
- 
--	spin_lock(&rtc_lock);
-+	spin_lock_irqsave(&rtc_lock, flags);
- 
- 	/* When the HPET interrupt handler calls us, the interrupt
- 	 * status is passed as arg1 instead of the irq number.  But
-@@ -686,7 +687,7 @@ static irqreturn_t cmos_interrupt(int irq, void *p)
- 			hpet_mask_rtc_irq_bit(RTC_AIE);
- 		CMOS_READ(RTC_INTR_FLAGS);
- 	}
--	spin_unlock(&rtc_lock);
-+	spin_unlock_irqrestore(&rtc_lock, flags);
- 
- 	if (is_intr(irqstat)) {
- 		rtc_update_irq(p, 1, irqstat);
+There is no such maging going on AFAIK. Please just do not use sha1 from
+linux-next unless it is really clear that those are not going to change.
+So essentially everything from mmotm is out of question.
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
