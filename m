@@ -2,140 +2,144 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAF3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA24B21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B1A21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qbLLolwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCBVAF (ORCPT
+        id S1726816AbgCBVBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:00:05 -0500
-Received: from gecko.sbs.de ([194.138.37.40]:33531 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgCBVAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:00:05 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 022Kxcb9030366
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 21:59:39 +0100
-Received: from [139.25.68.37] ([139.25.68.37])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 022Kxc3c022116;
-        Mon, 2 Mar 2020 21:59:38 +0100
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
- is out-of-range
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
- <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
- <20200302204940.GG6244@linux.intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <25cf56fc-3bed-fa1b-f8e3-62ac58663e09@siemens.com>
-Date:   Mon, 2 Mar 2020 21:59:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 16:01:40 -0500
+Received: from gateway24.websitewelcome.com ([192.185.50.73]:43600 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbgCBVBj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:01:39 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 3988013C1F5
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:01:37 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 8sC1jZb6R8vkB8sC1jTljE; Mon, 02 Mar 2020 15:01:37 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zN3rMtGrk/Zs5GdX97JZqsBoFoWxHWo9zxihuTDfHA0=; b=qbLLolwoTYSiwhnOJDcHHRchiL
+        X8Tnxyqk7vYdE/ErRr7J2QChPJTT/FCLEt5Zhl3g5breiKvoIbPjoKG0wqeyfWAgqcn4hoS8XPSBg
+        YfI7ZLZnQpDJAKaYtQOkYcx7rmrqPEMx+LKNoB8G9p/1q7TiVEXhslR1w3id/Zkkfvn/+LzJkro2O
+        qe3CzdrzteN1gu1PKoS8Kmi7yPj+svFQSC5ZR8TDGQk4kJ5TqnNrx7AyAvX7o5oBcyAHPmka3XsOq
+        8/2/Xq/jcnYZp6WL2Ffjn0yRldfDiU3zIOW3qWcH+eiJn7hIYv/mco1DZWUS653vmbxdCoNPjeHmb
+        QS1sO7GA==;
+Received: from [201.166.169.19] (port=16672 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j8sBz-0004O8-4B; Mon, 02 Mar 2020 15:01:35 -0600
+Date:   Mon, 2 Mar 2020 15:04:37 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "mlxsw@mellanox.com David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: mlxfw: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200302210437.GA30285@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200302204940.GG6244@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.19
+X-Source-L: No
+X-Exim-ID: 1j8sBz-0004O8-4B
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.19]:16672
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.03.20 21:49, Sean Christopherson wrote:
-> On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
->> On 02.03.20 20:57, Sean Christopherson wrote:
->>> Rework kvm_cpuid() to query entry->function when adjusting the output
->>> values so that the original function (in the aptly named "function") is
->>> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
->>> trace the max function for a range instead of the requested function if
->>> the requested function is out-of-range and an entry for the max function
->>> exists.
->>>
->>> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
->>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
->>> Cc: Jim Mattson <jmattson@google.com>
->>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> ---
->>>   arch/x86/kvm/cpuid.c | 15 +++++++--------
->>>   1 file changed, 7 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>> index b1c469446b07..6be012937eba 100644
->>> --- a/arch/x86/kvm/cpuid.c
->>> +++ b/arch/x86/kvm/cpuid.c
->>> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
->>>   	return max && function <= max->eax;
->>>   }
->>> +/* Returns true if the requested leaf/function exists in guest CPUID. */
->>>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->>>   	       u32 *ecx, u32 *edx, bool check_limit)
->>>   {
->>> -	u32 function = *eax, index = *ecx;
->>> +	const u32 function = *eax, index = *ecx;
->>>   	struct kvm_cpuid_entry2 *entry;
->>> -	struct kvm_cpuid_entry2 *max;
->>>   	bool found;
->>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
->>> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->>>   	 */
->>>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
->>>   	    !cpuid_function_in_range(vcpu, function)) {
->>> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
->>> -		if (max) {
->>> -			function = max->eax;
->>> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
->>> -		}
->>> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
->>> +		if (entry)
->>> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
->>>   	}
->>>   	if (entry) {
->>>   		*eax = entry->eax;
->>>   		*ebx = entry->ebx;
->>>   		*ecx = entry->ecx;
->>>   		*edx = entry->edx;
->>> -		if (function == 7 && index == 0) {
->>> +
->>> +		if (entry->function == 7 && index == 0) {
->>>   			u64 data;
->>>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
->>>   			    (data & TSX_CTRL_CPUID_CLEAR))
->>>
->>
->> What about the !entry case below this? It was impacted by the function
->> capping so far, not it's no longer.
-> 
-> Hmm, the only way the output would be different is in a really contrived
-> scenario where userspace doesn't provide an entry for the max basic leaf.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I think I've seen that, a cap to 0x10, with QEMU and '-cpu host# when 
-providing intentionally bogus values to cpuid.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Jan
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-> 
-> The !entry path can only be reached with "orig_function != function" if
-> orig_function is out of range and there is no entry for the max basic leaf.
-> The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
-> and to take effect with !entry would require there to be a CPUID.max.1 but
-> not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
-> userspace input and IMO can be ignored.
-> 
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c     | 2 +-
+ drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
+index 79057af4fe99..5d9ddf36fb4e 100644
+--- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
++++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
+@@ -496,7 +496,7 @@ mlxfw_mfa2_file_component_tlv_get(const struct mlxfw_mfa2_file *mfa2_file,
+ 
+ struct mlxfw_mfa2_comp_data {
+ 	struct mlxfw_mfa2_component comp;
+-	u8 buff[0];
++	u8 buff[];
+ };
+ 
+ static const struct mlxfw_mfa2_tlv_component_descriptor *
+diff --git a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
+index 33c971190bba..2014a5de5a01 100644
+--- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
++++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_tlv.h
+@@ -11,7 +11,7 @@ struct mlxfw_mfa2_tlv {
+ 	u8 version;
+ 	u8 type;
+ 	__be16 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ static inline const struct mlxfw_mfa2_tlv *
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.25.0
+
