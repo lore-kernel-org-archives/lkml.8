@@ -2,219 +2,189 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44466C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAE0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D48F21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JA7Kzeyq"
+	by mail.kernel.org (Postfix) with ESMTP id 3FD5E20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgCBLQQ (ORCPT
+        id S1727659AbgCBLQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:16:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44911 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725996AbgCBLQQ (ORCPT
+        Mon, 2 Mar 2020 06:16:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9006 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727032AbgCBLQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:16:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583147775;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=umbLYwhPWxfWOXkX5gvhj2TCibBswbVscPss66YGx1c=;
-        b=JA7KzeyqWl9Mq/C/bAg0yn8P7kXPFayMa/h6CQhNudhxZ1O7ZXuNFxcjCRlcjiI9iegYHA
-        5hEz8dQD2I6NeeRjCzhpO0SlpllV7eoO7WEeGgcNIgfzGHtN+SpmkkO/FgwAKZdl99uv5U
-        ahTAgMqUrQSXGW3mhgGqET6C6unuz/8=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-VDs-_QTmMj6AQhb5ZPBz0w-1; Mon, 02 Mar 2020 06:16:13 -0500
-X-MC-Unique: VDs-_QTmMj6AQhb5ZPBz0w-1
-Received: by mail-qv1-f69.google.com with SMTP id fc5so8342372qvb.17
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:16:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=umbLYwhPWxfWOXkX5gvhj2TCibBswbVscPss66YGx1c=;
-        b=KF/TYeCh1tB0aPzS8cBUeyXmZ6lV9giizr2c/AJFw/vkeJKJOWn+BKtV+4RE7TN0jM
-         1fmGA00L0P6IfMcy0bI/0DOY16bGzhzwLAIC8gHzTw28IqT/2+Ei1y8VZiq6D/wOPm4a
-         qRvfkHqeh8bpbRxQnynb3zGwoEOG1GIOhOd93WmCvelBWStZB+JqDsoKTOmWplXZekOA
-         6wuqL0+VF+311LDE2YONmYJtA89K0+JaTk/CIm72GmETPt5HudVJa/dq5N+qQQLkgU66
-         cuVssQyJzoaxD2WzAzRse40fkfQRCTDwzOyg1K4I6RSbY449p234Z3/P/mgxfwUkq5bd
-         ohWQ==
-X-Gm-Message-State: APjAAAXaD+bnmzTV9skve61fDEokeL3da4dnblqwbBtIOG7Bc/Tgcktw
-        O0nu0tc74zNWdABZKm8GZJkPQlSSUlSKjuH17shvdunHFD2+TSHVX/oKEUGLHxQN/B2DJApNcWS
-        ivjF7nv74bp+q97s2Z8eACslA
-X-Received: by 2002:a37:4f93:: with SMTP id d141mr15300001qkb.125.1583147772969;
-        Mon, 02 Mar 2020 03:16:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw37mRm8RQ5OwQWrA3Tw95Zs3ZfsyQXSy1ROgOhIMbb5VGK1q4sALItcgU02yvFe+sfPN8ezA==
-X-Received: by 2002:a37:4f93:: with SMTP id d141mr15299986qkb.125.1583147772684;
-        Mon, 02 Mar 2020 03:16:12 -0800 (PST)
-Received: from redhat.com (bzq-79-180-48-224.red.bezeqint.net. [79.180.48.224])
-        by smtp.gmail.com with ESMTPSA id w41sm10092944qtj.49.2020.03.02.03.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 03:16:11 -0800 (PST)
-Date:   Mon, 2 Mar 2020 06:16:07 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Yuri Benditovich <yuri.benditovich@daynix.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Yan Vugenfirer <yan@daynix.com>,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v3 2/3] virtio-net: Introduce RSS receive steering feature
-Message-ID: <20200302061549-mutt-send-email-mst@kernel.org>
-References: <20200301143302.8556-1-yuri.benditovich@daynix.com>
- <20200301143302.8556-3-yuri.benditovich@daynix.com>
- <20200301145811-mutt-send-email-mst@kernel.org>
- <CAOEp5Oc07THyvZghMBjns=aTVEPMxb4w6LFGFtUsS93h4xsSJQ@mail.gmail.com>
- <20200302055359-mutt-send-email-mst@kernel.org>
- <CAOEp5Oc8p6b4eDKOQoNfoER2UKNGwN6HrbVqvY+qgFwHev4qcQ@mail.gmail.com>
+        Mon, 2 Mar 2020 06:16:32 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022BFprD082280
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 06:16:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmu3nbv4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:16:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 2 Mar 2020 11:16:29 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 11:16:27 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022BFSvH28770798
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 11:15:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6FA74C059;
+        Mon,  2 Mar 2020 11:16:26 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A9EB4C040;
+        Mon,  2 Mar 2020 11:16:26 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.96.97])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 11:16:26 +0000 (GMT)
+Subject: Re: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
+ enqueue_task_fair+0x328/0x440
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
+ <afacbbd1-3d6b-c537-34e2-5b455e1c2267@de.ibm.com>
+ <CAKfTPtBikHzpHY-NdRJFfOFxx+S3=4Y0aPM5s0jpHs40+9BaGA@mail.gmail.com>
+ <b073a50e-4b86-56db-3fbd-6869b2716b34@de.ibm.com>
+ <1a607a98-f12a-77bd-2062-c3e599614331@de.ibm.com>
+ <CAKfTPtBZ2X8i6zMgrA1gNJmwoSnyRc76yXmLZEwboJmF-R9QVg@mail.gmail.com>
+ <b664f050-72d6-a483-be0a-8504f687f225@de.ibm.com>
+ <20200228163545.GA18662@vingu-book>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Mon, 2 Mar 2020 12:16:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOEp5Oc8p6b4eDKOQoNfoER2UKNGwN6HrbVqvY+qgFwHev4qcQ@mail.gmail.com>
+In-Reply-To: <20200228163545.GA18662@vingu-book>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030211-0012-0000-0000-0000038C3445
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030211-0013-0000-0000-000021C8E6C7
+Message-Id: <be45b190-d96c-1893-3ef0-f574eb595256@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 impostorscore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 12:58:34PM +0200, Yuri Benditovich wrote:
-> All the classes of commands are defined without indentation.
-> All the commands are defined with indentation of 1 space.
-> Only the last one (VIRTIO_NET_CTRL_GUEST_OFFLOADS_SET at the end of
-> the file) does not have an indentation.
 
-OK then, sorry about the noise.
 
-> On Mon, Mar 2, 2020 at 12:54 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Mon, Mar 02, 2020 at 10:53:14AM +0200, Yuri Benditovich wrote:
-> > > On Sun, Mar 1, 2020 at 9:58 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > >
-> > > > On Sun, Mar 01, 2020 at 04:33:01PM +0200, Yuri Benditovich wrote:
-> > > > > RSS (Receive-side scaling) defines hash calculation
-> > > > > rules and decision on receive virtqueue according to
-> > > > > the calculated hash, provided mask to apply and
-> > > > > provided indirection table containing indices of
-> > > > > receive virqueues. The driver sends the control
-> > > > > command to enable multiqueue and provide parameters
-> > > > > for receive steering.
-> > > > >
-> > > > > Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
-> > > > > ---
-> > > > >  include/uapi/linux/virtio_net.h | 42 +++++++++++++++++++++++++++++++--
-> > > > >  1 file changed, 40 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-> > > > > index 19e76b3e3a64..188ad3eecdc8 100644
-> > > > > --- a/include/uapi/linux/virtio_net.h
-> > > > > +++ b/include/uapi/linux/virtio_net.h
-> > > > > @@ -57,6 +57,7 @@
-> > > > >                                        * Steering */
-> > > > >  #define VIRTIO_NET_F_CTRL_MAC_ADDR 23        /* Set MAC address */
-> > > > >
-> > > > > +#define VIRTIO_NET_F_RSS       60    /* Supports RSS RX steering */
-> > > > >  #define VIRTIO_NET_F_RSC_EXT   61    /* extended coalescing info */
-> > > > >  #define VIRTIO_NET_F_STANDBY   62    /* Act as standby for another device
-> > > > >                                        * with the same MAC.
-> > > > > @@ -70,6 +71,17 @@
-> > > > >  #define VIRTIO_NET_S_LINK_UP 1       /* Link is up */
-> > > > >  #define VIRTIO_NET_S_ANNOUNCE        2       /* Announcement is needed */
-> > > > >
-> > > > > +/* supported/enabled hash types */
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_IPv4          (1 << 0)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_TCPv4         (1 << 1)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_UDPv4         (1 << 2)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_IPv6          (1 << 3)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_TCPv6         (1 << 4)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_UDPv6         (1 << 5)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_IP_EX         (1 << 6)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_TCP_EX        (1 << 7)
-> > > > > +#define VIRTIO_NET_RSS_HASH_TYPE_UDP_EX        (1 << 8)
-> > > > > +
-> > > > >  struct virtio_net_config {
-> > > > >       /* The config defining mac address (if VIRTIO_NET_F_MAC) */
-> > > > >       __u8 mac[ETH_ALEN];
-> > > > > @@ -93,6 +105,12 @@ struct virtio_net_config {
-> > > > >        * Any other value stands for unknown.
-> > > > >        */
-> > > > >       __u8 duplex;
-> > > > > +     /* maximum size of RSS key */
-> > > > > +     __u8 rss_max_key_size;
-> > > > > +     /* maximum number of indirection table entries */
-> > > > > +     __le16 rss_max_indirection_table_length;
-> > > > > +     /* bitmask of supported VIRTIO_NET_RSS_HASH_ types */
-> > > > > +     __le32 supported_hash_types;
-> > > > >  } __attribute__((packed));
-> > > > >
-> > > > >  /*
-> > > > > @@ -246,7 +264,9 @@ struct virtio_net_ctrl_mac {
-> > > > >
-> > > > >  /*
-> > > > >   * Control Receive Flow Steering
-> > > > > - *
-> > > > > + */
-> > > > > +#define VIRTIO_NET_CTRL_MQ   4
-> > > > > +/*
-> > > > >   * The command VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET
-> > > > >   * enables Receive Flow Steering, specifying the number of the transmit and
-> > > > >   * receive queues that will be used. After the command is consumed and acked by
-> > > > > @@ -259,11 +279,29 @@ struct virtio_net_ctrl_mq {
-> > > > >       __virtio16 virtqueue_pairs;
-> > > > >  };
-> > > > >
-> > > > > -#define VIRTIO_NET_CTRL_MQ   4
-> > > > >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET        0
-> > > > >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MIN        1
-> > > > >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MAX        0x8000
-> > > > >
-> > > > > +/*
-> > > > > + * The command VIRTIO_NET_CTRL_MQ_RSS_CONFIG has the same effect as
-> > > > > + * VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET does and additionally configures
-> > > > > + * the receive steering to use a hash calculated for incoming packet
-> > > > > + * to decide on receive virtqueue to place the packet. The command
-> > > > > + * also provides parameters to calculate a hash and receive virtqueue.
-> > > > > + */
-> > > > > +struct virtio_net_rss_config {
-> > > > > +     __le32 hash_types;
-> > > > > +     __le16 indirection_table_mask;
-> > > > > +     __le16 unclassified_queue;
-> > > > > +     __le16 indirection_table[1/* + indirection_table_mask */];
-> > > > > +     __le16 max_tx_vq;
-> > > > > +     __u8 hash_key_length;
-> > > > > +     __u8 hash_key_data[/* hash_key_length */];
-> > > > > +};
-> > > > > +
-> > > > > + #define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1
-> > > > > +
-> > > >
-> > > >
-> > > > Extra space here.
-> > >
-> > > Where exactly you want to remove the empty line?
-> > > The format here is exactly as in other places:
-> > > comment - structure - space - command - space
-> >
-> > + #define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1
-> >
-> > should be
-> >
-> > +#define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1
-> >
-> > >
-> > > >
-> > > > >  /*
-> > > > >   * Control network offloads
-> > > > >   *
-> > > > > --
-> > > > > 2.17.1
-> > > >
-> >
+On 28.02.20 17:35, Vincent Guittot wrote:
+> Le vendredi 28 févr. 2020 à 16:42:27 (+0100), Christian Borntraeger a écrit :
+>>
+>>
+>> On 28.02.20 16:37, Vincent Guittot wrote:
+>>> On Fri, 28 Feb 2020 at 16:08, Christian Borntraeger
+>>> <borntraeger@de.ibm.com> wrote:
+>>>>
+>>>> Also happened with 5.4:
+>>>> Seems that I just happen to have an interesting test workload/system size interaction
+>>>> on a newly installed system that triggers this.
+>>>
+>>> you will probably go back to 5.1 which is the version where we put
+>>> back the deletion of unused cfs_rq from the list which can trigger the
+>>> warning:
+>>> commit 039ae8bcf7a5 : (Fix O(nr_cgroups) in the load balancing path)
+>>>
+>>> AFAICT, we haven't changed this since
+>>
+>> So you do know what is the problem? If not is there any debug option or
+>> patch that I could apply to give you more information?
+> 
+> No I don't know what is happening. Your test probably goes through an unexpected path
+> 
+> Would it be difficult for me to reproduce your test env ?
+
+Not sure. Its a 32CPU (SMT2 -> 64) host. I have about 10 KVM guests running doing different
+things.
+
+> 
+> There is an optimization in the code which could generate problem if assumption is not
+> true. Could you try the patch below ?
+> 
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 3c8a379c357e..beb773c23e7d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4035,8 +4035,8 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  		__enqueue_entity(cfs_rq, se);
+>  	se->on_rq = 1;
+>  
+> +	list_add_leaf_cfs_rq(cfs_rq);
+>  	if (cfs_rq->nr_running == 1) {
+> -		list_add_leaf_cfs_rq(cfs_rq);
+>  		check_enqueue_throttle(cfs_rq);
+>  	}
+>  }
+
+Now running for 3 hours. I have not seen the issue yet. I can tell tomorrow if this fixes 
+the issue.
 
