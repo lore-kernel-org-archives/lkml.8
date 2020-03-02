@@ -2,125 +2,125 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA8EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9377BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BD32086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695A02086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Awop9XOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCBT5v (ORCPT
+        id S1727185AbgCBT6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:57:51 -0500
-Received: from mga05.intel.com ([192.55.52.43]:30422 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgCBT5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:57:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:57:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="438404992"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 11:57:40 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 6/6] KVM: x86: Add requested index to the CPUID tracepoint
-Date:   Mon,  2 Mar 2020 11:57:36 -0800
-Message-Id: <20200302195736.24777-7-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200302195736.24777-1-sean.j.christopherson@intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+        Mon, 2 Mar 2020 14:58:04 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:35134 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBT5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:57:38 -0500
+Received: by mail-yw1-f65.google.com with SMTP id a132so1051007ywb.2;
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GKP1xnf+jUUC+vOfFhdMTbNrJBQ854KSrSLYHrZ06Bk=;
+        b=Awop9XOq1i7oNr44YoGmA/aw95RSF8KIPQDXWo+1HSAkfVPLyZ/RyncObWJcPd4laq
+         NzxXrvF8SPPpMcfZV8Luei62eAqaZpvxHJQk18hal4Omfa3ZTpgPybX2vqKC7X5hsQV/
+         sL71FkPxxFdS1utqODguNaCYJjniAdx39fLE73d0ZVIHjqbXQ96iIO+whXm/XoWqoHOC
+         wkX09IwZ7qhUr0xP4hdn/Oxz87kY9U45HEcdRQCutvEzzdnPeiVieD1uaMiCwXSkRBPh
+         6aWgVRynhzIfrnW6fjyB+eHMv8yyCQ/wniKw7sNUSMagdPkHHZXnTkAs/rUavxHIt9VF
+         layQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GKP1xnf+jUUC+vOfFhdMTbNrJBQ854KSrSLYHrZ06Bk=;
+        b=MoR9ZDhWQVolFXAU9UNvzVF/E8XLDUvffN79Uk7twDwhYGPFMFxU5t1S4FK73WCQQJ
+         tPEM3Q897cWR1SKSUNvXiRIGzBE4dNRpSrGF6VUI9nwVXwfGt+GoQKh5/X6WsX0jbdBn
+         GTSxqmz0qx5ysa05UxTUxJQ7OKXxnaU8N0wUpyokVgz8ur73IJ36KGh6a/pkkOwG+raP
+         bq6Vn5h6P4Jw59Joxx4Zb7ToUde1WUrarldX+37BL3S0eXPr/HWi3cZ5UgO1Aac0VAO5
+         8gu2N4a1/dz8re/WFB0SPKMhOPMAt6HZcPBeemKyhV29lVhhYC8zDUWckEAARr+dohEj
+         mYeg==
+X-Gm-Message-State: ANhLgQ16xMz92iT4pc6OANiqFwCfmeIYSDFmvx3W5+ZCC5LpvGDAIkH5
+        psvsZaNjCP9JySTCFN9vor0=
+X-Google-Smtp-Source: ADFU+vvSk0t778qUzgJHbIXKFXgek6hyiUQEZELhI0jIaTTa8lYIW9yq45tXspn4bqz2gB7DHU9ozg==
+X-Received: by 2002:a0d:fc82:: with SMTP id m124mr1013400ywf.174.1583179055311;
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id h203sm8224852ywb.98.2020.03.02.11.57.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Mar 2020 11:57:35 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be>
+ <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+ <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+ <CACRpkdZwaKA-Gq4wjkPZ_VFiOgNgvLPnYmx4A3AFE-0eNNjQpQ@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ecde265b-f451-7514-2265-cf4d3024690b@gmail.com>
+Date:   Mon, 2 Mar 2020 13:57:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZwaKA-Gq4wjkPZ_VFiOgNgvLPnYmx4A3AFE-0eNNjQpQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Output the requested index when tracing CPUID emulation; it's basically
-mandatory for leafs where the index is meaningful, and is helpful for
-verifying KVM correctness even when the index isn't meaningful, e.g. the
-trace for a Linux guest's hypervisor_cpuid_base() probing appears to
-be broken (returns all zeroes) at first glance, but is correct because
-the index is non-zero, i.e. the output values correspond to random index
-in the maximum basic leaf.
+On 2/28/20 4:43 PM, Linus Walleij wrote:
+> On Fri, Feb 21, 2020 at 6:18 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 2/21/20 10:08 AM, Linus Walleij wrote:
+> 
+>>> Patch applied with Frank's Review tag.
+>>
+>> I created a devicetree unittest to show the problem that Geert's patches
+>> fix.
+>>
+>> I would prefer to have my unittest patch series applied somewhere,
+>> immediately followed by Geert's patch series.  This way, after
+>> applying my series, a test fail is reported, then after Geert's
+>> series is applied, the test fail becomes a test pass.
+>>
+>> Can you coordinate with Rob to accept both series either via
+>> your tree or Rob's tree?
+> 
+> I see Rob already applied the test.
+> 
+> I do not personally bother much about which order problems
+> get solved but I guess if Rob can back out the patch I can apply
+> it to my tree instead, before these patches. for some time,
+> before I start pulling stuff on top.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/cpuid.c |  3 ++-
- arch/x86/kvm/trace.h | 13 ++++++++-----
- 2 files changed, 10 insertions(+), 6 deletions(-)
+At this point, if it is a lot of trouble or confusion, I would not
+bother undoing the commits that have been done.  I'll leave it up
+to you and Rob to coordinate if you do decide to undo.
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index b0a4f3c17932..a3c9f6bf43f3 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -1047,7 +1047,8 @@ void kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 			}
- 		}
- 	}
--	trace_kvm_cpuid(function, *eax, *ebx, *ecx, *edx, exact_entry_exists);
-+	trace_kvm_cpuid(function, index, *eax, *ebx, *ecx, *edx,
-+			exact_entry_exists);
- }
- EXPORT_SYMBOL_GPL(kvm_cpuid);
- 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index f194dd058470..aa372d0119f0 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -151,12 +151,14 @@ TRACE_EVENT(kvm_fast_mmio,
-  * Tracepoint for cpuid.
-  */
- TRACE_EVENT(kvm_cpuid,
--	TP_PROTO(unsigned int function, unsigned long rax, unsigned long rbx,
--		 unsigned long rcx, unsigned long rdx, bool found),
--	TP_ARGS(function, rax, rbx, rcx, rdx, found),
-+	TP_PROTO(unsigned int function, unsigned int index, unsigned long rax,
-+		 unsigned long rbx, unsigned long rcx, unsigned long rdx,
-+		 bool found),
-+	TP_ARGS(function, index, rax, rbx, rcx, rdx, found),
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned int,	function	)
-+		__field(	unsigned int,	index		)
- 		__field(	unsigned long,	rax		)
- 		__field(	unsigned long,	rbx		)
- 		__field(	unsigned long,	rcx		)
-@@ -166,6 +168,7 @@ TRACE_EVENT(kvm_cpuid,
- 
- 	TP_fast_assign(
- 		__entry->function	= function;
-+		__entry->index		= index;
- 		__entry->rax		= rax;
- 		__entry->rbx		= rbx;
- 		__entry->rcx		= rcx;
-@@ -173,8 +176,8 @@ TRACE_EVENT(kvm_cpuid,
- 		__entry->found		= found;
- 	),
- 
--	TP_printk("func %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
--		  __entry->function, __entry->rax,
-+	TP_printk("func %x idx %x rax %lx rbx %lx rcx %lx rdx %lx, cpuid entry %s",
-+		  __entry->function, __entry->index, __entry->rax,
- 		  __entry->rbx, __entry->rcx, __entry->rdx,
- 		  __entry->found ? "found" : "not found")
- );
--- 
-2.24.1
-
+-Frank
