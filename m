@@ -7,70 +7,66 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B10EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3607AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545DD217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01316217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IP8CqWll"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E3EW7bKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCBPzm (ORCPT
+        id S1727322AbgCBPzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:55:42 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54967 "EHLO
+        Mon, 2 Mar 2020 10:55:53 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54999 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCBPzl (ORCPT
+        with ESMTP id S1727000AbgCBPzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:55:41 -0500
-Received: by mail-wm1-f68.google.com with SMTP id z12so11785967wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:55:39 -0800 (PST)
+        Mon, 2 Mar 2020 10:55:53 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z12so11786819wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:55:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=oJNCFnFx75P4PmGSwBJn8FFP/mBUf8whYY9xEyY9kl4=;
-        b=IP8CqWll/Znb5Z4OyMw1XQLoWy9UTYCxFID1QGp417UWkkYSjz8F0WB409mkwq7XH9
-         PkQ6l2vDZMHOkjGyoMdy+LAVp+dZyXYSu5eq+0nlAxiqWXl/geWsVB+O+7xzhv88n74M
-         jE2jExW548WZ1fMRJfWwVBBY0OooEvuAixNGLv2ALvid2XxiuSJ4idZw5GRXqy1vsnUQ
-         cscvJyzse8PMRTJoCklIFD4pAOrxF2Etq5k+wZfDBimEfO3hdeysDIDnoiMXKscXqiNp
-         Z3VGWg0luw5/Fd+mNnGjhXXdv4des+Simsby4oPcnzQp3aa/3f2PAghfnd2TKtXBKjuI
-         U1gQ==
+        bh=BjYlKL9o7TZbQsWc9K6QzEeYeYL9pKOO2B0dVZhGMgI=;
+        b=E3EW7bKsyRG3EAHqjwmwW9yEzLFHZ1Zm9ZA/LseFov8UVcQejVpj55bEMr/2EM/2ZO
+         YG32xnXA4AY9KhV5CkmUgqTQ1tOWULDOiiaJo1kVmuMGHqIQkyCBiGQBwR4j0jetKvGq
+         cntxwjyDo7avX0Np692/7MQfD5vH3JJax4mq5Z63KCD7u0eLQjNTpckWa/Nb9A+grmxZ
+         knnLm8dSDK1ZHsindY6ZoNfah7wDLVU2WeS0znidHeu/9uUwBoPrDoTXAuaFxYfLHLkk
+         vJEleCU4p8kjDrjgg93nVcHO+oVf3ZElg0XNcETlsZ8ssTlrCW3AC/Y2r+YJz5DNFrc+
+         hmOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=oJNCFnFx75P4PmGSwBJn8FFP/mBUf8whYY9xEyY9kl4=;
-        b=LqHSLq+SyXgk09ZB05ClAtMmByfat9g7PDsKKZ4uICccsxlxZpRaRosFtOGVJtUo6o
-         fmN5VtI1H0Zl3jp2TQVClM1bDRSPci+F4kSt3NHS+GnKnhl4uLL8ScrRnU19rxlKcO1I
-         b4AGH0DceQ54DSdPCQpRdxmt7t9LeZi8V+8Z9zmxzRJPxXtiL/aFOLgKumRxUKDQuBP6
-         n1U1dP/XPcckgIWXWQ14loBVhjmLJIrWsaVppFLXJYTniyKnj2L/9w0BoVO7wubYKjmo
-         pATLA9NYbK5JFRaPJ7HqmxSnf0ngamEB+sYyDxomvRPn1sOgPDcSSrf+Fy8edrFKrmdZ
-         XUKg==
-X-Gm-Message-State: ANhLgQ1TPjdUwq09QBsMsOXqxyDWSrk5iT4Qp08qrzQRljeSg50DSmS9
-        fO11HruKWY8TuK/zNTZqGxDh9w==
-X-Google-Smtp-Source: ADFU+vtfL1A+tLoqufxEudSmCG7N8M+9lw4QmtwvS2TSlV0UP83Rz3UrCVjL2ufzUIU5hEpeAJkSWA==
-X-Received: by 2002:a7b:ca58:: with SMTP id m24mr86848wml.129.1583164538850;
-        Mon, 02 Mar 2020 07:55:38 -0800 (PST)
+        bh=BjYlKL9o7TZbQsWc9K6QzEeYeYL9pKOO2B0dVZhGMgI=;
+        b=gXrnh2I0n8esbjuoA2yPhSr5ODclJpeWu/E2XFHxV/CTNh7NoenITNdoethNuXW8g2
+         N9tEhpgQl4/rC3FYRGO62dqLOySSxP6+HBr7FmXJeTzBUHhi87ojKBA1VEmNqbxnfVNQ
+         j2jiEERvYo8E+aTWV1g7SWaGcymMZWTEZI5bNGwzdXC1eOSuES3hQk/4D/KlXxYoceAT
+         ovLVmrtep7TaukrBxrff8hTAGinBmIW2UDtbOzeVSqYvIkLMH7iO6X61YIcbjqBNYeoT
+         2RTB6DfunJ9fILEqcYECCUarGADggxndhmzJyeUqSDTceL/fVj6MhaZph33XJ2W8jZQ1
+         Yl6Q==
+X-Gm-Message-State: ANhLgQ14FBeDj5S0De4mnxtzm7uKv25y6oLgYLCLnfeQy4ZimjV57I6Q
+        qJXnd6q/ZAB7FbMUvFIH+W6iymlDId/xZA==
+X-Google-Smtp-Source: ADFU+vutkqJro4J9wP34hv34vDjOhrgg/OZVjaaFWfss+KCr9LUev0wqJ6uKuztVCwzyYydvMm6yOA==
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr97464wmi.166.1583164550931;
+        Mon, 02 Mar 2020 07:55:50 -0800 (PST)
 Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id n3sm1106457wrv.91.2020.03.02.07.55.38
+        by smtp.gmail.com with ESMTPSA id l17sm28503407wro.77.2020.03.02.07.55.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:55:38 -0800 (PST)
-Subject: Re: [PATCH v4 02/11] drm/bridge: dw-hdmi: add max bpc connector
- property
+        Mon, 02 Mar 2020 07:55:50 -0800 (PST)
+Subject: Re: [PATCH v4 03/11] drm/bridge: dw-hdmi: Plug atomic state hooks to
+ the default implementation
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
-        a.hajda@samsung.com, jonas@kwiboo.se,
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
         boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 References: <20200206191834.6125-1-narmstrong@baylibre.com>
- <20200206191834.6125-3-narmstrong@baylibre.com>
- <11463907.O9o76ZdvQC@jernej-laptop>
- <09d315b8-22f3-a25a-1aea-9c5d50c634d6@baylibre.com>
- <20200302091818.GC11960@pendragon.ideasonboard.com>
+ <20200206191834.6125-4-narmstrong@baylibre.com>
+ <20200302095608.GH11960@pendragon.ideasonboard.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -122,100 +118,52 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <6eede520-cbd8-51e5-6b56-afd727d50ab0@baylibre.com>
-Date:   Mon, 2 Mar 2020 16:55:37 +0100
+Message-ID: <a11dd614-7a20-a711-7b18-09ae4b9fde49@baylibre.com>
+Date:   Mon, 2 Mar 2020 16:55:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200302091818.GC11960@pendragon.ideasonboard.com>
+In-Reply-To: <20200302095608.GH11960@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 10:18, Laurent Pinchart wrote:
-> Hi Neil and Jonas,
-> 
-> (CC'ing Daniel for a framework question)
+On 02/03/2020 10:56, Laurent Pinchart wrote:
+> Hi Neil,
 > 
 > Thank you for the patch.
 > 
-> On Fri, Feb 21, 2020 at 09:50:18AM +0100, Neil Armstrong wrote:
->> On 17/02/2020 07:38, Jernej Škrabec wrote:
->>> Dne četrtek, 06. februar 2020 ob 20:18:25 CET je Neil Armstrong napisal(a):
->>>> From: Jonas Karlman <jonas@kwiboo.se>
->>>>
->>>> Add the max_bpc property to the dw-hdmi connector to prepare support
->>>> for 10, 12 & 16bit output support.
->>>>
->>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>> ---
->>>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->>>> b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
->>>> 9e0927d22db6..051001f77dd4 100644
->>>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->>>> @@ -2406,6 +2406,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge
->>>> *bridge) DRM_MODE_CONNECTOR_HDMIA,
->>>>  				    hdmi->ddc);
->>>>
->>>> +	drm_atomic_helper_connector_reset(connector);
->>>
->>> Why is this reset needed?
->>
->> I assume it's to allocate a new connector state to attach a the bpc propery.
->>
->> But indeed, this helper is never used here, but only as callback to the drm_connector_funcs->reset.
->>
->> But, amdgpu calls :
->> 	/*
->> 	 * Some of the properties below require access to state, like bpc.
->> 	 * Allocate some default initial connector state with our reset helper.
->> 	 */
->> 	if (aconnector->base.funcs->reset)
->> 		aconnector->base.funcs->reset(&aconnector->base);
->>
->> which is the same.
+> On Thu, Feb 06, 2020 at 08:18:26PM +0100, Neil Armstrong wrote:
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > 
-> A comment would be useful:
-> 
-> 	/*
-> 	 * drm_connector_attach_max_bpc_property() requires the
-> 	 * connector to have a state.
-> 	 */
-> 	drm_atomic_helper_connector_reset(connector);
-> 
-> 	drm_connector_attach_max_bpc_property(connector, 8, 16);
-> 
+> How about adding a commit message ?
 
-Done
-
-> I don't like this much though, it feels like the initial reset performed
-> by drm_mode_config_reset() should set default values for all state
-> members that are related to properties. Daniel, what's the rationale
-> behind the current implementation ?
-> 
-> This is a DRM core issue that shouldn't block this patch though, so
-
-I'll investigate why, but I haven't found out how the intel driver got the
-connector state initialized since they don't use the atomic helpers....
+Done, thanks
 
 > 
 > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > 
->>>> +
->>>> +	drm_connector_attach_max_bpc_property(connector, 8, 16);
->>>> +
->>>>  	if (hdmi->version >= 0x200a && hdmi->plat_data->use_drm_infoframe)
->>>>  		drm_object_attach_property(&connector->base,
->>>>  			connector->dev-
->>>> mode_config.hdr_output_metadata_property, 0);
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> index 051001f77dd4..fec4a4bcd1fe 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -2494,6 +2494,9 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
+>>  }
+>>  
+>>  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+>> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+>> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+>> +	.atomic_reset = drm_atomic_helper_bridge_reset,
+>>  	.attach = dw_hdmi_bridge_attach,
+>>  	.detach = dw_hdmi_bridge_detach,
+>>  	.enable = dw_hdmi_bridge_enable,
 > 
 
