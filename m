@@ -4,166 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAFCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE95C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA37217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99295217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583160801;
-	bh=1w9gTDD0mrerWDAhBZGXC4+5deyJLyj8xbrGt2brb1M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Xdg1MZ3F03waa0ONd5UFAPfGTrk8l2KHU8f2k7i33lUy7CxhjWutzRfHbH7g3o6p6
-	 SJtt4LUpC6UPoxWdNmQSoBMR8gZ6OWlClaDdQ3pCakx4l1OlB6rarRMily4A1coa3D
-	 bSJp8fDP4wma3HT9B3DO7u3z42vpJ0SxOBs2R7gI=
+	s=default; t=1583160804;
+	bh=/ujiqn0F0eKhpDPmiPeKaMj+WcKEVZBmjG4Jyn1nIVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FnxeBSWcNCE3C2c5MLz91WhIcuUAYoPycKOvpEvfzAEDSEI+mDFHzj7/q9aofgdzP
+	 5fwKxpqlnv8DVuj8ojLfe7WKtxuqb5U+7Q7ZSjZsj8jQsZajCnsa1McfbdZ48wjG9C
+	 sBAj0d/inum83h+XNL2JQCMo/5pT884bnuhPJR/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgCBOxU (ORCPT
+        id S1727363AbgCBOxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:53:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 09:53:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgCBOxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:53:20 -0500
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        id S1727121AbgCBOxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:53:21 -0500
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B702080C;
-        Mon,  2 Mar 2020 14:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72A2121775;
+        Mon,  2 Mar 2020 14:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583160798;
-        bh=1w9gTDD0mrerWDAhBZGXC4+5deyJLyj8xbrGt2brb1M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vbwhZe/bLsp7NOTdfaVhIg+efxFdCJXjCBx2bckpQ3qaVSuNgaPyuipY86T6XKLqX
-         DOW1RIhCiMORXa1+yh/1bhqlm3O6V8hFAnkYx0EswUdqMs97/5Y36Y2eWBV0tHP8WC
-         KxF/fGryhEoQqyJOI147qTKoyO0TkR3UmSczIyxQ=
-Date:   Mon, 2 Mar 2020 15:53:12 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
-Message-ID: <20200302155312.62185b98@coco.lan>
-In-Reply-To: <20200302153039.0c4ff54f@collabora.com>
-References: <20200220163016.21708-1-ezequiel@collabora.com>
-        <20200220163016.21708-6-ezequiel@collabora.com>
-        <20200302145746.3e94c1d1@coco.lan>
-        <20200302153039.0c4ff54f@collabora.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1583160801;
+        bh=/ujiqn0F0eKhpDPmiPeKaMj+WcKEVZBmjG4Jyn1nIVw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eWCPKmEpAbTbc0FD61hW+TSlsCou0lKiFUWG7L+waQ0j4qgJTBCsZRYL0Ch+MM4m8
+         fap+mhyu7CPFkUF5zvXRXwucz1Hg46kWfCTuQeO1LIHOdsQAW0mqIUu0i2CyZb5U61
+         zwfxVeEjgoDyS+9b5RuC8zgKauyn8rYnLfHUGEGI=
+Date:   Mon, 2 Mar 2020 23:53:13 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: Check for readiness more quickly, to speed up boot
+ time
+Message-ID: <20200302145313.GA6773@redsun51.ssa.fujisawa.hgst.com>
+References: <20200229025228.GA203607@localhost>
+ <20200301183231.GA544682@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200301191501.GA235404@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200301191501.GA235404@localhost>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 2 Mar 2020 15:30:39 +0100
-Boris Brezillon <boris.brezillon@collabora.com> escreveu:
+On Sun, Mar 01, 2020 at 11:15:01AM -0800, Josh Triplett wrote:
+> On Sun, Mar 01, 2020 at 10:32:31AM -0800, Keith Busch wrote:
+> > I doubt there's really an issue there, but thought it's worth considering
+> > what happens at the other end of the specturm.
+> > 
+> > Anyway, the patch looks fine to me.
+> > 
+> > Reviewed-by: Keith Busch <kbusch@kernel.org>
+> 
+> Thank you!
+> 
+> Does this seem reasonable to enqueue for 5.7?
 
-> On Mon, 2 Mar 2020 14:57:46 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
->=20
-> > > +#define M_N(ctxidx, idc0_m, idc0_n, idc1_m, idc1_n,		\
-> > > +	    idc2_m, idc2_n, intra_m, intra_n)			\
-> > > +	[0][(ctxidx)] =3D {idc0_m, idc0_n},			\
-> > > +	[1][(ctxidx)] =3D {idc1_m, idc1_n},			\
-> > > +	[2][(ctxidx)] =3D {idc2_m, idc2_n},			\
-> > > +	[3][(ctxidx)] =3D {intra_m, intra_n}   =20
-> >=20
-> > Hmm... I can't even imagine what a macro named "M_N" would do.
-> > Please use a better name for it. =20
->=20
-> Well, the meaning of those fields is explained in the spec, and the
-> name itself has been chosen so it's short enough to not have lines
-> exceeding 80 chars while still keeping the number of lines used for the
-> cabac_table[] definition acceptable. But, I'm open to any other
-> suggestion.
-
-Well, code reviewers may not have the specs on their hands when
-reviewing patches :-)
-
-Keep 80 columns is something we desire, but not at the expense of
-making the code harder to maintain or understand. Yet, I suspect
-that increasing the name by a few extra bytes will still allow it to
-sit at the 80 columns space[1].
-
-[1] This macro passes 9 parameters. If each parameter consumes 4 chars,
-    and they're preceded by a tab, that would mean 44 columns.
-
-Perhaps something like CABAC_ENTRY or even MN_VALUES would be better.
-
->=20
-> >=20
-> > -
-> >=20
-> > With regards to the macro itself, at least for my eyes, it looked bad,
-> > from long-term maintenance PoV, to have a first argument (ctxidx) whose
-> > value is just a monotonic linearly-incremented counter. =20
->=20
-> It's not, we have holes in the middle, hence the explicit indexing. I
-> also tried to have something as close as possible to the spec, so
-> people can easily see where it comes from.
->=20
-> >=20
-> > I mean, the way it is, it sounds risky, as one might miss a number
-> > and one entire line of the array would be filled with zeros. =20
->=20
-> That's exactly why I used explicit indexing: I want specific portions
-> of the table to be 0-filled :-).
-
-Ah, OK! Implementation makes sense then.
->=20
-> >  =20
-> > > +
-> > > +/*
-> > > + * Constant CABAC table.
-> > > + * Built from the tables described in section '9.3.1.1 Initialisatio=
-n process
-> > > + * for context variables' of the H264 spec.
-> > > + */
-> > > +static const s8 rkvdec_h264_cabac_table[4][464][2] =3D {
-> > > +	/* Table 9-12 =E2=80=93 Values of variables m and n for ctxIdx from=
- 0 to 10 */
-> > > +	M_N(0, 20, -15, 20, -15, 20, -15, 20, -15),   =20
-> >=20
-> > So, (maybe except if the ctxidx value has some real meaning),
-> > perhaps you could, instead, switch the array order at the tables,
-> > and get rid of ctxidx parameter for good, so the above code would
-> > be like: =20
->=20
-> I can't switch the array order since the HW expects things to be
-> organized this way (that table is directly copied to a memory region
-> that's passed to the HW).
->=20
-> >=20
-> > #define INIT_MN_PAIRS(idc0_m, idc0_n, idc1_m, idc1_n,	\
-> > 	       idc2_m, idc2_n, intra_m, intra_n)	\
-> > 	{						\
-> > 		[0] =3D {idc0_m, idc0_n},			\
-> > 		[1] =3D {idc1_m, idc1_n},			\
-> > 		[2] =3D {idc2_m, idc2_n},			\
-> > 		[3] =3D {intra_m, intra_n}		\
-> > 	},
-> >=20
-> > static const s8 rkvdec_h264_cabac_table[464][4][2] =3D {
-> > 	/* Table 9-12 =E2=80=93 Values of variables m and n for ctxIdx from 0 =
-to 10 */
-> > 	INIT_MN_PAIRS(20, -15, 20, -15, 20, -15, 20, -15),
-> > 	... =20
->=20
-
-
-Thanks,
-Mauro
+Yes, early enough for 5.7. Let's just give this a few more days to see if
+nvme fabrics developers have any comments. Reading controller status for
+those transports is more complicated than PCI. I don't see an issue
+there either, but since this is common code, we should see if anyone
+else want to weigh in.
