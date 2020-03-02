@@ -2,131 +2,209 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80984C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89DFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B45521D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F8221775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCqdoYQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCBQcD (ORCPT
+        id S1727393AbgCBQcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:32:03 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37384 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgCBQcC (ORCPT
+        Mon, 2 Mar 2020 11:32:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21254 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727142AbgCBQcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:32:02 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j8nz1-00070K-Mf; Mon, 02 Mar 2020 16:31:55 +0000
+        Mon, 2 Mar 2020 11:32:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583166721;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SV2DzgE7/GVCHxe1MyF7cvm3oaLFW5XDl1ckEgBzooo=;
+        b=NCqdoYQZL20c7X1lccXyd9rFhgGzAs0YLSxhxoignPEdj8FVhm664oE5fcx8rCezfjvz2N
+        QphHI+1iNCc5Hb3aaRQSb6IwPlw+40W0VSWAgfavI9wGC4/aqrkNcuLKrXTpK8qVo9u9NZ
+        VgLmwmq235BoXIA9hGTjjbsfAe+ZP+w=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-S5q1sz_lN5Or8acYYFbJag-1; Mon, 02 Mar 2020 11:31:58 -0500
+X-MC-Unique: S5q1sz_lN5Or8acYYFbJag-1
+Received: by mail-wr1-f70.google.com with SMTP id d9so6017222wrv.21
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:31:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SV2DzgE7/GVCHxe1MyF7cvm3oaLFW5XDl1ckEgBzooo=;
+        b=jZ7bCxMVeIUue5XKXdCeIN0jsorBDxjn6lfMFtBBZAywJpTc2GKthCTZ4X9/7Z/gRZ
+         MpW4tSEQol2Jb+2PHXAH8ozEV/wdMdOW5FuTZEX+6amJwITcCBHKOniriD7vy27/2Ffm
+         GxITL+DsjUPJTj4tW+fEHtf48Cdwfn8pqfzm+Qy8ohf8WIF0gwaL0z6txI/J4oIrgP92
+         Jaoo1b42xOFYojBbOYykwB348StkRfu5k5q9+NwUNQRu8NgOg2Q/pCEdMF/jmzqOSY1n
+         TzDfQO6mxdYUvNUlR4g8fvxH5lntSvIBGGGzM0i7YESQ3xgInYwYXUSP1lGYRZbpPEYc
+         HzoQ==
+X-Gm-Message-State: ANhLgQ1mScQvd/3qK/xMPXIl6McJqgXP29fhh1imkQ70dsZAA/a7THEM
+        hlBIdgnefNfQX7wWOmo1c5GKbUe3wflfKKEqvDea7WxiT9nrh9q3Qv91FiHGndgSEfDNcxRqqxw
+        ysdC3/YYe3mVuGDQjssuj/wY0
+X-Received: by 2002:a1c:ba87:: with SMTP id k129mr244106wmf.102.1583166716825;
+        Mon, 02 Mar 2020 08:31:56 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuwUWhJ3l7EnEnCkmDlth1oK52o+owEznQwr9Yr2mH+gmpSnrmjs+4wXh/972NER3NftmL04w==
+X-Received: by 2002:a1c:ba87:: with SMTP id k129mr244074wmf.102.1583166716453;
+        Mon, 02 Mar 2020 08:31:56 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.85.6])
+        by smtp.gmail.com with ESMTPSA id i4sm16121618wmd.23.2020.03.02.08.31.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 08:31:55 -0800 (PST)
+Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
+To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d94a44f0-7fed-b5e4-49e8-6dd1b89185db@redhat.com>
 Date:   Mon, 2 Mar 2020 17:31:54 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-Message-ID: <20200302163154.mpdf5oex3hxnrmvc@wittgenstein>
-References: <96563.1582901612@warthog.procyon.org.uk>
- <20200228152427.rv3crd7akwdhta2r@wittgenstein>
- <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
- <20200302115239.pcxvej3szmricxzu@wittgenstein>
- <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
- <20200302151046.447zgo36dmfdr2ik@wittgenstein>
- <20200302153657.7k7qo4k5he2acxct@yavin>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200302153657.7k7qo4k5he2acxct@yavin>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:36:57AM +1100, Aleksa Sarai wrote:
-> On 2020-03-02, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > On Mon, Mar 02, 2020 at 01:05:04PM +0100, Christian Brauner wrote:
-> > > On Mon, Mar 02, 2020 at 12:52:39PM +0100, Christian Brauner wrote:
-> > > > On Mon, Mar 02, 2020 at 12:30:47PM +0100, Florian Weimer wrote:
-> > > > > * Christian Brauner:
-> > > > > 
-> > > > > > [Cc Florian since that ends up on libc's table sooner or later...]
-> > > > > 
-> > > > > I'm not sure what you are after here …
-> > > > 
-> > > > Exactly what you've commented below. Input on whether any of these
-> > > > changes would be either problematic if you e.g. were to implement
-> > > > openat() on top of openat2() in the future or if it would be problematic
-> > > > if we e.g. were to really deprecate AT_* flags for new syscalls.
-> > > > 
-> > > > > 
-> > > > > > On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
-> > > > > >> 	
-> > > > > >> I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
-> > > > > >> should be used instead of the equivalent AT_* flags for new system calls.  Is
-> > > > > >> this the case?
-> > > > > >
-> > > > > > Imho, it would make sense to use RESOLVE_* flags for new system calls
-> > > > > > and afair this was the original intention.
-> > > > > > The alternative is that RESOLVE_* flags are special to openat2(). But
-> > > > > > that seems strange, imho. The semantics openat2() has might be very
-> > > > > > useful for new system calls as well which might also want to support
-> > > > > > parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
-> > > > > > flags mirroring the new RESOLVE_* flags or we end up adding new
-> > > > > > RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
-> > > > > > possibility I vote for RESOLVE_* flags going forward. The have better
-> > > > > > naming too imho.
-> > > > > >
-> > > > > > An argument against this could be that we might end up causing more
-> > > > > > confusion for userspace due to yet another set of flags. But maybe this
-> > > > > > isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
-> > > > > > When we introduce a new syscall userspace will have to add support for
-> > > > > > it anyway.
-> > > > > 
-> > > > > I missed the start of the dicussion and what this is about, sorry.
-> > > > > 
-> > > > > Regarding open flags, I think the key point for future APIs is to avoid
-> > > > > using the set of flags for both control of the operation itself
-> > > > > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
-> > > > > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
-> > > 
-> > > Yeah, we have touched on that already and we have other APIs having
-> > > related problems. A clean way to avoid this problem is to require new
-> > > syscalls to either have two flag arguments, or - if appropriate -
-> > > suggest they make use of struct open_how that was implemented for
-> > > openat2().
-> > 
-> > By the way, if we really means business wrt to: separate resolution from
-> > fd-property falgs then shouldn't we either require O_NOFOLLOW for
-> > openat2() be specified in open_how->resolve or disallow O_NOFOLLOW for
-> > openat2() and introduce a new RESOLVE_* variant?
+On 27/02/20 04:21, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> I think we agreed a while ago we aren't touching O_ flags for openat2()
-> because it would hamper adoption (this is the same reason we aren't
-> fixing the whole O_ACCMODE mess, and O_LARGEFILE, and the arch-specific
-> O_ flags, and O_TMPFILE, and __O_SYNC, and FASYNC/O_ASYNC, and
-> __FMODE_EXEC and __FMODE_NONOTIFY, and ...).
+> When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the value of
+> vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not copied to
+> userspace by copy_to_user() from call site. Also cpuid->nent is not updated
+> to indicate how many entries were retrieved on success case. So this ioctl
+> is straight up broken. And in fact, it's not used anywhere. So it should be
+> deprecated.
 > 
-> To be fair, we did fix O_PATH|O_TMPFILE and invalid mode combinations
-> but that's only because those were fairly broken.
-
-Right, O_NOFOLLOW would've been kinda neat too because afaict it's the
-only flag left that is specifically related to path resolution in there
-that would fit nicely into open_how->resolve. :)
-
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/cpuid.c           | 20 --------------------
+>  arch/x86/kvm/cpuid.h           |  3 ---
+>  arch/x86/kvm/x86.c             | 16 ++--------------
+>  include/uapi/linux/kvm.h       |  1 +
+>  tools/include/uapi/linux/kvm.h |  1 +
+>  5 files changed, 4 insertions(+), 37 deletions(-)
 > 
-> But as I mentioned in a sister mail, I do agree that allowing O_NOFOLLOW
-> and RESOLVE_NO_TRAILING_SYMLINKS makes me feel a little uneasy. But
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..5e041a1282b8 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  	return r;
+>  }
+>  
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries)
+> -{
+> -	int r;
+> -
+> -	r = -E2BIG;
+> -	if (cpuid->nent < vcpu->arch.cpuid_nent)
+> -		goto out;
+> -	r = -EFAULT;
+> -	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
+> -			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
+> -		goto out;
+> -	return 0;
+> -
+> -out:
+> -	cpuid->nent = vcpu->arch.cpuid_nent;
+> -	return r;
+> -}
+> -
+>  static __always_inline void cpuid_mask(u32 *word, int wordnum)
+>  {
+>  	reverse_cpuid_check(wordnum);
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 7366c618aa04..76555de38e1b 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  			      struct kvm_cpuid2 *cpuid,
+>  			      struct kvm_cpuid_entry2 __user *entries);
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries);
+>  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>  	       u32 *ecx, u32 *edx, bool check_limit);
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index ddd1d296bd20..a6d99abedb2c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4295,21 +4295,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  					      cpuid_arg->entries);
+>  		break;
+>  	}
+> +	/* KVM_GET_CPUID2 is deprecated, should not be used. */
+>  	case KVM_GET_CPUID2: {
+> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
+> -		struct kvm_cpuid2 cpuid;
+> -
+> -		r = -EFAULT;
+> -		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
+> -			goto out;
+> -		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
+> -					      cpuid_arg->entries);
+> -		if (r)
+> -			goto out;
+> -		r = -EFAULT;
+> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
+> -			goto out;
+> -		r = 0;
+> +		r = -EINVAL;
+>  		break;
+>  	}
+>  	case KVM_GET_MSRS: {
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..61524780603d 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1380,6 +1380,7 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
+>  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+> index f0a16b4adbbd..2ef719af4c57 100644
+> --- a/tools/include/uapi/linux/kvm.h
+> +++ b/tools/include/uapi/linux/kvm.h
+> @@ -1379,6 +1379,7 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
+>  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+> 
 
-No version of this will be completey satisfying I fear.
+Queued, thanks.
 
-Christian
+Paolo
+
