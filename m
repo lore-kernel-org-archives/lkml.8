@@ -2,125 +2,144 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1D8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1A2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C764222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48E9222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UGPu8cMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgCBQ46 (ORCPT
+        id S1727433AbgCBQ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:56:58 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53437 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726775AbgCBQ46 (ORCPT
+        Mon, 2 Mar 2020 11:57:04 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:45765 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgCBQ5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:56:58 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-105.corp.google.com [104.133.0.105] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 022Gub0E024528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 2 Mar 2020 11:56:38 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 1BA5842045B; Mon,  2 Mar 2020 11:56:37 -0500 (EST)
-Date:   Mon, 2 Mar 2020 11:56:37 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
-        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
-        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
-        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
-        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
- fallocate(0): fallocate2(). TP defrag.
-Message-ID: <20200302165637.GA6826@mit.edu>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+        Mon, 2 Mar 2020 11:57:03 -0500
+Received: by mail-ua1-f68.google.com with SMTP id q17so599274uao.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Emi3zvh0GvAdchRt2bZiLjp8wJpgJ0s1FpAc2eNaRuE=;
+        b=UGPu8cMVzp70w7nVbEKjZtx9UFRGJyMmvWuiso/t2ciYBcXV4NidYkYwQAEfBh4QWG
+         aZpMq3EIRcnl8u2+zjl2+Jd5Vn/puw82z77b8eg+Ef8uol7aujjohP/vJUQqJTHtr8t8
+         J2Cqobj7UlwAIEEZ0i7+TZWAKL9aSaTZfnM2RqogQR6Kl3eC34GfLDXAEpNrwSyaDWoN
+         XhLfOL9n0HFgkugck2+qA6dntYdYc8tSvr4vw4jpypZ0iO7FTPHKDDrvJpKHCJlGidwX
+         exP6xZDfsfoWf5f3gQmolw9asucK2URju54NMvJssO8d95gZKWjAAVjgY4puF2stuAE3
+         CkYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Emi3zvh0GvAdchRt2bZiLjp8wJpgJ0s1FpAc2eNaRuE=;
+        b=ebH4yNuEl1FBZybe0KYAZUNkD+icOom/5Ze1yzZJ7p5rxs7HOpzNF4QcM9dyxSoF7x
+         +pxUrfOs2gChzqWJ934gi4CahKYLyMgwxyTmTuVQgMlAkC2Uxk0olGJP6+ZdMcxTSZMV
+         kf0g11woA7VV37+hUt/SLWHkewr46/s07cfRNS4GReeA4u/QTulfH/G6nHDQPxBzOPOY
+         sLI8/ijc0sX2bmxqD0Qb4ME1aYfXwOhgr9RynwjN1oSAMhKsKqpgdGGdnZibfZ87ym77
+         efGggBy3fTMAboGe/CMLyFNMThvZqrUSe/cXVgA34tPyQ5+nbMu1MKlTLGvbbnnQRF2z
+         Hztw==
+X-Gm-Message-State: ANhLgQ3SLjmL6l0dKrOj84tkXV67fMurVktY7OJaUsyZiGKTZ2aT8Smh
+        99Acp40LZ1oyeDHaUPhrzaSjZqzNO+nIFWJdcViV9g==
+X-Google-Smtp-Source: ADFU+vuWmdQz60uGm7dRu6x9AM6ilHJspWpQIG6duvbA7201l798XQKtBgH7CH8EdhToZchz7burnpQ0NzpfZLNjqow=
+X-Received: by 2002:ab0:1161:: with SMTP id g33mr392064uac.32.1583168221423;
+ Mon, 02 Mar 2020 08:57:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-3-glider@google.com>
+In-Reply-To: <20200302130430.201037-3-glider@google.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Mon, 2 Mar 2020 08:56:50 -0800
+Message-ID: <CAHRSSEwe=jZAEVhGw4ACBU0m-76TzZfJFv1Rzw=_UVm6HbTvAw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] sched/wait: avoid double initialization in ___wait_event()
+To:     Alexander Potapenko <glider@google.com>
+Cc:     keescook@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jann Horn <jannh@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kirill,
+On Mon, Mar 2, 2020 at 5:04 AM <glider@google.com> wrote:
+>
+> With CONFIG_INIT_STACK_ALL enabled, the local __wq_entry is initialized
+> twice. Because Clang is currently unable to optimize the automatic
+> initialization away (init_wait_entry() is defined in another translation
+> unit), remove it with the __no_initialize annotation.
+>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Alexander Potapenko <glider@google.com>
+>
+> ---
+>  v2:
+>   - changed __do_not_initialize to __no_initialize as requested by Kees
+>     Cook
+> ---
+>  drivers/android/binder.c | 4 ++--
+>  include/linux/wait.h     | 3 ++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index a59871532ff6b..66984e7c33094 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -4827,7 +4827,7 @@ static int binder_ioctl_write_read(struct file *filp,
+>         struct binder_proc *proc = filp->private_data;
+>         unsigned int size = _IOC_SIZE(cmd);
+>         void __user *ubuf = (void __user *)arg;
+> -       struct binder_write_read bwr __no_initialize;
+> +       struct binder_write_read bwr;
 
-In a couple of your comments on this patch series, you mentioned
-"defragmentation".  Is that because you're trying to use this as part
-of e4defrag, or at least, using EXT4_IOC_MOVE_EXT?
+How did __no_initialize get set so that it can be removed here? Should
+the addition of __no_initilize be removed earlier in the series (tip
+doesn't have the __no_initialize).
 
-If that's the case, you should note that input parameter for that
-ioctl is:
+>
+>         if (size != sizeof(struct binder_write_read)) {
+>                 ret = -EINVAL;
+> @@ -5026,7 +5026,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>                         goto err;
+>                 break;
+>         case BINDER_SET_MAX_THREADS: {
+> -               int max_threads;
+> +               int max_threads __no_initialize;
 
-struct move_extent {
-	__u32 reserved;		/* should be zero */
-	__u32 donor_fd;		/* donor file descriptor */
-	__u64 orig_start;	/* logical start offset in block for orig */
-	__u64 donor_start;	/* logical start offset in block for donor */
-	__u64 len;		/* block length to be moved */
-	__u64 moved_len;	/* moved block length */
-};
+Is this really needed? A single integer in a rarely called ioctl()
+being initialized twice doesn't warrant this optimization.
 
-Note that the donor_start is separate from the start of the file that
-is being defragged.  So you could have the userspace application
-fallocate a large chunk of space for that donor file, and then use
-that donor file to defrag multiple files if you want to close pack
-them.
-
-Many years ago, back when LSF/MM colocated with a larger
-storage-focused conference so we could manage to origanize an ext4
-developer's workshop, we had talked about ways we create kernel
-support for a more powerful userspace defragger, which could also
-defragment the free space, so that future block allocations were more
-likely to be successful.
-
-The discussions surrounded interfaces where userspace could block (or
-at least strongly dissuade unless the only other alternative was
-returning ENOSPC) the kernel from allocating out of a certain number
-of block groups.  And then also to have an interface where for a
-particular process (namely, the defragger), to make the kernel
-strongly prefer that allocations come out of an ordered list of block
-groups.
-
-(Of course these days, now that the cool kids are all embracing eBPF,
-one could imagine a privileged interface where the defragger could
-install some kind of eBPF program which provided enhanced policy to
-ext4's block allocator.)
-
-No one ever really followed through with this, in part because the
-details of allowing userspace (and it would have to be privileged
-userspace) to dictate policy to the block allocator has all sorts of
-potential pitfalls, and in part because no company was really
-interested in funding the engineering work.  In addition, I'll note
-that the windows world, the need and interest for defragging has gone
-done significantly with the advent more sophisticated file systems
-like NTFSv5, which doesn't need defragging nearly as often as say, the
-FAT file system.  And I think if anything, the interst in doing work
-with e4defrag has decreased even more over the years.
-
-That being said, there has been some interest in making changes to
-both the block allocator and some kind of on-line defrag which is
-optimized for low-end flash (such as the kind found in android
-handsets).  There, the need to be careful that we don't end up
-increasing the write wearout becomes even more critical, although the
-GC work which f2fs does involve extra moving around of data blocks,
-and phones have seemed to do fine.  Of course, the typical phone only
-has to last 2-3 years before the battery dies, the screen gets
-cracked, and/or the owner decides they want the latest cool toy from
-the phone manufacturers.  :-)
-
-In any case, if your goal is really some interface to support on-line
-defragmentation for ext4, you want to consider whether the
-EXT4_IOC_MOVE_EXTENT interface is sufficiently powerful such that you
-don't really need to mess around with new block allocation hints.
-
-Cheers,
-
-						- Ted
+>
+>                 if (copy_from_user(&max_threads, ubuf,
+>                                    sizeof(max_threads))) {
+> diff --git a/include/linux/wait.h b/include/linux/wait.h
+> index 3283c8d021377..b52a9bb2c7727 100644
+> --- a/include/linux/wait.h
+> +++ b/include/linux/wait.h
+> @@ -262,7 +262,8 @@ extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
+>  #define ___wait_event(wq_head, condition, state, exclusive, ret, cmd)          \
+>  ({                                                                             \
+>         __label__ __out;                                                        \
+> -       struct wait_queue_entry __wq_entry;                                     \
+> +       /* Unconditionally initialized by init_wait_entry(). */                 \
+> +       struct wait_queue_entry __wq_entry __no_initialize;                     \
+>         long __ret = ret;       /* explicit shadow */                           \
+>                                                                                 \
+>         init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);        \
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
