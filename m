@@ -2,83 +2,128 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF53BC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97078246B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C815C246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:47:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aEquvtIa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O24DpWH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbgCBIre (ORCPT
+        id S1727421AbgCBIre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 2 Mar 2020 03:47:34 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21353 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726887AbgCBIre (ORCPT
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:34467 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgCBIre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 03:47:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583138853; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wmVI700tbQq6+iaWrtHBd6KzHd/LvL94inrgBbMCajQ=; b=aEquvtIabK/tsD20675Xgj2Gqwqz/QgwbgZX7ak7FxeNNGjrF6GTI8Y8Ba2S9wyilwNrZ9fL
- eYrEFrZ33eqvhFoqgsOdwB863ud8HiVuw1aWjJ9BUJ6PYxcRD7UFT8tB8ueh1L8u/f1i1xUf
- YqDJbT7mqd16W//ARZ+s598ttK0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5cc824.7f6d358dbb20-smtp-out-n03;
- Mon, 02 Mar 2020 08:47:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CD535C433A2; Mon,  2 Mar 2020 08:47:31 +0000 (UTC)
-Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1A02C43383;
-        Mon,  2 Mar 2020 08:47:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1A02C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH] drm: msm: a6x: Disable interrupts before recovery
-Date:   Mon,  2 Mar 2020 14:17:16 +0530
-Message-Id: <1583138836-20807-1-git-send-email-smasetty@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+Received: by mail-qv1-f65.google.com with SMTP id o18so4492584qvf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:47:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BmwrfLdolJExYHdRRMhCPOOjmUkO4JEtLsceb4ov8ok=;
+        b=O24DpWH2UfeWkTRI08K50mJ4S30GRrYHgISHsOKT6vo1Cs8n4fFZEy84+LGKxJ4hFB
+         YmyzHDnmkXa1ZeyLdp9sYwRyd0OQyPzhzryH69yTcPD9M5Fs2r/mQCPbZNaGfTFw/tnw
+         hIyolisv6vXfElx23HnGllHqfOMoJlJ9bZHtaMFrQCw+C1+zQ/Ab8Wxxb/UzqYEvWU7f
+         iNtVRXobmDNJicpR3IS4cpSGHISIYm7KszMUIBT4vjuuhVKPLDKRnWJFwNfqlobMmp+o
+         j6JJlUEQ4ToJwB0PSrB1EZpQ8HU24fS0IsBlBKVPjrULFPLe/apgTVLfoeOMTp/44D0U
+         ZHxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BmwrfLdolJExYHdRRMhCPOOjmUkO4JEtLsceb4ov8ok=;
+        b=lmcnAdzHM0POmakJRY9FlJAYvxNR5Qvz8ULdYCKB9BXHb5L2Q1zF1HaB793rF9zD1h
+         dlXOjZoVoB0NEAIYAQhB4jKU9oRLZyTbaaeVG/RZ2cRa5ybPUzaOf6Kp3uipodxX+ya+
+         AWEVmtiGwiDVcFIfxbhK5k+Bv61SHFltVUkrHxoA9ApI92mlToKlXXgsC24EOOZByPwD
+         EKqfAuaTbT2y14MA44XvpNYqQEYB9nmdjDJ3PSQwsmNQewTI19R+lb3KZpR6VWWEbhaW
+         Oa+viV3XYaIxD5BGTYK9FbEvb0nYvnDyocyOgIRYmkFHMBcHJUlLbDCiCQtNXvVDXx1r
+         Eang==
+X-Gm-Message-State: ANhLgQ0hIEi+iJZxfBOYMlUQsPMBswXMd3bPvv/cQ3csBjMTjLXv2AqO
+        2sE2QEt1hQwIllJBICiRfRV4BVVa4RYoMelaLlYHZA==
+X-Google-Smtp-Source: ADFU+vszM+y1Vk/aAA616lesM2FSY4/wKuYINKtObJ+GgZyHEv0YYxcOJQvpk6/c+Ez7DdJ/T+qZR6objWCdlTj2AsU=
+X-Received: by 2002:ad4:4bc6:: with SMTP id l6mr7506991qvw.34.1583138852812;
+ Mon, 02 Mar 2020 00:47:32 -0800 (PST)
+MIME-Version: 1.0
+References: <0000000000003cbb40059f4e0346@google.com> <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
+ <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
+ <CAHC9VhQnbdJprbdTa_XcgUJaiwhzbnGMWJqHczU54UMk0AFCtw@mail.gmail.com>
+ <CACT4Y+azQXLcPqtJG9zbj8hxqw4jE3dcwUj5T06bdL3uMaZk+Q@mail.gmail.com>
+ <CAHC9VhRRDJzyene2_40nhnxRV_ufgyaU=RrFxYGsnxR4Z_AWWw@mail.gmail.com>
+ <55b362f2-9e6b-2121-ad1f-61d34517520b@i-love.sakura.ne.jp> <CAHC9VhT51-xezOmy1SM4eP_jFH9A8Tc05wY=cwDg7oC=FgYbYQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhT51-xezOmy1SM4eP_jFH9A8Tc05wY=cwDg7oC=FgYbYQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 2 Mar 2020 09:47:21 +0100
+Message-ID: <CACT4Y+YgoyBCoPYxXOb8oQjXYc+Q-cZLPi6y1Yrx_mnfzOQafQ@mail.gmail.com>
+Subject: Re: kernel panic: audit: backlog limit exceeded
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch disables interrupts in the GPU RBBM hang detect fault handler
-before going to recovery.
+On Fri, Feb 28, 2020 at 2:09 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Fri, Feb 28, 2020 at 5:03 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> > On 2020/02/28 9:14, Paul Moore wrote:
+> > > We could consider adding a fuzz-friendly build time config which would
+> > > disable the panic failsafe, but it probably isn't worth it at the
+> > > moment considering the syzbot's pid namespace limitations.
+> >
+> > I think adding a fuzz-friendly build time config does worth. For example,
+> > we have locations where printk() emits "BUG:" or "WARNING:" and fuzzer
+> > misunderstands that a crash occurred. PID namespace is irrelevant.
+> > I proposed one at
+> > https://lkml.kernel.org/r/20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp .
+> > I appreciate your response.
+>
+> To be clear, I was talking specifically about the intentional panic in
+> audit_panic().  It is different from every other panic I've ever seen
+> (perhaps there are others?) in that it doesn't indicate a serious
+> error condition in the kernel, it indicates that audit records were
+> dropped.  It seems extreme to most people, but some use cases require
+> that the system panic rather than lose audit records.
+>
+> My suggestion was that we could introduce a Kconfig build flag that
+> syzbot (and other fuzzers) could use to make the AUDIT_FAIL_PANIC case
+> in audit_panic() less panicky.  However, as syzbot isn't currently
+> able to test the kernel's audit code due to it's pid namespace
+> restrictions, it doesn't make much sense to add this capability.  If
+> syzbot removes that restriction, or when we get to the point that we
+> support multiple audit daemons, we can revisit this.
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+Yes, we need some story for both panic and pid ns.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index dc8ec2c..4dd0f62 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -676,6 +676,9 @@ static void a6xx_fault_detect_irq(struct msm_gpu *gpu)
- 		gpu_read64(gpu, REG_A6XX_CP_IB2_BASE, REG_A6XX_CP_IB2_BASE_HI),
- 		gpu_read(gpu, REG_A6XX_CP_IB2_REM_SIZE));
- 
-+	/* Disable interrupts before going for a recovery*/
-+	gpu_write(gpu, REG_A6XX_RBBM_INT_0_MASK, 0);
-+
- 	/* Turn off the hangcheck timer to keep it from bothering us */
- 	del_timer(&gpu->hangcheck_timer);
- 
--- 
-1.9.1
+We also use a separate net ns, but allow fuzzer to create some sockets
+in the init net ns to overcome similar limitations. This is done using
+a pseudo-syscall hack:
+https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/executor/common_linux.h#L1546-L1562
+
+But the pid ns is different and looks a bit harder as we need it
+during send of netlink messages.
+
+As a strawman proposal: the comment there says "for now":
+
+/* Only support auditd and auditctl in initial pid namespace
+ * for now. */
+if (task_active_pid_ns(current) != &init_pid_ns)
+  return -EPERM;
+
+What does that mean? Is it a kind of TODO? I mean if removing that
+limitation is useful for other reasons, then maybe we could kill 2
+birds with 1 stone.
