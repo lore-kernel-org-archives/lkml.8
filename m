@@ -2,107 +2,137 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5145DC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD927C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210D62086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28F82086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6j9t0b6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZyDJyjbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgCBLx6 (ORCPT
+        id S1727813AbgCBLyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:53:58 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37787 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbgCBLx5 (ORCPT
+        Mon, 2 Mar 2020 06:54:04 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49236 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbgCBLyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:53:57 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a141so10372992wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
-        b=r6j9t0b6YVsKN35LyP/H5lUyKRUrdC0WhAe7pyoL9zqxJsdyHeGhs2X3RPXsG77ucE
-         jE/L3lSF6Wv872Mzbni4tCKo2Uf/J5FiErTEvIguKLvUeYhUGNPKhhpaGFNRNrWGk+f2
-         1QjGeQADib8veuFWed0VG38BvxD1/BlcZKNZvBoIdZaKVu4tpxIefsYEaasn1pXrO6pw
-         1IS1EFDyfxBfwjF3zBykGgdaT4Xa+9qN7Hg+f7ZRYZZU9a6HuY5nByYkE4VPQwAGEqOh
-         HGZj0HxfvbruJPh91RNIa+cmcx57q78ersUThwaD49igmWlsnmeX5r7Lhm6Fksn6cv6m
-         AmWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=azUAbwec9h/nTfVaFPcgmhe6fEkHKvdkY4Og3qBi37Y=;
-        b=W8gYYqBUdTg9ixg6dp9K2MtV6y4KvujNcxy7F4UctBiSn0JGJ1jH+5j9ZH6+bLiM22
-         77CyS/GPZLDsQLBNpMTomVkeP6wnvrVbCFgPOC1sJz74KQ9GdLOf/1C/SS8VE26k0LYb
-         M82MN8cX4VrOAOTA/2DBB6W0IzsoHXFTyO48fi42hxM2v07IaKqCAx4VKC9K3tylrzvd
-         2ZIlv53HAGO2FqwC2C2O/8nbZQPlpmIQzf4RY80VVmNuXfAFglQD4XMCvydCHI8iCLu9
-         cnK86OsKA7X+6WDvm0ka66SeFdkedt1gNCALKZE0PyBB2ZM8AaPxNfi+0WgLvnsaiYn7
-         ANMw==
-X-Gm-Message-State: APjAAAV272XbhFMEW3/Vo7rc9PynWp45RlOTT8dV0sTLxwkuhSzcDFRv
-        +qe2VCaKCU+uona1xJ6m/NAFot6OzxI=
-X-Google-Smtp-Source: APXvYqynY+onBCIIhC4P/zjfJVC1tFcUN36uleAbHJTeNOVBp0N74P2fBTF9cu3aqLEh5sEG98Rv7w==
-X-Received: by 2002:a1c:9d85:: with SMTP id g127mr19364122wme.75.1583150036591;
-        Mon, 02 Mar 2020 03:53:56 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id j5sm27954117wrx.56.2020.03.02.03.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 03:53:55 -0800 (PST)
-Date:   Mon, 2 Mar 2020 11:54:32 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 02/12] docs: dt: convert usage-model.txt to ReST
-Message-ID: <20200302115432.GX3494@dell>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
- <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 06:54:04 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 022BrpRx069790;
+        Mon, 2 Mar 2020 05:53:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583150031;
+        bh=r1oFGQAljQ37WL7mkb3z3+k9czKzVZLG9ut5lfbWRS0=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ZyDJyjbFdtj+c7m1/sKMjH6zESrVG3Jrexn1gXjkpBtce83pmyl2gfvaXV/YwZfLH
+         inh6NIM0A0p1DMJU61NPYukioclBBCbqpdbfVJhg+iwktZo4EQuvhqqYA9+TUB/XiJ
+         VFiZNPGcBDKwugudEEuzzaA0hWdX7L3lUaFL6sfU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 022Brpmn110675
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Mar 2020 05:53:51 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 05:53:51 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 05:53:51 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 022Brn1F101010;
+        Mon, 2 Mar 2020 05:53:50 -0600
+Subject: Re: [PATCH v4 1/2] dmaengine: Add basic debugfs support
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
+References: <20200228130747.22905-1-peter.ujfalusi@ti.com>
+ <20200228130747.22905-2-peter.ujfalusi@ti.com>
+ <20200302071146.GE4148@vkoul-mobl>
+ <7b4f244d-0855-f979-414d-e2d3cb0f0c2f@ti.com>
+Message-ID: <be7d4df5-121b-0eec-b68c-fa3b5cffc8c9@ti.com>
+Date:   Mon, 2 Mar 2020 13:53:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <7b4f244d-0855-f979-414d-e2d3cb0f0c2f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0432bc8cdb6abb8618eac89d68db7441b613106d.1583135507.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 02 Mar 2020, Mauro Carvalho Chehab wrote:
 
-> - Add a SPDX header;
-> - Adjust document title;
-> - Use footnoote markups;
-> - Some whitespace fixes and new line breaks;
-> - Mark literal blocks as such;
-> - Add it to devicetree/index.rst.
+
+On 02/03/2020 12.28, Peter Ujfalusi wrote:
+> Hi Vinod,
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/index.rst            |  1 +
->  Documentation/devicetree/of_unittest.txt      |  2 +-
->  .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
+> On 02/03/2020 9.11, Vinod Koul wrote:
+>>> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+>>> index e8a320c9e57c..72cd7fe33638 100644
+>>> --- a/drivers/dma/dmaengine.h
+>>> +++ b/drivers/dma/dmaengine.h
+>>> @@ -182,4 +182,10 @@ dmaengine_desc_callback_valid(struct dmaengine_desc_callback *cb)
+>>>  struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+>>>  struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
+>>>  
+>>> +#ifdef CONFIG_DEBUG_FS
+>>> +#include <linux/debugfs.h>
+>>> +
+>>> +struct dentry *dmaengine_get_debugfs_root(void);
+>>
+>> this needs to have an else defined with NULL return so that we dont
+>> force users to wrap the code under CONFIG_DEBUG_FS..
+> 
+> Drivers would anyways should have their debugfs related code wrapped
+> within ifdef. There is no point of having the code complied when it can
+> not be used (no debugfs support).
+> 
+> But I can add the  else case if we really want to:
+> 
+> #ifdef CONFIG_DEBUG_FS
+> #include <linux/debugfs.h>
+> 
+> struct dentry *dmaengine_get_debugfs_root(void);
+> 
+> #else
+> struct dentry;
+> static inline struct dentry *dmaengine_get_debugfs_root(void)
+> {
+> 	return NULL;
+> }
+> #endif /* CONFIG_DEBUG_FS */
 
->  include/linux/mfd/core.h                      |  2 +-
+It might be even better if the core creates directories for the dma
+controllers in dma_async_device_register() and removes the whole
+directory in dma_async_device_unregister()
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Then drivers can get their per device root via:
+#ifdef CONFIG_DEBUG_FS
+static inline struct dentry *
+dmaengine_get_debugfs_root(struct dma_device *dma_dev) {
+	return dma_dev->dbg_dev_root;
+}
+#else
+struct dentry;
+static inline struct dentry *
+dmaengine_get_debugfs_root(struct dma_device *dma_dev)
+{
+	return NULL;
+}
+#endif /* CONFIG_DEBUG_FS */
 
->  4 files changed, 23 insertions(+), 17 deletions(-)
->  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+- Péter
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
