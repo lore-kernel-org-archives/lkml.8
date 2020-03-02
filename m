@@ -2,147 +2,211 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A17C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE442C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0C521D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583167495;
-	bh=8KCEg3dL32BCeilX8qMRabMF5ha5P0abQyGvrIRP/QQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ZAjueoJAhlDI8ppM754zuXHMirtejA4E88u+dvXmyFS8Zd+5kTU0pT/9viBronhth
-	 2+nzRKdEWA/24Zb/bWi7L9nDHMVBN1sxPd4alLfZzX+JSjzbotbWar/Zr22558u4BN
-	 84PwkjvqL0xeJNNg8SGW1H7giDhCuRrieanLV/Bg=
+	by mail.kernel.org (Postfix) with ESMTP id 816AA21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCBQoy (ORCPT
+        id S1727350AbgCBQrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:44:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgCBQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:44:53 -0500
-Received: from [10.92.140.24] (unknown [167.220.149.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D58472173E;
-        Mon,  2 Mar 2020 16:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583167492;
-        bh=8KCEg3dL32BCeilX8qMRabMF5ha5P0abQyGvrIRP/QQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PJvR1jjHJGFx2PAKkwkzM7pi1XQlhwg5hroIkYkdLfRjuEvnl/ICkKtow7EDVl63M
-         rq2W+HTFhAWWDGTFVeZG/nO84VK279lgBwFQQj4FGjsxlcer9srwiTKBGSAf9MjWGX
-         xHP2VM+nt/kIUuf9Xsf1pYqm4updJlUg8Z9gqi0g=
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     John Garry <john.garry@huawei.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
- <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
-Date:   Mon, 2 Mar 2020 11:44:50 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 11:47:21 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:33982 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727092AbgCBQrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:47:21 -0500
+Received: (qmail 3316 invoked by uid 2102); 2 Mar 2020 11:47:20 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 2 Mar 2020 11:47:20 -0500
+Date:   Mon, 2 Mar 2020 11:47:20 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marco Elver <elver@google.com>
+cc:     linux-kernel@vger.kernel.org, <kasan-dev@googlegroups.com>,
+        <parri.andrea@gmail.com>, <will@kernel.org>,
+        <peterz@infradead.org>, <boqun.feng@gmail.com>,
+        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
+        <luc.maranget@inria.fr>, <paulmck@kernel.org>, <akiyks@gmail.com>,
+        <dlustig@nvidia.com>, <joel@joelfernandes.org>,
+        <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v2] tools/memory-model/Documentation: Fix "conflict"
+ definition
+In-Reply-To: <20200302141819.40270-1-elver@google.com>
+Message-ID: <Pine.LNX.4.44L0.2003021134360.1555-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/2020 7:35 AM, John Garry wrote:
-> Hi Sinan,
-> 
-> Thanks for getting back to me.
-> 
->> On 2/28/2020 4:52 AM, John Garry wrote:
->>> About the commit in the $subject 87fe2d543f81, would there be any
->>> specific reason why the logic pio versions of these functions did not
->>> get the same treatment 
-> 
-> In fact, your changes and the logic PIO changes went in at the same time.
-> 
-> or should not? I'm talking about lib/logic_pio.c
+On Mon, 2 Mar 2020, Marco Elver wrote:
 
-I think your change missed "cross-architecture" category.
+> Alan: I think this needs your Signed-off-by, since I added you as
+> Co-developed-by.
 
-> 
-> #define BUILD_LOGIC_IO(bw, type)                   
-> type logic_in##bw(unsigned long addr)                   
-> {                                   
->     type ret = (type)~0;                       
->     if (addr < MMIO_UPPER_LIMIT) {                   
->         ret = read##bw(PCI_IOBASE + addr); ***   
->     } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
->         struct logic_pio_hwaddr *entry = find_io_range(addr);   
->                                    
->         if (entry)                       
->             ret = entry->ops->in(entry->hostdata,       
->                     addr, sizeof(type));       
->         else                           
->             WARN_ON_ONCE(1);               
->     }                               
->     return ret;                           
-> }       
-> 
->> How is the behavior on different architectures?
-> 
-> So today only ARM64 uses it for this relevant code, above. But maybe
-> others in future will want to use it - any arch without native IO port
-> access is a candidate.
+Here you go:
 
-I'm looking at Arnd here for help.
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
 
+> Let me know if this works for you.
+
+See below.
+
+> The definition of "conflict" should not include the type of access nor
+> whether the accesses are concurrent or not, which this patch addresses.
+> The definition of "data race" remains unchanged.
 > 
->>
->> As long as the expectations are set, I see no reason why it shouldn't
->> but, I'll let Arnd comment on it too.
+> The definition of "conflict" as we know it and is cited by various
+> papers on memory consistency models appeared in [1]: "Two accesses to
+> the same variable conflict if at least one is a write; two operations
+> conflict if they execute conflicting accesses."
 > 
-> ok, so it looks reasonable consider replicating your change for ***, above.
-
-Arnd is the maintainer here. We should consult first.
-I believe there is also a linux-arch mailing list. Going there with this
-question makes sense IMO.
-
-
+> The LKMM as well as the C11 memory model are adaptations of
+> data-race-free, which are based on the work in [2]. Necessarily, we need
+> both conflicting data operations (plain) and synchronization operations
+> (marked). For example, C11's definition is based on [3], which defines a
+> "data race" as: "Two memory operations conflict if they access the same
+> memory location, and at least one of them is a store, atomic store, or
+> atomic read-modify-write operation. In a sequentially consistent
+> execution, two memory operations from different threads form a type 1
+> data race if they conflict, at least one of them is a data operation,
+> and they are adjacent in <T (i.e., they may be executed concurrently)."
 > 
-> Thanks,
-> John
+> [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
+>     Programs that Share Memory", 1988.
+> 	URL: http://snir.cs.illinois.edu/listed/J21.pdf
+> 
+> [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
+>     Multiprocessors", 1993.
+> 	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
+> 
+> [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
+>     Model", 2008.
+> 	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
+> ---
+> v2:
+> * Apply Alan's suggested version.
+>   - Move "from different CPUs (or threads)" from "conflict" to "data
+>     race" definition. Update "race candidate" accordingly.
+> * Add citations to commit message.
+> 
+> v1: http://lkml.kernel.org/r/20200228164621.87523-1-elver@google.com
+> ---
+>  .../Documentation/explanation.txt             | 77 +++++++++----------
+>  1 file changed, 38 insertions(+), 39 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index e91a2eb19592a..7a59cadc2f4ca 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -1987,28 +1987,28 @@ outcome undefined.
+>  
+>  In technical terms, the compiler is allowed to assume that when the
+>  program executes, there will not be any data races.  A "data race"
+> -occurs when two conflicting memory accesses execute concurrently;
+> -two memory accesses "conflict" if:
+> +occurs when two conflicting memory accesses from different CPUs (or
+> +different threads on the same CPU) execute concurrently, and at least
+> +one of them is plain.  Two memory accesses "conflict" if:
+>  
+>  	they access the same location,
+>  
+> -	they occur on different CPUs (or in different threads on the
+> -	same CPU),
+> -
+> -	at least one of them is a plain access,
+> -
+>  	and at least one of them is a store.
+>  
+> -The LKMM tries to determine whether a program contains two conflicting
+> -accesses which may execute concurrently; if it does then the LKMM says
+> -there is a potential data race and makes no predictions about the
+> -program's outcome.
+> -
+> -Determining whether two accesses conflict is easy; you can see that
+> -all the concepts involved in the definition above are already part of
+> -the memory model.  The hard part is telling whether they may execute
+> -concurrently.  The LKMM takes a conservative attitude, assuming that
+> -accesses may be concurrent unless it can prove they cannot.
+> +We'll say that two accesses from different threads are "race
+> +candidates" if they conflict and at least one of them is plain.
+> +Whether or not two candidates actually do race in a given execution
+> +then depends on whether they are concurrent.  The LKMM tries to
+> +determine whether a program contains race candidates which may execute
+> +concurrently; if it does then the LKMM says there is a potential data
+> +race and makes no predictions about the program's outcome.
+
+Hmmm.  Although the content is okay, I don't like the organization very
+much.  What do you think of this for the above portion of the patch)?
+
+Alan Stern
+
+
+
+Index: usb-devel/tools/memory-model/Documentation/explanation.txt
+===================================================================
+--- usb-devel.orig/tools/memory-model/Documentation/explanation.txt
++++ usb-devel/tools/memory-model/Documentation/explanation.txt
+@@ -1987,28 +1987,36 @@ outcome undefined.
+ 
+ In technical terms, the compiler is allowed to assume that when the
+ program executes, there will not be any data races.  A "data race"
+-occurs when two conflicting memory accesses execute concurrently;
+-two memory accesses "conflict" if:
++occurs when there are two memory accesses such that:
+ 
+-	they access the same location,
++1.	they access the same location,
+ 
+-	they occur on different CPUs (or in different threads on the
+-	same CPU),
++2.	at least one of them is a store,
++
++3.	at least one of them is plain,
+ 
+-	at least one of them is a plain access,
++4.	they occur on different CPUs (or in different threads on the
++	same CPU), and
+ 
+-	and at least one of them is a store.
++5.	they execute concurrently.
+ 
+-The LKMM tries to determine whether a program contains two conflicting
+-accesses which may execute concurrently; if it does then the LKMM says
+-there is a potential data race and makes no predictions about the
++In the literature, two accesses are said to "conflict" if they satisfy
++1 and 2 above.  We'll go a little farther and say that two accesses
++are "race candidates" if they satisfy 1 - 4.  Thus, whether or not two
++race candidates actually do race in a given execution depends on
++whether they are concurrent.
++
++The LKMM tries to determine whether a program contains two race
++candidates which may execute concurrently; if it does then the LKMM
++says there is a potential data race and makes no predictions about the
+ program's outcome.
+ 
+-Determining whether two accesses conflict is easy; you can see that
+-all the concepts involved in the definition above are already part of
+-the memory model.  The hard part is telling whether they may execute
+-concurrently.  The LKMM takes a conservative attitude, assuming that
+-accesses may be concurrent unless it can prove they cannot.
++Determining whether two accesses are race candidates is easy; you can
++see that all the concepts involved in the definition above are already
++part of the memory model.  The hard part is telling whether they may
++execute concurrently.  The LKMM takes a conservative attitude,
++assuming that accesses may be concurrent unless it can prove they
++are not.
+ 
+ If two memory accesses aren't concurrent then one must execute before
+ the other.  Therefore the LKMM decides two accesses aren't concurrent
+
 
