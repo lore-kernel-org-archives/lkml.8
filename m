@@ -2,163 +2,102 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADC2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6810C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8224424686
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F43C24686
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583177892;
-	bh=/8fu4PTXMoJFHkTgpvoVbDMAYKyOlrI3iq8tR/SZsyw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEHJT7xlXqMN2M+4h8tHszvqFfDAf1gCgW5zcKuxv1uWtNdohLyFZ4WCwp/2C3v86
-	 POHtZYCfsQYHg/5Hi21Un2XQAUA3HDiilLyAm+IYN4ZIOcJC/D9Eo3aFrL4irXz3bY
-	 lX4izcn7b0Oz/4mpyWdL1PN6STxWHHieeYc3blVc=
+	s=default; t=1583177893;
+	bh=CeT8MrxmedI+zt8aOLIH3orrxcr7WWJylEIMKTJsKOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m3QgdhQT/pq/lwl+irTb+/M8Eg9UHh8/zezEQRU/CCpbg3GGOPtWR1wkeWrkZoJpT
+	 VDL4/0lkZtQ0RvbfWUohryGXl3oqooZptSQxqhZoGSNqFDZAoz83Ek6yhSz2cJSlFU
+	 afnSEMqwwaAg21s37xJuW6Y41PcSZ9LoFZrJjJ08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCBTiK (ORCPT
+        id S1726418AbgCBTiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:38:10 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35669 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgCBTgz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:36:55 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so230615pjq.0;
-        Mon, 02 Mar 2020 11:36:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Mu70DJRDEBMY5udogCEqxqr5nIzNXb/ZVa6ak+DAEGE=;
-        b=bGAzt2bRUsm7cgwQ5RTZVf/S93SfPOeYEhBXNLGRwQ8/ecMiHe74IFmLVYWe7mhP76
-         SkKnx+8xM0l1+Vo/1ldCceHC4pVNU92FOdKXVZJ/cpPs57m6I33Ct0SvcF7+6hTz060z
-         MhCQVL3cDoV7wDT1XD8fjiEpgPtQbwYq6kTsTvmWXZGI//EB+u3f/rPb0yrxA2BEZSbR
-         QO+6mFAIfwPr9yxjr0Uxm9mb9irEnCMdcctTP5mItZtb+FUOpOcV1/oiVX8I4x26JXxW
-         xOyDuld8jCL3RnQS04e9azPeVX+QUDh9ni+5UwrMD74gFWVbXqmdeGTAJmCHdydrtIQw
-         4vwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=Mu70DJRDEBMY5udogCEqxqr5nIzNXb/ZVa6ak+DAEGE=;
-        b=bpbKuDVleoCS4wxfp3dOHpE6BweDC/EHiZjG5rCnPoZOBS6DPPJQ20nBRiIC5wSiu+
-         yeeR+gx+lo+C2OQfY3eeMrFISV7Tmas05J+liOZgHntiGo95rj6OWhk/F/4HD8MiOM/e
-         brTD0ImvW/1leaRPE4/myvDLS0uZvHVftalILG7CwBfSk7xi3EOKAORujiKFdfqcjl0X
-         cytZgvEnyWhDC4PoVa57QWisae7BcOMi27PZFhU66dX7kh4OjkCaEhrrF0GNBjo/ZEc6
-         MkQBbNgxMrtm0oLDIgiQY1+/abUib/1F8yv7S/5W/+9OgNF/mf+QzvuwpstVQc44rAsj
-         quBg==
-X-Gm-Message-State: ANhLgQ1NOQ2BCVrlKzYdNvXoxPObO8Bz800eqNXnHDJUhCCkBAzglNgR
-        BhB7BzD8QTgauBaGwP5gGdWknfD9
-X-Google-Smtp-Source: ADFU+vtcLKKSg3LAVPMvkZQMOIZdKtFP4hQNOw94oXNyYV8OY5PcR4U8eitUv3IIaT8DAv+7edpk4A==
-X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr19528pjn.127.1583177813686;
-        Mon, 02 Mar 2020 11:36:53 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id hg6sm35441pjb.22.2020.03.02.11.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 11:36:52 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        Minchan Kim <minchan@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
-Date:   Mon,  2 Mar 2020 11:36:30 -0800
-Message-Id: <20200302193630.68771-8-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200302193630.68771-1-minchan@kernel.org>
-References: <20200302193630.68771-1-minchan@kernel.org>
+        Mon, 2 Mar 2020 14:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727716AbgCBThB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 14:37:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573AB2080C;
+        Mon,  2 Mar 2020 19:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583177820;
+        bh=CeT8MrxmedI+zt8aOLIH3orrxcr7WWJylEIMKTJsKOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u8wwXBbNVBTa/A3C4eLRYDldm8MpUPFYC5q8AuT0Y8Zb+HCK4vveOkBj+elCSV/MI
+         sOnBhrrrgb/5zAuzNiQHwpucanodU249g6298/y1KlYRydOb7HEoqBgVu/QDIDa+xI
+         uecLFtamZ9pR25O62XtbYF8Mxkp+D4Wv86EUOt2Y=
+Date:   Mon, 2 Mar 2020 20:36:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, akpm@linux-foundation.org,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Quentin Perret <qperret@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+Message-ID: <20200302193658.GA272023@kroah.com>
+References: <20200221114404.14641-1-will@kernel.org>
+ <20200302192811.n6o5645rsib44vco@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302192811.n6o5645rsib44vco@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Natalenko <oleksandr@redhat.com>
+On Mon, Mar 02, 2020 at 02:28:11PM -0500, Mathieu Desnoyers wrote:
+> On 21-Feb-2020 11:44:01 AM, Will Deacon wrote:
+> > Hi folks,
+> > 
+> > Despite having just a single modular in-tree user that I could spot,
+> > kallsyms_lookup_name() is exported to modules and provides a mechanism
+> > for out-of-tree modules to access and invoke arbitrary, non-exported
+> > kernel symbols when kallsyms is enabled.
+> > 
+> > This patch series fixes up that one user and unexports the symbol along
+> > with kallsyms_on_each_symbol(), since that could also be abused in a
+> > similar manner.
+> 
+> Hi,
+> 
+> I maintain a GPL kernel tracer (LTTng) since 2005 which happens to be
+> out-of-tree, even though we have made unsuccessful attempts to upstream
+> it in the past. It uses kallsyms_lookup_name() to fetch a few symbols. I
+> would be very glad to have them GPL-exported upstream rather than
+> relying on this work-around. Here is the list of symbols we would need
+> to GPL-export:
+> 
+> stack_trace_save
+> stack_trace_save_user
+> vmalloc_sync_all (CONFIG_X86)
+> get_pfnblock_flags_mask
+> disk_name
+> block_class
+> disk_type
 
-It all began with the fact that KSM works only on memory that is marked
-by madvise(). And the only way to get around that is to either:
+I hate to ask, but why does anyone need block_class?  or disk_name or
+disk_type?  I need to put them behind a driver core namespace or
+something soon...
 
-  * use LD_PRELOAD; or
-  * patch the kernel with something like UKSM or PKSM.
+thanks,
 
-(i skip ptrace can of worms here intentionally)
-
-To overcome this restriction, lets employ a new remote madvise API. This
-can be used by some small userspace helper daemon that will do auto-KSM
-job for us.
-
-I think of two major consumers of remote KSM hints:
-
-  * hosts, that run containers, especially similar ones and especially in
-    a trusted environment, sharing the same runtime like Node.js;
-
-  * heavy applications, that can be run in multiple instances, not
-    limited to opensource ones like Firefox, but also those that cannot be
-    modified since they are binary-only and, maybe, statically linked.
-
-Speaking of statistics, more numbers can be found in the very first
-submission, that is related to this one [1]. For my current setup with
-two Firefox instances I get 100 to 200 MiB saved for the second instance
-depending on the amount of tabs.
-
-1 FF instance with 15 tabs:
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   410
-
-2 FF instances, second one has 12 tabs (all the tabs are different):
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   592
-
-At the very moment I do not have specific numbers for containerised
-workload, but those should be comparable in case the containers share
-similar/same runtime.
-
-[1] https://lore.kernel.org/patchwork/patch/1012142/
-
-Reviewed-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- mm/madvise.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index e77c6c1fad34..f4fa962ee74d 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1005,6 +1005,10 @@ process_madvise_behavior_valid(int behavior)
- 	switch (behavior) {
- 	case MADV_COLD:
- 	case MADV_PAGEOUT:
-+#ifdef CONFIG_KSM
-+	case MADV_MERGEABLE:
-+	case MADV_UNMERGEABLE:
-+#endif
- 		return true;
- 	default:
- 		return false;
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+greg k-h
