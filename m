@@ -7,80 +7,87 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3092CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392D1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12D421556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C792166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583182244;
-	bh=Ju1eI11ASCoeumNUWOIdA1q+QefYzNsUdI+ZwROTQuI=;
+	s=default; t=1583182356;
+	bh=FLnuhIihPlnkfx+qEIKD35XRkiWsmrgqr4yKhDUOuo0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=av0DuxzaAM+2zFehDDUr835K5Ib1mAxY4QS/pkBnTfQlxOJTKT1Uu+T12fXACz8cQ
-	 Oj535IJsbjzLUb2U1RTXUaBOL+TWUBBuzF/Aiwez6IFd/wn5VudOwVERUzMeJGZ1z0
-	 U15p9kRugxn9q7vAkRNaMdFTwloZtCxJ73OWH/zQ=
+	b=T9fOphhbpPuL8sgJbPXuqHFGE6fJAObMz91SVxWXPSdNOENo7xmL3nfl0SoisdAdQ
+	 b/HyJZFw0uxhegt93h//MXrEe+nn21GFq74KGPQtoHbv7dVtvziuv6WNfB/MCjHf+c
+	 5DPZ5E8spzWWtUqr1jK8Mg1NP1rPCN9lV9MxFVnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgCBUun (ORCPT
+        id S1726783AbgCBUwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:50:43 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39446 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCBUum (ORCPT
+        Mon, 2 Mar 2020 15:52:35 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42230 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgCBUwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:50:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id r16so660956oie.6;
-        Mon, 02 Mar 2020 12:50:42 -0800 (PST)
+        Mon, 2 Mar 2020 15:52:34 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so691941otd.9;
+        Mon, 02 Mar 2020 12:52:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yDBoT2iZyLmE/VyS3LI4bYRTEiyPlUQdoNnsH2g/OMI=;
-        b=Pol7NFjokB2Ge06H1A3bYuRO/D9atB2/C4gfHV45HGo0JXqMxUPpukNtkEDzPiEC8S
-         cPE5ogm7L/tSHM6d4x/F25ZyU2GN8ye96gXX8xBSkny5oLQ8s5IXVLS/hzFr+rvQ1ut3
-         RnK9JpcUa4mdU7+TFRFVC3j0BaaopLzM5O0NsRtnIfP64ubZM1qB7UsNlTZDKthhZFUS
-         4SXmIR9MePqRLO/CU8aIlWuQ0SYQVXIeDsPbZeYmvQS/bVTJ3MfJBCxaAG0fMNMDlpuS
-         JaX8LE8pp/mJrz32VKzaPPxnpO6ltjSFm5SXgSfZ56g8zm5y6m/5TVlVqv8GHp9u65xK
-         ydiQ==
-X-Gm-Message-State: ANhLgQ2hYGlR1PR/E9uvh34eL/SSL/Gt76G6W8Uuf1ZCmXv00lVqbCj7
-        64A9ngV4iqDqKSqz6mJRgA==
-X-Google-Smtp-Source: ADFU+vt7519NjbiovGcpjkF5yZ6FnpdnihlTczsCJTnc0dGuZ5OpApPY2goE3RDVamt/UUzvEZ9rXQ==
-X-Received: by 2002:aca:814:: with SMTP id 20mr182489oii.159.1583182242055;
-        Mon, 02 Mar 2020 12:50:42 -0800 (PST)
+        bh=8Mbj926lcMMww9ZNMv7XcrAqImfQQxGz/1hr+H7/z0k=;
+        b=SALkbDmCO4oHDdV8909meb+aI/DR1q76h+u93aaSgCMqdniHsTvmRHSH3pbNvvIoPs
+         82c69vs4g0NcHa36ujwG4GC/3KMktJDR0DnPk3LXq07Qits5udJ2eMkph+REXEecqb7R
+         /FyxXGudoDoG5ChohA4XZ68VvJyv0GEumOHCMd1y26fpJc+kmu5Sq4jCTba6zHVZP2Cg
+         4OfyFiM5BgwKdRIHUmvoMyIovmltboZvxqnRRcne3FNCJs8/oaSsdawPiQHEhw3d3y7z
+         959Q9f4OjpwKkdh9FwTaloM6382WTaKD7WTdhjaPRTv1q2uBVlOhT01+PtKpU8DVDJf4
+         xLZA==
+X-Gm-Message-State: ANhLgQ1emJCmR8VtHnQfc9Svu+zrOLrKUx8Sq7J2kj1xJkJQ293JaRYj
+        XgljySMGgnmDXW4ABlbuFQ==
+X-Google-Smtp-Source: ADFU+vsU4BwI+ZhtAeYrEEnEWFuq7vUTpJHGBZvXyUJlXUt3DWxeVgdXESU0lhisXPI0WR6u21nvWw==
+X-Received: by 2002:a05:6830:11c7:: with SMTP id v7mr769049otq.41.1583182354070;
+        Mon, 02 Mar 2020 12:52:34 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c7sm6945919otm.63.2020.03.02.12.50.41
+        by smtp.gmail.com with ESMTPSA id p141sm934283oic.7.2020.03.02.12.52.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 12:50:41 -0800 (PST)
-Received: (nullmailer pid 7042 invoked by uid 1000);
-        Mon, 02 Mar 2020 20:50:40 -0000
-Date:   Mon, 2 Mar 2020 14:50:40 -0600
+        Mon, 02 Mar 2020 12:52:33 -0800 (PST)
+Received: (nullmailer pid 9793 invoked by uid 1000);
+        Mon, 02 Mar 2020 20:52:32 -0000
+Date:   Mon, 2 Mar 2020 14:52:32 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Franz Forstmayr <forstmayr.franz@gmail.com>
-Cc:     forstmayr.franz@gmail.com, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: hwmon: Add compatible for ti,ina260
-Message-ID: <20200302205040.GA6984@bogus>
-References: <20200224232647.29213-1-forstmayr.franz@gmail.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: clock: Convert UniPhier clock to json-schema
+Message-ID: <20200302205232.GA9730@bogus>
+References: <20200225010328.5638-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224232647.29213-1-forstmayr.franz@gmail.com>
+In-Reply-To: <20200225010328.5638-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 00:26:45 +0100, Franz Forstmayr wrote:
-> Add initial support for power/current monitor INA260
+On Tue, 25 Feb 2020 10:03:28 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier clock controller binding to DT schema format.
 > 
-> Signed-off-by: Franz Forstmayr <forstmayr.franz@gmail.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+>  .../clock/socionext,uniphier-clock.yaml       |  94 +++++++++++++
+>  .../bindings/clock/uniphier-clock.txt         | 132 ------------------
+>  2 files changed, 94 insertions(+), 132 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/clock/uniphier-clock.txt
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
