@@ -2,129 +2,166 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C72CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64750C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EFD24676
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B78321739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHewCuWK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mg/CO/Mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgCBNEw (ORCPT
+        id S1727859AbgCBNGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:04:52 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:50571 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgCBNEv (ORCPT
+        Mon, 2 Mar 2020 08:06:37 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45029 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgCBNGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:04:51 -0500
-Received: by mail-wr1-f74.google.com with SMTP id p5so5729500wrj.17
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:04:48 -0800 (PST)
+        Mon, 2 Mar 2020 08:06:36 -0500
+Received: by mail-ot1-f67.google.com with SMTP id v22so5053494otq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:06:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=j3aDuvHmNNb8lZp62OUl5ijcLNjosW5sWfAg0aQm8tI=;
-        b=vHewCuWK7XwWw+VRmDWzRLkq61RHy9RnkX3i1kaJ8fw0M0PseejKlj/CZ68p864I5Y
-         N9SGMmkirAc/jgX9ro369d5IupRgP9uXpmgTu6qWv8iSKdgEsMlJCz2VRmtvOWTC/16r
-         grP1CWYBHUL0E9jvxhIWnmwDxoKIWwJkXclff8CBxM+bx6bGzs+trjRunmDlTB2f/ISR
-         4gaf0upeQTTq1XGdTweSwITQOJ96unRsDb0Lq9uWCv3/Qh1ver1HInXxiCT1JaF/IrcZ
-         6+l3xZm5rOWOQFpx9N2kSsUuQHMUqx615nH6Ov9dq4D2fJQYRKhTRasXzzX8hyCASUJc
-         Yr+A==
+        bh=pD/gxf0uYDpfv1NMd5/waLUhIiVjzlBFv8IcmQrTdcE=;
+        b=mg/CO/Mh1z97WyRAh3G7ze2FpgB9K+haWIJAA/2o2dC08vQNxDhx/MY9XmKnjRC+KZ
+         dyJbkcVNnNxEgj1ZKlScAECq+iSG+hQNCAkAd+yEgm3ZUt7dBbCzDUHmmVsbY7PfJ4r+
+         GauYsUNCqbX2SO66HEx1L5Vhhog/P+Vi5QiHumRzdQh3JztX84UOZWuB6ZnnpvtDausA
+         7JlRxnaoNDWPOhonJpzPTiJEl90Kq9W85gRKASUlfB1HGObSquIYujOOPL4WtikLGKzd
+         n+ZbzTrwx36nYpWbk21sJWindpGAHDCmDGvnZNW087Qu/9sIQwY/QcoLrCZTPYGDoBax
+         AQsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=j3aDuvHmNNb8lZp62OUl5ijcLNjosW5sWfAg0aQm8tI=;
-        b=nFZ0cDXnqB5nQoc5LKL0v7JMnkP6vwIDe5JqpkDysSg79s7nIepBtO8yvOyX0x9Bk5
-         5hRjC4dAjOuMI9TvtO9L5Eo2ScDL2g4htJxpALk1UmvW3uQDMH5V4qSEv8nw0qFMchG5
-         xFFsLiOQyaiOyzeehJOUktLE9zEiwmbdPTqf/12wQFwhU9CGqMZcIxzXuShbeR5e2WEw
-         R4nDP7FEPKGcBvkJS8ZqvHIK9A8Jw4GdgsYcXd2RnnvYma45+Aei84jWBRAxTIbmyRGx
-         9gjRjUuD70kuTaee12t0zE22shTI9YCxmvuPI2LSVCPzhiEbiqOx3DcqEt0jD9GpDNvG
-         VNCg==
-X-Gm-Message-State: ANhLgQ31DRkJ5gwGHvkOgr/mgVncBQ2kdEqexGFl+g6zgzguLEen//3N
-        Ry3hRy78k41TJ2Jh25DmZC2YK1sWuoo=
-X-Google-Smtp-Source: ADFU+vvhEHHYZJ73Yy0CimVvZXBOlQbztjelV2mMGDGzouPCkzbXetIp+8NAtW54Y5Fi1/JwnKRZO766kE8=
-X-Received: by 2002:adf:ce12:: with SMTP id p18mr5676203wrn.88.1583154287784;
- Mon, 02 Mar 2020 05:04:47 -0800 (PST)
-Date:   Mon,  2 Mar 2020 14:04:30 +0100
-In-Reply-To: <20200302130430.201037-1-glider@google.com>
-Message-Id: <20200302130430.201037-3-glider@google.com>
-Mime-Version: 1.0
-References: <20200302130430.201037-1-glider@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2 3/3] sched/wait: avoid double initialization in ___wait_event()
-From:   glider@google.com
-To:     tkjos@google.com, keescook@chromium.org,
-        gregkh@linuxfoundation.org, arve@android.com, mingo@redhat.com
-Cc:     dvyukov@google.com, jannh@google.com, devel@driverdev.osuosl.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pD/gxf0uYDpfv1NMd5/waLUhIiVjzlBFv8IcmQrTdcE=;
+        b=aqkFMhjNBcsJxX+IBuoILzTBP27XwQ9W+/iXAtWM3QJOIwwLqFa4fsB5EkkLCo+NC4
+         oaBhvn4imvh6e1r2dLtzq/B+F2VPfcpkQOvvC4WAwfU9EtHLlE1Vx2bA/V/K6XjTsJz+
+         kXGJFe9pJ70ZIkfxdaD/9eLQiDPPgpdPRRRYvBlvzkILB+b2TZZiSVdDOcWwhUNiZGuF
+         TCRtpj7/uMzehkuktAzB2bRH0gNrc3WLPWDt6gJzWdcHWAdZfLZzVB8I1cZN55wx9DV/
+         o+GpVKe71UGOiqDO9kBrfdGTsI/xlKXtrX3xGvMUeY7kAHK8p1k3wP5lrTgN1fCF8mCS
+         8iaw==
+X-Gm-Message-State: ANhLgQ2oRV3js7cgN69DGEl9RvuOCqyaJ0OUcGeh6+hem4R/hABUCrbt
+        YuR8gk+JStkeDMRYyMjjlMCWo+cWWX5yi6xczayUYw==
+X-Google-Smtp-Source: ADFU+vsEtDWpu3CBbW2P4D6BNQQyNyFaj2yT+Fnw3axxVc8I4eTTD3DAN6BYP5Fm0m5y/xAWzQqSHqGF6t1ux27xO5U=
+X-Received: by 2002:a05:6830:11a:: with SMTP id i26mr2892609otp.180.1583154395616;
+ Mon, 02 Mar 2020 05:06:35 -0800 (PST)
+MIME-Version: 1.0
+References: <20191121115902.2551-1-will@kernel.org> <20191121115902.2551-6-will@kernel.org>
+ <CAG48ez0CoY2fuxNkdAn_Jx+hffQ1eyM_V++5q6Q5nra+_tE9hQ@mail.gmail.com> <20200228104332.GB2395@willie-the-truck>
+In-Reply-To: <20200228104332.GB2395@willie-the-truck>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 2 Mar 2020 14:06:09 +0100
+Message-ID: <CAG48ez3n+tNwm8ZCgrRj_L8eWu7vF6-v9EB7hsW09bv5TG6kPg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 05/10] lib/refcount: Improve performance of
+ generic REFCOUNT_FULL code
+To:     Will Deacon <will@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_INIT_STACK_ALL enabled, the local __wq_entry is initialized
-twice. Because Clang is currently unable to optimize the automatic
-initialization away (init_wait_entry() is defined in another translation
-unit), remove it with the __no_initialize annotation.
+On Fri, Feb 28, 2020 at 11:43 AM Will Deacon <will@kernel.org> wrote:
+> On Wed, Feb 26, 2020 at 05:10:46AM +0100, Jann Horn wrote:
+> > On Thu, Nov 21, 2019 at 12:58 PM Will Deacon <will@kernel.org> wrote:
+> > > + * If another thread also performs a refcount_inc() operation between the two
+> > > + * atomic operations, then the count will continue to edge closer to 0. If it
+> > > + * reaches a value of 1 before /any/ of the threads reset it to the saturated
+> > > + * value, then a concurrent refcount_dec_and_test() may erroneously free the
+> > > + * underlying object. Given the precise timing details involved with the
+> > > + * round-robin scheduling of each thread manipulating the refcount and the need
+> > > + * to hit the race multiple times in succession, there doesn't appear to be a
+> > > + * practical avenue of attack even if using refcount_add() operations with
+> > > + * larger increments.
+> >
+> > On top of that, the number of threads that can actually be running at
+> > a given time is capped. See include/linux/threads.h, where it is
+> > capped to pow(2, 22):
+> >
+> >     /*
+> >      * A maximum of 4 million PIDs should be enough for a while.
+> >      * [NOTE: PID/TIDs are limited to 2^29 ~= 500+ million, see futex.h.]
+> >      */
+> >     #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+> >             (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+> >
+> > And in the futex UAPI header, we have this, baking a TID limit into
+> > the userspace API (note that this is pow(2,30), not pow(2,29) as the
+> > comment in threads.h claims - I'm not sure where that difference comes
+> > from):
+> >
+> >     /*
+> >      * The rest of the robust-futex field is for the TID:
+> >      */
+> >     #define FUTEX_TID_MASK 0x3fffffff
+> >
+> > So AFAICS, with the current PID_MAX_LIMIT, if you assume that all
+> > participating refcount operations are non-batched (delta 1) and the
+> > attacker can't cause the threads to oops in the middle of the refcount
+> > operation (maybe that would be possible if you managed to find
+> > something like a NULL pointer dereference in perf software event code
+> > and had perf paranoia at <=1 , or something like that? - I'm not
+> > sure), then even in a theoretical scenario where an attacker spawns
+> > the maximum number of tasks possible and manages to get all of them to
+> > sequentially preempt while being in the middle of increment operations
+> > in several nested contexts (I'm not sure whether that can even happen
+> > - you're not going to take typical sleeping exceptions like page
+> > faults in the middle of a refcount op), the attacker will stay
+> > comfortably inside the saturated range. Even if the PID_MAX_LIMIT is
+> > at some point raised to the maximum permitted by the futex UAPI, this
+> > still holds as long as you assume no nesting. Hm, should I send a
+> > patch to add something like this to the explanatory comment?
+>
+> Sure, I'd be happy to improve the document by adding this -- please send
+> out a patch for review. It's probably also worth mentioning the batching
+> use-cases, although I struggle to reason about the window between the
+> {under,over}flow occuring and saturation.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Alexander Potapenko <glider@google.com>
+In the overflow case, it's fine, right? If you briefly crossed into
+the saturation range and then went back down, using some tasks with
+half-completed refcounting operations, then the refcount is still
+behaving as a correct non-saturating refcount. (And it can't cross
+over to the other end of the saturation range, because that's twice as
+much distance as you'd need to unpin a saturated refcount.)
 
----
- v2:
-  - changed __do_not_initialize to __no_initialize as requested by Kees
-    Cook
----
- drivers/android/binder.c | 4 ++--
- include/linux/wait.h     | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+And in the underflow case, we can't deterministically protect anyway
+without some external mechanism to protect the object's lifetime while
+someone is already freeing it - so that's pretty much just a
+best-effort thing anyway.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index a59871532ff6b..66984e7c33094 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -4827,7 +4827,7 @@ static int binder_ioctl_write_read(struct file *filp,
- 	struct binder_proc *proc = filp->private_data;
- 	unsigned int size = _IOC_SIZE(cmd);
- 	void __user *ubuf = (void __user *)arg;
--	struct binder_write_read bwr __no_initialize;
-+	struct binder_write_read bwr;
- 
- 	if (size != sizeof(struct binder_write_read)) {
- 		ret = -EINVAL;
-@@ -5026,7 +5026,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 			goto err;
- 		break;
- 	case BINDER_SET_MAX_THREADS: {
--		int max_threads;
-+		int max_threads __no_initialize;
- 
- 		if (copy_from_user(&max_threads, ubuf,
- 				   sizeof(max_threads))) {
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 3283c8d021377..b52a9bb2c7727 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -262,7 +262,8 @@ extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
- #define ___wait_event(wq_head, condition, state, exclusive, ret, cmd)		\
- ({										\
- 	__label__ __out;							\
--	struct wait_queue_entry __wq_entry;					\
-+	/* Unconditionally initialized by init_wait_entry(). */			\
-+	struct wait_queue_entry __wq_entry __no_initialize;			\
- 	long __ret = ret;	/* explicit shadow */				\
- 										\
- 	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
--- 
-2.25.0.265.gbab2e86ba0-goog
+> > Of course, if someone uses refcount batching with sufficiently large
+> > values, those guarantees go out of the window - if we wanted to be
+> > perfectionist about this, we could make the batched operations do slow
+> > cmpxchg stuff while letting the much more performance-critical
+> > single-reference case continue to use the fast saturation scheme.
+> > OTOH, the networking folks would probably hate that, since they're
+> > using the batched ops for ->sk_wmem_alloc stuff, where they count
+> > bytes as references? So I guess maybe we should leave it as-is.
+>
+> Agreed. If we hamper the performance here, then people will either look
+> to disable the checking or they will switch to atomic_t, which puts us
+> back to square one. Perfection is the enemy of the good and all that.
+>
+> Having said that, I'd still be keen to learn about any practical attacks
+> on this in case there is something smart we can do to mitigate them
+> without cmpxchg(). For example, one silly approach might be to bound the
+> maximum increment and split larger ones up using a loop.
 
+I guess that'd do the job. I don't know whether it's worth the trouble
+in practice though.
