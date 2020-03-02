@@ -2,213 +2,331 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021C6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45B32173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="kncJTKfI"
+	by mail.kernel.org (Postfix) with ESMTP id C8DA82173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCBU5s (ORCPT
+        id S1726843AbgCBU6u convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:57:48 -0500
-Received: from mail-eopbgr50043.outbound.protection.outlook.com ([40.107.5.43]:50336
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726690AbgCBU5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:57:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MTtiE8Tfrg26XWJ2oP5tKGxKA27buOG1M4oJGG9cc/hTL0U7TyO3CRMeka57tnDbBCxkyzYzQQP2tvnFcpYPNgTKV5qhwrQMScnmH0KFRboBRcbETBtaUhdi5swcRw5pcT9yOo4B7sNYEPZYglQD20VAChtGIjolAhjuMn6dCJHT3/Pf+VWZngJ9NfIDEn7rTEIuhDOhpyr6J6tJAJF/koHFTzlTh3aWtmmEQSnRrCj26nUGmH+Te1qi2Y5g00On8dl9yvO2lEmBGgKPvKwsIVYnlVBqb5L/rlrbFV7j/9hQ/R3mziNwnDuL48BSLq032M7RHLMSrTGXvs1q5HbOcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=803tOpKNryfd+LRf5X50v4ZX+8USha0Nl2DXCGQHcXc=;
- b=VlOg0FF0FK1r0rizyZrc0fPNs64n74v5FnOzYj9kkoHruz0XH156UgNwNylmj+wgKy8LLCJDlRQpqtZ8Dna2xBHcKqyaPWVKwog1leMA0Q6PNd/hzKDeNvwnlUDZJCnsHyZRMOr6mBXij9PRWQ2/Ed3mh48G/SYgELniRVKZpeAAx50gNNDsYZPP9yAiPEhmGisEqSG++fiX+0fRR8odY+MtBgdZCH4X3qDyxx4zIc7X8h542tyg0rvMWPfuuDkqzSVhwH6oB9YPod2NvNY4ay8B6RS0tII/rVHsb4qyeCUz2gtUy1ywuVQ0dm5kl4R13xKIJ9ed1VDIIPx8259L5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=803tOpKNryfd+LRf5X50v4ZX+8USha0Nl2DXCGQHcXc=;
- b=kncJTKfIMdHhMivHoP4EpuucOmLBmNHILGdFBh1Kx0XwGwbt+Jptb2sHXHUBNlGujd44qKt86bgagT3e1HIwSt8+Lx8FvYg7SZTRiRlOjj5yHOkc20riP4XDKqW/nrqI3P8FOBj0JAJRVGwgj7N+sakRw+6OTcjY89jGinRV5VU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@oss.nxp.com; 
-Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
- VI1PR0402MB3453.eurprd04.prod.outlook.com (52.134.3.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Mon, 2 Mar 2020 20:57:40 +0000
-Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
- ([fe80::35d0:31bc:91d9:ceb0]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
- ([fe80::35d0:31bc:91d9:ceb0%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 20:57:40 +0000
-From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz
-Cc:     gregkh@linuxfoundation.org, khilman@kernel.org,
-        ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, daniel.baluta@gmail.com,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, aisheng.dong@nxp.com,
-        shengjiu.wang@nxp.com, paul.olaru@nxp.com,
-        ranjani.sridharan@linux.intel.com,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [RFC PATCH 2/2] ASoC: SOF: Use multi PM domains helpers
-Date:   Mon,  2 Mar 2020 22:57:00 +0200
-Message-Id: <20200302205700.29746-3-daniel.baluta@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200302205700.29746-1-daniel.baluta@oss.nxp.com>
-References: <20200302205700.29746-1-daniel.baluta@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM4PR05CA0031.eurprd05.prod.outlook.com (2603:10a6:205::44)
- To VI1PR0402MB3839.eurprd04.prod.outlook.com (2603:10a6:803:21::19)
+        Mon, 2 Mar 2020 15:58:50 -0500
+Received: from mga07.intel.com ([134.134.136.100]:14134 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgCBU6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:58:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 12:58:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
+   d="scan'208";a="262915303"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Mar 2020 12:58:49 -0800
+Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 2 Mar 2020 12:58:49 -0800
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.2]) by
+ fmsmsx115.amr.corp.intel.com ([169.254.4.81]) with mapi id 14.03.0439.000;
+ Mon, 2 Mar 2020 12:58:49 -0800
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+CC:     Douglas Anderson <dianders@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
+        "smasetty@codeaurora.org" <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <swboyd@chromium.org>, Sean Paul <sean@poorly.run>
+Subject: RE: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
+ objects
+Thread-Topic: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
+ objects
+Thread-Index: AQHV8NPlMBHxtuqcFk6x//p6aZDLUag1x50A
+Date:   Mon, 2 Mar 2020 20:58:48 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663F4FDE244@FMSMSX108.amr.corp.intel.com>
+References: <1583182067-16530-1-git-send-email-jcrouse@codeaurora.org>
+ <1583182067-16530-3-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1583182067-16530-3-git-send-email-jcrouse@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.106]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM4PR05CA0031.eurprd05.prod.outlook.com (2603:10a6:205::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 20:57:39 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 92c5647e-2ef1-46b5-dcfb-08d7beec58a8
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3453:|VI1PR0402MB3453:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB3453A2EF41EB7ED3BDD341C7B8E70@VI1PR0402MB3453.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:525;
-X-Forefront-PRVS: 033054F29A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(2906002)(26005)(6486002)(4326008)(6506007)(5660300002)(186003)(16526019)(478600001)(7416002)(6666004)(1076003)(2616005)(66946007)(66556008)(66476007)(44832011)(8936002)(8676002)(86362001)(81166006)(81156014)(6512007)(52116002)(956004)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3453;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n/FB799LRjlYE0GyFkBKCEh59RV3CF8U+3+dAe/x9Bgd3SK/FX1lreV47ohXr7IPXe9fnd7mNtUrc2qDGbbAVgQFZkolXJgV8WorvkD0aoTJZMRkD1GF7WFR6lYWjf7eCFH5mMGiW0pCWKS5f4GSLAS/quLnP/Lo7aAoQcfq+ig7PMdmg/x6YvvSF4/DwnrwayWS7+1HTPARp+SNWJ0H1Xj9gmuC8zNXyLiMQHxiOxWsvS5Z8WkVvoLOk2noUI0agnmL+pgZJ4vNCXkJDIeDzQKVk8Wr+NBkIfzk1txDhqe/qkubkZf2DR7cpfMTDx81qlm8QSmm4djGemtv2pDi+SweadIGA/lIcPApMk1hRliLrT6Gy5FTd7QjrgScTFyQ5HER04obTXufi7ipK/XQ04ESaTshVb6pUAsMdPWR6nZQPs1LCvugUd2aZkHzwqDh
-X-MS-Exchange-AntiSpam-MessageData: pGohPEcW6nSL9dhwc16tQKGDoodAup31FfJo/y2dW3F0JCIGUbqoFRTpaGh55I/kdONVlX0/emVNQKG7hZtPfXma71SrVisLR35SROGh69uyJWDdLSHQiaP4OZVHosJ9si5plY71GeTK6gkp4Mz+Aw==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92c5647e-2ef1-46b5-dcfb-08d7beec58a8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 20:57:40.7364
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sOPLTXokLxIM8TkqJZ+OScPig77PaBE2ZRTUdVahy98nAPrKLoxpCYBpGqty/TCGCD69Discp1FVaCRO8HFB/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3453
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>Jordan Crouse
+>Sent: Monday, March 2, 2020 3:48 PM
+>To: linux-arm-msm@vger.kernel.org
+>Cc: Douglas Anderson <dianders@chromium.org>; David Airlie
+><airlied@linux.ie>; freedreno@lists.freedesktop.org;
+>smasetty@codeaurora.org; linux-kernel@vger.kernel.org; dri-
+>devel@lists.freedesktop.org; Stephen Boyd <swboyd@chromium.org>; Ruhl,
+>Michael J <michael.j.ruhl@intel.com>; Sean Paul <sean@poorly.run>
+>Subject: [PATCH v4 2/2] drm/msm/a6xx: Use the DMA API for GMU memory
+>objects
+>
+>The GMU has very few memory allocations and uses a flat memory space so
+>there is no good reason to go out of our way to bypass the DMA APIs which
+>were basically designed for this exact scenario.
+>
+>v4: Use dma_alloc_wc()
 
-Use dev_multi_pm_attach / dev_multi_pm_detach instead of the hardcoded
-version.
+The patch and the update look good to me.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/sof/imx/imx8.c | 54 +++++-----------------------------------
- 1 file changed, 6 insertions(+), 48 deletions(-)
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-index b692752b2178..ca740538a2d5 100644
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -51,10 +51,7 @@ struct imx8_priv {
- 	struct imx_sc_ipc *sc_ipc;
- 
- 	/* Power domain handling */
--	int num_domains;
--	struct device **pd_dev;
--	struct device_link **link;
--
-+	struct dev_multi_pm_domain_data *mpd;
- };
- 
- static void imx8_get_reply(struct snd_sof_dev *sdev)
-@@ -207,7 +204,6 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 	struct resource res;
- 	u32 base, size;
- 	int ret = 0;
--	int i;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -218,39 +214,9 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 	priv->sdev = sdev;
- 
- 	/* power up device associated power domains */
--	priv->num_domains = of_count_phandle_with_args(np, "power-domains",
--						       "#power-domain-cells");
--	if (priv->num_domains < 0) {
--		dev_err(sdev->dev, "no power-domains property in %pOF\n", np);
--		return priv->num_domains;
--	}
--
--	priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
--					  sizeof(*priv->pd_dev), GFP_KERNEL);
--	if (!priv->pd_dev)
--		return -ENOMEM;
--
--	priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
--					sizeof(*priv->link), GFP_KERNEL);
--	if (!priv->link)
--		return -ENOMEM;
--
--	for (i = 0; i < priv->num_domains; i++) {
--		priv->pd_dev[i] = dev_pm_domain_attach_by_id(&pdev->dev, i);
--		if (IS_ERR(priv->pd_dev[i])) {
--			ret = PTR_ERR(priv->pd_dev[i]);
--			goto exit_unroll_pm;
--		}
--		priv->link[i] = device_link_add(&pdev->dev, priv->pd_dev[i],
--						DL_FLAG_STATELESS |
--						DL_FLAG_PM_RUNTIME |
--						DL_FLAG_RPM_ACTIVE);
--		if (!priv->link[i]) {
--			ret = -ENOMEM;
--			dev_pm_domain_detach(priv->pd_dev[i], false);
--			goto exit_unroll_pm;
--		}
--	}
-+	priv->mpd = dev_multi_pm_attach(&pdev->dev);
-+	if (IS_ERR(priv->mpd))
-+		return PTR_ERR(priv->mpd);
- 
- 	ret = imx_scu_get_handle(&priv->sc_ipc);
- 	if (ret) {
-@@ -329,25 +295,17 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- exit_pdev_unregister:
- 	platform_device_unregister(priv->ipc_dev);
- exit_unroll_pm:
--	while (--i >= 0) {
--		device_link_del(priv->link[i]);
--		dev_pm_domain_detach(priv->pd_dev[i], false);
--	}
--
-+	dev_multi_pm_detach(priv->mpd);
- 	return ret;
- }
- 
- static int imx8_remove(struct snd_sof_dev *sdev)
- {
- 	struct imx8_priv *priv = (struct imx8_priv *)sdev->private;
--	int i;
- 
- 	platform_device_unregister(priv->ipc_dev);
- 
--	for (i = 0; i < priv->num_domains; i++) {
--		device_link_del(priv->link[i]);
--		dev_pm_domain_detach(priv->pd_dev[i], false);
--	}
-+	dev_multi_pm_detach(priv->mpd);
- 
- 	return 0;
- }
--- 
-2.17.1
+Mike
 
+>v3: Set the dma mask correctly and use dma_addr_t for the iova type
+>v2: Pass force_dma false to of_dma_configure to require that the DMA
+>region be set up and return error from of_dma_configure to fail probe.
+>
+>Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+>---
+>
+> drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 113 ++++---------------------------
+>---
+> drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   6 +-
+> 2 files changed, 12 insertions(+), 107 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>index 748cd37..dd51dd0 100644
+>--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>@@ -2,6 +2,7 @@
+> /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
+>
+> #include <linux/clk.h>
+>+#include <linux/dma-mapping.h>
+> #include <linux/interconnect.h>
+> #include <linux/pm_domain.h>
+> #include <linux/pm_opp.h>
+>@@ -920,21 +921,10 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+>
+> static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct
+>a6xx_gmu_bo *bo)
+> {
+>-	int count, i;
+>-	u64 iova;
+>-
+> 	if (IS_ERR_OR_NULL(bo))
+> 		return;
+>
+>-	count = bo->size >> PAGE_SHIFT;
+>-	iova = bo->iova;
+>-
+>-	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
+>-		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
+>-		__free_pages(bo->pages[i], 0);
+>-	}
+>-
+>-	kfree(bo->pages);
+>+	dma_free_wc(gmu->dev, bo->size, bo->virt, bo->iova);
+> 	kfree(bo);
+> }
+>
+>@@ -942,7 +932,6 @@ static struct a6xx_gmu_bo
+>*a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+> 		size_t size)
+> {
+> 	struct a6xx_gmu_bo *bo;
+>-	int ret, count, i;
+>
+> 	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+> 	if (!bo)
+>@@ -950,86 +939,14 @@ static struct a6xx_gmu_bo
+>*a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+>
+> 	bo->size = PAGE_ALIGN(size);
+>
+>-	count = bo->size >> PAGE_SHIFT;
+>+	bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova,
+>GFP_KERNEL);
+>
+>-	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
+>-	if (!bo->pages) {
+>+	if (!bo->virt) {
+> 		kfree(bo);
+> 		return ERR_PTR(-ENOMEM);
+> 	}
+>
+>-	for (i = 0; i < count; i++) {
+>-		bo->pages[i] = alloc_page(GFP_KERNEL);
+>-		if (!bo->pages[i])
+>-			goto err;
+>-	}
+>-
+>-	bo->iova = gmu->uncached_iova_base;
+>-
+>-	for (i = 0; i < count; i++) {
+>-		ret = iommu_map(gmu->domain,
+>-			bo->iova + (PAGE_SIZE * i),
+>-			page_to_phys(bo->pages[i]), PAGE_SIZE,
+>-			IOMMU_READ | IOMMU_WRITE);
+>-
+>-		if (ret) {
+>-			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU
+>buffer object\n");
+>-
+>-			for (i = i - 1 ; i >= 0; i--)
+>-				iommu_unmap(gmu->domain,
+>-					bo->iova + (PAGE_SIZE * i),
+>-					PAGE_SIZE);
+>-
+>-			goto err;
+>-		}
+>-	}
+>-
+>-	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
+>-		pgprot_writecombine(PAGE_KERNEL));
+>-	if (!bo->virt)
+>-		goto err;
+>-
+>-	/* Align future IOVA addresses on 1MB boundaries */
+>-	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
+>-
+> 	return bo;
+>-
+>-err:
+>-	for (i = 0; i < count; i++) {
+>-		if (bo->pages[i])
+>-			__free_pages(bo->pages[i], 0);
+>-	}
+>-
+>-	kfree(bo->pages);
+>-	kfree(bo);
+>-
+>-	return ERR_PTR(-ENOMEM);
+>-}
+>-
+>-static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+>-{
+>-	int ret;
+>-
+>-	/*
+>-	 * The GMU address space is hardcoded to treat the range
+>-	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
+>-	 * between the GMU and the CPU will live in this space
+>-	 */
+>-	gmu->uncached_iova_base = 0x60000000;
+>-
+>-
+>-	gmu->domain = iommu_domain_alloc(&platform_bus_type);
+>-	if (!gmu->domain)
+>-		return -ENODEV;
+>-
+>-	ret = iommu_attach_device(gmu->domain, gmu->dev);
+>-
+>-	if (ret) {
+>-		iommu_domain_free(gmu->domain);
+>-		gmu->domain = NULL;
+>-	}
+>-
+>-	return ret;
+> }
+>
+> /* Return the 'arc-level' for the given frequency */
+>@@ -1289,10 +1206,6 @@ void a6xx_gmu_remove(struct a6xx_gpu
+>*a6xx_gpu)
+>
+> 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+>
+>-	iommu_detach_device(gmu->domain, gmu->dev);
+>-
+>-	iommu_domain_free(gmu->domain);
+>-
+> 	free_irq(gmu->gmu_irq, gmu);
+> 	free_irq(gmu->hfi_irq, gmu);
+>
+>@@ -1313,7 +1226,13 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
+>struct device_node *node)
+>
+> 	gmu->dev = &pdev->dev;
+>
+>-	of_dma_configure(gmu->dev, node, true);
+>+	/* Pass force_dma false to require the DT to set the dma region */
+>+	ret = of_dma_configure(gmu->dev, node, false);
+>+	if (ret)
+>+		return ret;
+>+
+>+	/* Set the mask after the of_dma_configure() */
+>+	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
+>
+> 	/* Fow now, don't do anything fancy until we get our feet under us */
+> 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
+>@@ -1325,11 +1244,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
+>struct device_node *node)
+> 	if (ret)
+> 		goto err_put_device;
+>
+>-	/* Set up the IOMMU context bank */
+>-	ret = a6xx_gmu_memory_probe(gmu);
+>-	if (ret)
+>-		goto err_put_device;
+>-
+> 	/* Allocate memory for for the HFI queues */
+> 	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+> 	if (IS_ERR(gmu->hfi))
+>@@ -1375,11 +1289,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu,
+>struct device_node *node)
+> err_memory:
+> 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+>
+>-	if (gmu->domain) {
+>-		iommu_detach_device(gmu->domain, gmu->dev);
+>-
+>-		iommu_domain_free(gmu->domain);
+>-	}
+> 	ret = -ENODEV;
+>
+> err_put_device:
+>diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>index 2af91ed..4af65a3 100644
+>--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>@@ -12,8 +12,7 @@
+> struct a6xx_gmu_bo {
+> 	void *virt;
+> 	size_t size;
+>-	u64 iova;
+>-	struct page **pages;
+>+	dma_addr_t iova;
+> };
+>
+> /*
+>@@ -49,9 +48,6 @@ struct a6xx_gmu {
+> 	int hfi_irq;
+> 	int gmu_irq;
+>
+>-	struct iommu_domain *domain;
+>-	u64 uncached_iova_base;
+>-
+> 	struct device *gxpd;
+>
+> 	int idle_level;
+>--
+>2.7.4
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
