@@ -2,126 +2,129 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE554C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18376C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EC920870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E387A208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:16:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lz48/6Mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCBKOn (ORCPT
+        id S1727363AbgCBKQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:14:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36098 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgCBKOn (ORCPT
+        Mon, 2 Mar 2020 05:16:44 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55202 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727027AbgCBKQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:14:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id j14so4842104otq.3;
-        Mon, 02 Mar 2020 02:14:43 -0800 (PST)
+        Mon, 2 Mar 2020 05:16:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583144203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IXo+jOnMJnVg0BdBfAq0eKhEwbhNb8AEFiily5Isa3s=;
+        b=Lz48/6MrklQ1TgrAYgUnMvL5H84FnwqamDiw5QpMRvpI+KhLtT1OYWTXsdQKZb4YrC553c
+        pjGPssl6LbEcGWewxswEoLeP2tbCoQn2oasM5FaaNaSExMpoWniYULBixvqkNzdj+wCSl+
+        W1q7crQ1fFotjylPUNKyInhDV5VEHTs=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-9l02Ge80Nl22PEqgJcRN4Q-1; Mon, 02 Mar 2020 05:16:41 -0500
+X-MC-Unique: 9l02Ge80Nl22PEqgJcRN4Q-1
+Received: by mail-qk1-f197.google.com with SMTP id d2so8550682qko.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:16:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SVlemy32h72Zpj8jVlIGq7eQAhoadA5R3segFYSq66w=;
-        b=ELGPzNhp69sj+2oC0Y1Eh6u2+NdtJvFBULhKksN2+XrUtV4T+VM7c1VyjYFeARvPCl
-         MftwjcW/5q6KANeXz9vVyYKrt2ehobZzpq5unUneP5GfA5HRh9jJIaVtXjAOCja1esd5
-         1T1NeK7DFZuPphl+ztE9AK5jOrJ0rQDrWbN6IFsKhV/5RVe+gVgaZbg1+cdYI0B05u8p
-         L7EP/dOckGuLud6inX6FUhKgjFwA+rOYEYMsFaYy/kx82qXISyVJgLEQxvB+9VmZE+IO
-         LxmfuO4Plz+mRbwIY+OR2/gs4Gy6PJ7f38zhZ5nbXr5I/Zw88DGtI3JQ/KvG+d0HKqNx
-         5HaQ==
-X-Gm-Message-State: ANhLgQ0etdj+RxP+k+krSpUjyiERJq8VOGL/RR7KoP0sBkQ9DeCHO0ic
-        8pVL9J3z2BOKErjsierqCtu8eZpWM4qFRY46nhmWjw==
-X-Google-Smtp-Source: ADFU+vs/0ZiJfqPA7EukyL4+DZs2EJZ2FkBQDZwJ/jcv1Cma/xnhZmbg/F6SIEf/URrc+W049AaZlV2ArAclptArrf0=
-X-Received: by 2002:a05:6830:12d1:: with SMTP id a17mr3526676otq.39.1583144083038;
- Mon, 02 Mar 2020 02:14:43 -0800 (PST)
+        bh=IXo+jOnMJnVg0BdBfAq0eKhEwbhNb8AEFiily5Isa3s=;
+        b=NPFSZCVY3kRXW4LFp3xL0UXQfG/iA1BevLnQYjUMlVhsyJDuB+Fi2WLXbPdKOJ/m7c
+         0P/LEEartp/60MbNBbNO6wOTNuCuXoRJK4ko+jlnbqD6HhZ3M2BC04979xBdXrBDmhHm
+         NRBDykKn+OBv41fg7NrekMDiHPZZvVXzAteR7LIYLMACpMVsnZ5r+jcxv+mWs4tFPP0e
+         nhHXjFT1ti16Fl4VlXpoAzyS3SfHRRf85E5Gg9siXi8XiCPt8zR8i/yV46msAnS2TZil
+         DQLLhPuneMjV/E7FF7kaTfRTO7AC7zvvYD6BPb1NuOC190Ddy/nYQ2hoSmfjf7x1v+SX
+         o1vw==
+X-Gm-Message-State: ANhLgQ3jZU3QSKU4lesiL7DtI+9rqxZtjNapnXehks4RBYE+5YYpn/Ue
+        7bRVivu/tbxeAoRxJH17ksv3OV7F59GyVLF5t2EgQXoTyhmums6Ks7DUBxIFSKOcjkznqnwgXud
+        YpInaas7dalTHbORbqlLJwmRke172vSQZmoDeYTaB
+X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr7903639qkk.459.1583144201401;
+        Mon, 02 Mar 2020 02:16:41 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvciVC+XX0L/bTNhtxk+6Nmcqb4gcKNRf+REB1cVh+9NmujV8iEZpeEbQ7bkpaxLzOlPc2RTSKI9C/8YAO1yK4=
+X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr7903622qkk.459.1583144201197;
+ Mon, 02 Mar 2020 02:16:41 -0800 (PST)
 MIME-Version: 1.0
-References: <68219a85-295d-7b7c-9658-c3045bbcbaeb@free.fr> <e88ca46a-799d-9c86-f2d2-6284eb3c3419@free.fr>
- <CAMuHMdUZfR6pYG-hourZCKT-jhh1t+x-ySF4JnEPJjscGAQT+A@mail.gmail.com> <7622db71-b1f4-62b4-86ee-78e00d5bd52c@free.fr>
-In-Reply-To: <7622db71-b1f4-62b4-86ee-78e00d5bd52c@free.fr>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 11:14:21 +0100
-Message-ID: <CAMuHMdVYghD_xLeXVFD+PGBKECSkQ+_KxPBwFmUDDO3W5skscQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 2/2] clk: Use devm_add in managed functions
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200229173007.61838-1-tanure@linux.com>
+In-Reply-To: <20200229173007.61838-1-tanure@linux.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 2 Mar 2020 11:16:30 +0100
+Message-ID: <CAO-hwJJDv=LnOQDbgWwg2sOccM9Tt-h=082Coi0aYdwG-CG-Kg@mail.gmail.com>
+Subject: Re: [PATCH] HID: hyperv: NULL check before some freeing functions is
+ not needed.
+To:     Lucas Tanure <tanure@linux.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>, linux-hyperv@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On Mon, Mar 2, 2020 at 11:01 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
-> On 27/02/2020 14:36, Geert Uytterhoeven wrote:
-> > On Wed, Feb 26, 2020 at 4:55 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
-> >> Using the helper produces simpler code, and smaller object size.
-
-> >> --- a/drivers/clk/clk-devres.c
-> >> +++ b/drivers/clk/clk-devres.c
-
-> >> @@ -128,30 +109,22 @@ static int devm_clk_match(struct device *dev, void *res, void *data)
-> >>
-> >>  void devm_clk_put(struct device *dev, struct clk *clk)
-> >>  {
-> >> -       int ret;
-> >> -
-> >> -       ret = devres_release(dev, devm_clk_release, devm_clk_match, clk);
-> >> -
-> >> -       WARN_ON(ret);
-> >> +       WARN_ON(devres_release(dev, my_clk_put, devm_clk_match, clk));
-> >
-> > Getting rid of "ret" is an unrelated change, which actually increases
-> > kernel size, as the WARN_ON() parameter is stringified for the warning
-> > message.
+On Sat, Feb 29, 2020 at 6:30 PM Lucas Tanure <tanure@linux.com> wrote:
 >
-> Weird... Are you sure about that? I built the preprocessed file,
-> and it didn't appear to be so.
+> Fix below warnings reported by coccicheck:
+> drivers/hid/hid-hyperv.c:197:2-7: WARNING: NULL check before some freeing functions is not needed.
+> drivers/hid/hid-hyperv.c:211:2-7: WARNING: NULL check before some freeing functions is not needed.
 >
-> #ifndef WARN_ON
-> #define WARN_ON(condition) ({                                           \
->         int __ret_warn_on = !!(condition);                              \
->         if (unlikely(__ret_warn_on))                                    \
->                 __WARN();                                               \
->         unlikely(__ret_warn_on);                                        \
-> })
-> #endif
+> Signed-off-by: Lucas Tanure <tanure@linux.com>
+> ---
+
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+
+Sasha, do you prefer taking this through your tree or through the HID
+one. I don't think we have much scheduled for hyperv, so it's up to
+you.
+
+Cheers,
+Benjamin
+
+>  drivers/hid/hid-hyperv.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
-> Maybe you were thinking of i915's WARN_ON?
+> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+> index dddfca555df9..0b6ee1dee625 100644
+> --- a/drivers/hid/hid-hyperv.c
+> +++ b/drivers/hid/hid-hyperv.c
+> @@ -193,8 +193,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+>                 goto cleanup;
 >
-> #define WARN_ON(x) WARN((x), "%s", "WARN_ON(" __stringify(x) ")")
+>         /* The pointer is not NULL when we resume from hibernation */
+> -       if (input_device->hid_desc != NULL)
+> -               kfree(input_device->hid_desc);
+> +       kfree(input_device->hid_desc);
+>         input_device->hid_desc = kmemdup(desc, desc->bLength, GFP_ATOMIC);
+>
+>         if (!input_device->hid_desc)
+> @@ -207,8 +206,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+>         }
+>
+>         /* The pointer is not NULL when we resume from hibernation */
+> -       if (input_device->report_desc != NULL)
+> -               kfree(input_device->report_desc);
+> +       kfree(input_device->report_desc);
+>         input_device->report_desc = kzalloc(input_device->report_desc_size,
+>                                           GFP_ATOMIC);
+>
+> --
+> 2.25.1
+>
 
-Oops, you're right.  I got trapped again by an override of a standard macro
-(IMHO this should be removed).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
