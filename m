@@ -2,103 +2,81 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A56BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA68C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9AD217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8tjR1Bq"
+	by mail.kernel.org (Postfix) with ESMTP id 52E05217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgCBQUT (ORCPT
+        id S1727365AbgCBQUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:20:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44530 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726661AbgCBQUS (ORCPT
+        Mon, 2 Mar 2020 11:20:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42271 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgCBQUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:20:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583166018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dy2VYWwVWhSvzuqB6gToR7pJSPiAWRfT7pUZn4SEGOw=;
-        b=d8tjR1BqFfdPiwtqFkescCL3KPqDlrOTV81uLA63qcSU/lB+AkmyaPNRJvXIJjMr4vOdZl
-        6Gno1c3VcOIaTxgp04uhGqvBIY6OmlIxss9j2jaVey3HyL54kJcvbU/plqMnE45wnK5gD6
-        WffpSiFBt4ihnVZynyPijNiVA6hxo5M=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-437-mJTb85PRM8SVgcXVQ_gvUQ-1; Mon, 02 Mar 2020 11:20:16 -0500
-X-MC-Unique: mJTb85PRM8SVgcXVQ_gvUQ-1
-Received: by mail-wr1-f72.google.com with SMTP id c6so5979327wrm.18
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:20:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dy2VYWwVWhSvzuqB6gToR7pJSPiAWRfT7pUZn4SEGOw=;
-        b=NOdP8bkitOw6ig4YTrUHvvW0ov8ncugY4vmscEDqzrTCCHslxSuDhYgmTs/sRa1DMW
-         FvHvYsls5wuc0yhe/pFLyuwA10w59LW3Nn+a7cJwF/hqDXJ1n02kxDMhq5FM/rr+SK8h
-         fzuBBy5KC6NztoIS+mkuoT87Wld4xlxp+cWOa3OpzzBkiFh5Bew2aBwSahUD2ENAA7Ev
-         od+azrasSkxkvrI6kuo4j1CwpW22BCjVtVnm3H39tbiqnFqz6v0gDGa5uGa/LQkpGrh8
-         cI3wWXJ398Hk4lEYYGibTBcTWoIl6gGNy/N7Xf9cCHIducOKil/RRebSePSbwFQ4EA80
-         EL5A==
-X-Gm-Message-State: ANhLgQ03JaXNbmnW+0k54lTVkdVDfI2KfSKTMYrWRqL+WCsHjjmTEe9z
-        U6e3x1lFdcdeJEu4aNAnnMiZO99OoTd6gNDoblT9WgoNzdHSu+TZKb3v1HslMy1kO4jnnXsLDkU
-        wLgX0wGmkMw0u8ABbbCPbeySD
-X-Received: by 2002:adf:e74a:: with SMTP id c10mr341818wrn.113.1583166014975;
-        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsFba2ap/3M2C8V1ZLS9AbnIszACse8Qml7+E+3tl18MRaCrS1ooNkZd4X3DTQzJig9UjS+Jw==
-X-Received: by 2002:adf:e74a:: with SMTP id c10mr341803wrn.113.1583166014808;
-        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.85.6])
-        by smtp.gmail.com with ESMTPSA id z14sm29021610wru.31.2020.03.02.08.20.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
-Subject: Re: [PATCH 0/2] KVM: x86/mmu: Fast CR3 switch improvements
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200228225240.8646-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d930b38e-4306-4b1c-3bf9-20d1384b6788@redhat.com>
-Date:   Mon, 2 Mar 2020 17:20:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 11:20:35 -0500
+Received: from [5.158.153.55] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j8nnz-0004iZ-E0; Mon, 02 Mar 2020 17:20:31 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 20CF41040A1; Mon,  2 Mar 2020 17:20:26 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jan Kiszka <jan.kiszka@siemens.com>, x86 <x86@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: x2apic_wrmsr_fence vs. Intel manual
+In-Reply-To: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
+References: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
+Date:   Mon, 02 Mar 2020 17:20:26 +0100
+Message-ID: <87lfoienjp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200228225240.8646-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/20 23:52, Sean Christopherson wrote:
-> Two improvements for fast CR3 switch, implemented with nested VMX in mind,
-> but they should be helpful in general.
-> 
-> Sean Christopherson (2):
->   KVM: x86/mmu: Ignore guest CR3 on fast root switch for direct MMU
->   KVM: x86/mmu: Reuse the current root if possible for fast switch
-> 
->  arch/x86/kvm/mmu/mmu.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
-> 
+Jan Kiszka <jan.kiszka@siemens.com> writes:
+> as I generated a nice bug around fence vs. x2apic icr writes, I studied 
+> the kernel code and the Intel manual in this regard more closely. But 
+> there is a discrepancy:
+>
+> arch/x86/include/asm/apic.h:
+>
+> /*
+>  * Make previous memory operations globally visible before
+>  * sending the IPI through x2apic wrmsr. We need a serializing instruction or
+>  * mfence for this.
+>  */
+> static inline void x2apic_wrmsr_fence(void)
+> {
+>         asm volatile("mfence" : : : "memory");
+> }
+>
+> Intel SDM, 10.12.3 MSR Access in x2APIC Mode:
+>
+> "A WRMSR to an APIC register may complete before all preceding stores 
+> are globally visible; software can prevent this by inserting a 
+> serializing instruction or the sequence MFENCE;LFENCE before the WRMSR."
+>
+> The former dates back to ce4e240c279a, but that commit does not mention 
+> why lfence is not needed. Did the manual read differently back then? Or 
+> why are we safe? To my reading of lfence, it also has a certain 
+> instruction serializing effect that mfence does not have.
 
-Queued, thanks.
+The 2011 SDM says:
 
-Paolo
+  A WRMSR to an APIC register may complete before all preceding stores
+  are globally visible; software can prevent this by inserting a
+  serializing instruction, an SFENCE, or an MFENCE before the WRMSR.
 
+Sigh....
