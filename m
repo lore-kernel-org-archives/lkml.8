@@ -2,81 +2,151 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC67C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A053C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2352084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AEB2084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:28:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ZMoaIqvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCBT2B (ORCPT
+        id S1727783AbgCBT2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:28:01 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52656 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgCBT2A (ORCPT
+        Mon, 2 Mar 2020 14:28:02 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:41992 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgCBT2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 14:28:00 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5D7451475D3B8;
-        Mon,  2 Mar 2020 11:28:00 -0800 (PST)
-Date:   Mon, 02 Mar 2020 11:27:59 -0800 (PST)
-Message-Id: <20200302.112759.480416429402832078.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: inet_sock: Replace zero-length array with
- flexible-array member
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200302120742.GA16158@embeddedor>
-References: <20200302120742.GA16158@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 02 Mar 2020 11:28:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583177278; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K/w7xN8JJOoqBkwjRFtmhdPO4ps8i2CpUSpPDW0yr48=;
+        b=ZMoaIqvQbluaDkRWIfTLHOhukc1YfE8Xoybz2XPE9LtkkQ0wOuUmtDUDeTBYUWqWh5eKBc
+        C9gPkHzyq+tu3AbaCh+RzGvtvPK19aYl0giwSqiFgtLMsnSNbO06WhmYqQPnfoJFEnVVTN
+        HIb/5holaayaF/L64+uCeT5qyw8gjuI=
+Date:   Mon, 02 Mar 2020 16:27:33 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver
+ and LCD controller
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1583177253.3.5@crapouillou.net>
+In-Reply-To: <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Mon, 2 Mar 2020 06:07:42 -0600
+Hi Nikolaus,
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Applied.
+Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> From: Paul Boddie <paul@boddie.org.uk>
+>=20
+> A specialisation of the generic Synopsys HDMI driver is employed for=20
+> JZ4780
+> HDMI support. This requires a new driver, plus device tree and=20
+> configuration
+> modifications.
+>=20
+> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 32=20
+> ++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index f928329b034b..391d4e1efd35 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -433,4 +433,36 @@
+>=20
+>  		status =3D "disabled";
+>  	};
+> +
+> +	hdmi: hdmi@10180000 {
+> +		compatible =3D "ingenic,jz4780-dw-hdmi";
+> +		reg =3D <0x10180000 0x8000>;
+> +		reg-io-width =3D <4>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+> +		clock-names =3D "isfr" , "iahb";
+> +
+> +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
+> +		assigned-clock-rates =3D <27000000>;
+
+I *think* this should go to the board file.
+
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <3>;
+> +
+> +		/* ddc-i2c-bus =3D <&i2c4>; */
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+> +	lcd: lcd@13050000 {
+
+The node name should be 'lcd-controller'.
+
+> +		compatible =3D "ingenic,jz4740-lcd";
+
+The JZ4780's LCD controller is much newer than the JZ4740 one, so even=20
+if it works with the "ingenic,jz4740-lcd" compatible string, you want=20
+it as a fallback.
+So this should be: compatible =3D "ingenic,jz4780-lcd",=20
+"ingenic,jz4740-lcd".
+
+That means the YAML should be updated too.
+
+-Paul
+
+> +		reg =3D <0x13050000 0x1800>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
+> +		clock-names =3D "lcd", "lcd_pclk";
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <31>;
+> +
+> +		status =3D "disabled";
+> +	};
+>  };
+> --
+> 2.23.0
+>=20
+
+=
+
