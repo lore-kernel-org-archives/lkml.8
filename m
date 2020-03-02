@@ -2,203 +2,174 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AACC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEA6C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D68246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583131662;
-	bh=SiDpeCdDbzUvN9oPIojdN2kmTEqmOZp2IG2xnnVOft8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PRhDQc9IwVkwqyfv4AGr4W3ou+3PsrKtdz0Pf4ldb8/jNnaL+0+l/n5yBMK2OHIco
-	 6boS3OJ7DLJ1/rUwbLhp6QlUcXy2Mf7XnQQJj//86hWXB/Ivv6TdjbDFO2M7DAmLG9
-	 C4uGzBySGFcG1dpBAkHA/d3DF70X1E0z19rzeUwc=
+	by mail.kernel.org (Postfix) with ESMTP id 15D15246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCBGrl (ORCPT
+        id S1726889AbgCBGsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 01:48:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:56678 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgCBGrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:47:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3999C2468E;
-        Mon,  2 Mar 2020 06:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583131660;
-        bh=SiDpeCdDbzUvN9oPIojdN2kmTEqmOZp2IG2xnnVOft8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NKjr2d3DxDMLcPJBgA9vJTBKLdy4YP1n78Se5Y9V/IRzObU5ys+SjAk+BNg6bFUBg
-         UsUQNWL68Na6zySoskZgDJLpccJWaCR0fPQ4R3c6AiMbcv9jQdm/Sjc6Ha9dZkKZgr
-         swofh+c0qWcAJuSwU1Fp2Tubdg/jVZRTrDBm6WNk=
-Date:   Mon, 2 Mar 2020 15:47:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>, paulmck@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
-Message-Id: <20200302154734.42e538c66261146a6e69f064@kernel.org>
-In-Reply-To: <20200301193501.0a850859@oasis.local.home>
-References: <20200301193034.GY2935@paulmck-ThinkPad-P72>
-        <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
-        <20200301193501.0a850859@oasis.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726545AbgCBGsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:48:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D730AFEC;
+        Sun,  1 Mar 2020 22:47:58 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7EB443F6CF;
+        Sun,  1 Mar 2020 22:51:45 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
+Subject: [RFC 0/3] mm/vma: some new flags and helpers
+Date:   Mon,  2 Mar 2020 12:17:43 +0530
+Message-Id: <1583131666-15531-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 1 Mar 2020 19:35:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The motivation here is to consolidate VMA flag combinations commonly used
+across platforms and reduce code duplication while making it uncluttered
+in general.
 
-> On Sun, 1 Mar 2020 11:39:42 -0800
-> Andy Lutomirski <luto@amacapital.net> wrote:
-> 
-> > > On Mar 1, 2020, at 11:30 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > 
-> > > ﻿On Sun, Mar 01, 2020 at 10:54:23AM -0800, Andy Lutomirski wrote:  
-> > >>> On Sun, Mar 1, 2020 at 10:26 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >>> 
-> > >>> On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:  
-> > >>>> Andy Lutomirski <luto@kernel.org> writes:  
-> > >>>>> On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:  
-> > >>>>>> Andy Lutomirski <luto@amacapital.net> writes:  
-> > >>>>>>>> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >>>>>>>> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
-> > >>>>>>>> except trace_hardirq_off/on() as those trace functions do not allow to
-> > >>>>>>>> attach anything AFAICT.  
-> > >>>>>>> 
-> > >>>>>>> Can you point to whatever makes those particular functions special?  I
-> > >>>>>>> failed to follow the macro maze.  
-> > >>>>>> 
-> > >>>>>> Those are not tracepoints and not going through the macro maze. See
-> > >>>>>> kernel/trace/trace_preemptirq.c  
-> > >>>>> 
-> > >>>>> That has:
-> > >>>>> 
-> > >>>>> void trace_hardirqs_on(void)
-> > >>>>> {
-> > >>>>>        if (this_cpu_read(tracing_irq_cpu)) {
-> > >>>>>                if (!in_nmi())
-> > >>>>>                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
-> > >>>>>                tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
-> > >>>>>                this_cpu_write(tracing_irq_cpu, 0);
-> > >>>>>        }
-> > >>>>> 
-> > >>>>>        lockdep_hardirqs_on(CALLER_ADDR0);
-> > >>>>> }
-> > >>>>> EXPORT_SYMBOL(trace_hardirqs_on);
-> > >>>>> NOKPROBE_SYMBOL(trace_hardirqs_on);
-> > >>>>> 
-> > >>>>> But this calls trace_irq_enable_rcuidle(), and that's the part of the
-> > >>>>> macro maze I got lost in.  I found:
-> > >>>>> 
-> > >>>>> #ifdef CONFIG_TRACE_IRQFLAGS
-> > >>>>> DEFINE_EVENT(preemptirq_template, irq_disable,
-> > >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> > >>>>>             TP_ARGS(ip, parent_ip));
-> > >>>>> 
-> > >>>>> DEFINE_EVENT(preemptirq_template, irq_enable,
-> > >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
-> > >>>>>             TP_ARGS(ip, parent_ip));
-> > >>>>> #else
-> > >>>>> #define trace_irq_enable(...)
-> > >>>>> #define trace_irq_disable(...)
-> > >>>>> #define trace_irq_enable_rcuidle(...)
-> > >>>>> #define trace_irq_disable_rcuidle(...)
-> > >>>>> #endif
-> > >>>>> 
-> > >>>>> But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
-> > >>>>> where I got lost in the macro maze.  I looked at the gcc asm output,
-> > >>>>> and there is, indeed:  
-> > >>>> 
-> > >>>> DEFINE_EVENT
-> > >>>>  DECLARE_TRACE
-> > >>>>    __DECLARE_TRACE
-> > >>>>       __DECLARE_TRACE_RCU
-> > >>>>         static inline void trace_##name##_rcuidle(proto)
-> > >>>>            __DO_TRACE
-> > >>>>               if (rcuidle)
-> > >>>>                  ....
-> > >>>>   
-> > >>>>> But I also don't see why this is any different from any other tracepoint.  
-> > >>>> 
-> > >>>> Indeed. I took a wrong turn at some point in the macro jungle :)
-> > >>>> 
-> > >>>> So tracing itself is fine, but then if you have probes or bpf programs
-> > >>>> attached to a tracepoint these use rcu_read_lock()/unlock() which is
-> > >>>> obviosly wrong in rcuidle context.  
-> > >>> 
-> > >>> Definitely, any such code needs to use tricks similar to that of the
-> > >>> tracing code.  Or instead use something like SRCU, which is OK with
-> > >>> readers from idle.  Or use something like Steve Rostedt's workqueue-based
-> > >>> approach, though please be very careful with this latter, lest the
-> > >>> battery-powered embedded guys come after you for waking up idle CPUs
-> > >>> too often.  ;-)  
-> > >> 
-> > >> Are we okay if we somehow ensure that all the entry code before
-> > >> enter_from_user_mode() only does rcuidle tracing variants and has
-> > >> kprobes off?  Including for BPF use cases?  
-> > > 
-> > > That would work, though if BPF used SRCU instead of RCU, this would
-> > > be unnecessary.  Sadly, SRCU has full memory barriers in each of
-> > > srcu_read_lock() and srcu_read_unlock(), but we are working on it.
-> > > (As always, no promises!)
-> > >   
-> > >> It would be *really* nice if we could statically verify this, as has
-> > >> been mentioned elsewhere in the thread.  It would also probably be
-> > >> good enough if we could do it at runtime.  Maybe with lockdep on, we
-> > >> verify rcu state in tracepoints even if the tracepoint isn't active?
-> > >> And we could plausibly have some widget that could inject something
-> > >> into *every* kprobeable function to check rcu state.  
+This first introduces a default VM_DATA_DEFAULT_FLAGS which platforms can
+easily fall back on without requiring to define any similar data flag
+combinations as they currently do. This also adds some more common data
+flag combinations which are generally used when the platforms decide to
+override the default.
 
-I'm still not clear about this point, should I check rcuidle in kprobes
-int3 handler or jump optimized handler? (int3 handler will run in
-irq context so is not able to use srcu anyway...) Maybe I missed the point.
+The second patch consolidates VM_READ, VM_WRITE, VM_EXEC as VM_ACCESS_FLAGS
+extending the existing VMA accessibility concept via vma_is_accessibility().
+VM_ACCESS_FLAGS replaces many other instances which used check all three
+VMA access flags simultaneously.
 
-> > > 
-> > > Or just have at least one testing step that activates all tracepoints,
-> > > but with lockdep enabled?  
-> > 
-> > Also kprobe.
-> > 
-> > I don’t suppose we could make notrace imply nokprobe.  Then all
-> > kprobeable functions would also have entry/exit tracepoints, right?
-> 
-> There was some code before that prevented a kprobe from being allowed
-> in something that was not in the ftrace mcount table (which would make
-> this happen). But I think that was changed because it was too
-> restrictive.
+While here, this also adds some more special VMA flag based helpers which
+wraps around similar checks at various places thus improving readability.
+This series intentionally limits these new helpers which are applicable 
+only for special purpose VM flags than the more common ones like VM_READ,
+VM_WRITE, VM_EXEC, VM_SHARED etc just to limit code churn. But if there is
+common agreement that every flag should have it's own wrapper here, we can
+do that as well. Otherwise if this patch seems really unnecessary with much
+code churn, will be happy to drop it.
 
-Would you mean CONFIG_KPROBE_EVENTS_ON_NOTRACE? By default notrace
-means noprobe too now. With CONFIG_KPROBE_EVENTS_ON_NOTRACE=y, we can
-put kprobe events on notrace functions. So if you unsure, we can put
-a kprobe on those functions and see what happens.
-(Note that this is only for kprobe event, not kprobes itself)
+Reviews, comments, suggestions and concerns welcome. Thank you.
 
-It is actually very restrictive, but it is hard to make a whitelist
-maually, especially if the CC_FLAGS_FTRACE is removed while building.
+This series is based on v5.6-r4 after applying these patches.
 
-Thank you,
+1. https://patchwork.kernel.org/cover/11399319/
+2. https://patchwork.kernel.org/patch/11399379/
+
+This series is build tested across multiple architectures but boot tested
+only on arm64 and x86 platforms.
+
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: uclinux-h8-devel@lists.sourceforge.jp
+Cc: linux-hexagon@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: nios2-dev@lists.rocketboards.org
+Cc: openrisc@lists.librecores.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: linux-xtensa@linux-xtensa.org
+Cc: linux-mm@kvack.org
+
+Anshuman Khandual (3):
+  mm/vma: Define a default value for VM_DATA_DEFAULT_FLAGS
+  mm/vma: Introduce VM_ACCESS_FLAGS
+  mm/vma: Introduce some more VMA flag wrappers
+
+ arch/alpha/include/asm/page.h        |  3 --
+ arch/arc/include/asm/page.h          |  2 +-
+ arch/arm/include/asm/page.h          |  4 +-
+ arch/arm/mm/fault.c                  |  2 +-
+ arch/arm64/include/asm/page.h        |  4 +-
+ arch/arm64/mm/fault.c                |  2 +-
+ arch/c6x/include/asm/page.h          |  5 +--
+ arch/c6x/include/asm/processor.h     |  2 +-
+ arch/csky/include/asm/page.h         |  3 --
+ arch/h8300/include/asm/page.h        |  2 -
+ arch/hexagon/include/asm/page.h      |  3 +-
+ arch/ia64/include/asm/page.h         |  5 +--
+ arch/m68k/include/asm/page.h         |  3 --
+ arch/microblaze/include/asm/page.h   |  2 -
+ arch/mips/include/asm/page.h         |  5 +--
+ arch/nds32/include/asm/page.h        |  3 --
+ arch/nds32/mm/fault.c                |  2 +-
+ arch/nios2/include/asm/page.h        |  3 +-
+ arch/nios2/include/asm/processor.h   |  2 +-
+ arch/openrisc/include/asm/page.h     |  5 ---
+ arch/parisc/include/asm/page.h       |  3 --
+ arch/powerpc/include/asm/page.h      |  9 +----
+ arch/powerpc/include/asm/page_64.h   |  7 +---
+ arch/powerpc/mm/book3s64/pkeys.c     |  2 +-
+ arch/riscv/include/asm/page.h        |  3 +-
+ arch/s390/include/asm/page.h         |  3 +-
+ arch/s390/mm/fault.c                 |  2 +-
+ arch/sh/include/asm/page.h           |  3 --
+ arch/sh/include/asm/processor_64.h   |  2 +-
+ arch/sparc/include/asm/mman.h        |  2 +-
+ arch/sparc/include/asm/page_32.h     |  3 --
+ arch/sparc/include/asm/page_64.h     |  3 --
+ arch/unicore32/include/asm/page.h    |  3 --
+ arch/unicore32/mm/fault.c            |  2 +-
+ arch/x86/include/asm/page_types.h    |  4 +-
+ arch/x86/mm/pkeys.c                  |  2 +-
+ arch/x86/um/asm/vm-flags.h           | 10 +----
+ arch/xtensa/include/asm/page.h       |  3 --
+ drivers/staging/gasket/gasket_core.c |  2 +-
+ fs/binfmt_elf.c                      |  2 +-
+ fs/proc/task_mmu.c                   | 14 +++----
+ include/linux/huge_mm.h              |  4 +-
+ include/linux/mm.h                   | 58 +++++++++++++++++++++++++++-
+ kernel/events/core.c                 |  2 +-
+ kernel/events/uprobes.c              |  2 +-
+ mm/gup.c                             |  2 +-
+ mm/huge_memory.c                     |  6 +--
+ mm/hugetlb.c                         |  4 +-
+ mm/ksm.c                             |  8 ++--
+ mm/madvise.c                         |  4 +-
+ mm/memory.c                          |  4 +-
+ mm/migrate.c                         |  4 +-
+ mm/mlock.c                           |  4 +-
+ mm/mmap.c                            | 20 +++++-----
+ mm/mprotect.c                        |  9 ++---
+ mm/mremap.c                          |  4 +-
+ mm/msync.c                           |  3 +-
+ mm/rmap.c                            |  6 +--
+ mm/shmem.c                           |  8 ++--
+ 59 files changed, 140 insertions(+), 158 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.1
+
