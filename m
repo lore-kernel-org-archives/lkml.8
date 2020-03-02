@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD93C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CEFC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B9C246B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25E624699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgCBInn (ORCPT
+        id S1727505AbgCBInq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:43:43 -0500
-Received: from mga14.intel.com ([192.55.52.115]:45723 "EHLO mga14.intel.com"
+        Mon, 2 Mar 2020 03:43:46 -0500
+Received: from mga12.intel.com ([192.55.52.136]:57008 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbgCBInn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:43:43 -0500
+        id S1726313AbgCBInp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:43:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 00:43:42 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 00:43:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,506,1574150400"; 
-   d="scan'208";a="243133911"
+   d="scan'208";a="438211934"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 00:43:38 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 00:43:41 -0800
 From:   Dilip Kota <eswara.kota@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
         cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
         qi-ming.wu@intel.com, yixin.zhu@intel.com,
         Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v4 1/3] mfd: syscon: Add fwnode_to_regmap
-Date:   Mon,  2 Mar 2020 16:43:23 +0800
-Message-Id: <9953bb25281397553cb87b09d641c968d8432dd9.1583127977.git.eswara.kota@linux.intel.com>
+Subject: [PATCH v4 2/3] dt-bindings: phy: Add YAML schemas for Intel Combophy
+Date:   Mon,  2 Mar 2020 16:43:24 +0800
+Message-Id: <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <cover.1583127977.git.eswara.kota@linux.intel.com>
 References: <cover.1583127977.git.eswara.kota@linux.intel.com>
@@ -47,60 +47,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Traverse regmap handle entry from firmware node handle.
+Combophy subsystem provides PHY support to various
+controllers, viz. PCIe, SATA and EMAC.
+Adding YAML schemas for the same.
 
 Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 ---
 Changes on v4:
-  No changes
+  No changes.
 
- drivers/mfd/syscon.c       | 8 ++++++++
- include/linux/mfd/syscon.h | 6 ++++++
- 2 files changed, 14 insertions(+)
+Changes on v3:
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index e22197c832e8..08064ffc5394 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(device_node_to_regmap);
- 
-+struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-+{
-+	struct device_node *np = to_of_node(fwnode);
+ Add include/dt-bindings/phy/phy-intel-combphy.h for phy modes.
+ Add SoC specific compatible "intel,combophy-lgm".
+ Correct the nodename pattern.
+ clocks description removed and add maxItems entry.
+ Remove "simple-bus" as it expects minimum one address
+  cell and size cell in the children node. Call devm_of_platform_populate()
+  in the driver to perform "simple-bus" functionality.
+
+Changes on v2:
+
+ Add custom 'select'
+ Pass hardware instance entries with phandles and
+   remove cell-index and bid entries
+ Clock, register address space, are same for the children.
+   So move them to parent node.
+ Two PHY instances cannot run in different modes,
+   so move the phy-mode entry to parent node.
+ Add second child entry in the DT example.
+
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 123 +++++++++++++++++++++
+ include/dt-bindings/phy/phy-intel-combophy.h       |  10 ++
+ 2 files changed, 133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+ create mode 100644 include/dt-bindings/phy/phy-intel-combophy.h
+
+diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+new file mode 100644
+index 000000000000..f9bae37fab17
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	return device_node_get_regmap(np, false);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_to_regmap);
++title: Intel ComboPhy Subsystem
 +
- struct regmap *syscon_node_to_regmap(struct device_node *np)
- {
- 	if (!of_device_is_compatible(np, "syscon"))
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 112dc66262cc..a024dd88bdd4 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -18,6 +18,7 @@ struct device_node;
- 
- #ifdef CONFIG_MFD_SYSCON
- extern struct regmap *device_node_to_regmap(struct device_node *np);
-+extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
- extern struct regmap *syscon_node_to_regmap(struct device_node *np);
- extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
- extern struct regmap *syscon_regmap_lookup_by_phandle(
-@@ -29,6 +30,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
- 	return ERR_PTR(-ENOTSUPP);
- }
- 
-+static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
 +
- static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
- {
- 	return ERR_PTR(-ENOTSUPP);
++description: |
++  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
++  controllers. A single Combophy provides two PHY instances.
++
++properties:
++  $nodename:
++    pattern: "combophy(@.*|-[0-9a-f])*$"
++
++  compatible:
++    items:
++      - const: intel,combophy-lgm
++      - const: intel,combo-phy
++
++  clocks:
++    maxItems: 1
++
++  reg:
++    items:
++      - description: ComboPhy core registers
++      - description: PCIe app core control registers
++
++  reg-names:
++    items:
++      - const: core
++      - const: app
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: phy
++      - const: core
++
++  intel,syscfg:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: Chip configuration registers handle and ComboPhy instance id
++
++  intel,hsio:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: HSIO registers handle and ComboPhy instance id on NOC
++
++  intel,aggregation:
++    type: boolean
++    description: |
++      Specify the flag to configure ComboPHY in dual lane mode.
++
++  intel,phy-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Mode of the two phys in ComboPhy.
++      See dt-bindings/phy/phy-intel-combophy.h for values.
++
++patternProperties:
++  "^phy@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: intel,phydev
++
++      "#phy-cells":
++        const: 0
++
++      resets:
++        description: |
++          reset handle according to the PHY mode.
++          See ../reset/reset.txt for details.
++
++    required:
++      - compatible
++      - "#phy-cells"
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - intel,syscfg
++  - intel,hsio
++  - intel,phy-mode
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/phy/phy-intel-combophy.h>
++    combophy@d0a00000 {
++        compatible = "intel,combophy-lgm", "intel,combo-phy";
++        clocks = <&cgu0 1>;
++        reg = <0xd0a00000 0x40000>,
++              <0xd0a40000 0x1000>;
++        reg-names = "core", "app";
++        resets = <&rcu0 0x50 6>,
++                 <&rcu0 0x50 17>;
++        reset-names = "phy", "core";
++        intel,syscfg = <&sysconf 0>;
++        intel,hsio = <&hsiol 0>;
++        intel,phy-mode = <COMBO_PHY_PCIE>;
++
++        phy@0 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 23>;
++        };
++
++        phy@1 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 24>;
++        };
++    };
+diff --git a/include/dt-bindings/phy/phy-intel-combophy.h b/include/dt-bindings/phy/phy-intel-combophy.h
+new file mode 100644
+index 000000000000..bd7f6377f4ef
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-intel-combophy.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _DT_BINDINGS_INTEL_COMBOPHY
++#define _DT_BINDINGS_INTEL_COMBOPHY
++
++#define COMBO_PHY_PCIE	0
++#define COMBO_PHY_XPCS	1
++#define COMBO_PHY_SATA	2
++
++#endif /* _DT_BINDINGS_INTEL_COMBOPHY*/
 -- 
 2.11.0
 
