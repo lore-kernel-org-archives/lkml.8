@@ -2,250 +2,169 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450A1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA70C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D80A2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE942173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WvHVySHd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tqh/UKsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCBOSh (ORCPT
+        id S1727186AbgCBOTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:18:37 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:55889 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgCBOSh (ORCPT
+        Mon, 2 Mar 2020 09:19:49 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38623 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgCBOTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:18:37 -0500
-Received: by mail-wr1-f73.google.com with SMTP id m18so4613165wro.22
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:18:36 -0800 (PST)
+        Mon, 2 Mar 2020 09:19:48 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x7so521125pgh.5;
+        Mon, 02 Mar 2020 06:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=fOeP7AroqcsyRTw6L8AA/q48quQG5ja31dye1VtPbXg=;
-        b=WvHVySHdGEtgJ0JON1kvEBAfJMdlOSc+5WYZ6S//3VWQ9Aci0gB4Z+6rL07YZCf0Ms
-         mdZLaFpgb2jzJQxzbbxGBpggieUflfZ40Z6EryoNQNKHFMJcpnfcyzo4++EbUYzRTAoH
-         00VjCjfNFE77ZG1/OjeyldJJfT5YPBUCcoKNFtHtZdLSNW0crq1RUXGEe7J0ogmIyJGE
-         818rS1qz/iZFtQe72W6lu+jnh+NtPz5bcwYhPu0+6HJUr71Bh4whz8jB8osmxdepg+qY
-         yXvriNM5a2cnh7sCPWPfYGFDU3xqwPqjzLiNKDj2mKEasONCigkkAztxQY7eiS9GBXZL
-         SGYw==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ldz6VYxbURG1sW8v3fwieAF8HOL43xk0HODeVKT9mY8=;
+        b=Tqh/UKsX4S8zHti9tgWyvujEQUWFU/MRodEqOdBJRIk4r6sG7zXOQNgG32JnXJufSv
+         EfFj4e1osDCiEj5ZMh7zU13oGpelUbN0AO2CU8Z1JQbcVEnkmPq5nsLUaX7cnznVU5Pc
+         qh3Ya8SAwtVMTBv2LLWsfR/r8S6PJE1ARDtSJ5bxnArxNnqQu8MwzPgRzDQv0INqk0X3
+         tAKnjxH+isCODJ0MQaBcboOZVWfktbXjwkYjSBGp+xq4So1DN+UeXhgt8zYzPWJTiL/s
+         PFUmkDz7fpwzvNFknQATdJ26+HXDpDH6TFsX8kgWdsOtZCrfXB0yK90ZV89c6QdNvhWp
+         JiIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=fOeP7AroqcsyRTw6L8AA/q48quQG5ja31dye1VtPbXg=;
-        b=rft9Jjiy0GmvU+U/sS/0Jak8uNsUKM+5GSyHsEYegGeZQvt5qsvpslh8qX4E38Osl+
-         EkiqOeV3rr7FDNZSfeoyhjMpYqw46tAze9LN1mF/TCZYz7OShO+wgIWFNubXHfkf4pd+
-         CG7CcE/4+BMvUDjKOFga2Cqc0dwcHelXwkOuBzV1z3XlwQNuhECEubrTsAFP0aw9jWU5
-         UNBNSBsH1+LG8ND9Vupmsp/q0fEGfedxfS3dVjZO0HD1XiNbqWduvZwL4GpYFS0ijtI0
-         y6suYvr/rdATRw4YPeJHkjsiHz3+Lz+1p28JfOkYhT2cbwrx339+FZpXw+n9Hyt9py8I
-         lh9g==
-X-Gm-Message-State: APjAAAV0ov49lDGgmz8skX8hpWMQj/iKiwzOIlrgL0baK06pziDuI/RD
-        8FH6+2mIu0y5aqCCEZwU4x1grTfS5w==
-X-Google-Smtp-Source: APXvYqzroFcifaZUNodmfvP9Bvug+ca2oUHyHP3HiTvlgyDHz5VJ8Z83t3OYcvaKvogmq3RbkjChaV4y5g==
-X-Received: by 2002:adf:f70f:: with SMTP id r15mr22945837wrp.269.1583158715118;
- Mon, 02 Mar 2020 06:18:35 -0800 (PST)
-Date:   Mon,  2 Mar 2020 15:18:19 +0100
-Message-Id: <20200302141819.40270-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] tools/memory-model/Documentation: Fix "conflict" definition
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        paulmck@kernel.org, akiyks@gmail.com, dlustig@nvidia.com,
-        joel@joelfernandes.org, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ldz6VYxbURG1sW8v3fwieAF8HOL43xk0HODeVKT9mY8=;
+        b=WyeXB2dtr/IB0fq83NUTDrDjMbWy7Cd4PB9MiwJwDMPNEfFvfWsvTdJFIyHLt6CgtW
+         8VFMHl6rCqyXGDtUDOXjFD8cBXr0+cs3s1CGyieibA77GMkgXvgal/P4dxxQ1h1NOeIR
+         GRQwkQDhohq0kdhmSaeD7SFFLdlBZuycqJr1HoYvUqlbQIAZJ/CGQpUgEQkasPSOWryx
+         2XN0t0nSg3Ap048YIjsTwDrQROrijujo1CghU9nFFzQYv1X7UDp/8HTWw56iN87i0oke
+         1dHAx11ld/DqHJ99jZdiSvX7jzFdIONQOuYINhQUSShWAl+QBkxMl/xjiTd2CNWmqw9f
+         EADA==
+X-Gm-Message-State: APjAAAXm3tAG+iKxTmPpU8SgFETLQGWDZSuP47jNqupVJMQne5fTNmeS
+        V8RAxqA++s2+eY6O0ZSpv+GEdJQA
+X-Google-Smtp-Source: APXvYqxUx/IEn6C8/F8saWnZ1gDAk54vRl8c/4B/E3x7hF/bMp2LuQBNSHA2YSthAaQCHVrLQg51vQ==
+X-Received: by 2002:aa7:9a96:: with SMTP id w22mr17971225pfi.210.1583158786789;
+        Mon, 02 Mar 2020 06:19:46 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q66sm22304040pfq.27.2020.03.02.06.19.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 06:19:45 -0800 (PST)
+Subject: Re: [PATCH] watchdog: sbsa_gwdt: disable watchdog when system panic
+ was trigged by signal WS0
+To:     luanshi <zhangliguang@linux.alibaba.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1583138781-40936-1-git-send-email-zhangliguang@linux.alibaba.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <9018b040-d958-4745-e2b9-a9a6c75dd4e5@roeck-us.net>
+Date:   Mon, 2 Mar 2020 06:19:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1583138781-40936-1-git-send-email-zhangliguang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The definition of "conflict" should not include the type of access nor
-whether the accesses are concurrent or not, which this patch addresses.
-The definition of "data race" remains unchanged.
+On 3/2/20 12:46 AM, luanshi wrote:
+> When ARM SBSA Generic Watchdog worked in the two stages mode by setting
+> module parameter action to 1, when the timeout is reached, the first
+> signal (WS0) will trigger panic. Before panic, the value of register
+> SBSA_GWDT_WCS was 0x0, after panic and system startup, the value of
+> register SBSA_GWDT_WCS was 0x7, status bits SBSA_GWDT_WCS_EN
+> SBSA_GWDT_WCS_WS0 and SBSA_GWDT_WCS_WS1 were set, this will increase the
+> refcnt of module sbsa_gwdt by function watchdog_cdev_register because
+> flag WDOG_HW_RUNNING was set, so we cannot unload the module again. To be
+> consistent with reboot, watchdog should be disabled when system panic was
+> trigged by signal(WS0).
+> 
+> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> ---
+>  drivers/watchdog/sbsa_gwdt.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
+> index f0f1e3b..6bee5bb 100644
+> --- a/drivers/watchdog/sbsa_gwdt.c
+> +++ b/drivers/watchdog/sbsa_gwdt.c
+> @@ -194,6 +194,12 @@ static int sbsa_gwdt_stop(struct watchdog_device *wdd)
+>  
+>  static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>  {
+> +	struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+> +	struct watchdog_device *wdd = &gwdt->wdd;
+> +
+> +	if (wdd->ops->stop)
+> +		wdd->ops->stop(wdd);
+> +
+>  	panic(WATCHDOG_NAME " timeout");
+>  
+>  	return IRQ_HANDLED;
+> 
 
-The definition of "conflict" as we know it and is cited by various
-papers on memory consistency models appeared in [1]: "Two accesses to
-the same variable conflict if at least one is a write; two operations
-conflict if they execute conflicting accesses."
+This prevents the 2nd stage (the actual system reset) from working if the panic
+call gets stuck and doesn't result in a reboot. I don't think it is a good idea
+to do that. It effectively disables the second stage.
 
-The LKMM as well as the C11 memory model are adaptations of
-data-race-free, which are based on the work in [2]. Necessarily, we need
-both conflicting data operations (plain) and synchronization operations
-(marked). For example, C11's definition is based on [3], which defines a
-"data race" as: "Two memory operations conflict if they access the same
-memory location, and at least one of them is a store, atomic store, or
-atomic read-modify-write operation. In a sequentially consistent
-execution, two memory operations from different threads form a type 1
-data race if they conflict, at least one of them is a data operation,
-and they are adjacent in <T (i.e., they may be executed concurrently)."
+Ultimately, this is a bios problem; the bios/rommon should have stopped
+the watchdog when rebooting. If you don't want the watchdog to run on startup,
+you have to add a module parameter to disable the watchdog if it is running
+at probe time.
 
-[1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
-    Programs that Share Memory", 1988.
-	URL: http://snir.cs.illinois.edu/listed/J21.pdf
-
-[2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
-    Multiprocessors", 1993.
-	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
-
-[3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
-    Model", 2008.
-	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
-
-Signed-off-by: Marco Elver <elver@google.com>
-Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
----
-v2:
-* Apply Alan's suggested version.
-  - Move "from different CPUs (or threads)" from "conflict" to "data
-    race" definition. Update "race candidate" accordingly.
-* Add citations to commit message.
-
-v1: http://lkml.kernel.org/r/20200228164621.87523-1-elver@google.com
----
- .../Documentation/explanation.txt             | 77 +++++++++----------
- 1 file changed, 38 insertions(+), 39 deletions(-)
-
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index e91a2eb19592a..7a59cadc2f4ca 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -1987,28 +1987,28 @@ outcome undefined.
- 
- In technical terms, the compiler is allowed to assume that when the
- program executes, there will not be any data races.  A "data race"
--occurs when two conflicting memory accesses execute concurrently;
--two memory accesses "conflict" if:
-+occurs when two conflicting memory accesses from different CPUs (or
-+different threads on the same CPU) execute concurrently, and at least
-+one of them is plain.  Two memory accesses "conflict" if:
- 
- 	they access the same location,
- 
--	they occur on different CPUs (or in different threads on the
--	same CPU),
--
--	at least one of them is a plain access,
--
- 	and at least one of them is a store.
- 
--The LKMM tries to determine whether a program contains two conflicting
--accesses which may execute concurrently; if it does then the LKMM says
--there is a potential data race and makes no predictions about the
--program's outcome.
--
--Determining whether two accesses conflict is easy; you can see that
--all the concepts involved in the definition above are already part of
--the memory model.  The hard part is telling whether they may execute
--concurrently.  The LKMM takes a conservative attitude, assuming that
--accesses may be concurrent unless it can prove they cannot.
-+We'll say that two accesses from different threads are "race
-+candidates" if they conflict and at least one of them is plain.
-+Whether or not two candidates actually do race in a given execution
-+then depends on whether they are concurrent.  The LKMM tries to
-+determine whether a program contains race candidates which may execute
-+concurrently; if it does then the LKMM says there is a potential data
-+race and makes no predictions about the program's outcome.
-+
-+Determining whether two accesses are race candidates is easy; you can
-+see that all the concepts involved in the definition above are already
-+part of the memory model.  The hard part is telling whether they may
-+execute concurrently.  The LKMM takes a conservative attitude,
-+assuming that accesses may be concurrent unless it can prove they
-+are not.
- 
- If two memory accesses aren't concurrent then one must execute before
- the other.  Therefore the LKMM decides two accesses aren't concurrent
-@@ -2171,8 +2171,8 @@ again, now using plain accesses for buf:
- 	}
- 
- This program does not contain a data race.  Although the U and V
--accesses conflict, the LKMM can prove they are not concurrent as
--follows:
-+accesses are race candidates, the LKMM can prove they are not
-+concurrent as follows:
- 
- 	The smp_wmb() fence in P0 is both a compiler barrier and a
- 	cumul-fence.  It guarantees that no matter what hash of
-@@ -2326,12 +2326,11 @@ could now perform the load of x before the load of ptr (there might be
- a control dependency but no address dependency at the machine level).
- 
- Finally, it turns out there is a situation in which a plain write does
--not need to be w-post-bounded: when it is separated from the
--conflicting access by a fence.  At first glance this may seem
--impossible.  After all, to be conflicting the second access has to be
--on a different CPU from the first, and fences don't link events on
--different CPUs.  Well, normal fences don't -- but rcu-fence can!
--Here's an example:
-+not need to be w-post-bounded: when it is separated from the other
-+race-candidate access by a fence.  At first glance this may seem
-+impossible.  After all, to be race candidates the two accesses must
-+be on different CPUs, and fences don't link events on different CPUs.
-+Well, normal fences don't -- but rcu-fence can!  Here's an example:
- 
- 	int x, y;
- 
-@@ -2367,7 +2366,7 @@ concurrent and there is no race, even though P1's plain store to y
- isn't w-post-bounded by any marked accesses.
- 
- Putting all this material together yields the following picture.  For
--two conflicting stores W and W', where W ->co W', the LKMM says the
-+race-candidate stores W and W', where W ->co W', the LKMM says the
- stores don't race if W can be linked to W' by a
- 
- 	w-post-bounded ; vis ; w-pre-bounded
-@@ -2380,8 +2379,8 @@ sequence, and if W' is plain then they also have to be linked by a
- 
- 	w-post-bounded ; vis ; r-pre-bounded
- 
--sequence.  For a conflicting load R and store W, the LKMM says the two
--accesses don't race if R can be linked to W by an
-+sequence.  For race-candidate load R and store W, the LKMM says the
-+two accesses don't race if R can be linked to W by an
- 
- 	r-post-bounded ; xb* ; w-pre-bounded
- 
-@@ -2413,20 +2412,20 @@ is, the rules governing the memory subsystem's choice of a store to
- satisfy a load request and its determination of where a store will
- fall in the coherence order):
- 
--	If R and W conflict and it is possible to link R to W by one
--	of the xb* sequences listed above, then W ->rfe R is not
--	allowed (i.e., a load cannot read from a store that it
-+	If R and W are race candidates and it is possible to link R to
-+	W by one of the xb* sequences listed above, then W ->rfe R is
-+	not allowed (i.e., a load cannot read from a store that it
- 	executes before, even if one or both is plain).
- 
--	If W and R conflict and it is possible to link W to R by one
--	of the vis sequences listed above, then R ->fre W is not
--	allowed (i.e., if a store is visible to a load then the load
--	must read from that store or one coherence-after it).
-+	If W and R are race candidates and it is possible to link W to
-+	R by one of the vis sequences listed above, then R ->fre W is
-+	not allowed (i.e., if a store is visible to a load then the
-+	load must read from that store or one coherence-after it).
- 
--	If W and W' conflict and it is possible to link W to W' by one
--	of the vis sequences listed above, then W' ->co W is not
--	allowed (i.e., if one store is visible to a second then the
--	second must come after the first in the coherence order).
-+	If W and W' are race candidates and it is possible to link W
-+	to W' by one of the vis sequences listed above, then W' ->co W
-+	is not allowed (i.e., if one store is visible to a second then
-+	the second must come after the first in the coherence order).
- 
- This is the extent to which the LKMM deals with plain accesses.
- Perhaps it could say more (for example, plain accesses might
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Guenter
