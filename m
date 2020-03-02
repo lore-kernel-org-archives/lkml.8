@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71984C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669F8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4163F217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EFF24677
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgCCACh (ORCPT
+        id S1727911AbgCCACp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:02:37 -0500
-Received: from mga17.intel.com ([192.55.52.151]:37738 "EHLO mga17.intel.com"
+        Mon, 2 Mar 2020 19:02:45 -0500
+Received: from mga17.intel.com ([192.55.52.151]:37735 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgCBX5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727018AbgCBX5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:57:23 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384647"
+   d="scan'208";a="243384634"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:21 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 08/66] KVM: x86: Warn on zero-size save state for valid CPUID 0xD.N sub-leaf
-Date:   Mon,  2 Mar 2020 15:56:11 -0800
-Message-Id: <20200302235709.27467-9-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 04/66] KVM: x86: Clean up error handling in kvm_dev_ioctl_get_cpuid()
+Date:   Mon,  2 Mar 2020 15:56:07 -0800
+Message-Id: <20200302235709.27467-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,42 +49,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARN if the save state size for a valid XCR0-managed sub-leaf is zero,
-which would indicate a KVM or CPU bug.  Add a comment to explain why KVM
-WARNs so the reader doesn't have to tease out the relevant bits from
-Intel's SDM and KVM's XCR0/XSS code.
+Clean up the error handling in kvm_dev_ioctl_get_cpuid(), which has
+gotten a bit crusty as the function has evolved over the years.
+
+Opportunistically hoist the static @funcs declaration to the top of the
+function to make it more obvious that it's a "static const".
+
+No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/x86/kvm/cpuid.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index fd9b29aa7abc..424dde41cb5d 100644
+index de52cbb46171..11d5f311ef10 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -677,10 +677,17 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 				goto out;
+@@ -889,45 +889,40 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 			    struct kvm_cpuid_entry2 __user *entries,
+ 			    unsigned int type)
+ {
+-	struct kvm_cpuid_entry2 *cpuid_entries;
+-	int nent = 0, r = -E2BIG, i;
+-
+ 	static const u32 funcs[] = {
+ 		0, 0x80000000, CENTAUR_CPUID_SIGNATURE, KVM_CPUID_SIGNATURE,
+ 	};
  
- 			do_host_cpuid(&entry[i], function, idx);
--			if (entry[i].eax == 0)
--				continue;
--			if (WARN_ON_ONCE(entry[i].ecx & 1))
++	struct kvm_cpuid_entry2 *cpuid_entries;
++	int nent = 0, r, i;
 +
-+			/*
-+			 * The @supported check above should have filtered out
-+			 * invalid sub-leafs as well as sub-leafs managed by
-+			 * IA32_XSS MSR.  Only XCR0-managed sub-leafs should
-+			 * reach this point, and they should have a non-zero
-+			 * save state size.
-+			 */
-+			if (WARN_ON_ONCE(!entry[i].eax || (entry[i].ecx & 1)))
- 				continue;
-+
- 			entry[i].ecx = 0;
- 			entry[i].edx = 0;
- 			++*nent;
+ 	if (cpuid->nent < 1)
+-		goto out;
++		return -E2BIG;
+ 	if (cpuid->nent > KVM_MAX_CPUID_ENTRIES)
+ 		cpuid->nent = KVM_MAX_CPUID_ENTRIES;
+ 
+ 	if (sanity_check_entries(entries, cpuid->nent, type))
+ 		return -EINVAL;
+ 
+-	r = -ENOMEM;
+ 	cpuid_entries = vzalloc(array_size(sizeof(struct kvm_cpuid_entry2),
+ 					   cpuid->nent));
+ 	if (!cpuid_entries)
+-		goto out;
++		return -ENOMEM;
+ 
+-	r = 0;
+ 	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
+ 		r = get_cpuid_func(cpuid_entries, funcs[i], &nent, cpuid->nent,
+ 				   type);
+ 		if (r)
+ 			goto out_free;
+ 	}
++	cpuid->nent = nent;
+ 
+-	r = -EFAULT;
+ 	if (copy_to_user(entries, cpuid_entries,
+ 			 nent * sizeof(struct kvm_cpuid_entry2)))
+-		goto out_free;
+-	cpuid->nent = nent;
+-	r = 0;
++		r = -EFAULT;
+ 
+ out_free:
+ 	vfree(cpuid_entries);
+-out:
+ 	return r;
+ }
+ 
 -- 
 2.24.1
 
