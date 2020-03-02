@@ -2,148 +2,122 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6807C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A11CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA8224699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D15524697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NfkXxwE0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7/Qsko0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCBEN0 (ORCPT
+        id S1726892AbgCBETi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 23:13:26 -0500
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:43303 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgCBENZ (ORCPT
+        Sun, 1 Mar 2020 23:19:38 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39694 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgCBETh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 23:13:25 -0500
-Received: by mail-pf1-f176.google.com with SMTP id s1so4886101pfh.10
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 20:13:25 -0800 (PST)
+        Sun, 1 Mar 2020 23:19:37 -0500
+Received: by mail-pf1-f195.google.com with SMTP id l7so4906318pff.6
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 20:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CxsIIu+/8DSr9yF0CIvvdp+l+R1SqYNd7xvzR+EPPKE=;
-        b=NfkXxwE0BJXx6VznfLq3+TLrkcYj+Bd8JMt7XwZ/gLY6AnA12lM4KgasNRpqCaHJ/3
-         WZDZRB0oBnZGfd9KLE+ZF4S+mVBeMuImh9aIpm+02SemxBUTOmOHkPwlK0TxSw87erKC
-         EHpO7rLpaKKo5/AgmsafdCRkBQkS3yWp37CsE=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yHBK3/rKn+LVN6MYF4Du3i4K2LjtQ7eKL0BsrScrxdY=;
+        b=d7/Qsko0GvwfGJb8ZsXpoGwF4rLMogSWMCfssVO7mz/dNvAwHn/isV+n87qCFFmbOv
+         5zjVJd8s8wTvzQuK/rSEXqdU7n80xgKmPi+YT/pi6b1nRslw9JCLYyEeex4hei2hqpZo
+         n8IhdQ4UE13WUvK0oiJaVpkoTqF0ZeOpeFgwoUoJ0rdFRBI2ROI1V/riSgt+SoknniUG
+         oU74Yzahxa4Zjlorq1Kj4Atgho4PDTJSYAoV83Dc7sxa8T3EPZoEX2sRIf/JlrFhm6Wo
+         XbASG8ErPAaNqYZbbvREyHbQyxN/d5ir00tcBlEylWqYtxDW2w1GK+ZAT+ppZyfIcTfd
+         d46w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CxsIIu+/8DSr9yF0CIvvdp+l+R1SqYNd7xvzR+EPPKE=;
-        b=Co6J/l06yAvMDftNRRgMp56ekcwY/chWd8yEh9lP7RUdOiRQDbAOIjssijiqILDoYn
-         GnScbKxcA+4ws48N2hOu0PsGRBsoxoOFsdY0HAoTr5Tigq3bJX1O9pp9EFNM7U49ptDi
-         IMycZH0GlSzvBc+p35zPnkQP8wKoHWuXkXGNHI3wqtAzRcrZYqy4CNCcUo47RaDJCeO8
-         F/AETMMF2vBu+oa049vuPPBiNMfk0koUHsQty7nhbuPmLemxmKjNLNIJwCv2i5TSHJBe
-         qdBdFKtU5jubDxjR6QiwfPHomyMObIk7Lj688bpIMKaleNtpRlpN/4PeFqck5KZzppfQ
-         dmsw==
-X-Gm-Message-State: APjAAAX/LfbzD1A0htx0TQCgR0ZuUE7jeYXWTd5nr1htief/1qB+TO9n
-        mLP8wpCXUO13H3dPCNNVpzro9g==
-X-Google-Smtp-Source: APXvYqy2P0RLXAO/iaD6PSxmAoR9E0Ta7ZhsYA/73Gha5XVmyVbImRUyF/AYogQA0cr6jsaCacRF1A==
-X-Received: by 2002:aa7:9789:: with SMTP id o9mr14416433pfp.138.1583122404529;
-        Sun, 01 Mar 2020 20:13:24 -0800 (PST)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id d82sm1698114pfd.187.2020.03.01.20.13.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 20:13:24 -0800 (PST)
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv4 11/11] videobuf2: don't test db_attach in dma-contig prepare and finish
-Date:   Mon,  2 Mar 2020 13:12:13 +0900
-Message-Id: <20200302041213.27662-12-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200302041213.27662-1-senozhatsky@chromium.org>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yHBK3/rKn+LVN6MYF4Du3i4K2LjtQ7eKL0BsrScrxdY=;
+        b=O4Rf4fsBEovpbSgM5hrTb41NQjw03gWGVfTOAAoWUGAVR/Ex1lVAAm+N83CKB2/D8y
+         DYwqINQoe9oplAjDEafDZNTnE+KaNzzDGimYKAseQxYYJ0rao5RjWjf7JMvXpRcfGoF1
+         eTdUYCWNxJxMiTrHwf0N29X4em6WVL7pHysMenMWgmhfj6ex8LqZmjv6RuC+uWzIB3Vk
+         Y/mlM5z7RwqOPzXK8tllkW0h3J2Hz/Th4XfKcyb1W84JyQ972LLhd/58hqHA3ZawO+J7
+         zWtLyQxmnmMTBsDLeYTHU3vAYrxfK+rZoO0bpQeVzE0cVvhpRGa0Et2cK0fZN+gor0/Z
+         Igvg==
+X-Gm-Message-State: APjAAAWE/V6fxXUBSzf9vXGVlaHlVCyCFxPmBUw16ZWZ9JFORgAKqN6o
+        nBfw/msBAx/lahqGcPjepS6uYg==
+X-Google-Smtp-Source: APXvYqymLyln6a38K5aMXFA9lXxZgKiZg4FWlryrDmM9cXV42wpxdOAYp3guF6wE7YivyJTj7tRdBw==
+X-Received: by 2002:a63:c546:: with SMTP id g6mr16910592pgd.243.1583122776505;
+        Sun, 01 Mar 2020 20:19:36 -0800 (PST)
+Received: from localhost ([122.167.24.230])
+        by smtp.gmail.com with ESMTPSA id z13sm18823624pge.29.2020.03.01.20.19.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 01 Mar 2020 20:19:35 -0800 (PST)
+Date:   Mon, 2 Mar 2020 09:49:33 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH] cpufreq: ti-cpufreq: Add support for OPP_PLUS
+Message-ID: <20200302041933.uuoa5kbvgtde37oq@vireshk-i7>
+References: <20200228144529.14548-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228144529.14548-1-t-kristo@ti.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We moved cache management decision making to the upper layer and
-rely on buffer's need_cache_sync flags and videobuf2 core. If the
-upper layer (core) has decided to invoke ->prepare() or ->finish()
-then we must sync.
+On 28-02-20, 16:45, Tero Kristo wrote:
+> From: Lokesh Vutla <lokeshvutla@ti.com>
+> 
+> DRA762 SoC introduces OPP_PLUS which runs at 1.8GHz. Add
+> support for this OPP in ti-cpufreq driver.
+> 
+> Acked-by: Dave Gerlach <d-gerlach@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/cpufreq/ti-cpufreq.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+> index 557cb513bf7f..d62b6b21325a 100644
+> --- a/drivers/cpufreq/ti-cpufreq.c
+> +++ b/drivers/cpufreq/ti-cpufreq.c
+> @@ -25,11 +25,14 @@
+>  
+>  #define DRA7_EFUSE_HAS_OD_MPU_OPP		11
+>  #define DRA7_EFUSE_HAS_HIGH_MPU_OPP		15
+> +#define DRA76_EFUSE_HAS_PLUS_MPU_OPP		18
+>  #define DRA7_EFUSE_HAS_ALL_MPU_OPP		23
+> +#define DRA76_EFUSE_HAS_ALL_MPU_OPP		24
+>  
+>  #define DRA7_EFUSE_NOM_MPU_OPP			BIT(0)
+>  #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
+>  #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
+> +#define DRA76_EFUSE_PLUS_MPU_OPP		BIT(3)
+>  
+>  #define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
+>  #define OMAP3_CONTROL_IDCODE			0x4830A204
+> @@ -80,6 +83,9 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+>  	 */
+>  
+>  	switch (efuse) {
+> +	case DRA76_EFUSE_HAS_PLUS_MPU_OPP:
+> +	case DRA76_EFUSE_HAS_ALL_MPU_OPP:
+> +		calculated_efuse |= DRA76_EFUSE_PLUS_MPU_OPP;
+>  	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+>  	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+>  		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
 
-For DMABUF ->need_cache_sync_on_prepare and ->need_cache_sync_on_flush
-are always false so videobuf core does not call ->prepare() and
-->finish() on such buffers.
+This is already merged, why sending it again ?
 
-Additionally, scratch the DMABUF comment.
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/media/common/videobuf2/videobuf2-dma-contig.c | 6 ++----
- drivers/media/common/videobuf2/videobuf2-dma-sg.c     | 8 --------
- 2 files changed, 2 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-index a387260fb321..6ea0961149d7 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -100,8 +100,7 @@ static void vb2_dc_prepare(void *buf_priv)
- 	struct vb2_dc_buf *buf = buf_priv;
- 	struct sg_table *sgt = buf->dma_sgt;
- 
--	/* DMABUF exporter will flush the cache for us */
--	if (!sgt || buf->db_attach)
-+	if (!sgt)
- 		return;
- 
- 	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
-@@ -113,8 +112,7 @@ static void vb2_dc_finish(void *buf_priv)
- 	struct vb2_dc_buf *buf = buf_priv;
- 	struct sg_table *sgt = buf->dma_sgt;
- 
--	/* DMABUF exporter will flush the cache for us */
--	if (!sgt || buf->db_attach)
-+	if (!sgt)
- 		return;
- 
- 	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-index ddc67c9aaedb..2a01bc567321 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-@@ -204,10 +204,6 @@ static void vb2_dma_sg_prepare(void *buf_priv)
- 	struct vb2_dma_sg_buf *buf = buf_priv;
- 	struct sg_table *sgt = buf->dma_sgt;
- 
--	/* DMABUF exporter will flush the cache for us */
--	if (buf->db_attach)
--		return;
--
- 	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
- 			       buf->dma_dir);
- }
-@@ -217,10 +213,6 @@ static void vb2_dma_sg_finish(void *buf_priv)
- 	struct vb2_dma_sg_buf *buf = buf_priv;
- 	struct sg_table *sgt = buf->dma_sgt;
- 
--	/* DMABUF exporter will flush the cache for us */
--	if (buf->db_attach)
--		return;
--
- 	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
- }
- 
 -- 
-2.25.0.265.gbab2e86ba0-goog
-
+viresh
