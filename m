@@ -2,90 +2,117 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7249EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3ADC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5532A222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FDF21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCBP6T (ORCPT
+        id S1727464AbgCBP6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:58:19 -0500
-Received: from mga07.intel.com ([134.134.136.100]:58152 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbgCBP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:58:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 07:58:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="438321722"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Mar 2020 07:58:16 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j8nSU-006Ibe-Ru; Mon, 02 Mar 2020 17:58:18 +0200
-Date:   Mon, 2 Mar 2020 17:58:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v1] mei: Don't encourage to use kernel internal types in
- user code
-Message-ID: <20200302155818.GG1224808@smile.fi.intel.com>
-References: <20200228151328.45062-1-andriy.shevchenko@linux.intel.com>
- <3bb5abe91919458aa6166eb60d9451ff@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bb5abe91919458aa6166eb60d9451ff@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Mon, 2 Mar 2020 10:58:25 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727085AbgCBP6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:58:24 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022FnsAe036178
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 10:58:23 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmwvc1md-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:58:23 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bmt@zurich.ibm.com>;
+        Mon, 2 Mar 2020 15:58:20 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 15:58:17 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022FwGrd51118282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 15:58:16 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D24CFA4062;
+        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AD0AA405B;
+        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
+Received: from spoke.zurich.ibm.com (unknown [9.4.69.152])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 15:58:16 +0000 (GMT)
+From:   Bernard Metzler <bmt@zurich.ibm.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>
+Subject: [Patch for-rc v2] RDMA/siw: Fix failure handling during device creation
+Date:   Mon,  2 Mar 2020 16:58:14 +0100
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 20030215-0008-0000-0000-000003587D7C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030215-0009-0000-0000-00004A79A9BE
+Message-Id: <20200302155814.9896-1-bmt@zurich.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
+ clxscore=1015 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: Christoph.
+A failing call to ib_device_set_netdev() during device creation
+caused system crash due to xa_destroy of uninitialized xarray
+hit by device deallocation. Fixed by moving xarray initialization
+before potential device deallocation.
 
-On Sat, Feb 29, 2020 at 04:28:11PM +0000, Winkler, Tomas wrote:
-> > uuid_le is internal kernel type which shall not be exposed to the user in the first
-> > place. 
-> Why, these types are exported via include/uapi/linux/uuid.h
+Fixes: bdcf26bf9b3a (rdma/siw: network and RDMA core interface)
+Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+---
+v1 -> v2:
+- Fix here only potential system crash during failing device
+  creation, but not missing correct error propagation.
 
-Which is wrong from the day 1.
+ drivers/infiniband/sw/siw/siw_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The uuid_t type is being provided by libuuid in the user space, there is no
-(more) kernel exported equivalent. Same should be done to the uuid_le.
-
-We already discussed this couple of years ago.
-
-> In order to mitigate the (wrong) distribution of the use of that type,
-> > switch MEI AMT sample to plain unsigned char array.
-> 
-> There was a change to guid_t from uuild_le, anyhow there is much more code
->  except this sample that uses those types. 
-
-I guess you misunderstood the point. The types are for kernel use and keeping them
-exported in a condition like it's now (quoter baked due to drop of uuid_be part
-completely and uuid_le partially) is wrong.
-
-There is *no* ABI change. And basically libuuid or another one should provide
-type and infrastructure for this.
-
-> Nack so far.
-
-If you would like to bear the legacy type, why not to move this UUID UAPI parts
-directly to MEI?
-
+diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
+index 96ed349c0939..5cd40fb9e20c 100644
+--- a/drivers/infiniband/sw/siw/siw_main.c
++++ b/drivers/infiniband/sw/siw/siw_main.c
+@@ -388,6 +388,9 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 		{ .max_segment_size = SZ_2G };
+ 	base_dev->num_comp_vectors = num_possible_cpus();
+ 
++	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
++	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
++
+ 	ib_set_device_ops(base_dev, &siw_device_ops);
+ 	rv = ib_device_set_netdev(base_dev, netdev, 1);
+ 	if (rv)
+@@ -415,9 +418,6 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 	sdev->attrs.max_srq_wr = SIW_MAX_SRQ_WR;
+ 	sdev->attrs.max_srq_sge = SIW_MAX_SGE;
+ 
+-	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
+-	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
+-
+ 	INIT_LIST_HEAD(&sdev->cep_list);
+ 	INIT_LIST_HEAD(&sdev->qp_list);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.2
 
