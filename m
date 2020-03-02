@@ -2,197 +2,136 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B00C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90F2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B030C22B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S/K7AocX"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB6D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgCBPnE (ORCPT
+        id S1727616AbgCBPnJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:43:04 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:47199 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbgCBPnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:43:02 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154301euoutp029117b1fd0e3e366bebebe2f0dc5c9b83~4hxJXLltB1345813458euoutp02m
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:43:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200302154301euoutp029117b1fd0e3e366bebebe2f0dc5c9b83~4hxJXLltB1345813458euoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583163781;
-        bh=5YJmkzqSvsOl8Ktv0uRw2gsQLS0X8Ye3zrrzqfkrg18=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=S/K7AocXxU3JkFZvlxrG/fOl6z6WxxHIJ8pch7UNdQ5GtblGGuCRZUWCBqy0uz0KL
-         sxlAk7H7JLxq68JN/aiXvApk6XVVumoT7UVmnyFq9TA0OoKEzQTgbIrWjubMl8yXMQ
-         c4HxyOA0mL+rQTgZB3SZp7I+QGazXt1BFyNYDsZc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200302154301eucas1p2ba9a21a5c8aeeb1d5c68c8bc609a4b32~4hxI_wW7n1937719377eucas1p20;
-        Mon,  2 Mar 2020 15:43:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 35.AD.61286.5892D5E5; Mon,  2
-        Mar 2020 15:43:01 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154301eucas1p15080111e25e2a09f1848a659f3288b2b~4hxIsLcJJ1688016880eucas1p1f;
-        Mon,  2 Mar 2020 15:43:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200302154301eusmtrp1f04d5a60bc8a020d9172c153cd2f87ad~4hxIroKlY2927629276eusmtrp1v;
-        Mon,  2 Mar 2020 15:43:01 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-48-5e5d2985c20f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.10.07950.5892D5E5; Mon,  2
-        Mar 2020 15:43:01 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154300eusmtip1cb8d74e6d2819f4b0f7e39596efad4c5~4hxIZzkNw2417824178eusmtip1-;
-        Mon,  2 Mar 2020 15:43:00 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: Replace zero-length array with flexible-array
- member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <98cf9000-7ba4-afa6-345e-f170216c6847@samsung.com>
-Date:   Mon, 2 Mar 2020 16:43:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200221160005.GA13552@embeddedor>
+        Mon, 2 Mar 2020 10:43:09 -0500
+Received: from mail-oln040092253078.outbound.protection.outlook.com ([40.92.253.78]:55005
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727608AbgCBPnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:43:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y3IhocMVoZ8YdTenqivjpjDVBw0NmVuA4zZJOg/6B8rGjnNwVxMTFcdj2sBp2pamaR0kcuAkooZcQBWZ/HHVJP839DldYId+TforQp8xqq6/mVh7ksTEv2jj+8EVNPm+6wE5pDzZxvwlcqGtULACGY3yw6ZT6NLEbeEQs/UtwNvliKPNu7zYfGyYea/KhFkTlUdweXHVt5l1qwonqZsVETdWeA7M9g6+cyX5xsrBkAkh3mp8+x1/5GbCI1LJsLOCxCV0o9MXT/hvaJf7Nqwgb5uHarNOIXD8jBh/PBei6xrZVoKQM1SWhv1YiaRM/ZvmtR+UxRex6Rddc1+UFcGE8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W9qVlhsyDKCq9mjIeijB3fDgvsCLVXHxhbpLdE57J9Y=;
+ b=ku3GlGASsjzkyP/4DJaQekhEQvSd54/E7ZC1jLb1zvjSaX/GgB+3zxU7c59ei2NlgK50NFprX99mixGo5Ed39/ZOF7XTQlWvFPX+7YLBZEE+8zdsdw29UAHMUrnZ20fAitbby0ewas+m8wA1vTEXG/xNxt/fyfnTmkKBk8oNefNxaflVsfW2Ciuzgq9pu7PlLr2sXiTKnFH4ZyAQUAMExgKEHzKvJ3Q6pVygSAcaPBaYsSf8RW0q7y3o+5ZrXwJETxDWpB9IyAL6DEl0YydixfDmz4Qxwcky7biBiN/gpXpYIAEz0Z93fF8M4BjwFEimn4fy18CTAgMjOCmLW1dhsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT111.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::35) by
+ PU1APC01HT012.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::85)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
+ 2020 15:43:02 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
+ PU1APC01FT111.mail.protection.outlook.com (10.152.252.236) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:43:02 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 15:43:02 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:44cc:a624:8145:fa79) by ME2PR01CA0060.ausprd01.prod.outlook.com (2603:10c6:201:2b::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 15:43:01 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 2/3] nvmem: check for NULL reg_read and reg_write before
+ dereferencing
+Thread-Topic: [PATCH v2 2/3] nvmem: check for NULL reg_read and reg_write
+ before dereferencing
+Thread-Index: AQHV8KlCqOzxWYRvokel+qEls5/4vw==
+Date:   Mon, 2 Mar 2020 15:43:02 +0000
+Message-ID: <PSXP216MB0438A1EEBF56DF852F18F14580E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOd1Wzdg4g8bzkhZXvr5ns9i6R9Xi
-        RN8HVovLu+awObB4rDuo6nG/+ziTx+dNcgHMUVw2Kak5mWWpRfp2CVwZyzr7mAoWiVdsXrmM
-        sYHxp1AXIyeHhICJxPNF19m6GLk4hARWMEocO7ESyvnCKLF70w0mkCohgc+MEhOXqcB0tK64
-        wgpRtJxR4sKW08wQzltGicvrL7OAVLEJWElMbF/FCGILCwRJXDqyASwuImAkMXtGNyuIzSyQ
-        IHF60T2wOK+AncSjmWfA4iwCKhL/Xv1lBrFFBSIkPj04zApRIyhxcuYTsHpOAQOJ6ds+MULM
-        EZe49WQ+E4QtL7H97RxmiEu72SWer3GBsF0kfjy/AxUXlnh1fAs7hC0jcXpyDwvIAxIC6xgl
-        /na8YIZwtjNKLJ/8jw2iylrizrlfQDYH0AZNifW79CHCjhIrGlaygoQlBPgkbrwVhLiBT2LS
-        tunMEGFeiY42aFCrSWxYtoENZm3XzpXMExiVZiH5bBaSb2Yh+WYWwt4FjCyrGMVTS4tz01OL
-        DfNSy/WKE3OLS/PS9ZLzczcxApPJ6X/HP+1g/Hop6RCjAAejEg9vAHNsnBBrYllxZe4hRgkO
-        ZiURXl/O6Dgh3pTEyqrUovz4otKc1OJDjNIcLErivMaLXsYKCaQnlqRmp6YWpBbBZJk4OKUa
-        GPfK83NxB0z5cmfnq8iL3bcuWX8PFtR4aRLr/+jcze+/npm8mPdkoqP4iZOdHJ9fbwu+zGq2
-        fs6nLvPLd26KeD9hev/obV0X59KSE0ce3b14Tejrj6PL5rhHuohKtPMc6cvKXh/Ltdp0WpXC
-        edbufdP5lv/Ov5i18S6jQ+7num33n2rrvraUuG2vxFKckWioxVxUnAgAj9t3xCIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xu7qtmrFxBteesVlc+fqezWLrHlWL
-        E30fWC0u75rD5sDise6gqsf97uNMHp83yQUwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY
-        6hkam8daGZkq6dvZpKTmZJalFunbJehlLOvsYypYJF6xeeUyxgbGn0JdjJwcEgImEq0rrrB2
-        MXJxCAksZZRY9LWRsYuRAyghI3F8fRlEjbDEn2tdbBA1rxklPk6dxgySYBOwkpjYvooRxBYW
-        CJK4dGQDC4gtImAkMXtGNyvIHGaBBIln81IgepsZJa5+3A9WzytgJ/Fo5hlWEJtFQEXi36u/
-        YDNFBSIkDu+YBVUjKHFy5hOwmZwCBhLTt30CizMLqEv8mXeJGcIWl7j1ZD4ThC0vsf3tHOYJ
-        jEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRGz7ZjP7fsYOx6
-        F3yIUYCDUYmH9wdDbJwQa2JZcWXuIUYJDmYlEV5fzug4Id6UxMqq1KL8+KLSnNTiQ4ymQM9N
-        ZJYSTc4HRnZeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGwUm5
-        MeGcahbbmV5+XZq3WfWBmIZOZYLCcUFZe7UFRdutSpPeFIcZ20qfn7hiQeSxd89P1Eufq+q5
-        XXc37V1ZBv/Ma6mp8zROGegXfb297CjvUpWEizY/g5Zrh5zc989jW+nvPJN+oxPuCpe/eknv
-        WyD6YCK7yZK/Z+16pI5JOG96zS5/1+abEktxRqKhFnNRcSIA2ZHYkLQCAAA=
-X-CMS-MailID: 20200302154301eucas1p15080111e25e2a09f1848a659f3288b2b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200221155727eucas1p13764b85076c6fc29eccaf27ab6dc4967
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200221155727eucas1p13764b85076c6fc29eccaf27ab6dc4967
-References: <CGME20200221155727eucas1p13764b85076c6fc29eccaf27ab6dc4967@eucas1p1.samsung.com>
-        <20200221160005.GA13552@embeddedor>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0060.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::24) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:FD4BB06BD94C428BD5E7BC1EA9D663B71EF8BC335086E27AE3F99DA966EFD05C;UpperCasedChecksum:4109A4679E310BC9E2731DB7B87A24745EE3297D280C8578D681656E2076BC8D;SizeAsReceived:7849;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [OSAjFprNiLGj1wgwmfSBnc9rCXGYlsR9phDwiLtY2T+Q8q0Xj460IGB40bCNlA6N]
+x-microsoft-original-message-id: <20200302154255.GA480989@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 7577f359-ea81-4d88-ec16-08d7bec06475
+x-ms-exchange-slblob-mailprops: gjx25WM8ZNWYKaTQvYk/UtONeFal8oaUmDy8yat1o2nH675ykozxvOx5x1cairscCok630zng6YjFn9EaBVhK3kEJ9JdBCK8gOvs2OYVbowxzPkq41TLB4fQM3O9BkkC5g5VsZknLhmyQ4Yy3f96UXXbz3/XYShHWpeJDjx2EvkYtn4TUzLylTNJ97UTuDBD2LEDFgcT5QmjZq7nmS4mxUjVU2DoV6Kc30T0b764NNqnX4dZCkgQNnybw4ro/b672mII9yBuvmavjdvZcBc5UAn/lnr2bBky5gnc6Zsg0vDKQqzygjCI33lyHoAL88FGLhugoZRu/zNJGPeEs8hbEU0oJmGgw7V68ctjGSeQpnW/eEP2cnINzADubEcrZo2Rj6Idz+q3GnIR/jpa8UbyiFcOfi/3czCTUTjz97xWX8vnTRndqex5Q4JNqDp1rDt4TfSHzPo/HsBe7eGinxYNA5jMewW7CLGzwpQN9E0hYe1zbm09g96dJkGP6XWZYdoX7RYw5WoUDaJEutw8pS2Ct1fxU2OOV8foyxBgKX83k/qXZtYqCvS18ORYaljUj1WLE++9dSsMrBR5kx3AhxS3abla79oDuT3fvy8NEzTDHj9HvPv+pfni79CrK98L2DsO+4pkXZ+qAfI3glxKz7FNVFOKdGMeFhvG1NZAx0epebS4oyf5gQvCnqYD1eaIXziGO5gKfdokXKVLGjbA1DrTJXjcVpQG83N9YmQcjl1jbRw=
+x-ms-traffictypediagnostic: PU1APC01HT012:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8NnWKKqq3fXwvWIfcNrmx9Z8tu0GKkBVUrGsH3WpubKayn7fA2+O6MdNX8dAoojBNQlML4NMldUBeXTIDQuCmvZ9xDGJKe9MCRAqd9snSNGTK/LgnvObuozCtpLpzGr+2Zcs5jsiiUlWzK/xdTw+rfFtF3+PbckEsQKS1idlROZrEHp8lDzkny2f+V+6IJZd
+x-ms-exchange-antispam-messagedata: CJudsI5TVs1hnpXa/R54lvNntkNJ49ed/F8Z5dwqgU+gBF0LKaMBBTY4v5HBzMKlmncbjGNF0FW9xvhJILPkYP2BVd4Ffigr3SJp5CN4rV6DPf/cwY5bBUD6WyLUJc8CbOR3f7bTmtijXYOA/obDVs1i9K1mMPmNbHKEs+F0lPIydo3YbVfyk8DI1Yg2qbJSe4jsLAPhNU9OnI1wP03SPg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C8AE9AD44D481C429663FB7FC8105A1C@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7577f359-ea81-4d88-ec16-08d7bec06475
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:43:02.7901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Return -EPERM if reg_read is NULL in bin_attr_nvmem_read() or if
+reg_write is NULL in bin_attr_nvmem_write().
 
-On 2/21/20 5:00 PM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://protect2.fireeye.com/url?k=0e91e8f4-53f6acd2-0e9063bb-0cc47a31384a-8666d8e5380b9caf&u=https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+This prevents NULL dereferences such as the one described in
+03cd45d2e219 ("thunderbolt: Prevent crash if non-active NVMem file is
+read")
 
-Patch queued for v5.7, thanks.
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/nvmem/nvmem-sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+index 00d3259ea..9312e1d6f 100644
+--- a/drivers/nvmem/nvmem-sysfs.c
++++ b/drivers/nvmem/nvmem-sysfs.c
+@@ -56,6 +56,9 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
+ 
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_read)
++		return -EPERM;
++
+ 	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
+ 
+ 	if (rc)
+@@ -90,6 +93,9 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
+ 
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_write)
++		return -EPERM;
++
+ 	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
+ 
+ 	if (rc)
+-- 
+2.25.1
 
-> ---
->  drivers/video/fbdev/mmp/hw/mmp_ctrl.h | 2 +-
->  drivers/video/fbdev/ssd1307fb.c       | 2 +-
->  include/video/mmp_disp.h              | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> index 335d4983dc52..167585a889d3 100644
-> --- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> +++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> @@ -1406,7 +1406,7 @@ struct mmphw_ctrl {
->  
->  	/*pathes*/
->  	int path_num;
-> -	struct mmphw_path_plat path_plats[0];
-> +	struct mmphw_path_plat path_plats[];
->  };
->  
->  static inline int overlay_is_vid(struct mmp_overlay *overlay)
-> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-> index 142535267fec..fb2640fe575a 100644
-> --- a/drivers/video/fbdev/ssd1307fb.c
-> +++ b/drivers/video/fbdev/ssd1307fb.c
-> @@ -89,7 +89,7 @@ struct ssd1307fb_par {
->  
->  struct ssd1307fb_array {
->  	u8	type;
-> -	u8	data[0];
-> +	u8	data[];
->  };
->  
->  static const struct fb_fix_screeninfo ssd1307fb_fix = {
-> diff --git a/include/video/mmp_disp.h b/include/video/mmp_disp.h
-> index 1f9bc133e230..77252cb46361 100644
-> --- a/include/video/mmp_disp.h
-> +++ b/include/video/mmp_disp.h
-> @@ -231,7 +231,7 @@ struct mmp_path {
->  
->  	/* layers */
->  	int overlay_num;
-> -	struct mmp_overlay overlays[0];
-> +	struct mmp_overlay overlays[];
->  };
->  
->  extern struct mmp_path *mmp_get_path(const char *name);
-> 
