@@ -2,184 +2,84 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8823C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C744421739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7B520656
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a4c4z1jO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgCBNye (ORCPT
+        id S1727461AbgCBNyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:54:34 -0500
-Received: from mga11.intel.com ([192.55.52.93]:22884 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbgCBNyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:54:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 05:54:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="351544506"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 05:54:00 -0800
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH v3 3/9] usb: typec: mux: Allow the mux handles to be requested with fwnode
-Date:   Mon,  2 Mar 2020 16:53:47 +0300
-Message-Id: <20200302135353.56659-4-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200302135353.56659-1-heikki.krogerus@linux.intel.com>
-References: <20200302135353.56659-1-heikki.krogerus@linux.intel.com>
+        Mon, 2 Mar 2020 08:54:01 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34822 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726793AbgCBNx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:53:59 -0500
+X-UUID: 21efdbd243d345c5b3ab4482d27b7061-20200302
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0RbdWX8Fxh/6C5WD9L6DJxUtCmSunSS08zgopxXghdE=;
+        b=a4c4z1jON8lv4gVbzuW37Je1lS2uRLO33ASDA5d38JEju9sybFThAOJS7j/6S4dO3TmAnb6Ilx49Lk5rK1121Fl73qRHYMR/rxJTCMRZSD8kbr6cu+pwMLn8I26rcUUbuZE3rRlf4BWtIvtqSZkxnnbq5y89bf0bH+0SPnCtkFY=;
+X-UUID: 21efdbd243d345c5b3ab4482d27b7061-20200302
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1532422314; Mon, 02 Mar 2020 21:53:50 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 2 Mar 2020 21:51:08 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 2 Mar 2020 21:53:15 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1] scsi: ufs-mediatek: fix HOST_PA_TACTIVATE quirk for Samsung UFS Devices
+Date:   Mon, 2 Mar 2020 21:53:46 +0800
+Message-ID: <20200302135346.16797-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: D821A7F8565A24F42421CDA7B2AE2730833BCD91F3CAE1B5A150FD3669E3742E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introducing fwnode_typec_switch_get() and
-fwnode_typec_mux_get() functions that work just like
-typec_switch_get() and typec_mux_get() but they take struct
-fwnode_handle as the first parameter instead of struct
-device.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/usb/typec/mux.c       | 22 +++++++++++-----------
- include/linux/usb/typec_mux.h | 18 +++++++++++++++---
- 2 files changed, 26 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
-index 2b10869f0abd..e3a63b33d024 100644
---- a/drivers/usb/typec/mux.c
-+++ b/drivers/usb/typec/mux.c
-@@ -59,26 +59,26 @@ static void *typec_switch_match(struct device_connection *con, int ep,
- }
- 
- /**
-- * typec_switch_get - Find USB Type-C orientation switch
-- * @dev: The caller device
-+ * fwnode_typec_switch_get - Find USB Type-C orientation switch
-+ * @fwnode: The caller device node
-  *
-  * Finds a switch linked with @dev. Returns a reference to the switch on
-  * success, NULL if no matching connection was found, or
-  * ERR_PTR(-EPROBE_DEFER) when a connection was found but the switch
-  * has not been enumerated yet.
-  */
--struct typec_switch *typec_switch_get(struct device *dev)
-+struct typec_switch *fwnode_typec_switch_get(struct fwnode_handle *fwnode)
- {
- 	struct typec_switch *sw;
- 
--	sw = device_connection_find_match(dev, "orientation-switch", NULL,
-+	sw = fwnode_connection_find_match(fwnode, "orientation-switch", NULL,
- 					  typec_switch_match);
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
- 
- 	return sw;
- }
--EXPORT_SYMBOL_GPL(typec_switch_get);
-+EXPORT_SYMBOL_GPL(fwnode_typec_switch_get);
- 
- /**
-  * typec_put_switch - Release USB Type-C orientation switch
-@@ -258,8 +258,8 @@ static void *typec_mux_match(struct device_connection *con, int ep, void *data)
- }
- 
- /**
-- * typec_mux_get - Find USB Type-C Multiplexer
-- * @dev: The caller device
-+ * fwnode_typec_mux_get - Find USB Type-C Multiplexer
-+ * @fwnode: The caller device node
-  * @desc: Alt Mode description
-  *
-  * Finds a mux linked to the caller. This function is primarily meant for the
-@@ -267,19 +267,19 @@ static void *typec_mux_match(struct device_connection *con, int ep, void *data)
-  * matching connection was found, or ERR_PTR(-EPROBE_DEFER) when a connection
-  * was found but the mux has not been enumerated yet.
-  */
--struct typec_mux *typec_mux_get(struct device *dev,
--				const struct typec_altmode_desc *desc)
-+struct typec_mux *fwnode_typec_mux_get(struct fwnode_handle *fwnode,
-+				       const struct typec_altmode_desc *desc)
- {
- 	struct typec_mux *mux;
- 
--	mux = device_connection_find_match(dev, "mode-switch", (void *)desc,
-+	mux = fwnode_connection_find_match(fwnode, "mode-switch", (void *)desc,
- 					   typec_mux_match);
- 	if (!IS_ERR_OR_NULL(mux))
- 		WARN_ON(!try_module_get(mux->dev.parent->driver->owner));
- 
- 	return mux;
- }
--EXPORT_SYMBOL_GPL(typec_mux_get);
-+EXPORT_SYMBOL_GPL(fwnode_typec_mux_get);
- 
- /**
-  * typec_mux_put - Release handle to a Multiplexer
-diff --git a/include/linux/usb/typec_mux.h b/include/linux/usb/typec_mux.h
-index 4991c93df5d0..a9d9957933dc 100644
---- a/include/linux/usb/typec_mux.h
-+++ b/include/linux/usb/typec_mux.h
-@@ -3,6 +3,7 @@
- #ifndef __USB_TYPEC_MUX
- #define __USB_TYPEC_MUX
- 
-+#include <linux/property.h>
- #include <linux/usb/typec.h>
- 
- struct device;
-@@ -21,11 +22,16 @@ struct typec_switch_desc {
- 	void *drvdata;
- };
- 
--struct typec_switch *typec_switch_get(struct device *dev);
-+struct typec_switch *fwnode_typec_switch_get(struct fwnode_handle *fwnode);
- void typec_switch_put(struct typec_switch *sw);
- int typec_switch_set(struct typec_switch *sw,
- 		     enum typec_orientation orientation);
- 
-+static inline struct typec_switch *typec_switch_get(struct device *dev)
-+{
-+	return fwnode_typec_switch_get(dev_fwnode(dev));
-+}
-+
- struct typec_switch *
- typec_switch_register(struct device *parent,
- 		      const struct typec_switch_desc *desc);
-@@ -50,11 +56,17 @@ struct typec_mux_desc {
- 	void *drvdata;
- };
- 
--struct typec_mux *
--typec_mux_get(struct device *dev, const struct typec_altmode_desc *desc);
-+struct typec_mux *fwnode_typec_mux_get(struct fwnode_handle *fwnode,
-+				       const struct typec_altmode_desc *desc);
- void typec_mux_put(struct typec_mux *mux);
- int typec_mux_set(struct typec_mux *mux, struct typec_mux_state *state);
- 
-+static inline struct typec_mux *
-+typec_mux_get(struct device *dev, const struct typec_altmode_desc *desc)
-+{
-+	return fwnode_typec_mux_get(dev_fwnode(dev), desc);
-+}
-+
- struct typec_mux *
- typec_mux_register(struct device *parent, const struct typec_mux_desc *desc);
- void typec_mux_unregister(struct typec_mux *mux);
--- 
-2.25.0
+RGV2aWNlIHF1aXJrICJVRlNfREVWSUNFX1FVSVJLX0hPU1RfUEFfVEFDVElWQVRFIiBpcyBlbmFi
+bGVkIGZvciBhbGwNClNhbXN1bmcgZGV2aWNlcyBieSBkZWZhdWx0IGN1cnJlbnRseS4NCg0KSG93
+ZXZlciBNZWRpYVRlayBVRlMgaG9zdCByZXF1aXJlcyBkaWZmZXJlbnQgaG9zdCdzIFBBX1RBQ1RJ
+VkFURQ0KY29uZmlndXJhdGlvbi4gSGVuY2UgY2xlYXIgdGhpcyBxdWlyayBmaXJzdCBhbmQgdGhl
+biBhcHBseSB2ZW5kb3Itc3BlY2lmaWMNCnZhbHVlIGluIHZvcHMgY2FsbGJhY2suDQoNClNpZ25l
+ZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0NCiBk
+cml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgNCArKystDQogMSBmaWxlIGNoYW5nZWQs
+IDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMN
+CmluZGV4IGRlNjUwODIyYzlkOS4uM2IwZTU3NWQ3NDYwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0
+ZWsuYw0KQEAgLTUzMyw4ICs1MzMsMTAgQEAgc3RhdGljIGludCB1ZnNfbXRrX2FwcGx5X2Rldl9x
+dWlya3Moc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJc3RydWN0IHVmc19kZXZfaW5mbyAqZGV2X2lu
+Zm8gPSAmaGJhLT5kZXZfaW5mbzsNCiAJdTE2IG1pZCA9IGRldl9pbmZvLT53bWFudWZhY3R1cmVy
+aWQ7DQogDQotCWlmIChtaWQgPT0gVUZTX1ZFTkRPUl9TQU1TVU5HKQ0KKwlpZiAobWlkID09IFVG
+U19WRU5ET1JfU0FNU1VORykgew0KKwkJaGJhLT5kZXZfcXVpcmtzICY9IH5VRlNfREVWSUNFX1FV
+SVJLX0hPU1RfUEFfVEFDVElWQVRFOw0KIAkJdWZzaGNkX2RtZV9zZXQoaGJhLCBVSUNfQVJHX01J
+QihQQV9UQUNUSVZBVEUpLCA2KTsNCisJfQ0KIA0KIAkvKg0KIAkgKiBEZWNpZGUgd2FpdGluZyB0
+aW1lIGJlZm9yZSBnYXRpbmcgcmVmZXJlbmNlIGNsb2NrIGFuZA0KLS0gDQoyLjE4LjANCg==
 
