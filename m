@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1F9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0C5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F4F2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122E02086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgCBN1q (ORCPT
+        id S1728043AbgCBN1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:27:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:60880 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 08:27:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:60918 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgCBN1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:27:42 -0500
+        id S1728022AbgCBN1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:27:46 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6E8106F;
-        Mon,  2 Mar 2020 05:27:42 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51F111FB;
+        Mon,  2 Mar 2020 05:27:45 -0800 (PST)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 056013F534;
-        Mon,  2 Mar 2020 05:27:40 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BEED3F534;
+        Mon,  2 Mar 2020 05:27:44 -0800 (PST)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -35,9 +35,9 @@ Cc:     Juri Lelli <juri.lelli@redhat.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v3 4/6] sched/rt: Allow pulling unfitting task
-Date:   Mon,  2 Mar 2020 13:27:19 +0000
-Message-Id: <20200302132721.8353-5-qais.yousef@arm.com>
+Subject: [PATCH v3 6/6] sched/rt: Fix pushing unfit tasks to a better CPU
+Date:   Mon,  2 Mar 2020 13:27:21 +0000
+Message-Id: <20200302132721.8353-7-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200302132721.8353-1-qais.yousef@arm.com>
 References: <20200302132721.8353-1-qais.yousef@arm.com>
@@ -46,36 +46,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When implemented RT Capacity Awareness; the logic was done such that if
-a task was running on a fitting CPU, then it was sticky and we would try
-our best to keep it there.
+If a task was running on unfit CPU we could ignore migrating if the
+priority level of the new fitting CPU is the *same* as the unfit one.
 
-But as Steve suggested, to adhere to the strict priority rules of RT
-class; allow pulling an RT task to unfitting CPU to ensure it gets a
-chance to run ASAP.
+Add an extra check to select_task_rq_rt() to allow the push in case:
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+	* p->prio == new_cpu.highest_priority
+	* task_fits(p, new_cpu)
+
 Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-LINK: https://lore.kernel.org/lkml/20200203111451.0d1da58f@oasis.local.home/
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 ---
- kernel/sched/rt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/sched/rt.c | 41 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
 diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 3071c8612c03..e79a23ad4a93 100644
+index ce230bec6847..8aaa442e4867 100644
 --- a/kernel/sched/rt.c
 +++ b/kernel/sched/rt.c
-@@ -1656,8 +1656,7 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
- static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
- {
- 	if (!task_running(rq, p) &&
--	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
--	    rt_task_fits_capacity(p, cpu))
-+	    cpumask_test_cpu(cpu, p->cpus_ptr))
- 		return 1;
+@@ -1474,20 +1474,35 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	if (test || !rt_task_fits_capacity(p, cpu)) {
+ 		int target = find_lowest_rq(p);
  
- 	return 0;
+-		/*
+-		 * Bail out if we were forcing a migration to find a better
+-		 * fitting CPU but our search failed.
+-		 */
+-		if (!test && target != -1 && !rt_task_fits_capacity(p, target))
+-			goto out_unlock;
++		if (target != -1) {
++			bool fit_target = rt_task_fits_capacity(p, target);
+ 
+-		/*
+-		 * Don't bother moving it if the destination CPU is
+-		 * not running a lower priority task.
+-		 */
+-		if (target != -1 &&
+-		    p->prio < cpu_rq(target)->rt.highest_prio.curr)
+-			cpu = target;
++			/*
++			 * Bail out if we were forcing a migration to find a
++			 * better fitting CPU but our search failed.
++			 */
++			if (!test && !fit_target)
++				goto out_unlock;
++
++			/*
++			 * Don't bother moving it if the destination CPU is
++			 * not running a lower priority task.
++			 */
++			if (p->prio < cpu_rq(target)->rt.highest_prio.curr) {
++
++				cpu = target;
++
++			} else if (p->prio == cpu_rq(target)->rt.highest_prio.curr) {
++
++				/*
++				 * If the priority is the same and the new CPU
++				 * is a better fit, then move, otherwise don't
++				 * bother here either.
++				 */
++				if (fit_target)
++					cpu = target;
++			}
++		}
+ 	}
+ 
+ out_unlock:
 -- 
 2.17.1
 
