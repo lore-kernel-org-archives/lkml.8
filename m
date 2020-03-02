@@ -2,115 +2,95 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C0FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D992C3F2D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAC124673
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVzbakQI"
+	by mail.kernel.org (Postfix) with ESMTP id 47F4F2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583170287;
+	bh=XlV9RAShajDDWtFAUUaZGTpMYFEpEeauYp+B1tl84B0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IPErFDTV+f9CssnxZJRT5MXjJAREfwD2/yOFzKODby7aL2kxJ0F2v3XLhFxYM0V4Z
+	 rrEAnHNM1ivSHxV/9RgTKQ4+bTwOmVbHz3hVX1UPBGoZri1u+bkeX7plDkJmjOanYH
+	 z03m5HA7dBl8Fi90gqiidS43bVOf/5XMwYYXyeuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgCBRbY (ORCPT
+        id S1727368AbgCBRbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:31:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51196 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726451AbgCBRbY (ORCPT
+        Mon, 2 Mar 2020 12:31:25 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46035 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgCBRbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 12:31:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583170283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jldB4YfZBRz97Je6/WHGQJOl1nyyviDfJaDZ8qQ1FXs=;
-        b=aVzbakQI5CjF9UqLtCQHfD3xXkjoA64LyQhTP28GqMyYNpX6wyYc/TBhc/hxeLi62NCDuW
-        GsnOIfwHqbkWVftgsIsEZTQ8vqgosbJSB4ogaZHydluiJ6UpJSbnl8W1cFtPHA30Hxq63r
-        sqLaRMf0ei6g2vHTZAvLkrLfDt22xeU=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-50KxpN82NiaP3h8CDLlg4w-1; Mon, 02 Mar 2020 12:31:21 -0500
-X-MC-Unique: 50KxpN82NiaP3h8CDLlg4w-1
-Received: by mail-qv1-f72.google.com with SMTP id h17so244274qvc.18
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:31:21 -0800 (PST)
+Received: by mail-ot1-f67.google.com with SMTP id f21so1972299otp.12;
+        Mon, 02 Mar 2020 09:31:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jldB4YfZBRz97Je6/WHGQJOl1nyyviDfJaDZ8qQ1FXs=;
-        b=UR/PuUSyUhL6oprQoE58Hu3QNHeP1rmQ+n1IvpuXuHrXkMms2r/slhA3B67A6oh4Fp
-         O5/Up9JUVAAgoDc7r/CJw5GZU8k1PEko0oyzQEnA3gnT1YfbJ6E64P9+QmfVaLesBQzU
-         SJ+OC+ktH4bqCum6BN/JCbrKzC5UknaeoY1ifNMhI1yX4cCWLxZo3o29iY583fNBirA6
-         i6rCPE97c4t0P/lURrp/X5+3DgJGXeM6MsMuMKqMw1DXgn//GfxgI9YOQZOoHoMpziwv
-         sAF663vS9lhFXXH0keQHlOirwhPw6xPkxOggPY0exMwX6+GjwlCWHjw2j5prVVuAq+BL
-         Oi9w==
-X-Gm-Message-State: ANhLgQ14lJczcCZGx4MPedq7MfDwjnv25gCvn2wCII8scSbpi0awMBfK
-        4836UDI0eEPqFrRSTcNctmqnGYNalbTAkvPC9iKizx66ZpY93lH+Z7aYcqMSQ7JBU0b5I7538aU
-        hmFeLF0QQlKF5zdcZXQd0y9EP
-X-Received: by 2002:ae9:e8cc:: with SMTP id a195mr290504qkg.377.1583170281133;
-        Mon, 02 Mar 2020 09:31:21 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vv2gQ+g33X4TpuT9lUWYMS9uikxOY3kZWxAFaYX8GZYKvpySNs8kIfbyRKUQqhJafJHEYh4aA==
-X-Received: by 2002:ae9:e8cc:: with SMTP id a195mr290490qkg.377.1583170280920;
-        Mon, 02 Mar 2020 09:31:20 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id a23sm10369623qko.77.2020.03.02.09.31.19
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NVPKgHFg9MVyiT7cHNOydbqZKAk4BoNFFQmkh5sX568=;
+        b=E2PxvYbZwoHkCYwVTGXf8rnoCKuXV7GehIIvQEH2xqXBrARISieiwO9Gpwog4SYiW2
+         RWqGzIUtLzQdPsyM1sHo/JEzNcwNbdHW5pgYUOfaqIkM/+9gimn/rD3P+/S4uDA49fHR
+         MCcz9KPO5MRLm3N15WDLubVdd24eoZ80kZ2cov3myAOU0khqzL9+5trl3InaZEd0StPz
+         7JkFBG2d6mxNmAaMuB4b4Bg5oCXyGsH8zq2ShnXjF+KgmDPZeYTStyqhwYnMfVy59ZxR
+         tQQz1rOFplpwoykG2xv6KhgwnKgzChYkWHjGu0W8BNPwH7YdMlKhgm9uKt/e/BH8XyQc
+         8VTw==
+X-Gm-Message-State: ANhLgQ37815NbSltr39bC30fphKgZ78vJY6NtLABegIhFWIWKHMx4Fbl
+        hHatk8jSyvemohvbWpeAYw==
+X-Google-Smtp-Source: ADFU+vsOEBDrhuF9b2zzGgSXC8vvB25Jr9LwNXhpajjyIjPQFJ5pvjn+vl2o0/QC1t0+j7MLLDxw8g==
+X-Received: by 2002:a9d:23b6:: with SMTP id t51mr200652otb.15.1583170284181;
+        Mon, 02 Mar 2020 09:31:24 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p65sm6547379oif.47.2020.03.02.09.31.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:31:20 -0800 (PST)
-Date:   Mon, 2 Mar 2020 12:31:18 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Brian Geffon <bgeffon@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Martin Cracauer <cracauer@cons.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Bobby Powers <bobbypowers@gmail.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>, Hugh Dickins <hughd@google.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>
-Subject: Re: [PATCH RESEND v6 00/16] mm: Page fault enhancements
-Message-ID: <20200302173118.GC460741@xz-x1>
-References: <20200220155353.8676-1-peterx@redhat.com>
- <CADyq12wFKwzUYipU4g4Ey9X9J3qY0S=PEhSMBAeLfzpETUWVWQ@mail.gmail.com>
+        Mon, 02 Mar 2020 09:31:23 -0800 (PST)
+Received: (nullmailer pid 12413 invoked by uid 1000);
+        Mon, 02 Mar 2020 17:31:23 -0000
+Date:   Mon, 2 Mar 2020 11:31:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     frowand.list@gmail.com
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] of: unittest: make gpio overlay test dependent on
+ CONFIG_OF_GPIO
+Message-ID: <20200302173123.GA12343@bogus>
+References: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADyq12wFKwzUYipU4g4Ey9X9J3qY0S=PEhSMBAeLfzpETUWVWQ@mail.gmail.com>
+In-Reply-To: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:26:12AM -0800, Brian Geffon wrote:
-> I tested the entire patchset because I'm very interested in fault
-> retries with userfaultfd and the series has been stable and worked
-> well on x86.
+On Thu, 27 Feb 2020 22:16:29 -0600, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> Tested-by: Brian Geffon <bgeffon@google.com>
+> Randconfig testing found compile errors in drivers/of/unittest.c if
+> CONFIG_GPIOLIB is not set because CONFIG_OF_GPIO depends on
+> CONFIG_GPIOLIB.  Make the gpio overlay test depend on CONFIG_OF_GPIO.
+> 
+> No code is modified, it is only moved to a different location and
+> protected with #ifdef CONFIG_OF_GPIO.  An empty
+> of_unittest_overlay_gpio() is added in the #else.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>  drivers/of/unittest.c | 465 ++++++++++++++++++++++++++------------------------
+>  1 file changed, 238 insertions(+), 227 deletions(-)
+> 
 
-(Thanks again for Brian's quick follow up, and adding Andrew in again)
+Applied, thanks.
 
-Hi, Andrew,
-
-Do you have plan to queue this series for linux-next?  Please let me
-know if you want me to repost with you CCed for the whole series.
-
-Thanks!
-
--- 
-Peter Xu
-
+Rob
