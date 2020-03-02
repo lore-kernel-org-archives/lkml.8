@@ -2,217 +2,214 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3408C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E4FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BCF246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583131973;
-	bh=gNFMkI67cWGR442JON7h5LtEJ3zYDqMvS+mDx5NH8gk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qUi0PbZFmeXS0MtMoznsXWVxp1M4bot0KgpqI7jxJFA91qM0kcu04VmB1NyAu2n8a
-	 4pKd1ayizS+J9JlqIAxcM5Dy0A0DfSW0bfml4QziYEwv1Qvh7Yj1ao/Y4CXpdJzBwF
-	 TtK8B5xb1MQ5IOx7Hlr2thdPpY0XTpdSN3BFdmK4=
+	by mail.kernel.org (Postfix) with ESMTP id 62C2824697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nNDD/rub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgCBGww (ORCPT
+        id S1726805AbgCBGzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgCBGwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:52:51 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5318824697;
-        Mon,  2 Mar 2020 06:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583131970;
-        bh=gNFMkI67cWGR442JON7h5LtEJ3zYDqMvS+mDx5NH8gk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jo3pmEb9HbC6K3QUT6S4rdMdKNSpovRNH2DENQ9NuT1LHpju9oLDmLLz36dverToN
-         uGz/1wIio2XYDJ3JN3vg553ALoBrIpLY+aNhNAU+UZcBtslSElSmnqrxrIGFoCqV5h
-         i49z8DbVzR25DivJQrlTMBqCLKwQPLJeHHQmjBgE=
-Date:   Mon, 2 Mar 2020 15:52:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v2] Documentation: bootconfig: Update boot configuration
- documentation
-Message-Id: <20200302155247.93558d4865a8bcd160ef39e5@kernel.org>
-In-Reply-To: <972ba3a8-9dd7-e043-d2f0-8fa8620686f7@infradead.org>
-References: <158287861133.18632.12035327305997207220.stgit@devnote2>
-        <158287862131.18632.11822701514141299400.stgit@devnote2>
-        <972ba3a8-9dd7-e043-d2f0-8fa8620686f7@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Mar 2020 01:55:07 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52904 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgCBGzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:55:07 -0500
+Received: by mail-pj1-f67.google.com with SMTP id lt1so1291666pjb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 22:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pWcYKlhLAnKGB3383nGwa1XGwMwc5bp9m4MPxMifptM=;
+        b=nNDD/rubXmYKGH9BJT0e27lqeQsmccF/U5km0Dx0rn8qwQ3HpB6UDN8hyJWQr7Qi56
+         GTi2hkxYOrvhaqLFEoHFPt+0Qr23+FJfaBiCc+zQll5nEkmnnTgvhHTUVZ8kmogW1ypd
+         H/1bATv1m/pje1sWAlfQLACBnkOkSJEPgg/UCoSjQk8HncVFVF5zlZPWDqab0Vs10KB2
+         chQ2tiO375iXhc9thpXCn2UQxY+PIOCaRlIpvI0cC5J2XmaCjAnFLZta7uAjMIQm/UH3
+         pVNYtib47VbQcSam2au+f9Z1sF1TnQ+EZFvelzznopj3lUi716/ozqCbez6CKqx5S8O8
+         vlPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pWcYKlhLAnKGB3383nGwa1XGwMwc5bp9m4MPxMifptM=;
+        b=CLUgHvOZvY6l5x57qOWoghDHqXAHN7t74duINsFmZAjp2jjGAhNblQN38/BZM1+2eA
+         96b0OIm8kwjx/YIcJ/6pWmEBoH+DopbEzmf1OSUjEs6E6FaKCv6Os5VEFP7XNV2gh6uz
+         2M697uSGn8bHAcRvouVXqVm2o1Gtiw019DodY5OBqo0tYyag+9i8xGhU4smBTdYins07
+         1xfmu5XGlAB3b4KQUvGv89vEb+oG5Myq6uba8/AB6yrFHEYfvZd1HrMyTSpYuzBPBbw5
+         uije3tWDNDTMGOuGSxGQJGRnGExbsP/YXz0CV6LTTm5Jj4UXyWoHhOC4Rqgad0eUSgV3
+         YANg==
+X-Gm-Message-State: APjAAAWoMJHLdAi3McZBAKfGnl8imhECIBZ/VQMlXnJKm/iMSIsmvMc/
+        cLP+Fe/G1WEtJQq1CyZYbJQEnQ==
+X-Google-Smtp-Source: APXvYqxAQJBrCZKpR7ZbY7wdYkROyZ6BhKS54PIo+Ig28iQj7F3OvFmQe2/r9GuyIz2jw/M+aKP79A==
+X-Received: by 2002:a17:902:8545:: with SMTP id d5mr15883403plo.116.1583132105386;
+        Sun, 01 Mar 2020 22:55:05 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w26sm20301383pfj.119.2020.03.01.22.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 22:55:04 -0800 (PST)
+Date:   Sun, 1 Mar 2020 22:55:02 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: qrtr: Respond to HELLO message
+Message-ID: <20200302065502.GG210720@yoga>
+References: <20200302032527.552916-1-bjorn.andersson@linaro.org>
+ <20200302032527.552916-2-bjorn.andersson@linaro.org>
+ <20200302055025.GA23607@Mani-XPS-13-9360>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302055025.GA23607@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 21:59:45 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Sun 01 Mar 21:50 PST 2020, Manivannan Sadhasivam wrote:
 
-> On 2/28/20 12:30 AM, Masami Hiramatsu wrote:
-> > Update boot configuration documentation.
+> Hi Bjorn,
+> 
+> Thanks for the fix. I have tested this and it works perfectly!
+> 
+> On Sun, Mar 01, 2020 at 07:25:26PM -0800, Bjorn Andersson wrote:
+> > Lost in the translation from the user space implementation was the
+> > detail that HELLO mesages must be exchanged between each node pair.  As
+> > such the incoming HELLO must be replied to.
 > > 
-> >  - Not using "config" abbreviation but configuration or description.
-> >  - Rewrite descriptions of node and its maxinum number.
-> >  - Add a section of use cases of boot configuration.
-> >  - Move how to use bootconfig to earlier section.
-> >  - Fix some typos, indents and format mistakes.
+> 
+> Err. I thought the say_hello() part in ctrl_cmd_hello() was redundant, so
+> removed it :P
+> 
+> Sorry for that.
+> 
+
+No worries.
+
+> > Similar to the previous implementation no effort is made to prevent two
+> > Linux boxes from continuously sending HELLO messages back and forth,
+> > this is left to a follow up patch.
 > > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > say_hello() is moved, to facilitate the new call site.
+> > 
+> > Fixes: 0c2204a4ad71 ("net: qrtr: Migrate nameservice to kernel from userspace")
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > ---
-> > Changes in v2:
-> >  - Fixes additional typos (Thanks Markus and Randy!)
-> >  - Change a section title to "Tree Structured Key".
-> > ---
-> >  Documentation/admin-guide/bootconfig.rst |  180 +++++++++++++++++++-----------
-> >  Documentation/trace/boottime-trace.rst   |    2 
-> >  2 files changed, 116 insertions(+), 66 deletions(-)
+> >  net/qrtr/ns.c | 54 ++++++++++++++++++++++++++++-----------------------
+> >  1 file changed, 30 insertions(+), 24 deletions(-)
 > > 
-> > diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-> > index cf2edcd09183..6a58d5e64896 100644
-> > --- a/Documentation/admin-guide/bootconfig.rst
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> > @@ -11,19 +11,98 @@ Boot Configuration
-> >  Overview
-> >  ========
+> > diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
+> > index 7bfde01f4e8a..e3f11052b5f6 100644
+> > --- a/net/qrtr/ns.c
+> > +++ b/net/qrtr/ns.c
+> > @@ -286,9 +286,38 @@ static int server_del(struct qrtr_node *node, unsigned int port)
+> >  	return 0;
+> >  }
 > >  
-> > -The boot configuration expands the current kernel command line to support
-> > -additional key-value data when booting the kernel in an efficient way.
-> > -This allows administrators to pass a structured-Key config file.
-> > +Boot configuration expands the current kernel command line to support
-> > +additional key-value data while booting the kernel in an efficient way.
-> > +This allows administrators to pass a structured key configuration file
-> > +as a way to supplement the kernel command line to pass system boot parameters.
+> > +static int say_hello(struct sockaddr_qrtr *dest)
+> > +{
+> > +	struct qrtr_ctrl_pkt pkt;
+> > +	struct msghdr msg = { };
+> > +	struct kvec iv;
+> > +	int ret;
+> > +
+> > +	iv.iov_base = &pkt;
+> > +	iv.iov_len = sizeof(pkt);
+> > +
+> > +	memset(&pkt, 0, sizeof(pkt));
+> > +	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+> > +
+> > +	msg.msg_name = (struct sockaddr *)dest;
+> > +	msg.msg_namelen = sizeof(*dest);
+> > +
+> > +	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
+> > +	if (ret < 0)
+> > +		pr_err("failed to send hello msg\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  /* Announce the list of servers registered on the local node */
+> >  static int ctrl_cmd_hello(struct sockaddr_qrtr *sq)
+> >  {
+> > +	int ret;
+> > +
+> > +	ret = say_hello(sq); > > +	if (ret < 0)
+> > +		return ret;
+> > +
+> >  	return announce_servers(sq);
+> >  }
 > >  
-> > -Config File Syntax
-> > -==================
-> > +Compared with the kernel command line, the boot configuration can provide
-> > +scalability (up to 32 KiB configuration data), readability (structured
-> > +configuration with comments) and compact expression of option groups.
-> 
-> Do the comments count in the 32 KiB of data?  I.e., is the max bootconfig
-> file size 32 KiB?
-
-Yes, the max bootconfig file size is 32 KiB. This could be fixed by filtering
-out the comments by bootconfig tool.
-
-> > +
-> > +When to Use the Boot Configuration?
-> > +-----------------------------------
-> > +
-> > +The boot configuration supports kernel command line options and init daemon
-> > +boot options. All sub-keys under "kernel" root key are passed as a part of
-> > +kernel command line [1]_, and ones under "init" root key are passed as a part
-> > +of init command line. For example, ::
-> > +
-> > +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
-> > +
-> > +This can be written as following boot configuration file.::
-> > +
-> > +   kernel {
-> > +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
-> > +      ro       # mount rootfs as read only
-> > +      quiet    # No console log
-> > +      splash   # show splash image on boot screen
-> > +      console = "ttyS0,115200n8" # 1st console to serial device
-> > +      console += tty0            # add 2nd console
-> > +   }
-> > +
-> > +If you think that kernel/init options becomes too long to write in boot-loader
-> > +configuration file or you want to comment on each option, the boot
-> > +configuration may be suitable. If unsure, you can still continue to use the
-> > +legacy kernel command line.
-> > +
-> > +Also, some subsystem may depend on the boot configuration, and it has own
-> > +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
-> > +describe its options [2]_. In this case, you need to use the boot
-> > +configuration.
-> 
-> Does this say that "ftrace" requires use of bootconfig?
-> It seems to say that.
-
-Ah, I got it. The last sentence is confusing. How about below?
-
-"If you want to use the boot-time tracer, you need to use the boot configuration."
-
-> 
-> > +
-> > +.. [1] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
-> > +.. [2] See :ref:`Documentation/trace/boottime-trace.rst <boottimetrace>`
-> > +
-> > +
-> > +How to Use the Boot Configuration?
-> > +----------------------------------
-> > +
-> > +To enable the boot configuration support on your kernel, it must be built with
-> > +``CONFIG_BOOT_CONFIG=y`` and ``CONFIG_BLK_DEV_INITRD=y``.
-> > +
-> > +Next, you can write a boot configuration file and attach it to initrd image.
-> > +
-> > +The boot configuration file is attached to the end of the initrd (initramfs)
-> > +image file with size, checksum and 12-byte magic word as below.
-> > +
-> > +[initrd][bootconfig][size(u32)][checksum(u32)][#BOOTCONFIG\n]
-> > +
-> > +The Linux kernel decodes the last part of the initrd image in memory to
-> > +get the boot configuration data.
-> > +Because of this "piggyback" method, there is no need to change or
-> > +update the boot loader and the kernel image itself.
-> > +
-> > +To do this operation, Linux kernel provides "bootconfig" command under
-> > +tools/bootconfig, which allows admin to apply or delete the configuration
-> > +file to/from initrd image. You can build it by the following command::
-> > +
-> > + # make -C tools/bootconfig
-> 
-> Please make that honor O=builddir instead of building in the kernel
-> source tree and ignoring O=builddir.
-
-OK.
-
-> 
-> > +
-> > +To add your boot configuration file to initrd image, run bootconfig as below
-> > +(Old data is removed automatically if exists)::
-> > +
-> > + # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
+> > @@ -566,29 +595,6 @@ static void ctrl_cmd_del_lookup(struct sockaddr_qrtr *from,
+> >  	}
+> >  }
 > >  
-> > -The boot config syntax is a simple structured key-value. Each key consists
-> > -of dot-connected-words, and key and value are connected by ``=``. The value
-> > -has to be terminated by semi-colon (``;``) or newline (``\n``).
-> > +To remove the configuration from the image, you can use -d option as below::
-> > +
-> > + # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
-> > +
-> > +At last, add ``bootconfig`` on the normal kernel command line to tell the
-> > +kernel to look for the bootconfig at the end of the initrd file. For example::
-> > +
-> > +  GRUB_CMDLINE_LINUX="bootconfig"
+> > -static int say_hello(void)
+> > -{
+> > -	struct qrtr_ctrl_pkt pkt;
+> > -	struct msghdr msg = { };
+> > -	struct kvec iv;
+> > -	int ret;
+> > -
+> > -	iv.iov_base = &pkt;
+> > -	iv.iov_len = sizeof(pkt);
+> > -
+> > -	memset(&pkt, 0, sizeof(pkt));
+> > -	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+> > -
+> > -	msg.msg_name = (struct sockaddr *)&qrtr_ns.bcast_sq;
+> > -	msg.msg_namelen = sizeof(qrtr_ns.bcast_sq);
+> > -
+> > -	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
+> > -	if (ret < 0)
+> > -		pr_err("failed to send hello msg\n");
+> > -
+> > -	return ret;
+> > -}
+> > -
+> >  static void qrtr_ns_worker(struct work_struct *work)
+> >  {
+> >  	const struct qrtr_ctrl_pkt *pkt;
+> > @@ -725,7 +731,7 @@ void qrtr_ns_init(struct work_struct *work)
+> >  	if (!qrtr_ns.workqueue)
+> >  		goto err_sock;
+> >  
+> > -	ret = say_hello();
+> > +	ret = say_hello(&qrtr_ns.bcast_sq);
 > 
-> 
-> thanks.
-
-Thanks for your review!
-
-> -- 
-> ~Randy
+> Why do you want to pass a global variable here? Why can't it be used directly
+> in say_hello() as done before?
 > 
 
+Because I changed the prototype of say_hello() so that we pass the
+destination address; here that's the broadcast address, in
+ctrl_cmd_hello() it's the specific sender of the incoming hello that we
+want to respond to.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Bjorn
+
+> Other than that,
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Thanks,
+> Mani
+> 
+> >  	if (ret < 0)
+> >  		goto err_wq;
+> >  
+> > -- 
+> > 2.24.0
+> > 
