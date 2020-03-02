@@ -2,125 +2,148 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD728C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E31D20732
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583185354;
-	bh=JPt1GW/X4+gGbXrqreiGG2d0387gM+1pVKMZEvE/AYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QyxO+EDWMWgkKvpgthLXmZku/DMaB58Kh2RxZ2GAjgY5hC+T7CvsOAvxzqiknubGT
-	 6lqwst6E0z8Drq8N7SUXyyZDH7PieQ3UFCHzewr0dnFw66FMx88EG+H7TZd/uxxndp
-	 1V0rr5zaHisK/dehLjOGTV43M+sWaS3gcBMrJbOU=
+	by mail.kernel.org (Postfix) with ESMTP id EF0BC22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEXELDoo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgCBVmd (ORCPT
+        id S1726843AbgCBVnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:42:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34035 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCBVmd (ORCPT
+        Mon, 2 Mar 2020 16:43:22 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42982 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgCBVnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:42:33 -0500
-Received: by mail-pg1-f195.google.com with SMTP id t3so468957pgn.1;
-        Mon, 02 Mar 2020 13:42:32 -0800 (PST)
+        Mon, 2 Mar 2020 16:43:22 -0500
+Received: by mail-pf1-f196.google.com with SMTP id f5so344558pfk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:43:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uCaeMVtpR4WxjCDq5Vfh+a8fRchrnLxaj/CXDjUGdA8=;
-        b=J8wu8V/Af3IccEALYEmGUkRRtRQf0eHqJtvdzRy3rVTCrtdP6PW08OeuWgaUNsffoD
-         PHBKH9KVyHoLnN8A5n99gnVHaEJwbFuir0FsRkSJrmmpg5ZS2n1IJuivyJXlRI1anHzK
-         CvTaKm7FaOIoFr+YSVSml1ojUzRuKiXha2tO8pnjISsheobbcDMu2joOWtIHg/p36K+U
-         yUiSplP8t1pld0j2GZOoSTsGrnawOhSlMV8gDnNzpADJ/xQ895qCtOeZZ1QpwEKbkOkl
-         sG5VYnyN5sMoH6grcQAfoB0Jd0P5rcSSnCaDIxXBGUsSjx3zqc9288L4XioDhfPKxlJ+
-         zCWQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4dlwidJa8gDEE3TMB16QWBVQS+uPEhVk5tCpDd5ZLJM=;
+        b=vEXELDoob+J8VQsf8H5NR7WHeynlggYFMF78SSlMvgD2RMO3pCCAnjZ3ehbZ0aldd5
+         dvf/XYY1VurmRTOGDqrCs5Ogc4X3lhwKDoyakd25opm8rk2WQu/n3OVQmXgFFXpRzAqm
+         +dfu3sriNNRUBMscl3Wkk6oEhhSCH4rNiD0wvwA7kcGQyNILwyp+ZryAv146IdGKnkag
+         3EGku1T/MjyHVFIoP/tJUePzmBZb1HpgqR8OE5hqsOBz0N3SMhpLwySFMHBZLjrBZjCW
+         DqdDnDcev7344FrO0mGzQ3J0ow2S6Et9x5hDZFr+bHFGvsTWU22EoCVmuaq2YYQTzRrQ
+         esMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uCaeMVtpR4WxjCDq5Vfh+a8fRchrnLxaj/CXDjUGdA8=;
-        b=RPuO7rlqYJAzlbi496tuq3AvXGwns4EAeQ4ajTtyAxBopMFZPYpUJWFlzKjlOl1Mfk
-         PDM3gag1e7QEOaBbAE8EoLuz56/YihbxVPeZFgURcspINcCxLgviw0sUFCwf7TsxgS6b
-         IUU/yurFZGYHSxF7jUiwUX8QLKFFhAMQcUungImogGwu7YZK1AR9Okpciwsy8MHlxwz4
-         f8t21Lx4FgIW/MXssV9Zf4TCaRTs3+6hAwRA0A++10okLAaY9X6PB+gGwHLl6BhQV8tp
-         uSphcQRt7+8dE4s7/+uddzEJr2v/Jm+MQuHArJ2IDUU/SAg/caIuxUqzMXez+2SIGO78
-         uiyw==
-X-Gm-Message-State: ANhLgQ0ztNdHlM0ryENSM3g39UCrAr9xlI3c7p/x1YF1wl5dXeSiapC3
-        lui8l2abpdjjESKgT0XHFllTir0k
-X-Google-Smtp-Source: ADFU+vtKj7Kdji9S24ngTS6f/a4A5/EsWr2TF1Am3s89ghNlWHDiZAC9e3EqX8YodZmfHodpOyNTow==
-X-Received: by 2002:a63:f501:: with SMTP id w1mr899386pgh.61.1583185351725;
-        Mon, 02 Mar 2020 13:42:31 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id ev22sm184390pjb.0.2020.03.02.13.42.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4dlwidJa8gDEE3TMB16QWBVQS+uPEhVk5tCpDd5ZLJM=;
+        b=TDfZQVvCE6oPVHHuUOpkC0hSSSNpWllAYFCz5623H2+8E4RzsemuimEJj7Vwo62/7b
+         sKsG7UX9o60ImekzoN8mM9F05kTCR69bh99Acb7uakk2uYo0kFXfnQTpAW1ax6Dpbi6k
+         ZWj2ltQmAdkJ/VeJymdpK3Q/UarCMFnIkdIQ6fjPoGMQDHgDa60WQA0uL1laXdyBvn8m
+         X7odKiuGe82TaiROQerDVTkK2JL0rDXFOUt5MDoDJAeQyXMXROvqw2UqmaQLv306raE/
+         rlQQWbXoZTx82FAob7cXhdaEkNBT0Ho6QE+DF9b3gF4Ihn1/OThhWy0seqtnuAN0SIJM
+         3nGA==
+X-Gm-Message-State: ANhLgQ2TiJ2w7YMAspeE5V91dWMOYMQ2FX18aaH9ML8wKEqjtuHqSxz5
+        le7LhnEl8iciUiQvqNOz+9a+PA==
+X-Google-Smtp-Source: ADFU+vtQXMul1hNQtsoN7QrNSj8GdpelOfLhaSfk0E4yO0oVxkQ4ZreXZEDUg5eQKHQcTUxVkdhiBg==
+X-Received: by 2002:a63:9549:: with SMTP id t9mr876417pgn.346.1583185401237;
+        Mon, 02 Mar 2020 13:43:21 -0800 (PST)
+Received: from yoga (pat_11.qualcomm.com. [192.35.156.11])
+        by smtp.gmail.com with ESMTPSA id y197sm23281150pfc.79.2020.03.02.13.43.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 13:42:30 -0800 (PST)
-Date:   Mon, 2 Mar 2020 13:42:28 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 0/7] introduce memory hinting API for external process
-Message-ID: <20200302214228.GB71660@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302131618.b0f9f0e76d53a69184321884@linux-foundation.org>
+        Mon, 02 Mar 2020 13:43:20 -0800 (PST)
+Date:   Mon, 2 Mar 2020 13:43:17 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     nikita.shubin@maquefel.me, Nikita Shubin <NShubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] remoteproc: error on kick missing
+Message-ID: <20200302214317.GI210720@yoga>
+References: <20200228110804.25822-1-nikita.shubin@maquefel.me>
+ <CANLsYkyDsJaxO_37qTjEP+aeQju8W2+jhHFRF7+oifBMqJqyng@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302131618.b0f9f0e76d53a69184321884@linux-foundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CANLsYkyDsJaxO_37qTjEP+aeQju8W2+jhHFRF7+oifBMqJqyng@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 01:16:18PM -0800, Andrew Morton wrote:
-> On Mon,  2 Mar 2020 11:36:23 -0800 Minchan Kim <minchan@kernel.org> wrote:
-> 
-> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-> > application could give hints to kernel what memory range are preferred to be
-> > reclaimed. However, in some platform(e.g., Android), the information
-> > required to make the hinting decision is not known to the app.
-> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-> > and that daemon must be able to initiate reclaim on its own without any app
-> > involvement.
-> > 
-> > To solve the concern, this patch introduces new syscall - process_madvise(2).
-> > Bascially, it's same with madvise(2) syscall but it has some differences.
-> > 
-> > 1. It needs pidfd of target process to provide the hint
-> > 2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
-> >    Other hints in madvise will be opened when there are explicit requests from
-> >    community to prevent unexpected bugs we couldn't support.
-> > 3. Only privileged processes can do something for other process's address
-> >    space.
-> > 
-> > For more detail of the new API, please see "mm: introduce external memory hinting API"
-> > description in this patchset.
-> 
-> Thanks, I grabbed these.
-> 
-> I massaged the patch titles significantly - mainly to alert readers to
-> the fact that we're proposing a new syscall.
-> 
-> Is a manpage for process_madvise(2) being prepared?
+On Mon 02 Mar 09:44 PST 2020, Mathieu Poirier wrote:
 
-I will prepare it, Thanks!
+> Hi Nikita,
+> 
+> On Fri, 28 Feb 2020 at 04:07, <nikita.shubin@maquefel.me> wrote:
+> >
+> > From: Nikita Shubin <NShubin@topcon.com>
+> >
+> > .kick method not set in rproc_ops will result in:
+> >
+> > 8<--- cut here ---
+> > Unable to handle kernel NULL pointer dereference
+> >
+> > in rproc_virtio_notify, after firmware loading.
+> 
+> There wasn't any kernel stack trace?  What platform was this observed
+> on? I'm afraid we won't be able to move forward with this patch
+> without one, or more information on what is happening.
+> 
+> >
+> > refuse to register an rproc-induced virtio device if no kick method was
+> > defined for rproc.
+> >
+> > Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> > ---
+
+Nikita, please include "v2" in the subject and add here (below the ---)
+short summary of what changes since v1.
+
+> >  drivers/remoteproc/remoteproc_virtio.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> > index 8c07cb2ca8ba..31a62a0b470e 100644
+> > --- a/drivers/remoteproc/remoteproc_virtio.c
+> > +++ b/drivers/remoteproc/remoteproc_virtio.c
+> > @@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+> >         struct rproc_mem_entry *mem;
+> >         int ret;
+> >
+> > +       if (rproc->ops->kick == NULL) {
+> > +               ret = -EINVAL;
+> > +               dev_err(dev, ".kick method not defined for %s",
+> > +                               rproc->name);
+> > +               goto out;
+> > +       }
+> 
+> I think it would be better to use WARN_ONCE() in rproc_virtio_notify()
+> than prevent a virtio device from being added.  But again I will need
+> more information on this case to know for sure.
+> 
+
+I reviewed v1 and afaict there's no way rproc->ops->kick would change
+and that things wouldn't work without a kick.
+
+So I requested that it should be checked during initialization instead.
+Please let me know if I missed some case.
+
+Regards,
+Bjorn
+
+> Thanks,
+> Mathieu
+> 
+> > +
+> >         /* Try to find dedicated vdev buffer carveout */
+> >         mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
+> >         if (mem) {
+> > --
+> > 2.24.1
+> >
