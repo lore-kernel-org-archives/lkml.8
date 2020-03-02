@@ -3,132 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13406C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D295C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82DF214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20C3214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgCBOeJ (ORCPT
+        id S1727231AbgCBOff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:34:09 -0500
-Received: from mail.hallyn.com ([178.63.66.53]:46164 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgCBOeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:34:08 -0500
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 5E334B1A; Mon,  2 Mar 2020 08:34:05 -0600 (CST)
-Date:   Mon, 2 Mar 2020 08:34:05 -0600
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        mpawlowski@fb.com
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-Message-ID: <20200302143405.GA25432@mail.hallyn.com>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
- <2b0fe94b-036a-919e-219b-cc1ba0641781@toxicpanda.com>
+        Mon, 2 Mar 2020 09:35:35 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46524 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbgCBOfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:35:34 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 162EB294121;
+        Mon,  2 Mar 2020 14:35:33 +0000 (GMT)
+Date:   Mon, 2 Mar 2020 15:35:29 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 5/6] media: rkvdec: Add the rkvdec driver
+Message-ID: <20200302153529.4e2429e7@collabora.com>
+In-Reply-To: <20200302145746.3e94c1d1@coco.lan>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-6-ezequiel@collabora.com>
+        <20200302145746.3e94c1d1@coco.lan>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b0fe94b-036a-919e-219b-cc1ba0641781@toxicpanda.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:33:04PM -0500, Josef Bacik wrote:
-> On 2/18/20 9:33 AM, Christian Brauner wrote:
-> > Hey everyone,
-> > 
-> > This is v3 after (off- and online) discussions with Jann the following
-> > changes were made:
-> > - To handle nested user namespaces cleanly, efficiently, and with full
-> >    backwards compatibility for non fsid-mapping aware workloads we only
-> >    allow writing fsid mappings as long as the corresponding id mapping
-> >    type has not been written.
-> > - Split the patch which adds the internal ability in
-> >    kernel/user_namespace to verify and write fsid mappings into tree
-> >    patches:
-> >    1. [PATCH v3 04/25] fsuidgid: add fsid mapping helpers
-> >       patch to implement core helpers for fsid translations (i.e.
-> >       make_kfs*id(), from_kfs*id{_munged}(), kfs*id_to_k*id(),
-> >       k*id_to_kfs*id()
-> >    2. [PATCH v3 05/25] user_namespace: refactor map_write()
-> >       patch to refactor map_write() in order to prepare for actual fsid
-> >       mappings changes in the following patch. (This should make it
-> >       easier to review.)
-> >    3. [PATCH v3 06/25] user_namespace: make map_write() support fsid mappings
-> >       patch to implement actual fsid mappings support in mape_write()
-> > - Let the keyctl infrastructure only operate on kfsid which are always
-> >    mapped/looked up in the id mappings similar to what we do for
-> >    filesystems that have the same superblock visible in multiple user
-> >    namespaces.
-> > 
-> > This version also comes with minimal tests which I intend to expand in
-> > the future.
-> > 
-> >  From pings and off-list questions and discussions at Google Container
-> > Security Summit there seems to be quite a lot of interest in this
-> > patchset with use-cases ranging from layer sharing for app containers
-> > and k8s, as well as data sharing between containers with different id
-> > mappings. I haven't Cced all people because I don't have all the email
-> > adresses at hand but I've at least added Phil now. :)
-> > 
-> I put this into a kernel for our container guys to mess with in order to
-> validate it would actually be useful for real world uses.  I've cc'ed the
-> guy who did all of the work in case you have specific questions.
+On Mon, 2 Mar 2020 14:57:46 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> > +	for (j = 0; j < 3; j++) {  
 > 
-> Good news is the interface is acceptable, albeit apparently the whole user
-> ns interface sucks in general.  But you haven't made it worse, so success!
+> Again a magic number. I guess this came from that big "M_N" table with 4
+> elements, right? Please use a define instead of hardcoding a number
+> here.
 
-Well I very much disagree here :)  With the first part!  But I do
-understand the shortcomings.  Anyway,
-
-I still hope we get to talk about this in person, but IMO this is the
-right approach (this being - thinking about how to make the uid mappings
-more flexible without making them too complicated to be safe to use),
-but a bit too static in terms of target.  There are at least two ways
-that I could see usefully generalizing it
-
-From a user space pov, the following goal is indespensible (for my use
-cases):  that the fsuid be selectable based on fs, mountpoint, or file
-context (as in selinux).
-
-From a userns pov, one way to look at it is this:  when task t1 signals
-task t2, it's not only t1's namespace that's considered when filling in
-the sender uid, but also t2's.  Likewise, when writing a file, we should
-consider both t1's fsuid+userns, and the file's, mount's, or filesystem's
-userns.
-
-From that POV, your patch is a step in the right direction and could be
-taken as is (modulo any tmpfs fix Josef needs :)  From there I would
-propose adding a 'userns=<uidnsfd>' bind mount option, so we could create
-an empty userns with the desired mapping (subject to permissions granted
-by subuids), get an fd to the uidns, and say
-
-	mount --bind -o uidns=5 /shared /containers/c1/mnt/shared
-
-So now when I write a file /etc/hosts as container fsuid 0, it'll be
-subject to the container rootfs mount's uid mapping, presumably
-100000.  When I write /mnt/shared/hello, it'll be subject to the mount's
-uid mapping, which might be 1000.
-
--serge
+Nope, it's unrelated to the cabac_table size, it's related to how the
+HW accesses the P/B reflists (there are 1 P reflist, and 2 B reflists,
+hence the 3 here). I guess we can have a '#define NUM_REFLISTS 3'.
