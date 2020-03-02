@@ -2,130 +2,190 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3FFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4708B21739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWTcWZAI"
+	by mail.kernel.org (Postfix) with ESMTP id 620E821739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgCBKcm (ORCPT
+        id S1727628AbgCBKdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:32:42 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41161 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgCBKcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:32:33 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u26so10969945ljd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:32:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a42O4KV4bEmBFQrB6svb5MCsREuatuBAEWKoVrmbJO0=;
-        b=cWTcWZAIYzjyX4csJQI8qpY9zS6H5etvZc0N+Mrjfy88j2LDsNnKBZ2r9ZOt7c0ee1
-         Z3l7UAHxFeonp5mJo00Zi1tUpr3Q/MWTk56CuJWDaegT83D6Bi0DGPOjReSz7hCi6jBE
-         D1//q/27Sh7NMHJX5zt+R9JW3R799Sc4ccu9n1NERTb5xBYG8OxenY6BJ6X/M4AGPh8W
-         9DWOReMKA3aRztFwCRoDvEgY7PBSzMnehaXPgokPEiuCHiVc22zv0RugHl5TZ9VdZx/I
-         PGFVb8zFCYwHgI8Jlgq+dw1zf0KLMSd/EOqh3KN/r12jgXFGrbk7J3MxjBTxjPXTxY2F
-         pPsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=a42O4KV4bEmBFQrB6svb5MCsREuatuBAEWKoVrmbJO0=;
-        b=NYt4llZ6JOR3xdhKqybACbb2Jna0ClshSjtoRYQw17fkFDcCfYMMheQD/h6TwGq8D4
-         6ras96vpwALnuTtHzQNWiKzNbuXa37HXrcWkC52AgqwPZMRp5gyKL2/wvt/niFMq+hP6
-         hWFskqhdqQjwYJ7wVkxn19yUpQexjKKo1agmlKvxjoVgRydLeKtCwAvzDESwphg+/v/u
-         6IkPpNyxe+GBEtdqQHoTysRPtXBcqo3R08yMm2NhZ7R+HoSVYNCTF5ZQy/wkdOtVYcFl
-         uiSIn6LHAlVrmlUa7I1dMDXXgHDpWB2k+RjiXAJdUOvZEcYRYeUjojrSmS8kfebW29k7
-         JDLQ==
-X-Gm-Message-State: ANhLgQ2Uf3kNQWh5Mq+F8eJg/ca6f0x7IAYTQwWHTKgCW7l/z/5uyD94
-        fGS8Y7AWoirdY4FR6YImmZk=
-X-Google-Smtp-Source: ADFU+vvy4hEeA0Fk8eWL+molTfrJlcJGZig6kMdWtN2clniYcBX6YHZQdFlQSI1P0cwNHUtitZvmcQ==
-X-Received: by 2002:a05:651c:cf:: with SMTP id 15mr11454597ljr.288.1583145151835;
-        Mon, 02 Mar 2020 02:32:31 -0800 (PST)
-Received: from localhost.localdomain ([149.255.131.2])
-        by smtp.gmail.com with ESMTPSA id n21sm3895328lfh.2.2020.03.02.02.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 02:32:31 -0800 (PST)
-From:   Roman Stratiienko <r.stratiienko@gmail.com>
-To:     jernej.skrabec@siol.net, mripard@kernel.org, wens@csie.org
-Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Roman Stratiienko <r.stratiienko@gmail.com>
-Subject: [PATCH v4 4/4] RFC: drm/sun4i: Process alpha channel of most bottom layer
-Date:   Mon,  2 Mar 2020 12:31:38 +0200
-Message-Id: <20200302103138.17916-5-r.stratiienko@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200302103138.17916-1-r.stratiienko@gmail.com>
-References: <.>
- <20200302103138.17916-1-r.stratiienko@gmail.com>
+        Mon, 2 Mar 2020 05:33:33 -0500
+Received: from relay.sw.ru ([185.231.240.75]:36748 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbgCBKdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:33:32 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j8iNv-0003Co-6T; Mon, 02 Mar 2020 13:33:15 +0300
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+To:     Dave Chinner <david@fromorbit.com>,
+        Andreas Dilger <adilger@dilger.ca>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
+        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
+        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
+        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+ <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
+ <eda406cc-8ce3-e67a-37be-3e525b58d5a1@virtuozzo.com>
+ <4933D88C-2A2D-4ACA-823E-BDFEE0CE143F@dilger.ca>
+ <20200228211610.GQ10737@dread.disaster.area>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <9c62dfec-4e01-c711-7a94-373616302d08@virtuozzo.com>
+Date:   Mon, 2 Mar 2020 13:33:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200228211610.GQ10737@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner display engine blender consists of 3 pipelined blending units.
+On 29.02.2020 00:16, Dave Chinner wrote:
+> On Fri, Feb 28, 2020 at 08:35:19AM -0700, Andreas Dilger wrote:
+>> On Feb 27, 2020, at 5:24 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>> On 27.02.2020 00:51, Andreas Dilger wrote:
+>>>> On Feb 26, 2020, at 1:05 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>> In that case, an interesting userspace interface would be an array of
+>>>> inode numbers (64-bit please) that should be packed together densely in
+>>>> the order they are provided (maybe a flag for that).  That allows the
+>>>> filesystem the freedom to find the physical blocks for the allocation,
+>>>> while userspace can tell which files are related to each other.
+>>>
+>>> So, this interface is 3-in-1:
+>>>
+>>> 1)finds a placement for inodes extents;
+>>
+>> The target allocation size would be sum(size of inodes), which should
+>> be relatively small in your case).
+>>
+>>> 2)assigns this space to some temporary donor inode;
+>>
+>> Maybe yes, or just reserves that space from being allocated by anyone.
+>>
+>>> 3)calls ext4_move_extents() for each of them.
+>>
+>> ... using the target space that was reserved earlier
+>>
+>>> Do I understand you right?
+>>
+>> Correct.  That is my "5 minutes thinking about an interface for grouping
+>> small files together without exposing kernel internals" proposal for this.
+> 
+> You don't need any special kernel interface with XFS for this. It is
+> simply:
+> 
+> 	mkdir tmpdir
+> 	create O_TMPFILEs in tmpdir
+> 
+> Now all the tmpfiles you create and their data will be co-located
+> around the location of the tmpdir inode. This is the natural
+> placement policy of the filesystem. i..e the filesystem assumes that
+> files in the same directory are all related, so will be accessed
+> together and so should be located in relatively close proximity to
+> each other.
 
-PIPE0->\
-        BLD0-\
-PIPE1->/      BLD1-\
-PIPE2->------/      BLD2->OUT
-PIPE3->------------/
+Hm, but does this help for my problem? 1)allocate two files in the same directory
+and then 2)move source files there?
 
-This pipeline produces incorrect composition if PIPE0 buffer has alpha.
-Correct solution is to add one more blending step and mix PIPE0 with
-background, but it is not supported by the hardware.
+In case of I have two 512K files ext4 allows the same:
 
-Use premultiplied alpha buffer of PIPE0 overlay channel as is.
-In this case we got same effect as mixing PIPE0 with black background.
+1)fallocate() 1M continuous space (this should ends with success in case of disc
+is not almost full);
+2)move both files into newly allocated space.
 
-Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+But this doubles IO, since both of files have to be moved. The ideal solution
+would be to allocate space around one of them and to move the second file there.
 
----
-
-v4:
-- Initial version, depends on other unmerged patches in the patchset.
----
- drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 2 +-
- drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-index dd6145f80c36..d94f4d8b9128 100644
---- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-@@ -106,7 +106,7 @@ static void sun8i_ui_layer_update_alpha(struct sun8i_mixer *mixer, int channel,
- 	regmap_update_bits(mixer->engine.regs,
- 			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
- 			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
--			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos));
-+			   zpos ? SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos) : 0);
- }
- 
- static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int channel,
-diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-index e6d8a539614f..68a6843db4ab 100644
---- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-@@ -108,7 +108,7 @@ static void sun8i_vi_layer_update_alpha(struct sun8i_mixer *mixer, int channel,
- 	regmap_update_bits(mixer->engine.regs,
- 			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
- 			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
--			   (mixer->cfg->is_de3) ?
-+			   (zpos != 0 && mixer->cfg->is_de3) ?
- 				SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos) : 0);
- 
- }
--- 
-2.17.1
+> This is a locality optimisation technique that is older than XFS. It
+> works remarkably well when the filesystem can spread directories
+> effectively across it's address space.  It also allows userspace to
+> use simple techniques to group (or separate) data files as desired.
+> Indeed, this is how xfs_fsr directs locality for it's tmpfiles when
+> relocating/defragmenting data....
+> 
+>>> If so, then IMO it's good to start from two inodes, because here may code
+>>> a very difficult algorithm of placement of many inodes, which may require
+>>> much memory. Is this OK?
+>>
+>> Well, if the files are small then it won't be a lot of memory.  Even so,
+>> the kernel would only need to copy a few MB at a time in order to get
+>> any decent performance, so I don't think that is a huge problem to have
+>> several MB of dirty data in flight.
+>>
+>>> Can we introduce a flag, that some of inode is unmovable?
+>>
+>> There are very few flags left in the ext4_inode->i_flags for use.
+>> You could use "IMMUTABLE" or "APPEND_ONLY" to mean that, but they
+>> also have other semantics.  The EXT4_NOTAIL_FL is for not merging the
+>> tail of a file, but ext4 doesn't have tails (that was in Reiserfs),
+>> so we might consider it a generic "do not merge" flag if set?
+> 
+> We've had that in XFS for as long as I can remember. Many
+> applications were sensitive to the exact layout of the files they
+> created themselves, so having xfs_fsr defrag/move them about would
+> cause performance SLAs to be broken.
+> 
+> Indeed, thanks to XFS, ext4 already has an interface that can be
+> used to set/clear a "no defrag" flag such as you are asking for.
+> It's the FS_XFLAG_NODEFRAG bit in the FS_IOC_FS[GS]ETXATTR ioctl.
+> In XFS, that manages the XFS_DIFLAG_NODEFRAG on-disk inode flag,
+> and it has special meaning for directories. From the 'man 3 xfsctl'
+> man page where this interface came from:
+> 
+>       Bit 13 (0x2000) - XFS_XFLAG_NODEFRAG
+> 	No defragment file bit - the file should be skipped during a
+> 	defragmentation operation. When applied to  a directory,
+> 	new files and directories created will inherit the no-defrag
+> 	bit.
+> 
+>>> Can this interface use a knowledge about underlining device discard granuality?
+>>
+>> As I wrote above, ext4+mballoc has a very good appreciation for alignment.
+>> That was written for RAID storage devices, but it doesn't matter what
+>> the reason is.  It isn't clear if flash discard alignment is easily
+>> used (it may not be a power-of-two value or similar), but wouldn't be
+>> harmful to try.
+> 
+> Yup, XFS has the similar (but more complex) alignment controls for
+> directing allocation to match the underlying storage
+> characteristics. e.g. stripe unit is also the "small file size
+> threshold" where the allocation policy changes from packing to
+> aligning and separating.
+> 
+>>> In the answer to Dave, I wrote a proposition to make fallocate() care about
+>>> i_write_hint. Could you please comment what you think about that too?
+>>
+>> I'm not against that.  How the two interact would need to be documented
+>> first and discussed to see if that makes sene, and then implemented.
+> 
+> Individual filesystems can make their own choices as to what they do
+> with write hints, including ignoring them and leaving it for the
+> storage device to decide where to physically place the data. Which,
+> in many cases, ignoring the hint is the right thing for the
+> filesystem to do...
+> 
+> Cheers,
+> 
+> Dave.
+> 
 
