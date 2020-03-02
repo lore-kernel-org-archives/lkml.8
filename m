@@ -2,94 +2,83 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66837C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA51C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D38B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583179234;
-	bh=MpEaZUwBtCOPHlV40kr/R3Xv7ZHdjd3MFMIYHAfoYtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DZE2Nxhtsu0B64XcOpggMyxT3ErnnJx5xPgFFPILr1heMdrjQ+U/cWhRJ34ed6VL2
-	 vGck/5FWmjtVqVvwv3zJ+QwbW25DwSWqjb5c0KJFrcSmP4yEb3puNhJymOIU08/uAa
-	 Qb7wjPG1sXW+UawOtAVQtj0zOQBb+/A4sZ0DzJJM=
+	by mail.kernel.org (Postfix) with ESMTP id C2ABF21556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCBUAd (ORCPT
+        id S1726831AbgCBUCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:00:33 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44841 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBUAc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:00:32 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d9so201459plo.11;
-        Mon, 02 Mar 2020 12:00:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eha5O4PDESWCMGJ9xv9C6hsbviURSXHrEZj1b6AN74w=;
-        b=mP+Vqs9OGp83mqOrPBaLryKSYTLw9nChmF01OoCfPTBTFWl+ERguoPPjfaeWcoAvjk
-         RWrdL9j2iE1AY6HmUciIc/0qixCGnvrWHo7TZv+2Kq1df0y+Pu0pv5a0MDCmCRTOOTgG
-         wBCpHrrcdy+fFT5Kb96S3Dms6VK7jMR4onS09/4+o0dsRYqjmy2+wit41RCwf7Lfn4ui
-         RT5o0no4C0OMdf53O2OgdKtB4vWzorNCU/0XPZ25SBbmdV9aZTYTmsUjYRk2KPgzHC6R
-         vN87uBLX0PR8KV/q63ksbv+fMShfVOjS/T4Ez5QylNSW8bVeA7cBbS33mxgODHCub1YW
-         bOUg==
-X-Gm-Message-State: ANhLgQ294+fuLMYeHjdMqxrdqSeOohQ5JA52rR7f1m617lE4QeX3YIEB
-        0yYX8HqjLpt87B5J71Q3p+CfmkBkRRE=
-X-Google-Smtp-Source: ADFU+vtuBEA5RFTwmgEPxMVETCPNW0efmSmnHAxCShQAfQUWpkiYAg9vQ83ecTjj51b/s1wKzCokOw==
-X-Received: by 2002:a17:90a:928a:: with SMTP id n10mr124327pjo.194.1583179231233;
-        Mon, 02 Mar 2020 12:00:31 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id u12sm22392960pgr.3.2020.03.02.12.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 12:00:29 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 39EE7413C3; Mon,  2 Mar 2020 20:00:27 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 20:00:27 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, logang@deltatee.com, knut.omang@oracle.com,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] init: main: add KUnit to kernel init
-Message-ID: <20200302200027.GG11244@42.do-not-panic.com>
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-5-brendanhiggins@google.com>
+        Mon, 2 Mar 2020 15:02:30 -0500
+Received: from mga14.intel.com ([192.55.52.115]:29490 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCBUCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:02:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 12:02:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
+   d="scan'208";a="351618287"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 12:02:29 -0800
+Date:   Mon, 2 Mar 2020 12:02:29 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/13] KVM: x86: Allow userspace to disable the
+ emulator
+Message-ID: <20200302200229.GE6244@linux.intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
+ <3ec358a8-859d-9ef1-7392-372d55b28ee4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130230812.142642-5-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3ec358a8-859d-9ef1-7392-372d55b28ee4@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 03:08:09PM -0800, Brendan Higgins wrote:
-> Remove KUnit from init calls entirely, instead call directly from
-> kernel_init().
+On Mon, Mar 02, 2020 at 07:42:31PM +0100, Paolo Bonzini wrote:
+> On 19/02/20 00:29, Sean Christopherson wrote:
+> > The primary intent of this series is to dynamically allocate the emulator
+> > and get KVM to a state where the emulator *could* be disabled at some
+> > point in the future.  Actually allowing userspace to disable the emulator
+> > was a minor change at that point, so I threw it in.
+> > 
+> > Dynamically allocating the emulator shrinks the size of x86 vcpus by
+> > ~2.5k bytes, which is important because 'struct vcpu_vmx' has once again
+> > fattened up and squeaked past the PAGE_ALLOC_COSTLY_ORDER threshold.
+> > Moving the emulator to its own allocation gives us some breathing room
+> > for the near future, and has some other nice side effects.
+> > 
+> > As for disabling the emulator... in the not-too-distant future, I expect
+> > there will be use cases that can truly disable KVM's emulator, e.g. for
+> > security (KVM's and/or the guests).  I don't have a strong opinion on
+> > whether or not KVM should actually allow userspace to disable the emulator
+> > without a concrete use case (unless there already is a use case?), which
+> > is why that part is done in its own tiny patch.
+> > 
+> > Running without an emulator has been "tested" in the sense that the
+> > selftests that don't require emulation continue to pass, and everything
+> > else fails with the expected "emulation error".
 > 
-> Co-developed-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> I agree with Vitaly that, if we want this, it should be a KVM_ENABLE_CAP
+> instead.  The first 10 patches are very nice cleanups though so I plan
+> to apply them (with Vitaly's suggested nits for review) after you answer
+> the question on patch 10.
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-
-In particular the placement and strategy matches my expectations and
-allows us to think of __init as a separate beast, as we should.
-
-  Luis
+Works for me, thanks!
