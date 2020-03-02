@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E39C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057BE217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3293D246D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgCBX5p (ORCPT
+        id S1727701AbgCBX5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:45 -0500
+        Mon, 2 Mar 2020 18:57:52 -0500
 Received: from mga02.intel.com ([134.134.136.20]:25524 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbgCBX53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:29 -0500
+        id S1727496AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384719"
+   d="scan'208";a="243384731"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 32/66] KVM: x86: Handle UMIP emulation CPUID adjustment in VMX code
-Date:   Mon,  2 Mar 2020 15:56:35 -0800
-Message-Id: <20200302235709.27467-33-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for EPT in VMX code
+Date:   Mon,  2 Mar 2020 15:56:39 -0800
+Message-Id: <20200302235709.27467-37-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,49 +49,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the CPUID adjustment for UMIP emulation into VMX code to eliminate
-an instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
-pattern in the common CPUID handling code.
+Move the clearing of the GBPAGE CPUID bit into VMX to eliminate an
+instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+pattern in the common CPUID handling code, and to pave the way toward
+eliminating ->get_lpage_level().
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c   | 2 --
+ arch/x86/kvm/cpuid.c   | 3 +--
  arch/x86/kvm/vmx/vmx.c | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 983eec22d2f5..35451ea0a690 100644
+index 84b9a488a443..aacfd6af774a 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -339,7 +339,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
- 
- static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
- {
--	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
- 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
- 	unsigned f_la57;
- 	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
-@@ -382,7 +381,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
- 		cpuid_entry_mask(entry, CPUID_7_ECX);
- 		/* Set LA57 based on hardware capability. */
- 		entry->ecx |= f_la57;
--		entry->ecx |= f_umip;
- 		entry->ecx |= f_pku;
- 		/* PKU is not yet implemented for shadow paging. */
- 		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+@@ -416,8 +416,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	int r, i, max_idx;
+ 	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+ #ifdef CONFIG_X86_64
+-	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+-				? F(GBPAGES) : 0;
++	unsigned f_gbpages = F(GBPAGES);
+ 	unsigned f_lm = F(LM);
+ #else
+ 	unsigned f_gbpages = 0;
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 67958c27b7c0..f4efc45810b8 100644
+index 1a4ac20797a4..131f4b88d307 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7131,6 +7131,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- 			cpuid_entry_set(entry, X86_FEATURE_MPX);
- 		if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
- 			cpuid_entry_set(entry, X86_FEATURE_INVPCID);
-+		if (vmx_umip_emulated())
-+			cpuid_entry_set(entry, X86_FEATURE_UMIP);
+@@ -7145,6 +7145,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 	case 0x80000001:
+ 		if (!cpu_has_vmx_rdtscp())
+ 			cpuid_entry_clear(entry, X86_FEATURE_RDTSCP);
++		if (enable_ept && !cpu_has_vmx_ept_1g_page())
++			cpuid_entry_clear(entry, X86_FEATURE_GBPAGES);
  		break;
  	default:
  		break;
