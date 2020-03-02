@@ -2,110 +2,106 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC068C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D21C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F6C2084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D4721739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoSkkwh7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JyzupQSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCBP0F (ORCPT
+        id S1727140AbgCBP1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:26:05 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36121 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgCBP0F (ORCPT
+        Mon, 2 Mar 2020 10:27:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54718 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726751AbgCBP1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:26:05 -0500
-Received: by mail-lf1-f67.google.com with SMTP id s1so7922480lfd.3;
-        Mon, 02 Mar 2020 07:26:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=bukTu9hwl5g5tnxxRv26V6s76cWTVObhbh4EskdLihU=;
-        b=OoSkkwh7Cmv3dCPJ/k1vu9Sn5CeBGuir/88pWzCGEYK9jq7EjoUY7/PBZmMJMtmxYg
-         M5wWnf3WOrg76bbA8+VQsuj8mj+RbK8UMLq7PR7yIx3LE6+WR3Qn3aO0B3/hMgX3osbS
-         a5A3V/GeBRDKnR4zfzy7DoWCALYlD07R6nlmwtF6t0GKYjoEdmqcd5D5Eq/Ft8YmEW7o
-         T3QKXKNkhGaPw8hmO+5+OJwDLIYWPREuQarcV4clbrOyR0qz0wo0VOHt4Lss8b2wxfhj
-         2F1APIe4aPffFjqqZsd88CVqULmVOxY6U+PxKWHp6JUQcpN9ItxqMzVeMyctKqSlfYF6
-         WKEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bukTu9hwl5g5tnxxRv26V6s76cWTVObhbh4EskdLihU=;
-        b=TSuxY52FDcs2u4vg+c0FYTjHJTGY0YtTjzaKPqTRTa4U3LcnYp/nFibix3qE7esJtl
-         lKUU1av7xx6AS/AgJIF//1Gb4g8gFCjZR/68DRTp5bzrnNAKO4iGbdnd7gA+ngYKOFVm
-         VkE1OPa1a5dWXOSLDVLC1wOhdJzTlqNc4SpJFXRtUNvGQIUaAe5hVpPkg69PuIIzP/9f
-         m91ldvj+B/zNbfgHlsjo6jMtvMhmU00QQi1Jv9s3uTEgPNEdS3qVQlYh7KWwNJcDXxVW
-         xlggwzLNt1bOPRA/F8GO5eyyR+w93QNbQK0b+mLiNYcFdQFaBs7+3UCddxNB2+9DXnhU
-         vKbw==
-X-Gm-Message-State: ANhLgQ3PBBJZApPBGdxikNpkW0tDuqYvqB6TBuDYoOFMtGEgjir5DzX8
-        K0Qy8pusXqp2JAt2qSCdUnF0ichNx8E=
-X-Google-Smtp-Source: ADFU+vtqfAJonV+lvjYlIT+V/SuYsnMeHhJPyqr0BubSWwv4qEZKQIBkJhE1ZXWZwz2MUZcsbwolqQ==
-X-Received: by 2002:a19:ed08:: with SMTP id y8mr11146164lfy.56.1583162762468;
-        Mon, 02 Mar 2020 07:26:02 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id 138sm12353615lfk.9.2020.03.02.07.26.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:26:01 -0800 (PST)
-Subject: Re: [PATCH 9/9] io_uring: pass submission ref to async
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583078091.git.asml.silence@gmail.com>
- <29efa25e63ea86b9b038fff202a5f7423b5482c8.1583078091.git.asml.silence@gmail.com>
- <fb27a289-717c-b911-7981-db72cbc51c26@gmail.com>
- <fab1f954-98f0-3576-9142-966982988bc0@gmail.com>
- <902c439f-81ff-7593-e6b4-eee3f217c292@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <19a08aaa-069b-27d1-1cb7-5033b74c2e78@gmail.com>
-Date:   Mon, 2 Mar 2020 18:26:01 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 10:27:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583162868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JEaoL0NQ8YVPWWyRVDVCR6lLWIpeqTebjG8iPOD9Bmg=;
+        b=JyzupQStQi8/1XphmwQdxK4rPr6C5W4llKwqafdCLn4ByN2AilQ/6sI1Sdrva/9dvLKPI3
+        bf/4lajld5j1orR0hnaVOoRLqDypcll/n+PN4EimFtACBjZNBNnHg/R4dTRt4ApLABWufZ
+        6chxmsFGWlF+8uzjhheQjWxi1a3ciZ4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-WeqELKtxNR2vKMOTZb8t9w-1; Mon, 02 Mar 2020 10:27:46 -0500
+X-MC-Unique: WeqELKtxNR2vKMOTZb8t9w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CB13CF98F;
+        Mon,  2 Mar 2020 15:27:45 +0000 (UTC)
+Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 077039CA3;
+        Mon,  2 Mar 2020 15:27:43 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 16:27:41 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf parse-events: Use asprintf() instead of strncpy()
+ for tracepoints
+Message-ID: <20200302152741.GA263077@krava>
+References: <20200302145535.GA28183@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <902c439f-81ff-7593-e6b4-eee3f217c292@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302145535.GA28183@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/2020 6:12 PM, Jens Axboe wrote:
-> On 3/2/20 8:08 AM, Pavel Begunkov wrote:
->> On 3/2/2020 12:39 AM, Pavel Begunkov wrote:
->>> On 01/03/2020 19:18, Pavel Begunkov wrote:
->>>> Currenlty, every async work handler accepts a submission reference,
->>>> which it should put. Also there is a reference grabbed in io_get_work()
->>>> and dropped in io_put_work(). This patch merge them together.
->>>>
->>>> - So, ownership of the submission reference passed to io-wq, and it'll
->>>> be put in io_put_work().
->>>> - io_get_put() doesn't take a ref now and so deleted.
->>>> - async handlers don't put the submission ref anymore.
->>>> - make cancellation bits of io-wq to call {get,put}_work() handlers
->>>
->>> Hmm, it makes them more like {init,fini}_work() and unbalanced/unpaired. May be
->>> no a desirable thing.
->>
->> Any objections against replacing {get,put}_work() with
->> io_finilise_work()? It will be called once and only once, and a work
->> must not go away until it happened. It will be enough for now, but not
->> sure whether you have some plans for this get/put pinning.
+On Mon, Mar 02, 2020 at 11:55:35AM -0300, Arnaldo Carvalho de Melo wrote:
+
+SNIP
+
+>       |          ^~~~~~
+>   CC       /tmp/build/perf/util/call-path.o
 > 
-> I have no further plans there, the get/put work only exist to ensure that
-> the work item stays valid in case of cancelation lookups.
+> So I replaced it with asprintf to make the code shorter, use a bit less
+> memory and deal with the above problem, ok?
+> 
+> - Arnaldo
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index c01ba6f8fdad..a14995835d85 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -257,21 +257,15 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+>  				path = zalloc(sizeof(*path));
+>  				if (!path)
+>  					return NULL;
+> -				path->system = malloc(MAX_EVENT_LENGTH);
+> -				if (!path->system) {
+> +				if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
+>  					free(path);
+>  					return NULL;
+>  				}
+> -				path->name = malloc(MAX_EVENT_LENGTH);
+> -				if (!path->name) {
+> +				if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
+>  					zfree(&path->system);
+>  					free(path);
+>  					return NULL;
+>  				}
+> -				strncpy(path->system, sys_dirent->d_name,
+> -					MAX_EVENT_LENGTH);
+> -				strncpy(path->name, evt_dirent->d_name,
+> -					MAX_EVENT_LENGTH);
 
-Great, it'll go into v2 as well.
+looks good to me, and we can probably remove MAX_EVENT_LENGTH as well?
 
--- 
-Pavel Begunkov
+jirka
+
