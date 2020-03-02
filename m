@@ -7,37 +7,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09995C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF89C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA4F2467B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511C12468D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgCBLBK (ORCPT
+        id S1727820AbgCBLBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:01:10 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:34253 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgCBLBH (ORCPT
+        Mon, 2 Mar 2020 06:01:34 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:51939 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727659AbgCBLBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:01:07 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TrQxdHj_1583146853;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrQxdHj_1583146853)
+        Mon, 2 Mar 2020 06:01:11 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TrR9JWI_1583146862;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrR9JWI_1583146862)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 02 Mar 2020 19:00:54 +0800
+          Mon, 02 Mar 2020 19:01:02 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, akpm@linux-foundation.org,
         mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
         khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         hannes@cmpxchg.org, lkp@intel.com
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 02/20] mm/memcg: fold lock_page_lru into commit_charge
-Date:   Mon,  2 Mar 2020 19:00:12 +0800
-Message-Id: <1583146830-169516-3-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH v9 19/20] mm/lru: add debug checking for page memcg moving
+Date:   Mon,  2 Mar 2020 19:00:29 +0800
+Message-Id: <1583146830-169516-20-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -46,114 +44,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Konstantin Khlebnikov mentioned:
+This debug patch could give some clues if there are sth out of
+consideration.
 
-	Also I don't like these functions:
-	- called lock/unlock but actually also isolates
-	- used just once
-	- pgdat evaluated twice
-
-Cleanup and fold these functions into commit_charge. It also reduces
-lock time while lrucare && !PageLRU.
+Hugh Dickins reported a bug of this patch, Thanks!
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Hugh Dickins <hughd@google.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 ---
- mm/memcontrol.c | 57 ++++++++++++++++++++-------------------------------------
- 1 file changed, 20 insertions(+), 37 deletions(-)
+ include/linux/memcontrol.h |  6 ++++++
+ mm/compaction.c            |  2 ++
+ mm/memcontrol.c            | 15 +++++++++++++++
+ 3 files changed, 23 insertions(+)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index f60009580d2a..27c7bbe82125 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -431,6 +431,8 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+ void unlock_page_lruvec_irq(struct lruvec *lruvec);
+ void unlock_page_lruvec_irqrestore(struct lruvec *lruvec, unsigned long flags);
+ 
++void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page);
++
+ static inline
+ struct mem_cgroup *mem_cgroup_from_css(struct cgroup_subsys_state *css){
+ 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
+@@ -1191,6 +1193,10 @@ static inline void count_memcg_page_event(struct page *page,
+ void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
+ {
+ }
++
++static inline void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
++{
++}
+ #endif /* CONFIG_MEMCG */
+ 
+ /* idx can be of type enum memcg_stat_item or node_stat_item */
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 4a773f0ffedf..40c270bd5092 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -984,6 +984,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
+ 			locked_lruvec = lruvec;
+ 
++			lruvec_memcg_debug(lruvec, page);
++
+ 			/* Try get exclusive access under lock */
+ 			if (!skip_updated) {
+ 				skip_updated = true;
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d09776cd6e10..875e2aebcde7 100644
+index 099926efbb48..2d71e53ead88 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2572,41 +2572,11 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
- 	css_put_many(&memcg->css, nr_pages);
+@@ -1240,6 +1240,19 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+ 	return lruvec;
  }
  
--static void lock_page_lru(struct page *page, int *isolated)
--{
--	pg_data_t *pgdat = page_pgdat(page);
--
--	spin_lock_irq(&pgdat->lru_lock);
--	if (PageLRU(page)) {
--		struct lruvec *lruvec;
--
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		ClearPageLRU(page);
--		del_page_from_lru_list(page, lruvec, page_lru(page));
--		*isolated = 1;
--	} else
--		*isolated = 0;
--}
--
--static void unlock_page_lru(struct page *page, int isolated)
--{
--	pg_data_t *pgdat = page_pgdat(page);
--
--	if (isolated) {
--		struct lruvec *lruvec;
--
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		VM_BUG_ON_PAGE(PageLRU(page), page);
--		SetPageLRU(page);
--		add_page_to_lru_list(page, lruvec, page_lru(page));
--	}
--	spin_unlock_irq(&pgdat->lru_lock);
--}
--
- static void commit_charge(struct page *page, struct mem_cgroup *memcg,
- 			  bool lrucare)
- {
--	int isolated;
-+	struct lruvec *lruvec = NULL;
-+	pg_data_t *pgdat;
- 
- 	VM_BUG_ON_PAGE(page->mem_cgroup, page);
- 
-@@ -2614,9 +2584,17 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
- 	 * In some cases, SwapCache and FUSE(splice_buf->radixtree), the page
- 	 * may already be on some other mem_cgroup's LRU.  Take care of it.
- 	 */
--	if (lrucare)
--		lock_page_lru(page, &isolated);
--
-+	if (lrucare) {
-+		pgdat = page_pgdat(page);
-+		spin_lock_irq(&pgdat->lru_lock);
++void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
++{
++#ifdef CONFIG_DEBUG_VM
++	if (mem_cgroup_disabled())
++		return;
 +
-+		if (PageLRU(page)) {
-+			lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+			ClearPageLRU(page);
-+			del_page_from_lru_list(page, lruvec, page_lru(page));
-+		} else
-+			spin_unlock_irq(&pgdat->lru_lock);
-+	}
- 	/*
- 	 * Nobody should be changing or seriously looking at
- 	 * page->mem_cgroup at this point:
-@@ -2633,8 +2611,13 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
- 	 */
- 	page->mem_cgroup = memcg;
++	if (!page->mem_cgroup)
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != root_mem_cgroup, page);
++	else
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
++#endif
++}
++
+ /* page must be isolated */
+ struct lruvec *lock_page_lruvec_irq(struct page *page)
+ {
+@@ -1248,6 +1261,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *page)
+ 	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+ 	spin_lock_irq(&lruvec->lru_lock);
  
--	if (lrucare)
--		unlock_page_lru(page, isolated);
-+	if (lrucare && lruvec) {
-+		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+		VM_BUG_ON_PAGE(PageLRU(page), page);
-+		SetPageLRU(page);
-+		add_page_to_lru_list(page, lruvec, page_lru(page));
-+		spin_unlock_irq(&pgdat->lru_lock);
-+	}
++	lruvec_memcg_debug(lruvec, page);
+ 	return lruvec;
  }
  
- #ifdef CONFIG_MEMCG_KMEM
+@@ -1258,6 +1272,7 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page, unsigned long *flags)
+ 	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+ 	spin_lock_irqsave(&lruvec->lru_lock, *flags);
+ 
++	lruvec_memcg_debug(lruvec, page);
+ 	return lruvec;
+ }
+ 
 -- 
 1.8.3.1
 
