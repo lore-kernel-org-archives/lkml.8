@@ -2,138 +2,131 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176E1C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AA2C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF58C2468D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoJ/hSIh"
+	by mail.kernel.org (Postfix) with ESMTP id 4DE712468D
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCBCil (ORCPT
+        id S1726829AbgCBCkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 21:38:41 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37372 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgCBCij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 21:38:39 -0500
-Received: by mail-il1-f195.google.com with SMTP id a6so7997995ilc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 18:38:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hMBtZKtRWZnuY7I2gHV8O0aP4O5vGYjUt387++HUGg0=;
-        b=GoJ/hSIhtzmyK1XJGrqO7MByCX/BqrUWQv4z+ueuUJNbrzqFtG8bW4JIDPsvIncAeW
-         3EjWVRw8A9l0UnxL4ahWx2hqUN45nEZCU0OrNvHP2Rmr4yAczOyEco3SmvhCzIRTEWzg
-         2nWiizNIf/13Mdewd0VigJmlCLnX6T+A19iPEjrGeXSjp7R2r5tku7Dy/mIQmD3Q0e4n
-         HaNXKT9TAXhpb4zovKnrtzB7MwPxHau+Ie8umdopdU79mjJCMTI+uorDlbTVm/jKs0Ys
-         bcuX6zU2BaabHoKiplMLkDK99a906rlv7NDo0MsARJNMPSPQKdDvsr+/KYWm0yH4Avn/
-         dzWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hMBtZKtRWZnuY7I2gHV8O0aP4O5vGYjUt387++HUGg0=;
-        b=YNFxdzXHMlOahUFS4twPy8MUBZ1knC5F3HfXtW5JPIZWUPdiD1ZK17pdotZ5tOSYcd
-         SsWd8JhHGiByNNz5/tdoTtQ+CcfZMXziWCFpRpbwIBouUpF2lRTNnNrvxOC871WULqT3
-         Hic4Cx/bL1hDH8MiM02KcV/pdbO/b2CbEBWCsrnZWdBNVeMRRX7udG25BE16pj25PCRV
-         aUKosbk+dNwprE/w5N9YcNYxVl8Q8vJY/Hyixv4Kf7XVcb9Q5TMho0nzkurFXb9hHeZ4
-         SszaaI3hNil8sdp6PwI7YdUQW8gpRbqC8Y2OPE3TbG3CAW0TU4ucGVXZlu2Q8ioWDp8u
-         6OxQ==
-X-Gm-Message-State: APjAAAU7proOACj19+/bebz0RHmhhwTwLZbktoJAl+fiBD6j4nfEsv6f
-        IzQFu8wdkkgCCqOF8UnUFC59xfgJtVJCNNUXcQ==
-X-Google-Smtp-Source: APXvYqwDyaP6Qn0pUWmDTtkqgW8emavOCeHLkeDP9XbwTbCJicqdnj0l+jIsvnqly0DAdgsCYBkmoZe1/psRu3keFaE=
-X-Received: by 2002:a92:194c:: with SMTP id e12mr13324399ilm.12.1583116718718;
- Sun, 01 Mar 2020 18:38:38 -0800 (PST)
+        Sun, 1 Mar 2020 21:40:43 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60226 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726695AbgCBCkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 21:40:42 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 66F8A3F26BA126D15212;
+        Mon,  2 Mar 2020 10:40:39 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
+ 10:40:32 +0800
+Subject: Re: [PATCH v4 16/20] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-17-maz@kernel.org>
+ <6798eb13-a7e9-2a92-91b2-9b657962ea79@huawei.com>
+ <7aa668a5920b8deb8c2ee2fec3ef69b3@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <865e3cc6-19e3-a1ec-84a6-8c15ad738345@huawei.com>
+Date:   Mon, 2 Mar 2020 10:40:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
- <1582889550-9101-4-git-send-email-kernelfans@gmail.com> <CAKgT0Uc5cqJ5yhdi7HkyFTuiYQiPt9rGFPd42qAGSa7+d9ZQgQ@mail.gmail.com>
-In-Reply-To: <CAKgT0Uc5cqJ5yhdi7HkyFTuiYQiPt9rGFPd42qAGSa7+d9ZQgQ@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 2 Mar 2020 10:38:27 +0800
-Message-ID: <CAFgQCTtQL7Dub8csVn-EDs8EBtsSSjsRobJLnXrrosTDnZhj4w@mail.gmail.com>
-Subject: Re: [PATCHv5 3/3] mm/gup_benchemark: add LONGTERM_BENCHMARK test in
- gup fast path
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     linux-mm <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7aa668a5920b8deb8c2ee2fec3ef69b3@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:43 PM Alexander Duyck
-<alexander.duyck@gmail.com> wrote:
->
-> On Fri, Feb 28, 2020 at 3:35 AM Pingfan Liu <kernelfans@gmail.com> wrote:
-> >
-> > Introduce a GUP_LONGTERM_BENCHMARK ioctl to test longterm pin in gup fast
-> > path.
->
-> The title of the patch has a typo in it. There is only one 'e' in "benchmark".
-Yes, it should be GUP_FAST_LONGTERM_BENCHMARK
->
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Shuah Khan <shuah@kernel.org>
-> > To: linux-mm@kvack.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  mm/gup_benchmark.c                         | 7 +++++++
-> >  tools/testing/selftests/vm/gup_benchmark.c | 6 +++++-
-> >  2 files changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> > index 8dba38e..bf61e7a 100644
-> > --- a/mm/gup_benchmark.c
-> > +++ b/mm/gup_benchmark.c
-> > @@ -8,6 +8,7 @@
-> >  #define GUP_FAST_BENCHMARK     _IOWR('g', 1, struct gup_benchmark)
-> >  #define GUP_LONGTERM_BENCHMARK _IOWR('g', 2, struct gup_benchmark)
-> >  #define GUP_BENCHMARK          _IOWR('g', 3, struct gup_benchmark)
-> > +#define GUP_FAST_LONGTERM_BENCHMARK    _IOWR('g', 4, struct gup_benchmark)
-> >
-> >  struct gup_benchmark {
-> >         __u64 get_delta_usec;
-> > @@ -57,6 +58,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
-> >                         nr = get_user_pages_fast(addr, nr, gup->flags,
-> >                                                  pages + i);
-> >                         break;
-> > +               case GUP_FAST_LONGTERM_BENCHMARK:
-> > +                       nr = get_user_pages_fast(addr, nr,
-> > +                                       (gup->flags & 1) | FOLL_LONGTERM,
-> > +                                        pages + i);
-> > +                       break;
->
-> If I am not mistaken the mask of gup->flags is redundant. It is
-> already masked by FOLL_WRITE several lines before this switch
-> statement.
-Yes, you are right. Thanks for your kind review.
+Hi Marc,
 
-Regards,
-Pingfan
+On 2020/2/29 3:16, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2020-02-20 03:55, Zenghui Yu wrote:
+>> Hi Marc,
+>>
+>> On 2020/2/14 22:57, Marc Zyngier wrote:
+>>> In order to let a guest buy in the new, active-less SGIs, we
+>>> need to be able to switch between the two modes.
+>>>
+>>> Handle this by stopping all guest activity, transfer the state
+>>> from one mode to the other, and resume the guest.
+>>>
+>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>
+>> [...]
+>>
+>>> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
+>>> index 1bc09b523486..2c9fc13e2c59 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-v3.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-v3.c
+>>> @@ -540,6 +540,8 @@ int vgic_v3_map_resources(struct kvm *kvm)
+>>>           goto out;
+>>>       }
+>>>   +    if (kvm_vgic_global_state.has_gicv4_1)
+>>> +        vgic_v4_configure_vsgis(kvm);
+>>>       dist->ready = true;
+>>>     out:
+>>
+>> Is there any reason to invoke vgic_v4_configure_vsgis() here?
+>> This is called on the first VCPU run, through kvm_vgic_map_resources().
+>> Shouldn't the vSGI configuration only driven by a GICD_CTLR.nASSGIreq
+>> writing (from guest, or from userspace maybe)?
+> 
+> What I'm trying to catch here is the guest that has been restored with
+> nASSGIreq set. At the moment, we don't do anything on the userspace
+> side, because the vmm could decide to write that particular bit
+> multiple times, and switching between the two modes is expensive (not
+> to mention that all the vcpus may not have been created yet).
+> 
+> Moving it to the first run makes all these pitfalls go away (we have the
+> final nASSSGIreq value, and all the vcpus are accounted for).
+
+So what will happen on restoration is (roughly):
+
+  - for GICR_ISPENR0: We will restore the pending status of vSGIs into
+    software pending_latch, just like what we've done for normal SGIs.
+  - for GICD_CTLR.nASSGIreq: We will only record the written value.
+    (Note to myself: No invocation of configure_vsgis() in uaccess_write
+     callback, I previously mixed it up with the guest write callback.)
+  - Finally, you choose the first vcpu run as the appropriate point to
+    potentially flush the pending status to HW according to the final
+    nASSGIreq value.
+
+> 
+> Does this make sense to you?
+
+Yeah, it sounds like a good idea! And please ignore what I've replied to
+patch #15, I obviously missed your intention at that time, sorry...
+
+But can we move this hunk to some places more appropriate, for example,
+put it together with the GICD_CTLR's uaccess_write change? It might make
+things a bit clearer for other reviewers. :-)
+
+
+Thanks,
+Zenghui
+
