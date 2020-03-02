@@ -2,149 +2,148 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E0EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A21FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF1321739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D452121739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EmoWHNnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCBU3C (ORCPT
+        id S1726747AbgCBUbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:29:02 -0500
-Received: from mail-oln040092064044.outbound.protection.outlook.com ([40.92.64.44]:44199
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgCBU3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:29:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fTNljQOlo/VItxs1j0Fi5N+zMmwEKrqF/1+8tFozmgzXtESspeEJpb5VmBpIcZfahl5fah5AsvmqWXqLH7zLFuSEGuTQacFAM3r3xW06rKdQi+2l4IG8jEGKHcJxoVJ2pTCwVHsyCPqKHqOLSPU6gSG0MgGE4slDpOuhQzKZeHq1RJZeDyXL2nI8H43HRmWPVxD4nklr7H+xrmNy8ye4UHV4X/GmJsH+NwGV1yyZp8yiX/8JTD7x2Ka00HVwdQLIFLmTU8N+Ap2/eUfkVwnhauiBNyMwGO8sdMvXlgAIjS7ilBQ71fSQEReTtLfy1WrZokLUoNQBrLGqK2jiYVkFZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9WItZN0YFIgwuGDkDEsDC/sqmYi0bb5gVZBC8nxRJ/E=;
- b=Q9hvojDEjJ1G9f9SF1D5LgoYkcXymvG3skAbRhSbRQLgG1JG418+RTblZpn4Hc6MpdbAIaru5L0g/nknkpDNhEPEbE4yXu3M8AmabzDrzaUpmv18de10p380TRRpuabCTW+20xmtemAknc6Ug47hy8ZSjSROwGi2RrKbGGAufIkLKAT9cAI9vtZUATBmgk4eFE9i0DDivNVw9ziQ6Ez2L818yyBIkAfWdxoYus4tdvpWb4AJ1DHvz5sQj7W+tTJPcc/P06a/L/dHG5nYyEysRUVXByJT2OZIN2kRcL5PLcCmneafQSwlAgQF0PEIfOf0CIBwi/qA/szYW+wfBo1LDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR01FT058.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e18::35) by
- HE1EUR01HT174.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::124)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
- 2020 20:28:56 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.58) by
- HE1EUR01FT058.mail.protection.outlook.com (10.152.0.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 20:28:56 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 20:28:56 +0000
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR0102CA0023.eurprd01.prod.exchangelabs.com (2603:10a6:208:14::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 20:28:54 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>
-CC:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCHv3] exec: Fix a deadlock in ptrace
-Thread-Topic: [PATCHv3] exec: Fix a deadlock in ptrace
-Thread-Index: AQHV8M6l6N/OOmCoxkO4zYjKB9YU8Kg1wMQA
-Date:   Mon, 2 Mar 2020 20:28:56 +0000
-Message-ID: <AM6PR03MB51709CFCC54A25681C87DABAE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
- <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74zmfc9.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <CAG48ez0iXMD0mduKWHG6GZZoR+s2jXy776zwiRd+tFADCEiBEw@mail.gmail.com>
- <AM6PR03MB5170BD130F15CE1909F59B55E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez1jj_J3PtENWvu8piFGsik6RvuyD38ie48TYr2k1Rbf3A@mail.gmail.com>
- <5e5d45a3.1c69fb81.f99ac.0806@mx.google.com>
- <CAG48ez0zfutdReRCP38+F2O=LMU11FUQAG59YkaKZY8AJNxSGQ@mail.gmail.com>
- <AM6PR03MB517034D7787B305832FEA885E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB517034D7787B305832FEA885E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0023.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::36) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:787DD6075D33EEEDAEE3E26861DF4223AC06363B82E577E006F6A557BB55324F;UpperCasedChecksum:2B76CB72DBD1AAE991D4CB4B16B2532DEF00E963AA4A4A30B3351A60950B7833;SizeAsReceived:9897;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [8hP23OIvzx9SHL5EUzvkrbLR1Am349/n]
-x-microsoft-original-message-id: <2413bf2b-6663-892d-4898-3ff2cc543d30@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: b9ae2766-c41a-4bd8-5934-08d7bee854a8
-x-ms-traffictypediagnostic: HE1EUR01HT174:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SKuFG1FQpeLCmrj5VXY87qA6kKnLO/nBsr9IKsmshVGR34OdWvSQyhaIPBlFhLTEL6e+xF34B2obzfLm48T7UAyCV4nmj+KmkY/jYgUdt6JHmLL5Z3sQptdTmVRAjB3BF4mGBnXdIVONfpf7T+H37Ln8tC8Zf1wPU2WZUDcTCaR8FhAwADkIkRfBpwkdzpvP
-x-ms-exchange-antispam-messagedata: +jwvXQKamDUFGuKNA03o7tEV+/tc4QqAg7aKpBanW2ksZ6pDii2n+opRdV2pDmq9eHWso+4egPZ902wAp4S0BblV+N5V0Czy2DQZH1mbO9NuPb2RN1F1atay1BJl7akmtY4QnLWEp5Mp4zqrhz71Pw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <273077F5A4E6CE4C8F92F03DD763FF0F@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9ae2766-c41a-4bd8-5934-08d7bee854a8
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 20:28:56.1301
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT174
+        Mon, 2 Mar 2020 15:31:22 -0500
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:47404 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCBUbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:31:22 -0500
+Received: by mail-yw1-f73.google.com with SMTP id b195so987656ywa.14
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:31:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=aihQYJyYU6rAhab/wfRsprbv1ChtTTWAtf4Gs/sLtew=;
+        b=EmoWHNnC3GmmT1fQR4b+eNyOdqxc4dSP/L7Ck/cPjz+laobHXJTPYrpx6RnpfnaYg6
+         jEMR+ZJHob86afxd2iTqe6yl770MccPz7Wh36Z4R4VrTdc+lLhVIEt5QhgGHfH3JKnMX
+         LmIiCk/pzyCz5X/MBG+RRUZScnKlzLvV+MRsjaCSzrFr0TQHCz1s9Ukdrr7ysc4QXlWk
+         9HBbsfEeNsl+HQ8ISF5IrV2CxIGOXxjfH1iLOvlp8vR61axv/mmUt3fUvD06zF4Mfe2E
+         aTV/Gun0pcpO9Bgwg+qfQEOQP/kVby/EzuJDx7Nlt22XEx74ouhjFFP/INIB86ECjh0Z
+         OtZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=aihQYJyYU6rAhab/wfRsprbv1ChtTTWAtf4Gs/sLtew=;
+        b=bg3yOK9UyluLEMGP11bXU0P7tOK51xHWffgHF+GtpN3I4LxFjGwEDDUgtDREb/dp6J
+         bjQQZgGmCbgPgQ19tc3+Pgn05VBEUrNU1jPdNFogLVvPYV3jISiQDChCLXZTJqUVqM+h
+         Y/LlTcUcH9ud16bWiv5jZc4mQMyOd0/tzMJnc44fwTz+c62BD0VLhHfxDfQOmLu+UytD
+         qDMNKzdsJ8zB1t/DZ4fhKGgBzmb7YxcSfqtzrnNQCpPQ9WjykoQ+DIyXqEycewlwPw92
+         j3tL3TqkHZtBUV43CSkwCdATnvKakkNcFL5P/6jFbknTq1FgEKdqSh2Uk3HC+gqgAZZW
+         l/JA==
+X-Gm-Message-State: ANhLgQ0WAYcEe50bBBoHpylb03jvdbL/r+SBEHFcY0qtbUKb7XlRrglf
+        0uVVz2eKOX9rJyVEbhACzCn2IuoOUvHNSQ==
+X-Google-Smtp-Source: ADFU+vsS9GknTSE+3+5xm2leEa0Ul9szOKAXYY5z95L1JXYZd0kbMTU4A5zCU2nnGu8RBpDng5OejBWzi04V9w==
+X-Received: by 2002:a81:23d8:: with SMTP id j207mr1140477ywj.203.1583181081383;
+ Mon, 02 Mar 2020 12:31:21 -0800 (PST)
+Date:   Mon,  2 Mar 2020 12:31:09 -0800
+Message-Id: <20200302203109.179417-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] memcg: css_tryget_online cleanups
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy8yLzIwIDk6MTAgUE0sIEJlcm5kIEVkbGluZ2VyIHdyb3RlOg0KPiAtLS0gYS9pbmNsdWRl
-L2xpbnV4L2JpbmZtdHMuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2JpbmZtdHMuaA0KPiBAQCAt
-NDQsNyArNDQsMTEgQEAgc3RydWN0IGxpbnV4X2JpbnBybSB7DQo+ICAJCSAqIGV4ZWMgaGFzIGhh
-cHBlbmVkLiBVc2VkIHRvIHNhbml0aXplIGV4ZWN1dGlvbiBlbnZpcm9ubWVudA0KPiAgCQkgKiBh
-bmQgdG8gc2V0IEFUX1NFQ1VSRSBhdXh2IGZvciBnbGliYy4NCj4gIAkJICovDQo+IC0JCXNlY3Vy
-ZWV4ZWM6MTsNCj4gKwkJc2VjdXJlZXhlYzoxLA0KPiArCQkvKg0KPiArCQkgKiBTZXQgYnkgZmx1
-c2hfb2xkX2V4ZWMsIHdoZW4gdGhlIGNyZWRfY2hhbmdlX211dGV4IGlzIHRha2VuLg0KDQpPb3Bz
-LCBtaXNzZWQgdG8gdXBkYXRlIHRoaXMgY29tbWVudCwgc2hvdWxkIGJlICJ3aGVuIHRoZSBjcmVk
-X2d1YXJkX211dGV4IGlzIHRha2VuIi4NCg0KSSdsbCBzZW5kIGEgbmV3IHBhdGNoIGxhdGVyLg0K
-DQpCZXJuZC4NCg0KPiArCQkgKi8NCj4gKwkJY2FsbGVkX2ZsdXNoX29sZF9leGVjOjE7DQo+ICAj
-aWZkZWYgX19hbHBoYV9fDQo+ICAJdW5zaWduZWQgaW50IHRhc286MTsNCj4gICNlbmRpZg0K
+Currently multiple locations in memcg code, css_tryget_online() is being
+used. However it doesn't matter whether the cgroup is online for the
+callers. Online used to matter when we had reparenting on offlining and
+we needed a way to prevent new ones from showing up.
+
+The failure case for couple of these css_tryget_online usage is to
+fallback to root_mem_cgroup which kind of make bypassing the memcg
+limits possible for some workloads. For example creating an inotify
+group in a subcontainer and then deleting that container after moving the
+process to a different container will make all the event objects
+allocated for that group to the root_mem_cgroup. So, using
+css_tryget_online() is dangerous for such cases.
+
+Two locations still use the online version. The swapin of offlined
+memcg's pages and the memcg kmem cache creation. The kmem cache indeed
+needs the online version as the kernel does the reparenting of memcg
+kmem caches. For the swapin case, it has been left for later as the
+fallback is not really that concerning.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+
+Changes since v1:
+- replaced WARN_ON with WARN_ON_ONCE
+
+ mm/memcontrol.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 62b574d0cd3c..75d8883bf975 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -656,7 +656,7 @@ __mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
+ 	 */
+ 	__mem_cgroup_remove_exceeded(mz, mctz);
+ 	if (!soft_limit_excess(mz->memcg) ||
+-	    !css_tryget_online(&mz->memcg->css))
++	    !css_tryget(&mz->memcg->css))
+ 		goto retry;
+ done:
+ 	return mz;
+@@ -961,7 +961,8 @@ struct mem_cgroup *get_mem_cgroup_from_page(struct page *page)
+ 		return NULL;
+ 
+ 	rcu_read_lock();
+-	if (!memcg || !css_tryget_online(&memcg->css))
++	/* Page should not get uncharged and freed memcg under us. */
++	if (!memcg || WARN_ON_ONCE(!css_tryget(&memcg->css)))
+ 		memcg = root_mem_cgroup;
+ 	rcu_read_unlock();
+ 	return memcg;
+@@ -974,10 +975,13 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
+ static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(void)
+ {
+ 	if (unlikely(current->active_memcg)) {
+-		struct mem_cgroup *memcg = root_mem_cgroup;
++		struct mem_cgroup *memcg;
+ 
+ 		rcu_read_lock();
+-		if (css_tryget_online(&current->active_memcg->css))
++		/* current->active_memcg must hold a ref. */
++		if (WARN_ON_ONCE(!css_tryget(&current->active_memcg->css)))
++			memcg = root_mem_cgroup;
++		else
+ 			memcg = current->active_memcg;
+ 		rcu_read_unlock();
+ 		return memcg;
+@@ -6732,7 +6736,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+ 		goto out;
+ 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
+ 		goto out;
+-	if (css_tryget_online(&memcg->css))
++	if (css_tryget(&memcg->css))
+ 		sk->sk_memcg = memcg;
+ out:
+ 	rcu_read_unlock();
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
