@@ -2,266 +2,123 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9487C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D49C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E3A2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20612187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="cJ5tTw3N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ka1a7c9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgCBMuq (ORCPT
+        id S1727804AbgCBMvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:50:46 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55231 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCBMuq (ORCPT
+        Mon, 2 Mar 2020 07:51:36 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28354 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727267AbgCBMvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:50:46 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z12so11024301wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:50:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CSPsohpgpqQmBo13ul1xmw/YNjoW8YKs48JNi+aPBmM=;
-        b=cJ5tTw3N0pWG+ghjSZgzoypuxo8uMs1F43Wbg9X7vearQZbHCTHNUesUaH3RAbZDf2
-         Y0zMSivTpAkLNH9n+J12qqCx6JC6v6EJyFelnUtnMy7rXO5n6uraC9iV78bdh9wNyohD
-         iCfBnqA2TJzCiPC36j9kfCSp2+XmhLFaHUeYQhi4ifhv+FM3ckgLYESYFbZIc/eyhx8f
-         782Od94W6kOEmoZhY4Iv4hT5CBWYzBYgvVvGaY7ki0ILqxNPHajTYgCy7RS5BbetMfvz
-         Bb7nXc5Moj7CtsQ/yXsoBv/PQ9U/owwhWcOnodDRDfA4BASy+syWYOTlMfSA1SU3jMki
-         mGSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CSPsohpgpqQmBo13ul1xmw/YNjoW8YKs48JNi+aPBmM=;
-        b=ZZsCSM7DuoUJez4dNfMODu7+ln0MwbjUWIuzHsNBr2T+9Mb6C4TeSZw05hQnV0bh0E
-         dqcxuf8U3Rb1YAutjsJYcSG7vcP6AOAxKicr+B8ktt798/5YaqFF/6RGw+0XkO7s1uWO
-         2h39S1cR6AZdyhacBF5dTwLvm632nQmsb+Jd/JpLQz3gJxZ1jmSlqKXp22R6shzcg5Um
-         wFY/9xzkGS2W7ywMy7CFxAnJ49m1BtViQCYGHPBxKd13JfV+XdSl0PxgSarIVsUplyQh
-         +zz78v4P8dW+oaqHqzGduBkh5MNwf1JFSGSF7Gx8rLQyra5LGJKj818GBtrI5TKS9Kpm
-         Nq4w==
-X-Gm-Message-State: ANhLgQ01FPX1Zkn+Ook9+wnTmYvQcVBSsJrXuFvYC9tW8YphAertrlS6
-        O5Xo7Bb/HttZdUwBvy2eFVgTl5qyR3VqggOR3Lo5KQ==
-X-Google-Smtp-Source: ADFU+vtYMNuw0SCL+KswwM/YxdRE18ZwcHgkc9aHKtmKVQ8zcoxmZUMlTpF2vspJXpmDvli8VqiHduV/uiOVAxWQKWI=
-X-Received: by 2002:a7b:cb10:: with SMTP id u16mr1751723wmj.96.1583153443629;
- Mon, 02 Mar 2020 04:50:43 -0800 (PST)
+        Mon, 2 Mar 2020 07:51:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583153494;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6FPcx9mNIhbN5J4WRPrHMT4YXzuuZ33lg/Dd3R/eu0g=;
+        b=Ka1a7c9eyfqqx35lNOXm0BQMSKV5Fsulny2pBmf6V3AL4ZNy6x1D+CDK/1WFCdGRzaGZWQ
+        XpeUclP8yXj5ykGhuywQVtn6dn3mfFvigNUkAFSzixrDdWYV4Wppbd/NoFDww8SPWJ5fGv
+        s1gAbTSEgyLuF89EQgFvZxwBCuz2Fs0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-VGenNzM1PRWg1_JG_ugdAw-1; Mon, 02 Mar 2020 07:51:31 -0500
+X-MC-Unique: VGenNzM1PRWg1_JG_ugdAw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95DE8800D50;
+        Mon,  2 Mar 2020 12:51:29 +0000 (UTC)
+Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D300560C05;
+        Mon,  2 Mar 2020 12:51:26 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 13:51:23 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v5 0/3] perf report: Support annotation of code without
+ symbols
+Message-ID: <20200302125123.GA204976@krava>
+References: <20200227043939.4403-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200228165503.18054-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228165503.18054-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Mon, 2 Mar 2020 12:50:28 +0000
-Message-ID: <CAPY8ntD-_GBtTOS--J_yEAbM+U6zjAdebmHnpE4+Ev4LVFjq7g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] media: i2c: imx219: Add support 640x480
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227043939.4403-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad.
+On Thu, Feb 27, 2020 at 12:39:36PM +0800, Jin Yao wrote:
+> For perf report on stripped binaries it is currently impossible to do
+> annotation. The annotation state is all tied to symbols, but there are
+> either no symbols, or symbols are not covering all the code.
+> 
+> We should support the annotation functionality even without symbols.
+> 
+> The first patch uses al_addr to print because it's easy to dump
+> the instructions from this address in binary for branch mode.
+> 
+> The second patch supports the annotation on stripped binary.
+> 
+> The third patch supports the hotkey 'a' on address for annotation.
+> 
+>  v5:
+>  ---
+>  Separate the hotkey 'a' implementation to a new patch
+>  "perf report: Support hotkey 'a' on address for annotation"
 
-Thanks for the patch.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-On Fri, 28 Feb 2020 at 16:55, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> This patch adds support to 640x480 cropped resolution for the sensor
+thanks,
+jirka
 
-I was a little hesitant to add cropped modes without good reason.
-Processing them through an ISP with something like lens shading
-compensation requires the ISP to know the crop, so ideally it should
-be reflected through the selection API (probably read-only - I'm not
-sure you can modify the register set totally dynamically for
-cropping).
-I know we have the 1080p mode in there already which is cropped, but
-that was mainly as it is the only way to get 30fps 1080p over two
-CSI-2 lanes. I wonder if there is a better way of reflecting this.
+> 
+>  v4:
+>  ---
+>  1. Support the hotkey 'a'. When we press 'a' on address,
+>     now it supports the annotation.
+> 
+>  2. Change the patch title from
+>     "Support interactive annotation of code without symbols" to
+>     "perf report: Support interactive annotation of code without symbols"
+> 
+>  v3:
+>  ---
+>  Keep just the ANNOTATION_DUMMY_LEN, and remove the
+>  opts->annotate_dummy_len since it's the "maybe in future
+>  we will provide" feature.
+> 
+>  v2:
+>  ---
+>  Fix a crash issue when annotating an address in "unknown" object.
+> 
+> Jin Yao (3):
+>   perf util: Print al_addr when symbol is not found
+>   perf report: Support interactive annotation of code without symbols
+>   perf report: Support hotkey 'a' on address for annotation
+> 
+>  tools/perf/ui/browsers/hists.c | 90 +++++++++++++++++++++++++++-------
+>  tools/perf/util/annotate.h     |  1 +
+>  tools/perf/util/sort.c         |  6 ++-
+>  3 files changed, 78 insertions(+), 19 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/i2c/imx219.c | 70 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index 1388c9bc00bb..232ebf41063a 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -54,6 +54,7 @@
->  #define IMX219_VTS_15FPS               0x0dc6
->  #define IMX219_VTS_30FPS_1080P         0x06e3
->  #define IMX219_VTS_30FPS_BINNED                0x06e3
-> +#define IMX219_VTS_30FPS_640x480       0x0239
->  #define IMX219_VTS_MAX                 0xffff
->
->  #define IMX219_VBLANK_MIN              4
-> @@ -329,6 +330,65 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
->         {0x0163, 0x78},
->  };
->
-> +static const struct imx219_reg mode_640_480_regs[] = {
-
-Can I ask where these register settings came from? They differ from
-references I have in a few odd ways.
-
-There's also a comment at the top of mode arrays declaring the
-supported modes and where they came from. Could you update that
-please?
-
-> +       {0x0100, 0x00},
-> +       {0x30eb, 0x0c},
-> +       {0x30eb, 0x05},
-> +       {0x300a, 0xff},
-> +       {0x300b, 0xff},
-> +       {0x30eb, 0x05},
-> +       {0x30eb, 0x09},
-
-Datasheet section 3-4 says these are to access manufacturer specific
-registers, but the access sequence should be
-0x30eb 0x05
-0x30eb 0x0c
-0x300a 0xff
-0x300b 0xff
-0x30eb 0x05
-0x30eb 0x09
-Is there a reason your first two writes are reversed compared to this
-published order?
-
-> +       {0x0114, 0x01},
-> +       {0x0128, 0x01},
-
-DPHY_CTRL RW MIPI Global timing setting
-0:auto mode, 1:manual mode
-
-All the other modes have this as auto mode. Why does this mode need
-manual settings, and is something else configuring those manual
-values?
-
-> +       {0x012a, 0x18},
-> +       {0x012b, 0x00},
-> +       {0x0162, 0x0d},
-> +       {0x0163, 0xe7},
-
-All the other modes have set line length to 0x0d78 (3448 decimal)
-rather than your 0xd37 (3559).
-Is there any specific reason for this? If we need a different value,
-then we also need to vary IMX219_PPL_DEFAULT and V4L2_CID_HBLANK
-depending on mode. Or probably better would be to make it variable,
-but that has a load of other implications.
-
-> +       {0x0164, 0x03},
-> +       {0x0165, 0xe8},
-> +       {0x0166, 0x08},
-> +       {0x0167, 0xe7},
-> +       {0x0168, 0x02},
-> +       {0x0169, 0xf0},
-> +       {0x016a, 0x06},
-> +       {0x016b, 0xaf},
-> +       {0x016c, 0x02},
-> +       {0x016d, 0x80},
-> +       {0x016e, 0x01},
-> +       {0x016f, 0xe0},
-> +       {0x0170, 0x01},
-> +       {0x0171, 0x01},
-> +       {0x0172, 0x00},
-
-0x0172 is IMAGE_ORIENTATION_A, which is handled via V4L2_CID_HFLIP /
-V4L2_CID_VFLIP, not in the mode table.
-
-> +       {0x0174, 0x03},
-> +       {0x0175, 0x03},
-> +       {0x0301, 0x05},
-> +       {0x0303, 0x01},
-> +       {0x0304, 0x03},
-> +       {0x0305, 0x03},
-> +       {0x0306, 0x00},
-> +       {0x0307, 0x39},
-> +       {0x0309, 0x08},
-
-"OPPXCK_DIV. Ouptut pixel clock divider value, default 0x0A."
-This looks like it is a change that should be part of the support for
-8bit formats.
-Have you tested this mode with 10bit readout? Are the data rates correct?
-
-> +       {0x030b, 0x01},
-> +       {0x030c, 0x00},
-> +       {0x030d, 0x72},
-> +       {0x0624, 0x06},
-> +       {0x0625, 0x68},
-> +       {0x0626, 0x04},
-> +       {0x0627, 0xd0},
-> +       {0x455e, 0x00},
-> +       {0x471e, 0x4b},
-> +       {0x4767, 0x0f},
-> +       {0x4750, 0x14},
-> +       {0x4540, 0x00},
-> +       {0x47b4, 0x14},
-> +       {0x4713, 0x30},
-> +       {0x478b, 0x10},
-> +       {0x478f, 0x10},
-> +       {0x4793, 0x10},
-> +       {0x4797, 0x0e},
-> +       {0x479b, 0x0e},
-> +};
-> +
->  static const char * const imx219_test_pattern_menu[] = {
->         "Disabled",
->         "Color Bars",
-> @@ -414,6 +474,16 @@ static const struct imx219_mode supported_modes[] = {
->                         .regs = mode_1640_1232_regs,
->                 },
->         },
-> +       {
-> +               /* 640x480 30fps mode */
->
-> +               .width = 640,
-> +               .height = 480,
-> +               .vts_def = IMX219_VTS_30FPS_640x480,
-
-I've just run this mode on a Pi and I get a default of about 84fps via
-v4l2-ctl to /dev/null. Is the default frame rate expected to be 30fps?
-In which case I think the value of IMX219_VTS_30FPS_640x480 is wrong
-(I'd expect 0x6e3 again, same as the other modes), or the comments and
-define names are wrong. One or other ought to be fixed.
-
-My calculations say that with:
-- VBLANK set to 89
-- a pixel rate of 182400000 (based on IMX219_PIXEL_RATE)
-- HBLANK fixed at 2808
-- frame being 640x480
-The overall frame size is therefore (640+2808) * (480+89) = 1961912
-pixel clocks. That would at first glance appear to give a frame rate
-of 92fps. Testing with an alternate tool is giving me timings for
-90fps but with a few dropped frames (the dropped frames would explain
-v4l2-ctl reading slightly low).
-
-If I amend OPPXCK_DIV to be 0xA (the same as the other modes), then it
-doesn't appear to change.
-However hold off on investigating the specifics for now - I appear to
-be unable to select the 10bit/pixel formats, so I suspect something is
-up with patch 2 that added the 8bit support (I was about to review
-that anyway).
-
-  Dave
-
-> +               .reg_list = {
-> +                       .num_of_regs = ARRAY_SIZE(mode_640_480_regs),
-> +                       .regs = mode_640_480_regs,
-> +               },
-> +       },
->  };
->
->  struct imx219 {
-> --
-> 2.20.1
->
