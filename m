@@ -2,65 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E39C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF26C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C8F20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583143691;
-	bh=OffZQerAS2WJSpc9mMTLQe6T/x5CNUDFyO/TPtYpBaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HBM6Unr9Ucfs+1i1qEigZHmB3EJu+MISxCpQBjUbp+xREgRyptS9SSStzT6DAcJro
-	 KL6LVyiQ/Ik4rsCzSJ9/SMGb0FWWJ+/l90cRYNfj/I7laFDycqPVEMPvD+rMOfNpcR
-	 JEj40u05ShtIJvbh2+k42PcLao7JzWaamnAn0UaA=
+	by mail.kernel.org (Postfix) with ESMTP id EA8DF20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgCBKIK (ORCPT
+        id S1727595AbgCBKIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:08:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbgCBKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:08:09 -0500
-Received: from localhost (unknown [171.76.77.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C4802086A;
-        Mon,  2 Mar 2020 10:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583143689;
-        bh=OffZQerAS2WJSpc9mMTLQe6T/x5CNUDFyO/TPtYpBaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZuJeI0fX/2v3teEA+TQJOQbmpZEmaKFKiNJPS7jPHCZ2OUa7F0hehlxOZHQtICCLN
-         gy6P6eXSIa/pE7DxjfGw8o8lR1E4CxO8YG26ZZkvBpITnCkTSJ1Q6ZPaPLInH8u4QD
-         /TK9dEBsg6eqGk+wQmsD8oN6lDL+9aYDkbNd6ooc=
-Date:   Mon, 2 Mar 2020 15:38:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, natechancellor@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: fsl-dpaa2-qdma: Adding shutdown hook
-Message-ID: <20200302092630.GK4148@vkoul-mobl>
-References: <20200227042841.18358-1-peng.ma@nxp.com>
+        Mon, 2 Mar 2020 05:08:19 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43206 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgCBKIS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:08:18 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CE511292A3E
+Subject: Re: [PATCH 2/8] Input: cros_ec_keyb: Use cros_ec_cmd_xfer_status
+ helper
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        pmalani@chromium.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fei Shao <fshao@chromium.org>, linux-input@vger.kernel.org
+References: <20200220155859.906647-1-enric.balletbo@collabora.com>
+ <20200220155859.906647-3-enric.balletbo@collabora.com>
+Message-ID: <a4beacb4-b309-9e72-b522-186c5c059718@collabora.com>
+Date:   Mon, 2 Mar 2020 11:08:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227042841.18358-1-peng.ma@nxp.com>
+In-Reply-To: <20200220155859.906647-3-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-02-20, 12:28, Peng Ma wrote:
-> We need to ensure DMA engine could be stopped in order for kexec
-> to start the next kernel.
-> So add the shutdown operation support.
+Hi Dmitry,
 
-Applied, thanks
+Gentle ping, I'd like feedback from you on this series, and are you fine with
+this change?
 
--- 
-~Vinod
+Thanks,
+ Enric
+
+On 20/2/20 16:58, Enric Balletbo i Serra wrote:
+> This patch makes use of cros_ec_cmd_xfer_status() instead of
+> cros_ec_cmd_xfer(). In this case there is no advantage of doing this
+> apart from that we want to make cros_ec_cmd_xfer() a private function
+> for the EC protocol and let people only use the
+> cros_ec_cmd_xfer_status() to return Linux standard error codes.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  drivers/input/keyboard/cros_ec_keyb.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+> index 2b71c5a51f90..fc1793ca2f17 100644
+> --- a/drivers/input/keyboard/cros_ec_keyb.c
+> +++ b/drivers/input/keyboard/cros_ec_keyb.c
+> @@ -347,18 +347,14 @@ static int cros_ec_keyb_info(struct cros_ec_device *ec_dev,
+>  	params->info_type = info_type;
+>  	params->event_type = event_type;
+>  
+> -	ret = cros_ec_cmd_xfer(ec_dev, msg);
+> -	if (ret < 0) {
+> -		dev_warn(ec_dev->dev, "Transfer error %d/%d: %d\n",
+> -			 (int)info_type, (int)event_type, ret);
+> -	} else if (msg->result == EC_RES_INVALID_VERSION) {
+> +	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+> +	if (ret == -ENOTSUPP) {
+>  		/* With older ECs we just return 0 for everything */
+>  		memset(result, 0, result_size);
+>  		ret = 0;
+> -	} else if (msg->result != EC_RES_SUCCESS) {
+> -		dev_warn(ec_dev->dev, "Error getting info %d/%d: %d\n",
+> -			 (int)info_type, (int)event_type, msg->result);
+> -		ret = -EPROTO;
+> +	} else if (ret < 0) {
+> +		dev_warn(ec_dev->dev, "Transfer error %d/%d: %d\n",
+> +			 (int)info_type, (int)event_type, ret);
+>  	} else if (ret != result_size) {
+>  		dev_warn(ec_dev->dev, "Wrong size %d/%d: %d != %zu\n",
+>  			 (int)info_type, (int)event_type,
+> 
