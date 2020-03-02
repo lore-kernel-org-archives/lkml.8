@@ -2,148 +2,123 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2CDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1687AC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39A624695
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE3A24695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYnyAQOr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wN51pkEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCBJXF (ORCPT
+        id S1727432AbgCBJXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:23:05 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40327 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgCBJXF (ORCPT
+        Mon, 2 Mar 2020 04:23:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56626 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCBJXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 04:23:05 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so4178685pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 01:23:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X50f3KltXHYHA3hHiuSfi+hu3pg0WDIwQipk7QuSG+4=;
-        b=aYnyAQOr9VuGffJkqNSsTkS7Qnfhqmk/Qy4UVEYJIwqHwVBpNQYLwR/5BrQVsvWZ45
-         4HivLJnIcEKz/4ok5iRRuRf/P25hVn+iLj7EEZR036jusbBNXOPuPoSxaPnt+cp74ukS
-         tR8P2q9Ea48odYx0/axNp+nAOk0wPQUtrL3WCvtW2HlUYW7hN8Ujd8LG6eTSPEbnGq1D
-         OgWwUiXn/cojeQyODLM1AM9cvEe+ZE4c84OEYCsvvg7HeUyBsM6ZdDtZcHr6/Wcq8xI9
-         D83fhow5waF3bE/RjePjD5GDrvagf/4nXJOsT/GIjhC/+I5b5LGsiwupvJdoI1AFPPcH
-         oVeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X50f3KltXHYHA3hHiuSfi+hu3pg0WDIwQipk7QuSG+4=;
-        b=SplvaTnXME6TLNPI59PX1NtjA7a6v4/mVX3v71JBDg5m5pva/RpJqHTE3syNzcGjOc
-         pkHJ4LRpcXoWV4DiQP97JY9xoeQWab2Kt/iObpyW05Y0ha0BmsEWwOlK8cwLM9cQeIDI
-         0f+Y7N0Ue2DDaFu1AznWenwPGBJvOCPf+mdZy+0fvZoJAcQAqAOvScK6IFGeWwSXjZdn
-         loqgOLxluiEGRCB65OSjljVE7rvaLseqQ1Asm0pyWYzGxCI0dUlpTp7h9UODTZTzJx0C
-         FwwEP2Q4mwsFWcXpS2vTX1T+zI8yUvLr3Ufy9DOZhJxLI1qDPbudA7o82nK8KmhPEg0o
-         mQBA==
-X-Gm-Message-State: ANhLgQ1WY22Moyh7PmoZchLFATwMtdbcG/btsToYfLh5APXlUUPav58Q
-        9dfYiMpH367Qaj9K1MV/30g=
-X-Google-Smtp-Source: ADFU+vvW98z93Yp+1Dy8C/iQY3xi+XM1cHEXPmj/VK4MkhXgtgex+cQP4PWoRYXQausGSGTCX5UPrA==
-X-Received: by 2002:a17:902:467:: with SMTP id 94mr5771812ple.302.1583140984048;
-        Mon, 02 Mar 2020 01:23:04 -0800 (PST)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id a36sm19887909pga.32.2020.03.02.01.23.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 01:23:03 -0800 (PST)
-Date:   Mon, 2 Mar 2020 17:23:01 +0800
-From:   sunjunyong <sunjy516@gmail.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        sunjunyong@xiaomi.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: fix a double abort case with
- fw_load_sysfs_fallback
-Message-ID: <20200302092301.GA25139@mi-OptiPlex-7050>
-References: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
- <20200228130735.GA11244@42.do-not-panic.com>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0229N1sO087046;
+        Mon, 2 Mar 2020 03:23:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583140981;
+        bh=EN0Dk2LYuFwCwIullgFBLCxgS4RYp5ZL1N4I2VeJ7C4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wN51pkEkS8BjnL5hSOFowd9XkLW3DOn2DbHoZxqncY7BBCDmxnVtY/kW4JE09vB08
+         GhKqqooSn1wbKC95T0OS+9Agj5IRaDLOFpzLvZ+JEK4YeiPiFS0iKkC4uV05OzV8XH
+         +0eXHYo9kgeWiNmftF3/uQBtMCcNen/NukCg93Os=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0229N1iv124318
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Mar 2020 03:23:01 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 03:23:01 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 03:23:00 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0229Mw01071647;
+        Mon, 2 Mar 2020 03:22:59 -0600
+Subject: Re: [PATCH] cpufreq: ti-cpufreq: Add support for OPP_PLUS
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+References: <20200228144529.14548-1-t-kristo@ti.com>
+ <20200302041933.uuoa5kbvgtde37oq@vireshk-i7>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <99717846-743e-ba87-9dda-4cf39d562518@ti.com>
+Date:   Mon, 2 Mar 2020 11:22:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228130735.GA11244@42.do-not-panic.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200302041933.uuoa5kbvgtde37oq@vireshk-i7>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis:
-
-This issue is caused by concurrent situation like below:
-when thread 1# wait firmware loading, thread 2# may write -1 to abort loading and wakeup thread 1# before it timeout.
-so wait_for_completion_killable_timeout of thread 1# would return remaining time which is != 0 with fw_st->status FW_STATUS_ABORTED.
-And the results would be converted into err -ENOENT in __fw_state_wait_common and transfered to fw_load_sysfs_fallback in thread 1#. 
-The -ENOENT means firmware status is already at ABORTED, so fw_load_sysfs_fallback no need to get mutex to abort again.
-BTW,the double abort issue would not cause kernel panic but slow down it sometimes.
------------------------------
-thread 1#,wait for loading
-fw_load_sysfs_fallback
- ->fw_sysfs_wait_timeout
-    ->__fw_state_wait_common
-       ->wait_for_completion_killable_timeout
-
-in __fw_state_wait_common,
-...
-93	ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
-94	if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
-95		return -ENOENT;
-96	if (!ret)
-97		return -ETIMEDOUT;
-98
-99	return ret < 0 ? ret : 0;
------------------------------
-thread 2#, write -1 to abort loading
-firmware_loading_store
- ->fw_load_abort
-   ->__fw_load_abort
-     ->fw_state_aborted
-       ->__fw_state_set
-         ->complete_all 
-
-in __fw_state_set,
-...
-111         if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
-112                 complete_all(&fw_st->completion);
-...
------------------------------
-On Fri, Feb 28, 2020 at 01:07:35PM +0000, Luis Chamberlain wrote:
-> On Fri, Feb 28, 2020 at 03:56:33PM +0800, Junyong Sun wrote:
-> > fw_sysfs_wait_timeout may return err with -ENOENT
-> > at fw_load_sysfs_fallback and firmware is already
-> > in abort status, no need to abort again, so skip it.
+On 02/03/2020 06:19, Viresh Kumar wrote:
+> On 28-02-20, 16:45, Tero Kristo wrote:
+>> From: Lokesh Vutla <lokeshvutla@ti.com>
+>>
+>> DRA762 SoC introduces OPP_PLUS which runs at 1.8GHz. Add
+>> support for this OPP in ti-cpufreq driver.
+>>
+>> Acked-by: Dave Gerlach <d-gerlach@ti.com>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/cpufreq/ti-cpufreq.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+>> index 557cb513bf7f..d62b6b21325a 100644
+>> --- a/drivers/cpufreq/ti-cpufreq.c
+>> +++ b/drivers/cpufreq/ti-cpufreq.c
+>> @@ -25,11 +25,14 @@
+>>   
+>>   #define DRA7_EFUSE_HAS_OD_MPU_OPP		11
+>>   #define DRA7_EFUSE_HAS_HIGH_MPU_OPP		15
+>> +#define DRA76_EFUSE_HAS_PLUS_MPU_OPP		18
+>>   #define DRA7_EFUSE_HAS_ALL_MPU_OPP		2
+>> +#define DRA76_EFUSE_HAS_ALL_MPU_OPP		24
+>>   
+>>   #define DRA7_EFUSE_NOM_MPU_OPP			BIT(0)
+>>   #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
+>>   #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
+>> +#define DRA76_EFUSE_PLUS_MPU_OPP		BIT(3)
+>>   
+>>   #define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
+>>   #define OMAP3_CONTROL_IDCODE			0x4830A204
+>> @@ -80,6 +83,9 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+>>   	 */
+>>   
+>>   	switch (efuse) {
+>> +	case DRA76_EFUSE_HAS_PLUS_MPU_OPP:
+>> +	case DRA76_EFUSE_HAS_ALL_MPU_OPP:
+>> +		calculated_efuse |= DRA76_EFUSE_PLUS_MPU_OPP;
+>>   	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
+>>   	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
+>>   		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
 > 
-> What exactly is caused by this issue though? Are you seeing
-> a kernel panic, some extra messages in the kernel log? This
-> informationw ould be useful for the kernel commit log.
-> 
-> > Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-> > ---
-> >  drivers/base/firmware_loader/fallback.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-> > index 8704e1b..1e9c96e 100644
-> > --- a/drivers/base/firmware_loader/fallback.c
-> > +++ b/drivers/base/firmware_loader/fallback.c
-> > @@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
-> >  	}
-> >  
-> >  	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
-> > -	if (retval < 0) {
-> > +	if (retval < 0 && retval != -ENOENT) {
-> >  		mutex_lock(&fw_lock);
-> >  		fw_load_abort(fw_sysfs);
-> >  		mutex_unlock(&fw_lock);
-> > -- 
-> > 2.7.4
-> > 
+> This is already merged, why sending it again ?
+
+Oops sorry, seems I was looking at stale local upstream branch when 
+checking what is still missing upstream. Please ignore.
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
