@@ -2,193 +2,115 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C0FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413992146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAC124673
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVHwvRCa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVzbakQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCBRaP (ORCPT
+        id S1727309AbgCBRbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:30:15 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38397 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgCBRaO (ORCPT
+        Mon, 2 Mar 2020 12:31:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51196 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726451AbgCBRbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:30:14 -0500
-Received: by mail-lf1-f66.google.com with SMTP id w22so219786lfk.5;
-        Mon, 02 Mar 2020 09:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1QsztcmRjjgnJkOwfQvCXGGMgGg2RrrK0NJ3VxHJW/4=;
-        b=fVHwvRCaCsXbRecBGXejJLb9N7iPAYXucEDy9h+xLbtB1kYFM/arTyVHUSdqN49v+k
-         mC1SgQidUbZWF3u4Yv9X18OlFPELK5uKQvBvkJ/jZtTVnk2P1BKiOiDV12m6CkFaqXvE
-         Og1gOVR40k3rjrYfS8ScMZUM5rW8r+SqJMyPNYzGYOk3BDRd5q+P6Sor0RZfqEr+giQj
-         1OIvwm80w+An8IZOC4b7tm0/EeNBOi6RZ6cQL89JOLLKlqGD2da5tZY9ljXJZGAcJs8Y
-         PXqS1/mYD7vPk08JC4M/Cpz1LRLAZlXRBH20n0Ys3ZXdFUf/48jaW9bwXu10pX7gNMc6
-         HIkg==
+        Mon, 2 Mar 2020 12:31:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583170283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jldB4YfZBRz97Je6/WHGQJOl1nyyviDfJaDZ8qQ1FXs=;
+        b=aVzbakQI5CjF9UqLtCQHfD3xXkjoA64LyQhTP28GqMyYNpX6wyYc/TBhc/hxeLi62NCDuW
+        GsnOIfwHqbkWVftgsIsEZTQ8vqgosbJSB4ogaZHydluiJ6UpJSbnl8W1cFtPHA30Hxq63r
+        sqLaRMf0ei6g2vHTZAvLkrLfDt22xeU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-50KxpN82NiaP3h8CDLlg4w-1; Mon, 02 Mar 2020 12:31:21 -0500
+X-MC-Unique: 50KxpN82NiaP3h8CDLlg4w-1
+Received: by mail-qv1-f72.google.com with SMTP id h17so244274qvc.18
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:31:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1QsztcmRjjgnJkOwfQvCXGGMgGg2RrrK0NJ3VxHJW/4=;
-        b=Kxc13uDjxV4DHO6c+M7bGRQYPUN6CYjTAWdeBt0cmqIERmsjYbzgnmuTUMJ9LgK1dr
-         wqTDhISS4la8AnMtLtN+4THXI4JE7QO187jpU/X3ukJUXoYEdcsrwLjO1LzA9jAEZujI
-         U0HZJmEQcCYeqHEZb/VxL28QxZYjZxyAhel3wL3GQEmcAypvgoiTGM/ENaHWplRVw6zZ
-         dNQ0Xp3fe9dXLIcziVtGOpuBC816l9x6k7P3TYgm12IRTwie8+a3u7GUNzT4ZpDhsKex
-         trqGPkYzYsUtVMmENisaQRtPggqdxV5L5hjiqMiiXy37yTZvyJ3oPVuS0scezDoJSBUJ
-         fNNA==
-X-Gm-Message-State: ANhLgQ1quiK65YWsNoBKiGsBrHHyd2pCJumhes9gLBsw0VpTYrS3ASP/
-        AquUXC7zpq7mavqE3HPmxpUtSqy2
-X-Google-Smtp-Source: ADFU+vu0WpY1vxz5eZrr5DPZTQLOQlXDg86e3wFne7IsFgMqj6l6i7kxQRcftfKXZUNBC0C+UGMWVQ==
-X-Received: by 2002:a19:fc18:: with SMTP id a24mr119917lfi.208.1583170212061;
-        Mon, 02 Mar 2020 09:30:12 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id e8sm12734113lfc.18.2020.03.02.09.30.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jldB4YfZBRz97Je6/WHGQJOl1nyyviDfJaDZ8qQ1FXs=;
+        b=UR/PuUSyUhL6oprQoE58Hu3QNHeP1rmQ+n1IvpuXuHrXkMms2r/slhA3B67A6oh4Fp
+         O5/Up9JUVAAgoDc7r/CJw5GZU8k1PEko0oyzQEnA3gnT1YfbJ6E64P9+QmfVaLesBQzU
+         SJ+OC+ktH4bqCum6BN/JCbrKzC5UknaeoY1ifNMhI1yX4cCWLxZo3o29iY583fNBirA6
+         i6rCPE97c4t0P/lURrp/X5+3DgJGXeM6MsMuMKqMw1DXgn//GfxgI9YOQZOoHoMpziwv
+         sAF663vS9lhFXXH0keQHlOirwhPw6xPkxOggPY0exMwX6+GjwlCWHjw2j5prVVuAq+BL
+         Oi9w==
+X-Gm-Message-State: ANhLgQ14lJczcCZGx4MPedq7MfDwjnv25gCvn2wCII8scSbpi0awMBfK
+        4836UDI0eEPqFrRSTcNctmqnGYNalbTAkvPC9iKizx66ZpY93lH+Z7aYcqMSQ7JBU0b5I7538aU
+        hmFeLF0QQlKF5zdcZXQd0y9EP
+X-Received: by 2002:ae9:e8cc:: with SMTP id a195mr290504qkg.377.1583170281133;
+        Mon, 02 Mar 2020 09:31:21 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vv2gQ+g33X4TpuT9lUWYMS9uikxOY3kZWxAFaYX8GZYKvpySNs8kIfbyRKUQqhJafJHEYh4aA==
+X-Received: by 2002:ae9:e8cc:: with SMTP id a195mr290490qkg.377.1583170280920;
+        Mon, 02 Mar 2020 09:31:20 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id a23sm10369623qko.77.2020.03.02.09.31.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:30:11 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: staging: tegra-vde: Use devm_platform_ioremap_resource_byname()
-Date:   Mon,  2 Mar 2020 20:29:04 +0300
-Message-Id: <20200302172904.460-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 02 Mar 2020 09:31:20 -0800 (PST)
+Date:   Mon, 2 Mar 2020 12:31:18 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Brian Geffon <bgeffon@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Martin Cracauer <cracauer@cons.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Bobby Powers <bobbypowers@gmail.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mel Gorman <mgorman@suse.de>, Hugh Dickins <hughd@google.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>
+Subject: Re: [PATCH RESEND v6 00/16] mm: Page fault enhancements
+Message-ID: <20200302173118.GC460741@xz-x1>
+References: <20200220155353.8676-1-peterx@redhat.com>
+ <CADyq12wFKwzUYipU4g4Ey9X9J3qY0S=PEhSMBAeLfzpETUWVWQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CADyq12wFKwzUYipU4g4Ey9X9J3qY0S=PEhSMBAeLfzpETUWVWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a new devm_platform_ioremap_resource_byname() helper in the
-kernel now, which helps to make code cleaner a tad by replacing few
-"boilerplate" lines of code with a single line. Let's utilize that
-new helper in the VDE driver.
+On Fri, Feb 21, 2020 at 11:26:12AM -0800, Brian Geffon wrote:
+> I tested the entire patchset because I'm very interested in fault
+> retries with userfaultfd and the series has been stable and worked
+> well on x86.
+> 
+> Tested-by: Brian Geffon <bgeffon@google.com>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+(Thanks again for Brian's quick follow up, and adding Andrew in again)
 
-Changelog:
+Hi, Andrew,
 
-v2: Updated commit's message to make it more informative, as was requested
-    by Dan Carpenter in the review comment to v1.
+Do you have plan to queue this series for linux-next?  Please let me
+know if you want me to repost with you CCed for the whole series.
 
- drivers/staging/media/tegra-vde/vde.c | 55 +++++----------------------
- 1 file changed, 9 insertions(+), 46 deletions(-)
+Thanks!
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index e18fd48981da..d3e63512a765 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -949,7 +949,6 @@ static int tegra_vde_runtime_resume(struct device *dev)
- static int tegra_vde_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct resource *regs;
- 	struct tegra_vde *vde;
- 	int irq, err;
- 
-@@ -959,75 +958,39 @@ static int tegra_vde_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, vde);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sxe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->sxe = devm_ioremap_resource(dev, regs);
-+	vde->sxe = devm_platform_ioremap_resource_byname(pdev, "sxe");
- 	if (IS_ERR(vde->sxe))
- 		return PTR_ERR(vde->sxe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "bsev");
--	if (!regs)
--		return -ENODEV;
--
--	vde->bsev = devm_ioremap_resource(dev, regs);
-+	vde->bsev = devm_platform_ioremap_resource_byname(pdev, "bsev");
- 	if (IS_ERR(vde->bsev))
- 		return PTR_ERR(vde->bsev);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mbe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->mbe = devm_ioremap_resource(dev, regs);
-+	vde->mbe = devm_platform_ioremap_resource_byname(pdev, "mbe");
- 	if (IS_ERR(vde->mbe))
- 		return PTR_ERR(vde->mbe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ppe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->ppe = devm_ioremap_resource(dev, regs);
-+	vde->ppe = devm_platform_ioremap_resource_byname(pdev, "ppe");
- 	if (IS_ERR(vde->ppe))
- 		return PTR_ERR(vde->ppe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mce");
--	if (!regs)
--		return -ENODEV;
--
--	vde->mce = devm_ioremap_resource(dev, regs);
-+	vde->mce = devm_platform_ioremap_resource_byname(pdev, "mce");
- 	if (IS_ERR(vde->mce))
- 		return PTR_ERR(vde->mce);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tfe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->tfe = devm_ioremap_resource(dev, regs);
-+	vde->tfe = devm_platform_ioremap_resource_byname(pdev, "tfe");
- 	if (IS_ERR(vde->tfe))
- 		return PTR_ERR(vde->tfe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ppb");
--	if (!regs)
--		return -ENODEV;
--
--	vde->ppb = devm_ioremap_resource(dev, regs);
-+	vde->ppb = devm_platform_ioremap_resource_byname(pdev, "ppb");
- 	if (IS_ERR(vde->ppb))
- 		return PTR_ERR(vde->ppb);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "vdma");
--	if (!regs)
--		return -ENODEV;
--
--	vde->vdma = devm_ioremap_resource(dev, regs);
-+	vde->vdma = devm_platform_ioremap_resource_byname(pdev, "vdma");
- 	if (IS_ERR(vde->vdma))
- 		return PTR_ERR(vde->vdma);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "frameid");
--	if (!regs)
--		return -ENODEV;
--
--	vde->frameid = devm_ioremap_resource(dev, regs);
-+	vde->frameid = devm_platform_ioremap_resource_byname(pdev, "frameid");
- 	if (IS_ERR(vde->frameid))
- 		return PTR_ERR(vde->frameid);
- 
 -- 
-2.25.1
+Peter Xu
 
