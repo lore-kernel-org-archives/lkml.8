@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF6EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC85BC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3243424682
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7191921D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="aw2nU/wx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HeFIECEa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCBXNy (ORCPT
+        id S1727143AbgCBXN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:13:54 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:21112 "EHLO
+        Mon, 2 Mar 2020 18:13:59 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:21108 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgCBXNw (ORCPT
+        with ESMTP id S1727018AbgCBXNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:13:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1583190833; x=1614726833;
+  t=1583190832; x=1614726832;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Mjs7be7Jt2PfOz6LF6Rk11t6ekJAzXeK7FYTH2QG7xw=;
-  b=aw2nU/wxB2wYXuaqkuYBuPWtBNuY/F+vtEawCVvumYMNN8+2KcWIKF6m
-   NE9BIPn/BJguXC38NrjZaqRk0/lpIKx9IDGRz3jFzB+2HLRU4Wkos+iO0
-   FDl8PeH7B+MToMugxX4ffFdc+H3zlRt7Zedc08Fq4dgF3z/nezgmH4jI9
-   4y5ZBHxkV6T7uotE7oucmj6IsVTQue6kN+Fdwi6W9VtE21OevPt/vmpI7
-   5kSuLUlnANFRSqrTG9HexKmHK7+I4Nl+2XDuK1w2ilUh1wVZa/xQ7rMC1
-   A8/I/drv+nMwJDRID2CWWUJv3WsfDiZ2mm4t58kfmfVaDsZIkFe2Qgy98
-   A==;
-IronPort-SDR: pAk9qwzMPRk19Gcaa2QQuHmccyCQvavKi/JEei3Xp5xpWbK6wmkliRcdbMKkKIC+3zZZqmNN/K
- hiNbAV37KtgQ0Xb6+oL1of8OV9l4G9u4rC2GFvSnb3n63IEsDkhaUE5zyZXhxzFx6UkUiBMy7W
- QKUSb47UK1txxoiu7AR4p8SdzOmaGnwFcELG3sv2N9KsQ+Lv9yDBRoNA6NIC5onUXzBB1lRnlq
- pAooEya9xUhXc8PvT+UekKR50wMEaNc/q5Qb+5q/1dQC9fQmRqsTxPIye2J3jbhfWvfi+UKjie
- IdM=
+  bh=An4QxOIbgeJWb2ziaNibTecv8A2NG8L/MhNmQAwRso4=;
+  b=HeFIECEaEZs3ytn6eh01UGP3O3Ds6gcahVBYX9BEyq2GHLBYwrnk3fw1
+   k6amOqRkQ2WHgrNAhEsZsWzbL7sFQYWp5u1taca1w/u86JlBteHIu4BcR
+   R/KgJ+YDQNNKqkrhW5en4lkJdHOPCRELi895FYYcW4QqV6BNo41Gi0kyJ
+   pteV/hITE+oO+McYSNWazhi16BbK2mv8gBaWf4Sp0PEKaVbJw0q65m3+w
+   hcxRvoyUTPV8rx+JtN/9UE3RhV8yAKVCyd/H7yItgz0LVHp9nasq9VE+Y
+   jSeiBaPuh2YK+rtD/WmXZG9PXqa+qhX8Wgwf7uiQT6V3HrPJatx6YFLXK
+   g==;
+IronPort-SDR: rHQ5drhIeJp8KeSgA59LtcsWgaCq5zhVT78MW6uHBDBKZiI42XbTRWav6gByMVRLa0qEIa8xW0
+ RlddbJ+pwbjwMuIny3wldmch791wdNcwnaSQ7GMSTmN33h2x6q8j04P3/jdMY7JQmNV1wl4+Bp
+ xsBLfo6Wk5APYFb/6/NKqwZ9sv0mQCnVm5DPnVqDmu4z4JqKXEkRIQ6zkXZNOvumB64uG0Zvyp
+ xhbscB81tQmpQltZR5le3WwcIjj6sTLpacizqtCYydcOW44RSZnzN0MzCy2kEecZEhVAgJ6kXm
+ Jh8=
 X-IronPort-AV: E=Sophos;i="5.70,508,1574092800"; 
-   d="scan'208";a="131708415"
+   d="scan'208";a="131708411"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
   by ob1.hgst.iphmx.com with ESMTP; 03 Mar 2020 07:13:52 +0800
-IronPort-SDR: yZpHmi2gSNoCe9DIUWTjY4dHGF2YkocuCi84qwj9bZN8tZa0cKq+G/BlX5OoiRG2D17HBjTh3g
- PZ12J78xsoHag6CRr3IFD2o6MBfS278+x9e47ajpG+i7nLeJ1ybqHrpuSE07W5GZFSSAsRECF0
- CeO5WN2vAh0QNoOPUFT2bmu6SRwoV9A+PWt7hR4KtfckdAGK8AXFadXnSomZgQaa4IFwzTo5Mn
- g0cLyJleoecCZ01WmRp+WCb6V0u0MKgUaPDwOxA8FQ68VSRum7xu3zqd6BLyvuIhqy/RWSVAyb
- RF4YMJOchCGkX1jjPsvysali
+IronPort-SDR: X+6nxLzjcNGx1EMrX6NrVNFhZWFQbKUoTwuIPbAlu2dHYXy/cSFsBCjbgECsxTcWSSAknefZeR
+ ZeXY7BuZ6XyGbbHxA83s4gErfhUcdQPgmcHNaRxokfSQcbkoRSzEVrI26OIGJU2uIq5YzMZtU5
+ IZvH6WgNw0oMUow+VusJs/9arRjj21/vvyKasQC/gdcNBsk0bNW1T2euTpTLZGu1lv1S/9ybXJ
+ +zZ50mgoom8hLRjM5kd1ORc/MaCkOK6Hd9G+CK6n2VXQX/7lCDU7QYJppe5L3y1tXVTnx9kXye
+ ywkST0mW4WHvnUEKCcZCwbJZ
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:06:08 -0800
-IronPort-SDR: UvUo/F33SJdtlcBWIL2Kco3te34Zifbebw4+5JxuHLG+p0jo1p4F+q5MVTtgASDhqRG3HrOMI9
- Hc0BmZnLxBrNj8W/gM4O4u4+eYI45N0KHfw7lD/eDhrygj0u0+ATRSRTU8G3a4sejTwhsW2srP
- ksv7Ek8oHmmYGtzzuX1rSRfeWCdkk1Lw/bXNC6FgcwP1AGVYR50q1YWSemF7GRwdwy41mB2Kme
- 9u+yxtwY1Bwe7F7GAtr1FvsG7uflcop4a5JmStae2UCxUIFMgOzRtIA2fm5mJ5zApRKQpv6Cqa
- y2s=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:06:07 -0800
+IronPort-SDR: NEpdmUaJ9bZcwWy8DsNyzAMLJ6giCXg883z2OrKbGpn9zhr9ixzPWVF5akUozek7BXnM+Tz9d3
+ 8gygzaSLUuJyrBukLook9gUK02xsKRSGqMqA19E3jQTahWs+ae7F/JTc+QkvxmbS/qF3T4+6nQ
+ DgwvnMaMA4pSBim38e/x7ZC7M5CgWn0rrkpqbzTaRF/phSsdctlNEh73vT8pN1+AR1E2njw/yr
+ cezushU2p0XEvaZ1K+hzmBMR9FGhYEZvNp8Aor64A32FMAzPtVprZQyfUoM9CdjCgeL3skoV5+
+ w9I=
 WDCIronportException: Internal
 Received: from usa002267.ad.shared (HELO yoda.hgst.com) ([10.86.54.35])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Mar 2020 15:13:52 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Mar 2020 15:13:51 -0800
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -78,9 +78,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Vincent Chen <vincent.chen@sifive.com>
-Subject: [PATCH v3 2/2] irqchip/sifive-plic: Add support for multiple PLICs
-Date:   Mon,  2 Mar 2020 15:11:46 -0800
-Message-Id: <20200302231146.15530-3-atish.patra@wdc.com>
+Subject: [PATCH v3 1/2] irqchip/sifive-plic: Enable/Disable external interrupts upon cpu online/offline
+Date:   Mon,  2 Mar 2020 15:11:45 -0800
+Message-Id: <20200302231146.15530-2-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200302231146.15530-1-atish.patra@wdc.com>
 References: <20200302231146.15530-1-atish.patra@wdc.com>
@@ -91,206 +91,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current, PLIC driver can support only 1 PLIC on the board. However,
-there can be multiple PLICs present on a two socket systems in RISC-V.
+Currently, PLIC threshold is only initialized once in the beginning.
+However, threshold can be set to disabled if a CPU is marked offline with
+CPU hotplug feature. This will not allow to change the irq affinity to a
+CPU that just came online.
 
-Modify the driver so that each PLIC handler can have a information
-about individual PLIC registers and an irqdomain associated with it.
-
-Tested on two socket RISC-V system based on VCU118 FPGA connected via
-OmniXtend protocol.
+Add PLIC specific CPU hotplug callbacks and enable the threshold when a CPU
+comes online. Take this opportunity to move the external interrupt enable
+code from trap init to PLIC driver as well. On cpu offline path, the driver
+performs the exact opposite operations i.e. disable the interrupt and
+the threshold.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 Reviewed-by: Anup Patel <anup@brainfault.org>
 ---
- drivers/irqchip/irq-sifive-plic.c | 81 +++++++++++++++++++------------
- 1 file changed, 51 insertions(+), 30 deletions(-)
+ arch/riscv/kernel/traps.c         |  2 +-
+ drivers/irqchip/irq-sifive-plic.c | 38 +++++++++++++++++++++++++++----
+ include/linux/cpuhotplug.h        |  1 +
+ 3 files changed, 36 insertions(+), 5 deletions(-)
 
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index ffb3d94bf0cc..55ea614d89bf 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -157,5 +157,5 @@ void __init trap_init(void)
+ 	/* Set the exception vector address */
+ 	csr_write(CSR_TVEC, &handle_exception);
+ 	/* Enable interrupts */
+-	csr_write(CSR_IE, IE_SIE | IE_EIE);
++	csr_write(CSR_IE, IE_SIE);
+ }
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 7c7f37393f99..c34fb3ae0ff8 100644
+index aa4af886e43a..7c7f37393f99 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -59,7 +59,11 @@
- #define	PLIC_DISABLE_THRESHOLD		0xf
- #define	PLIC_ENABLE_THRESHOLD		0
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2018 Christoph Hellwig
+  */
+ #define pr_fmt(fmt) "plic: " fmt
++#include <linux/cpu.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+@@ -55,6 +56,9 @@
+ #define     CONTEXT_THRESHOLD		0x00
+ #define     CONTEXT_CLAIM		0x04
  
--static void __iomem *plic_regs;
-+struct plic_priv {
-+	struct cpumask lmask;
-+	struct irq_domain *irqdomain;
-+	void __iomem *regs;
-+};
++#define	PLIC_DISABLE_THRESHOLD		0xf
++#define	PLIC_ENABLE_THRESHOLD		0
++
+ static void __iomem *plic_regs;
  
  struct plic_handler {
- 	bool			present;
-@@ -70,6 +74,7 @@ struct plic_handler {
- 	 */
- 	raw_spinlock_t		enable_lock;
- 	void __iomem		*enable_base;
-+	struct plic_priv	*priv;
- };
- static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
- 
-@@ -88,31 +93,40 @@ static inline void plic_toggle(struct plic_handler *handler,
+@@ -230,6 +234,32 @@ static int plic_find_hart_id(struct device_node *node)
+ 	return -1;
  }
  
- static inline void plic_irq_toggle(const struct cpumask *mask,
--				   int hwirq, int enable)
-+				   struct irq_data *d, int enable)
- {
- 	int cpu;
-+	struct plic_priv *priv = irq_get_chip_data(d->irq);
- 
--	writel(enable, plic_regs + PRIORITY_BASE + hwirq * PRIORITY_PER_ID);
-+	writel(enable, priv->regs + PRIORITY_BASE + d->hwirq * PRIORITY_PER_ID);
- 	for_each_cpu(cpu, mask) {
- 		struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
- 
--		if (handler->present)
--			plic_toggle(handler, hwirq, enable);
-+		if (handler->present &&
-+		    cpumask_test_cpu(cpu, &handler->priv->lmask))
-+			plic_toggle(handler, d->hwirq, enable);
- 	}
- }
- 
- static void plic_irq_unmask(struct irq_data *d)
- {
--	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
--					   cpu_online_mask);
-+	struct cpumask amask;
-+	unsigned int cpu;
-+	struct plic_priv *priv = irq_get_chip_data(d->irq);
++static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
++{
++	/* priority must be > threshold to trigger an interrupt */
++	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
++}
 +
-+	cpumask_and(&amask, &priv->lmask, cpu_online_mask);
-+	cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-+					   &amask);
- 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
- 		return;
--	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-+	plic_irq_toggle(cpumask_of(cpu), d, 1);
- }
- 
- static void plic_irq_mask(struct irq_data *d)
- {
--	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-+	struct plic_priv *priv = irq_get_chip_data(d->irq);
++static int plic_dying_cpu(unsigned int cpu)
++{
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
 +
-+	plic_irq_toggle(&priv->lmask, d, 0);
- }
- 
- #ifdef CONFIG_SMP
-@@ -120,17 +134,21 @@ static int plic_set_affinity(struct irq_data *d,
- 			     const struct cpumask *mask_val, bool force)
- {
- 	unsigned int cpu;
-+	struct cpumask amask;
-+	struct plic_priv *priv = irq_get_chip_data(d->irq);
++	csr_clear(CSR_IE, IE_EIE);
++	plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
 +
-+	cpumask_and(&amask, &priv->lmask, mask_val);
- 
- 	if (force)
--		cpu = cpumask_first(mask_val);
-+		cpu = cpumask_first(&amask);
- 	else
--		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-+		cpu = cpumask_any_and(&amask, cpu_online_mask);
- 
- 	if (cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
--	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-+	plic_irq_toggle(&priv->lmask, d, 0);
-+	plic_irq_toggle(cpumask_of(cpu), d, 1);
- 
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
-@@ -191,8 +209,6 @@ static const struct irq_domain_ops plic_irqdomain_ops = {
- 	.free		= irq_domain_free_irqs_top,
- };
- 
--static struct irq_domain *plic_irqdomain;
--
- /*
-  * Handling an interrupt is a two-step process: first you claim the interrupt
-  * by reading the claim register, then you complete the interrupt by writing
-@@ -209,7 +225,7 @@ static void plic_handle_irq(struct pt_regs *regs)
- 
- 	csr_clear(CSR_IE, IE_EIE);
- 	while ((hwirq = readl(claim))) {
--		int irq = irq_find_mapping(plic_irqdomain, hwirq);
-+		int irq = irq_find_mapping(handler->priv->irqdomain, hwirq);
- 
- 		if (unlikely(irq <= 0))
- 			pr_warn_ratelimited("can't find mapping for hwirq %lu\n",
-@@ -265,15 +281,17 @@ static int __init plic_init(struct device_node *node,
++	return 0;
++}
++
++static int plic_starting_cpu(unsigned int cpu)
++{
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
++
++	csr_set(CSR_IE, IE_EIE);
++	plic_set_threshold(handler, PLIC_ENABLE_THRESHOLD);
++
++	return 0;
++}
++
+ static int __init plic_init(struct device_node *node,
+ 		struct device_node *parent)
  {
- 	int error = 0, nr_contexts, nr_handlers = 0, i;
- 	u32 nr_irqs;
-+	struct plic_priv *priv;
+@@ -267,7 +297,6 @@ static int __init plic_init(struct device_node *node,
+ 		struct plic_handler *handler;
+ 		irq_hw_number_t hwirq;
+ 		int cpu, hartid;
+-		u32 threshold = 0;
  
--	if (plic_regs) {
--		pr_warn("PLIC already present.\n");
--		return -ENXIO;
--	}
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
- 
--	plic_regs = of_iomap(node, 0);
--	if (WARN_ON(!plic_regs))
--		return -EIO;
-+	priv->regs = of_iomap(node, 0);
-+	if (WARN_ON(!priv->regs)) {
-+		error = -EIO;
-+		goto out_free_priv;
-+	}
- 
- 	error = -EINVAL;
- 	of_property_read_u32(node, "riscv,ndev", &nr_irqs);
-@@ -287,9 +305,9 @@ static int __init plic_init(struct device_node *node,
- 		goto out_iounmap;
- 
- 	error = -ENOMEM;
--	plic_irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
--			&plic_irqdomain_ops, NULL);
--	if (WARN_ON(!plic_irqdomain))
-+	priv->irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
-+			&plic_irqdomain_ops, priv);
-+	if (WARN_ON(!priv->irqdomain))
- 		goto out_iounmap;
- 
- 	for (i = 0; i < nr_contexts; i++) {
-@@ -334,13 +352,14 @@ static int __init plic_init(struct device_node *node,
+ 		if (of_irq_parse_one(node, i, &parent)) {
+ 			pr_err("failed to parse parent for context %d.\n", i);
+@@ -301,7 +330,7 @@ static int __init plic_init(struct device_node *node,
+ 		handler = per_cpu_ptr(&plic_handlers, cpu);
+ 		if (handler->present) {
+ 			pr_warn("handler already present for context %d.\n", i);
+-			threshold = 0xffffffff;
++			plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
  			goto done;
  		}
  
-+		cpumask_set_cpu(cpu, &priv->lmask);
- 		handler->present = true;
- 		handler->hart_base =
--			plic_regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
-+			priv->regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
- 		raw_spin_lock_init(&handler->enable_lock);
- 		handler->enable_base =
--			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
--
-+			priv->regs + ENABLE_BASE + i * ENABLE_PER_HART;
-+		handler->priv = priv;
+@@ -313,13 +342,14 @@ static int __init plic_init(struct device_node *node,
+ 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+ 
  done:
+-		/* priority must be > threshold to trigger an interrupt */
+-		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
  		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
  			plic_toggle(handler, hwirq, 0);
-@@ -356,7 +375,9 @@ static int __init plic_init(struct device_node *node,
- 	return 0;
+ 		nr_handlers++;
+ 	}
  
- out_iounmap:
--	iounmap(plic_regs);
-+	iounmap(priv->regs);
-+out_free_priv:
-+	kfree(priv);
- 	return error;
- }
- 
++	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
++				  "irqchip/sifive/plic:starting",
++				  plic_starting_cpu, plic_dying_cpu);
+ 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
+ 		nr_irqs, nr_handlers, nr_contexts);
+ 	set_handle_irq(plic_handle_irq);
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index d37c17e68268..77d70b633531 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -102,6 +102,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
+ 	CPUHP_AP_IRQ_BCM2836_STARTING,
+ 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
++	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
+ 	CPUHP_AP_MICROCODE_LOADER,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
 -- 
 2.25.0
 
