@@ -2,122 +2,112 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3226AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80629C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137B02166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577BC21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgCBOqo (ORCPT
+        id S1727199AbgCBOst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:46:44 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727113AbgCBOqo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:46:44 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EjtcH006223
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 09:46:43 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbeuvsh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:46:42 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Mar 2020 14:46:40 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 14:46:37 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022EkarV55705680
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 14:46:36 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 248075204F;
-        Mon,  2 Mar 2020 14:46:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.229.179])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 105105204E;
-        Mon,  2 Mar 2020 14:46:34 +0000 (GMT)
-Subject: Re: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Mon, 02 Mar 2020 09:46:34 -0500
-In-Reply-To: <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
-References: <20200210100048.21448-1-roberto.sassu@huawei.com>
-         <20200210100048.21448-3-roberto.sassu@huawei.com>
-         <1581373420.5585.920.camel@linux.ibm.com>
-         <6955307747034265bd282bf68c368f34@huawei.com>
-         <1583156506.8544.60.camel@linux.ibm.com>
-         <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030214-0016-0000-0000-000002EC4EF2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030214-0017-0000-0000-0000334F91DB
-Message-Id: <1583160394.8544.89.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020108
+        Mon, 2 Mar 2020 09:48:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:33684 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727075AbgCBOst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:48:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DDBF2F;
+        Mon,  2 Mar 2020 06:48:48 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 807FB3F534;
+        Mon,  2 Mar 2020 06:48:45 -0800 (PST)
+Date:   Mon, 2 Mar 2020 14:48:43 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, peterz@infradead.org, mpe@ellerman.id.au,
+        paulus@samba.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, alexey.budankov@linux.intel.com,
+        yao.jin@linux.intel.com, robert.richter@amd.com,
+        kim.phillips@amd.com, maddy@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Subject: Re: [RFC 02/11] perf/core: Data structure to present hazard data
+Message-ID: <20200302144842.GD56497@lakrids.cambridge.arm.com>
+References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
+ <20200302052355.36365-3-ravi.bangoria@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302052355.36365-3-ravi.bangoria@linux.ibm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> > > > On Mon, 2020-02-10 at 11:00 +0100, Roberto Sassu wrote: 
-> > My initial patch attempted to use any common TPM and kernel hash
-> > algorithm to calculate the boot_aggregate.  The discussion with James
-> > was pretty clear, which you even stated in the Changelog.  Either we
-> > use the IMA default hash algorithm, SHA256 for TPM 2.0 or SHA1 for TPM
-> > 1.2 for the boot-aggregate.
+On Mon, Mar 02, 2020 at 10:53:46AM +0530, Ravi Bangoria wrote:
+> From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 > 
-> Ok, I didn't understand fully. I thought we should use the default IMA
-> algorithm and select SHA256 as fallback choice for TPM 2.0 if there is no
-> PCR bank for default algorithm.
-
-Yes, preference is given to the IMA default algorithm, but it should
-fall back to using SHA256 or SHA1, based on the TPM.
-
-> I additionally implemented the logic to
-> select the first PCR bank if the SHA256 PCR bank is not available but I can
-> remove it.
+> Introduce new perf sample_type PERF_SAMPLE_PIPELINE_HAZ to request kernel
+> to provide cpu pipeline hazard data. Also, introduce arch independent
+> structure 'perf_pipeline_haz_data' to pass hazard data to userspace. This
+> is generic structure and arch specific data needs to be converted to this
+> format.
 > 
-> SHA256 should be the minimum requirement for boot aggregate. The
-> advantage of using the default IMA algorithm is that it will be possible to
-> select stronger algorithms when they are supported by the TPM. We might
-> introduce a new option to specify only the algorithm for boot aggregate,
-> like James suggested to support embedded systems. Let me know which
-> option you prefer.
+> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  include/linux/perf_event.h            |  7 ++++++
+>  include/uapi/linux/perf_event.h       | 32 ++++++++++++++++++++++++++-
+>  kernel/events/core.c                  |  6 +++++
+>  tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++-
+>  4 files changed, 75 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 547773f5894e..d5b606e3c57d 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1001,6 +1001,7 @@ struct perf_sample_data {
+>  	u64				stack_user_size;
+>  
+>  	u64				phys_addr;
+> +	struct perf_pipeline_haz_data	pipeline_haz;
+>  } ____cacheline_aligned;
+>  
+>  /* default value for data source */
+> @@ -1021,6 +1022,12 @@ static inline void perf_sample_data_init(struct perf_sample_data *data,
+>  	data->weight = 0;
+>  	data->data_src.val = PERF_MEM_NA;
+>  	data->txn = 0;
+> +	data->pipeline_haz.itype = PERF_HAZ__ITYPE_NA;
+> +	data->pipeline_haz.icache = PERF_HAZ__ICACHE_NA;
+> +	data->pipeline_haz.hazard_stage = PERF_HAZ__PIPE_STAGE_NA;
+> +	data->pipeline_haz.hazard_reason = PERF_HAZ__HREASON_NA;
+> +	data->pipeline_haz.stall_stage = PERF_HAZ__PIPE_STAGE_NA;
+> +	data->pipeline_haz.stall_reason = PERF_HAZ__SREASON_NA;
+>  }
+>  
+>  extern void perf_output_sample(struct perf_output_handle *handle,
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 377d794d3105..ff252618ca93 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -142,8 +142,9 @@ enum perf_event_sample_format {
+>  	PERF_SAMPLE_REGS_INTR			= 1U << 18,
+>  	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+>  	PERF_SAMPLE_AUX				= 1U << 20,
+> +	PERF_SAMPLE_PIPELINE_HAZ		= 1U << 21,
 
-I don't remember James saying that, but if the community really wants
-that support, then it should be upstreamed independently, as a
-separate patch.  Let's first get the basics working.
+Can we please have perf_event_open() reject this sample flag for PMUs
+without the new callback (introduced in the next patch)?
 
-thanks,
+That way it'll be possible to detect whether the PMU exposes this.
 
-Mimi
-
+Thanks,
+Mark.
