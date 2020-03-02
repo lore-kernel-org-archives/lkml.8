@@ -7,88 +7,101 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D992C3F2D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D85C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F4F2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6FB2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583170287;
-	bh=XlV9RAShajDDWtFAUUaZGTpMYFEpEeauYp+B1tl84B0=;
+	s=default; t=1583170308;
+	bh=U5WKU/pprjnHH97LPx4qGkM2g9gzbITvZ1LBuOzwtSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IPErFDTV+f9CssnxZJRT5MXjJAREfwD2/yOFzKODby7aL2kxJ0F2v3XLhFxYM0V4Z
-	 rrEAnHNM1ivSHxV/9RgTKQ4+bTwOmVbHz3hVX1UPBGoZri1u+bkeX7plDkJmjOanYH
-	 z03m5HA7dBl8Fi90gqiidS43bVOf/5XMwYYXyeuI=
+	b=ytFhMt9nsSwJd/80bE97C0Gp8tcWBAyHr23+0dRtm/RGLCWMAIhHP3RzSGyB8eiY2
+	 HYaaQn/Pjo9UZFwYW9krWExS/wa7jU+FJAi7yBKuvGD+9Iuqg6MUTdHqmMYnbTgPoP
+	 GXMkQ9gzxDasCufwVg5n5aDZZ9JOfyA7fIS7ZIgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCBRbZ (ORCPT
+        id S1727397AbgCBRbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:31:25 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46035 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgCBRbY (ORCPT
+        Mon, 2 Mar 2020 12:31:47 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33071 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgCBRbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:31:24 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f21so1972299otp.12;
-        Mon, 02 Mar 2020 09:31:24 -0800 (PST)
+        Mon, 2 Mar 2020 12:31:47 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a20so80661otl.0;
+        Mon, 02 Mar 2020 09:31:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NVPKgHFg9MVyiT7cHNOydbqZKAk4BoNFFQmkh5sX568=;
-        b=E2PxvYbZwoHkCYwVTGXf8rnoCKuXV7GehIIvQEH2xqXBrARISieiwO9Gpwog4SYiW2
-         RWqGzIUtLzQdPsyM1sHo/JEzNcwNbdHW5pgYUOfaqIkM/+9gimn/rD3P+/S4uDA49fHR
-         MCcz9KPO5MRLm3N15WDLubVdd24eoZ80kZ2cov3myAOU0khqzL9+5trl3InaZEd0StPz
-         7JkFBG2d6mxNmAaMuB4b4Bg5oCXyGsH8zq2ShnXjF+KgmDPZeYTStyqhwYnMfVy59ZxR
-         tQQz1rOFplpwoykG2xv6KhgwnKgzChYkWHjGu0W8BNPwH7YdMlKhgm9uKt/e/BH8XyQc
-         8VTw==
-X-Gm-Message-State: ANhLgQ37815NbSltr39bC30fphKgZ78vJY6NtLABegIhFWIWKHMx4Fbl
-        hHatk8jSyvemohvbWpeAYw==
-X-Google-Smtp-Source: ADFU+vsOEBDrhuF9b2zzGgSXC8vvB25Jr9LwNXhpajjyIjPQFJ5pvjn+vl2o0/QC1t0+j7MLLDxw8g==
-X-Received: by 2002:a9d:23b6:: with SMTP id t51mr200652otb.15.1583170284181;
-        Mon, 02 Mar 2020 09:31:24 -0800 (PST)
+        bh=nceDhubgEx2PRo1oS71egJ8r44PsaL0PBb2aHnuBV9I=;
+        b=ssTHS2vNiRSr6ckobTQ9XZ6wQrsCnSTANQJ0Qz1/MpYkowb1TIQ8hN+OJy8oXmMCCT
+         mMnc8VxCZxCJdCiU+0iPUtrAOCvH1kwBlKTsUkj+pUa8XyXFcuAiut1bjs/JOHQFo3wZ
+         GM2Jsuhovd7htVPGlqse2Pc0LRmktNVDrPMwIppYWHGHzYcxsuLbG1MIy27fBX2knxdr
+         pJUcDCwuROVKzFmxhjCNsYVHTx0Y/2YDR5Rd2yIkMD3v5+6Dc+Ypw1eRpe4chfoSg3mS
+         pRkX1PU4sQqm1BwL97Rp9ZN4xOQSxVXxLbktNo+CBe6JVLmUx0m887/bImjWptAZ5xCc
+         A/Tw==
+X-Gm-Message-State: ANhLgQ1QAylhsVQMb0sa6Bq3Dn/Le/tpSE9u2rCnRJwgzJwDXGPfXRZ7
+        PQDBv41hALnnWOk7VuMByA==
+X-Google-Smtp-Source: ADFU+vsYNpUcWht2oZZ77lQyyjdI3vzZC8UuGlF/X5L1TTRZKoMYgTgmHOsRz1GxawFY8cTJ/sMouw==
+X-Received: by 2002:a9d:6ad1:: with SMTP id m17mr236956otq.198.1583170306360;
+        Mon, 02 Mar 2020 09:31:46 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p65sm6547379oif.47.2020.03.02.09.31.23
+        by smtp.gmail.com with ESMTPSA id s23sm1523341oie.0.2020.03.02.09.31.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:31:23 -0800 (PST)
-Received: (nullmailer pid 12413 invoked by uid 1000);
-        Mon, 02 Mar 2020 17:31:23 -0000
-Date:   Mon, 2 Mar 2020 11:31:23 -0600
+        Mon, 02 Mar 2020 09:31:45 -0800 (PST)
+Received: (nullmailer pid 13106 invoked by uid 1000);
+        Mon, 02 Mar 2020 17:31:45 -0000
+Date:   Mon, 2 Mar 2020 11:31:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     frowand.list@gmail.com
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alan Tull <atull@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] of: unittest: make gpio overlay test dependent on
- CONFIG_OF_GPIO
-Message-ID: <20200302173123.GA12343@bogus>
-References: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH v3] of: overlay: log the error cause on resolver failure
+Message-ID: <20200302173145.GA13073@bogus>
+References: <20200228084027.10797-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582863389-3118-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20200228084027.10797-1-luca@lucaceresoli.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 22:16:29 -0600, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Fri, 28 Feb 2020 09:40:27 +0100, Luca Ceresoli wrote:
+> When a DT overlay has a node label that is not present in the live
+> devicetree symbols table, this error is printed:
 > 
-> Randconfig testing found compile errors in drivers/of/unittest.c if
-> CONFIG_GPIOLIB is not set because CONFIG_OF_GPIO depends on
-> CONFIG_GPIOLIB.  Make the gpio overlay test depend on CONFIG_OF_GPIO.
+>   OF: resolver: overlay phandle fixup failed: -22
+>   create_overlay: Failed to create overlay (err=-22)
 > 
-> No code is modified, it is only moved to a different location and
-> protected with #ifdef CONFIG_OF_GPIO.  An empty
-> of_unittest_overlay_gpio() is added in the #else.
+> which does not help much in finding the node label that caused the problem
+> and fix the overlay source.
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> Add an error message with the name of the node label that caused the
+> error. The new output is:
+> 
+>   OF: resolver: node label 'gpio9' not found in live devicetree symbols table
+>   OF: resolver: overlay phandle fixup failed: -22
+>   create_overlay: Failed to create overlay (err=-22)
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> 
 > ---
->  drivers/of/unittest.c | 465 ++++++++++++++++++++++++++------------------------
->  1 file changed, 238 insertions(+), 227 deletions(-)
+> 
+> Changed in v3:
+>  - add only the message from v1, but as reworded by Frank
+> 
+> Changed in v2:
+>  - add a message for each error path that does not have one yet
+> ---
+>  drivers/of/resolver.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 
 Applied, thanks.
