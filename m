@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A36C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D04C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BADF217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492472467E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCBX5u (ORCPT
+        id S1727665AbgCBX5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:50 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25519 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:57:47 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25520 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:30 -0500
+        id S1727487AbgCBX53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:29 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384734"
+   d="scan'208";a="243384725"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 37/66] KVM: x86: Refactor handling of XSAVES CPUID adjustment
-Date:   Mon,  2 Mar 2020 15:56:40 -0800
-Message-Id: <20200302235709.27467-38-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 34/66] KVM: x86: Handle RDTSCP CPUID adjustment in VMX code
+Date:   Mon,  2 Mar 2020 15:56:37 -0800
+Message-Id: <20200302235709.27467-35-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,50 +49,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invert the handling of XSAVES, i.e. set it based on boot_cpu_has() by
-default, in preparation for adding KVM cpu caps, which will generate the
-mask at load time before ->xsaves_supported() is ready.
+Move the clearing of the RDTSCP CPUID bit into VMX, which has a separate
+VMCS control to enable RDTSCP in non-root, to eliminate an instance of
+the undesirable "unsigned f_* = *_supported ? F(*) : 0" pattern in the
+common CPUID handling code.  Drop ->rdtscp_supported() since CPUID
+adjustment was the last remaining user.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/kvm/cpuid.c   | 3 +--
+ arch/x86/kvm/vmx/vmx.c | 4 ++++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index aacfd6af774a..c2e70cd0dbf1 100644
+index 9c2e20a76ca8..f39efc9d640b 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -422,7 +422,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+@@ -424,7 +424,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
  	unsigned f_gbpages = 0;
  	unsigned f_lm = 0;
  #endif
--	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
+-	unsigned f_rdtscp = kvm_x86_ops->rdtscp_supported() ? F(RDTSCP) : 0;
+ 	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
  	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
  
- 	/* cpuid 1.edx */
-@@ -479,7 +478,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 
- 	/* cpuid 0xD.1.eax */
- 	const u32 kvm_cpuid_D_1_eax_x86_features =
--		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | f_xsaves;
-+		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES);
- 
- 	/* all calls to cpuid_count() should be made on the same cpu */
- 	get_cpu();
-@@ -610,6 +609,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 
- 		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
- 		cpuid_entry_mask(entry, CPUID_D_1_EAX);
-+
-+		if (!kvm_x86_ops->xsaves_supported())
-+			cpuid_entry_clear(entry, X86_FEATURE_XSAVES);
-+
- 		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
- 			entry->ebx = xstate_required_size(supported_xcr0, true);
- 		else
+@@ -446,7 +445,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+ 		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+ 		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+-		F(FXSR) | F(FXSR_OPT) | f_gbpages | f_rdtscp |
++		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
+ 		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW);
+ 	/* cpuid 1.ecx */
+ 	const u32 kvm_cpuid_1_ecx_x86_features =
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 49a1cac7bf0c..3bcb09b5efac 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7139,6 +7139,10 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 		    boot_cpu_has(X86_FEATURE_OSPKE))
+ 			cpuid_entry_set(entry, X86_FEATURE_PKU);
+ 		break;
++	case 0x80000001:
++		if (!cpu_has_vmx_rdtscp())
++			cpuid_entry_clear(entry, X86_FEATURE_RDTSCP);
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.24.1
 
