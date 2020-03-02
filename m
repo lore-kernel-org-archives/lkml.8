@@ -2,131 +2,108 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E85C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8110214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mOEtgKW1"
+	by mail.kernel.org (Postfix) with ESMTP id B69BD214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCBMEp (ORCPT
+        id S1727927AbgCBMFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:04:45 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.189]:36517 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727736AbgCBMEp (ORCPT
+        Mon, 2 Mar 2020 07:05:07 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55059 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgCBMFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:04:45 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 8A99B60C4F
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:04:43 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8joRjS0j1RP4z8joRjptYb; Mon, 02 Mar 2020 06:04:43 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aC9iqi902jVDV0FwmY0WOb2/TDDXpbbOOU6f3WzG29g=; b=mOEtgKW1jkzprYDuuFXqL8PGw+
-        9zyI/mXwqkhBBkwsdeW11YwLIVppno33x2MLEK2vpAFxVA6xKiNGgcd2/SAjDBC9YwG4TKrGMlFhe
-        ffNBd+qxsUFI/mNes7I1eJAy2/lFnPa21G06lJszUoFfXAr04aGtbzsIMKTJSrQ6AJIm2Jt5nbncQ
-        TcQ8WZS61Y7R8u1jnE8SsTjD0pGYVsemJx+kFDksZwh6VqblfNBhnFzC05Iv/Se1+dhcb/lFxt6fx
-        8isAEHEFVk6SS2ih0U9u9MjtVVGHvP+D/Nd7AaTnVFu6knt+SEbXQcIPEZl1waOE0zWJPzWgodJnw
-        uFIqLwFQ==;
-Received: from [200.76.83.37] (port=42254 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8joP-003ugb-GT; Mon, 02 Mar 2020 06:04:41 -0600
-Date:   Mon, 2 Mar 2020 06:07:42 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: inet_sock: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302120742.GA16158@embeddedor>
+        Mon, 2 Mar 2020 07:05:07 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8jol-0001z4-W6; Mon, 02 Mar 2020 12:05:04 +0000
+Date:   Mon, 2 Mar 2020 13:05:03 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
+References: <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.76.83.37
-X-Source-L: No
-X-Exim-ID: 1j8joP-003ugb-GT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.76.83.37]:42254
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302115239.pcxvej3szmricxzu@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Mon, Mar 02, 2020 at 12:52:39PM +0100, Christian Brauner wrote:
+> On Mon, Mar 02, 2020 at 12:30:47PM +0100, Florian Weimer wrote:
+> > * Christian Brauner:
+> > 
+> > > [Cc Florian since that ends up on libc's table sooner or later...]
+> > 
+> > I'm not sure what you are after here …
+> 
+> Exactly what you've commented below. Input on whether any of these
+> changes would be either problematic if you e.g. were to implement
+> openat() on top of openat2() in the future or if it would be problematic
+> if we e.g. were to really deprecate AT_* flags for new syscalls.
+> 
+> > 
+> > > On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
+> > >> 	
+> > >> I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
+> > >> should be used instead of the equivalent AT_* flags for new system calls.  Is
+> > >> this the case?
+> > >
+> > > Imho, it would make sense to use RESOLVE_* flags for new system calls
+> > > and afair this was the original intention.
+> > > The alternative is that RESOLVE_* flags are special to openat2(). But
+> > > that seems strange, imho. The semantics openat2() has might be very
+> > > useful for new system calls as well which might also want to support
+> > > parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
+> > > flags mirroring the new RESOLVE_* flags or we end up adding new
+> > > RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
+> > > possibility I vote for RESOLVE_* flags going forward. The have better
+> > > naming too imho.
+> > >
+> > > An argument against this could be that we might end up causing more
+> > > confusion for userspace due to yet another set of flags. But maybe this
+> > > isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
+> > > When we introduce a new syscall userspace will have to add support for
+> > > it anyway.
+> > 
+> > I missed the start of the dicussion and what this is about, sorry.
+> > 
+> > Regarding open flags, I think the key point for future APIs is to avoid
+> > using the set of flags for both control of the operation itself
+> > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
+> > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
 
-struct foo {
-        int stuff;
-        struct boo array[];
+Yeah, we have touched on that already and we have other APIs having
+related problems. A clean way to avoid this problem is to require new
+syscalls to either have two flag arguments, or - if appropriate -
+suggest they make use of struct open_how that was implemented for
+openat2().
+
+ * @flags: O_* flags.
+ * @mode: O_CREAT/O_TMPFILE file mode.
+ * @resolve: RESOLVE_* flags.
+ */
+struct open_how {
+	__u64 flags;
+	__u64 mode;
+	__u64 resolve;
 };
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/net/inet_sock.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
-index 34c4436fd18f..a7ce00af6c44 100644
---- a/include/net/inet_sock.h
-+++ b/include/net/inet_sock.h
-@@ -52,7 +52,7 @@ struct ip_options {
- 	unsigned char	router_alert;
- 	unsigned char	cipso;
- 	unsigned char	__pad2;
--	unsigned char	__data[0];
-+	unsigned char	__data[];
- };
- 
- struct ip_options_rcu {
--- 
-2.25.0
-
