@@ -2,112 +2,104 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E30C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0518EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227D92166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAF82166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4UC+0ji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCBOgb (ORCPT
+        id S1727372AbgCBOgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:36:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbgCBOga (ORCPT
+        Mon, 2 Mar 2020 09:36:54 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38492 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCBOgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:36:30 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EKcwB068726;
-        Mon, 2 Mar 2020 09:36:23 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnccm256-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 09:36:22 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 022EWqPS008952;
-        Mon, 2 Mar 2020 14:36:21 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02wdc.us.ibm.com with ESMTP id 2yffk6arnm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 14:36:21 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022EaLJ945285730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 14:36:21 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66153AE060;
-        Mon,  2 Mar 2020 14:36:21 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04908AE063;
-        Mon,  2 Mar 2020 14:36:20 +0000 (GMT)
-Received: from oc6034535106.ibm.com (unknown [9.160.4.131])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 14:36:20 +0000 (GMT)
-Subject: Re: linux-next: build warning after merge of the scsi-mkp tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200302133543.7052d654@canb.auug.org.au>
-From:   Brian King <brking@linux.vnet.ibm.com>
-Message-ID: <5bff0f26-3b20-e240-e1b4-65af411a3a56@linux.vnet.ibm.com>
-Date:   Mon, 2 Mar 2020 08:36:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 09:36:54 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q9so2747139pfs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:36:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2QInZVdkPBk5bmMRIvmTp3CQChg52fcaaVfT0rxH9V8=;
+        b=Q4UC+0jiKeBIj7k9TTcLV9aXFcDlOALrOygJTTrgQjpZ8hUM/VgrBtrciiZD0VGt7K
+         Th/fju3nQjqaSvmeXdlZGBKHPCZR3066Y4FqvzCbYIK/5JL1Wjexc+vGCpIYO0V7unsh
+         MJo9UjixifoZ53oY3QZXIf2xqEgF9BTl0RtqNkNlo0Y2xk0biIUX6xCvohkQFRCuhdzw
+         EP1bTgdY3JImBvnbVjJzG9XgjYnio9kr1riezk+XvQ2CKhJVmgbhVH0WuAp+EUHXtyOd
+         /73GNsCC/MOafsKpHY1a+SXAvKdBhR4G+YXSk7G6e+3F0iRZ5OcfqXMQqsHNJqsQjuN3
+         TFbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2QInZVdkPBk5bmMRIvmTp3CQChg52fcaaVfT0rxH9V8=;
+        b=b5jv11woxqL7OYG4Vr2E7tSETl0LhTn7wpKXxrIOIhXc2CTCoRdPTeb9lJEImZi0r/
+         t319c+nl/9//PQPP/L6U0S5BwhWFI+v9bOOJ0TaEmGjrH+Qmwo6CHS4k+0N8muJXBVkh
+         DCfL4NJJcHWTvl8d6TQMGCvqwcYBaruQjo7+wkNGwcC6EMw/+UzWJX8/cZu2qucLo0FL
+         2w2WH9+l4FLpk0F0i5COmnOLChIl3NHxBt4DisGGJC7VnDP74meeFQ4rinXPHWm2iiYs
+         ElgQn+5QuN/s0giQHH+tyUccQpBaNW5LytgOxj7aHBhOzLND0rlfysRgI0K6yqI4shsd
+         JgFQ==
+X-Gm-Message-State: ANhLgQ2wQTdbK9NnTNXMyEseHPUljroSPf10w8uwnL0vwYz7ViDVORvf
+        0Y3Xdvz4EK8rcfs61bIR+6o=
+X-Google-Smtp-Source: ADFU+vvPM5+O35B1CzUIuEKmIqM4cdmmFBKb3ps3peBwYwuRg5MYTPMgZBpFe00X/BMmtI/qsYa/rA==
+X-Received: by 2002:a62:a518:: with SMTP id v24mr11286088pfm.77.1583159812930;
+        Mon, 02 Mar 2020 06:36:52 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id p94sm12857231pjp.15.2020.03.02.06.36.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 06:36:52 -0800 (PST)
+Date:   Mon, 2 Mar 2020 20:06:46 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: Use the correct style for SPDX License Identifier
+Message-ID: <20200302143642.GA3335@nishad>
 MIME-Version: 1.0
-In-Reply-To: <20200302133543.7052d654@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_04:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/20 8:35 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the scsi-mkp tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
-> 
-> In file included from include/uapi/linux/posix_types.h:5,
->                  from include/uapi/linux/types.h:14,
->                  from include/linux/types.h:6,
->                  from include/linux/list.h:5,
->                  from include/linux/module.h:12,
->                  from drivers/scsi/ibmvscsi/ibmvfc.c:10:
-> drivers/scsi/ibmvscsi/ibmvfc.c: In function 'ibmvfc_tgt_implicit_logout_and_del':
-> include/linux/stddef.h:8:14: warning: 'return' with a value, in function returning void [-Wreturn-type]
->     8 | #define NULL ((void *)0)
->       |              ^
-> drivers/scsi/ibmvscsi/ibmvfc.c:3644:10: note: in expansion of macro 'NULL'
->  3644 |   return NULL;
->       |          ^~~~
-> drivers/scsi/ibmvscsi/ibmvfc.c:3638:13: note: declared here
->  3638 | static void ibmvfc_tgt_implicit_logout_and_del(struct ibmvfc_target *tgt)
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Introduced by commit
-> 
->   54b04c99d02e ("scsi: ibmvfc: Avoid loss of all paths during SVC node reboot")
-> 
+This patch corrects the SPDX License Identifier style in
+header file related to Kernel driver API to route trace data.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-Thanks. I'll send the one line fix.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/tty/n_tracesink.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/n_tracesink.h b/drivers/tty/n_tracesink.h
+index 1b846330c855..7031d515a700 100644
+--- a/drivers/tty/n_tracesink.h
++++ b/drivers/tty/n_tracesink.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  *  n_tracesink.h - Kernel driver API to route trace data in kernel space.
+  *
 -- 
-Brian King
-Power Linux I/O
-IBM Linux Technology Center
+2.17.1
 
