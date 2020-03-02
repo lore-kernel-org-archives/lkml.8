@@ -2,136 +2,65 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2381FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048F821739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eYGWa4no"
+	by mail.kernel.org (Postfix) with ESMTP id F340C214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:01:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCBL7O (ORCPT
+        id S1727869AbgCBMBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:59:14 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.73]:29796 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727228AbgCBL7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:59:14 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 2E779AE26D
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 05:59:13 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8jj7j3WQbSl8q8jj7jgmRJ; Mon, 02 Mar 2020 05:59:13 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kzUqRBProYnJMl/U55hJEG0fvIDnfxPBZ5ML3y+DSkM=; b=eYGWa4noBm4mb5y8OEjY+SufaR
-        07Jf8aAq0TLuzMcMdPkT1DSYPUHKSA1CFiRfkhYy6QK/dKTVePx097lF+5XdhpjX6tnlT+lCiiu2C
-        cDVB72xS8EfwXX1+Kmw9g+F+DGXSwZGqjXZ0OTk2lGaCsIuqNkHVIfku7cbfIvUeaxZ+3sRaVJ+Ln
-        I5RdqywHznMQYwV7vcp1nkDqzL1EnCF6cmO8G2LH3zynVNWPW5ve4L3BAC8SBQE/wBw2X6d9TL1+y
-        V6kRuHZvLLS7eIZaoHL/tGEK8X5fOOYJSfx0/H2wZnAQYm1F7Yc/KYH6NEkq0Cq+Ps/7eH5eO+bxZ
-        2dtoezBQ==;
-Received: from [201.166.157.105] (port=42214 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8jj4-003q5x-W0; Mon, 02 Mar 2020 05:59:11 -0600
-Date:   Mon, 2 Mar 2020 06:02:09 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] drop_monitor: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302120209.GA15699@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.157.105
-X-Source-L: No
-X-Exim-ID: 1j8jj4-003q5x-W0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.157.105]:42214
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 2 Mar 2020 07:01:20 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:46308 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbgCBMBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:01:20 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F26231A103A;
+        Mon,  2 Mar 2020 13:01:18 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 72E9C1A1044;
+        Mon,  2 Mar 2020 13:01:16 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6CEAE40299;
+        Mon,  2 Mar 2020 20:01:13 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] regulator: anatop: Improve Kconfig dependency
+Date:   Mon,  2 Mar 2020 19:55:18 +0800
+Message-Id: <1583150118-8014-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+ANATOP regulator should depend on ARCH_MXC or COMPILE_TEST.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- include/uapi/linux/net_dropmon.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
-index 66048cc5d7b3..67e31f329190 100644
---- a/include/uapi/linux/net_dropmon.h
-+++ b/include/uapi/linux/net_dropmon.h
-@@ -29,12 +29,12 @@ struct net_dm_config_entry {
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 074a2ef..d5542c2 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -107,6 +107,7 @@ config REGULATOR_AD5398
  
- struct net_dm_config_msg {
- 	__u32 entries;
--	struct net_dm_config_entry options[0];
-+	struct net_dm_config_entry options[];
- };
- 
- struct net_dm_alert_msg {
- 	__u32 entries;
--	struct net_dm_drop_point points[0];
-+	struct net_dm_drop_point points[];
- };
- 
- struct net_dm_user_msg {
+ config REGULATOR_ANATOP
+ 	tristate "Freescale i.MX on-chip ANATOP LDO regulators"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on MFD_SYSCON
+ 	help
+ 	  Say y here to support Freescale i.MX on-chip ANATOP LDOs
 -- 
-2.25.0
+2.7.4
 
