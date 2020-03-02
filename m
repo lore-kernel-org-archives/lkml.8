@@ -6,66 +6,66 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B62C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6071C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91FD21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F6421556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jCAh83IS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="B3X4puU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgCBQX6 (ORCPT
+        id S1727196AbgCBQZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:23:58 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55418 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCBQX6 (ORCPT
+        Mon, 2 Mar 2020 11:25:11 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44310 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgCBQZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:23:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 6so3465262wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:23:56 -0800 (PST)
+        Mon, 2 Mar 2020 11:25:11 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n7so418193wrt.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:25:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=UaXmfdRD+RogZavDsWZ2Xu1muVDHx7qL1cRXMVQIaG8=;
-        b=jCAh83IS11VcYAMyCg2IKY9ysFWiPlOllIQwqJIKu7LC0UgfNy/0YUshkg8sAsIixe
-         T2tyJDMQmlUIRqvBWjVkkApLb0zj4ihySmriBj4rcrCdnF4G5NYI5sqxEfjhu4wLCcJm
-         U9LPB8Xufr4d9P5gGp4lFXy1T3BYpjfEQgVc1NiTXuUdr4890HIcNTAtpHq6AL8le/WO
-         gH90ODQ/OXDQtPnMnRvclPrHaaH8rQixBMs1KTJNTyQxfYN1XLIJ/pG3BM8JEANL9lvs
-         VvHDtqg6YN561nKG1P3doe523Sf+y3jXbfL9CwPS544mxt3KnDPztlKlV8IOjHyPIqz3
-         AfJg==
+        bh=DQCMbgMMKN4eMeJGo0Sh2/wZnBo8vQSRKLHwF2vzE7s=;
+        b=B3X4puU1y9SmFMshbChsRmChUOK2azMe71Z6UNk1N9NDl6tMQa4PSHNF+osdrbJXHY
+         wLD5KwG64BeOrgSRYxi/KRY7U9Nl6yD/Zqy1LV1yjLeKSQ+bQwT1O3spYrzbqA14zOpC
+         WAI4GQmlEl4Wc5tpIjvpyTrGtZPFv/wxLch4Pr4Iq9Y5B2m+40bqPAz/0xfJyeRemzj7
+         0GxWPqrZ0yjWODLO4bwgMiDbhJVSzI1HoZ1lMeY9rrvi2XBUarq7sSV0loFlK0iPK3c3
+         dnIpKxLpNYJ2D99tIj2D/1HpIPR1RFvDWajdRmPOKU0UpLGNxs+OwFbatGARS0xCNo/O
+         SA7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=UaXmfdRD+RogZavDsWZ2Xu1muVDHx7qL1cRXMVQIaG8=;
-        b=Uugh0HL29E8RCvmW8kURXf+HsYi/Uwwiqj/GOOihUqsbNonL4vZE4o/DYYQEUZGtyO
-         G0K99c092zFfTmKnpAM1WTFJ8UE0J3by0AwGI6pbE+YrfGgdFhKAz/75OoGymeY4Hc4l
-         7pEpVcMWbazV/x+IFX/+Fhuy9lE+H/SMCMNraqO03bpJto8ELI6tBUStsUz/VIcEy94q
-         lxzrGR7qE0ag6v1mVuZgz1B30lFFWqpFsGcPWpYtXgTC1aCQSyB2o9iaDe3fjk3320JM
-         dLDporXvqzXPULU8cxGfTDjGCg+D0Svwna2L2gvxHATxhpKzyThTwYnyc5FFeRJP1DzT
-         V3Kw==
-X-Gm-Message-State: ANhLgQ0fDZQH9elYCi40BkMxjs+9/exdwoKDngG2GoYW15ft6DXH1XKp
-        +OCTChsEMNM/hy1Lb6xNwzVHcQ==
-X-Google-Smtp-Source: ADFU+vv8D6CdaqmTDhr7fwgQwP+TsU7dihlNiEMXFNlusa/13yIpEeBBvpYiQrJfUxeUtmQvHgtsHA==
-X-Received: by 2002:a1c:f615:: with SMTP id w21mr200544wmc.152.1583166236090;
-        Mon, 02 Mar 2020 08:23:56 -0800 (PST)
+        bh=DQCMbgMMKN4eMeJGo0Sh2/wZnBo8vQSRKLHwF2vzE7s=;
+        b=e9ouYt5ghnWgUWmSnsmpUnZJR7LRsYAxCxyttxEcFk58LSBuV3RzDryHlQTv61j6Eg
+         OJ37lF2vwbF9o2S81AR5lT8ZzceFoybchs+4qs1idE4KQsGD1rnjU6HUsWTnTIveTCfV
+         YvJ8KxBf3v8TC67kpIsBD2aRLcYESylZSBXE1gt3tZ+8st81CVBvTn0lLd75ZLdw0ne5
+         qQ1kOpcQwLNllpskigFdfi6kPiyHwxvfc091KspUVqM1tIQUZ6J9u8k5SzSFK+B6oe6/
+         YbFFNcs7omdZnywKqllO4Tc8qPry6AJi4aGXLBPQ1RmK7tONKLTm3W93fHQ6lV+TsmUh
+         btDw==
+X-Gm-Message-State: ANhLgQ2Ni36n1wNJGCct8LflF9MmAG3ylaTeuvk6MQMwNiR0AwWExZdA
+        mBhPaYdJr3DMcSBYYwN+sFbJGw==
+X-Google-Smtp-Source: ADFU+vtZgwQFqSgV0Xi9k1YUBkP5b4vDb2TY6yuZe1HN/vcyZrgyFl5FHMyu4impez0lXe+ojRP0RA==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr335199wrx.147.1583166308694;
+        Mon, 02 Mar 2020 08:25:08 -0800 (PST)
 Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d7sm18821187wmc.6.2020.03.02.08.23.54
+        by smtp.gmail.com with ESMTPSA id k7sm15851605wmi.19.2020.03.02.08.25.07
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 08:23:55 -0800 (PST)
+        Mon, 02 Mar 2020 08:25:08 -0800 (PST)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
-        hans.verkuil@cisco.com
-Cc:     linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v5 0/5] media: meson: vdec: Add VP9 decoding support
-In-Reply-To: <20200219140958.23542-1-narmstrong@baylibre.com>
-References: <20200219140958.23542-1-narmstrong@baylibre.com>
-Date:   Mon, 02 Mar 2020 17:23:54 +0100
-Message-ID: <7h1rqasp2d.fsf@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] drm/meson: add support for Amlogic Video FBC
+In-Reply-To: <20200220162758.13524-1-narmstrong@baylibre.com>
+References: <20200220162758.13524-1-narmstrong@baylibre.com>
+Date:   Mon, 02 Mar 2020 17:25:06 +0100
+Message-ID: <7hy2sirafx.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,23 +75,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> Hello,
+> Amlogic uses a proprietary lossless image compression protocol and format
+> for their hardware video codec accelerators, either video decoders or
+> video input encoders.
 >
-> This patchset aims to bring VP9 decoding support to Amlogic GXL, G12A & SM1
-> platforms for the amlogic stateful video decoder driver.
+> It considerably reduces memory bandwidth while writing and reading
+> frames in memory.
 >
-> With this, it passes v4l2-compliance with streaming on Amlogic G12A and
-> Amlogic SM1 SoCs successfully using the stream at [1] with a fixed
-> pyv4l2compliance script for VP9 at [2].
+> The underlying storage is considered to be 3 components, 8bit or 10-bit
+> per component, YCbCr 420, single plane :
+> - DRM_FORMAT_YUV420_8BIT
+> - DRM_FORMAT_YUV420_10BIT
 >
-> The original script kept the IVF headers in the stream, confusing the
-> decoder. The fixed script only extracts the payload from the IVF container.
+> This modifier will be notably added to DMA-BUF frames imported from the V4L2
+> Amlogic VDEC decoder.
 >
-> The decoder has been tested using the Google CTS TestVectorsIttiam VP9 yuv420
-> samples and the VP9 Decoder Performance streams at [5], decoding all streams from
-> Profile 0 and 2 up to Level 4.1, with 10bit downsampling to 8bit.
+> At least two options are supported :
+> - Scatter mode: the buffer is filled with a IOMMU scatter table referring
+>   to the encoder current memory layout. This mode if more efficient in terms
+>   of memory allocation but frames are not dumpable and only valid during until
+>   the buffer is freed and back in control of the encoder
+> - Memory saving: when the pixel bpp is 8b, the size of the superblock can
+>   be reduced, thus saving memory.
+>
+> This serie adds the missing register, updated the FBC decoder registers
+> content to be committed by the crtc code.
+>
+> The Amlogic FBC has been tested with compressed content from the Amlogic
+> HW VP9 decoder on S905X (GXL), S905D2 (G12A) and S905X3 (SM1) in 8bit
+> (Scatter+Mem Saving on G12A/SM1, Mem Saving on GXL) and 10bit
+> (Scatter on G12A/SM1, default on GXL).
+>
+> It's expected to work as-is on GXM and G12B SoCs.
 
-Tested on meson-sm1-sei610,
+Tested on meson-sm1-sei610 with 4k@60p (VP9) streams.
 
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 
