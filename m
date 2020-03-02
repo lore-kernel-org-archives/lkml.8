@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65883C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E33C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3BA217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B20324677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgCBX7X (ORCPT
+        id S1727850AbgCBX70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:59:23 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25520 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:59:26 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17168 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbgCBX52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727439AbgCBX52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 18:57:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:24 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384698"
+   d="scan'208";a="243384817"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:24 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 25/66] KVM: x86: Use u32 for holding CPUID register value in helpers
-Date:   Mon,  2 Mar 2020 15:56:28 -0800
-Message-Id: <20200302235709.27467-26-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 64/66] KVM: nSVM: Expose SVM features to L1 iff nested is enabled
+Date:   Mon,  2 Mar 2020 15:57:07 -0800
+Message-Id: <20200302235709.27467-65-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,48 +49,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the intermediate CPUID output register values from "int" to "u32"
-to match both hardware and the storage type in struct cpuid_reg.
+Set SVM feature bits in KVM capabilities if and only if nested=true, KVM
+shouldn't advertise features that realistically can't be used.  Use
+kvm_cpu_cap_has(X86_FEATURE_SVM) to indirectly query "nested" in
+svm_set_supported_cpuid() in anticipation of moving CPUID 0x8000000A
+adjustments into common x86 code.
 
-No functional change intended.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/svm.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index c1ac0995843d..72a79bdfed6b 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -95,7 +95,7 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
- 	return reverse_cpuid[x86_leaf];
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index f32fc3c03667..8e39dcd3160d 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1373,21 +1373,21 @@ static __init void svm_set_cpu_caps(void)
+ 	if (avic)
+ 		kvm_cpu_cap_clear(X86_FEATURE_X2APIC);
+ 
+-	/* CPUID 0x80000001 */
+-	if (nested)
++	/* CPUID 0x80000001 and 0x8000000A (SVM features) */
++	if (nested) {
+ 		kvm_cpu_cap_set(X86_FEATURE_SVM);
+ 
++		if (boot_cpu_has(X86_FEATURE_NRIPS))
++			kvm_cpu_cap_set(X86_FEATURE_NRIPS);
++
++		if (npt_enabled)
++			kvm_cpu_cap_set(X86_FEATURE_NPT);
++	}
++
+ 	/* CPUID 0x80000008 */
+ 	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+ 	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+ 		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
+-
+-	/* CPUID 0x8000000A */
+-	/* Support next_rip if host supports it */
+-	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
+-
+-	if (npt_enabled)
+-		kvm_cpu_cap_set(X86_FEATURE_NPT);
  }
  
--static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-+static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+ static __init int svm_hardware_setup(void)
+@@ -6051,6 +6051,10 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
  {
- 	struct kvm_cpuid_entry2 *entry;
- 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-@@ -121,7 +121,7 @@ static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
- 
- static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
- 
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (!reg)
-@@ -132,7 +132,7 @@ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_
- 
- static __always_inline void guest_cpuid_clear(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
- 
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (reg)
+ 	switch (entry->function) {
+ 	case 0x8000000A:
++		if (!kvm_cpu_cap_has(X86_FEATURE_SVM)) {
++			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
++			break;
++		}
+ 		entry->eax = 1; /* SVM revision 1 */
+ 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
+ 				   ASID emulation to nested SVM */
 -- 
 2.24.1
 
