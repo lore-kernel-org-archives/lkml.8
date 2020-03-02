@@ -2,141 +2,201 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F196C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612062468A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B14246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GprpfjrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgCBFlI (ORCPT
+        id S1726657AbgCBFuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:41:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46604 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgCBFlH (ORCPT
+        Mon, 2 Mar 2020 00:50:35 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37551 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgCBFue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:41:07 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0225ckDE181086
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 00:41:06 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfkn93qbx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:41:05 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 2 Mar 2020 05:41:03 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 05:40:56 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0225etsf54395120
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 05:40:55 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CCBE11C05B;
-        Mon,  2 Mar 2020 05:40:55 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 10D8611C066;
-        Mon,  2 Mar 2020 05:40:55 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 05:40:55 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 38D18A00BE;
-        Mon,  2 Mar 2020 16:40:50 +1100 (AEDT)
-Subject: Re: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request
- controller health & perf data
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Mon, 02 Mar 2020 16:40:53 +1100
-In-Reply-To: <fdc5faec-d03d-3cba-4a9c-add7e522ad13@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-22-alastair@au1.ibm.com>
-         <fdc5faec-d03d-3cba-4a9c-add7e522ad13@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 2 Mar 2020 00:50:34 -0500
+Received: by mail-pj1-f65.google.com with SMTP id o2so2029690pjp.2
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fz5Kp2VdKawxBoU+hLFXNYu1dVA8dYreDgpbY7UrLKU=;
+        b=GprpfjrSdJhCqLS8OT2NzuXi3BUcWXA15xKQGZWWf3YBBrmEtOfkB4VEjsKmem7ym3
+         LLvS0HCmO+ZEdOzOFWgZiVBeBx4fRFeO/d6+MyybU/aWj7k6UoeG+/2w1nbl+6W/f/hY
+         TomsHDeKCmY79m/MlbtQJy0LRRWOj+LHkkmRKkcemXRhES/3Bf/Dwmll/mu0WoxcbxCa
+         gaCZNaxYJcToEnXFIXhe35fZ46yTfJMWcWIG6qEu4Zl1H1IeC7JPNgAV6myBvICL/3Sv
+         jsMprZqkePz0L0voDSWOS9M7YIn9Tt4nourI+tjistiQuxTr+nMw7Id1fnpXoZlroaKW
+         8vKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fz5Kp2VdKawxBoU+hLFXNYu1dVA8dYreDgpbY7UrLKU=;
+        b=K9jr2sW6OHzc25iBg0CPxdaleW+neydgLW7gPoK0lyZ1mJ1dzV6GwtBh3GhihiVrSr
+         8cGx5aKkD2QAS5YejeP2xGoKywMBDlzJZgwxz3QRuLLmvh8SMhD/caBkxqy3DDcsauYN
+         PGqah0J9IvxHguZrGfmRZxtumHCNmY+JHsApvP09Otl+C7UXmyLj3EPILYoxB+6iXr7B
+         b4+L1iXeuHv3HYJX+2mCW9clh0nb8Si6WKvig8ZrWE9Xztt59+SUzSgmQTK0Sp+bTqa5
+         BKRU3rP2E6PWGosldflfvetMYoLpLIINRS0ih+Y2HvkY+I0Md8UwU4SSvPx6PgLji4sv
+         nKsQ==
+X-Gm-Message-State: APjAAAWhVUv+hvx5nI1cvYG21zLbnD/ExkwmNTplCy0/T/oaMLNyNgOt
+        jkWQ1DkCHvNu4228VYNjaUeo
+X-Google-Smtp-Source: APXvYqwf0p2Ihc98F61cK6cnafM3qoNT3H/Dan2meJyAD3Tp1BSClvBwEBDewnQQ/ew1M66WYi9faQ==
+X-Received: by 2002:a17:902:b28a:: with SMTP id u10mr16846102plr.1.1583128233500;
+        Sun, 01 Mar 2020 21:50:33 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:683:b69c:15d:29bf:12ee:d853])
+        by smtp.gmail.com with ESMTPSA id w81sm5179222pff.22.2020.03.01.21.50.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Mar 2020 21:50:32 -0800 (PST)
+Date:   Mon, 2 Mar 2020 11:20:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: qrtr: Respond to HELLO message
+Message-ID: <20200302055025.GA23607@Mani-XPS-13-9360>
+References: <20200302032527.552916-1-bjorn.andersson@linaro.org>
+ <20200302032527.552916-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030205-4275-0000-0000-000003A74018
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030205-4276-0000-0000-000038BC43F0
-Message-Id: <e79a4d409dec611ca8d4316a235fa9baafc3967a.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_01:2020-02-28,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxlogscore=632 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020041
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302032527.552916-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 17:12 +1100, Andrew Donnellan wrote:
-> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > When health & performance data is requested from the controller,
-> > it responds with an error log containing the requested information.
-> > 
-> > This patch allows the request to me issued via an IOCTL.
-> 
-> A better explanation would be good - this IOCTL triggers a request
-> to 
-> the controller to collect controller health/perf data, and the 
-> controller will later respond with an error log that can be picked
-> up 
-> via the error log IOCTL that you've defined earlier.
-> 
+Hi Bjorn,
+
+Thanks for the fix. I have tested this and it works perfectly!
+
+On Sun, Mar 01, 2020 at 07:25:26PM -0800, Bjorn Andersson wrote:
+> Lost in the translation from the user space implementation was the
+> detail that HELLO mesages must be exchanged between each node pair.  As
+> such the incoming HELLO must be replied to.
 > 
 
-Ok
+Err. I thought the say_hello() part in ctrl_cmd_hello() was redundant, so
+removed it :P
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Sorry for that.
 
+> Similar to the previous implementation no effort is made to prevent two
+> Linux boxes from continuously sending HELLO messages back and forth,
+> this is left to a follow up patch.
+> 
+> say_hello() is moved, to facilitate the new call site.
+> 
+> Fixes: 0c2204a4ad71 ("net: qrtr: Migrate nameservice to kernel from userspace")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  net/qrtr/ns.c | 54 ++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 30 insertions(+), 24 deletions(-)
+> 
+> diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
+> index 7bfde01f4e8a..e3f11052b5f6 100644
+> --- a/net/qrtr/ns.c
+> +++ b/net/qrtr/ns.c
+> @@ -286,9 +286,38 @@ static int server_del(struct qrtr_node *node, unsigned int port)
+>  	return 0;
+>  }
+>  
+> +static int say_hello(struct sockaddr_qrtr *dest)
+> +{
+> +	struct qrtr_ctrl_pkt pkt;
+> +	struct msghdr msg = { };
+> +	struct kvec iv;
+> +	int ret;
+> +
+> +	iv.iov_base = &pkt;
+> +	iv.iov_len = sizeof(pkt);
+> +
+> +	memset(&pkt, 0, sizeof(pkt));
+> +	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+> +
+> +	msg.msg_name = (struct sockaddr *)dest;
+> +	msg.msg_namelen = sizeof(*dest);
+> +
+> +	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
+> +	if (ret < 0)
+> +		pr_err("failed to send hello msg\n");
+> +
+> +	return ret;
+> +}
+> +
+>  /* Announce the list of servers registered on the local node */
+>  static int ctrl_cmd_hello(struct sockaddr_qrtr *sq)
+>  {
+> +	int ret;
+> +
+> +	ret = say_hello(sq);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return announce_servers(sq);
+>  }
+>  
+> @@ -566,29 +595,6 @@ static void ctrl_cmd_del_lookup(struct sockaddr_qrtr *from,
+>  	}
+>  }
+>  
+> -static int say_hello(void)
+> -{
+> -	struct qrtr_ctrl_pkt pkt;
+> -	struct msghdr msg = { };
+> -	struct kvec iv;
+> -	int ret;
+> -
+> -	iv.iov_base = &pkt;
+> -	iv.iov_len = sizeof(pkt);
+> -
+> -	memset(&pkt, 0, sizeof(pkt));
+> -	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
+> -
+> -	msg.msg_name = (struct sockaddr *)&qrtr_ns.bcast_sq;
+> -	msg.msg_namelen = sizeof(qrtr_ns.bcast_sq);
+> -
+> -	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
+> -	if (ret < 0)
+> -		pr_err("failed to send hello msg\n");
+> -
+> -	return ret;
+> -}
+> -
+>  static void qrtr_ns_worker(struct work_struct *work)
+>  {
+>  	const struct qrtr_ctrl_pkt *pkt;
+> @@ -725,7 +731,7 @@ void qrtr_ns_init(struct work_struct *work)
+>  	if (!qrtr_ns.workqueue)
+>  		goto err_sock;
+>  
+> -	ret = say_hello();
+> +	ret = say_hello(&qrtr_ns.bcast_sq);
+
+Why do you want to pass a global variable here? Why can't it be used directly
+in say_hello() as done before?
+
+Other than that,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+>  	if (ret < 0)
+>  		goto err_wq;
+>  
+> -- 
+> 2.24.0
+> 
