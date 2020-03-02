@@ -2,164 +2,141 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BBEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E35AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244E52166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA75B2467B
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Kd3qekBE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zvw7P6Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgCBSlq (ORCPT
+        id S1727496AbgCBSmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:41:46 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:55530 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgCBSlq (ORCPT
+        Mon, 2 Mar 2020 13:42:11 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43989 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727389AbgCBSmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:41:46 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: MAMv96/j/LMDj499/TZQWziL9NGmVkwPMckB6taGZVmmH5dT9EGw85L04fK5cKBknLw9UTCHuv
- Wgvi4JAphYLwitmkW2QsVgnHy2fWjCj9ZCbVIspOTZce9LmWi0iltTOugws/gvhdC61bHHRzl7
- aH+DN7i0PQ2ztzTuX8QaN35DH/qFlm0Sc9XJQlINAILwlYzn9Qxvf4FssnY7+hCDPMEn/Sm+6H
- i+X/8fuWRCofaxmbiWFGr5zDnEmbs7mo6R2PTg5Sagq9ztNuf9aAmHr8F7Losv57e+7h48fQj9
- N64=
-X-IronPort-AV: E=Sophos;i="5.70,507,1574146800"; 
-   d="scan'208";a="68556762"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 11:41:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Mar 2020 11:11:43 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 2 Mar 2020 11:11:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F7T35jznAy0NxP0HP1mt+cYNJd4VqONpkNJQd/MQLKYYU0J21b7gnnESvOrad4CBy2UfAGx3CLId2+ZpnEvmKn2pgjjj/wnZExJ3y1NTj1y7dyn/FcSuMB3p91LA/EpXkWRMAd7HMx6BhdVaUIFpuK2pnPxJUjUfHxsK5wcrgp8HDJWaxrvdMEtKVlB9uMeo0hgWiMcsLQIfuYxT5z5FARM4FNiU09ItL5nXpBFMcjVajJ4PDcwNwwKwWn/pBXcbk4QZCwALLGMaiuesE3dJiGZkhXrMVmraq/8JAInzYZwja3xiC3vOCdSwAOREmFiAKCEf0T4zqf+asy+VkwiGtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a7evzqpedXlC2VW5XtGOozKmkcbq8HWazP2age8MSy8=;
- b=nFlzsBSDN3Tf9SOu7p6DwEcG5//WDqJ04zaMHpOsYa05mDHgDWyiL33EFhh1nAiN/mG6Z35fbl6aRyIHt3upVrO5MOs45uSeQieHExOrJr68Q59ZNPpungzOWS7ra2sqMkLo98UQG8fu/IZ1NmBrFoVAWUI3r/RvH+IvNPIMqrKbTxXEKUBskEyc7jqJcqljAnBmGm/hmMI4pvGWk25T9JeBPJJUlFxhNiQvgkSHxO2h2crQArUFYC7jGGKs1Z5nHTSh4hl4DCCf4Vtf9pPjbNWSqEmEDnqSKFsCsLFtavZn4kLgbbDJwEi1e3qvxTqwNE2YZXd2KIO0WpbeunIaNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a7evzqpedXlC2VW5XtGOozKmkcbq8HWazP2age8MSy8=;
- b=Kd3qekBE3f2fljwh10ntKkpezw3ap9Fs/hX3q10TugjOx9xeV+6OrnZ/x3ppYOwr998cp3b2Ukro9jov+idK3FCbF0B7spG+EZClQYHUivF3dr9xKPgsRIIa3Tb+5Iw0uX1Ybu5hRnc3719c783rASxp63kuMmzrQTRVYekEBCw=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
- by MN2PR11MB4142.namprd11.prod.outlook.com (2603:10b6:208:135::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
- 2020 18:11:41 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 18:11:41 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <j.neuschaefer@gmx.net>
-CC:     <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mtd: spi-nor: Refactor spi_nor_read_id()
-Thread-Topic: [PATCH v2] mtd: spi-nor: Refactor spi_nor_read_id()
-Thread-Index: AQHV8L4Gb9MROFWvGECs4qQxGNhQEQ==
-Date:   Mon, 2 Mar 2020 18:11:41 +0000
-Message-ID: <11395630.65iIH9RknS@localhost.localdomain>
-References: <20200223173713.2981-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20200223173713.2981-1-j.neuschaefer@gmx.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ccbbcf1-7a25-4d15-9532-08d7bed528a9
-x-ms-traffictypediagnostic: MN2PR11MB4142:
-x-microsoft-antispam-prvs: <MN2PR11MB4142A17A7979CD600170DC57F0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(26005)(66446008)(6486002)(186003)(4326008)(478600001)(9686003)(6512007)(6916009)(966005)(91956017)(64756008)(66946007)(2906002)(71200400001)(76116006)(8936002)(316002)(53546011)(86362001)(54906003)(6506007)(66556008)(5660300002)(66476007)(81156014)(81166006)(8676002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aPb+a+c5DY3M5J/7yVQ+3Cq/WliwU0vtn90GWxRRig6lBwmZza0Aq87Q5rQ7moPMcq3+8BkohdLCviA4BvQFXkrzhhWqdEvCnNXwTkFoYbdhUHvYz3I5Q41gHFDMH271JBbnJXp3AUohKZzlMiwXS/ZrT0ZUdruQ4M9jJCm6XlllYHOLt/rkosm2LwEvUEd9vvGyRVFBa5GS3v050cDlQSAeNGoAoONdXQn4K/sMXNviafqYg//xlo1MKYJEcYxf8MIt/D80BE9zFDNp7cN02CtWMzbp+L+36vtTI6Ps+JEX0tfot5WAdEr7Vt1Y7AmvoNwhO5RKz1AaTdxdxvY7DmQp2zYmEwPKbvKjL0uZTfQSVsExfdgklhh5PWEUvzUqJXRQsBf6BmZVeDiD/Oyaezzbxs47hbzcMUH3twZ38OWlWuw3oTSBGanLQw18qX/d1NiskWS95de8qZGq4f+5F3LI1E6zT79eT+YBDQ0tTbPlV6QjLPGz5KZE1C15XUwK+jyX/OuQn6ICqEwVAUGy1sSx0bcb4lcLKiqWg1Wd73hbnNowqbmG5Jz3YZoPAe/u
-x-ms-exchange-antispam-messagedata: 24b6jiSJqii6+BSGzdpBr0krHHamBMbAvAEEqk2DmjBhuC9OBtBDnipPeS6cAtQzMD2bo/vVKnCx135WXt+KhzzhwcVCz708kB3v8GAx11SuV+5h7penK1SrNP1yrYLyb0qgk94shQU0Rr888lMTDg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <256C4BC2074A704B87D53D8B1AC8A49D@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 13:42:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583174530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=x+PcEaMz7vD6r/sekHWdoFeMEXe7RrhKK1hXyARhweQ=;
+        b=Zvw7P6UezZW0uzjslnqGdGXALYEl3gct2vxZAg9UMzh3crsCgN6MrlwK+5TmKLXNhaYRCg
+        rv2qp2wlFvnbONUkRDVt0Be85/AaZZmhKdnT5Jtrc65vbRUGGBa4ZQLkVz+UcbV5lly/DU
+        zCv+x6YFvsTf/6nSkySeh6FjAIsLQkw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-361-SKy6hr5lPZykom0-L2Nqvw-1; Mon, 02 Mar 2020 13:42:06 -0500
+X-MC-Unique: SKy6hr5lPZykom0-L2Nqvw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77684107ACC4;
+        Mon,  2 Mar 2020 18:42:03 +0000 (UTC)
+Received: from [10.36.116.60] (ovpn-116-60.ams2.redhat.com [10.36.116.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCDBB19C7F;
+        Mon,  2 Mar 2020 18:41:55 +0000 (UTC)
+Subject: Re: [PATCH v1 06/11] mm: Allow to offline unmovable PageOffline()
+ pages via MEM_GOING_OFFLINE
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Qian Cai <cai@lca.pw>, Pingfan Liu <kernelfans@gmail.com>
+References: <20200302134941.315212-1-david@redhat.com>
+ <20200302134941.315212-7-david@redhat.com>
+ <abac569d8d1978aebadf71b65cdeb240a6256ad2.camel@linux.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <65d4aadd-4d19-865a-3b65-d6a6d4f23dc5@redhat.com>
+Date:   Mon, 2 Mar 2020 19:41:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ccbbcf1-7a25-4d15-9532-08d7bed528a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:11:41.4339
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2DTb7qm4tDWhhQ6Om+njeW0d2kMHp2qirOas3s5zR2ubUVGaGgDbYHUMu8T2+ed2l7UJJD53LtrE2lnElUAMpc95EJbk+bIc71fPM8WbvMs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
+In-Reply-To: <abac569d8d1978aebadf71b65cdeb240a6256ad2.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, February 23, 2020 7:37:13 PM EET Jonathan Neusch=E4fer wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
-e
-> content is safe
->=20
-> - Don't use `tmp` for two purposes (return value, loop counter).
->   Instead, use `i` for the loop counter, and `ret` for the return value.
-> - Don't use tabs between type and name in variable declarations,
->   for consistency with other functions in spi-nor.c.
-> - Rewrite nested `if`s as `if (a && b)`.
-> - Remove `info` variable, and use spi_nor_ids[i] directly.
->=20
-> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> ---
->=20
-> v2:
-> - As suggested by Tudor Ambarus:
->   - rename tmp to ret
->   - remove tabs between variable type and name
->   - remove `info` variable
->=20
-> v1:
-> - https://lore.kernel.org/lkml/20200218151034.24744-1-j.neuschaefer@gmx.n=
-et/
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 25 +++++++++++--------------
->  1 file changed, 11 insertions(+), 14 deletions(-)
->=20
+On 02.03.20 18:40, Alexander Duyck wrote:
+> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Changed i's type from int to unsigned int, reordered local variables and=20
-applied to spi-nor/next. Thanks,
-ta
+Thanks a lot Alex!
+
+-- 
+Thanks,
+
+David / dhildenb
 
