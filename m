@@ -2,100 +2,101 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED839C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3152C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05602465D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583183781;
-	bh=1zHdXUwUuJKgz+S2bvIxUrqahpJf4qagshjRfd/2x6w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yvVPc4SSadTDwrKWlCowVVVvIR825E8wjy0BnpG1bKmAV/zCRdVuuJjqbBDwxF/ry
-	 ltU58ofmnu1EHtKLWkNKmnlXTZ1MVqmXpugxOJSnZcOdLq2eb9PUMPAVoopyvK3AqI
-	 /y5aNp46O8nB4zAUyqGdv0VUiU97QuOEEfHX7QXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8830224676
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wx9paDmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCBVQU (ORCPT
+        id S1726907AbgCBVQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:16:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgCBVQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:16:20 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A456F20873;
-        Mon,  2 Mar 2020 21:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583183779;
-        bh=1zHdXUwUuJKgz+S2bvIxUrqahpJf4qagshjRfd/2x6w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZmcLe9uaAA2Qx+E2R23T0roasOLIwuwb4Ktw0FpDcq7IuHF0bxOc874A5Vgvyr/zN
-         7shrL4WwoFYUXOCtUCrTkpJIO5vSMfYGlSp982jYZfyDSLtYt8Mn6YILc7T16dRdeY
-         RmZOGzGZtOz3uiYbZUFBdNU6SItSYiMVo7NkrJvk=
-Date:   Mon, 2 Mar 2020 13:16:18 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 0/7] introduce memory hinting API for external
- process
-Message-Id: <20200302131618.b0f9f0e76d53a69184321884@linux-foundation.org>
-In-Reply-To: <20200302193630.68771-1-minchan@kernel.org>
-References: <20200302193630.68771-1-minchan@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Mar 2020 16:16:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46126 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgCBVQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:16:43 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so280035pll.13;
+        Mon, 02 Mar 2020 13:16:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=707JQcccZExSjQ1cG2+ME+5GhpTFiiOzPDZOM11Q128=;
+        b=Wx9paDmHSp4xWfhx/DfIRVvf6rL3n8uUicBhfpLjw5f8G/eBmsYCqOG7N8ZuXupNmf
+         rdbSrJ6qErAkMbNVgMXUUsSBYxHgiv/GlyAal69L/hnenxOTONbX4aqEEnJvd6T43Q0Z
+         QRjOKpkiN8BHEWyjlNtUMfEaM8pwdjEaom99sOwwXFXqEytqTxiaEKOREenFoZszgUGi
+         mCXSNHwBw6kjeHabrIttOORoS8SCOE28IO9v+aU/rKObusUUivdoWyidVU+B06g9+Oid
+         gj74zbMA8eAT2fu8o+RyLNKqdW60Z2tm48WET8wore3K/9SGSY6X2xZam3H46ukFdvRl
+         2pJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=707JQcccZExSjQ1cG2+ME+5GhpTFiiOzPDZOM11Q128=;
+        b=DKmNiVnE1LUwxl+SP5O2MdeCUC3NKqtySGGsrPF7djZT2dZngQmdCKiAIenpIFC5me
+         aog99ZOLh1sC8SkBPfZxfhTcHxdWvnAx/kRk84YQd/IUhKPPnetAJG5N3Z4CG5LuvrEl
+         t2NyFrZMBeJeRe3slE9iJzfKlsLsQ3xNXs+FOWcEih1anK+VYo1OQSLinwbOqxh5NESx
+         LU/tewQBIst7yTcpwm6TJOEPRvp2YIZ+J5vEpfSNvbg7g5IIE0TEFMKFLtbhsfFgeQg2
+         briLMrIMu3cKot66MqXwF8w/DAU81rVnhUJ+jzEU+K+9JCkQn00ZOPljTqy5xSnMVvq4
+         2ytQ==
+X-Gm-Message-State: ANhLgQ2Mpowjzzl7VAh9kEaKaxahISTY8dBUsHX+zqz7gIODQ7Jxa7J5
+        9BZW6mWw/5pWMXtwOKe7KLA=
+X-Google-Smtp-Source: ADFU+vv8Sd1PEqvRWJ2m63xwCVr6MxSHIdfgCkefGodJS420ZPfzwUnmsuy8u+aYp11Q6DL+cKqPKQ==
+X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr1015904plo.28.1583183802179;
+        Mon, 02 Mar 2020 13:16:42 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q17sm21738229pfg.123.2020.03.02.13.16.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 13:16:41 -0800 (PST)
+Date:   Mon, 2 Mar 2020 13:16:40 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, logang@deltatee.com,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] kunit: create a centralized executor to dispatch
+ all KUnit tests
+Message-ID: <20200302211640.GA8364@roeck-us.net>
+References: <20200228012036.15682-1-brendanhiggins@google.com>
+ <20200302200337.GH11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302200337.GH11244@42.do-not-panic.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Mar 2020 11:36:23 -0800 Minchan Kim <minchan@kernel.org> wrote:
-
-> Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-> application could give hints to kernel what memory range are preferred to be
-> reclaimed. However, in some platform(e.g., Android), the information
-> required to make the hinting decision is not known to the app.
-> Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-> and that daemon must be able to initiate reclaim on its own without any app
-> involvement.
+On Mon, Mar 02, 2020 at 08:03:37PM +0000, Luis Chamberlain wrote:
+> Guenter,
 > 
-> To solve the concern, this patch introduces new syscall - process_madvise(2).
-> Bascially, it's same with madvise(2) syscall but it has some differences.
+> are you still running your cross-architecture tests? If so any chance
+
+Yes
+
+> you can try this for your build tests?
 > 
-> 1. It needs pidfd of target process to provide the hint
-> 2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
->    Other hints in madvise will be opened when there are explicit requests from
->    community to prevent unexpected bugs we couldn't support.
-> 3. Only privileged processes can do something for other process's address
->    space.
-> 
-> For more detail of the new API, please see "mm: introduce external memory hinting API"
-> description in this patchset.
 
-Thanks, I grabbed these.
+I didn't have KUNIT_TEST enabled to start with. I did that now, and
+started a test run on mainline a minute ago. We'll see how that goes.
 
-I massaged the patch titles significantly - mainly to alert readers to
-the fact that we're proposing a new syscall.
+Afterwards, sure, I can run the series in a test branch. It would be great
+if I can pick it up from a repository somewhere.
 
-Is a manpage for process_madvise(2) being prepared?
+Guenter
