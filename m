@@ -2,99 +2,125 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82487C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515FCC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A99246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:37:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cwlhJHtI"
+	by mail.kernel.org (Postfix) with ESMTP id 28D24246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583141935;
+	bh=afyeUw5VnZbUAYoxsLpHi50eMt+vGabCRyRpK0qjkKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rG8zdmHo1yOsirMmj1IiSO2j7eebuiwH6E2irl6AjEZHiQFH1hnopBQkFk5Oy1nmk
+	 dMw8rYazGYgiOqNOa2PAgjPtimofTD/KPGUi6RHaAZSo0swIXc0UA4SjwsgMwmUeEj
+	 4lLDPxLfxEBkNca57H87z3OV4GXpf/+SLi27xhP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCBJhy (ORCPT
+        id S1727492AbgCBJiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:37:54 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50698 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCBJhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:37:53 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 00E6E54A;
-        Mon,  2 Mar 2020 10:37:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583141872;
-        bh=JaiLwKwLjbPQuu84TSj6iCTI4JbyTTiFDByTAxo6at0=;
+        Mon, 2 Mar 2020 04:38:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgCBJix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:38:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4492469C;
+        Mon,  2 Mar 2020 09:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583141932;
+        bh=afyeUw5VnZbUAYoxsLpHi50eMt+vGabCRyRpK0qjkKQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cwlhJHtIEgnNQ53Hmp8isgrboXULKcbj4DthZ127fTLcRs2IRyEnA43pDcWOLmgtX
-         0/3jRu7JSVq7+lldyxuk8/en/DJHOCMYAPkF/hQ/scvzhICy2dRofuOsoAFgfc+3tR
-         bkynMlVN6FWoRhsTQj2kz0BCydMkSLjWhS6RW+gw=
-Date:   Mon, 2 Mar 2020 11:37:28 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] drm/bridge: dw-hdmi: do not force "none" scan mode
-Message-ID: <20200302093728.GF11960@pendragon.ideasonboard.com>
-References: <20200229163043.158262-1-jernej.skrabec@siol.net>
- <20200229163043.158262-4-jernej.skrabec@siol.net>
+        b=d7FvmEYtAwbRISDQY7cpWbE7ZT2VmfjytHB0Oe5CwmLnlGScTHDDwtdd8WGhgId0i
+         +CCLK/MeafrNAiTtz+T//uVq1jW+TmYqxUCPeO8KmncEje4PVrxfH6HWXFBHukW1Nh
+         2cVO5WvoXFuBx218U3sXyT3ocQItiPz4TChWNmJA=
+Date:   Mon, 2 Mar 2020 10:38:50 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200302093850.GA1998325@kroah.com>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com>
+ <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
+ <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200229163043.158262-4-jernej.skrabec@siol.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jernej and Jonas,
-
-Thank you for the patch.
-
-On Sat, Feb 29, 2020 at 05:30:42PM +0100, Jernej Skrabec wrote:
-> From: Jonas Karlman <jonas@kwiboo.se>
+On Mon, Mar 02, 2020 at 10:09:51AM +0100, Miklos Szeredi wrote:
+> On Fri, Feb 28, 2020 at 5:36 PM David Howells <dhowells@redhat.com> wrote:
+> >
+> > sysfs also has some other disadvantages for this:
+> >
+> >  (1) There's a potential chicken-and-egg problem in that you have to create a
+> >      bunch of files and dirs in sysfs for every created mount and superblock
+> >      (possibly excluding special ones like the socket mount) - but this
+> >      includes sysfs itself.  This might work - provided you create sysfs
+> >      first.
 > 
-> Setting scan mode to "none" confuses some TVs like LG B8, which randomly
-> change overscan procentage over time. Digital outputs like HDMI and DVI,
-
-s/procentage/percentage/ ?
-
-> handled by this controller, don't really need overscan, so we can always
-> set scan mode to underscan. Actually, this is exactly what
-> drm_hdmi_avi_infoframe_from_display_mode() already does, so we can just
-> remove offending line.
+> Sysfs architecture looks something like this (I hope Greg will correct
+> me if I'm wrong):
 > 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> [updated commit message]
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 --
->  1 file changed, 2 deletions(-)
+> device driver -> kobj tree <- sysfs tree
 > 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 9d7bfb1cb213..3d6021119942 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1655,8 +1655,6 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
->  			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
->  	}
->  
-> -	frame.scan_mode = HDMI_SCAN_MODE_NONE;
-> -
->  	/*
->  	 * The Designware IP uses a different byte format from standard
->  	 * AVI info frames, though generally the bits are in the correct
+> The kobj tree is created by the device driver, and the dentry tree is
+> created on demand from the kobj tree.   Lifetime of kobjs is bound to
+> both the sysfs objects and the device but not the other way round.
+> I.e. device can go away while the sysfs object is still being
+> referenced, and sysfs can be freely mounted and unmounted
+> independently of device initialization.
+> 
+> So there's no ordering requirement between sysfs mounts and other
+> mounts.   I might be wrong on the details, since mounts are created
+> very early in the boot process...
+> 
+> >
+> >  (2) sysfs is memory intensive.  The directory structure has to be backed by
+> >      dentries and inodes that linger as long as the referenced object does
+> >      (procfs is more efficient in this regard for files that aren't being
+> >      accessed)
+> 
+> See above: I don't think dentries and inodes are pinned, only kobjs
+> and their associated cruft.  Which may be too heavy, depending on the
+> details of the kobj tree.
 
--- 
-Regards,
+That is correct, they should not be pinned, that is what kernfs handles
+and why we can handle 30k virtual block devices on a 31bit s390 instance
+:)
 
-Laurent Pinchart
+So you shouldn't have to worry about memory for sysfs.
+
+There are loads of other reasons probably not to use sysfs for this
+instead :)
+
+thanks,
+
+greg k-h
