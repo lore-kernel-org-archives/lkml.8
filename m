@@ -2,221 +2,81 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0567C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57560C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A1A2465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583177014;
-	bh=b9j/vwsv3YYXGbkibYOirNZOX9FDyLSjLC4MAkVcoqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=umHtuVw/qLs0GgYTqA/toR1El5XgO3mUBujbCRgJB5e6gSfHAK5Xispiu0cahnUHz
-	 TV3uszU4SG76aYfVxorv72TLtkdwnXiVIomFpzUmuD0rwWu9FG2OQHnXkLKuatevfh
-	 F+lFHoIl7Ifx/FFKW0OEsb20I/EfpDK5f9bhVwF0=
+	by mail.kernel.org (Postfix) with ESMTP id 331052084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgCBTXd (ORCPT
+        id S1727606AbgCBT10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:23:33 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45161 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgCBTXd (ORCPT
+        Mon, 2 Mar 2020 14:27:26 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52604 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgCBT1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:23:33 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so158823pls.12;
-        Mon, 02 Mar 2020 11:23:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fX2Aei7xiQwIHHM7cuDD9mmHopxJvdd5QvDnEUqFw38=;
-        b=H/3CJ6rT+2Wsfz9ESdDWi3Xs8JbHfqLCzsju/DeoR106JaCeVs3NPpedySWUJCcWcG
-         1QrBZZcPlfz78ukYB6jDtkYs2dBXky/ZzXD9UePnBGnrxu1qkPkSby6zc/c5dx3NgTz4
-         Hrle3AckDUi+BagbjBdxOeQsMNibcwBAJ2j4rKro+2y2fx101FEpkBGsG+0/RSuPgdzR
-         tTOIshi3WMwtaMzG2cqpUUd4NUV5NR/QoDboCimIxFPZJNmik39gSE4dfSDDh79cGwdK
-         s88conD3d8G/SnDTJWBOgr/BAVwgk0CjL8UuVJMOAR/nrhxelZSwrnPrN6Oexxspzdiy
-         vRtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fX2Aei7xiQwIHHM7cuDD9mmHopxJvdd5QvDnEUqFw38=;
-        b=HI97ZBtFEXnIAfA3DoEsUp7GccYgu2PKSqRk4eewMCPs9drKSWqZBbA5yodyDDF5lK
-         L9KL1WqMezS08OhfmM/ERfZh5kJv2FJHPjKpuSZKJACuYyts6bbfSiG14KxGbjcXVrz9
-         VT+Mn+CxY1DVGZG8x+J+ksE7WuB4PUUjEqIkFGVFiD1nGcHhyZFV5OGAibIsba3DdnLv
-         PEYwzFGYnAssWjjS6x90xytURKADwGBXiTtE9p8s0BDOqhUGzN8m3MC4qNjiD3BfniZ/
-         IOnjHQ2zUgIVrgew+q2ZX6Be8xXAyjH1YKPvkXTX/WK8bFaOs7TO6Dp6wW1aATwwY03Y
-         njXg==
-X-Gm-Message-State: ANhLgQ2n098zR5AwI272q1fbJtt9AZmCweerQhAUkoWky3SBycyLc2ur
-        i1xaqHovyOt350VxqDFRKv8=
-X-Google-Smtp-Source: ADFU+vueVFAHx0zsc6sIl0jBwr/4HNzm/aldo/a4k2JtVvrzDpTzNLo/NnD26xP9n+iWUxjv+2/I/A==
-X-Received: by 2002:a17:90a:1546:: with SMTP id y6mr27255pja.26.1583177011513;
-        Mon, 02 Mar 2020 11:23:31 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id b18sm22286150pfd.63.2020.03.02.11.23.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 11:23:30 -0800 (PST)
-Date:   Mon, 2 Mar 2020 11:23:28 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [PATCH v6 5/7] mm: support both pid and pidfd for process_madvise
-Message-ID: <20200302192328.GB234476@google.com>
-References: <20200219014433.88424-1-minchan@kernel.org>
- <20200219014433.88424-6-minchan@kernel.org>
- <CAJuCfpE_T1UG_eSQMa6y7n0GXQBOQ8sE=0fcWmSo2ZhHoj4mCg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpE_T1UG_eSQMa6y7n0GXQBOQ8sE=0fcWmSo2ZhHoj4mCg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 2 Mar 2020 14:27:25 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 627B314706610;
+        Mon,  2 Mar 2020 11:27:25 -0800 (PST)
+Date:   Mon, 02 Mar 2020 11:27:24 -0800 (PST)
+Message-Id: <20200302.112724.1368962476397075089.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] netdevice: Replace zero-length array with
+ flexible-array member
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200302115933.GA15346@embeddedor>
+References: <20200302115933.GA15346@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 02 Mar 2020 11:27:25 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 02:41:07PM -0800, Suren Baghdasaryan wrote:
-> On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
-> >
-> > There is a demand[1] to support pid as well pidfd for process_madvise
-> > to reduce unnecessary syscall to get pidfd if the user has control of
-> > the target process(ie, they could guarantee the process is not gone
-> > or pid is not reused. Or, it might be okay to give a hint to wrong
-> > process).
-> 
-> nit: When would "give a hint to wrong process" be ok? I would just
-> remove this part.
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Mon, 2 Mar 2020 05:59:33 -0600
 
-I wanted to say non destructive hints. It's already true for other
-some hints because they are just best effort so it's not critical
-to be failed. If you mind it, I will remove the phrase.
-
-Thanks.
-
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> >
-> > This patch aims for supporting both options like waitid(2). So, the
-> > syscall is currently,
-> >
-> >         int process_madvise(int which, pid_t pid, void *addr,
-> >                 size_t length, int advise, unsigned long flag);
-> >
-> > @which is actually idtype_t for userspace libray and currently,
-> > it supports P_PID and P_PIDFD.
-> >
-> > [1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-> >
-> > Cc: Christian Brauner <christian@brauner.io>
-> > Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > ---
-> >  include/linux/syscalls.h |  3 ++-
-> >  mm/madvise.c             | 34 ++++++++++++++++++++++------------
-> >  2 files changed, 24 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index e4cd2c2f8bb4..f5ada20e2943 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -876,7 +876,8 @@ asmlinkage long sys_munlockall(void);
-> >  asmlinkage long sys_mincore(unsigned long start, size_t len,
-> >                                 unsigned char __user * vec);
-> >  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
-> > -asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
-> > +
-> > +asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
-> >                         size_t len, int behavior, unsigned long flags);
-> >  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
-> >                         unsigned long prot, unsigned long pgoff,
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index def1507c2030..f6d9b9e66243 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -1182,11 +1182,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> >         return do_madvise(current, current->mm, start, len_in, behavior);
-> >  }
-> >
-> > -SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> > +SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
-> >                 size_t, len_in, int, behavior, unsigned long, flags)
-> >  {
-> >         int ret;
-> > -       struct fd f;
-> >         struct pid *pid;
-> >         struct task_struct *task;
-> >         struct mm_struct *mm;
-> > @@ -1197,20 +1196,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> >         if (!process_madvise_behavior_valid(behavior))
-> >                 return -EINVAL;
-> >
-> > -       f = fdget(pidfd);
-> > -       if (!f.file)
-> > -               return -EBADF;
-> > +       switch (which) {
-> > +       case P_PID:
-> > +               if (upid <= 0)
-> > +                       return -EINVAL;
-> > +
-> > +               pid = find_get_pid(upid);
-> > +               if (!pid)
-> > +                       return -ESRCH;
-> > +               break;
-> > +       case P_PIDFD:
-> > +               if (upid < 0)
-> > +                       return -EINVAL;
-> >
-> > -       pid = pidfd_pid(f.file);
-> > -       if (IS_ERR(pid)) {
-> > -               ret = PTR_ERR(pid);
-> > -               goto fdput;
-> > +               pid = pidfd_get_pid(upid);
-> > +               if (IS_ERR(pid))
-> > +                       return PTR_ERR(pid);
-> > +               break;
-> > +       default:
-> > +               return -EINVAL;
-> >         }
-> >
-> >         task = get_pid_task(pid, PIDTYPE_PID);
-> >         if (!task) {
-> >                 ret = -ESRCH;
-> > -               goto fdput;
-> > +               goto put_pid;
-> >         }
-> >
-> >         mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-> > @@ -1223,7 +1233,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> >         mmput(mm);
-> >  release_task:
-> >         put_task_struct(task);
-> > -fdput:
-> > -       fdput(f);
-> > +put_pid:
-> > +       put_pid(pid);
-> >         return ret;
-> >  }
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Applied.
