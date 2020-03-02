@@ -2,216 +2,293 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD033C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443B0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C44020842
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1653420842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Y9364sZL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cQqRyYLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCBSXN (ORCPT
+        id S1727531AbgCBSXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:23:13 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:33107 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCBSXL (ORCPT
+        Mon, 2 Mar 2020 13:23:54 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28163 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgCBSXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:23:11 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Et8wgwFivVl09Ms2xzqKkIR1c5Ozvp3GWoLf0y0aQ2WqPmKFpHLzFguQJncCSi5xQHIS8BSlUv
- oGYl4o7iw7nEz8zgMyeiCs65NHgJS7bxBt+hgthAla2YFrJyBhWQZ00dxHbvH4g3kLYwRUEH6B
- Gw+1z/D3qjXs3aJZO42+WPYlQ8JdflIKocbK6vRr09D3ZnYcl7bn9UVSZFZTRl8NkWOV6aR0Ga
- bltvwYEdQZ3itEIpqNduT5iSapOQQflRQjX4VEVKE2zPcEYPA7/+j8Wtn4p9DyVckjaTfK3BDF
- ezY=
-X-IronPort-AV: E=Sophos;i="5.70,507,1574146800"; 
-   d="scan'208";a="67603667"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 11:23:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Mar 2020 11:08:15 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 2 Mar 2020 11:08:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XbBPIs3LzbShjBsYoD6vOKMSHB2Pu7lv82wqc7fXTH6XvYP2dJ6r39BsfuLdN6sWVmf1AkAXie2OmynN7DlFzRNGETFTh7u3a4FdEzs61/a0qR41jy/d8ZdXYk+X6MN+bky5AA/ihT4iNIXj9eSHgcTo5PHDqee4IsrswDLvRndQ96qGJXnPYEUnQFFheJeDBg9rRjCPYaC32A0rIiT5Yi9YL0R63WIutCRJJB7nzDe/ZSIW6R9O4APYfaDN5hvjABBYzM46qzsocPOmV6vJ9e9lTSl5mfgzI/LJpPzDOxUrTe6bOPv4DnGffM6tlF4CCKXmJKGDJ2O0W7Cy/Xjigw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FgxP/0qrLREtX2VdVJrzjCW/rVhmsK0LisXVTin0iQA=;
- b=dmXkRXOi9LTPTkO9gMcItae0yF+v34N+nhQ2eIpuiXRnJGe19qlHpIOmh645wbJKK5+vnrywVU6sxyox/uOMzFVvdrema4b/mabZNaVWOBsF4CUslm2fOXLi9iNcKtebWuvviycbzOwG7/sxUHTF4gVVsmFbeUv2hmpylViF1Y3OJ0izW+UtdEPnGTrfjDT9V31V9gXgKR9DhOviMYfsiu6XRKE2IiDMBY+hGw3XWRf2Ldvs15S8ZIn46d1OgFjS8Hk6heyt2ayj1BUkp8ejxGiy/II8dFBLB1hOtYL+sN8AC12CcRu3I+0oEcErXary1uyl69Q87DYjy8IZg51IwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FgxP/0qrLREtX2VdVJrzjCW/rVhmsK0LisXVTin0iQA=;
- b=Y9364sZLpSWxaqJcX81GBriBHNeR/oSxLI12T97OVepEDAluYQzFnZuGDz9acopgXuYM+6GvNSJ7aO3zj/nnGTdbr0bPGgyVxHAVsnZUqCbRQwJXG+/M7jzkanq/1tAOqfX7wzpAn64qAOuuYconUSm0MvzN62q0JGlsB0DSIGI=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
- by MN2PR11MB4142.namprd11.prod.outlook.com (2603:10b6:208:135::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
- 2020 18:07:57 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 18:07:57 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <bbrezillon@kernel.org>, <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
-        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <matthias.bgg@gmail.com>, <vz@mleia.com>,
-        <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
-        <john.garry@huawei.com>, <tglx@linutronix.de>,
-        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
-        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
-        <swboyd@chromium.org>, <opensource@jilayne.com>,
-        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
-        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 22/23] mtd: spi-nor: Get rid of the now empty spi_nor_ids[]
- table
-Thread-Topic: [PATCH 22/23] mtd: spi-nor: Get rid of the now empty
- spi_nor_ids[] table
-Thread-Index: AQHV8L2Ao5pXiJSCo0+Lr0LSsFFLlA==
-Date:   Mon, 2 Mar 2020 18:07:57 +0000
-Message-ID: <20200302180730.1886678-23-tudor.ambarus@microchip.com>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f086245d-cb62-4cdd-8d3f-08d7bed4a306
-x-ms-traffictypediagnostic: MN2PR11MB4142:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4142EF77AA6FBC2B4F03AAE0F0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(36756003)(26005)(66446008)(107886003)(6486002)(186003)(2616005)(4326008)(478600001)(6512007)(91956017)(64756008)(66946007)(2906002)(71200400001)(76116006)(8936002)(316002)(86362001)(54906003)(6506007)(66556008)(5660300002)(66476007)(7406005)(1076003)(7416002)(81156014)(81166006)(110136005)(8676002)(26583001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8DyBiWuLtupwp5M+h1SfOK0RS6z/zXM5w1X9iGEjEv3RdFt/+KbnaE7lRggGXhT6ZMJaUo5pXLJpmT4SGzeQCV+LsY+ti6Vu/Kq7xWV1AKCGwBRnjOWPmz1HbmFTPmgNZT7OGtiBo8ADm5/yxskrBXt8O6YqRZccUJG4u6iMryYFC9/8TnaNniSJU5poCUFPv/3PEgsDZw+h+LZEGEOfe/Jwq6I4LaETeHEFSC1TxjjZ+N8jZT3w+xfoiHTztOJZtfEe1rr9t1Fp+B8vUAcAqU3sDEPqrfB+g40y+RIDifv9imGNuRECQJaEfNkiRFu1i4sTYJb64d3orOkDJba2PIZm2qDBKPsYdYGX7yqhQz7UO8P81HR+S82Ic1tx0DhF6D1MHa1A6eg7nng0xqysm/TLF5LP/1Cs04lQU04eTO5jEfrXK0/GKKRtVCFD0F/LsyK9fHdSemR1Pwr51WBmFjMGzEJMptHXlN+83HNYuw+FEFGj6jQ1q97RN8Rxt1hl
-x-ms-exchange-antispam-messagedata: nbRyvy0kRzWsH24VUoZHBR+WeVsE6hjfvWnWYxpRPJrYSHwB1F9SLcxfXmmH4ldTDcBf//CJNC9LqauEZuO+h7O3zShMi6N4H8meZZL389szMedXjwLXsfVMPbJ3iM4nvncn3KRRfz4jp5cHifK0xw==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f086245d-cb62-4cdd-8d3f-08d7bed4a306
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:07:57.0426
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f5vfbYniA3sHIKzQ7h85mmQdxw3fAZxfIcRwP08w+kvxOZU4MiGwiC+3ychKLi3ZUIMc7t/brvzTlUXafiLc8Ve7lVRBDROSy6Fwt4eXVN0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
+        Mon, 2 Mar 2020 13:23:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583173433; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=IRRcVtf8aZJCqhim3ILrzE4d/zqI5L3hew+ar23P7Lw=; b=cQqRyYLGs9hdDJunhO7VKQbBlsL0fWU0zxbpimII6Gs1YZyW21rW6Z1Gt85taNEeuouzSQL/
+ telwzk8QXCLJLAISz9p8RkxsESpKroGG8u5ZxFgozmW6Er9iOVcU8LDNUGYEzknK14kw3wpF
+ IXcUiO+RS9mHDwkCu4BYmBwxhI0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5d4f38.7f1ed31f4f80-smtp-out-n03;
+ Mon, 02 Mar 2020 18:23:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 60A5DC447A2; Mon,  2 Mar 2020 18:23:52 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79477C4479D;
+        Mon,  2 Mar 2020 18:23:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79477C4479D
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
+        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v3 2/2] drm/msm/a6xx: Use the DMA API for GMU memory objects
+Date:   Mon,  2 Mar 2020 11:23:44 -0700
+Message-Id: <1583173424-21832-3-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
+References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <bbrezillon@kernel.org>
+The GMU has very few memory allocations and uses a flat memory space so
+there is no good reason to go out of our way to bypass the DMA APIs which
+were basically designed for this exact scenario.
 
-All entries have been moved to manufacturer drivers. Get rid of this
-empty table.
+v3: Set the dma mask correctly and use dma_addr_t for the iova type
 
-Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+v2: Pass force_dma false to of_dma_configure to require that the DMA
+region be set up and return error from of_dma_configure to fail probe.
+
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/mtd/spi-nor/core.c | 25 -------------------------
- 1 file changed, 25 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index f4178cd65c45..a2e1917b608d 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -1953,21 +1953,6 @@ int spi_nor_sr2_bit7_quad_enable(struct spi_nor *nor=
-)
- 	return 0;
- }
-=20
--/* NOTE: double check command sets and memory organization when you add
-- * more nor chips.  This current list focusses on newer chips, which
-- * have been converging on command sets which including JEDEC ID.
-- *
-- * All newly added entries should describe *hardware* and should use SECT_=
-4K
-- * (or SECT_4K_PMC) if hardware supports erasing 4 KiB sectors. For usage
-- * scenarios excluding small sectors there is config option that can be
-- * disabled: CONFIG_MTD_SPI_NOR_USE_4K_SECTORS.
-- * For historical (and compatibility) reasons (before we got above config)=
- some
-- * old entries may be missing 4K flag.
-- */
--static const struct flash_info spi_nor_ids[] =3D {
--	{ },
--};
--
- static const struct spi_nor_manufacturer *manufacturers[] =3D {
- 	&spi_nor_atmel,
- 	&spi_nor_catalyst,
-@@ -2037,11 +2022,6 @@ static const struct flash_info *spi_nor_read_id(stru=
-ct spi_nor *nor)
- 		}
- 	}
-=20
--	info =3D spi_nor_search_part_by_id(spi_nor_ids,
--					 ARRAY_SIZE(spi_nor_ids) - 1, id);
--	if (info)
--		return info;
--
- 	dev_err(nor->dev, "unrecognized JEDEC id bytes: %*ph\n",
- 		SPI_NOR_MAX_ID_LEN, id);
- 	return ERR_PTR(-ENODEV);
-@@ -2952,11 +2932,6 @@ static const struct flash_info *spi_nor_match_id(str=
-uct spi_nor *nor,
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 115 ++++------------------------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   7 +--
+ 2 files changed, 15 insertions(+), 107 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 748cd37..854ba30 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -2,6 +2,7 @@
+ /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
+ 
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
+ #include <linux/interconnect.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
+@@ -920,21 +921,10 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+ 
+ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
  {
- 	unsigned int i, j;
-=20
--	for (i =3D 0; i < ARRAY_SIZE(spi_nor_ids) - 1; i++) {
--		if (!strcmp(name, spi_nor_ids[i].name))
--			return &spi_nor_ids[i];
+-	int count, i;
+-	u64 iova;
+-
+ 	if (IS_ERR_OR_NULL(bo))
+ 		return;
+ 
+-	count = bo->size >> PAGE_SHIFT;
+-	iova = bo->iova;
+-
+-	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
+-		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
+-		__free_pages(bo->pages[i], 0);
 -	}
 -
- 	for (i =3D 0; i < ARRAY_SIZE(manufacturers); i++) {
- 		for (j =3D 0; j < manufacturers[i]->nparts; j++) {
- 			if (!strcmp(name, manufacturers[i]->parts[j].name)) {
---=20
-2.23.0
+-	kfree(bo->pages);
++	dma_free_attrs(gmu->dev, bo->size, bo->virt, bo->iova, bo->attrs);
+ 	kfree(bo);
+ }
+ 
+@@ -942,94 +932,23 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+ 		size_t size)
+ {
+ 	struct a6xx_gmu_bo *bo;
+-	int ret, count, i;
+ 
+ 	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+ 	if (!bo)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	bo->size = PAGE_ALIGN(size);
++	bo->attrs = DMA_ATTR_WRITE_COMBINE;
+ 
+-	count = bo->size >> PAGE_SHIFT;
++	bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
++		bo->attrs);
+ 
+-	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
+-	if (!bo->pages) {
++	if (!bo->virt) {
+ 		kfree(bo);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	for (i = 0; i < count; i++) {
+-		bo->pages[i] = alloc_page(GFP_KERNEL);
+-		if (!bo->pages[i])
+-			goto err;
+-	}
+-
+-	bo->iova = gmu->uncached_iova_base;
+-
+-	for (i = 0; i < count; i++) {
+-		ret = iommu_map(gmu->domain,
+-			bo->iova + (PAGE_SIZE * i),
+-			page_to_phys(bo->pages[i]), PAGE_SIZE,
+-			IOMMU_READ | IOMMU_WRITE);
+-
+-		if (ret) {
+-			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU buffer object\n");
+-
+-			for (i = i - 1 ; i >= 0; i--)
+-				iommu_unmap(gmu->domain,
+-					bo->iova + (PAGE_SIZE * i),
+-					PAGE_SIZE);
+-
+-			goto err;
+-		}
+-	}
+-
+-	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
+-		pgprot_writecombine(PAGE_KERNEL));
+-	if (!bo->virt)
+-		goto err;
+-
+-	/* Align future IOVA addresses on 1MB boundaries */
+-	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
+-
+ 	return bo;
+-
+-err:
+-	for (i = 0; i < count; i++) {
+-		if (bo->pages[i])
+-			__free_pages(bo->pages[i], 0);
+-	}
+-
+-	kfree(bo->pages);
+-	kfree(bo);
+-
+-	return ERR_PTR(-ENOMEM);
+-}
+-
+-static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+-{
+-	int ret;
+-
+-	/*
+-	 * The GMU address space is hardcoded to treat the range
+-	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
+-	 * between the GMU and the CPU will live in this space
+-	 */
+-	gmu->uncached_iova_base = 0x60000000;
+-
+-
+-	gmu->domain = iommu_domain_alloc(&platform_bus_type);
+-	if (!gmu->domain)
+-		return -ENODEV;
+-
+-	ret = iommu_attach_device(gmu->domain, gmu->dev);
+-
+-	if (ret) {
+-		iommu_domain_free(gmu->domain);
+-		gmu->domain = NULL;
+-	}
+-
+-	return ret;
+ }
+ 
+ /* Return the 'arc-level' for the given frequency */
+@@ -1289,10 +1208,6 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+ 
+ 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+ 
+-	iommu_detach_device(gmu->domain, gmu->dev);
+-
+-	iommu_domain_free(gmu->domain);
+-
+ 	free_irq(gmu->gmu_irq, gmu);
+ 	free_irq(gmu->hfi_irq, gmu);
+ 
+@@ -1313,7 +1228,13 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 
+ 	gmu->dev = &pdev->dev;
+ 
+-	of_dma_configure(gmu->dev, node, true);
++	/* Pass force_dma false to require the DT to set the dma region */
++	ret = of_dma_configure(gmu->dev, node, false);
++	if (ret)
++		return ret;
++
++	/* Set the mask after the of_dma_configure() */
++	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
+ 
+ 	/* Fow now, don't do anything fancy until we get our feet under us */
+ 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
+@@ -1325,11 +1246,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	if (ret)
+ 		goto err_put_device;
+ 
+-	/* Set up the IOMMU context bank */
+-	ret = a6xx_gmu_memory_probe(gmu);
+-	if (ret)
+-		goto err_put_device;
+-
+ 	/* Allocate memory for for the HFI queues */
+ 	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+ 	if (IS_ERR(gmu->hfi))
+@@ -1375,11 +1291,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ err_memory:
+ 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+ 
+-	if (gmu->domain) {
+-		iommu_detach_device(gmu->domain, gmu->dev);
+-
+-		iommu_domain_free(gmu->domain);
+-	}
+ 	ret = -ENODEV;
+ 
+ err_put_device:
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+index 2af91ed..d10cddd 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+@@ -12,8 +12,8 @@
+ struct a6xx_gmu_bo {
+ 	void *virt;
+ 	size_t size;
+-	u64 iova;
+-	struct page **pages;
++	dma_addr_t iova;
++	unsigned long attrs;
+ };
+ 
+ /*
+@@ -49,9 +49,6 @@ struct a6xx_gmu {
+ 	int hfi_irq;
+ 	int gmu_irq;
+ 
+-	struct iommu_domain *domain;
+-	u64 uncached_iova_base;
+-
+ 	struct device *gxpd;
+ 
+ 	int idle_level;
+-- 
+2.7.4
