@@ -2,167 +2,85 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEC9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB508C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F90A21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820172173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nYaQcCZh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5K1pb1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgCBMkk (ORCPT
+        id S1727627AbgCBMm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:40:40 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43640 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727361AbgCBMkj (ORCPT
+        Mon, 2 Mar 2020 07:42:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34031 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727228AbgCBMm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:40:39 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022CRZP1031014;
-        Mon, 2 Mar 2020 13:40:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=od867/NqQ0zAhpHSh/6j6bad1lhZJnIKCi8AtM5gVIw=;
- b=nYaQcCZhWBqb0nnxjzdyHnMifIGYDGQmQCWWG5kdWwKEKVrNwC3nRiXqsAi90ofqa3xj
- Z2UsyY28A1h8UIB63mu4eEJ5ksxdcuhzyFZJ3rgH2dLzu2pHs0hMtJJxpm76LgCPxBg7
- RGUKdLHwmMEBjLy+KjYAPeQVGkKWuzYRr5aCrh+bR3c7WQ4RUGYHUaD9gn7X5Z6rBdka
- ZiCS6Um2JKrBMYxenV9juKDDpeO3x6hpaTG2JSlz3I3Xhv46QEk7oCJSBj97bo+3wL+Z
- 616UieuuMdLVeQjCMYab5TuNyw2lp2cSMZbMqVTe5fGjBTj4sg3bpI9tMTiiR241Fpo5 aw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yfea6khun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Mar 2020 13:40:09 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A724D100034;
-        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 943FD2C38B1;
-        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar
- 2020 13:40:02 +0100
-Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
- information
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-CC:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Ian Lepore <ian@freebsd.org>
-References: <20200221161418.20225-1-alexandre.torgue@st.com>
- <20200221161418.20225-2-alexandre.torgue@st.com>
- <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
- <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <866a8137-4152-da6e-f6d6-03aa245ddbb0@st.com>
-Date:   Mon, 2 Mar 2020 13:40:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 07:42:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583152977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jBO8EEOjfex8u0t23SNnR9VcuJJE9A6M8SfZYPDK40Y=;
+        b=Y5K1pb1eDU1H+OS0IKuMxkUc8tvZPft1+rY27mSqT7Mi1Us+NHXC4ZII6bP6nT3b0e5bC6
+        wemE+D3jvmsImU/3UT4wjG0YRtd2LSGz1fWzzZX7gaXa8+i2OcLxPCnlejwkMhzm6Regeu
+        9WzuNbkm1B0GZY3DnfCMZjM/OU7sFmQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-327-VdUHncH4OyKzclJAazqbEg-1; Mon, 02 Mar 2020 07:42:56 -0500
+X-MC-Unique: VdUHncH4OyKzclJAazqbEg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9ED5F10CE780;
+        Mon,  2 Mar 2020 12:42:54 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-127.ams2.redhat.com [10.36.116.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F46B5DA2C;
+        Mon,  2 Mar 2020 12:42:52 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+References: <96563.1582901612@warthog.procyon.org.uk>
+        <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+        <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+        <20200302115239.pcxvej3szmricxzu@wittgenstein>
+        <8736arnel9.fsf@oldenburg2.str.redhat.com>
+        <20200302121959.it3iophjavbhtoyp@wittgenstein>
+        <20200302123510.bm3a2zssohwvkaa4@wittgenstein>
+Date:   Mon, 02 Mar 2020 13:42:50 +0100
+In-Reply-To: <20200302123510.bm3a2zssohwvkaa4@wittgenstein> (Christian
+        Brauner's message of "Mon, 2 Mar 2020 13:35:10 +0100")
+Message-ID: <87y2sjlygl.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_03:2020-03-02,2020-03-02 signatures=0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Christian Brauner:
 
+> One difference to openat() is that openat2() doesn't silently ignore
+> unknown flags. But I'm not sure that would matter for iplementing
+> openat() via openat2() since there are no flags that openat() knows about
+> that openat2() doesn't know about afaict. So the only risks would be
+> programs that accidently have a bit set that isn't used yet.
 
-On 2/21/20 8:38 PM, Rob Herring wrote:
-> On Fri, Feb 21, 2020 at 11:52 AM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
->>> This commit adds a new script to create a file (in dts file directory) with
->>> some information (date, Linux version, user). This file could then be used
->>> to populate "build-info" property in every dts file that would use this
->>> build information:
->>>
->>> Example:
->>>
->>> / {
->>>        ...
->>>        build-info = /incbin/("dtb-build.txt");
->>
->> s/.txt/.dtsi/
->>
->> and same wherever the file name is used.
->>
->>
->>>        ...
->>> };
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>
->>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->>> index bae62549e3d2..a5af84ef4ffc 100644
->>> --- a/scripts/Makefile.lib
->>> +++ b/scripts/Makefile.lib
->>> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
->>>   # DTC
->>>   # ---------------------------------------------------------------------------
->>>   DTC ?= $(objtree)/scripts/dtc/dtc
->>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
->>>
->>>   # Disable noisy checks by default
->>>   ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->>> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->>>
->>>   quiet_cmd_dtc = DTC     $@
->>>   cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->>> +     $(DTB_GEN_INFO) $(src) ; \
->>>        $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
->>>        $(DTC) -O $(2) -o $@ -b 0 \
->>>                $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->>> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
->>> new file mode 100755
->>> index 000000000000..0cd8bd98e410
->>> --- /dev/null
->>> +++ b/scripts/gen_dtb_build_info.sh
->>> @@ -0,0 +1,10 @@
->>> +#!/bin/bash
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +
->>> +set -o nounset
->>> +
->>> +DTB_DIR=$1
->>> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
->>> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
->>
->> I would remove the filler words "From", "by", "the", and the trailing
->> period ('.').
->>
->> <bikeshed>
->> You might consider using a format more like the Linux
->> kernel version line, which puts parenthesis around the
->> compiled by info.
-> 
-> IMO, we should use exactly the Linux kernel version line. Or exactly
-> the u-boot version line when built in u-boot.
+Will there be any new flags for openat in the future?  If not, we can
+just use a constant mask in an openat2-based implementation of openat.
 
-I agree to keep the same format than Linux banner. But does it make 
-sense to keep uts version, config flags ?
+Thanks,
+Florian
 
-regards
-Alex
-
-> 
-> Rob
-> 
