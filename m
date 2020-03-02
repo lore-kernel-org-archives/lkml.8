@@ -2,327 +2,533 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AE0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7622217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C73F21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UhnLiIh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCBP56 (ORCPT
+        id S1727445AbgCBP6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:57:58 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46177 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgCBP56 (ORCPT
+        Mon, 2 Mar 2020 10:58:03 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36436 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbgCBP6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:57:58 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g96so10156336otb.13;
-        Mon, 02 Mar 2020 07:57:57 -0800 (PST)
+        Mon, 2 Mar 2020 10:58:02 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g83so8953491wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:58:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wBpVpn8ZSs1N7QbQ5sNsHjPK34mnLUxBzYi8A5yEBlI=;
+        b=UhnLiIh3pEdwgGmvF52iHWYWx5VjHGvhSY3RsScd5IXgVX4CLxJ/iNeevELqCEBisX
+         gEKV1RJevQItZoZFaLq0cyXpvDeZkntwyn9uKdqhwfLDl79xlR1K3feH/J9X0SJwg8DD
+         kIo/C0k/+4Hxri73IC1OBbM125H/Y/8K+0qyO62GMCPx140+CxexTLYpnrJ6ZkQuq3sV
+         4BkpE5f5u4DYqRqS6MiiDmt198ks0U2vdfllC5LBtAAj14erRfPCyKgHtrbHbgaRa7sJ
+         sWHUksBOhGcW6yl41SxZ4/o++0c/09C1Qw194eYdDn1GjJO2v7+sS7sL2DbIuy8emeJZ
+         Ntig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nito/nrZsWtOKekEZGAYljgXMNzrk2/5S3aE/Pp6hpw=;
-        b=TQLDPo0hedRA5ly3wzJN2d18s/slzog7hkmx7qYItkl/maRDpnuKo4J0W3wo+or3FW
-         evEeS6hQ9Q123MkMH/YRvnKefV1Y7CkQPtJ8X987sU9OSqXOiiciSM+fzkY8qMI4h3gd
-         hkAUt2yLG0zBY40MQhjKup6vcc2lpNYEyqJjFncXGzMD/020tEGEAVE14BQ3DOXL+3Fh
-         ivjYXgxCeeb31BkG9I0nLeh8IPJ2IuuABltmj2GGSNt8eRr3R9CgVphM2A3p7xBn2j+C
-         1UD5iyU9DrRSElnh1Lgkb4n6Cu39j0jPHmEAbyYcamSkohju8T9yjmsbOxq5dpFw3DW0
-         b4UA==
-X-Gm-Message-State: APjAAAXjn+kAZeIbZmOuwKJfZevDQKf9wgDQm554a3J5y7BAfE4DC5PF
-        E05vLcKvnyB5QmGK2bAPppGtQrC+jTK86++fpcQ=
-X-Google-Smtp-Source: APXvYqxZfeCMUCmPDo150isft8U19jV/qbujmuP/cdQANvFKK6654BGfmN/KgnrbsmahhA2IQQrudvzS3H3CA0ko0Eg=
-X-Received: by 2002:a05:6830:100e:: with SMTP id a14mr13887882otp.297.1583164677024;
- Mon, 02 Mar 2020 07:57:57 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wBpVpn8ZSs1N7QbQ5sNsHjPK34mnLUxBzYi8A5yEBlI=;
+        b=qSf89N1F/lhjTVHC05Z/QySDeG/oLO6hmUUVDtSw2HH80v4YT1lB0lZWYGYRF43Uv7
+         RSk70kXOy6MomEeQ1k01yUJo0lYhmWop1wuG4CZWpWZHv2dtIsvN5777nBp/4VOBalS5
+         QFFUtbF5gCT5Yn7hYiFoJlOTrVWJ0iTJgwfE5dk3f89OTLY6+wxdrbKR6E/LQAJHrS9I
+         nTnz5QaLNWd9LWLjYusn/UbYULq60isHUxYTC+D8YSqdULg9cdgQ6SfwQx1i1yZ7uuTB
+         JEOI7BtqWfwbTrlBZB7He0hGIth97CT3J251K0YiQ1S1LlJxLunelPYnJLRJFfQY3soD
+         dL2w==
+X-Gm-Message-State: ANhLgQ3DWmjX98T1uJtZ5Vx1T8sAJu9o0pg9ww/A97nkb9LEb404F5JU
+        8Ft7HgIfzR099kWQf7cUH0yNGyv+jhYSYA==
+X-Google-Smtp-Source: ADFU+vuiZBFgYpeAFtkhE0uj+ytndQ+SgWww41wjRvO3uBOPqGsYbJiUjzKxJV3I7jEUMx9a4vU1Pw==
+X-Received: by 2002:a1c:1f0c:: with SMTP id f12mr75898wmf.179.1583164679438;
+        Mon, 02 Mar 2020 07:57:59 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a70sm15760482wme.28.2020.03.02.07.57.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:57:58 -0800 (PST)
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format
+ negociation
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-5-narmstrong@baylibre.com>
+ <20200302101815.GJ11960@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <b8e65d6c-e206-9289-947e-6ab5bb3967af@baylibre.com>
+Date:   Mon, 2 Mar 2020 16:57:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228170210.18252-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 16:57:35 +0100
-Message-ID: <CAMuHMdUn9njDRWZPcSD87YuejmhNvDK3pUqL5kXNX6KA-8Y72g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200302101815.GJ11960@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+On 02/03/2020 11:18, Laurent Pinchart wrote:
+> Hi Neil,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Feb 06, 2020 at 08:18:27PM +0100, Neil Armstrong wrote:
+>> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to negociate
+>> the possible output and input formats for the current mode and monitor,
+>> and use the negotiated formats in a basic atomic_check callback.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
+>>  1 file changed, 268 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> index fec4a4bcd1fe..15048ad694bc 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+>>  	hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
+>>  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
+>>  
+>> -	/* TOFIX: Get input format from plat data or fallback to RGB888 */
+>>  	if (hdmi->plat_data->input_bus_format)
+>>  		hdmi->hdmi_data.enc_in_bus_format =
+>>  			hdmi->plat_data->input_bus_format;
+>> -	else
+>> +	else if (hdmi->hdmi_data.enc_in_bus_format == MEDIA_BUS_FMT_FIXED)
+>>  		hdmi->hdmi_data.enc_in_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>>  
+>>  	/* TOFIX: Get input encoding from plat data or fallback to none */
+>> @@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+>>  	else
+>>  		hdmi->hdmi_data.enc_in_encoding = V4L2_YCBCR_ENC_DEFAULT;
+>>  
+>> -	/* TOFIX: Default to RGB888 output format */
+>> -	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>> +	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
+>> +		hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>>  
+>>  	hdmi->hdmi_data.pix_repet_factor = 0;
+>>  	hdmi->hdmi_data.hdcp_enable = 0;
+>> @@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs =
+>>  	.atomic_check = dw_hdmi_connector_atomic_check,
+>>  };
+>>  
+>> +/*
+>> + * Possible output formats :
+>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48,
+>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36,
+>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30,
+>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24,
+>> + * - MEDIA_BUS_FMT_YUV16_1X48,
+>> + * - MEDIA_BUS_FMT_RGB161616_1X48,
+>> + * - MEDIA_BUS_FMT_UYVY12_1X24,
+>> + * - MEDIA_BUS_FMT_YUV12_1X36,
+>> + * - MEDIA_BUS_FMT_RGB121212_1X36,
+>> + * - MEDIA_BUS_FMT_UYVY10_1X20,
+>> + * - MEDIA_BUS_FMT_YUV10_1X30,
+>> + * - MEDIA_BUS_FMT_RGB101010_1X30,
+>> + * - MEDIA_BUS_FMT_UYVY8_1X16,
+>> + * - MEDIA_BUS_FMT_YUV8_1X24,
+>> + * - MEDIA_BUS_FMT_RGB888_1X24,
+>> + */
+> 
+> I'd drop this comment as I don't think it brings much, except for a risk
+> of getting out of sync with the implementation below :-)
 
-CC linux-media
+I know it's redundant, but I'll prefer having it here to clarify which bus formats
+are handled.
 
-On Fri, Feb 28, 2020 at 6:02 PM Lad Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> This patch adds support AISTARVISION MIPI Adapter V2.1 board connected
-> to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> which have the camera endpoint nodes with disabled status and in
-> r8a774c0-ek874-mipi-2.1.dts file VIN/CSI nodes are enabled. By default
-> imx219 endpoint is tied with CSI2.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+>> +
+>> +/* Can return a maximum of 12 possible output formats for a mode/connector */
+>> +#define MAX_OUTPUT_SEL_FORMATS	12
+> 
+> I count 11 below.
 
-Thanks for your patch!
+Exact !
 
-> Geert/Rob since the imx219 driver is yet to make into mainline
-> but has been merged into media-subsystem I would like to take
-> this patch via media-tree.
+> 
+>> +
+>> +static u32 *dw_hdmi_bridge_atomic_get_output_bus_fmts(struct drm_bridge *bridge,
+>> +					struct drm_bridge_state *bridge_state,
+>> +					struct drm_crtc_state *crtc_state,
+>> +					struct drm_connector_state *conn_state,
+>> +					unsigned int *num_output_fmts)
+>> +{
+>> +	struct drm_connector *conn = conn_state->connector;
+>> +	struct drm_display_info *info = &conn->display_info;
+>> +	struct drm_display_mode *mode = &crtc_state->mode;
+>> +	u8 max_bpc = conn_state->max_requested_bpc;
+>> +	bool is_hdmi2_sink = info->hdmi.scdc.supported ||
+>> +			     (info->color_formats & DRM_COLOR_FORMAT_YCRCB420);
+>> +	u32 *output_fmts;
+>> +	int i = 0;
+> 
+> i is never negative, you can make it an unsigned int.
+ok
 
-Usually DTS patches are merged through renesas-devel and arm-soc, not
-through a driver's subsystems tree.  This is done to avoid merge
-conflicts.  I prefer not to deviate from that, unless there is a very
-good reason to do so.
+> 
+>> +
+>> +	*num_output_fmts = 0;
+>> +
+>> +	output_fmts = kcalloc(MAX_OUTPUT_SEL_FORMATS, sizeof(*output_fmts),
+>> +			      GFP_KERNEL);
+>> +	if (!output_fmts)
+>> +		return NULL;
+>> +
+>> +	/*
+>> +	 * If the current mode enforces 4:2:0, force the output but format
+>> +	 * to 4:2:0 and do not add the YUV422/444/RGB formats
+>> +	 */
+>> +	if (conn->ycbcr_420_allowed &&
+>> +	    (drm_mode_is_420_only(info, mode) ||
+>> +	     (is_hdmi2_sink && drm_mode_is_420_also(info, mode)))) {
+>> +
+>> +		/* Order bus formats from 16bit to 8bit if supported */
+>> +		if (max_bpc >= 16 && info->bpc == 16 &&
+>> +		    (info->hdmi.y420_dc_modes & DRM_EDID_YCBCR420_DC_48))
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY16_0_5X48;
+>> +
+>> +		if (max_bpc >= 12 && info->bpc >= 12 &&
+>> +		    (info->hdmi.y420_dc_modes & DRM_EDID_YCBCR420_DC_36))
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY12_0_5X36;
+>> +
+>> +		if (max_bpc >= 10 && info->bpc >= 10 &&
+>> +		    (info->hdmi.y420_dc_modes & DRM_EDID_YCBCR420_DC_30))
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY10_0_5X30;
+>> +
+>> +		/* Default 8bit fallback */
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+>> +
+>> +		*num_output_fmts = i;
+>> +
+>> +		return output_fmts;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Order bus formats from 16bit to 8bit and from YUV422 to RGB
+>> +	 * if supported. In any case the default RGB888 format is added
+>> +	 */
+>> +
+>> +	if (max_bpc >= 16 && info->bpc == 16) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +	}
+>> +
+>> +	if (max_bpc >= 12 && info->bpc >= 12) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +	}
+>> +
+>> +	if (max_bpc >= 10 && info->bpc >= 10) {
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +
+>> +		if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +			output_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +	}
+>> +
+>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB422)
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +
+>> +	if (info->color_formats & DRM_COLOR_FORMAT_YCRCB444)
+>> +		output_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +
+>> +	/* Default 8bit RGB fallback */
+>> +	output_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +
+>> +	*num_output_fmts = i;
+>> +
+>> +	return output_fmts;
+>> +}
+>> +
+>> +/*
+>> + * Possible input formats :
+>> + * - MEDIA_BUS_FMT_RGB888_1X24
+>> + * - MEDIA_BUS_FMT_YUV8_1X24
+>> + * - MEDIA_BUS_FMT_UYVY8_1X16
+>> + * - MEDIA_BUS_FMT_UYYVYY8_0_5X24
+>> + * - MEDIA_BUS_FMT_RGB101010_1X30
+>> + * - MEDIA_BUS_FMT_YUV10_1X30
+>> + * - MEDIA_BUS_FMT_UYVY10_1X20
+>> + * - MEDIA_BUS_FMT_UYYVYY10_0_5X30
+>> + * - MEDIA_BUS_FMT_RGB121212_1X36
+>> + * - MEDIA_BUS_FMT_YUV12_1X36
+>> + * - MEDIA_BUS_FMT_UYVY12_1X24
+>> + * - MEDIA_BUS_FMT_UYYVYY12_0_5X36
+>> + * - MEDIA_BUS_FMT_RGB161616_1X48
+>> + * - MEDIA_BUS_FMT_YUV16_1X48
+>> + * - MEDIA_BUS_FMT_UYYVYY16_0_5X48
+>> + */
+> 
+> Same here.
 
-Is there any dependency on the code in the media tree that I'm missing?
-Once DT bindings have been accepted in a subsystem maintainer's tree,
-you can start using them in DTS files.
+I'll prefer keeping these aswell
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +/ {
-> +       ov5645_vdddo_1v8: 1p8v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vdddo";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       ov5645_vdda_2v8: 2p8v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vdda";
-> +               regulator-min-microvolt = <2800000>;
-> +               regulator-max-microvolt = <2800000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       ov5645_vddd_1v5: 1p5v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vddd";
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       imx219_vana_2v8: 2p8v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vana";
-> +               regulator-min-microvolt = <2800000>;
-> +               regulator-max-microvolt = <2800000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       imx219_vdig_1v8: 1p8v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vdig";
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       imx219_vddl_1v2: 1p2v {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "camera_vddl";
-> +               regulator-min-microvolt = <1200000>;
-> +               regulator-max-microvolt = <1200000>;
-> +               regulator-always-on;
-> +       };
-> +
-> +       imx219_clk: imx219_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <24000000>;
-> +       };
-> +};
-> +
-> +&MIPI_PARENT_I2C {
-> +       ov5645: ov5645@3c {
-> +               compatible = "ovti,ov5645";
-> +               reg = <0x3c>;
-> +               status = "disabled";
+> 
+>> +
+>> +/* Can return a maximum of 4 possible input formats for an output format */
+>> +#define MAX_INPUT_SEL_FORMATS	4
+> 
+> As Boris pointed out, that should be 3.
 
-Is there any real need to disable this node here?
-Do you envision anyone including this .dtsi file, and not enabling this
-node?
+Yep
 
-> +
-> +               clock-names = "xclk";
-> +
-> +               vdddo-supply = <&ov5645_vdddo_1v8>;
-> +               vdda-supply = <&ov5645_vdda_2v8>;
-> +               vddd-supply = <&ov5645_vddd_1v5>;
-> +
-> +               port@0 {
+> 
+>> +
+>> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
+>> +					struct drm_bridge_state *bridge_state,
+>> +					struct drm_crtc_state *crtc_state,
+>> +					struct drm_connector_state *conn_state,
+>> +					u32 output_fmt,
+>> +					unsigned int *num_input_fmts)
+>> +{
+>> +	u32 *input_fmts;
+>> +	int i = 0;
+> 
+> i is never negative, you can make it an unsigned int.
+ok
 
-DT bindings say "port", without unit-address.
+> 
+>> +
+>> +	*num_input_fmts = 0;
+>> +
+>> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+>> +			     GFP_KERNEL);
+>> +	if (!input_fmts)
+>> +		return NULL;
+>> +
+>> +	switch (output_fmt) {
+>> +	/* 8bit */
+>> +	case MEDIA_BUS_FMT_RGB888_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV8_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+>> +		break;
+>> +
+>> +	/* 10bit */
+>> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV10_1X30:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+>> +		break;
+>> +
+>> +	/* 12bit */
+>> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV12_1X36:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+>> +		break;
+>> +
+>> +	/* 16bit */
+>> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +		break;
+>> +	case MEDIA_BUS_FMT_YUV16_1X48:
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+>> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+>> +		break;
+>> +
+>> +	/* 420 */
+> 
+> s/420/YUV 4:2:0/ ?
 
-> +                       ov5645_ep: endpoint {
-> +                       };
-> +               };
-> +       };
-> +
-> +       rpi_v2_camera: imx219@10 {
-> +               compatible = "sony,imx219";
-> +               reg = <0x10>;
-> +               status = "disabled";
+Looks better
 
-Likewise.
+> 
+>> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+>> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+>> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+>> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+>> +		input_fmts[i++] = output_fmt;
+>> +		break;
+>> +	}
+>> +
+>> +	*num_input_fmts = i;
+>> +
+>> +	if (*num_input_fmts == 0) {
+>> +		kfree(input_fmts);
+>> +		input_fmts = NULL;
+>> +	}
+>> +
+>> +	return input_fmts;
+>> +}
+>> +
+>> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+>> +				       struct drm_bridge_state *bridge_state,
+>> +				       struct drm_crtc_state *crtc_state,
+>> +				       struct drm_connector_state *conn_state)
+>> +{
+>> +	struct dw_hdmi *hdmi = bridge->driver_private;
+>> +
+>> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+> 
+> s/%x/0x%04x/
+> 
+>> +			bridge_state->output_bus_cfg.format);
+> 
+> Misalignment ?
 
-> +
-> +               VANA-supply = <&imx219_vana_2v8>;
-> +               VDIG-supply = <&imx219_vdig_1v8>;
-> +               VDDL-supply = <&imx219_vddl_1v2>;
-> +               clocks = <&imx219_clk>;
-> +
-> +               port@0 {
+Fixed
 
-DT bindings say "port", without unit-address...
+> 
+>> +
+>> +	hdmi->hdmi_data.enc_out_bus_format =
+>> +			bridge_state->output_bus_cfg.format;
+>> +
+>> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+>> +			bridge_state->input_bus_cfg.format);
+> 
+> Same here. I would combine both messages:
+> 
+> 	dev_dbg(hdmi->dev, "input format: 0x%04x, output format: 0x04x\n",
+> 		bridge_state->input_bus_cfg.format,
+> 		bridge_state->output_bus_cfg.format);
 
-> +                       reg = <0>;
+Looks better
 
-... and thus no "reg" property.
+> 
+>> +
+>> +	hdmi->hdmi_data.enc_in_bus_format =
+>> +			bridge_state->input_bus_cfg.format;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>>  {
+>>  	struct dw_hdmi *hdmi = bridge->driver_private;
+>> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+>>  	.atomic_reset = drm_atomic_helper_bridge_reset,
+>>  	.attach = dw_hdmi_bridge_attach,
+>>  	.detach = dw_hdmi_bridge_detach,
+>> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+>> +	.atomic_get_output_bus_fmts = dw_hdmi_bridge_atomic_get_output_bus_fmts,
+>> +	.atomic_get_input_bus_fmts = dw_hdmi_bridge_atomic_get_input_bus_fmts,
+>>  	.enable = dw_hdmi_bridge_enable,
+>>  	.disable = dw_hdmi_bridge_disable,
+>>  	.mode_set = dw_hdmi_bridge_mode_set,
+>> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>>  
+>>  	hdmi->bridge.driver_private = hdmi;
+>>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+>> +
+> 
+> This seems unrelated.
 
-> +                       imx219_ep0: endpoint {
-> +                       };
-> +               };
-> +       };
-> +};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> new file mode 100644
-> index 000000000000..435b7f62d88d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> + * connected with aistarvision-mipi-v2-adapter board
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +#include "r8a774c0-ek874.dts"
-> +#define MIPI_PARENT_I2C i2c3
-> +#include "aistarvision-mipi-adapter-2.1.dtsi"
-> +
-> +/ {
-> +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> +};
-> +
-> +&i2c3 {
-> +       status = "okay";
-> +};
-> +
-> +&vin4 {
-> +       status = "okay";
-> +};
-> +
-> +&vin5 {
-> +       status = "okay";
-> +};
-> +
-> +&csi40 {
-> +       status = "okay";
-> +
-> +       ports {
-> +               port@0 {
-> +                       reg = <0>;
-> +
-> +                       csi40_in: endpoint {
-> +                               clock-lanes = <0>;
-> +                               data-lanes = <1 2>;
-> +                               remote-endpoint = <&imx219_ep0>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&ov5645 {
-> +       /* uncomment status and remote-endpoint properties to tie ov5645
-> +        * to CSI2 also make sure remote-endpoint for imx219 camera is
-> +        * commented and remote endpoint in csi40_in is ov5645_ep
-> +        */
-> +       /* status = "okay"; */
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
+Yep
 
-#{address,size}-cells not needed.
+> 
+>>  #ifdef CONFIG_OF
+>>  	hdmi->bridge.of_node = pdev->dev.of_node;
+>>  #endif
+> 
 
-> +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> +
-> +       clocks = <&cpg CPG_MOD 716>;
-> +       clock-frequency = <24000000>;
-
-I know this is dictated by the DT bindings for the ov5645 camera, but
-specifying a clock rate is usually done through assigned-clock-rates,
-cfr.  Documentation/devicetree/bindings/clock/clock-bindings.txt.
-
-> +
-> +       port@0 {
-
-port {
-
-> +               ov5645_ep: endpoint {
-> +                       clock-lanes = <0>;
-> +                       data-lanes = <1 2>;
-> +                       /* remote-endpoint = <&csi40_in>; */
-> +               };
-> +       };
-> +};
-> +
-> +&rpi_v2_camera {
-> +       status = "okay";
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       port@0 {
-> +               reg = <0>;
-
-port {
-
-> +               imx219_ep0: endpoint {
-> +                       clock-lanes = <0>;
-> +                       data-lanes = <1 2>;
-> +                       remote-endpoint = <&csi40_in>;
-> +                       link-frequencies = /bits/ 64 <456000000>;
-> +               };
-> +       };
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Neil
