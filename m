@@ -2,106 +2,118 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA66C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97FDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174022173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B15F2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YdktfZqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgCBMPQ (ORCPT
+        id S1727779AbgCBMPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:15:16 -0500
-Received: from gate.crashing.org ([63.228.1.57]:40759 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgCBMPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:15:16 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 022CEvNK020865;
-        Mon, 2 Mar 2020 06:14:58 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 022CEtSw020859;
-        Mon, 2 Mar 2020 06:14:55 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Mon, 2 Mar 2020 06:14:55 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>
-Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
-Message-ID: <20200302121455.GH22482@gate.crashing.org>
-References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com> <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com> <87pndvrpvj.fsf@mpe.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pndvrpvj.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        Mon, 2 Mar 2020 07:15:37 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50678 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbgCBMPg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:15:36 -0500
+Received: by mail-pj1-f68.google.com with SMTP id nm14so1622358pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZGpFs/2Hpvp5EBjhtEPYFMiCDK4EwWNSDCEw0ZF9yM=;
+        b=YdktfZqsllSe62wYX660jiqDRS+EalzZnMQ1BeqTSt6UePbz+K0FicX2SsE/V0cujA
+         5xWBPQ/CoyG8cCbk0OYdp++ETje+/Zb3758uFx7Qekbu/aW/7Z9P7O5b1yiYOpyhmqGv
+         lokSV/Y8mwFqiA+CYWGVKLnJYUt+R77uSUoac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZGpFs/2Hpvp5EBjhtEPYFMiCDK4EwWNSDCEw0ZF9yM=;
+        b=A1efomTt9lk1F0ZIF/cJlobpSvQ4Vop/IlyGVvz+6RcUlSpc7tFMAeTGibsi1sYeDB
+         +5Dx48csQ0bgkCpUxRC7Y+9Fy/Y/ki59p/WqA7og6PuWvfCqAEttBAkl1x5joKm2LkWH
+         BYCGQ9OYuFWFDcCgRtV0KbU31ma8aGn9EKVoKUa/+h2iGFdi8FHETFV7MlTkLpgLShim
+         yEmyWbd9RBMJ+wHCsNApedLI3MgrbOYxwi4mGFGFkeRYrbADfDptziwWH6cAlp2j+msN
+         mCPsUXvdq1E6JHPaBH6rC6Fvv2zLJAFRiP78QrYKZZO7tc4fCqtxabhTMRZG+B2iBMrJ
+         2e3Q==
+X-Gm-Message-State: APjAAAX+ws1RkmlFFR3yaT9Lk7gO5/YquwlqfXDsj5Z3lMZy4Gd2PcIv
+        XK93EkQLe1Bwa5qDIV8NAdqRTcsI/Tk=
+X-Google-Smtp-Source: APXvYqwRMn3OTkeHmnSwspvfRaPVPBDR27JwwVPH2eKLlGUxm3/qGiUC5qrtz1TVnCC2dlGf61Hqxg==
+X-Received: by 2002:a17:902:c203:: with SMTP id 3mr18521523pll.261.1583151334258;
+        Mon, 02 Mar 2020 04:15:34 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:30f2:7a9c:387e:6c7])
+        by smtp.gmail.com with ESMTPSA id g4sm2291857pgk.24.2020.03.02.04.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 04:15:33 -0800 (PST)
+From:   David Stevens <stevensd@chromium.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Stevens <stevensd@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: [PATCH v2 0/4] Support virtio cross-device resources
+Date:   Mon,  2 Mar 2020 21:15:20 +0900
+Message-Id: <20200302121524.7543-1-stevensd@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 09:51:44PM +1100, Michael Ellerman wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> > Michael, what tends to be the triggers for people using
-> > PPC_DISABLE_WERROR? Do you have reports for it?
-> 
-> My memory is that we have had very few reports of it actually causing
-> problems. But I don't have hard data to back that up.
+This patchset implements the current proposal for virtio cross-device
+resource sharing [1], with minor changes based on recent comments. It
+is expected that this will be used to import virtio resources into the
+virtio-video driver currently under discussion [2].
 
-I build all archs with GCC trunk.
+This patchset adds a new hook to dma-buf, for querying the dma-buf's
+underlying virtio UUID. This hook is then plumbed through DRM PRIME
+buffers, and finally implemented in virtgpu.
 
-It always breaks for me, with thousands of errors, which is why since
-many years I carry 21 lines of patch to thoroughly disable -Werror for
-the powerpc arch.  It takes over a year from when a warning is added to
-the kernel taking care of it -- and of course, I build with the current
-development version of the compiler, so I get to see many misfiring
-warnings and other fallout as well.  (Currently there are more than 100
-warnings, this is way too many to consider attacking that as well).
+[1] https://markmail.org/thread/jsaoqy7phrqdcpqu
+[2] https://markmail.org/thread/p5d3k566srtdtute
 
-> It has tripped up the Clang folks, but that's partly because they're
-> building clang HEAD, and also because ~zero powerpc kernel developers
-> are building regularly with clang. I'm trying to fix the latter ...
+v1 -> v2 changes:
+ - Move get_uuid callback into main dma-buf ops (instead of placing it
+   in a new flavor of dma-buf).
+ - Rename new virtio commands and feature flag, and pull uapi changes
+   into their own patch.
 
-Is anyone building regularly with GCC HEAD?  Power or any other arch?
+David Stevens (4):
+  dma-buf: add support for virtio exported objects
+  drm/prime: add support for virtio exported objects
+  virtio-gpu: add VIRTIO_GPU_F_RESOURCE_UUID feature
+  drm/virtio: Support virtgpu exported resources
 
-> And then building with GCC head sometimes requires disabling -Werror
-> because of some new warning, sometimes valid sometimes not.
+ drivers/dma-buf/dma-buf.c              | 14 ++++++
+ drivers/gpu/drm/drm_prime.c            | 27 +++++++++++
+ drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 ++
+ drivers/gpu/drm/virtio/virtgpu_drv.h   | 19 ++++++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
+ drivers/gpu/drm/virtio/virtgpu_prime.c | 48 ++++++++++++++++++--
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 62 ++++++++++++++++++++++++++
+ include/drm/drm_drv.h                  | 15 +++++++
+ include/linux/dma-buf.h                | 22 +++++++++
+ include/uapi/linux/virtio_gpu.h        | 19 ++++++++
+ 10 files changed, 230 insertions(+), 3 deletions(-)
 
-Yes.  And never worth breaking the build for.
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
--Werror is something you use if you do not trust your developers.
-
-Warnings are not errors.  The compiler warns for things that
-heuristically look suspicious.  And it errors for things that are wrong.
-
-Some warnings have many false positives, but are so useful (find many
-nasty problems, for example) that it is worth enabling them often.
--Werror sabotages that, giving people an extra incentive to disable
-useful warnings.
-
-> I think we could mostly avoid those problems by having the option only
-> on by default for known compiler versions.
-
-Well, the kernel disables most useful warnings anyway, so that might
-even work, sure.
-
-> It'd also be nice if we could do:
-> 
->  $ make WERROR=0
-> 
-> Or something similarly obvious to turn off the WERROR option. That way
-> users don't even have to edit their .config manually, they just rerun
-> make with WERROR=0 and it works.
-
-That would be nice, yes, that would help my situation as well.
-
-
-Segher
