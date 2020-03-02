@@ -2,121 +2,171 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F48C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29097C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A92222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E566C217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZCsQqhun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCBP4X (ORCPT
+        id S1727502AbgCBP4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:56:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51348 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbgCBP4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:56:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E0C1BAF00;
-        Mon,  2 Mar 2020 15:56:06 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, wahrenst@gmx.net,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v3 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Date:   Mon,  2 Mar 2020 16:55:28 +0100
-Message-Id: <20200302155528.19505-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200302155528.19505-1-nsaenzjulienne@suse.de>
-References: <20200302155528.19505-1-nsaenzjulienne@suse.de>
+        Mon, 2 Mar 2020 10:56:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55128 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgCBP4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:56:45 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z12so11790741wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:56:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=b3t9aJpKXeK1YZcEru2kIhftxfshYeOnQjG1qownOxY=;
+        b=ZCsQqhund0Bl0vrZ/HLmfGsxW+P97mm6Y+YzcAOyx3EZrWRw4XooGbDN+QpGa1Ff+t
+         rOU1jPTnvzhZJpv8mVleUEAlwCumB5yvqkGKBZ+Reqzf2gjtxfN6p4nLZdAejZsEFZi8
+         J42O9Dz4ZbEEvFyfXMZB6YRvFfnbL6WDvEX/gJZzYq3HkjXK6UTterIVApuC45TkTFdc
+         RnsE9Gln2hTWvPcFWyUFAyuuuTZvCMALA2vcVfGRaOrMTYGUJ8nyYCpQmE+oX/mucTzO
+         b2IksTI3UbgY1wNEuHSOrKHpUmWNsZxzwSPRmbThfD5UAZjbNkckm3sBD6yAu0gjFWyw
+         D4Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=b3t9aJpKXeK1YZcEru2kIhftxfshYeOnQjG1qownOxY=;
+        b=E0uYiKNp1XMgbXCG5thpr40szbr5A7YcSlyZYrlnMRPONwrl3RGL1ypp+JB5diYiPS
+         CgoLOpX1wi/trXLeEYnGs6CwGqVNzhELcATxhSd/12IkaPCSu/4mFoygVWE2szaQdWKF
+         II3LG8J/yuBuJ0K2u7eLT8TjwXHAwNPCcyDIG0bPCfFa12aXfueM/mgOSp+5Pt+524G4
+         7SBAa6/l85oFVD/sDyqZehClAk1NtTz+PbECvcSDaXrBE0boSda+zUC22dbSvC/zvRrU
+         Re5ByFEAOqhMMBytGDCx/2nBVA4uDV3FWbfJUPAd9KT/eFK2YIqVmK5PwqRMqj5hgKUX
+         FkBA==
+X-Gm-Message-State: ANhLgQ0r6t1AmgvxUBkbic2yf8iYMVfD/qYrUDmeFRIvQ8seFJX9UiXf
+        SkpcyBUNeGkqYFTEgSCaW/1aJw==
+X-Google-Smtp-Source: ADFU+vu0GIhLzLXDBquuqbkjLhURd3FsUF9wGfdQaK+BZVVoyVOi2JRI+GBMEtGns797d/283FHtkA==
+X-Received: by 2002:a1c:5f41:: with SMTP id t62mr128259wmb.42.1583164601025;
+        Mon, 02 Mar 2020 07:56:41 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id o24sm15918154wmh.28.2020.03.02.07.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 07:56:40 -0800 (PST)
+Date:   Mon, 2 Mar 2020 15:57:16 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/19] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Message-ID: <20200302155716.GD3494@dell>
+References: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
+ <20200302142621.GB3494@dell>
+ <20200302143803.GI2667@lahna.fi.intel.com>
+ <20200302151924.GC3494@dell>
+ <20200302154205.GF1224808@smile.fi.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302154205.GF1224808@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-VideCore. Inform VideCore that VL805 was just reset.
+On Mon, 02 Mar 2020, Andy Shevchenko wrote:
 
-Also, as this creates a dependency between XHCI_PCI and VideoCore's,
-reflect that on the firmware interface Kconfg.
+> On Mon, Mar 02, 2020 at 03:19:24PM +0000, Lee Jones wrote:
+> > On Mon, 02 Mar 2020, Mika Westerberg wrote:
+> > > On Mon, Mar 02, 2020 at 02:26:21PM +0000, Lee Jones wrote:
+> > > > On Mon, 02 Mar 2020, Mika Westerberg wrote:
+> 
+> > > > > Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
+> > > > > IPC communications with minor differences. This duplication does not make
+> > > > > much sense so this series reworks the two drivers so that there is only a
+> > > > > single implementation of the SCU IPC. In addition to that the API will be
+> > > > > updated to take SCU instance pointer as an argument, and most of the
+> > > > > callers will be converted to this new API. The old API is left there but
+> > > > > the plan is to get rid the callers and then the old API as well (this is
+> > > > > something we are working with Andy Shevchenko).
+> > > > > 
+> > > > > The intel_pmc_ipc.c is then moved under MFD which suits better for this
+> > > > > kind of a driver that pretty much sets up the SCU IPC and then creates a
+> > > > > bunch of platform devices for the things sitting behind the PMC. The driver
+> > > > > is renamed to intel_pmc_bxt.c which should follow the existing conventions
+> > > > > under drivers/mfd (and it is only meant for Intel Broxton derivatives).
+> > > > > 
+> > > > > This is on top of platform-driver-x86.git/for-next branch because there is
+> > > > > already some cleanup work queued that re-organizes Kconfig and Makefile
+> > > > > entries.
+> > > > > 
+> > > > > I have tested this on Intel Joule (Broxton-M) board.
+> > > > > 
+> > > > > Changes from v6:
+> > > > > 
+> > > > >   * Added Reviewed-by tag from Andy
+> > > > >   * Expanded PMC, IPC and IA acronyms
+> > > > >   * Drop TCO_DEVICE_NAME, PUNIT_DEVICE_NAME and TELEMETRY_DEVICE_NAME
+> > > > >   * Move struct intel_pmc_dev into include/linux/mfd/intel_pmc_bxt.h
+> > > > >   * Add PMC_DEVICE_MAX to the enum and use it
+> > > > >   * Add kernel-docs for simplecmd_store() and northpeak_store()
+> > > > >   * Use if (ret) return ret; over the ternary operator
+> > > > >   * Drop "This is index X" from comments
+> > > > >   * Use acpi_has_watchdog() to determine whether iTCO_wdt is added or not.
+> > > > >   * Rename intel_scu_ipc_pdata -> intel_scu_ipc_data to make it less
+> > > > >     confusing wrt. platform data for platform drivers.
+> > > > 
+> > > > Any reason why you've dropped all my tags?
+> > > 
+> > > You mean these?
+> > > 
+> > > For my own reference:
+> > >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > > 
+> > > I wasn't really sure what to do with them. They are not in the normal
+> > > tag format I've seen so I thought you use them yourself somehow to
+> > > manage your mailboxes. I can add them back if needed.
+> > 
+> > Yes, please add them, so I can track them.
+> > 
+> > It normally means that I plan to take the set through MFD and
+> > subsequently send an immutable pull-request out to the other
+> > Maintainers once all the other Acks have been provided.
+> > 
+> > MFD handles these kinds of cross-subsystem patch-sets often.
+> 
+> This series has dependencies to PDx86 (as mentioned in cover letter).
+> 
+> What do you prefer then, me to:
+> a) prepare ib from what I have, then you take it followed by me taking your ib, or
+> b) take everything and prepare ib for you?
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Either would be fine by me.
 
----
+What kind of dependencies are they?  Are they protected by Kconfig
+options?  Another way of asking that would be to say, would this set
+throw build errors if I tried to apply and build it or would it just
+refuse to compile?
 
-Changes since v1:
- - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
-   gets compiled when needed.
-
- drivers/firmware/Kconfig      |  1 +
- drivers/usb/host/pci-quirks.c | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index ea869addc89b..40a468d712a5 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -180,6 +180,7 @@ config ISCSI_IBFT
- config RASPBERRYPI_FIRMWARE
- 	tristate "Raspberry Pi Firmware Driver"
- 	depends on BCM2835_MBOX
-+	default XHCI_PCI
- 	help
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index beb2efa71341..aee2eaa3f0e1 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -16,6 +16,9 @@
- #include <linux/export.h>
- #include <linux/acpi.h>
- #include <linux/dmi.h>
-+
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "pci-quirks.h"
- #include "xhci-ext-caps.h"
- 
-@@ -1243,11 +1246,26 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
- 
- static void quirk_usb_early_handoff(struct pci_dev *pdev)
- {
-+	int ret;
-+
- 	/* Skip Netlogic mips SoC's internal PCI USB controller.
- 	 * This device does not need/support EHCI/OHCI handoff
- 	 */
- 	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
- 		return;
-+
-+	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-+		ret = rpi_firmware_init_vl805(pdev);
-+		if (ret)
-+			/*
-+			 * Firmware might be outdated, or else, something
-+			 * failed, keep going and hope for the best.
-+			 */
-+			dev_warn(&pdev->dev,
-+				 "Failed to load VL805's firmware: %d\n",
-+				 ret);
-+	}
-+
- 	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
- 			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
