@@ -2,133 +2,131 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C1C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A6A246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F85424695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ci8NDOIm"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UKehywIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgCBJDV (ORCPT
+        id S1726946AbgCBJFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:03:21 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726674AbgCBJDV (ORCPT
+        Mon, 2 Mar 2020 04:05:54 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49986 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgCBJFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:03:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583139800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zh8cgchJm1y3v+DF2yCaLs1qahz0gPLON0uwqCUOxqk=;
-        b=ci8NDOImEG8D098RboSnMmXX1gRT/3eybqBFTGyOoAn+COLcm/ldrwCsZWtrnT+f7v5g2C
-        P3J7GmNY0ys6ZqzS8QfLKG9o+TEkXTpPtGWMp35n2pzwT/XaZDtP7wjL32JY3qjCGbqFxu
-        8s+nLTUGUy7olwWIKGaIt6wlY8e6L8Q=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-7JSrurCbO0K9rVDdU58Kvg-1; Mon, 02 Mar 2020 04:03:19 -0500
-X-MC-Unique: 7JSrurCbO0K9rVDdU58Kvg-1
-Received: by mail-wr1-f71.google.com with SMTP id j32so5471661wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 01:03:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=zh8cgchJm1y3v+DF2yCaLs1qahz0gPLON0uwqCUOxqk=;
-        b=TMdZ5QeSr/s71leoBMZ7+8RPb9KfbTuFnVB+Qbu6vrdkFeqygYxoF74w729RtoCwi1
-         s88m72nvHxflQA+huvBb6BhLcS9lyry9rWJukgWqa/47jQOz3teI8Bd92DmaxNkQ9iKD
-         hMaXnDUuLnTX0/WjHgJX2Lc43XRGzo5keZ3HRu4XfykaVcI2RNE4yY3wkhC3xuMSk8HD
-         QNuYFwviHYO1sBR4hZWZ1txyQMXzVUelGi4Z38YNefugmBrA/57VEdLlVPZvo90oUGEz
-         1PBe7MZJqc6W7BLbcRD6yArGpMxZIF5x+8ji4zjiBabwjX5M08L2Lv8jJmhawHnTBrSD
-         As6g==
-X-Gm-Message-State: APjAAAWfe6VsKWW8Gie6tF/iaXo/2KSg0qI1fI54nOZ1S/Z40gj5bxgX
-        9qJJCKzq7xGCFiH/O9JTw2WR6Qn2t/fW+jtb3LhfT8bpTJivWbNCs95rnOS7D/45AfAYtpuYAXA
-        GX9Dx4bi+XjyRS7VMt/IInGTo
-X-Received: by 2002:a5d:4b82:: with SMTP id b2mr21266753wrt.102.1583139797981;
-        Mon, 02 Mar 2020 01:03:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyC8l2PJhEaf0MiIHxDflEbFnI0+GLughJFRf0goS12IzY5n+bQfTBb90jKAb24wmRK/g4wRA==
-X-Received: by 2002:a5d:4b82:: with SMTP id b2mr21266722wrt.102.1583139797799;
-        Mon, 02 Mar 2020 01:03:17 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w1sm14213034wmc.11.2020.03.02.01.03.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 01:03:17 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/61] KVM: x86: Introduce KVM cpu caps
-In-Reply-To: <20200229183219.GA22451@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <87wo8ak84x.fsf@vitty.brq.redhat.com> <20200229183219.GA22451@linux.intel.com>
-Date:   Mon, 02 Mar 2020 10:03:16 +0100
-Message-ID: <8736ari0x7.fsf@vitty.brq.redhat.com>
+        Mon, 2 Mar 2020 04:05:53 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1287954A;
+        Mon,  2 Mar 2020 10:05:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583139951;
+        bh=VDWAsNeO8Ac3vEXOshs+XlaeJk2oAZMeE+lRCTwjq3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UKehywIxMxHb/CCQajH3sguIvjMVZxuTpfxCoiWpcAl17aU8YfSaLfF+U8+h3TENy
+         E6EoN2ZT7TPVULNqBPQR5IqLp2vIgwQDMw1X6qqy6LeKRUnf78T24zknkPZJBfgVBT
+         Ijz2XzdMkjKEbPcr0tnUmXvYAOy75kpICjkE2ojw=
+Date:   Mon, 2 Mar 2020 11:05:27 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] drm/bridge: dw-hdmi: set mtmdsclock for deep
+ color
+Message-ID: <20200302090527.GB11960@pendragon.ideasonboard.com>
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200206191834.6125-2-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi Neil and Jonas,
 
-> On Tue, Feb 25, 2020 at 04:18:38PM +0100, Vitaly Kuznetsov wrote:
->> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> 
->> >
->> >   7. Profit!
->> 
->> Would it be better or worse if we eliminate set_supported_cpuid() hook
->> completely by doing an ugly hack like (completely untested):
->> 
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index a2a091d328c6..5ad291d48e1b 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -1145,8 +1145,6 @@ struct kvm_x86_ops {
->>  
->>         void (*set_tdp_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
->>  
->> -       void (*set_supported_cpuid)(struct kvm_cpuid_entry2 *entry);
->> -
->>         bool (*has_wbinvd_exit)(void);
->>  
->>         u64 (*read_l1_tsc_offset)(struct kvm_vcpu *vcpu);
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index e8beb1e542a8..88431fc02797 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -749,6 +749,16 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->>  		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
->>  		break;
->>  	}
->> +	case 0x8000000A:
->> +		if (boot_cpu_has(X86_FEATURE_SVM)) {
->> +			entry->eax = 1; /* SVM revision 1 */
->> +			entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
->> +					   ASID emulation to nested SVM */
->> +			entry->ecx = 0; /* Reserved */
->> +			entry->edx = 0; /* Per default do not support any
->> +					   additional features */
->
-> Lucky thing that you suggested this change, patch ("KVM: SVM: Convert
-> feature updates from CPUID to KVM cpu caps") was buggy in that clearing
-> entry->edx here would wipe out all X86_FEATURE_NRIPS and X86_FEATURE_NPT.
-> Only noticed it when moving this code. 
->
+Thank you for the patch.
 
-I plan to give your v2 a spin on AMD Epyc, just in case)
+On Thu, Feb 06, 2020 at 08:18:24PM +0100, Neil Armstrong wrote:
+> From: Jonas Karlman <jonas@kwiboo.se>
+> 
+> Configure the correct mtmdsclock for deep colors to prepare support
+> for 10, 12 & 16bit output.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 67fca439bbfb..9e0927d22db6 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -1818,9 +1818,26 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+>  
+>  	dev_dbg(hdmi->dev, "final pixclk = %d\n", vmode->mpixelclock);
+
+Nitpicking a bit, I would change
+
+-	vmode->mtmdsclock = vmode->mpixelclock = mode->clock * 1000;
++	vmode->mpixelclock = mode->clock * 1000;
+
+above, and here add
+
+	vmode->mtmdsclock = vmode->mpixelclock;
+
+to keep all mtmdsclock calculation in a single place.
+
+> +	if (!hdmi_bus_fmt_is_yuv422(hdmi->hdmi_data.enc_out_bus_format)) {
+> +		switch (hdmi_bus_fmt_color_depth(
+> +				hdmi->hdmi_data.enc_out_bus_format)) {
+> +		case 16:
+> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 2;
+
+Both mpixelclock and mtmdsclock are unsigned int. Is the cast to u64
+needed ?
+
+On a separate but related note, what does the 'm' in tmdsclock stand for
+? It seems to originate from the 'm' prefix for mpixelclock, which has
+been there from the start. Unless there's a good reason for the prefix,
+renaming mtmdsclock to tmds_clock (and handling the other fields in the
+hdmi_vmode structure similarly) would increase clarity I think.
+
+> +			break;
+> +		case 12:
+> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 3 / 2;
+> +			break;
+> +		case 10:
+> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 5 / 4;
+> +			break;
+> +		}
+> +	}
+> +
+>  	if (hdmi_bus_fmt_is_yuv420(hdmi->hdmi_data.enc_out_bus_format))
+>  		vmode->mtmdsclock /= 2;
+>  
+> +	dev_dbg(hdmi->dev, "final tmdsclk = %d\n", vmode->mtmdsclock);
+
+s/tmdsclk/tmdsclock/ to match the field name ?
+
+> +
+>  	/* Set up HDMI_FC_INVIDCONF */
+>  	inv_val = (hdmi->hdmi_data.hdcp_enable ||
+>  		   (dw_hdmi_support_scdc(hdmi) &&
 
 -- 
-Vitaly
+Regards,
 
+Laurent Pinchart
