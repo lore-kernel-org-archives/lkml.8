@@ -2,312 +2,97 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236CFC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFA4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0C121D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vf/1v0TF"
+	by mail.kernel.org (Postfix) with ESMTP id 648C621775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583166801;
+	bh=oELwpjESw1IYc/+P2F4CGX/wrBID/934WX+6x8m3sE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R6616DYET3gHdzS0eEjfMvbOoQibmzxYmdipEMJM3s3FARMjh5nThebtXV1A75SkR
+	 FEVdAPqvMQjTAo8cFEhd6gNKUG31CDS17yNa0ToktYu3ojcY0+YCt8crkp90Qu8R0L
+	 MYlVdpXyUXaDrCceaLAh0dEeAIpOYgpq25ANf2DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCBQc7 (ORCPT
+        id S1727426AbgCBQdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:32:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47558 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727072AbgCBQc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:32:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583166775;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X9rcUbisKxxmFlt7qW9aNoQqeqD9jDa6T4zDyj5oRUY=;
-        b=Vf/1v0TFP383X4KR7W/gVj0w8uIQO1c+No/hYLlVSfB18Q70rVuI/asAIAQDdU86JFXUck
-        YNrKu5HriHdzw67GFUV8B2L4r56D5TB7Bs0JI1si8XuhYt12UZAig8qoB30twevok6YgFw
-        wLEgxbcWAApy77mWCDFGidf9amuxq/M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-GBPppWQfNWCZUPKurUpT8g-1; Mon, 02 Mar 2020 11:32:53 -0500
-X-MC-Unique: GBPppWQfNWCZUPKurUpT8g-1
-Received: by mail-wr1-f70.google.com with SMTP id f10so6026894wrv.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:32:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=X9rcUbisKxxmFlt7qW9aNoQqeqD9jDa6T4zDyj5oRUY=;
-        b=AfeVKu2Vz6BywDo7doGhMsJVJta8wQc+hPzdHhLe7MNxakwKz9YImajcErW+GEeLvU
-         qbYDJW2T6ZNg5kC1WShyk6jhuhC50KX7m9kued/aFOtS5STl8wZYJOEsOpPiDbcNeZJW
-         I5eOeFynhKnZmrlMTenA2pIPUAD6vCc9r4HlxP78QzTIZrHpenNepDDUUyq+wyhGWr2P
-         qUYiVb7/8qYXMBzckkCmqlWxR/1I3ERaXbww0ilegOJtMepWaG6QCRW5IiQpkxSRZLcK
-         3CteIKaEbI3gwe+vCZP7iCBQyCCvS4M162+W8FRVyMtoRs8D0ToBB4jqf2Fowip+e/uL
-         XJRQ==
-X-Gm-Message-State: ANhLgQ21o5Eb4bAtZn3eRzVEVYp4FvbpZTER0e+eH5kN0VrNca3HYFLc
-        aA+h5l42sdxxNrHU1mLqE4jB4+kfXPgaOUU+QX4ev7ekq6vRURLlrCu+KjPhVPzJL8afWCYszXd
-        ocoIYyIFX0dfdPg9uWFaSaNY8
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr360686wrr.379.1583166771753;
-        Mon, 02 Mar 2020 08:32:51 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvuZEjb6Nr8Jrwbslhtq5FeU7KvE06qDYUKp17eJgGVM+1Fh2zFoywyfkUqFHbCBpG23lH0lg==
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr360656wrr.379.1583166771449;
-        Mon, 02 Mar 2020 08:32:51 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.85.6])
-        by smtp.gmail.com with ESMTPSA id s15sm973084wrr.45.2020.03.02.08.32.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 08:32:50 -0800 (PST)
-Subject: Re: [PATCH v3] KVM: LAPIC: Recalculate apic map in batch
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <441ae2d3-cece-2c74-900c-22c7fa7ff373@redhat.com>
-Date:   Mon, 2 Mar 2020 17:32:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 11:33:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:35120 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbgCBQdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:33:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 798BFFEC;
+        Mon,  2 Mar 2020 08:33:19 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F22793F534;
+        Mon,  2 Mar 2020 08:33:18 -0800 (PST)
+Date:   Mon, 2 Mar 2020 16:33:17 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
+ buswidth
+Message-ID: <20200302163317.GH4166@sirena.org.uk>
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
+ <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+ <CAMuHMdV9v-7eRqi3JjcNaOBpRrC2-gLDCizYOJwhQCjZiLr5dA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1582684862-10880-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tT3UgwmDxwvOMqfu"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV9v-7eRqi3JjcNaOBpRrC2-gLDCizYOJwhQCjZiLr5dA@mail.gmail.com>
+X-Cookie: Whistler's mother is off her rocker.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/20 03:41, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated 
-> several times, each time it will consume 10+ us observed by ftrace in my 
-> non-overcommit environment since the expensive memory allocate/mutex/rcu etc 
-> operations. This patch optimizes it by recaluating apic map in batch, I hope 
-> this can benefit the serverless scenario which can frequently create/destroy 
-> VMs. 
-> 
-> Before patch:
-> 
-> kvm_lapic_reset  ~27us
-> 
-> After patch:
-> 
-> kvm_lapic_reset  ~14us 
-> 
-> Observed by ftrace, improve ~48%.
-> 
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v2 -> v3:
->  * move apic_map_dirty to kvm_arch
->  * add the suggestions from Paolo
-> 
-> v1 -> v2:
->  * add apic_map_dirty to kvm_lapic
->  * error condition in kvm_apic_set_state, do recalcuate  unconditionally
-> 
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/lapic.c            | 46 ++++++++++++++++++++++++++++++++---------
->  arch/x86/kvm/lapic.h            |  1 +
->  arch/x86/kvm/x86.c              |  1 +
->  4 files changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 40a0c0f..4380ed1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -920,6 +920,7 @@ struct kvm_arch {
->  	atomic_t vapics_in_nmi_mode;
->  	struct mutex apic_map_lock;
->  	struct kvm_apic_map *apic_map;
-> +	bool apic_map_dirty;
->  
->  	bool apic_access_page_done;
->  	unsigned long apicv_inhibit_reasons;
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index afcd30d..de832aa 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -164,14 +164,28 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
->  	kvfree(map);
->  }
->  
-> -static void recalculate_apic_map(struct kvm *kvm)
-> +void kvm_recalculate_apic_map(struct kvm *kvm)
->  {
->  	struct kvm_apic_map *new, *old = NULL;
->  	struct kvm_vcpu *vcpu;
->  	int i;
->  	u32 max_id = 255; /* enough space for any xAPIC ID */
->  
-> +	if (!kvm->arch.apic_map_dirty) {
-> +		/*
-> +		 * Read kvm->arch.apic_map_dirty before
-> +		 * kvm->arch.apic_map
-> +		 */
-> +		smp_rmb();
-> +		return;
-> +	}
-> +
->  	mutex_lock(&kvm->arch.apic_map_lock);
-> +	if (!kvm->arch.apic_map_dirty) {
-> +		/* Someone else has updated the map. */
-> +		mutex_unlock(&kvm->arch.apic_map_lock);
-> +		return;
-> +	}
->  
->  	kvm_for_each_vcpu(i, vcpu, kvm)
->  		if (kvm_apic_present(vcpu))
-> @@ -236,6 +250,12 @@ static void recalculate_apic_map(struct kvm *kvm)
->  	old = rcu_dereference_protected(kvm->arch.apic_map,
->  			lockdep_is_held(&kvm->arch.apic_map_lock));
->  	rcu_assign_pointer(kvm->arch.apic_map, new);
-> +	/*
-> +	 * Write kvm->arch.apic_map before
-> +	 * clearing apic->apic_map_dirty
-> +	 */
-> +	smp_wmb();
-> +	kvm->arch.apic_map_dirty = false;
->  	mutex_unlock(&kvm->arch.apic_map_lock);
->  
->  	if (old)
-> @@ -257,20 +277,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
->  		else
->  			static_key_slow_inc(&apic_sw_disabled.key);
->  
-> -		recalculate_apic_map(apic->vcpu->kvm);
-> +		apic->vcpu->kvm->arch.apic_map_dirty = true;
->  	}
->  }
->  
->  static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
->  {
->  	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
->  {
->  	kvm_lapic_set_reg(apic, APIC_LDR, id);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
-> @@ -286,7 +306,7 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
->  
->  	kvm_lapic_set_reg(apic, APIC_ID, id);
->  	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
-> -	recalculate_apic_map(apic->vcpu->kvm);
-> +	apic->vcpu->kvm->arch.apic_map_dirty = true;
->  }
->  
->  static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-> @@ -1912,7 +1932,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  	case APIC_DFR:
->  		if (!apic_x2apic_mode(apic)) {
->  			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
-> -			recalculate_apic_map(apic->vcpu->kvm);
-> +			apic->vcpu->kvm->arch.apic_map_dirty = true;
->  		} else
->  			ret = 1;
->  		break;
-> @@ -2018,6 +2038,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  		break;
->  	}
->  
-> +	kvm_recalculate_apic_map(apic->vcpu->kvm);
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
-> @@ -2166,7 +2188,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->  			static_key_slow_dec_deferred(&apic_hw_disabled);
->  		} else {
->  			static_key_slow_inc(&apic_hw_disabled.key);
-> -			recalculate_apic_map(vcpu->kvm);
-> +			vcpu->kvm->arch.apic_map_dirty = true;
->  		}
->  	}
->  
-> @@ -2207,6 +2229,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->  	if (!apic)
->  		return;
->  
-> +	vcpu->kvm->arch.apic_map_dirty = false;
->  	/* Stop the timer in case it's a reset to an active apic */
->  	hrtimer_cancel(&apic->lapic_timer.timer);
->  
-> @@ -2258,6 +2281,8 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->  
->  	vcpu->arch.apic_arb_prio = 0;
->  	vcpu->arch.apic_attention = 0;
-> +
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  }
->  
->  /*
-> @@ -2479,17 +2504,18 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  	int r;
->  
-> -
->  	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
->  	/* set SPIV separately to get count of SW disabled APICs right */
->  	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
->  
->  	r = kvm_apic_state_fixup(vcpu, s, true);
-> -	if (r)
-> +	if (r) {
-> +		kvm_recalculate_apic_map(vcpu->kvm);
->  		return r;
-> +	}
->  	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
->  
-> -	recalculate_apic_map(vcpu->kvm);
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  	kvm_apic_set_version(vcpu);
->  
->  	apic_update_ppr(apic);
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index ec6fbfe..7581bc2 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -78,6 +78,7 @@ void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
->  void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
->  void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
->  u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
-> +void kvm_recalculate_apic_map(struct kvm *kvm);
->  void kvm_apic_set_version(struct kvm_vcpu *vcpu);
->  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
->  int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 79bc995..d3802a2 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -350,6 +350,7 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	}
->  
->  	kvm_lapic_set_base(vcpu, msr_info->data);
-> +	kvm_recalculate_apic_map(vcpu->kvm);
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_apic_base);
-> 
 
-Queued, thanks.
+--tT3UgwmDxwvOMqfu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Paolo
+On Mon, Mar 02, 2020 at 05:12:05PM +0100, Geert Uytterhoeven wrote:
+> On Fri, Feb 28, 2020 at 4:23 PM John Garry <john.garry@huawei.com> wrote:
 
+> > A host controller driver might know this info from DMI tables, for example.
+
+> Can't acpi_register_spi_device() obtain that info from DMI tables,
+> to avoid contaminating the generic code?
+
+The DMI tables are going to boil down to per board quirks which we
+*could* put in the core but you end up with a lot of them and chances
+are that at some point we'll end up with device specific quirks which
+don't fit so well in the core.  Handling stuff in the drivers is fairly
+idiomatic.
+
+Much ACPI, so standards :/
+
+--tT3UgwmDxwvOMqfu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5dNUwACgkQJNaLcl1U
+h9AexAf/aeE9iGeVv7pH09/MjY36txVc4+qNNLl4dd0LN6yt222WVl1jNMjvWnTl
+LrJ94pJcXCAPNZMpzkOMFJHdSK2n9PCuoA9KprkrZ2UUUpQe96q+Ll2qGnO3R7Wo
+qcL0FtJEGfuo9znEMdKSAxp2Buc6RW3AgPYp/9N7s+JT17mm9dL50BrujpvgaE6C
+LTSQ7KZ+rJFDBejSFD8T81zT80tVWXqyzWH9xdDFc9RkvBlX2iFqkUHXDP73Z1ik
+v/6mYFfXLjz0ekOn4/YKkTip2/EQ/EA4SrPYF80UOIzFFGYECBSdGXU3ZEHvkQBV
+jodU2vNG5FKyZOVlc4YxD5faKm8peA==
+=zK3/
+-----END PGP SIGNATURE-----
+
+--tT3UgwmDxwvOMqfu--
