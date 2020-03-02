@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1455BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C122C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E050A246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEDD246C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137147;
-	bh=Vu4drSBZdJ6r65+/VIWN4lBc7AM9+f6OSc5S/+zCBBo=;
+	s=default; t=1583137153;
+	bh=2McQRtYZ+HSM4VsIstHnjM6JtSpkSFvG8RiBiZEorzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a3TOumqtfRVl7jx+OYvxv4vMzHETCFiqhSAfzICTa15dwKiEGE7FlS3BJiB0e7FV3
-	 GUOHMif63np7tCG2T5U8QFb6iW6ql1JBwHibUVBXok1fkqcz7nN3/dPqusBGiy05+c
-	 Qe7aOr4O6Hjq4L7HWRiUDTEn6mxHR3kj1ZH+vQqY=
+	b=Hh/ApKpgEYPmcDnwXvprWkHHK0H0yFg/qI1DgXYF+bYqeCIe7UmKXXbW994bNc2e+
+	 UKwlGQYKO0UHirw/Zg4pXH2v5fyOv2QFF7df+whzQusEXPpxtczWVFAUFlwTyw0j5H
+	 2LJnVWVr6Zg2GX9pdrkwkkfk5PeUsAvK4y8bm0Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgCBITC (ORCPT
+        id S1727913AbgCBITL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:19:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 03:19:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbgCBIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727130AbgCBIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 03:16:20 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54CD7246DD;
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CD0246C7;
         Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583136979;
-        bh=Vu4drSBZdJ6r65+/VIWN4lBc7AM9+f6OSc5S/+zCBBo=;
+        bh=2McQRtYZ+HSM4VsIstHnjM6JtSpkSFvG8RiBiZEorzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdNSbkpwRLfbaB+SWyiEcSivpHFnSpfgHOey/uObQvn+5c+opil/E7Wy772vrNOQX
-         gWan4TC/NXqgvbnIxmfp+XJLDQHWa0gMkLLDVF7yPMLIOXYtWuF860hNS6EHJKzEZZ
-         4nRDirKgdNBg44a0MvU5gOtKNub7Uw+GPIkdGgco=
+        b=ndWbLqoE69WGK6FXi41Ia6LIbJWDiORZnkVxnrDHfORpxqDUbINdj3xbWVtOHdfGN
+         CYDHdBvAkOIx4Q7gJ6Qohqs398zgI+6wDybIQUvC5YEanM553EX10GfWOJXGQexiYg
+         LY+QcuRyHB9E+LLp3VtrTRNrfRP7CTsAZ0yNYYWo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003y8-Hb; Mon, 02 Mar 2020 09:16:17 +0100
+        id 1j8gFN-0003xW-AO; Mon, 02 Mar 2020 09:16:17 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 20/42] docs: scsi: convert link_power_management_policy.txt to ReST
-Date:   Mon,  2 Mar 2020 09:15:53 +0100
-Message-Id: <c56177fdf046d80e0dec6031c4139cb4e8c39d31.1583136624.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 12/42] docs: scsi: convert cxgb3i.txt to ReST
+Date:   Mon,  2 Mar 2020 09:15:45 +0100
+Message-Id: <0708b62b6ec4f0dddc581e412bb02ba6476f4523.1583136624.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
 References: <cover.1583136624.git.mchehab+huawei@kernel.org>
@@ -61,53 +61,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/scsi/index.rst                         |  1 +
- ...t_policy.txt => link_power_management_policy.rst} | 12 +++++++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
- rename Documentation/scsi/{link_power_management_policy.txt => link_power_management_policy.rst} (65%)
+ Documentation/scsi/{cxgb3i.txt => cxgb3i.rst} | 22 ++++++++++++-------
+ Documentation/scsi/index.rst                  |  1 +
+ 2 files changed, 15 insertions(+), 8 deletions(-)
+ rename Documentation/scsi/{cxgb3i.txt => cxgb3i.rst} (86%)
 
-diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index e6850c0a1378..c40050ac3b32 100644
---- a/Documentation/scsi/index.rst
-+++ b/Documentation/scsi/index.rst
-@@ -24,5 +24,6 @@ Linux SCSI Subsystem
-    hpsa
-    hptiop
-    libsas
-+   link_power_management_policy
- 
-    scsi_transport_srp/figures
-diff --git a/Documentation/scsi/link_power_management_policy.txt b/Documentation/scsi/link_power_management_policy.rst
-similarity index 65%
-rename from Documentation/scsi/link_power_management_policy.txt
-rename to Documentation/scsi/link_power_management_policy.rst
-index d18993d01884..64288dcf10f6 100644
---- a/Documentation/scsi/link_power_management_policy.txt
-+++ b/Documentation/scsi/link_power_management_policy.rst
-@@ -1,8 +1,15 @@
+diff --git a/Documentation/scsi/cxgb3i.txt b/Documentation/scsi/cxgb3i.rst
+similarity index 86%
+rename from Documentation/scsi/cxgb3i.txt
+rename to Documentation/scsi/cxgb3i.rst
+index 7ac8032ee9b2..e01f18fbfa9f 100644
+--- a/Documentation/scsi/cxgb3i.txt
++++ b/Documentation/scsi/cxgb3i.rst
+@@ -1,4 +1,8 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==========================
-+Link Power Managent Policy
-+==========================
-+
- This parameter allows the user to set the link (interface) power management.
- There are 3 possible options:
++=================================
+ Chelsio S3 iSCSI Driver for Linux
++=================================
  
-+=====================   =====================================================
- Value			Effect
------------------------------------------------------------------------------
-+=====================   =====================================================
- min_power		Tell the controller to try to make the link use the
- 			least possible power when possible.  This may
- 			sacrifice some performance due to increased latency
-@@ -15,5 +22,4 @@ max_performance		Generally, this means no power management.  Tell
- medium_power		Tell the controller to enter a lower power state
- 			when possible, but do not enter the lowest power
- 			state, thus improving latency over min_power setting.
--
--
-+=====================   =====================================================
+ Introduction
+ ============
+@@ -49,7 +53,8 @@ The following steps need to be taken to accelerates the open-iscsi initiator:
+ 
+    The cxgb3i module registers a new transport class "cxgb3i" with open-iscsi.
+ 
+-   * in the case of recompiling the kernel, the cxgb3i selection is located at
++   * in the case of recompiling the kernel, the cxgb3i selection is located at::
++
+ 	Device Drivers
+ 		SCSI device support --->
+ 			[*] SCSI low-level drivers  --->
+@@ -58,25 +63,26 @@ The following steps need to be taken to accelerates the open-iscsi initiator:
+ 2. Create an interface file located under /etc/iscsi/ifaces/ for the new
+    transport class "cxgb3i".
+ 
+-   The content of the file should be in the following format:
++   The content of the file should be in the following format::
++
+ 	iface.transport_name = cxgb3i
+ 	iface.net_ifacename = <ethX>
+ 	iface.ipaddress = <iscsi ip address>
+ 
+    * if iface.ipaddress is specified, <iscsi ip address> needs to be either the
+-	same as the ethX's ip address or an address on the same subnet. Make
+-	sure the ip address is unique in the network.
++     same as the ethX's ip address or an address on the same subnet. Make
++     sure the ip address is unique in the network.
+ 
+ 3. edit /etc/iscsi/iscsid.conf
+    The default setting for MaxRecvDataSegmentLength (131072) is too big;
+-   replace with a value no bigger than 15360 (for example 8192):
++   replace with a value no bigger than 15360 (for example 8192)::
+ 
+ 	node.conn[0].iscsi.MaxRecvDataSegmentLength = 8192
+ 
+    * The login would fail for a normal session if MaxRecvDataSegmentLength is
+-	too big.  A error message in the format of
+-	"cxgb3i: ERR! MaxRecvSegmentLength <X> too big. Need to be <= <Y>."
+-	would be logged to dmesg.
++     too big.  A error message in the format of
++     "cxgb3i: ERR! MaxRecvSegmentLength <X> too big. Need to be <= <Y>."
++     would be logged to dmesg.
+ 
+ 4. To direct open-iscsi traffic to go through cxgb3i's accelerated path,
+    "-I <iface file name>" option needs to be specified with most of the
+diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
+index 6bb2428c1d56..3809213b83da 100644
+--- a/Documentation/scsi/index.rst
++++ b/Documentation/scsi/index.rst
+@@ -16,5 +16,6 @@ Linux SCSI Subsystem
+    bfa
+    bnx2fc
+    BusLogic
++   cxgb3i
+ 
+    scsi_transport_srp/figures
 -- 
 2.21.1
 
