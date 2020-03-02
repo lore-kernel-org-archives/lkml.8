@@ -2,119 +2,156 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC076C3F2D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1822DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB2122B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A9322B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:41:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W6GW3qv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgCBRku (ORCPT
+        id S1727388AbgCBRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:40:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:7421 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbgCBRks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:40:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 09:40:48 -0800
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="319136975"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 09:40:48 -0800
-Message-ID: <abac569d8d1978aebadf71b65cdeb240a6256ad2.camel@linux.intel.com>
-Subject: Re: [PATCH v1 06/11] mm: Allow to offline unmovable PageOffline()
- pages via MEM_GOING_OFFLINE
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Qian Cai <cai@lca.pw>, Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 02 Mar 2020 09:40:47 -0800
-In-Reply-To: <20200302134941.315212-7-david@redhat.com>
-References: <20200302134941.315212-1-david@redhat.com>
-         <20200302134941.315212-7-david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 2 Mar 2020 12:41:40 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52530 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbgCBRlk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:41:40 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so204742wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:41:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tvdbdMgz88MJf9BoYqsaU2aUOFZnxWoo9V9MAM6ukWI=;
+        b=W6GW3qv5bDLk7l6FbsLd/EKNHS076n6l1cKzmn6r3lL/sp2kZynKFrGRze73Uggg2U
+         +PYOPW/0TJumZDzeCZvPJeMTpqNU0ZbZeWBX4H6JTG0shZtEkVVcUQr/yXh5XO1/WShr
+         o4oog+VZYNJkjBSciZIiVvVilXgm7jBvTHl2eBvgpmHW2f+Yp/1uPgrPJKa2iM1I0ypC
+         /5lUu81Lth/a2na5uLG1uTaYECn9bZXlRxqoUic2aQyXHknZ3EG49/tGvXCXl7lsue2C
+         E8/lyaUbI7yMclAlPTkE8CkjWuUBOqr+xR4EL73vdT0gpKFZxwuOvpVIq99O2tt4g2MI
+         sDrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tvdbdMgz88MJf9BoYqsaU2aUOFZnxWoo9V9MAM6ukWI=;
+        b=Pb4Ba1PoXYEqQrfpnJSAbdYmFZKd9izVoEsLRWT99w5mHfqqstxzZeTP7oL4gMT/2x
+         uIb1Bxwed3C6YMv/E8+3z45FoL5uc5ShcSxRPtd8NdB3VxNTuePP+2CYUvH8+fJ7KkgD
+         +BbkpPeGW+/dmKux6J7vCxl3+I0rSGT6lBWbESe1INyv8XrLqHrLZzSfFvOM/GWRJI24
+         r86Z+QYgdM1MNKBxMsY/E3nQMI3sNP/1qVe7X9LUpCBGe08l++whM9aaqc+giwxu/3lc
+         tPnjurn23Zj2hjRL/TGzPpuqqM7BPTsidsZtSrBOMcOvjK9aBktoekeyuG8XE/m9+N4o
+         84eg==
+X-Gm-Message-State: ANhLgQ2WY+58eD4btIJXOUG0su98vInJcIwAzpeMsM14gDL61STm+VW2
+        VlxU6BKPiIbi2HjJIImDA93hSQ==
+X-Google-Smtp-Source: ADFU+vuw6dOIoSSxL94MbozX1PWKSVJwqQlDNIaFEdguU2AD7t349DIKiDb6PQfD+MSyYnf0e6imug==
+X-Received: by 2002:a7b:c958:: with SMTP id i24mr188610wml.180.1583170896293;
+        Mon, 02 Mar 2020 09:41:36 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:995:2d3a:cb24:4f79? ([2a01:e34:ed2f:f020:995:2d3a:cb24:4f79])
+        by smtp.googlemail.com with ESMTPSA id b13sm207095wme.2.2020.03.02.09.41.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 09:41:35 -0800 (PST)
+Subject: Re: [PATCH 1/1] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+To:     Rob Herring <robh+dt@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+References: <20200301174636.63446-1-paul@crapouillou.net>
+ <20200301174636.63446-2-paul@crapouillou.net>
+ <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2d81c623-5c1b-9f98-c191-0763295aa3a9@linaro.org>
+Date:   Mon, 2 Mar 2020 18:41:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 14:49 +0100, David Hildenbrand wrote:
-> virtio-mem wants to allow to offline memory blocks of which some parts
-> were unplugged (allocated via alloc_contig_range()), especially, to later
-> offline and remove completely unplugged memory blocks. The important part
-> is that PageOffline() has to remain set until the section is offline, so
-> these pages will never get accessed (e.g., when dumping). The pages should
-> not be handed back to the buddy (which would require clearing PageOffline()
-> and result in issues if offlining fails and the pages are suddenly in the
-> buddy).
+On 02/03/2020 18:06, Rob Herring wrote:
+> On Sun, Mar 1, 2020 at 11:47 AM Paul Cercueil <paul@crapouillou.net> wrote:
+>>
 > 
-> Let's allow to do that by allowing to isolate any PageOffline() page
-> when offlining. This way, we can reach the memory hotplug notifier
-> MEM_GOING_OFFLINE, where the driver can signal that he is fine with
-> offlining this page by dropping its reference count. PageOffline() pages
-> with a reference count of 0 can then be skipped when offlining the
-> pages (like if they were free, however they are not in the buddy).
-> 
-> Anybody who uses PageOffline() pages and does not agree to offline them
-> (e.g., Hyper-V balloon, XEN balloon, VMWare balloon for 2MB pages) will not
-> decrement the reference count and make offlining fail when trying to
-> migrate such an unmovable page. So there should be no observable change.
-> Same applies to balloon compaction users (movable PageOffline() pages), the
-> pages will simply be migrated.
-> 
-> Note 1: If offlining fails, a driver has to increment the reference
-> 	count again in MEM_CANCEL_OFFLINE.
-> 
-> Note 2: A driver that makes use of this has to be aware that re-onlining
-> 	the memory block has to be handled by hooking into onlining code
-> 	(online_page_callback_t), resetting the page PageOffline() and
-> 	not giving them to the buddy.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Well, this flew into linux-next quickly and breaks 'make
+> dt_binding_check'... Please drop, revert or fix quickly.
 
-This addresses the core concerns I had with the patch.
+dropped.
 
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
