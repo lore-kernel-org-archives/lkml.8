@@ -2,159 +2,207 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15370C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8070222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I+9jLMj6"
+	by mail.kernel.org (Postfix) with ESMTP id 6E41B222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCBPmh (ORCPT
+        id S1727579AbgCBPml convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:42:37 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55790 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbgCBPmh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:42:37 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154235euoutp018de63f8099fa82afa9986f8452ee6a65~4hwwrwDZB1457214572euoutp01R
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:42:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200302154235euoutp018de63f8099fa82afa9986f8452ee6a65~4hwwrwDZB1457214572euoutp01R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583163755;
-        bh=eDSx6Ol5pio0KwUFZPvqg82H3h7F/bFkN2rPoKXN2sk=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=I+9jLMj6PfEz8LZIIkSatEnPKBNpfMzC7vvS7L+CPqfFVpuz4hmACpdbK+JD6xdvC
-         B+UDGG4TE1aS5UvrxeAusWjLDvKCt3gwI0LP3AUcnH+Bl52Z4z4WX0jcsMpesJqJXz
-         ri6VRmuI4j3LnO9yeXZ6zakO1j3+joPPdf812E54=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200302154235eucas1p29481c369be662e126846f6913f0f7bf9~4hwwf4o3f2199621996eucas1p2S;
-        Mon,  2 Mar 2020 15:42:35 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id D8.C3.60698.B692D5E5; Mon,  2
-        Mar 2020 15:42:35 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154234eucas1p28d4029255b58b6cd63e587655010efbc~4hwwKKjeM2399223992eucas1p2O;
-        Mon,  2 Mar 2020 15:42:34 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200302154234eusmtrp1257456edfec660818add2723ecf1872d~4hwwJjINk2922329223eusmtrp1M;
-        Mon,  2 Mar 2020 15:42:34 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-84-5e5d296bb470
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 34.00.07950.A692D5E5; Mon,  2
-        Mar 2020 15:42:34 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200302154234eusmtip2f17357d24d4c7770d7325bb853ea054b~4hwv0j-m32188921889eusmtip2H;
-        Mon,  2 Mar 2020 15:42:34 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: remove set but not used variable 'ulScaleRight'
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com
-Message-ID: <0b16ece5-a95c-5420-b5d4-7c576171780f@samsung.com>
-Date:   Mon, 2 Mar 2020 16:42:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200119121945.12517-1-yukuai3@huawei.com>
+        Mon, 2 Mar 2020 10:42:41 -0500
+Received: from mail-oln040092253011.outbound.protection.outlook.com ([40.92.253.11]:6182
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727407AbgCBPmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:42:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Eu96xXdnGNXvr6IdVLKrcNo/dL6IKd6Qj5mG3kZxtJMcRilW5dvoyO4X9znWtgdRKkh+159dK96SdUSWdDL5G2or1eA9p/3Z2Lqtvmnm6ZrRxTYaZJ6BR8udRW7aMcJsPPK1YZ4ssQ9k/DbGJnn+IA8rfBzGngZE4f555LUcxMIP9oAoLwsoVRoX90mMgVwHjRQxgtVN2HAxTIbe5aMvmpMCS5ra9Nc51G556eu1+IEw/HolqCymb6kk5PEhjzw1tahnkViefNjR6UiC0a7nMkzAY27Ch+fJYDHPks52HDx+9nV+euDgXqYvH/JKi7wqBDVPp0EAohzUd096PCC4uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NYtowb9+Ullj2M1uv1jXOw4L+VWGtADYKz7o6ZvE75I=;
+ b=LVzKr7mxjuniuF2o/SWig0dMSrS+sn6WomkXFSsNMn/RRC8KsjzORzf+f86+GfqYfWmAaj+Mm8n/56gEcNSJ5y2Z6gmK8Av6VQ1T2wTw03iBup+ctKg9Ii7UZHBFZ70ZYCSlmv6focyWqV7s5qnpgIwEDz+8v8qAIkI9s2812WKAoQ/l5ljrEqS2xlwswXhOR0RJS7QPG40LjF6L2vZQzAOuMt+kB7abLb8Z8UZl0A3f0FJH0sV8jP9ysoXcClaSmzlS3ZYyPw4NuwBnV5HmHy1BaD370A/lDc0mEBBcwSNiW7vt/UaoradfTmG0gUdPcR42kphAuplYsUNyWfbUbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT111.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::3c) by
+ PU1APC01HT238.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::449)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
+ 2020 15:42:34 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
+ PU1APC01FT111.mail.protection.outlook.com (10.152.252.236) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:42:34 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 15:42:34 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:44cc:a624:8145:fa79) by ME2PR01CA0066.ausprd01.prod.outlook.com (2603:10c6:201:2b::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:42:32 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 1/3] nvmem: Add support for write-only instances
+Thread-Topic: [PATCH v2 1/3] nvmem: Add support for write-only instances
+Thread-Index: AQHV8KkxXdrLTxYhU0iNsiLC1KLatw==
+Date:   Mon, 2 Mar 2020 15:42:34 +0000
+Message-ID: <PSXP216MB0438930B1FC30EF79F15FD1780E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djPc7rZmrFxBtvOM1tc+fqezeJE3wdW
-        i8u75rBZXHt3hs1izkI2i4WPbrA5sHm0HHnL6nG/+ziTx+dNcgHMUVw2Kak5mWWpRfp2CVwZ
-        +5acZSro4ql4dOs2WwPjd84uRk4OCQETicPbl7CB2EICKxglTrVadTFyAdlfGCXOXj3ICuF8
-        ZpR4efQXUBUHWMeZ//UQ8eWMErdXfGCG6H7LKNHa7wdiswlYSUxsX8UIYgsLeEvMXfudBcQW
-        EVCQuNX8gh2kmVmgh1HiwJc9YAleATuJddf/gw1iEVCR6Dn8hhXEFhWIkPj04DArRI2gxMmZ
-        T8DqOQUsJBatPcQOYjMLiEvcejKfCcKWl2jeOpsZZIGEwGR2iSdPp7JD/OkisX33MiYIW1ji
-        1fEtUHEZidOTe1ggGtYxSvzteAHVvZ1RYvnkf2wQVdYSd85B/M8soCmxfpc+RNhRYs2hfnZI
-        sPBJ3HgrCHEEn8SkbdOZIcK8Eh1tQhDVahIblm1gg1nbtXMl8wRGpVlIXpuF5J1ZSN6ZhbB3
-        ASPLKkbx1NLi3PTUYuO81HK94sTc4tK8dL3k/NxNjMAUc/rf8a87GPf9STrEKMDBqMTDG8Ac
-        GyfEmlhWXJl7iFGCg1lJhNeXMzpOiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/xopexQgLpiSWp
-        2ampBalFMFkmDk6pBsaDxgeTj32f01a9w3bpHdni2stW7z1V7eWmaqwR+ypyK417W67gWpsD
-        a/mNvcsWy2df4prUPj9slVS7RHV1aFGvd/WD9qVvS+VE5uyfc/9O1u5Y/QXvJMSm9CW4rvx5
-        5/G+EP0/b5aJzmJkWnSZZafNRwHZc96nZLOX1MldFz5/pa89VCFI5L8SS3FGoqEWc1FxIgAd
-        hsuNLQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsVy+t/xe7pZmrFxBk/O6Vpc+fqezeJE3wdW
-        i8u75rBZXHt3hs1izkI2i4WPbrA5sHm0HHnL6nG/+ziTx+dNcgHMUXo2RfmlJakKGfnFJbZK
-        0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZ+5acZSro4ql4dOs2WwPjd84u
-        Rg4OCQETiTP/67sYuTiEBJYySqy6+4cdIi4jcXx9WRcjJ5ApLPHnWhcbRM1rRomHb16wgSTY
-        BKwkJravYgSxhQW8Jeau/c4CYosIKEjcan7BDmIzC/QwSvyaFw/R3A204PsssAZeATuJddf/
-        M4PYLAIqEj2H37CC2KICERKHd8DUCEqcnPkEbCingIXEorWHoIaqS/yZd4kZwhaXuPVkPhOE
-        LS/RvHU28wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLjfSKE3OLS/PS9ZLzczcxAmNq
-        27GfW3Ywdr0LPsQowMGoxMP7gyE2Tog1say4MvcQowQHs5IIry9ndJwQb0piZVVqUX58UWlO
-        avEhRlOg5yYyS4km5wPjPa8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8T
-        B6dUA2PMHeNfqVYN36wnSR7I5WKxOntwhkTc7nVf5OVqTkjFRH1TlP3ifkL1+2nbzrACu4A4
-        pt6Kf+0p5vtrs4/41SmZ1mTnrTStY9zkZq5i/7Wdo9Z5V2/fimcrElRti9olJkrqs0geqilc
-        Z+c81W73jutL16w7dMh85/qNfVF7Fb/Myc+VbHwxS4mlOCPRUIu5qDgRAPeAlIK/AgAA
-X-CMS-MailID: 20200302154234eucas1p28d4029255b58b6cd63e587655010efbc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200119122043eucas1p2b450cd177ca0d86d268323a074c82b05
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200119122043eucas1p2b450cd177ca0d86d268323a074c82b05
-References: <CGME20200119122043eucas1p2b450cd177ca0d86d268323a074c82b05@eucas1p2.samsung.com>
-        <20200119121945.12517-1-yukuai3@huawei.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0066.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::30) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:1D69E5E86D08E5CE96CC82BAC60CFBA750E491E14BCD01DFCC7294E6CE8F875A;UpperCasedChecksum:3FD8DA9CFFC61089773B005CA77A50849166B5D5E68AA0783AF424B738FD7A0D;SizeAsReceived:7800;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [pfYjh1WR1BZS+6mZwieJqUMAJ+HXqvRdUwVUbCwrjccnshfHVq29yOlFAZpQP3gG]
+x-microsoft-original-message-id: <20200302154227.GA480962@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 6c240aa6-3173-41b5-3cc2-08d7bec05386
+x-ms-exchange-slblob-mailprops: gjx25WM8ZNWYKaTQvYk/UtONeFal8oaUNZI/HkFRNrR33q31c7duxzaGctdAwA3O8vIIzArerEUbX+TFZHYzxFxqvxOlA+iZoNoCmOGtbrMqgFkTC+lJ4/EIwl0RNKVzhpsAzDQgeBR3F5Y/eQqSJp/vsImnpPKEIfsjxtV3v5OAsPeFdgy8+Jy5IrmposNAiDCo2iHCeY9y0onNNg/gx0Ctp1smdmcHPo0G5//Y2T0Mic9781KfX8nj6ksbf5o3avhvPn8yHf8pee+lFHivrTqOkZrkoOFiCqliWRIW9Eif3bbFNkqoXlrn9QE01EShYxCw/9maqL9XWWTXfXNbCMgDC1mCAL0JXfMPYfVBKQSL2ilUK1DhOUmakERqsFgMeYDRSqlicPc7txCXvXFlUgBsU0qCVp+txrKoO+EFOrDi4Wg50X8e6eAkPwYUX8KE7wnYCpHkGJ0eW9bQjXKz6Dq7jdUDY9uR1W+lwI2Ex5/WCsvkuo704g8DSfTgxqWvcwKdOC/UhZ2frl771b2k4YvKnAcJPC76UPe4A2d9FbCzxWFerBue7+wLdL21ag7eZr76ksPOqJ6PbIulgOqbetyfnjulnaQQ8u1O0u8Bj7+B+ClcApB9FGYA3kSExfejdTgHmAdAzVwU4US5fo0IQeBdJngjeo3leJkimMsDc/uhO6YgaRU5qycrO/49CKf/HMMzEiDznEPtCMJT+EanDzHa70nkRytgjigLu+wLlBo=
+x-ms-traffictypediagnostic: PU1APC01HT238:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fUB4sd2iqfnk780PFibW5IEQGZNbuBT83AYMRxFZqAmyv3Iw9typxQIiN4wFYD7VnooM/SLv6q/VT1LK8dD8ovUhsWboZuifK3amjqQ6FFpLi1evLrb5GNMsRGeOVzQuZk79IqKBdEFM2NgVJdabT4OJpKgYJIQM4Ulm4Q273nTfESR5dtF1RdCD0+WyiT8h
+x-ms-exchange-antispam-messagedata: AcKr+nV2rbjlNwBCrWdn5HrRc+OGTOuS3WiDgy+3+KUBdeacUVhkSdhpw0KZWCeWydqREKEFDJ5+uaI7vqkOW47lvGe5PIfBR1uvavEh8oxbxUC6U7puR2T1tI1ocARZauIP8XgNqXZ4ew56a59m5MJZ/60kw1xrCssYlbd0AjwhP5qYxKkikbtbrMt2b3JIvEm/FqjtQhrcRdD3yKlseQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <258C4A77CD0E704DA0F560BB3459A2CA@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c240aa6-3173-41b5-3cc2-08d7bec05386
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:42:34.3797
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is at least one real-world use-case for write-only nvmem
+instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
+non-active NVMem file is read").
 
-On 1/19/20 1:19 PM, yu kuai wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/video/fbdev/kyro/STG4000OverlayDevice.c: In function
-> ‘SetOverlayViewPort’:
-> drivers/video/fbdev/kyro/STG4000OverlayDevice.c:334:19: warning:
-> variable ‘ulScaleRight’ set but not used [-Wunused-but-set-variable]
-> 
-> It is never used, and so can be removed.
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+Add support for write-only nvmem instances by adding attrs for 0200.
 
-Patch queued for v5.7, thanks.
+Change nvmem_register() to abort if NULL group is returned from
+nvmem_sysfs_get_groups().
+
+Return NULL from nvmem_sysfs_get_groups() in invalid cases.
+
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/nvmem/core.c        |  2 ++
+ drivers/nvmem/nvmem-sysfs.c | 53 ++++++++++++++++++++++++++++++++-----
+ 2 files changed, 48 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index ef326f243..27bd4c4e3 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -388,6 +388,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+ 			   config->read_only || !nvmem->reg_write;
  
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+ 	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
++	if (!nvmem->dev.groups)
++		return NULL;
+ 
+ 	device_initialize(&nvmem->dev);
+ 
+diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+index 9e0c429cd..00d3259ea 100644
+--- a/drivers/nvmem/nvmem-sysfs.c
++++ b/drivers/nvmem/nvmem-sysfs.c
+@@ -196,16 +196,50 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+ 	NULL,
+ };
+ 
++/* write only permission, root only */
++static struct bin_attribute bin_attr_wo_root_nvmem = {
++	.attr	= {
++		.name	= "nvmem",
++		.mode	= 0200,
++	},
++	.write	= bin_attr_nvmem_write,
++};
++
++static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
++	&bin_attr_wo_root_nvmem,
++	NULL,
++};
++
++static const struct attribute_group nvmem_bin_wo_root_group = {
++	.bin_attrs	= nvmem_bin_wo_root_attributes,
++	.attrs		= nvmem_attrs,
++};
++
++static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
++	&nvmem_bin_wo_root_group,
++	NULL,
++};
++
+ const struct attribute_group **nvmem_sysfs_get_groups(
+ 					struct nvmem_device *nvmem,
+ 					const struct nvmem_config *config)
+ {
+-	if (config->root_only)
+-		return nvmem->read_only ?
+-			nvmem_ro_root_dev_groups :
+-			nvmem_rw_root_dev_groups;
+-
+-	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
++	/* Read-only */
++	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
++		return config->root_only ?
++			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
++
++	/* Read-write */
++	if (nvmem->reg_read && nvmem->reg_write)
++		return config->root_only ?
++			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
++
++	/* Write-only, do not honour request for global writable entry */
++	if (!nvmem->reg_read && nvmem->reg_write)
++		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
++
++	/* Neither reg_read nor reg_write are provided, abort */
++	return NULL;
+ }
+ 
+ /*
+@@ -224,11 +258,16 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
+ 	if (!config->base_dev)
+ 		return -EINVAL;
+ 
+-	if (nvmem->read_only) {
++	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only)) {
+ 		if (config->root_only)
+ 			nvmem->eeprom = bin_attr_ro_root_nvmem;
+ 		else
+ 			nvmem->eeprom = bin_attr_ro_nvmem;
++	} else if (!nvmem->reg_read && nvmem->reg_write) {
++		if (config->root_only)
++			nvmem->eeprom = bin_attr_wo_root_nvmem;
++		else
++			return -EPERM;
+ 	} else {
+ 		if (config->root_only)
+ 			nvmem->eeprom = bin_attr_rw_root_nvmem;
+-- 
+2.25.1
 
-> ---
->  drivers/video/fbdev/kyro/STG4000OverlayDevice.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/kyro/STG4000OverlayDevice.c b/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
-> index 0aeeaa10708b..9fde0e3b69ec 100644
-> --- a/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
-> +++ b/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
-> @@ -331,7 +331,7 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
->  	u32 ulScale;
->  	u32 ulLeft, ulRight;
->  	u32 ulSrcLeft, ulSrcRight;
-> -	u32 ulScaleLeft, ulScaleRight;
-> +	u32 ulScaleLeft;
->  	u32 ulhDecim;
->  	u32 ulsVal;
->  	u32 ulVertDecFactor;
-> @@ -470,7 +470,6 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
->  		 * round down the pixel pos to the nearest 8 pixels.
->  		 */
->  		ulScaleLeft = ulSrcLeft;
-> -		ulScaleRight = ulSrcRight;
->  
->  		/* shift fxscale until it is in the range of the scaler */
->  		ulhDecim = 0;
-> 
