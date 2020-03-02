@@ -2,176 +2,90 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30062C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34148C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A042084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C20821739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="JTM4hoos";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="MNMkKznI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhcrMb8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCBPdZ (ORCPT
+        id S1727350AbgCBPd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:33:25 -0500
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:58160 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgCBPdZ (ORCPT
+        Mon, 2 Mar 2020 10:33:28 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33761 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgCBPd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:33:25 -0500
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 9AD8B4A02C;
-        Mon,  2 Mar 2020 10:33:20 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=Vi38EUq+JMULt2NQV1KsMhxFf0c=; b=JTM4ho
-        os8ys/hV1sCL4G+Rc0Kx8QmWTzZKV01P7hyQFPMcCZzgyfOoz+0GnReg+V+JGMhD
-        xPKugKuXrgZidT1V5tVApzmfPyEbkzemOHBYwKhNyb8lsHKC2vL9+JBlQVNw9CAV
-        jPT2BbnzV7AiuY5kakQ+k4Ddqb4H/emu8tkZs=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 90CA54A02B;
-        Mon,  2 Mar 2020 10:33:20 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=NmmE9aIpcRhBlAZU4EmzZNvY9119maGX22PMnYUwqTw=; b=MNMkKznIiwC0ytqiHqYHsAQUKLqosFYQDpcp8dbeWE6xxPoOAuGznv177QxWCdRt7Q6GnFoG3Jv9P3G6pjKKI9LHaopAAeyDbPNHdd+CsFuIdkdm4NF/M58JScx3cD+T+1SSTZzBTyxYarWeEZIb/UA3/W0SWLXKvT9I5ff/S50=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 06E674A02A;
-        Mon,  2 Mar 2020 10:33:20 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 33EC02DA0227;
-        Mon,  2 Mar 2020 10:33:19 -0500 (EST)
-Date:   Mon, 2 Mar 2020 10:33:19 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/2] kconfig: make 'imply' obey the direct dependency
-In-Reply-To: <20200302062340.21453-2-masahiroy@kernel.org>
-Message-ID: <nycvar.YSQ.7.76.2003021032000.1559@knanqh.ubzr>
-References: <20200302062340.21453-1-masahiroy@kernel.org> <20200302062340.21453-2-masahiroy@kernel.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 2 Mar 2020 10:33:27 -0500
+Received: by mail-lj1-f195.google.com with SMTP id f13so3391767ljp.0;
+        Mon, 02 Mar 2020 07:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D1+XRJJy42ZSFyjL3ICumxudKN6nuaWlh/hrQNXWmHs=;
+        b=YhcrMb8qdlu+1+7X+oWQBU0VOFDbQmoyWa28VfvKwI9Zy8BEJzCRXG2m3iwkT8EVOP
+         /QRrw8/dyTkulIGpeaTQYVOabTRejkaoyCiXtGESlw2iDFfUMhJFYhKEf8iXUJlWRKcq
+         OnIs9HO7pgVwqUiLrD7UZDuzvrlqtK+mAZ6bwCCRJ6UMdXE0tYOtNBbiA/UHy7O2jzmW
+         ZZL+0AHiPSGP+c+l+EdVROHj91vQyUwhl9XTt76nI0Q7BfbzQJC/9yn9XlliDgtTAPe/
+         MQ6+Chrld4E9yxlmyN5UJh3VSJQajNSJkvU277Ma95CdKp+InfihIVMC5tenD+fhhyLc
+         Yupg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D1+XRJJy42ZSFyjL3ICumxudKN6nuaWlh/hrQNXWmHs=;
+        b=lF4VR3Sj9NEwJzVpbwBbUp58n6S1ZRaSQ85WUG4X0pDkVioSu9kf8UFvzk1SQoCfQg
+         hXHJ29AinKmhhXH3PTLtGANquemoOgutpAFI9j/1gHFpXqJa4NPPamgG8S8mGf4/+RxN
+         yWGvYMSBlXiZS9Aq84OCa3s/moWkh1S8FvJB0F9zoowU1s6zQfA/gZxXpWfQsKOEx6vg
+         0eIv8eC7r998ZPMM21OTBoG6k80JWuBx3xjPywVPfRULSQWBfGZSnmk1qgP7vCcb+dsV
+         VEMNoVcV6gVl2jzi+YO4Hst3t2axYXOiIuY4Y1lb0W/3M3imzhibLf3E43Goo7KSLAYQ
+         i6bw==
+X-Gm-Message-State: ANhLgQ3OC/w7TftVW7xS9oaAMdmXHbMY0V6h85lsu2aVMXTaM8DblgN2
+        hLlxbWyt0oYiPiNitpK4T1JNyPTkJsvS/gD83+Y=
+X-Google-Smtp-Source: ADFU+vuddxhLZiv9IVm3bmlaGjKFRPDJnYo5ZMO8KblJymAQ5Pw502u4vz0ALAhaR/SOh+6Y0ugIAMXLPwWQezRRx14=
+X-Received: by 2002:a2e:b78e:: with SMTP id n14mr11528790ljo.269.1583163205431;
+ Mon, 02 Mar 2020 07:33:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 251BF298-5C9B-11EA-B9D9-C28CBED8090B-78420484!pb-smtp1.pobox.com
+References: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAOMZO5AP65Upj8v=KaPLzS10DNdwrz20gJGbwbcJfCDqZBx71Q@mail.gmail.com> <CA+V-a8s_d3Atp9J5KM=x4z2z_iAY8+9vcSHFUTyQ3XZ9HCCS3g@mail.gmail.com>
+In-Reply-To: <CA+V-a8s_d3Atp9J5KM=x4z2z_iAY8+9vcSHFUTyQ3XZ9HCCS3g@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 2 Mar 2020 12:33:13 -0300
+Message-ID: <CAOMZO5DP3BMmmL3eM5dmhy0YdMGvD9UW1mUXb1tYds9eVbE6LA@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020, Masahiro Yamada wrote:
+Hi Prabhakar,
 
-> The 'imply' statement may create unmet direct dependency when the
-> implied symbol depends on m.
-> 
-> [Test Code]
-> 
->   config FOO
->           tristate "foo"
->           imply BAZ
-> 
->   config BAZ
->           tristate "baz"
->           depends on BAR
-> 
->   config BAR
->           def_tristate m
-> 
->   config MODULES
->           def_bool y
->           option modules
-> 
-> If you set FOO=y, BAZ is also promoted to y, which results in the
-> following .config file:
-> 
->   CONFIG_FOO=y
->   CONFIG_BAZ=y
->   CONFIG_BAR=m
->   CONFIG_MODULES=y
-> 
-> This does not meet the dependency 'BAZ depends on BAR'.
-> 
-> Unlike 'select', what is worse, Kconfig never shows the
-> 'WARNING: unmet direct dependencies detected for ...' for this case.
-> 
-> Because 'imply' is considered to be weaker than 'depends on', Kconfig
-> should take the direct dependency into account.
-> 
-> For clarification, describe this case in kconfig-language.rst too.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On Mon, Mar 2, 2020 at 4:19 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+> > Should this be a device tree property instead?
+> I did give a thought about it, but making this as DT property would
+> make it more stiff.
 
-> ---
-> 
->  Documentation/kbuild/kconfig-language.rst | 7 +++++--
->  scripts/kconfig/symbol.c                  | 4 +++-
->  2 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index d4d988aea679..68719e78ff85 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -159,11 +159,11 @@ applicable everywhere (see syntax).
->    Given the following example::
->  
->      config FOO
-> -	tristate
-> +	tristate "foo"
->  	imply BAZ
->  
->      config BAZ
-> -	tristate
-> +	tristate "baz"
->  	depends on BAR
->  
->    The following values are possible:
-> @@ -174,6 +174,9 @@ applicable everywhere (see syntax).
->  	n		y		n		N/m/y
->  	m		y		m		M/y/n
->  	y		y		y		Y/m/n
-> +	n		m		n		N/m
-> +	m		m		m		M/n
-> +	y		m		n		M/n
->  	y		n		*		N
->  	===		===		=============	==============
->  
-> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> index b101ef3c377a..3dc81397d003 100644
-> --- a/scripts/kconfig/symbol.c
-> +++ b/scripts/kconfig/symbol.c
-> @@ -221,7 +221,7 @@ static void sym_calc_visibility(struct symbol *sym)
->  		sym_set_changed(sym);
->  	}
->  	tri = no;
-> -	if (sym->implied.expr && sym->dir_dep.tri != no)
-> +	if (sym->implied.expr)
->  		tri = expr_calc_value(sym->implied.expr);
->  	if (tri == mod && sym_get_type(sym) == S_BOOLEAN)
->  		tri = yes;
-> @@ -394,6 +394,8 @@ void sym_calc_value(struct symbol *sym)
->  				if (sym->implied.tri != no) {
->  					sym->flags |= SYMBOL_WRITE;
->  					newval.tri = EXPR_OR(newval.tri, sym->implied.tri);
-> +					newval.tri = EXPR_AND(newval.tri,
-> +							      sym->dir_dep.tri);
->  				}
->  			}
->  		calc_newval:
-> -- 
-> 2.17.1
-> 
-> 
+In case a system has two OV5645 and we want to operate each OV5645
+with a different virtual channel, it will not be possible with the
+module_param approach.
+
+Using a device tree property would make it possible though, so I think
+it makes more sense to use a device tree property for this.
+
+Thanks
