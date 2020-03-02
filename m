@@ -2,113 +2,140 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82007C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3908C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A65820656
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A922221739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmLGIQqL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e/7/QIWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgCBNvl (ORCPT
+        id S1727299AbgCBNvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:51:41 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38754 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCBNvk (ORCPT
+        Mon, 2 Mar 2020 08:51:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57045 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726872AbgCBNvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:51:40 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u9so4857841wml.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:51:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R2BZu+imcykNACPLPvIynfptCCeFQHdJvvg/T84qCP8=;
-        b=mmLGIQqLs40/1JctkJUW6fbnrI0wxyktW/MCLs1VqwiTzd4SDvBGmvOxVfPkG5rZh5
-         uJOIAYDexjxz0yNhBvg09cLZfbwPNB0bBkJHNv+3WEvizQvZfuZ3AU4SRlzG1g5mk2B6
-         6llx37T3S+hlKdpV+y2jbBUJ79l3tlddWzm2s2FedCGfwWzUs47UvEOu5PBCppwg5+xW
-         ac+OsYujE/Xtu1/oDlh3eYFUeABe6ORlhnB3CGOPTXr3M6HT0acqwrAzGalKO74ZEZj4
-         gRVXWMijclJLyTIZqs4CpiEVANmMCGVLWD1imqMswpQ8LNtWQ4dgW9ezZEmblkQfjK8s
-         WFTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R2BZu+imcykNACPLPvIynfptCCeFQHdJvvg/T84qCP8=;
-        b=hrFKGrnjikI5qqpSdHoH934GxPVp2ED1sBJgLTjzG9lrAAt8kmoo6hrksMnBE7qxX6
-         xdOr/ieiCEhXZR8p7CaAD9t7jp2YIEjvIdq51YqnLTuOvlmxqmLrXDgvAWGgsG1q1vTP
-         +A7CWzuPObNklaSl0pjwvl3dFo5S4bCm2JXMIjawX6CsSW7zOjtICcXRIQ3+FOQbLrXa
-         ERln3r8QP3Dy6p8xyRuJkX4y9ALDpYX2BisaTR58ZWLQj1owmR+yTENPW6klwDv55832
-         l8i8jnblL8jpVcPdQFfeS/WHa/pTNCEi06J12553TL6JpKr9XXtxQqRXq/liWy6hoti5
-         BN0w==
-X-Gm-Message-State: ANhLgQ2T8L4W9e+TKtDPed9Ww07VperSb8lahU3y4S6KMhVkjQKyILJ9
-        ooltZmp3g7vfWSFJCJANVfw=
-X-Google-Smtp-Source: ADFU+vt/Vy32uNCBI4Sk9lNPXzlHfMBJTlaslZWI9ZLyr6KXc2/mDivaYthY+LJV4eqjQSkIGmYZCQ==
-X-Received: by 2002:a05:600c:351:: with SMTP id u17mr6467430wmd.22.1583157098661;
-        Mon, 02 Mar 2020 05:51:38 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id l17sm7530089wmi.10.2020.03.02.05.51.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 05:51:37 -0800 (PST)
-Date:   Mon, 2 Mar 2020 13:51:37 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     mateusznosek0@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/mm_init.c: Clean code. Use BUILD_BUG_ON when
- comparing compile time constant
-Message-ID: <20200302135137.lm5syk7r2thohs54@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200228224617.11343-1-mateusznosek0@gmail.com>
+        Mon, 2 Mar 2020 08:51:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583157112;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FiCQRZVKNip0tJQTjyPcrPcjQQToViBOoP7sm23P5rA=;
+        b=e/7/QIWSACrQf4vjSmtHcqqR9aivAvGmLAvhZTTwUA7FqIW612sssjoxODciGFP8a0fZCN
+        ttgkyv1oOl2+ujphbVa3NbSEhuYrTEqUrfkwszEal4tpQZXgX7WQTsciBWtzN3CJgWk+of
+        OyV3xjsbkAHlJ21/Q51uBWChp6xJV8s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-kOprc3jJMlih9pd5-Echgw-1; Mon, 02 Mar 2020 08:51:48 -0500
+X-MC-Unique: kOprc3jJMlih9pd5-Echgw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C8D713F7;
+        Mon,  2 Mar 2020 13:51:46 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-116-114.ams2.redhat.com [10.36.116.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A09227183;
+        Mon,  2 Mar 2020 13:51:27 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH v1 04/11] mm: Export alloc_contig_range() / free_contig_range()
+Date:   Mon,  2 Mar 2020 14:49:34 +0100
+Message-Id: <20200302134941.315212-5-david@redhat.com>
+In-Reply-To: <20200302134941.315212-1-david@redhat.com>
+References: <20200302134941.315212-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228224617.11343-1-mateusznosek0@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:46:17PM +0100, mateusznosek0@gmail.com wrote:
->From: Mateusz Nosek <mateusznosek0@gmail.com>
->
->MAX_ZONELISTS is compile time constant,
->so it should be compared using BUILD_BUG_ON not BUG_ON.
->
->Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+A virtio-mem device wants to allocate memory from the memory region it
+manages in order to unplug it in the hypervisor - similar to
+a balloon driver. Also, it might want to plug previously unplugged
+(allocated) memory and give it back to Linux. alloc_contig_range() /
+free_contig_range() seem to be the perfect interface for this task.
 
-Sounds you are right.
+In contrast to existing balloon devices, a virtio-mem device operates
+on bigger chunks (e.g., 4MB) and only on physical memory it manages. It
+tracks which chunks (subblocks) are still plugged, so it can go ahead
+and try to alloc_contig_range()+unplug them on unplug request, or
+plug+free_contig_range() unplugged chunks on plug requests.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+A virtio-mem device will use alloc_contig_range() / free_contig_range()
+only on ranges that belong to the same node/zone in at least
+MAX(MAX_ORDER - 1, pageblock_order) order granularity - e.g., 4MB on
+x86-64. The virtio-mem device added that memory, so the memory
+exists and does not contain any holes. virtio-mem will only try to alloca=
+te
+on ZONE_NORMAL, never on ZONE_MOVABLE, just like when allocating
+gigantic pages (we don't put unmovable data into the movable zone).
 
->---
-> mm/mm_init.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/mm/mm_init.c b/mm/mm_init.c
->index 5c918388de99..7da6991d9435 100644
->--- a/mm/mm_init.c
->+++ b/mm/mm_init.c
->@@ -37,7 +37,7 @@ void __init mminit_verify_zonelist(void)
-> 		struct zonelist *zonelist;
-> 		int i, listid, zoneid;
-> 
->-		BUG_ON(MAX_ZONELISTS > 2);
->+		BUILD_BUG_ON(MAX_ZONELISTS > 2);
-> 		for (i = 0; i < MAX_ZONELISTS * MAX_NR_ZONES; i++) {
-> 
-> 			/* Identify the zone and nodelist */
->-- 
->2.17.1
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Alexander Potapenko <glider@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com> # to export contig range allocat=
+or API
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/page_alloc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
--- 
-Wei Yang
-Help you, Help me
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 79e950d76ffc..8d7be3f33e26 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8597,6 +8597,7 @@ int alloc_contig_range(unsigned long start, unsigne=
+d long end,
+ 				pfn_max_align_up(end), migratetype);
+ 	return ret;
+ }
++EXPORT_SYMBOL(alloc_contig_range);
+=20
+ static int __alloc_contig_pages(unsigned long start_pfn,
+ 				unsigned long nr_pages, gfp_t gfp_mask)
+@@ -8712,6 +8713,7 @@ void free_contig_range(unsigned long pfn, unsigned =
+int nr_pages)
+ 	}
+ 	WARN(count !=3D 0, "%d pages are still in use!\n", count);
+ }
++EXPORT_SYMBOL(free_contig_range);
+=20
+ /*
+  * The zone indicated has a new number of managed_pages; batch sizes and=
+ percpu
+--=20
+2.24.1
+
