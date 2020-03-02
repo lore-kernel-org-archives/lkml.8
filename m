@@ -2,176 +2,146 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515AEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89820C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1823520866
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eFWqtiYE"
+	by mail.kernel.org (Postfix) with ESMTP id 683A320848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCBW0Y (ORCPT
+        id S1726859AbgCBWgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:26:24 -0500
-Received: from mail-bn8nam12on2084.outbound.protection.outlook.com ([40.107.237.84]:6113
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgCBW0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:26:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZtegsG+q7VeJvuvnSMXBnz1Y0Ato2/PxRELP9MXqGa9PcX6h3yYgwLvWwhHbYSPEh3tikALH6AnAQrT0AWg5bAZjkdi9AE51hpW8yPglBq8ZuxWxJE267J/NRLd1Qhz1aGw0BRrkfw+gguz0kAwFBQX1Zjk25ALq+F6roGKQ2i9jDeArY3G3etaWLLKFyqIyYlx6JzaGm3Tm+9RHhBJsQJ7pa2huQzC8Ge5VzWNL6w/NWy2NjYOFkU0Irkv/LdTBM8RU7O/U3c2LYS0CAnKpPqkFVUlqRSzv1CrcuCiEq1Lh5ASRIryvlgnwQOjqvv+MjNk/EZ4I/voFVnbTjWNhrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xePwD/9oTSo6veH2q5Nf1c461X+YDRVi9pjFeJLdyso=;
- b=DeBJCPBaTZr7jXDr24Hhl1k4mKq5bhN3CLnIQb7ODPQ3+AX4IAj4kl7LrymBXaWtBH2BVhQv2Y+YwiyQWlpmjPomnMG2W1KEFDt0eHQ/xgOaLH3X7SqsE/kdpM9LhSVgs9mDb1WNfIwBqkrm8BYw+2Tv3jvIgjfUWFZSV7kw8SGYQIkbtuAgYEAm+itkrvKsN7BITw13KFCE6lady7TSfhp9ZhygxVYEFXLf+VfeJlDhz6e8L/3M4e4MM5hFepwSHP4WZGXy5srUe/nKIfcNJuCKijkGBXL05TX0HoNVeJDXxMTt4kQwtsw7Bv6S6Kffp8hCIqG6ixtLOhMRIBlBTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xePwD/9oTSo6veH2q5Nf1c461X+YDRVi9pjFeJLdyso=;
- b=eFWqtiYE7n2LHuXTRQwB+6VxnSxfOL7wFcMFNMGWAsWHw81A8Ygsta7P3wy0Nmeqsh/5fdkLpqKF/YUY+etlyG91IZ7Q/9dns0KEDY3Qq8AJcwAzwdGNpDborjpYhY6wTItvETqGw+GckOluoLzTRO0AsLAgjyQr8DhSgAnpVoM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2622.namprd12.prod.outlook.com (2603:10b6:805:72::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
- 2020 22:25:59 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 22:25:59 +0000
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
-        maddy@linux.ibm.com
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <df966d6e-8898-029f-e697-8496500a1663@amd.com>
-Date:   Mon, 2 Mar 2020 16:25:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM3PR14CA0129.namprd14.prod.outlook.com
- (2603:10b6:0:53::13) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+        Mon, 2 Mar 2020 17:36:05 -0500
+Received: from mga06.intel.com ([134.134.136.31]:35175 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbgCBWgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:36:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 14:36:03 -0800
+X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
+   d="scan'208";a="273921114"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 14:36:02 -0800
+Subject: [PATCH 0/5] Manual definition of Soft Reserved memory devices
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Date:   Mon, 02 Mar 2020 14:19:57 -0800
+Message-ID: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.136.247] (165.204.77.1) by DM3PR14CA0129.namprd14.prod.outlook.com (2603:10b6:0:53::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 22:25:58 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 94815d2b-6cfa-4012-fd47-08d7bef8af18
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2622:|SN6PR12MB2622:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2622A71410E94EBC652A953D87E70@SN6PR12MB2622.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 033054F29A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(376002)(396003)(189003)(199004)(66476007)(5660300002)(36756003)(66946007)(16576012)(478600001)(4326008)(31686004)(66556008)(6486002)(7416002)(316002)(53546011)(86362001)(110136005)(8676002)(52116002)(2906002)(54906003)(26005)(81156014)(81166006)(31696002)(186003)(16526019)(8936002)(2616005)(956004)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2622;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hdaZS8zra4H3It/T6hgmDGvOzKLubE6kgeYs1Wd4qwbGEQgS0Ro4SUoZkEG3FE7YxoGCfAB4loxbEjCKWdErug4byQ8gw6Fv40ekp0eCe+TP/0rvu+jIzq1qZArFUsCkx7GEm1TW0iHInzsQwreelCzl1Srb1yNVxTblxyNUCogmqOcbgTdHLd0UsxM7N/ci8zsHee0HImsxGE88YACYQ9BKqTuAkn5yobxWVDpesnhS/uJXdHHcb8x6QjpQTH6Ws+MXboIkSfjF8fBrqVbjoSPFNTnVU6N1pdNS2WzfJ3rZBgAJzrFw5YELYn0r5+QxKpUNUnr66NaLgfrRIsxDybhE4ynWUTJE98+QgWNUmAyEIdV9K/DFesAf3+wxre4VmMu1TAprKDUnVZZdCfPkJQ4B3gMV9hp5L9lvP6RTibpfV+QjW8TYnhJvEzng/6so
-X-MS-Exchange-AntiSpam-MessageData: lrhEG9wYmAIY1KpjajfXttz7zKOM0ZYUwnP35QPEEfds9D4Rftz9TzDIk31NhLT1kKP/oKUFPgyvH/rc4ODn4ColB3+WAGvCZPIxilIQtJEt2g5HmghlQ/SnYP7+jElMisDU6qXMY4vq6NzlbMfOQA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94815d2b-6cfa-4012-fd47-08d7bef8af18
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 22:25:59.7322
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1YILT2AnjPXwkGTbyM7/Pzey9S+3rmTw73XaWZUCCRyjWIQPhe7L6kWCg+kU8EoaqttmWFfEXQuD+2FOAWSbhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2622
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 2:21 PM, Stephane Eranian wrote:
-> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>> Modern processors export such hazard data in Performance
->>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>> AMD[3] provides similar information.
->>>
->>> Implementation detail:
->>>
->>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>> If it's set, kernel converts arch specific hazard information
->>> into generic format:
->>>
->>>   struct perf_pipeline_haz_data {
->>>          /* Instruction/Opcode type: Load, Store, Branch .... */
->>>          __u8    itype;
->>>          /* Instruction Cache source */
->>>          __u8    icache;
->>>          /* Instruction suffered hazard in pipeline stage */
->>>          __u8    hazard_stage;
->>>          /* Hazard reason */
->>>          __u8    hazard_reason;
->>>          /* Instruction suffered stall in pipeline stage */
->>>          __u8    stall_stage;
->>>          /* Stall reason */
->>>          __u8    stall_reason;
->>>          __u16   pad;
->>>   };
->>
->> Kim, does this format indeed work for AMD IBS?
+Given the current dearth of systems that supply an ACPI HMAT table, and
+the utility of being able to manually define device-dax "hmem" instances
+via the efi_fake_mem= option, relax the requirements for creating these
+devices. Specifically, add an option (numa=nohmat) to optionally disable
+consideration of the HMAT and update efi_fake_mem= to behave like
+memmap=nn!ss in terms of delimiting device boundaries.
 
-It's not really 1:1, we don't have these separations of stages
-and reasons, for example: we have missed in L2 cache, for example.
-So IBS output is flatter, with more cycle latency figures than
-IBM's AFAICT.
+All review welcome of course, but the E820 changes want an x86
+maintainer ack, the efi_fake_mem update needs Ard, and Rafael has
+previously shepherded the HMAT changes. For the changes to
+kernel/resource.c, where there is no clear maintainer, I just copied the
+last few people to make thoughtful changes in that area. I am happy to
+take these through the nvdimm tree along with these prerequisites
+already in -next:
 
-> Personally, I don't like the term hazard. This is too IBM Power
-> specific. We need to find a better term, maybe stall or penalty.
+b2ca916ce392 ACPI: NUMA: Up-level "map to online node" functionality
+4fcbe96e4d0b mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+575e23b6e13c powerpc/papr_scm: Switch to numa_map_to_online_node()
+1e5d8e1e47af x86/mm: Introduce CONFIG_NUMA_KEEP_MEMINFO
+5d30f92e7631 x86/NUMA: Provide a range-to-target_node lookup facility
+7b27a8622f80 libnvdimm/e820: Retrieve and populate correct 'target_node' info
 
-Right, IBS doesn't have a filter to only count stalled or otherwise
-bad events.  IBS' PPR descriptions has one occurrence of the
-word stall, and no penalty.  The way I read IBS is it's just
-reporting more sample data than just the precise IP: things like
-hits, misses, cycle latencies, addresses, types, etc., so words
-like 'extended', or the 'auxiliary' already used today even
-are more appropriate for IBS, although I'm the last person to
-bikeshed.
+Tested with:
 
-> Also worth considering is the support of ARM SPE (Statistical
-> Profiling Extension) which is their version of IBS.
-> Whatever gets added need to cover all three with no limitations.
+        numa=nohmat efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
 
-I thought Intel's various LBR, PEBS, and PT supported providing
-similar sample data in perf already, like with perf mem/c2c?
+...to create to device-dax instances:
 
-Kim
+	# daxctl list -RDu
+	[
+	  {
+	    "path":"\/platform\/hmem.1",
+	    "id":1,
+	    "size":"4.00 GiB (4.29 GB)",
+	    "align":2097152,
+	    "devices":[
+	      {
+	        "chardev":"dax1.0",
+	        "size":"4.00 GiB (4.29 GB)",
+	        "target_node":3,
+	        "mode":"devdax"
+	      }
+	    ]
+	  },
+	  {
+	    "path":"\/platform\/hmem.0",
+	    "id":0,
+	    "size":"4.00 GiB (4.29 GB)",
+	    "align":2097152,
+	    "devices":[
+	      {
+	        "chardev":"dax0.0",
+	        "size":"4.00 GiB (4.29 GB)",
+	        "target_node":2,
+	        "mode":"devdax"
+	      }
+	    ]
+	  }
+	]
+
+---
+
+Dan Williams (5):
+      ACPI: NUMA: Add 'nohmat' option
+      efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+      ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+      resource: Report parent to walk_iomem_res_desc() callback
+      ACPI: HMAT: Attach a device for each soft-reserved range
+
+
+ arch/x86/kernel/e820.c              |   16 +++++-
+ arch/x86/mm/numa.c                  |    4 +
+ drivers/acpi/numa/hmat.c            |   71 +++-----------------------
+ drivers/dax/Kconfig                 |    5 ++
+ drivers/dax/Makefile                |    3 -
+ drivers/dax/hmem/Makefile           |    6 ++
+ drivers/dax/hmem/device.c           |   97 +++++++++++++++++++++++++++++++++++
+ drivers/dax/hmem/hmem.c             |    2 -
+ drivers/firmware/efi/x86_fake_mem.c |   12 +++-
+ include/acpi/acpi_numa.h            |    1 
+ include/linux/dax.h                 |    8 +++
+ kernel/resource.c                   |    1 
+ 12 files changed, 156 insertions(+), 70 deletions(-)
+ create mode 100644 drivers/dax/hmem/Makefile
+ create mode 100644 drivers/dax/hmem/device.c
+ rename drivers/dax/{hmem.c => hmem/hmem.c} (98%)
+
+base-commit: 7b27a8622f802761d5c6abd6c37b22312a35343c
