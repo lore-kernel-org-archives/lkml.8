@@ -2,113 +2,446 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEF5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82197C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0633724673
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D50C20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bN5i+rDR"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ESXCafrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCBSWN (ORCPT
+        id S1727447AbgCBSXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:22:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23858 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726997AbgCBSWN (ORCPT
+        Mon, 2 Mar 2020 13:23:09 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:33107 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgCBSXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:22:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583173332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ih5//RAv6LhCAV7ANNWMSlbgMbwpFxJEPQWnbvDX1pk=;
-        b=bN5i+rDRRehkh6Ub9LLvs7GniUBaTvaMvyCIXVrfio8rZEHSNUGYEuyw34Hru5jmEOiejA
-        y3RMBqcGnzNLf+vpX94ooMCflne/uh9idDqPW/RkKMMLRcaY9YzQrV0FhhXwJBa9vjl6Q8
-        R70pDOHF6wgCm89qig/2WYtpRGgM/50=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-9mIcrl5qM7eNV5P_7daE8g-1; Mon, 02 Mar 2020 13:22:11 -0500
-X-MC-Unique: 9mIcrl5qM7eNV5P_7daE8g-1
-Received: by mail-wr1-f71.google.com with SMTP id j32so63848wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:22:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ih5//RAv6LhCAV7ANNWMSlbgMbwpFxJEPQWnbvDX1pk=;
-        b=ZA9JWItULQ3z3epG5xZJk2/BxYUiShr1gGrCQZqMqgZCao8sfNEPRLXlU0S6KETXoQ
-         f5icA+QkJOkH3naH3e8OPuU/A/trRaWlrlWJmvxzvxlnNgs2vgQQdLiKR+RIySKBBiIX
-         0yKlmpmN4FnMDXDut7FOqbrxCTWkCPoEU1Jn1v77LuRSEi3tP3kKKaAl8NFq7UbDLZt0
-         qaoldo6K/+YTvIeKMNTJimDKVMg3eZUTGrSOa46dGDx1sUCrLUnkvAG+FL1dMoCuGiqG
-         FnR05VFy24TvNJn56+IKA4kXtyQeq8zMvOrZ65AIJz8PlEkuSMYLBO1mO7ABotXP1mFw
-         WjgA==
-X-Gm-Message-State: ANhLgQ05m8DpiFO7uLF/lkM7ZVfuAm2HrOVk0MzJWDlhE1NFx2oJT/5T
-        lfZFrgzfAmEwI5MeLnu7/CZa0/RjWjHi2s0c9AjZflCYU+u/afAil1rgf4DRNxg52q+fk5xFd1B
-        Tb2u/o+beo9ttsn9Gfq9++Ty3
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr40736wmb.118.1583173330032;
-        Mon, 02 Mar 2020 10:22:10 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vs9ZQ2SoIISj8TdDsBbhc3slcREpZ8XKsZ1xcKoa/2yEi4GDeN1FpR2ke/iKZ7ArhjCgTZ7JA==
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr40717wmb.118.1583173329766;
-        Mon, 02 Mar 2020 10:22:09 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.85.6])
-        by smtp.gmail.com with ESMTPSA id a184sm346359wmf.29.2020.03.02.10.22.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 10:22:09 -0800 (PST)
-Subject: Re: [PATCH v3] KVM: X86: Just one leader to trigger kvmclock sync
- request
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <kernellwp@gmail.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1582859921-11932-1-git-send-email-wanpengli@tencent.com>
- <87lfoihpwt.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f0fe943d-bdd0-1150-6d22-e7e48416da6d@redhat.com>
-Date:   Mon, 2 Mar 2020 19:22:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <87lfoihpwt.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 2 Mar 2020 13:23:08 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: w0LdkjvxFcz6lBjCghOwyy5RSSGS06ljCa1VV2N5sCLtxgADxd8lzNcZ2y+LZ9An3QF0aNrmN0
+ dKpnn3T4kTOc8Gece1I0ADEP6hQ5BdiF6PneCtUIAHaUfOR8jVJFO7SxLBtpS2BSaszVWLOgxl
+ Ip5UMgZK6oO9sMaPZ5/CImeVcJfZoIXaH9aso4fQd0iHMjm88Gega3Vli5THUMOJi5pqxwixXF
+ XCh1U5F1vU0+FLyW0Dx+rYIOEtWW0ZG/c9yHlHWj+upFEgwOwsi00S9Hfxe4RoOQ5obhUN6s2i
+ BZQ=
+X-IronPort-AV: E=Sophos;i="5.70,507,1574146800"; 
+   d="scan'208";a="67603656"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 11:23:07 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 2 Mar 2020 11:08:14 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 2 Mar 2020 11:08:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tz9cm6VXupF4v5WC5A1g2LRB/JKwul+ugbCekaA5pU+99bR1AMnUxx1NsAAmCbk/FMjInwfjZS+lxeS0xuX1AZDQWabLmZ0tVnkSlSpjFWZM69U/AC5ixBYOwK3662RsiqzECltbMcDlAfachSQwEWn9GV0q//uVMFt/f+hltYSmvrBHTJ0d9FYxaToPKMUtCnfuLN/2eSv1D7rykd2Iwweya1MbrlSD7NxUBaxAfZE1g4oL0ADxf9jzXBHokc+eqwdw6AAVgC4+2aslFfzjlKfVHoaxVGXe1Ome440TqRL7v5Glm1c4Ttwwmwyb446bC986V4rEl/YZzB6TIUqGDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gOPRzOjkFy+ajctbc4FajKqKi0sI4eQkBgwXrfldr5A=;
+ b=aBvu0P7t47znJlJP8uBVUNoYXAvMoHX1dzny4GxgSmMqZZZmF0UuMo/PbWFz6S2vzA0bpZmjDU33Hj19dh9AYjYb3t4gnu1IhBwWgwnRYSV3+HTRkz6gTtOqzSU7fkJJvDGSKElLcZju39cFDJan20Eqtkd6l6pq4W/xaXy5Ibv62CuWwGPvnbZZrmm6/kLXeJD+sQDZGomdIq0mdGjzl8jtEooGYLzbuTOQ6VHRxe1Skx5/PjJXtM+Ge5HBWhzXdc2NezCL91Hes1KN8psDT4fkqWXgoxzUeoiVfcr0cIPjrlsrLSRf8CuznppzJA5IxeUa7rFrv/PLhjXT6lO6eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gOPRzOjkFy+ajctbc4FajKqKi0sI4eQkBgwXrfldr5A=;
+ b=ESXCafrWC7w98hg00s5cdiufPIWMacd9cZFRj5399qoliz7bZOQT71kqQ6sufGuqgWcbjZegLeUbuENewn+aJVDuD7s4Rk5BOvxJVGkCgkVZwlUJhL3uO2lASuEnUIFMo6yjWLb4XjS4xVCie9wm1c0LYpI5bZ3jLbMDUdglCkY=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
+ by MN2PR11MB4142.namprd11.prod.outlook.com (2603:10b6:208:135::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
+ 2020 18:07:56 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 18:07:56 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <bbrezillon@kernel.org>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <matthias.bgg@gmail.com>, <vz@mleia.com>,
+        <michal.simek@xilinx.com>, <ludovic.barre@st.com>,
+        <john.garry@huawei.com>, <tglx@linutronix.de>,
+        <nishkadg.linux@gmail.com>, <michael@walle.cc>,
+        <dinguyen@kernel.org>, <thor.thayer@linux.intel.com>,
+        <swboyd@chromium.org>, <opensource@jilayne.com>,
+        <mika.westerberg@linux.intel.com>, <kstewart@linuxfoundation.org>,
+        <allison@lohutok.net>, <jethro@fortanix.com>, <info@metux.net>,
+        <alexander.sverdlin@nokia.com>, <rfontana@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 20/23] mtd: spi-nor: Move Xilinx bits out of core.c
+Thread-Topic: [PATCH 20/23] mtd: spi-nor: Move Xilinx bits out of core.c
+Thread-Index: AQHV8L1/nqXX3HpkeUKEtq8g2RPGbA==
+Date:   Mon, 2 Mar 2020 18:07:56 +0000
+Message-ID: <20200302180730.1886678-21-tudor.ambarus@microchip.com>
+References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 222e2005-7889-41e4-0270-08d7bed4a296
+x-ms-traffictypediagnostic: MN2PR11MB4142:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB41423A87B0E0EBB1684F704AF0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(36756003)(26005)(66446008)(107886003)(6486002)(186003)(2616005)(4326008)(478600001)(6512007)(91956017)(64756008)(66946007)(2906002)(71200400001)(76116006)(8936002)(316002)(86362001)(54906003)(6506007)(66556008)(5660300002)(66476007)(7406005)(1076003)(7416002)(81156014)(81166006)(110136005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3aWAO5TlWxHmhuKzXqjFhuuml1cCjfo+9Imu88wkIAEDeVdXsTYbnZaSrKFRb7Hee653ZHwG2pYWgyiDS4xPrQlqx2tvH8/7Ten8d54BuymCyBv8RGCVU3fHk3qidXz3qR4upyGJrdVxHHZZN8XtbBnkCoS6yMyntXyLUb47Bq32OpFNUfNs91O8Z85VPiCDqhUDRtjeJn9dbkg2F5oKjyg9WCUlYw5v3Oq8sC/SzdW0cru9ranQGoqiqxj8U1DK4kNehT/j/gvCN5xC1HfWTsLIKenJ3FmDHHvKckYwsNb0OkkOFnRO++cg9Gs+aCpPiR2ZPU/J2pK1W8uLyUnETBiO09ijbd9XtopGbXtM2Ahv2VmbSQ6I/Mq4ICthDzYVZT/VhgprUuEKMyVJek/4lXDB+y5QFSd5jPIzJw0qh9ZO6COaXlM/UcnWjjMlmDzw
+x-ms-exchange-antispam-messagedata: ptoJ0CjLbGLvQV7+JVPZ3uM78rMM9EsYqlWgl2sU/kQRnsnsv0RBJrYsPB63pzpXL9wV0BuMVCXEzib/e42yp2KrPgaQseklHZn2B7D4IXDp6Vzjoj1bOlHpMwtRWqiIqqEZqyJHCQgasI19KfS6Tw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 222e2005-7889-41e4-0270-08d7bed4a296
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:07:56.0282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fNRS58tOlBSXg07qEmo18ijNXmqVsIxkCXiymYoSmGugCQv9AEaSszpVUtiJgl9Mn3s0rZ9p82rV9GV6cGtc3ih7TeCwyg42cUUqv5II27M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/20 14:01, Vitaly Kuznetsov wrote:
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9389,11 +9389,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
->  
->         mutex_unlock(&vcpu->mutex);
->  
-> -       if (!kvmclock_periodic_sync)
-> -               return;
-> -
-> -       schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> -                                       KVMCLOCK_SYNC_PERIOD);
-> +       if (vcpu->vcpu_idx == 0 && kvmclock_periodic_sync)
-> +               schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> +                                     KVMCLOCK_SYNC_PERIOD);
->  }
+From: Boris Brezillon <bbrezillon@kernel.org>
 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Create a SPI NOR manufacturer driver for Xilinx chips, and move the
+Xilinx definitions outside of core.c.
 
-Good idea, I squashed the change.
+While at it, remove the SPI_S3AN flag which is now useless.
 
-Paolo
+Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ drivers/mtd/spi-nor/Makefile |  1 +
+ drivers/mtd/spi-nor/core.c   | 76 +----------------------------
+ drivers/mtd/spi-nor/core.h   | 13 +----
+ drivers/mtd/spi-nor/xilinx.c | 94 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 98 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/mtd/spi-nor/xilinx.c
 
+diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+index cd8d95b727c9..fa03513dd160 100644
+--- a/drivers/mtd/spi-nor/Makefile
++++ b/drivers/mtd/spi-nor/Makefile
+@@ -15,4 +15,5 @@ spi-nor-objs			+=3D micron-st.o
+ spi-nor-objs			+=3D spansion.o
+ spi-nor-objs			+=3D sst.o
+ spi-nor-objs			+=3D winbond.o
++spi-nor-objs			+=3D xilinx.o
+ obj-$(CONFIG_MTD_SPI_NOR)	+=3D spi-nor.o
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 1776fb8eb66b..3e9f6bafa01b 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -1117,26 +1117,6 @@ void spi_nor_unlock_and_unprep(struct spi_nor *nor)
+ 	mutex_unlock(&nor->lock);
+ }
+=20
+-/*
+- * This code converts an address to the Default Address Mode, that has non
+- * power of two page sizes. We must support this mode because it is the de=
+fault
+- * mode supported by Xilinx tools, it can access the whole flash area and
+- * changing over to the Power-of-two mode is irreversible and corrupts the
+- * original data.
+- * Addr can safely be unsigned int, the biggest S3AN device is smaller tha=
+n
+- * 4 MiB.
+- */
+-static u32 s3an_convert_addr(struct spi_nor *nor, u32 addr)
+-{
+-	u32 offset, page;
+-
+-	offset =3D addr % nor->page_size;
+-	page =3D addr / nor->page_size;
+-	page <<=3D (nor->page_size > 512) ? 10 : 9;
+-
+-	return page | offset;
+-}
+-
+ static u32 spi_nor_convert_addr(struct spi_nor *nor, loff_t addr)
+ {
+ 	if (!nor->params.convert_addr)
+@@ -1985,13 +1965,6 @@ int spi_nor_sr2_bit7_quad_enable(struct spi_nor *nor=
+)
+  * old entries may be missing 4K flag.
+  */
+ static const struct flash_info spi_nor_ids[] =3D {
+-	/* Xilinx S3AN Internal Flash */
+-	{ "3S50AN", S3AN_INFO(0x1f2200, 64, 264) },
+-	{ "3S200AN", S3AN_INFO(0x1f2400, 256, 264) },
+-	{ "3S400AN", S3AN_INFO(0x1f2400, 256, 264) },
+-	{ "3S700AN", S3AN_INFO(0x1f2500, 512, 264) },
+-	{ "3S1400AN", S3AN_INFO(0x1f2600, 512, 528) },
+-
+ 	/* XMC (Wuhan Xinxin Semiconductor Manufacturing Corp.) */
+ 	{ "XM25QH64A", INFO(0x207017, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_DUAL_R=
+EAD | SPI_NOR_QUAD_READ) },
+ 	{ "XM25QH128A", INFO(0x207018, 0, 64 * 1024, 256, SECT_4K | SPI_NOR_DUAL_=
+READ | SPI_NOR_QUAD_READ) },
+@@ -2014,6 +1987,7 @@ static const struct spi_nor_manufacturer *manufacture=
+rs[] =3D {
+ 	&spi_nor_spansion,
+ 	&spi_nor_sst,
+ 	&spi_nor_winbond,
++	&spi_nor_xilinx,
+ };
+=20
+ static const struct flash_info *
+@@ -2199,46 +2173,6 @@ static int spi_nor_check(struct spi_nor *nor)
+ 	return 0;
+ }
+=20
+-static int s3an_nor_setup(struct spi_nor *nor,
+-			  const struct spi_nor_hwcaps *hwcaps)
+-{
+-	int ret;
+-
+-	ret =3D spi_nor_xread_sr(nor, nor->bouncebuf);
+-	if (ret)
+-		return ret;
+-
+-	nor->erase_opcode =3D SPINOR_OP_XSE;
+-	nor->program_opcode =3D SPINOR_OP_XPP;
+-	nor->read_opcode =3D SPINOR_OP_READ;
+-	nor->flags |=3D SNOR_F_NO_OP_CHIP_ERASE;
+-
+-	/*
+-	 * This flashes have a page size of 264 or 528 bytes (known as
+-	 * Default addressing mode). It can be changed to a more standard
+-	 * Power of two mode where the page size is 256/512. This comes
+-	 * with a price: there is 3% less of space, the data is corrupted
+-	 * and the page size cannot be changed back to default addressing
+-	 * mode.
+-	 *
+-	 * The current addressing mode can be read from the XRDSR register
+-	 * and should not be changed, because is a destructive operation.
+-	 */
+-	if (nor->bouncebuf[0] & XSR_PAGESIZE) {
+-		/* Flash in Power of 2 mode */
+-		nor->page_size =3D (nor->page_size =3D=3D 264) ? 256 : 512;
+-		nor->mtd.writebufsize =3D nor->page_size;
+-		nor->mtd.size =3D 8 * nor->page_size * nor->info->n_sectors;
+-		nor->mtd.erasesize =3D 8 * nor->page_size;
+-	} else {
+-		/* Flash in Default addressing mode */
+-		nor->params.convert_addr =3D s3an_convert_addr;
+-		nor->mtd.erasesize =3D nor->info->sector_size;
+-	}
+-
+-	return 0;
+-}
+-
+ static void
+ spi_nor_set_read_settings(struct spi_nor_read_command *read,
+ 			  u8 num_mode_clocks,
+@@ -2837,11 +2771,6 @@ static void spi_nor_info_init_params(struct spi_nor =
+*nor)
+ 	spi_nor_init_uniform_erase_map(map, erase_mask, params->size);
+ }
+=20
+-static void s3an_post_sfdp_fixups(struct spi_nor *nor)
+-{
+-	nor->params.setup =3D s3an_nor_setup;
+-}
+-
+ /**
+  * spi_nor_post_sfdp_fixups() - Updates the flash's parameters and setting=
+s
+  * after SFDP has been parsed (is also called for SPI NORs that do not
+@@ -2854,9 +2783,6 @@ static void s3an_post_sfdp_fixups(struct spi_nor *nor=
+)
+  */
+ static void spi_nor_post_sfdp_fixups(struct spi_nor *nor)
+ {
+-	if (nor->info->flags & SPI_S3AN)
+-		s3an_post_sfdp_fixups(nor);
+-
+ 	if (nor->manufacturer && nor->manufacturer->fixups &&
+ 	    nor->manufacturer->fixups->post_sfdp)
+ 		nor->manufacturer->fixups->post_sfdp(nor);
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index 9eb46900bc72..abd5332afaf5 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -73,16 +73,6 @@ struct flash_info {
+ #define SPI_NOR_XSR_RDY		BIT(10)	/*
+ 					 * S3AN flashes have specific opcode to
+ 					 * read the status register.
+-					 * Flags SPI_NOR_XSR_RDY and SPI_S3AN
+-					 * use the same bit as one implies the
+-					 * other, but we will get rid of
+-					 * SPI_S3AN soon.
+-					 */
+-#define	SPI_S3AN		BIT(10)	/*
+-					 * Xilinx Spartan 3AN In-System Flash
+-					 * (MFR cannot be used for probing
+-					 * because it has the same value as
+-					 * ATMEL flashes)
+ 					 */
+ #define SPI_NOR_4B_OPCODES	BIT(11)	/*
+ 					 * Use dedicated 4byte address op codes
+@@ -150,7 +140,7 @@ struct flash_info {
+ 		.n_sectors =3D (_n_sectors),				\
+ 		.page_size =3D _page_size,				\
+ 		.addr_width =3D 3,					\
+-		.flags =3D SPI_NOR_NO_FR | SPI_S3AN,
++		.flags =3D SPI_NOR_NO_FR | SPI_NOR_XSR_RDY,
+=20
+ /**
+  * struct spi_nor_manufacturer - SPI NOR manufacturer object
+@@ -182,6 +172,7 @@ extern const struct spi_nor_manufacturer spi_nor_st;
+ extern const struct spi_nor_manufacturer spi_nor_spansion;
+ extern const struct spi_nor_manufacturer spi_nor_sst;
+ extern const struct spi_nor_manufacturer spi_nor_winbond;
++extern const struct spi_nor_manufacturer spi_nor_xilinx;
+=20
+ int spi_nor_write_enable(struct spi_nor *nor);
+ int spi_nor_write_disable(struct spi_nor *nor);
+diff --git a/drivers/mtd/spi-nor/xilinx.c b/drivers/mtd/spi-nor/xilinx.c
+new file mode 100644
+index 000000000000..fcf635d89f65
+--- /dev/null
++++ b/drivers/mtd/spi-nor/xilinx.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2005, Intec Automation Inc.
++ * Copyright (C) 2014, Freescale Semiconductor, Inc.
++ */
++
++#include <linux/mtd/spi-nor.h>
++
++#include "core.h"
++
++static const struct flash_info xilinx_parts[] =3D {
++	/* Xilinx S3AN Internal Flash */
++	{ "3S50AN", S3AN_INFO(0x1f2200, 64, 264) },
++	{ "3S200AN", S3AN_INFO(0x1f2400, 256, 264) },
++	{ "3S400AN", S3AN_INFO(0x1f2400, 256, 264) },
++	{ "3S700AN", S3AN_INFO(0x1f2500, 512, 264) },
++	{ "3S1400AN", S3AN_INFO(0x1f2600, 512, 528) },
++};
++
++/*
++ * This code converts an address to the Default Address Mode, that has non
++ * power of two page sizes. We must support this mode because it is the de=
+fault
++ * mode supported by Xilinx tools, it can access the whole flash area and
++ * changing over to the Power-of-two mode is irreversible and corrupts the
++ * original data.
++ * Addr can safely be unsigned int, the biggest S3AN device is smaller tha=
+n
++ * 4 MiB.
++ */
++static u32 s3an_convert_addr(struct spi_nor *nor, u32 addr)
++{
++	u32 offset, page;
++
++	offset =3D addr % nor->page_size;
++	page =3D addr / nor->page_size;
++	page <<=3D (nor->page_size > 512) ? 10 : 9;
++
++	return page | offset;
++}
++
++static int xilinx_nor_setup(struct spi_nor *nor,
++			    const struct spi_nor_hwcaps *hwcaps)
++{
++	int ret;
++
++	ret =3D spi_nor_xread_sr(nor, nor->bouncebuf);
++	if (ret)
++		return ret;
++
++	nor->erase_opcode =3D SPINOR_OP_XSE;
++	nor->program_opcode =3D SPINOR_OP_XPP;
++	nor->read_opcode =3D SPINOR_OP_READ;
++	nor->flags |=3D SNOR_F_NO_OP_CHIP_ERASE;
++
++	/*
++	 * This flashes have a page size of 264 or 528 bytes (known as
++	 * Default addressing mode). It can be changed to a more standard
++	 * Power of two mode where the page size is 256/512. This comes
++	 * with a price: there is 3% less of space, the data is corrupted
++	 * and the page size cannot be changed back to default addressing
++	 * mode.
++	 *
++	 * The current addressing mode can be read from the XRDSR register
++	 * and should not be changed, because is a destructive operation.
++	 */
++	if (nor->bouncebuf[0] & XSR_PAGESIZE) {
++		/* Flash in Power of 2 mode */
++		nor->page_size =3D (nor->page_size =3D=3D 264) ? 256 : 512;
++		nor->mtd.writebufsize =3D nor->page_size;
++		nor->mtd.size =3D 8 * nor->page_size * nor->info->n_sectors;
++		nor->mtd.erasesize =3D 8 * nor->page_size;
++	} else {
++		/* Flash in Default addressing mode */
++		nor->params.convert_addr =3D s3an_convert_addr;
++		nor->mtd.erasesize =3D nor->info->sector_size;
++	}
++
++	return 0;
++}
++
++static void xilinx_post_sfdp_fixups(struct spi_nor *nor)
++{
++	nor->params.setup =3D xilinx_nor_setup;
++}
++
++static const struct spi_nor_fixups xilinx_fixups =3D {
++	.post_sfdp =3D xilinx_post_sfdp_fixups,
++};
++
++const struct spi_nor_manufacturer spi_nor_xilinx =3D {
++	.name =3D "xilinx",
++	.parts =3D xilinx_parts,
++	.nparts =3D ARRAY_SIZE(xilinx_parts),
++	.fixups =3D &xilinx_fixups,
++};
+--=20
+2.23.0
