@@ -2,108 +2,215 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF753C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F024C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA33921775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583175306;
-	bh=xk+7g8my9loHivdYEkAWmckUnPigyBNqghv5KIOzBDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dgnL7r2S31DbBD4ECmqr2UwRoSUbE28KKmCjwdLnzA/xFIWC43rb2Xw1pTFjUrk3/
-	 Ao8miAoVF4q+0F5YAIzUuohW1BXKc6gPR5tslHAT7cBCh1pxBK11TJ40cG/eB0rN8U
-	 Mt1CW0bG/zGO3/3R9qqQL2jEhcweTtHQut7SnbbE=
+	by mail.kernel.org (Postfix) with ESMTP id 7B9F020873
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCBSzG (ORCPT
+        id S1727576AbgCBSzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:55:06 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37892 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbgCBSzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:55:05 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i14so328957otp.5;
-        Mon, 02 Mar 2020 10:55:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uWS79D/0ZLL0e/s1oUout/5p5w20WIJlmrFZDFmjEe4=;
-        b=MW/FA4tmHQdKbLPYXiyQmytOsiIz4dfBkqDjJVktEmAYpBy7CUkSwE1yn+y7fdQZZG
-         3CFgxhxcdDmw5MLYIpDw0z7W5nVGm2L8UEpHfFfvCo9ItLkxJ1yhzzMgg/h7jgVsLakc
-         gHnEjLAeizVKhwUXK6R5tpRFNZgO7yPorlbvavMnnbTX6bFjHcyAJmBnDcSq2uZMybtz
-         xpAF3fQ9inpqKM4uCpBEoAyO6+MQZnl+F/YBh8wiLyTF3XuMrrU8HP2R2mqXJ1JOnR1B
-         GHwFqDoJ7ZyalaNC1v9vQJKsS6u9t0J2JNHeTZMJfNu0E3q3Aw6zMIMzqKGM++4Joq+r
-         1zSg==
-X-Gm-Message-State: ANhLgQ3K94ZXaH69ZYcThigZ6YbY6X8Sg+vt3MfhcmkeNgGRQE5ap3C6
-        LP5yOuYlRpWaylRckyi7+Q==
-X-Google-Smtp-Source: ADFU+vt2q1Eduhwf/PVNlCpfWIgnuXW91fEn1d40UCOZdJUjlTwYuw6/BVVLBJDj89BnwQ28P5Q3Hw==
-X-Received: by 2002:a05:6830:60b:: with SMTP id w11mr468468oti.350.1583175304589;
-        Mon, 02 Mar 2020 10:55:04 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n64sm6852351otn.35.2020.03.02.10.55.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 10:55:04 -0800 (PST)
-Received: (nullmailer pid 994 invoked by uid 1000);
-        Mon, 02 Mar 2020 18:55:03 -0000
-Date:   Mon, 2 Mar 2020 12:55:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, Sam Ravnborg <sam@ravnborg.org>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
- Schema
-Message-ID: <20200302185503.GA32613@bogus>
-References: <cover.1582913973.git.hns@goldelico.com>
- <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+        Mon, 2 Mar 2020 13:55:37 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:57010 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727360AbgCBSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:55:36 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1j8qDo-0005xH-8O; Mon, 02 Mar 2020 11:55:21 -0700
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>,
+        Michal Hocko <mhocko@suse.com>
+References: <20200221182503.28317-1-logang@deltatee.com>
+ <20200221182503.28317-7-logang@deltatee.com>
+ <CAPcyv4gR1+NaWzteqNKip=cYk89oEVW18HNao7Xv=JipzzDagw@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8b13f6aa-77b7-a47d-1a49-b8e2f800ac9d@deltatee.com>
+Date:   Mon, 2 Mar 2020 11:55:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPcyv4gR1+NaWzteqNKip=cYk89oEVW18HNao7Xv=JipzzDagw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: mhocko@suse.com, ebadger@gigaio.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, hch@lst.de, akpm@linux-foundation.org, david@redhat.com, mhocko@kernel.org, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v3 6/7] mm/memory_hotplug: Add pgprot_t to mhp_params
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 19:19:26 +0100, "H. Nikolaus Schaller" wrote:
-> From: Sam Ravnborg <sam@ravnborg.org>
-> 
-> Add DT bindings for the LCD controller on the jz4780 SoC
-> Based on .txt binding from Zubair Lutfullah Kakakhel
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.example.dt.yaml: example-0: 'jz4780-lcdk@0x13050000' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+On 2020-02-29 3:44 p.m., Dan Williams wrote:
+> On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+>> struct page mappings for IO memory. At present, these mappings are created
+>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+>> x86, an mtrr register will typically override this and force the cache
+>> type to be UC-. In the case firmware doesn't set this register it is
+>> effectively WB and will typically result in a machine check exception
+>> when it's accessed.
+>>
+>> Other arches are not currently likely to function correctly seeing they
+>> don't have any MTRR registers to fall back on.
+>>
+>> To solve this, provide a way to specify the pgprot value explicitly to
+>> arch_add_memory().
+>>
+>> Of the arches that support MEMORY_HOTPLUG: x86_64, and arm64 need a simple
+>> change to pass the pgprot_t down to their respective functions which set
+>> up the page tables. For x86_32, set the page tables explicitly using
+>> _set_memory_prot() (seeing they are already mapped). For ia64, s390 and
+>> sh, reject anything but PAGE_KERNEL settings -- this should be fine,
+>> for now, seeing these architectures don't support ZONE_DEVICE.
+>>
+>> A check in __add_pages() is also added to ensure the pgprot parameter was
+>> set for all arches.
+>>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> ---
+>>  arch/arm64/mm/mmu.c            | 3 ++-
+>>  arch/ia64/mm/init.c            | 3 +++
+>>  arch/powerpc/mm/mem.c          | 3 ++-
+>>  arch/s390/mm/init.c            | 3 +++
+>>  arch/sh/mm/init.c              | 3 +++
+>>  arch/x86/mm/init_32.c          | 5 +++++
+>>  arch/x86/mm/init_64.c          | 2 +-
+>>  include/linux/memory_hotplug.h | 2 ++
+>>  mm/memory_hotplug.c            | 5 ++++-
+>>  mm/memremap.c                  | 6 +++---
+>>  10 files changed, 28 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index ee37bca8aba8..ea3fa844a8a2 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>                 flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>>
+>>         __create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+>> -                            size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
+>> +                            size, params->pgprot, __pgd_pgtable_alloc,
+>> +                            flags);
+>>
+>>         memblock_clear_nomap(start, size);
+>>
+>> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+>> index 97bbc23ea1e3..d637b4ea3147 100644
+>> --- a/arch/ia64/mm/init.c
+>> +++ b/arch/ia64/mm/init.c
+>> @@ -676,6 +676,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>         unsigned long nr_pages = size >> PAGE_SHIFT;
+>>         int ret;
+>>
+>> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>> +               return -EINVAL;
+>> +
+>>         ret = __add_pages(nid, start_pfn, nr_pages, params);
+>>         if (ret)
+>>                 printk("%s: Problem encountered in __add_pages() as ret=%d\n",
+>> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+>> index 19b1da5d7eca..832412bc7fad 100644
+>> --- a/arch/powerpc/mm/mem.c
+>> +++ b/arch/powerpc/mm/mem.c
+>> @@ -138,7 +138,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+>>         resize_hpt_for_hotplug(memblock_phys_mem_size());
+>>
+>>         start = (unsigned long)__va(start);
+>> -       rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
+>> +       rc = create_section_mapping(start, start + size, nid,
+>> +                                   params->pgprot);
+>>         if (rc) {
+>>                 pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
+>>                         start, start + size, rc);
+>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>> index e9e4a7abd0cc..87b2d024e75a 100644
+>> --- a/arch/s390/mm/init.c
+>> +++ b/arch/s390/mm/init.c
+>> @@ -277,6 +277,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>         if (WARN_ON_ONCE(params->altmap))
+>>                 return -EINVAL;
+>>
+>> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>> +               return -EINVAL;
+>> +
+>>         rc = vmem_add_mapping(start, size);
+>>         if (rc)
+>>                 return rc;
+>> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+>> index e5114c053364..b9de2d4fa57e 100644
+>> --- a/arch/sh/mm/init.c
+>> +++ b/arch/sh/mm/init.c
+>> @@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>         unsigned long nr_pages = size >> PAGE_SHIFT;
+>>         int ret;
+>>
+>> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
+>> +               return -EINVAL;
+>> +
+>>         /* We only have ZONE_NORMAL, so this is easy.. */
+>>         ret = __add_pages(nid, start_pfn, nr_pages, params);
+>>         if (unlikely(ret))
+>> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+>> index e25a4218e6ff..96d8e4fb1cc8 100644
+>> --- a/arch/x86/mm/init_32.c
+>> +++ b/arch/x86/mm/init_32.c
+>> @@ -858,6 +858,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>  {
+>>         unsigned long start_pfn = start >> PAGE_SHIFT;
+>>         unsigned long nr_pages = size >> PAGE_SHIFT;
+>> +       int ret;
+>> +
+>> +       ret = _set_memory_prot(start, nr_pages, params->pgprot);
+> 
+> Perhaps a comment since it's not immediately obvious where the
+> PAGE_KERNEL prot was established, and perhaps add a conditional to
+> skip this call in the param->pgprot == PAGE_KERNEL case?
 
-See https://patchwork.ozlabs.org/patch/1246780
-Please check and re-submit.
+Yes I can add the skip in the PAGE_KERNEL case. Though I'm not sure what
+you are asking for with regards to the comment. Just that pgprot is set
+by the caller usually to PAGE_KERNEL?
+
+> Other than that looks good to me, but only an ack since I'm only
+> testing the x86 changes.
+> 
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+
+
+Thanks,
+
+Logan
