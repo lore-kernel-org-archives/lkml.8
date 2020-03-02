@@ -2,202 +2,135 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1FEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDA5C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3F021D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9014A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCBPnb convert rfc822-to-8bit (ORCPT
+        id S1727667AbgCBPne convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:43:31 -0500
-Received: from mail-oln040092071065.outbound.protection.outlook.com ([40.92.71.65]:35899
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Mon, 2 Mar 2020 10:43:34 -0500
+Received: from mail-oln040092254068.outbound.protection.outlook.com ([40.92.254.68]:8942
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727305AbgCBPna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:43:30 -0500
+        id S1727305AbgCBPnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:43:33 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SFt7S5IqhRMS2BtfMLmzqQ6AdzISDqFm9cmLVm7Vw2BsO4Du5ViS2uIC9LPj9H2eCpk1M2BDDDsy3p8sOJlUzu2uopzLCi9Ccm5FDSzj1nWBvd+TuPAZmmz6oLW2Wfhbx9FgrHNcBGpkQu/wQVHd8a915OdiJbHQLl0YWVvotSiZb3tPUNB3QUd27n4+9zD8PojMvQVR5DREB9D9DVRV8rIFLXQq2MYrHhWeOUP06uObwUnwszddEYRAnuwmZX/sBA37mc2PSQfK7KHd6Ujtpn3jzdhOya7T4HwUAhx7Z0u0j5Loe1OwMscrVknTpn8nzhNm/CrquOGa0qTnFzxi5g==
+ b=LbPU4YQzS2b04VZMGnuDL534Z7BQgoilgLRhvY7Yu916rZJIf9K9Ytpszcnzyny4EXmNlOGRN13ru/z8STDeuT7HJkFxCc7HPG1bdHUHjmD/xowzHAl3EPUWeK+tfpCCOBNzSbEGsnp8UbhMNLZluIQVm0gR3f6GVKH/2xstBHpTSe8vvP+5QgE136xUpqzJTUD7X33ck1OkUmhV5XkMCI6qXp9k0WNVESLIcD5HviT/oV2aK1YabhQ2PQnvgiX2U7T9BAFHviNnxKeJ3TAhEBDIuovHcpr/fbLSG19wIS/rd/qzAUHbWothnBWG+gsa4OMEvQgU4ixUsbykCNDi9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aKll1uYXY/p4lporydDRyPbyHI3XYNaz0hS7oe1Ogas=;
- b=FsvVBSbar+IL1Rxk1F67qCrt3dvGMZ6e0kyODDP51JvdmiUd/EFDnbAovWbiqx03wB6Vjqew/cX6DJNu1XnevKaxntid6vNx/uZEgkRxCfZCzTmnGtGjArby6Td7rlQVeAetihrx8gET8lIJwXybKJ245YgXNsAPd8QyYwfZ447gZENrbKYM39FuyV1F1CuECUdgIPOCMNOrat4ZP3d9/sKOW97yCAeosCt/ts8onLtTqAbOHQOXJ+o3Unhuu5B9jDygHqrKz5R0SGhNuIWjAIMMgnyvbAHyXZ2a+6cM3q4BnsGk8idlbGNcZkLicjmfp/qvgbfws1lIOeXpW4AUbg==
+ bh=DHrQfmweTMEoNFtUiG5dlAvEFxu31/biZJwyPszszgQ=;
+ b=MJj25CdrkKIsFIOSwfhhMPDlEt0voxog9HU+pbD+DAxx8E/GCVJs0dEP+itvBSNMqylwIGE/3rhFbla6LX6Q2JIvELRD3B+sQuYlAO/dvP8L2Mo0bMGeWS1hwVE9UYX09QYND9oEovhrM6wqjRt9vx1TnG0GcSnTkcZtoF0KtTmlkLCotFhTVR9j//3ZT9vai+4qfTl3lj4BcnVsNXNF0W/504xDJAlSquxBJ94k/Jy56jfq4vKXjFBqDXm+Nfpv3/+PKO7rodF6epBiFIYfb27Ppmc/X7aYxjjBFU5+boQgsiGB7FcgPLCIkDh9jy5AODw5scPosencqt892L6s5Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
-Received: from DB5EUR03FT054.eop-EUR03.prod.protection.outlook.com
- (2a01:111:e400:7e0a::36) by
- DB5EUR03HT063.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e0a::231)
+Received: from PU1APC01FT111.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::38) by
+ PU1APC01HT081.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::284)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
- 2020 15:43:24 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.20.55) by
- DB5EUR03FT054.mail.protection.outlook.com (10.152.20.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:43:24 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 15:43:24 +0000
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0052.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 15:43:22 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-Thread-Topic: [PATCHv2] exec: Fix a deadlock in ptrace
-Thread-Index: AQHV8AjGwZG4WijWc0+aQpdADP+q6qg02ufjgACXoYA=
-Date:   Mon, 2 Mar 2020 15:43:24 +0000
-Message-ID: <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
- <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74zmfc9.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87a74zmfc9.fsf@x220.int.ebiederm.org>
-Accept-Language: en-US, en-GB, de-DE
+ 2020 15:43:29 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
+ PU1APC01FT111.mail.protection.outlook.com (10.152.252.236) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:43:29 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 15:43:29 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:44cc:a624:8145:fa79) by ME2PR01CA0064.ausprd01.prod.outlook.com (2603:10c6:201:2b::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:43:28 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active NVMem
+ file is read"
+Thread-Topic: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
+ NVMem file is read"
+Thread-Index: AQHV8KlS3XYq90/jLkW1+zKh/mLy4g==
+Date:   Mon, 2 Mar 2020 15:43:29 +0000
+Message-ID: <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZR0P278CA0052.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1d::21) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:C65645E00256BFF0EF483D4ABF04F7ED9CADCA7DA782503334C81EE275B55748;UpperCasedChecksum:B5B02A4BC8C9B6E7E3C31595013F4DCA6C0D23C66AB23D6F5B8892FBA4152BEE;SizeAsReceived:9189;Count:50
+x-clientproxiedby: ME2PR01CA0064.ausprd01.prod.outlook.com
+ (2603:10c6:201:2b::28) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:2D50C9D10288A8929A633F25961440531D1E2B9ECD2AC7E9E137FC9EB34207D7;UpperCasedChecksum:0CA51D05F807693BC92CBC23C91A286C5B8C420C893BE8320F74D9C7000ECE8C;SizeAsReceived:7856;Count:49
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [dyEnYHlm0P0uZkeIkkriIIvlZ6DvQ6d1]
-x-microsoft-original-message-id: <61e5cb52-cf93-3203-ad57-174abbff19af@hotmail.de>
+x-tmn:  [0liB1Wzf/ianTt9u8E32Ozks24dCYd/ayZc22nBBehvrxEI/N2NzRWY9ckAAjJGn]
+x-microsoft-original-message-id: <20200302154322.GA481006@nicholas-dell-linux>
 x-ms-publictraffictype: Email
-x-incomingheadercount: 50
+x-incomingheadercount: 49
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 293008bd-2da8-4d78-0182-08d7bec0715c
-x-ms-traffictypediagnostic: DB5EUR03HT063:
+x-ms-office365-filtering-correlation-id: acd34931-e75b-4679-e977-08d7bec0747f
+x-ms-exchange-slblob-mailprops: S/btQ8cKWiR7zL3p/sYosB1cR4mu1sxVWNzyiwZVoeIaabYY3CbYD6c2bGLp6LXhknC8ITBgBQZ9rEU9Gs5K/GauZrkWOlMhHBkdEFrHuoe+qXJX/szud8fP4cxrCzLKolsZIB0uehC6YTRqY8L9P0iy8vqvo4f0dPiqtEmgtDKpoIYrBXuNmYJG3h+//SHtucowlWVniGn5Na7MU2UjlHMDuoM2xndfA1k/kib2nRrcbMOKbDGcZVNHerKN3VlAYy+O3i+7iiVjzTn8cxDrZRj5Ws+B9AdNX0aLOrQqh6VmVZZbqN9j4qhtIuauJ0HNP9KBOeAVh09jBAC0fRPy/APxNi1UrHomeneZreE11L43iSlEYwtuf7x2low82UyHKsjJ4sGo7pvxaym2qekzkV7tcHa2iBzfiMQuuz1nnH8r6V7JkxVhCaLydve4jPVUiau85Jm0zsx+fnoWfELetrjVZwCgzCNxiywD6jpvDZ+p4kN4pjzMvSGkvgz1QcYlRZ11Cl1kg4Gk8WZexubeF4WrZoeyUGUFbX/8bi4MCIYc+jVckCg+GZZVyJrprtZ/cS7ShQlISNa+1dyns1e3n8QOFX8sYclhH6Gt1lJhc04vB+Nj4jfPMugYRGEeTirPj4b4pj+2Jn/XHZSQu8GgO5Tf8lWr8xQIEqagE1veczLbx8AWWqcfI1KiEGzcTU/DNkavrJrBU5vAHWy2rEk4EpBDWO7+apRF4UCf/y04NoPA4uGgsULfeX3qoq3fTH7ivZxHDVicrig=
+x-ms-traffictypediagnostic: PU1APC01HT081:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8YGYe8UrOXFcm3aSssWupgEEhVcVi9JVL1E2AABGe5vjDQjaRww+7cLsEzPLfb8+6ywdEkeCyWNtByP5r9IZy43Lxrt3a+VuWVfL1b98GWRsl95OA82pgEEiMSiH7Xn4qY+h8/BAFJt/lQKR/+R2IUce2BZZCwil4w5jWmOdVe12Au0vujeQovOjjeQM6lWd
-x-ms-exchange-antispam-messagedata: nGOltsXFW+coIa96+DJIrZYklzcnSMqhRstON9t0wQZXsG8UocU/d/wvILxFg70AO2koqTfnfvn73bVCRlWMZFHiFC1bEmNsKKc8Ofucn1WWhD7Vw+pNbvhxFR0QqeYZ62u+1cOuZTpNrhEp4FVvZw==
+x-microsoft-antispam-message-info: WzWzs3qtNYFXwhmpfBKR/OWNubXPvV1Yn47TTkmnEUchr6dRf46llF/DvM2GipL/2y4uBdEFX/facy1O7ehWg6umiBQ8721tFJK2PblINsHhu1fhOENHXxx+AAkQIS1wpzgRD/LxneViN/xg4XnU8NYNmY0ac6XAxdC1tpNazy8MiWw+4a/P09/AWzrU639G
+x-ms-exchange-antispam-messagedata: YS5o03/5FKZvGeITAAFodIiYVN9b47P4s7psS6lIrg7fIvAAUh1LzkBRtEwdmAFEtnsB9LdmeeVB1860wtlPbmYj/7VxhaP88KD3OlAFigdBXJvDiE+nouysAnDy2LjvixX0w7nY8kM47SgNx+5XsLAQib5REx9AG976Yx1khXMgstkanLlXvREnWv+XTdMc3n5LgRXVD2lFBChbJ17N8A==
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <82B95786708D07499487862F589BAAC3@eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <111194DE43A13D489888F0C46FA39259@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 293008bd-2da8-4d78-0182-08d7bec0715c
+X-MS-Exchange-CrossTenant-Network-Message-Id: acd34931-e75b-4679-e977-08d7bec0747f
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:43:24.7444
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:43:29.6951
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT063
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 7:38 AM, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-> 
->> This fixes a deadlock in the tracer when tracing a multi-threaded
->> application that calls execve while more than one thread are running.
->>
->> I observed that when running strace on the gcc test suite, it always
->> blocks after a while, when expect calls execve, because other threads
->> have to be terminated.  They send ptrace events, but the strace is no
->> longer able to respond, since it is blocked in vm_access.
->>
->> The deadlock is always happening when strace needs to access the
->> tracees process mmap, while another thread in the tracee starts to
->> execve a child process, but that cannot continue until the
->> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> 
-> I think your patch works, but I don't think to solve your case another
-> mutex is necessary.  Possibly it is justified, but I hesitate to
-> introduce yet another concept in the code.
-> 
-> Having read elsewhere in the thread that this does not solve the problem
-> Oleg has mentioned I am really hesitant to add more complexity to the
-> situation.
-> 
-> 
-> For your case there is a straight forward and local workaround.
-> 
-> When the current task is ptracing the target task don't bother with
-> cred_gaurd_mutex and ptrace_may_access in access_mm as those tests
-> have already passed.  Instead just confirm the ptrace status. AKA
-> the permission check in ptraces_access_vm.
-> 
-> I think something like this is all we need.
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index cee89229606a..b0ab98c84589 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1224,6 +1224,16 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  	struct mm_struct *mm;
->  	int err;
->  
-> +	if (task->ptrace && (current == task->parent)) {
-> +		mm = get_task_mm(task);
-> +		if ((get_dumpable(mm) != SUID_DUMP_USER) &&
-> +		    !ptracer_capable(task, mm->user_ns)) {
-> +			mmput(mm);
-> +			mm = ERR_PTR(-EACCESS);
-> +		}
-> +		return mm;
-> +	}
-> +
->  	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
->  	if (err)
->  		return ERR_PTR(err);
-> 
-> Does this solve your test case?
-> 
+This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
 
-I tried this with s/EACCESS/EACCES/.
+Since NVMEM subsystem gained support for write-only instances, this
+workaround is no longer required, so drop it.
 
-The test case in this patch is not fixed, but strace does not freeze,
-at least with my setup where it did freeze repeatable.  That is
-obviously because it bypasses the cred_guard_mutex.  But all other
-process that access this file still freeze, and cannot be
-interrupted except with kill -9.
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/thunderbolt/switch.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-However that smells like a denial of service, that this
-simple test case which can be executed by guest, creates a /proc/$pid/mem
-that freezes any process, even root, when it looks at it.
-I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 7d6ecc342..ad5479f21 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -348,12 +348,6 @@ static int tb_switch_nvm_read(void *priv, unsigned int offset, void *val,
+ 	return ret;
+ }
+ 
+-static int tb_switch_nvm_no_read(void *priv, unsigned int offset, void *val,
+-				 size_t bytes)
+-{
+-	return -EPERM;
+-}
+-
+ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+ 			       size_t bytes)
+ {
+@@ -399,7 +393,6 @@ static struct nvmem_device *register_nvmem(struct tb_switch *sw, int id,
+ 		config.read_only = true;
+ 	} else {
+ 		config.name = "nvm_non_active";
+-		config.reg_read = tb_switch_nvm_no_read;
+ 		config.reg_write = tb_switch_nvm_write;
+ 		config.root_only = true;
+ 	}
+-- 
+2.25.1
 
-
-Bernd.
