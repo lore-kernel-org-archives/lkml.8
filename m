@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F8AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7CDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB7B2467E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EA92467E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgCBX5i (ORCPT
+        id S1727523AbgCBX5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25521 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:57:31 -0500
+Received: from mga17.intel.com ([192.55.52.151]:37738 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbgCBX52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:28 -0500
+        id S1727291AbgCBX50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:26 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384683"
+   d="scan'208";a="243384777"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 20/66] KVM: x86: Calculate the supported xcr0 mask at load time
-Date:   Mon,  2 Mar 2020 15:56:23 -0800
-Message-Id: <20200302235709.27467-21-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 51/66] KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
+Date:   Mon,  2 Mar 2020 15:56:54 -0800
+Message-Id: <20200302235709.27467-52-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,208 +49,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new global variable, supported_xcr0, to track which xcr0 bits can
-be exposed to the guest instead of calculating the mask on every call.
-The supported bits are constant for a given instance of KVM.
+Set emulated and transmuted (set based on other features) feature bits
+via kvm_cpu_caps now that the CPUID output for KVM_GET_SUPPORTED_CPUID
+is direcly overidden with kvm_cpu_caps.
 
-This paves the way toward eliminating the ->mpx_supported() call in
-kvm_mpx_supported(), e.g. eliminates multiple retpolines in VMX's nested
-VM-Enter path, and eventually toward eliminating ->mpx_supported()
-altogether.
+Note, VMX emulation of UMIP already sets kvm_cpu_caps.
 
 No functional change intended.
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c   | 32 +++++++++-----------------------
- arch/x86/kvm/svm.c     |  2 ++
- arch/x86/kvm/vmx/vmx.c |  4 ++++
- arch/x86/kvm/x86.c     | 14 +++++++++++---
- arch/x86/kvm/x86.h     |  7 +------
- 5 files changed, 27 insertions(+), 32 deletions(-)
+ arch/x86/kvm/cpuid.c   | 72 +++++++++++++++++++++---------------------
+ arch/x86/kvm/svm.c     | 18 +++--------
+ arch/x86/kvm/vmx/vmx.c | 18 +----------
+ 3 files changed, 42 insertions(+), 66 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 85f292088d91..1eb775c33c4e 100644
+index 5fef02dbf4e1..c0ee0cb33a37 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -52,16 +52,6 @@ bool kvm_mpx_supported(void)
- }
- EXPORT_SYMBOL_GPL(kvm_mpx_supported);
+@@ -315,6 +315,8 @@ void kvm_set_cpu_caps(void)
+ 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+ 		F(F16C) | F(RDRAND)
+ 	);
++	/* KVM emulates x2apic in software irrespective of host support. */
++	kvm_cpu_cap_set(X86_FEATURE_X2APIC);
  
--u64 kvm_supported_xcr0(void)
--{
--	u64 xcr0 = KVM_SUPPORTED_XCR0 & host_xcr0;
--
--	if (!kvm_mpx_supported())
--		xcr0 &= ~(XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
--
--	return xcr0;
--}
--
- #define F feature_bit
+ 	kvm_cpu_cap_mask(CPUID_1_EDX,
+ 		F(FPU) | F(VME) | F(DE) | F(PSE) |
+@@ -351,6 +353,17 @@ void kvm_set_cpu_caps(void)
+ 		F(MD_CLEAR)
+ 	);
  
- int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-@@ -107,8 +97,7 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 		vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
- 	} else {
- 		vcpu->arch.guest_supported_xcr0 =
--			(best->eax | ((u64)best->edx << 32)) &
--			kvm_supported_xcr0();
-+			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
- 		vcpu->arch.guest_xstate_size = best->ebx =
- 			xstate_required_size(vcpu->arch.xcr0, false);
- 	}
-@@ -633,14 +622,12 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 				goto out;
- 		}
++	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
++	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
++	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
++
++	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
++		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
++	if (boot_cpu_has(X86_FEATURE_STIBP))
++		kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
++	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
++
+ 	kvm_cpu_cap_mask(CPUID_7_1_EAX,
+ 		F(AVX512_BF16)
+ 	);
+@@ -384,6 +397,29 @@ void kvm_set_cpu_caps(void)
+ 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
+ 	);
+ 
++	/*
++	 * AMD has separate bits for each SPEC_CTRL bit.
++	 * arch/x86/kernel/cpu/bugs.c is kind enough to
++	 * record that in cpufeatures so use them.
++	 */
++	if (boot_cpu_has(X86_FEATURE_IBPB))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_IBPB);
++	if (boot_cpu_has(X86_FEATURE_IBRS))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_IBRS);
++	if (boot_cpu_has(X86_FEATURE_STIBP))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_STIBP);
++	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_SSBD);
++	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_SSB_NO);
++	/*
++	 * The preference is to use SPEC CTRL MSR instead of the
++	 * VIRT_SPEC MSR.
++	 */
++	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
++	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
++
+ 	/*
+ 	 * Hide all SVM features by default, SVM will set the cap bits for
+ 	 * features it emulates and/or exposes for L1.
+@@ -492,9 +528,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	case 1:
+ 		cpuid_entry_override(entry, CPUID_1_EDX);
+ 		cpuid_entry_override(entry, CPUID_1_ECX);
+-		/* we support x2apic emulation even if host does not support
+-		 * it since we emulate x2apic in software */
+-		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
  		break;
--	case 0xd: {
--		u64 supported = kvm_supported_xcr0();
--
--		entry->eax &= supported;
--		entry->ebx = xstate_required_size(supported, false);
-+	case 0xd:
-+		entry->eax &= supported_xcr0;
-+		entry->ebx = xstate_required_size(supported_xcr0, false);
- 		entry->ecx = entry->ebx;
--		entry->edx &= supported >> 32;
--		if (!supported)
-+		entry->edx &= supported_xcr0 >> 32;
-+		if (!supported_xcr0)
- 			break;
+ 	case 2:
+ 		/*
+@@ -540,17 +573,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		cpuid_entry_override(entry, CPUID_7_ECX);
+ 		cpuid_entry_override(entry, CPUID_7_EDX);
  
- 		entry = do_host_cpuid(array, function, 1);
-@@ -650,7 +637,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
- 		cpuid_mask(&entry->eax, CPUID_D_1_EAX);
- 		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
--			entry->ebx = xstate_required_size(supported, true);
-+			entry->ebx = xstate_required_size(supported_xcr0, true);
- 		else
- 			entry->ebx = 0;
- 		/* Saving XSS controlled state via XSAVES isn't supported. */
-@@ -658,7 +645,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+-		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+-		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+-		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+-
+-		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+-		if (boot_cpu_has(X86_FEATURE_STIBP))
+-			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+-
+ 		/* KVM only supports 0x7.0 and 0x7.1, capped above via min(). */
+ 		if (entry->eax == 1) {
+ 			entry = do_host_cpuid(array, function, 1);
+@@ -722,28 +744,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = g_phys_as | (virt_as << 8);
  		entry->edx = 0;
- 
- 		for (i = 2; i < 64; ++i) {
--			if (!(supported & BIT_ULL(i)))
-+			if (!(supported_xcr0 & BIT_ULL(i)))
- 				continue;
- 
- 			entry = do_host_cpuid(array, function, i);
-@@ -666,7 +653,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 				goto out;
- 
- 			/*
--			 * The @supported check above should have filtered out
-+			 * The supported check above should have filtered out
- 			 * invalid sub-leafs as well as sub-leafs managed by
- 			 * IA32_XSS MSR.  Only XCR0-managed sub-leafs should
- 			 * reach this point, and they should have a non-zero
-@@ -681,7 +668,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 			entry->edx = 0;
- 		}
+ 		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
+-		/*
+-		 * AMD has separate bits for each SPEC_CTRL bit.
+-		 * arch/x86/kernel/cpu/bugs.c is kind enough to
+-		 * record that in cpufeatures so use them.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_IBPB))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_IBPB);
+-		if (boot_cpu_has(X86_FEATURE_IBRS))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_IBRS);
+-		if (boot_cpu_has(X86_FEATURE_STIBP))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_SSBD);
+-		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_SSB_NO);
+-		/*
+-		 * The preference is to use SPEC CTRL MSR instead of the
+-		 * VIRT_SPEC MSR.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
+-		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
  		break;
--	}
- 	/* Intel PT */
- 	case 0x14:
- 		if (!f_intel_pt)
+ 	}
+ 	case 0x80000019:
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index fd3fc9fbefff..51db8addda04 100644
+index 964331106e9a..d351007eb7f9 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -1385,6 +1385,8 @@ static __init int svm_hardware_setup(void)
+@@ -1377,6 +1377,11 @@ static __init void svm_set_cpu_caps(void)
+ 	if (nested)
+ 		kvm_cpu_cap_set(X86_FEATURE_SVM);
  
- 	init_msrpm_offsets();
- 
-+	supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
++	/* CPUID 0x80000008 */
++	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
++	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
 +
- 	if (boot_cpu_has(X86_FEATURE_NX))
- 		kvm_enable_efer_bits(EFER_NX);
+ 	/* CPUID 0x8000000A */
+ 	/* Support next_rip if host supports it */
+ 	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
+@@ -6047,22 +6052,9 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
+ 					 APICV_INHIBIT_REASON_NESTED);
+ }
  
+-/*
+- * Vendor specific emulation must be handled via ->set_supported_cpuid(), not
+- * svm_set_cpu_caps(), as capabilities configured during hardware_setup() are
+- * masked against hardware/kernel support, i.e. they'd be lost.
+- *
+- * Note, setting a flag based on a *different* feature, e.g. setting VIRT_SSBD
+- * if LS_CFG_SSBD or AMD_SSBD is supported, is effectively emulation.
+- */
+ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ {
+ 	switch (entry->function) {
+-	case 0x80000008:
+-		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+-		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
+-		break;
+ 	case 0x8000000A:
+ 		entry->eax = 1; /* SVM revision 1 */
+ 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2dcf27e3a7a6..cf874c364c8f 100644
+index be2aecda733b..d5a5e8f987c8 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7655,6 +7655,10 @@ static __init int hardware_setup(void)
- 		WARN_ONCE(host_bndcfgs, "KVM: BNDCFGS in host will be lost");
+@@ -7119,25 +7119,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
  	}
+ }
  
-+	if (!kvm_mpx_supported())
-+		supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
-+				    XFEATURE_MASK_BNDCSR);
+-/*
+- * Vendor specific emulation must be handled via ->set_supported_cpuid(), not
+- * vmx_set_cpu_caps(), as capabilities configured during hardware_setup() are
+- * masked against hardware/kernel support, i.e. they'd be lost.
+- */
+ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ {
+-	switch (entry->function) {
+-	case 0x7:
+-		/*
+-		 * UMIP needs to be manually set even though vmx_set_cpu_caps()
+-		 * also sets UMIP since do_host_cpuid() will drop it.
+-		 */
+-		if (vmx_umip_emulated())
+-			cpuid_entry_set(entry, X86_FEATURE_UMIP);
+-		break;
+-	default:
+-		break;
+-	}
 +
- 	if (!cpu_has_vmx_vpid() || !cpu_has_vmx_invvpid() ||
- 	    !(cpu_has_vmx_invvpid_single() || cpu_has_vmx_invvpid_global()))
- 		enable_vpid = 0;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ddd1d296bd20..e3598fe171a5 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -180,6 +180,11 @@ struct kvm_shared_msrs {
- static struct kvm_shared_msrs_global __read_mostly shared_msrs_global;
- static struct kvm_shared_msrs __percpu *shared_msrs;
+ }
  
-+#define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
-+				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
-+				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
-+				| XFEATURE_MASK_PKRU)
-+
- static u64 __read_mostly host_xss;
- 
- struct kvm_stats_debugfs_item debugfs_entries[] = {
-@@ -226,6 +231,8 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- };
- 
- u64 __read_mostly host_xcr0;
-+u64 __read_mostly supported_xcr0;
-+EXPORT_SYMBOL_GPL(supported_xcr0);
- 
- struct kmem_cache *x86_fpu_cache;
- EXPORT_SYMBOL_GPL(x86_fpu_cache);
-@@ -4099,8 +4106,7 @@ static int kvm_vcpu_ioctl_x86_set_xsave(struct kvm_vcpu *vcpu,
- 		 * CPUID leaf 0xD, index 0, EDX:EAX.  This is for compatibility
- 		 * with old userspace.
- 		 */
--		if (xstate_bv & ~kvm_supported_xcr0() ||
--			mxcsr & ~mxcsr_feature_mask)
-+		if (xstate_bv & ~supported_xcr0 || mxcsr & ~mxcsr_feature_mask)
- 			return -EINVAL;
- 		load_xsave(vcpu, (u8 *)guest_xsave->region);
- 	} else {
-@@ -7304,8 +7310,10 @@ int kvm_arch_init(void *opaque)
- 
- 	perf_register_guest_info_callbacks(&kvm_guest_cbs);
- 
--	if (boot_cpu_has(X86_FEATURE_XSAVE))
-+	if (boot_cpu_has(X86_FEATURE_XSAVE)) {
- 		host_xcr0 = xgetbv(XCR_XFEATURE_ENABLED_MASK);
-+		supported_xcr0 = host_xcr0 & KVM_SUPPORTED_XCR0;
-+	}
- 
- 	kvm_lapic_init();
- 	if (pi_inject_timer == -1)
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 3624665acee4..02b49ee49e24 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -280,13 +280,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 			    int emulation_type, void *insn, int insn_len);
- enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
- 
--#define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
--				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
--				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
--				| XFEATURE_MASK_PKRU)
- extern u64 host_xcr0;
--
--extern u64 kvm_supported_xcr0(void);
-+extern u64 supported_xcr0;
- 
- extern unsigned int min_timer_period_us;
- 
+ static __init void vmx_set_cpu_caps(void)
 -- 
 2.24.1
 
