@@ -7,116 +7,95 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0F9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B430C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A6724677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC662465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583192428;
-	bh=7F6YZaYUo+bFsyPu/iD1rssKpwVVUWfNFhyXmJyZjKg=;
+	s=default; t=1583192476;
+	bh=L80nZ7i1LC244PxEUQB2golwW3/H7GMiinNmtYYtAuM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m7+lJ4QBAp8iB0R9vpdLM9m6A4xgj8peRKF67jx8QZUc88grN2iLsb7HLt7+e7gV1
-	 CVIXZ4ckp0gVSvAZ57Ci/SHMaBdDUjmj1of3AeFNanRCJ8x+zrOPovICmzSday6/NZ
-	 X9D/bjTzkxI3PKsKaNLAEvsxUp2CtQ5V2bHql7SE=
+	b=Z5TrONlbnOeLy11ym2wzmLXYxLM0J4NuTTwdW4sT1BcxXDmfzQ7wt7/qa0FoL12XM
+	 GSSEkEgjEutx133E1KRtJ6bC36tZhDFy6o3lSF3h7A6T5bNXEhSRWKTDGgSJcCtn34
+	 Z5DW1DSasL58/FUkHojmiq4bayoBz9mzie75NS+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCBXk1 (ORCPT
+        id S1726979AbgCBXlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:40:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38738 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCBXk0 (ORCPT
+        Mon, 2 Mar 2020 18:41:15 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40586 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCBXlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:40:26 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 2so1121823oiz.5;
-        Mon, 02 Mar 2020 15:40:26 -0800 (PST)
+        Mon, 2 Mar 2020 18:41:14 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x19so1169158otp.7;
+        Mon, 02 Mar 2020 15:41:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9vV5PavoKMjDsMnqHBiR5ea2gdjD5MmrYM/2QvxafIs=;
-        b=dgq6O59wi5Y+WWE1ipZbc5pgbf9qBCAoZh7bRG6hnKFT54cnmn3q+VNLvrO2CrXGx2
-         0P8zan3yQ/mEo7Yva3ICpK4rLIRU35fo/IaYoogb93Hteen8CZ5sYZ8evAzJorpmlj/Z
-         sXwEF5zZVIgpWhtH1S6O7gWldE0iFviujigXJ8TLgJ4l90sCSilqkW3fEx9hrq5Xbjwx
-         EdXbJNMVYyLIgWOI0l/FXZB0Gu88Cb0pJtPLqO0d494+wJYiNcbYvpOUIBVwEWNRvC61
-         49X5bfHMEp+tKFWt8m45VFribaNeEV5KCrXzPTq2fp6RXJevQM/1cIq0R2Gk1XB/4JNu
-         UhQQ==
-X-Gm-Message-State: ANhLgQ3hbACVlRPOks4Xk49Intgx3TOPvGr3UQnyp5ph9+xoj7nVyF0N
-        6akUKM8Oa6MjyyC1EAr3yA==
-X-Google-Smtp-Source: ADFU+vtgcYVuJTNmsDp6or+nYg6nhWTDc+Rs/i0JWWu7H1wds1V1X0/hmCpu4JSt66QSVVmXpfJv+w==
-X-Received: by 2002:aca:c709:: with SMTP id x9mr609649oif.130.1583192425557;
-        Mon, 02 Mar 2020 15:40:25 -0800 (PST)
+        bh=0C7KbIrNsdK55X+XBECBVpZklmhln+kZr6VyUlPfaOg=;
+        b=FZHPe3gMase4bYHT2m/r3pwCkj0Th0tOzSosyqtgh9jDZouJNUxDXKVIJa9ChzHg01
+         J+Hf3pR3TlYcxJrtdVoLnipjDzC44ZACUPJLcEhQXScSXz8X5LGbRzMaBwbQ7y09Fdn3
+         RHj6CR8nD6wj+lot9a2q0frJvYhcTAMqOcv9t7855rhg5BgcZwz3cVElnom3jX7EmK/b
+         RlxZF88VvB9P9oQg3869F+71VSxZ9f/h7HB9pQwFjdf5C80rPWchd/NcXH2ZWKD2RrIe
+         rXq7exNJHAolNtGZf1ILltIc6VqZ3YDYCX9hfukgRdm/nDF5Q0wvOTanUT1+j05sTrzB
+         3Vtg==
+X-Gm-Message-State: ANhLgQ25Wl1ypVbHPyCiFCNCUD6MAmfq4ZwCqWLmuTNpYJ4Nkf1q7tUc
+        eAkbFejK20xqyKxrYUVMGw==
+X-Google-Smtp-Source: ADFU+vvRNTwOIvYWej38IX/q9s2fFMVV+Tr53mzpWuzaWObBRVFixrBQrnrBtVRBMjR5Mq1mWiO3hA==
+X-Received: by 2002:a9d:6a4f:: with SMTP id h15mr1326265otn.86.1583192473868;
+        Mon, 02 Mar 2020 15:41:13 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j4sm3556682otr.30.2020.03.02.15.40.23
+        by smtp.gmail.com with ESMTPSA id 67sm6924948oid.30.2020.03.02.15.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 15:40:24 -0800 (PST)
-Received: (nullmailer pid 20489 invoked by uid 1000);
-        Mon, 02 Mar 2020 23:40:22 -0000
-Date:   Mon, 2 Mar 2020 17:40:22 -0600
+        Mon, 02 Mar 2020 15:41:13 -0800 (PST)
+Received: (nullmailer pid 21716 invoked by uid 1000);
+        Mon, 02 Mar 2020 23:41:12 -0000
+Date:   Mon, 2 Mar 2020 17:41:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        rdunlap@infradead.org, dri-devel@lists.freedesktop.org,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v11 2/5] dt-bindings: mediatek: Update mmsys binding to
- reflect it is a system controller
-Message-ID: <20200302234022.GA20424@bogus>
-References: <20200302110128.2664251-1-enric.balletbo@collabora.com>
- <20200302110128.2664251-3-enric.balletbo@collabora.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v8 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
+Message-ID: <20200302234112.GA21654@bogus>
+References: <cover.1582905653.git.hns@goldelico.com>
+ <37d3b9e4c60692215fff0e75a78ac1e7792aaf75.1582905653.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302110128.2664251-3-enric.balletbo@collabora.com>
+In-Reply-To: <37d3b9e4c60692215fff0e75a78ac1e7792aaf75.1582905653.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Mar 2020 12:01:25 +0100, Enric Balletbo i Serra wrote:
-> The mmsys system controller is not only a pure clock controller, so
-> update the binding documentation to reflect that apart from providing
-> clocks, it also provides routing and miscellaneous control registers.
+On Fri, 28 Feb 2020 17:00:49 +0100, "H. Nikolaus Schaller" wrote:
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> This patch brings support for the JZ4780 efuse. Currently it only exposes
+> a read only access to the entire 8K bits efuse memory.
+> 
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> [converted to yaml]
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
-> 
-> Changes in v11: None
-> Changes in v10:
-> - Update the binding documentation for the mmsys system controller.
-> 
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> 
->  .../devicetree/bindings/arm/mediatek/mediatek,mmsys.txt    | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
