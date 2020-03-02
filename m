@@ -2,130 +2,215 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48491C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D686FC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C27246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB34246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hg5Pf70i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCBHfk (ORCPT
+        id S1726889AbgCBHg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:35:40 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23998 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726282AbgCBHfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:35:39 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0227Y4wn108155
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 02:35:38 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfmyqcvw0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 02:35:38 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Mon, 2 Mar 2020 07:35:36 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 07:35:28 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0227ZRU642860844
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 07:35:27 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64329A404D;
-        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D5A7A4051;
-        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 07:35:27 +0000 (GMT)
-Received: from [9.102.43.192] (unknown [9.102.43.192])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 760FCA00BE;
-        Mon,  2 Mar 2020 18:35:18 +1100 (AEDT)
-Subject: Re: [PATCH v3 26/27] powerpc/powernv/pmem: Expose the firmware
- version in sysfs
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-27-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 2 Mar 2020 18:35:20 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-27-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 2 Mar 2020 02:36:58 -0500
+Received: from mail-am6eur05on2068.outbound.protection.outlook.com ([40.107.22.68]:51233
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgCBHg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:36:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yx/xED3x3NSwXaHLyPfXAqgOiyGJw5B9bDXygPZS7i3vbKb/XhSAIxrbg82na5U/jpSp05VaMwA11lKbPLIw5eekWFX+12PSdPh3nAMlNBMSZMJx8AAQ1C7YKKrqDeGz+KUrp4iw/V8dJCbWZLFGtGE8A1zIgGGSFrvWkho5bIUNA7C7tYFVBeVgOPcOwILH81/0UioQ/m9GadQjxyJI7bxXSCoz2JshdTRDrwhLGGnB6So9ZXA7azpJG/OeNjNamu3ZpLXcd0Rvo2V/nT5k5gPbu4nPBfCUdooP7XAjOX1kU95pQGUYJJnB9ZFvGv96DaFnvA0bv6bom2ZgLwJ8HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0CW8kX+OBHDocvqUzhceSUBQpJ+2wT3OAYRuLZ0tqIY=;
+ b=IaI64oiYHRTFDt7zQigYbvHlBnzJy4HeAkOoLaQ11Tdvzvtn+hUq6YqwaIYBQxNR4OTW2UqWnuxVPcidjx5B65Q/g0o94ZIXJDyhkIEi/MpTyj/7wkarNXN3XtPKrpxo1ou7Xy1mWHXQwHvY2dCL4PE0/S5u4Ps3H2lrpORhtGfJtobZbQymqi48XXkXo+Bd3M0oD3Emp2+dqJu40sEGbNzWKQ6Irs8LTrNrbEQ9jJ5Ta2Nh9J365ToPTXZl9TH68jcPm5KoLQ5YjHrH213svLKaijDrKC8M47FMV7j2QFkmVvldy98cq5qInT4vlFOeH0GQfJNOaEn/7ou5t/EymA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0CW8kX+OBHDocvqUzhceSUBQpJ+2wT3OAYRuLZ0tqIY=;
+ b=Hg5Pf70imGtHtGk8vKmDMDHHDlLCrWxVBER9rpDL28/iN/kkmmRM4DwCxy4VB5UPAXQ7CY7YmnQ19r7nfsGEoeDlfU3LVzMaVmqOHC/iMEkPjtBREsIGNc2nFTTjsSryWDDh5i/Jp8UHS5IuE7XmUHexwCgToI9UcoQ8t7f/FlM=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6445.eurprd04.prod.outlook.com (20.179.232.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15; Mon, 2 Mar 2020 07:36:54 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 07:36:54 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: imx-sdma: fix context cache
+Thread-Topic: [PATCH] dmaengine: imx-sdma: fix context cache
+Thread-Index: AQHV1qnIaNGAJ9R9HEaS0rzYiAQ7rag1GlnQ
+Date:   Mon, 2 Mar 2020 07:36:54 +0000
+Message-ID: <VE1PR04MB66383055663F08FBFDF2E47489E70@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030207-0008-0000-0000-0000035840C9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030207-0009-0000-0000-00004A796B51
-Message-Id: <2253010d-c7ad-347b-4668-d5f1a95d3f1e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_01:2020-02-28,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=649 malwarescore=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020058
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [183.192.236.243]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 574c4a10-eb01-459e-cb2d-08d7be7c7aeb
+x-ms-traffictypediagnostic: VE1PR04MB6445:|VE1PR04MB6445:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB644543B84FA553006E6EAA3489E70@VE1PR04MB6445.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(189003)(199004)(4326008)(2906002)(52536014)(186003)(86362001)(478600001)(8936002)(71200400001)(33656002)(8676002)(81156014)(81166006)(316002)(66946007)(76116006)(55016002)(66446008)(66556008)(66476007)(9686003)(64756008)(5660300002)(966005)(110136005)(54906003)(6506007)(7696005)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6445;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CU51/NeB4Q7nPZKexdqQNU22py3pdtD80JGpdp8i1VnfetPXM+OvfNi5wXsMidqzuUuFjf7zMJTg5tq+u/1Fjbv3TIR2Xlmk8E7cjLRfaAADtjBX3/XXhP1EnGP9k7pfrjG6p8uHk+ueHojkACOhs40n4RSptR8nCMPlhYHWKFkvvGdEIPK5qX+G2xJMabfOzUEapAJcFq1rsDkF19Dd8mcmodTT1I50OxZ8CgQyo4Y/H+rpoBGN7f7HnCAyraNy2tdyUgVfBA9wMqD4ltRFpNuJgPWh+mHNfiu3hWo6smOorEmpKRrR7llrNL011plJHBqNo1cXe5t//IV72PdIAwOGqswri8wuuPB7FXJsxxaH+pEW9WQHko+NjIKR0bGEn7nsPq1vCicnMSkfoFWsFibllvntCIUVX+3ciJpkIaJ5vim8inxtF8obLvTISIpSHkd7pqqRQqZWYbRfvDuTQLOIDZTAdE/Z4KHzG2iGtplqzLWbgBjwbEo6SPg4k0AmQKMFKAAkeaDDx2c7t9dgtw==
+x-ms-exchange-antispam-messagedata: mwH/hvwRRAbc0k7KQ7Wh1pXwAdABjQ7VaQKZWRbMz83gIVq84mTDvW1JrUq4++ZaLz/fxFuBu/vxY8s/c0CPp6sbOPK+FUn7tXOJAU0XeIi5a0GloAtQ8/xRCZ5ON93ugrFQzLS6EcdTiZQqkhx4AQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 574c4a10-eb01-459e-cb2d-08d7be7c7aeb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 07:36:54.1990
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aRHXWh+CsUO01BTgF1us9wvY+sqTuQgECo8Lj6yoe80qVb8vekEf/VV80Hkf/z2pEQIL4aoxa6rPiGxXoZy1ew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6445
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This information will be used by ndctl in userspace to help users identify
-> the device.
-
-You should include the information from the subject line in the body of 
-the commit message too.
-
-I think this patch could probably be squashed in with the last one.
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+On 2020/01/29 Martin Fuzzey <martin.fuzzey@flowbird.group> wrote:
+>=20
+> There is a DMA problem with the serial ports on i.MX6.
+>=20
+> When the following sequence is performed:
+>=20
+> 1) Open a port
+> 2) Write some data
+> 3) Close the port
+> 4) Open a *different* port
+> 5) Write some data
+> 6) Close the port
+>=20
+> The second write sends nothing and the second close hangs.
+> If the first close() is omitted it works.
+>=20
+> Adding logs to the the UART driver shows that the DMA is being setup but =
+the
+> callback is never invoked for the second write.
+>=20
+> This used to work in 4.19.
+>=20
+> Git bisect leads to:
+> 	ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+>=20
+> This commit adds a "context_loaded" flag used to avoid unnecessary contex=
+t
+> setups.
+> However the flag is only reset in sdma_channel_terminate_work(), which is
+> only invoked in a worker triggered by sdma_terminate_all() IF there is an=
+ active
+> descriptor.
+>=20
+> So, if no active descriptor remains when the channel is terminated, the f=
+lag is
+> not reset and, when the channel is later reused the old context is used.
+>=20
+> Fix the problem by always resetting the flag in sdma_free_chan_resources(=
+).
+>=20
+> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+>=20
+> ---
+>=20
+> The following python script may be used to reproduce the problem:
+>=20
+> import re, serial, sys
+>=20
+> ports=3D(0, 4) # Can be any ports not used (no need to connect anything) =
+NOT
+> console...
+>=20
+> def get_tx_counts():
+>         pattern =3D re.compile("(\d+):.*tx:(\d+).*")
+>         tx_counts =3D {}
+>         with open("/proc/tty/driver/IMX-uart", "r") as f:
+>                 for line in f:
+>                         match =3D pattern.match(line)
+>                         if match:
+>                                 tx_counts[int(match.group(1))] =3D
+> int(match.group(2))
+>         return tx_counts
+>=20
+> before =3D get_tx_counts()
+>=20
+> a =3D serial.Serial("/dev/ttymxc%d" % ports[0])
+> a.write("polop")
+> a.close()
+> b =3D serial.Serial("/dev/ttymxc%d" % ports[1])
+> b.write("test")
+>=20
+> after =3D get_tx_counts()
+>=20
+> if (after[ports[0]] - before[ports[0]]  > 0) and (after[ports[1]] - befor=
+e[ports[1]] >
+> 0):
+>         print "PASS"
+>         sys.exit(0)
+> else:
+>         print "FAIL"
+>         print "Before: %s" % before
+>         print "After: %s" % after
+>         sys.exit(1)
+> ---
+>  drivers/dma/imx-sdma.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> 066b21a..332ca50 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1338,6 +1338,7 @@ static void sdma_free_chan_resources(struct
+> dma_chan *chan)
+>=20
+>  	sdmac->event_id0 =3D 0;
+>  	sdmac->event_id1 =3D 0;
+> +	sdmac->context_loaded =3D false;
+Martin, thanks for you patch, sorry for the issue left in kernel for so lon=
+g, because my below patch set has been pending from last year. I would like=
+ revert commit ad0d92d: "dmaengine: imx-sdma: refine to load context only o=
+nce" since some drivers may change.
+context during two transfer like spi did. I would pick up this patch set th=
+is week anyway.=20
+https://lore.kernel.org/patchwork/patch/1086454/=20
+>=20
+>  	sdma_set_channel_priority(sdmac, 0);
+>=20
+> --
+> 1.9.1
 
