@@ -2,126 +2,143 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D68C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F97C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6F5217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSAe/B1i"
+	by mail.kernel.org (Postfix) with ESMTP id 89F2A217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583168554;
+	bh=/65ypuagroe4Dhr6JRR0SJiFFyQRvZCGs96m6duAq9s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LGCc6INahDdFvKNls1T8SlbylPqHI8KLWzGUGc9Dw1fNOm4G13hevOnAprNSPffE5
+	 ecv6akgkEjlPqhAJUKgtxulPgDmFtfygas/VjmSEW10d7JmeIljWttLNf5wMdvvZf0
+	 Px87IOvusaronJZASibtt5r6OQWHD3AK4GFqg0ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCBRCL (ORCPT
+        id S1727463AbgCBRCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:02:11 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43284 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgCBRCL (ORCPT
+        Mon, 2 Mar 2020 12:02:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35185 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgCBRCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:02:11 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q18so313213qki.10;
-        Mon, 02 Mar 2020 09:02:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z/s0AFZ+XxkV+eI3XGK5Ud6Mh7RjzKiJ4qxWDIVLNhw=;
-        b=qSAe/B1iUQEWVYG5vamIa+kD1MuBB+e7dR6ZdhDrv7YLSNdUtwOzCcRGM4C+LPDZG/
-         SvBTRXTs1lsSjSC7JgFfwUFoxHfqp6OuI3UNZXen2J3nPz7G+JaGDXkW7wLClC+959W6
-         lI0x5YwClURyDKxIXNp6awsrzAfHPOwmDINXg23NfYZQoyHiIxU/QunL3YTVo/h2IBuc
-         C24ldEYVq/zBTgu+4B1yLCDrh3ewThjZ8kioNsHzHSqiUgS2Vh0vrxQ4KlP04v0m2MPC
-         r0FwRAkBZtlk8kVGGuLueKcBCFrLza677jAwm+hjxViDJqf9LtxcZ/fi7tewgiECG3e4
-         dzDA==
+        Mon, 2 Mar 2020 12:02:33 -0500
+Received: by mail-ot1-f67.google.com with SMTP id v10so3157624otp.2;
+        Mon, 02 Mar 2020 09:02:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z/s0AFZ+XxkV+eI3XGK5Ud6Mh7RjzKiJ4qxWDIVLNhw=;
-        b=VmgheZLZQEJcIrleGjk4qwj52vdHDbZXub6QpUGvCyVvbjmFey1Lv9yar8aIxqargF
-         iEVGzZYNWI/dZJXy2bO3gEozWvNSPIMEE1dxLfwesUx5yWHy7xO6c44J7ag40IjIFpsf
-         qu9hM2/0SHOz05VJSD/UD6CaCAZuy3ylXiOZMXkIVgJ3xTQ/3oYdF65xeDqMnotdcdWc
-         972sJtuK4XT6H608+NHtO12A/uFUWOZhio68A0wQs/gvqtnfrtIKKgXw6yMOYkLPrGw5
-         PJ6aUSbKi0eqm5GF39kf79EJv8nv2WVZEv23yiu+QhiBmmks5lpVs27WqCxkltmF4k5E
-         gHxA==
-X-Gm-Message-State: ANhLgQ0SKTzZNQiJnfl2X+pEKFvErpo7n8rNlO+VYVb4KDj+B8BoDecK
-        8tg2ZEEwvXtboM0p5wx+ntI=
-X-Google-Smtp-Source: ADFU+vs831cPPOh0W5Sh1ogClVB6oEBZpozuz0OmLqf0zY+BbS5tLVtNjeG7Zu0atrmkfUA5nv2JMg==
-X-Received: by 2002:a05:620a:1647:: with SMTP id c7mr259994qko.20.1583168527508;
-        Mon, 02 Mar 2020 09:02:07 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id w2sm10554175qto.73.2020.03.02.09.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:02:06 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 2 Mar 2020 12:02:05 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] efi/x86: Make efi32_pe_entry more readable
-Message-ID: <20200302170205.GA2937123@rani.riverdale.lan>
-References: <20200301230436.2246909-1-nivedita@alum.mit.edu>
- <20200301230436.2246909-4-nivedita@alum.mit.edu>
- <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
- <20200302165359.GA2599505@rani.riverdale.lan>
- <CAKv+Gu-8HeNaRYZNtTHr1_VF1aH=BRKF4CaeyP-PPfHNQN2paA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3E3fWxDEv9ZHfmOkcec5gIIJeOvKCzK/ypdiNkYfC8Q=;
+        b=PU5YSgJM0v8gIGcwJCuVXvlgu5Cm9dRRs4HeH+ZE1UYmKTrqSHRrSeIklZmnd41AF8
+         TiM+ovRk8Esx/fBCyLAR6jMKwit0RuIXMzXXNfNE+ZF5RmWwxHLLH1bor53s4fn+IMbF
+         9B/CfH1QAeIEhW+oAg96abRDPoiPlPYVXSt0COj3g2zrWOdlY9pBYbW+lLHl/yti71h5
+         Vpjr4HD9YzUGHZUwvoSUeTjk51WC4jHfpWa3LQ51Ypr7JvmrDtSDYYVTiTZuNcp2qdwz
+         FIRA6C4Uvesg70p2NBCTIZCLujXKyaclBHDL9CFoyOwKJzMTq1NAk5QHWi+Tdc6NInl5
+         MPtA==
+X-Gm-Message-State: ANhLgQ2AagbWnLnObH29eBzcxI/w2JG5nx/sU13i0gXrTcNmcR2HJFkA
+        Ee/ALzUBKxbKduUDYlRaQAeFis6BDAb/c3woLS0=
+X-Google-Smtp-Source: ADFU+vtrrwRitcEkkYBbTuh1knba7jp5gALhcQEhCs5xZDWVZPrBv0NBfHT14a2k5mSe4rTQlRheR8mZvBJynFnoa78=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr125593otn.262.1583168552404;
+ Mon, 02 Mar 2020 09:02:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-8HeNaRYZNtTHr1_VF1aH=BRKF4CaeyP-PPfHNQN2paA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
+ <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
+ <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org> <CAJZ5v0jTSKd_23fJhM+XUmFX_yTjcD+c_s1Jvi3HA1EmXPkzZw@mail.gmail.com>
+ <CAEXW_YRL0kum5yVm+9V8i_PK2FcHfPeUOxJKZ+T8P3zqhATxJg@mail.gmail.com> <CAD=jOEZ3vdNC4qTMxptaXLjs7i8TCTYjeiv9vXhcapLSkrr9RQ@mail.gmail.com>
+In-Reply-To: <CAD=jOEZ3vdNC4qTMxptaXLjs7i8TCTYjeiv9vXhcapLSkrr9RQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 2 Mar 2020 18:02:21 +0100
+Message-ID: <CAJZ5v0hee4FxeVub_ZkAYn9z8q1_ZLA_AcmTtS-w39VzSe0UxA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amol Grover <frextrite@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:57:04PM +0100, Ard Biesheuvel wrote:
-> On Mon, 2 Mar 2020 at 17:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Mon, Mar 02, 2020 at 08:49:17AM +0100, Ard Biesheuvel wrote:
-> > > On Mon, 2 Mar 2020 at 00:04, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > ...
-> > > >         call    1f
-> > > > -1:     pop     %ebp
-> > > > -       subl    $1b, %ebp
-> > > > +1:     pop     %ebx
-> > > > +       subl    $1b, %ebx
-> > ...
-> > > >
-> > > > +       movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
-> > >
-> > > The code that follows efi32_pe_stub_entry still expects the runtime
-> > > displacement in %ebp, so we'll need to pass that in another way here.
-> > >
-> > > >         jmp     efi32_pe_stub_entry
-> >
-> > Didn't follow -- what do you mean by runtime displacement?
-> >
-> > efi32_pe_stub_entry expects the runtime address of startup_32 to be in
-> > %ebp, but with the changes for keeping the frame pointer in %ebp, I
-> > changed the runtime address to be in %ebx instead. Hence I added that
-> > movl %ebx, %ebp to put it in %ebp just before calling efi32_pe_stub_entry.
-> > That should be fine, no?
-> 
-> But how does that work with:
-> 
-> SYM_INNER_LABEL(efi32_pe_stub_entry, SYM_L_LOCAL)
->     movl %ecx, efi32_boot_args(%ebp)
->     movl %edx, efi32_boot_args+4(%ebp)
->     movb $0, efi_is64(%ebp)
-> 
-> 
-> ?
+On Mon, Mar 2, 2020 at 1:34 PM Madhuparna Bhowmik
+<madhuparnabhowmik10@gmail.com> wrote:
+>
+>
+>
+> On Mon, 2 Mar, 2020, 3:48 AM Joel Fernandes, <joel@joelfernandes.org> wrote:
+>>
+>> On Sun, Mar 1, 2020 at 4:23 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>> >
+>> > On Sun, Mar 1, 2020 at 9:53 PM <joel@joelfernandes.org> wrote:
+>> > >
+>> > >
+>> > >
+>> > > On March 1, 2020 3:12:53 PM EST, "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+>> > > >On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
+>> > > >>
+>> > > >> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>> > > >>
+>> > > >> This patch passes the cond argument to list_for_each_entry_rcu()
+>> > > >> to fix the following false-positive lockdep warnings:
+>> > > >>
+>> > > >> [  330.302784] =============================
+>> > > >> [  330.302789] WARNING: suspicious RCU usage
+>> > > >> [  330.302796] 5.6.0-rc1+ #5 Not tainted
+>> > > >> [  330.302801] -----------------------------
+>> > > >> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in
+>> > > >non-reader section!!
+>> > > >>
+>> > > >> [  330.303303] =============================
+>> > > >> [  330.303307] WARNING: suspicious RCU usage
+>> > > >> [  330.303311] 5.6.0-rc1+ #5 Not tainted
+>> > > >> [  330.303315] -----------------------------
+>> > > >> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in
+>> > > >non-reader section!!
+>> > > >>
+>> > > >> [  331.934969] =============================
+>> > > >> [  331.934971] WARNING: suspicious RCU usage
+>> > > >> [  331.934973] 5.6.0-rc1+ #5 Not tainted
+>> > > >> [  331.934975] -----------------------------
+>> > > >> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in
+>> > > >non-reader section!!
+>> > > >>
+>> > > >> [  332.467772] WARNING: suspicious RCU usage
+>> > > >> [  332.467775] 5.6.0-rc1+ #5 Not tainted
+>> > > >> [  332.467775] -----------------------------
+>> > > >> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in
+>> > > >non-reader section!!
+>> > > >
+>> > > >I don't see these warnings in the kernels run locally here.
+>> > > >
+>> > > >What do you do to get them?
+>> > > >
+>> > > >Joel, any comments here?
+>> > >
+>> > > You have to enable lockdep in your config. Does your setup have that?
+>> >
+>> > CONFIG_LOCK_DEBUGGING_SUPPORT=y
+>> > CONFIG_PROVE_LOCKING=y
+>> > CONFIG_DEBUG_SPINLOCK=y
+>> > CONFIG_DEBUG_LOCK_ALLOC=y
+>> > CONFIG_LOCKDEP=y
+>>
+>>
+> I had CONFIG_PROVE_RCU_LIST = y and I think these warnings were triggered when I had closed my laptop (like just close without shutting down).
 
-Why wouldn't it work? Before this change, efi32_pe_entry set %ebp to
-startup_32 (via the call/pop/sub sequence), so efi32_pe_stub_entry was
-entered with %ebp == startup_32.
+OK, so let's define a macro for that in this file to avoid code duplication.
 
-After this change, the call/pop/sub sequence puts startup_32 into %ebx,
-and then I copy it into %ebp just before branching to efi32_pe_stub_entry.
-So everything should continue to work the same way as before?
+And analogously in the second patch.
+
+Thanks!
