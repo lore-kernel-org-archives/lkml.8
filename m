@@ -2,107 +2,234 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E82C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A1C2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6ZOyiWb"
+	by mail.kernel.org (Postfix) with ESMTP id E26CE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgCBOnd (ORCPT
+        id S1727276AbgCBOoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:43:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50197 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727032AbgCBOnc (ORCPT
+        Mon, 2 Mar 2020 09:44:32 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46610 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgCBOoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:43:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583160211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4DTh1eeDs28NHEo2dJQ0T28Uq7zqauPX5DAtgIFS8qg=;
-        b=V6ZOyiWbp8CmXoaUdfCigu1KW+2XFDngu/3sDN3zXdYw5LYIopH9IgBWTIoquQViWRcAK+
-        +23ghfvISnOZTjoqycwBE6mGL4v/HMQoUiQS4eMfoj4o+cIS24vBGux2VHR5eiHi6AgkOP
-        wG5nT1RjNkbB7sEng2HxddvAKdkJm/U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-StHBW8ivOYK2YTHxoV5-rw-1; Mon, 02 Mar 2020 09:43:27 -0500
-X-MC-Unique: StHBW8ivOYK2YTHxoV5-rw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 2 Mar 2020 09:44:32 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8325592422;
-        Mon,  2 Mar 2020 14:43:25 +0000 (UTC)
-Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74C725C122;
-        Mon,  2 Mar 2020 14:43:19 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 15:43:07 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 03/13] kprobes: Add symbols for kprobe insn pages
-Message-ID: <20200302144307.GD204976@krava>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
- <20200228135125.567-4-adrian.hunter@intel.com>
- <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
- <20200228172004.GI5451@krava>
- <20200229134947.839096dbc8321cfdca980edb@kernel.org>
- <20200229184913.4e13e516@oasis.local.home>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4B76F295793;
+        Mon,  2 Mar 2020 14:44:30 +0000 (GMT)
+Date:   Mon, 2 Mar 2020 15:44:26 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
+ P/B0/B1 reflists
+Message-ID: <20200302154426.5fb09f91@collabora.com>
+In-Reply-To: <20200302142433.0ad1b383@coco.lan>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-3-ezequiel@collabora.com>
+        <20200302142433.0ad1b383@coco.lan>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200229184913.4e13e516@oasis.local.home>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 06:49:13PM -0500, Steven Rostedt wrote:
-> On Sat, 29 Feb 2020 13:49:47 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Mon, 2 Mar 2020 14:24:33 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> Em Thu, 20 Feb 2020 13:30:12 -0300
+> Ezequiel Garcia <ezequiel@collabora.com> escreveu:
 > 
-> > On Fri, 28 Feb 2020 18:20:04 +0100
-> > Jiri Olsa <jolsa@redhat.com> wrote:
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
 > > 
-> > > > BTW, it seems to pretend to be a module, but is there no concern of
-> > > > confusing users? Shouldn't it be [*kprobes] so that it is non-exist
-> > > > module name?  
-> > > 
-> > > note we already have bpf symbols as [bpf] module  
+> > Building those list is a standard procedure described in section
+> > '8.2.4 Decoding process for reference picture lists construction' of
+> > the H264 specification.
 > > 
-> > Yeah, and this series adds [kprobe(s)] and [ftrace] too.
-> > I simply concern that the those module names implicitly become
-> > special word (rule) and embedded in the code. If such module names
-> > are not exposed to users, it is OK (but I hope to have some comments).
-> > However, it is under /proc, which means users can notice it.
+> > We already have 2 drivers needing the same logic (hantro and rkvdec) and
+> > I suspect we will soon have more.
+> > 
+> > Let's provide generic helpers to create those lists.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/media/v4l2-core/Kconfig     |   4 +
+> >  drivers/media/v4l2-core/Makefile    |   1 +
+> >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
+> >  include/media/v4l2-h264.h           |  85 +++++++++
+> >  4 files changed, 348 insertions(+)
+> >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+> >  create mode 100644 include/media/v4l2-h264.h
+> > 
+> > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
+> > index 39e3fb30ba0b..8a4ccfbca8cf 100644
+> > --- a/drivers/media/v4l2-core/Kconfig
+> > +++ b/drivers/media/v4l2-core/Kconfig
+> > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
+> >  config VIDEO_TUNER
+> >  	tristate
+> >  
+> > +# Used by drivers that need v4l2-h264.ko
+> > +config V4L2_H264
+> > +	tristate
+> > +
+> >  # Used by drivers that need v4l2-mem2mem.ko
+> >  config V4L2_MEM2MEM_DEV
+> >  	tristate
+> > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
+> > index 786bd1ec4d1b..c5c53e0941ad 100644
+> > --- a/drivers/media/v4l2-core/Makefile
+> > +++ b/drivers/media/v4l2-core/Makefile
+> > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
+> >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
+> >  
+> >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
+> > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
+> >  
+> >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
+> >  
+> > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
+> > new file mode 100644
+> > index 000000000000..4f68c27ec7fd
+> > --- /dev/null
+> > +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> > @@ -0,0 +1,258 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * V4L2 H264 helpers.
+> > + *
+> > + * Copyright (C) 2019 Collabora, Ltd.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/sort.h>
+> > +
+> > +#include <media/v4l2-h264.h>
+> > +
+> > +/**
+> > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
+> > + *				      builder
+> > + *
+> > + * @b: the builder context to initialize
+> > + * @dec_params: decode parameters control
+> > + * @slice_params: first slice parameters control
+> > + * @sps: SPS control
+> > + * @dpb: DPB to use when creating the reference list
+> > + */
+> > +void
+> > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
+> > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
+> > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
+> > +		const struct v4l2_ctrl_h264_sps *sps,
+> > +		const struct v4l2_h264_dpb_entry *dpb)  
 > 
-> I share Masami's concerns. It would be good to have something
-> differentiate local functions that are not modules. That's one way I
-> look to see if something is a module or built in, is to see if kallsyms
-> has it as a [].
+> The prototype here is not nice...
 > 
-> Perhaps prepend with: '&' ?
+> > +{
+> > +	int cur_frame_num, max_frame_num;
+> > +	unsigned int i;
+> > +
+> > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
+> > +	cur_frame_num = slice_params->frame_num;
+> > +
+> > +	memset(b, 0, sizeof(*b));
+> > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
+> > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
+> > +					     dec_params->top_field_order_cnt);
+> > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
+> > +	else
+> > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
+> > +
+> > +	for (i = 0; i < 16; i++) {
+> > +		u32 pic_order_count;
+> > +
+> > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > +			continue;
+> > +
+> > +		b->refs[i].pic_num = dpb[i].pic_num;  
+> 
+> ... as you're expecting a fixed number of elements at DPB array, and using
+> a magic number (16) inside the for loop.
 
-that would break some of the perf code.. IMO Arnaldo's explanation
-makes sense and we could keep it as it is
+I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
+told that this is an arbitrary limitation (the spec does not explicitly
+limit the DPB size, even if all the HW we've seen seem to limit it to
+16). Maybe we can pass the DPB array size as an argument so it stays
+HW-specific.
 
-jirka
+> 
+> > +
+> > +		/*
+> > +		 * Handle frame_num wraparound as described in section
+> > +		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
+> > +		 * TODO: This logic will have to be adjusted when we start
+> > +		 * supporting interlaced content.
+> > +		 */
+> > +		if (dpb[i].frame_num > cur_frame_num)
+> > +			b->refs[i].frame_num = (int)dpb[i].frame_num -
+> > +					       max_frame_num;
+> > +		else
+> > +			b->refs[i].frame_num = dpb[i].frame_num;
+> > +
+> > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> > +			pic_order_count = min(dpb[i].top_field_order_cnt,
+> > +					      dpb[i].bottom_field_order_cnt);
+> > +		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> > +			pic_order_count = dpb[i].bottom_field_order_cnt;
+> > +		else
+> > +			pic_order_count = dpb[i].top_field_order_cnt;
+> > +
+> > +		b->refs[i].pic_order_count = pic_order_count;
+> > +		b->unordered_reflist[b->num_valid] = i;
+> > +		b->num_valid++;
+> > +	}
+> > +
+> > +	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
+> > +		b->unordered_reflist[i] = i;
+> > +}
+> > +EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
+> > +
+> > +static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
+> > +				    const void *data)
+> > +{
+> > +	const struct v4l2_h264_reflist_builder *builder = data;
+> > +	u8 idxa, idxb;
+> > +
+> > +	idxa = *((u8 *)ptra);
+> > +	idxb = *((u8 *)ptrb);
+> > +
+> > +	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {  
+> 
+> Where do you ensure that idxa and idxb won't be bigger than NUM_DPB_ENTRIES?
 
+If it does that means something went wrong in the init func. I can add
+a WARN_ON() and bail out if you want, but I can't return an error here
+(that's not what the caller of the callback expects).
