@@ -2,83 +2,124 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA51C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2ABF21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A6F21556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:03:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISAm9jEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgCBUCa (ORCPT
+        id S1726891AbgCBUDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:02:30 -0500
-Received: from mga14.intel.com ([192.55.52.115]:29490 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCBUCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:02:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 12:02:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="351618287"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 12:02:29 -0800
-Date:   Mon, 2 Mar 2020 12:02:29 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/13] KVM: x86: Allow userspace to disable the
- emulator
-Message-ID: <20200302200229.GE6244@linux.intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
- <3ec358a8-859d-9ef1-7392-372d55b28ee4@redhat.com>
+        Mon, 2 Mar 2020 15:03:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58186 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726545AbgCBUDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:03:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583179382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LPojLI446aoeLmtH/1lQnBQGbo8ED69kam5nyvQn7G8=;
+        b=ISAm9jEi3tqMJuC26XwuRzbR+5wTZZpe87HfIH1CmKj5NdHvs6fM/DBNaUwQmvPQ5G+/mQ
+        AiHPOJUfQ8ObTxUJVHIxylFy3EB2z094TEgHwKa/lXAk0oMvqz5n9LEKWViS1QB0hUq3hg
+        JpU2um5fkSmvgVZp4SDgDyUfo/DQz6w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-kaSIEsubPHaM28o8lGTkdg-1; Mon, 02 Mar 2020 15:02:58 -0500
+X-MC-Unique: kaSIEsubPHaM28o8lGTkdg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B645801F7C;
+        Mon,  2 Mar 2020 20:02:57 +0000 (UTC)
+Received: from krava (ovpn-204-60.brq.redhat.com [10.40.204.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5D2160BF3;
+        Mon,  2 Mar 2020 20:02:52 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 21:02:49 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf symbols: Don't try to find a vmlinux file when
+ looking for kernel modules
+Message-ID: <20200302200249.GA9761@krava>
+References: <20200302191007.GD10335@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3ec358a8-859d-9ef1-7392-372d55b28ee4@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200302191007.GD10335@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 07:42:31PM +0100, Paolo Bonzini wrote:
-> On 19/02/20 00:29, Sean Christopherson wrote:
-> > The primary intent of this series is to dynamically allocate the emulator
-> > and get KVM to a state where the emulator *could* be disabled at some
-> > point in the future.  Actually allowing userspace to disable the emulator
-> > was a minor change at that point, so I threw it in.
-> > 
-> > Dynamically allocating the emulator shrinks the size of x86 vcpus by
-> > ~2.5k bytes, which is important because 'struct vcpu_vmx' has once again
-> > fattened up and squeaked past the PAGE_ALLOC_COSTLY_ORDER threshold.
-> > Moving the emulator to its own allocation gives us some breathing room
-> > for the near future, and has some other nice side effects.
-> > 
-> > As for disabling the emulator... in the not-too-distant future, I expect
-> > there will be use cases that can truly disable KVM's emulator, e.g. for
-> > security (KVM's and/or the guests).  I don't have a strong opinion on
-> > whether or not KVM should actually allow userspace to disable the emulator
-> > without a concrete use case (unless there already is a use case?), which
-> > is why that part is done in its own tiny patch.
-> > 
-> > Running without an emulator has been "tested" in the sense that the
-> > selftests that don't require emulation continue to pass, and everything
-> > else fails with the expected "emulation error".
+On Mon, Mar 02, 2020 at 04:10:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> The dso->kernel value is now set to everything that is in
+> machine->kmaps, but that was being used to decide if vmlinux lookup is
+> needed, which ended up making that lookup be made for kernel modules,
+> that now have dso->kernel set, leading to these kinds of warnings when
+> running on a machine with compressed kernel modules, like fedora:31:
+>     
+>   [root@five ~]# perf record -F 10000 -a sleep 2
+>   [ perf record: Woken up 1 times to write data ]
+>   lzma: fopen failed on vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+>   lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+>   lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+>   [ perf record: Captured and wrote 1.024 MB perf.data (1366 samples) ]
+>   [root@five ~]#
 > 
-> I agree with Vitaly that, if we want this, it should be a KVM_ENABLE_CAP
-> instead.  The first 10 patches are very nice cleanups though so I plan
-> to apply them (with Vitaly's suggested nits for review) after you answer
-> the question on patch 10.
+> This happens when collecting the buildid, when we find samples for
+> kernel modules, fix it by checking if the looked up DSO is a kernel
+> module by other means.
+> 
+> Fixes: 02213cec64bb ("perf maps: Mark module DSOs with kernel type")
 
-Works for me, thanks!
+ok, I couldn't see that because kcore took over the modules,
+for some reason you don't have it enabled on your system?
+
+because I had to disable it manualy in the code.. I think
+we should add some --no-kcore option for record
+
+the fix is working for me:
+
+Tested/Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
