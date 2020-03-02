@@ -2,127 +2,176 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C7EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE6620866
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1823520866
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eFWqtiYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCBW0M (ORCPT
+        id S1726979AbgCBW0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:26:12 -0500
-Received: from hosting.gsystem.sk ([212.5.213.30]:33146 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBW0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:26:12 -0500
-Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 1FA2B7A02F6;
-        Mon,  2 Mar 2020 23:26:11 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Bart Van Assche <bvanassche@acm.org>
-Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
-Date:   Mon, 2 Mar 2020 23:26:08 +0100
-User-Agent: KMail/1.9.10
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Hernandez <michael.hernandez@cavium.com>,
-        Sawan Chandak <sawan.chandak@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>
-References: <202002231929.01662.linux@zary.sk> <1fbad673-1b8c-0813-c60e-a4f56330a972@acm.org> <202002271809.07717.linux@zary.sk>
-In-Reply-To: <202002271809.07717.linux@zary.sk>
-X-KMail-QuotePrefix: > 
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+        Mon, 2 Mar 2020 17:26:24 -0500
+Received: from mail-bn8nam12on2084.outbound.protection.outlook.com ([40.107.237.84]:6113
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725781AbgCBW0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:26:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZtegsG+q7VeJvuvnSMXBnz1Y0Ato2/PxRELP9MXqGa9PcX6h3yYgwLvWwhHbYSPEh3tikALH6AnAQrT0AWg5bAZjkdi9AE51hpW8yPglBq8ZuxWxJE267J/NRLd1Qhz1aGw0BRrkfw+gguz0kAwFBQX1Zjk25ALq+F6roGKQ2i9jDeArY3G3etaWLLKFyqIyYlx6JzaGm3Tm+9RHhBJsQJ7pa2huQzC8Ge5VzWNL6w/NWy2NjYOFkU0Irkv/LdTBM8RU7O/U3c2LYS0CAnKpPqkFVUlqRSzv1CrcuCiEq1Lh5ASRIryvlgnwQOjqvv+MjNk/EZ4I/voFVnbTjWNhrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xePwD/9oTSo6veH2q5Nf1c461X+YDRVi9pjFeJLdyso=;
+ b=DeBJCPBaTZr7jXDr24Hhl1k4mKq5bhN3CLnIQb7ODPQ3+AX4IAj4kl7LrymBXaWtBH2BVhQv2Y+YwiyQWlpmjPomnMG2W1KEFDt0eHQ/xgOaLH3X7SqsE/kdpM9LhSVgs9mDb1WNfIwBqkrm8BYw+2Tv3jvIgjfUWFZSV7kw8SGYQIkbtuAgYEAm+itkrvKsN7BITw13KFCE6lady7TSfhp9ZhygxVYEFXLf+VfeJlDhz6e8L/3M4e4MM5hFepwSHP4WZGXy5srUe/nKIfcNJuCKijkGBXL05TX0HoNVeJDXxMTt4kQwtsw7Bv6S6Kffp8hCIqG6ixtLOhMRIBlBTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xePwD/9oTSo6veH2q5Nf1c461X+YDRVi9pjFeJLdyso=;
+ b=eFWqtiYE7n2LHuXTRQwB+6VxnSxfOL7wFcMFNMGWAsWHw81A8Ygsta7P3wy0Nmeqsh/5fdkLpqKF/YUY+etlyG91IZ7Q/9dns0KEDY3Qq8AJcwAzwdGNpDborjpYhY6wTItvETqGw+GckOluoLzTRO0AsLAgjyQr8DhSgAnpVoM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2622.namprd12.prod.outlook.com (2603:10b6:805:72::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
+ 2020 22:25:59 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 22:25:59 +0000
+Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
+ information
+To:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
+        maddy@linux.ibm.com
+References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
+ <20200302101332.GS18400@hirez.programming.kicks-ass.net>
+ <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <df966d6e-8898-029f-e697-8496500a1663@amd.com>
+Date:   Mon, 2 Mar 2020 16:25:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202003022326.08698.linux@zary.sk>
+X-ClientProxiedBy: DM3PR14CA0129.namprd14.prod.outlook.com
+ (2603:10b6:0:53::13) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.136.247] (165.204.77.1) by DM3PR14CA0129.namprd14.prod.outlook.com (2603:10b6:0:53::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 22:25:58 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 94815d2b-6cfa-4012-fd47-08d7bef8af18
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2622:|SN6PR12MB2622:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2622A71410E94EBC652A953D87E70@SN6PR12MB2622.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 033054F29A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(376002)(396003)(189003)(199004)(66476007)(5660300002)(36756003)(66946007)(16576012)(478600001)(4326008)(31686004)(66556008)(6486002)(7416002)(316002)(53546011)(86362001)(110136005)(8676002)(52116002)(2906002)(54906003)(26005)(81156014)(81166006)(31696002)(186003)(16526019)(8936002)(2616005)(956004)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2622;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hdaZS8zra4H3It/T6hgmDGvOzKLubE6kgeYs1Wd4qwbGEQgS0Ro4SUoZkEG3FE7YxoGCfAB4loxbEjCKWdErug4byQ8gw6Fv40ekp0eCe+TP/0rvu+jIzq1qZArFUsCkx7GEm1TW0iHInzsQwreelCzl1Srb1yNVxTblxyNUCogmqOcbgTdHLd0UsxM7N/ci8zsHee0HImsxGE88YACYQ9BKqTuAkn5yobxWVDpesnhS/uJXdHHcb8x6QjpQTH6Ws+MXboIkSfjF8fBrqVbjoSPFNTnVU6N1pdNS2WzfJ3rZBgAJzrFw5YELYn0r5+QxKpUNUnr66NaLgfrRIsxDybhE4ynWUTJE98+QgWNUmAyEIdV9K/DFesAf3+wxre4VmMu1TAprKDUnVZZdCfPkJQ4B3gMV9hp5L9lvP6RTibpfV+QjW8TYnhJvEzng/6so
+X-MS-Exchange-AntiSpam-MessageData: lrhEG9wYmAIY1KpjajfXttz7zKOM0ZYUwnP35QPEEfds9D4Rftz9TzDIk31NhLT1kKP/oKUFPgyvH/rc4ODn4ColB3+WAGvCZPIxilIQtJEt2g5HmghlQ/SnYP7+jElMisDU6qXMY4vq6NzlbMfOQA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94815d2b-6cfa-4012-fd47-08d7bef8af18
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 22:25:59.7322
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1YILT2AnjPXwkGTbyM7/Pzey9S+3rmTw73XaWZUCCRyjWIQPhe7L6kWCg+kU8EoaqttmWFfEXQuD+2FOAWSbhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2622
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 27 February 2020 18:09:07 Ondrej Zary wrote:
-> 
-> On Tuesday 25 February 2020 04:41:48 Bart Van Assche wrote:
-> > On 2020-02-24 00:20, Ondrej Zary wrote:
-> > > Looks like it's in some inlined function.
-> > > 
-> > > /usr/src/linux-source-4.19# gdb /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
-> > > GNU gdb (Debian 8.2.1-2+b3) 8.2.1
-> > > ...
-> > > Reading symbols from /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...Reading symbols 
-> > > from /usr/lib/debug//lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...done.
-> > > done.
-> > > 
-> > > (gdb) list *(qla24xx_async_abort_cmd+0x1b)
-> > > 0xf88b is in qla24xx_async_abort_cmd (./arch/x86/include/asm/atomic.h:97).
-> > > 92       *
-> > > 93       * Atomically increments @v by 1.
-> > > 94       */
-> > > 95      static __always_inline void arch_atomic_inc(atomic_t *v)
-> > > 96      {
-> > > 97              asm volatile(LOCK_PREFIX "incl %0"
-> > > 98                           : "+m" (v->counter) :: "memory");
-> > > 99      }
-> > > 100     #define arch_atomic_inc arch_atomic_inc
-> > >
-> > > [ ... ]
-> > > 
-> > > (gdb) disassemble qla24xx_async_abort_cmd
-> > > Dump of assembler code for function qla24xx_async_abort_cmd:
-> > >    0x000000000000f870 <+0>:     callq  0xf875 <qla24xx_async_abort_cmd+5>
-> > >    0x000000000000f875 <+5>:     push   %r15
-> > >    0x000000000000f877 <+7>:     push   %r14
-> > >    0x000000000000f879 <+9>:     push   %r13
-> > >    0x000000000000f87b <+11>:    push   %r12
-> > >    0x000000000000f87d <+13>:    push   %rbp
-> > >    0x000000000000f87e <+14>:    push   %rbx
-> > >    0x000000000000f87f <+15>:    mov    0x28(%rdi),%r13
-> > >    0x000000000000f883 <+19>:    mov    0x20(%rdi),%r15
-> > >    0x000000000000f887 <+23>:    mov    0x48(%rdi),%r14
-> > >    0x000000000000f88b <+27>:    lock incl 0x4(%r14)
-> > >    0x000000000000f890 <+32>:    mfence
-> > 
-> > Thanks, this is very helpful. I think the above means that the crash is
-> > triggered by the following code:
-> > 
-> > 	sp = qla2xxx_get_qpair_sp(cmd_sp->qpair, cmd_sp->fcport,
-> > 		GFP_KERNEL);
-> > 
-> > From the start of qla2xxx_get_qpair_sp():
-> > 
-> > 	QLA_QPAIR_MARK_BUSY(qpair, bail);
-> > 
-> > From qla_def.h:
-> > 
-> > #define QLA_QPAIR_MARK_BUSY(__qpair, __bail) do {	\
-> > 	atomic_inc(&__qpair->ref_count);		\
-> > 	mb();						\
-> > 	if (__qpair->delete_in_progress) {		\
-> > 		atomic_dec(&__qpair->ref_count);	\
-> > 		__bail = 1;				\
-> > 	} else {					\
-> > 	       __bail = 0;				\
-> > 	}						\
-> > } while (0)
-> > 
-> > One of the changes between kernel version v4.9.210 and v4.19.98 is the
-> > following: "qla2xxx: Add multiple queue pair functionality". I think the
-> >  above information means that the cmd_sp->qpair pointer is NULL. I will
-> > let QLogic recommend a solution.
-> 
-> Thank you very much for the analysis.
-> Unfortunately, QLogic does not seem to care...
+On 3/2/20 2:21 PM, Stephane Eranian wrote:
+> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
+>>> Modern processors export such hazard data in Performance
+>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
+>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
+>>> AMD[3] provides similar information.
+>>>
+>>> Implementation detail:
+>>>
+>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
+>>> If it's set, kernel converts arch specific hazard information
+>>> into generic format:
+>>>
+>>>   struct perf_pipeline_haz_data {
+>>>          /* Instruction/Opcode type: Load, Store, Branch .... */
+>>>          __u8    itype;
+>>>          /* Instruction Cache source */
+>>>          __u8    icache;
+>>>          /* Instruction suffered hazard in pipeline stage */
+>>>          __u8    hazard_stage;
+>>>          /* Hazard reason */
+>>>          __u8    hazard_reason;
+>>>          /* Instruction suffered stall in pipeline stage */
+>>>          __u8    stall_stage;
+>>>          /* Stall reason */
+>>>          __u8    stall_reason;
+>>>          __u16   pad;
+>>>   };
+>>
+>> Kim, does this format indeed work for AMD IBS?
 
-Let's try to CC the people at Cavium that signed-off the commit.
+It's not really 1:1, we don't have these separations of stages
+and reasons, for example: we have missed in L2 cache, for example.
+So IBS output is flatter, with more cycle latency figures than
+IBM's AFAICT.
 
--- 
-Ondrej Zary
+> Personally, I don't like the term hazard. This is too IBM Power
+> specific. We need to find a better term, maybe stall or penalty.
+
+Right, IBS doesn't have a filter to only count stalled or otherwise
+bad events.  IBS' PPR descriptions has one occurrence of the
+word stall, and no penalty.  The way I read IBS is it's just
+reporting more sample data than just the precise IP: things like
+hits, misses, cycle latencies, addresses, types, etc., so words
+like 'extended', or the 'auxiliary' already used today even
+are more appropriate for IBS, although I'm the last person to
+bikeshed.
+
+> Also worth considering is the support of ARM SPE (Statistical
+> Profiling Extension) which is their version of IBS.
+> Whatever gets added need to cover all three with no limitations.
+
+I thought Intel's various LBR, PEBS, and PT supported providing
+similar sample data in perf already, like with perf mem/c2c?
+
+Kim
