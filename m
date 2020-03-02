@@ -2,80 +2,57 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F61AC3F2E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D44C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7712246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D184D2468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137105;
-	bh=j+CiTWabGq3FXlueQMbmSeaj+tQF9Be/P6X1HTLA8n0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RQ1r5nz5pUe1SOfsizNgcJZc7T76MsWVHjkP+vdkckIrEkUzDnPyJv9vT13tKJgUk
-	 9CtDJT3NZASHxUiVHcoufikHcf7a6tmQYGPOnUslTKLf5AR+gywxM3jYd61vllgTIx
-	 Qw3F6OtuxRIVwSHnHEsTmMhuuZjhsEUBeBCP7ZDE=
+	s=default; t=1583137129;
+	bh=2ystwVh1h2eU6vurRedIUhhyG4BGvNNF9noJpwOCuJM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GJCThdVEsbl4wf/4OCz5djNVrr0zv9YiENmhH5k+IzHfEdztu69gN5eysinOuSN5G
+	 LRM5Fk/PNkoJjS34mLpT1BZnhcF4jbMRQTz66NbmGg5topxPymM5nRwe/ATAIywJ5s
+	 rYIpuxqu7J3pwEfNxhaeh2k6ZkPWo2AKsuA9dRmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgCBISY (ORCPT
+        id S1727593AbgCBISo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:18:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56988 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 03:18:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727198AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 03:16:21 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 893B0246EB;
+        by mail.kernel.org (Postfix) with ESMTPSA id 56241246DE;
         Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583136979;
-        bh=j+CiTWabGq3FXlueQMbmSeaj+tQF9Be/P6X1HTLA8n0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=x5jd/QTE93lIkxJfUM+jb34xeZrMlv/yIiMdt8EhqpuW6Ei6D0jFaJXgsUjqpKRjp
-         5+jxbPQ01NnYDKXNH6g7hBQZjQxNa24LhZSDLG5mEnOB1BfyZVi80j3vHcBdMzHZV7
-         9Pwx7QA3BzGzBWRqzJVve1WOSw7I6wr+ugQscbEg=
+        bh=2ystwVh1h2eU6vurRedIUhhyG4BGvNNF9noJpwOCuJM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qRkpokPuX+U1d8fA5kDkGJp+0v37w2ntFUv/0eT0rx/Ko0SOXlbDMPHEPtMr7mhKO
+         qOgwSU8buBEAM51ScROP2g946QBPC/su2j1TtKw2Aco9GC3zIRL+Uhup1I/XUEtN3b
+         ZF6vghx9aSp7Vbql/WKvKMVxNTBqEgb1VsCIdVKM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8gFM-0003wg-VK; Mon, 02 Mar 2020 09:16:16 +0100
+        id 1j8gFN-0003y0-Fy; Mon, 02 Mar 2020 09:16:17 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
-        megaraidlinux.pdl@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        esc.storagedev@microsemi.com, Doug Gilbert <dgilbert@interlog.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        HighPoint Linux Team <linux@highpoint-tech.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Hannes Reinecke <hare@suse.com>, dc395x@twibble.org,
-        Oliver Neukum <oliver@neukum.org>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Juergen E. Fischer" <fischer@norbit.de>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Jamie Lenehan <lenehan@twibble.org>,
-        Ali Akcaagac <aliakc@web.de>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Avri Altman <avri.altman@wdc.com>,
-        GOTO Masanori <gotom@debian.or.jp>
-Subject: [PATCH 00/42] Manually convert SCSI documentation to ReST format
-Date:   Mon,  2 Mar 2020 09:15:33 +0100
-Message-Id: <cover.1583136624.git.mchehab+huawei@kernel.org>
+        HighPoint Linux Team <linux@highpoint-tech.com>
+Subject: [PATCH 18/42] docs: scsi: convert hptiop.txt to ReST
+Date:   Mon,  2 Mar 2020 09:15:51 +0100
+Message-Id: <d189a339bb360b7b397914ee3ddeb75d9a7fd788.1583136624.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
+References: <cover.1583136624.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,181 +60,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series manually convert all SCSI documentation files to ReST.
-
-This is part of a bigger series that finaly finishes the migration to ReST.
-After that, we can focus on more interesting tasks from the documentation
-PoV, like cleaning obsolete stuff and filling the gaps.
-
-If you want to see how this would show at the documentation body,
-a sneak peak of this series (together with the other pending
-doc patches from me) is available at:
-
-        https://www.infradead.org/~mchehab/kernel_docs/scsi/index.html
-
-This series is available on this devel branch:
-
-        https://git.linuxtv.org/mchehab/experimental.git/log/?h=scsi_docs_20200228
-
-and it is based on next-20200228
-
-
-Mauro Carvalho Chehab (42):
-  Add an empty index file for SCSI documents
-  docs: scsi: include SCSI Transport SRP diagram at the doc body
-  docs: scsi: convert 53c700.txt to ReST
-  docs: scsi: convert aacraid.txt to ReST
-  docs: scsi: convert advansys.txt to ReST
-  docs: scsi: convert aha152x.txt to ReST
-  docs: scsi: convert aic79xx.txt to ReST
-  docs: scsi: convert aic7xxx.txt to ReST
-  docs: scsi: convert bfa.txt to ReST
-  docs: scsi: convert bnx2fc.txt to ReST
-  docs: scsi: convert BusLogic.txt to ReST
-  docs: scsi: convert cxgb3i.txt to ReST
-  docs: scsi: convert dc395x.txt to ReST
-  docs: scsi: convert dpti.txt to ReST
-  docs: scsi: convert FlashPoint.txt to ReST
-  docs: scsi: convert g_NCR5380.txt to ReST
-  docs: scsi: convert hpsa.txt to ReST
-  docs: scsi: convert hptiop.txt to ReST
-  docs: scsi: convert libsas.txt to ReST
-  docs: scsi: convert link_power_management_policy.txt to ReST
-  docs: scsi: convert lpfc.txt to ReST
-  docs: scsi: convert megaraid.txt to ReST
-  docs: scsi: convert ncr53c8xx.txt to ReST
-  docs: scsi: convert NinjaSCSI.txt to ReST
-  docs: scsi: convert ppa.txt to ReST
-  docs: scsi: convert qlogicfas.txt to ReST
-  docs: scsi: convert scsi-changer.txt to ReST
-  docs: scsi: convert scsi_eh.txt to ReST
-  docs: scsi: convert scsi_fc_transport.txt to ReST
-  docs: scsi: convert scsi-generic.txt to ReST
-  docs: scsi: convert scsi_mid_low_api.txt to ReST
-  docs: scsi: convert scsi-parameters.txt to ReST
-  docs: scsi: convert scsi.txt to ReST
-  docs: scsi: convert sd-parameters.txt to ReST
-  docs: scsi: convert smartpqi.txt to ReST
-  docs: scsi: convert st.txt to ReST
-  docs: scsi: convert sym53c500_cs.txt to ReST
-  docs: scsi: convert sym53c8xx_2.txt to ReST
-  docs: scsi: convert tcm_qla2xxx.txt to ReST
-  docs: scsi: convert ufs.txt to ReST
-  docs: scsi: convert wd719x.txt to ReST
-  docs: scsi: convert arcmsr_spec.txt to ReST
-
- Documentation/driver-api/libata.rst           |    2 +-
- Documentation/index.rst                       |    1 +
- Documentation/scsi/{53c700.txt => 53c700.rst} |   61 +-
- .../scsi/{BusLogic.txt => BusLogic.rst}       |   89 +-
- .../scsi/{FlashPoint.txt => FlashPoint.rst}   |  225 +-
- .../scsi/{NinjaSCSI.txt => NinjaSCSI.rst}     |  198 +-
- .../scsi/{aacraid.txt => aacraid.rst}         |   59 +-
- .../scsi/{advansys.txt => advansys.rst}       |  129 +-
- .../scsi/{aha152x.txt => aha152x.rst}         |   73 +-
- .../scsi/{aic79xx.txt => aic79xx.rst}         |  586 +++---
- .../scsi/{aic7xxx.txt => aic7xxx.rst}         |  446 ++--
- Documentation/scsi/arcmsr_spec.rst            |  907 ++++++++
- Documentation/scsi/arcmsr_spec.txt            |  574 -----
- Documentation/scsi/{bfa.txt => bfa.rst}       |   28 +-
- Documentation/scsi/{bnx2fc.txt => bnx2fc.rst} |   18 +-
- Documentation/scsi/{cxgb3i.txt => cxgb3i.rst} |   22 +-
- Documentation/scsi/{dc395x.txt => dc395x.rst} |   75 +-
- Documentation/scsi/dpti.rst                   |   92 +
- Documentation/scsi/dpti.txt                   |   83 -
- .../scsi/{g_NCR5380.txt => g_NCR5380.rst}     |   89 +-
- Documentation/scsi/{hpsa.txt => hpsa.rst}     |   79 +-
- Documentation/scsi/{hptiop.txt => hptiop.rst} |   45 +-
- Documentation/scsi/index.rst                  |   51 +
- Documentation/scsi/{libsas.txt => libsas.rst} |  364 ++--
- ...y.txt => link_power_management_policy.rst} |   12 +-
- Documentation/scsi/{lpfc.txt => lpfc.rst}     |   16 +-
- .../scsi/{megaraid.txt => megaraid.rst}       |   47 +-
- .../scsi/{ncr53c8xx.txt => ncr53c8xx.rst}     | 1865 ++++++++++-------
- Documentation/scsi/{ppa.txt => ppa.rst}       |   12 +-
- .../scsi/{qlogicfas.txt => qlogicfas.rst}     |   17 +-
- .../{scsi-changer.txt => scsi-changer.rst}    |   36 +-
- .../{scsi-generic.txt => scsi-generic.rst}    |   75 +-
- ...csi-parameters.txt => scsi-parameters.rst} |   28 +-
- Documentation/scsi/{scsi.txt => scsi.rst}     |   31 +-
- .../scsi/{scsi_eh.txt => scsi_eh.rst}         |  217 +-
- ...fc_transport.txt => scsi_fc_transport.rst} |  236 ++-
- ...i_mid_low_api.txt => scsi_mid_low_api.rst} | 1730 +++++++--------
- .../{Makefile => figures.rst}                 |    9 +-
- .../{sd-parameters.txt => sd-parameters.rst}  |   21 +-
- .../scsi/{smartpqi.txt => smartpqi.rst}       |   52 +-
- Documentation/scsi/{st.txt => st.rst}         |  301 ++-
- .../{sym53c500_cs.txt => sym53c500_cs.rst}    |    8 +-
- .../scsi/{sym53c8xx_2.txt => sym53c8xx_2.rst} | 1109 +++++-----
- .../scsi/{tcm_qla2xxx.txt => tcm_qla2xxx.rst} |   26 +-
- Documentation/scsi/{ufs.txt => ufs.rst}       |   84 +-
- Documentation/scsi/{wd719x.txt => wd719x.rst} |   23 +-
- MAINTAINERS                                   |   28 +-
- drivers/scsi/BusLogic.c                       |    2 +-
- drivers/scsi/Kconfig                          |   42 +-
- drivers/scsi/aha152x.c                        |    4 +-
- drivers/scsi/aic7xxx/Kconfig.aic79xx          |    2 +-
- drivers/scsi/aic7xxx/Kconfig.aic7xxx          |    2 +-
- drivers/scsi/arcmsr/arcmsr_attr.c             |    2 +-
- drivers/scsi/arcmsr/arcmsr_hba.c              |    2 +-
- drivers/scsi/dpt/dpti_ioctl.h                 |    2 +-
- drivers/scsi/dpt_i2o.c                        |    2 +-
- drivers/scsi/dpti.h                           |    2 +-
- drivers/scsi/g_NCR5380.c                      |    2 +-
- drivers/scsi/ncr53c8xx.c                      |    2 +-
- drivers/scsi/pcmcia/Kconfig                   |    2 +-
- drivers/scsi/smartpqi/Kconfig                 |    2 +-
- drivers/scsi/st.c                             |    2 +-
- drivers/scsi/ufs/Kconfig                      |    2 +-
- include/scsi/sg.h                             |    2 +-
- scripts/documentation-file-ref-check          |    2 +-
- 65 files changed, 6040 insertions(+), 4317 deletions(-)
- rename Documentation/scsi/{53c700.txt => 53c700.rst} (75%)
- rename Documentation/scsi/{BusLogic.txt => BusLogic.rst} (93%)
- rename Documentation/scsi/{FlashPoint.txt => FlashPoint.rst} (21%)
- rename Documentation/scsi/{NinjaSCSI.txt => NinjaSCSI.rst} (28%)
- rename Documentation/scsi/{aacraid.txt => aacraid.rst} (83%)
- rename Documentation/scsi/{advansys.txt => advansys.rst} (73%)
- rename Documentation/scsi/{aha152x.txt => aha152x.rst} (76%)
- rename Documentation/scsi/{aic79xx.txt => aic79xx.rst} (48%)
- rename Documentation/scsi/{aic7xxx.txt => aic7xxx.rst} (49%)
- create mode 100644 Documentation/scsi/arcmsr_spec.rst
- delete mode 100644 Documentation/scsi/arcmsr_spec.txt
- rename Documentation/scsi/{bfa.txt => bfa.rst} (72%)
- rename Documentation/scsi/{bnx2fc.txt => bnx2fc.rst} (91%)
- rename Documentation/scsi/{cxgb3i.txt => cxgb3i.rst} (86%)
- rename Documentation/scsi/{dc395x.txt => dc395x.rst} (64%)
- create mode 100644 Documentation/scsi/dpti.rst
- delete mode 100644 Documentation/scsi/dpti.txt
- rename Documentation/scsi/{g_NCR5380.txt => g_NCR5380.rst} (41%)
- rename Documentation/scsi/{hpsa.txt => hpsa.rst} (77%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/scsi/{hptiop.txt => hptiop.rst} | 45 ++++++++++++++++---
+ Documentation/scsi/index.rst                  |  1 +
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 40 insertions(+), 8 deletions(-)
  rename Documentation/scsi/{hptiop.txt => hptiop.rst} (78%)
- create mode 100644 Documentation/scsi/index.rst
- rename Documentation/scsi/{libsas.txt => libsas.rst} (57%)
- rename Documentation/scsi/{link_power_management_policy.txt => link_power_management_policy.rst} (65%)
- rename Documentation/scsi/{lpfc.txt => lpfc.rst} (93%)
- rename Documentation/scsi/{megaraid.txt => megaraid.rst} (66%)
- rename Documentation/scsi/{ncr53c8xx.txt => ncr53c8xx.rst} (55%)
- rename Documentation/scsi/{ppa.txt => ppa.rst} (32%)
- rename Documentation/scsi/{qlogicfas.txt => qlogicfas.rst} (92%)
- rename Documentation/scsi/{scsi-changer.txt => scsi-changer.rst} (87%)
- rename Documentation/scsi/{scsi-generic.txt => scsi-generic.rst} (70%)
- rename Documentation/scsi/{scsi-parameters.txt => scsi-parameters.rst} (81%)
- rename Documentation/scsi/{scsi.txt => scsi.rst} (82%)
- rename Documentation/scsi/{scsi_eh.txt => scsi_eh.rst} (73%)
- rename Documentation/scsi/{scsi_fc_transport.txt => scsi_fc_transport.rst} (74%)
- rename Documentation/scsi/{scsi_mid_low_api.txt => scsi_mid_low_api.rst} (39%)
- rename Documentation/scsi/scsi_transport_srp/{Makefile => figures.rst} (1%)
- rename Documentation/scsi/{sd-parameters.txt => sd-parameters.rst} (37%)
- rename Documentation/scsi/{smartpqi.txt => smartpqi.rst} (67%)
- rename Documentation/scsi/{st.txt => st.rst} (79%)
- rename Documentation/scsi/{sym53c500_cs.txt => sym53c500_cs.rst} (89%)
- rename Documentation/scsi/{sym53c8xx_2.txt => sym53c8xx_2.rst} (53%)
- rename Documentation/scsi/{tcm_qla2xxx.txt => tcm_qla2xxx.rst} (57%)
- rename Documentation/scsi/{ufs.txt => ufs.rst} (79%)
- rename Documentation/scsi/{wd719x.txt => wd719x.rst} (46%)
 
+diff --git a/Documentation/scsi/hptiop.txt b/Documentation/scsi/hptiop.rst
+similarity index 78%
+rename from Documentation/scsi/hptiop.txt
+rename to Documentation/scsi/hptiop.rst
+index 12ecfd308e55..23ae7ae36971 100644
+--- a/Documentation/scsi/hptiop.txt
++++ b/Documentation/scsi/hptiop.rst
+@@ -1,15 +1,25 @@
+-HIGHPOINT ROCKETRAID 3xxx/4xxx ADAPTER DRIVER (hptiop)
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++======================================================
++Highpoint RocketRAID 3xxx/4xxx Adapter Driver (hptiop)
++======================================================
+ 
+ Controller Register Map
+--------------------------
++-----------------------
+ 
+-For RR44xx Intel IOP based adapters, the controller IOP is accessed via PCI BAR0 and BAR2:
++For RR44xx Intel IOP based adapters, the controller IOP is accessed via PCI BAR0 and BAR2
+ 
++     ============== ==================================
+      BAR0 offset    Register
++     ============== ==================================
+             0x11C5C Link Interface IRQ Set
+             0x11C60 Link Interface IRQ Clear
++     ============== ==================================
+ 
++     ============== ==================================
+      BAR2 offset    Register
++     ============== ==================================
+             0x10    Inbound Message Register 0
+             0x14    Inbound Message Register 1
+             0x18    Outbound Message Register 0
+@@ -21,10 +31,13 @@ For RR44xx Intel IOP based adapters, the controller IOP is accessed via PCI BAR0
+             0x34    Outbound Interrupt Mask Register
+             0x40    Inbound Queue Port
+             0x44    Outbound Queue Port
++     ============== ==================================
+ 
+ For Intel IOP based adapters, the controller IOP is accessed via PCI BAR0:
+ 
++     ============== ==================================
+      BAR0 offset    Register
++     ============== ==================================
+             0x10    Inbound Message Register 0
+             0x14    Inbound Message Register 1
+             0x18    Outbound Message Register 0
+@@ -36,16 +49,22 @@ For Intel IOP based adapters, the controller IOP is accessed via PCI BAR0:
+             0x34    Outbound Interrupt Mask Register
+             0x40    Inbound Queue Port
+             0x44    Outbound Queue Port
++     ============== ==================================
+ 
+ For Marvell not Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BAR1:
+ 
++     ============== ==================================
+      BAR0 offset    Register
++     ============== ==================================
+          0x20400    Inbound Doorbell Register
+          0x20404    Inbound Interrupt Mask Register
+          0x20408    Outbound Doorbell Register
+          0x2040C    Outbound Interrupt Mask Register
++     ============== ==================================
+ 
++     ============== ==================================
+      BAR1 offset    Register
++     ============== ==================================
+              0x0    Inbound Queue Head Pointer
+              0x4    Inbound Queue Tail Pointer
+              0x8    Outbound Queue Head Pointer
+@@ -53,14 +72,20 @@ For Marvell not Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BA
+             0x10    Inbound Message Register
+             0x14    Outbound Message Register
+      0x40-0x1040    Inbound Queue
+-   0x1040-0x2040    Outbound Queue
++     0x1040-0x2040  Outbound Queue
++     ============== ==================================
+ 
+ For Marvell Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BAR1:
+ 
++     ============== ==================================
+      BAR0 offset    Register
++     ============== ==================================
+              0x0    IOP configuration information.
++     ============== ==================================
+ 
++     ============== ===================================================
+      BAR1 offset    Register
++     ============== ===================================================
+           0x4000    Inbound List Base Address Low
+           0x4004    Inbound List Base Address High
+           0x4018    Inbound List Write Pointer
+@@ -76,10 +101,11 @@ For Marvell Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BAR1:
+          0x10420    CPU to PCIe Function 0 Message A
+          0x10480    CPU to PCIe Function 0 Doorbell
+          0x10484    CPU to PCIe Function 0 Doorbell Enable
++     ============== ===================================================
+ 
+ 
+ I/O Request Workflow of Not Marvell Frey
+-------------------------------------------
++----------------------------------------
+ 
+ All queued requests are handled via inbound/outbound queue port.
+ A request packet can be allocated in either IOP or host memory.
+@@ -124,7 +150,7 @@ of an inbound message.
+ 
+ 
+ I/O Request Workflow of Marvell Frey
+---------------------------------------
++------------------------------------
+ 
+ All queued requests are handled via inbound/outbound list.
+ 
+@@ -167,13 +193,17 @@ User-level Interface
+ 
+ The driver exposes following sysfs attributes:
+ 
++     ==================   ===    ========================
+      NAME                 R/W    Description
++     ==================   ===    ========================
+      driver-version        R     driver version string
+      firmware-version      R     firmware version string
++     ==================   ===    ========================
+ 
+ 
+ -----------------------------------------------------------------------------
+-Copyright (C) 2006-2012 HighPoint Technologies, Inc. All Rights Reserved.
++
++Copyright |copy| 2006-2012 HighPoint Technologies, Inc. All Rights Reserved.
+ 
+   This file is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+@@ -181,4 +211,5 @@ Copyright (C) 2006-2012 HighPoint Technologies, Inc. All Rights Reserved.
+   GNU General Public License for more details.
+ 
+   linux@highpoint-tech.com
++
+   http://www.highpoint-tech.com
+diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
+index b16f348bd31b..b13df9c1810a 100644
+--- a/Documentation/scsi/index.rst
++++ b/Documentation/scsi/index.rst
+@@ -22,5 +22,6 @@ Linux SCSI Subsystem
+    FlashPoint
+    g_NCR5380
+    hpsa
++   hptiop
+ 
+    scsi_transport_srp/figures
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 39767eca07d9..e2bd7911baa9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7545,7 +7545,7 @@ HIGHPOINT ROCKETRAID 3xxx RAID DRIVER
+ M:	HighPoint Linux Team <linux@highpoint-tech.com>
+ W:	http://www.highpoint-tech.com
+ S:	Supported
+-F:	Documentation/scsi/hptiop.txt
++F:	Documentation/scsi/hptiop.rst
+ F:	drivers/scsi/hptiop.c
+ 
+ HIPPI
 -- 
 2.21.1
-
 
