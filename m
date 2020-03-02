@@ -2,116 +2,100 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F3BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2D0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9036214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB3221D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="al25Ucu2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NyD6MKC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCBVeX (ORCPT
+        id S1726780AbgCBVkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:34:23 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44259 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgCBVeX (ORCPT
+        Mon, 2 Mar 2020 16:40:07 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39900 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbgCBVkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:34:23 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v22so805589otq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I6ClrHJCDNehdRwS/y+69ocK05bWUHG0fpm4Y3ogQMg=;
-        b=al25Ucu2Xvqlcka3jbLAcCOKotduTm2FFbbXOqn9KbMySnDy4wnIl+NPtL0S1pWkU7
-         caNnGcCoHb/wAZVNKaYFlHYQw8t3Lviym7agQi5JyryS+mW3kXGsNT110isIDpycpI+s
-         9U0B41qhuBQ0491XYM3K/Tq/B7/p6nnblL6xZ7gKB+CmQt9+2MzFFf7TleRsqCThQZHg
-         IktBo4UMv1SdUNKacekdQpSspTS2mXuBcZfxIGLyTxRatn6dg1/jIqcXMtWXq8MJ7MiC
-         wYDIMROKG1f0LOlZtTtQgZjwmDIZwojxsKjtz5SjuQidXnXSH/9qleZAMuWK6BwUeqZR
-         jRXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I6ClrHJCDNehdRwS/y+69ocK05bWUHG0fpm4Y3ogQMg=;
-        b=HsjUn7LfVTI0/ge9BQhtOmmNasqAH5Axq5CLq8DMV07rfVOn4aP9gGCzXC4VtYMUOp
-         KklSACxU93b93gZRPOp821Ta2dDYXO4Qpu4f4Hn/doQqxG3DngZAo8F0xI8Npws55eoc
-         OdYXkXoWHm3lIDffi5OD+XFIbjbEdQDC7vEQ7LS3EhOfddWimwHvK/QcvrPZQVe1W9pC
-         BaMy6HArtg+xsps9yCHHpaZXIy4ZOIXgbZLm19fdSPZhvj48OsrYHDrRd2fARDFT9DKw
-         cNx8B02kyvpR8S+RhAjqFgbgqW2dPfETW1U6obgybCuyKRnAeRnXxRq91oCiTA8JBORU
-         nmWw==
-X-Gm-Message-State: ANhLgQ1AxP2vbp6U5A64x77X6dazRQAO4ZCo83BlBkqMbBylusP6J+Tc
-        JGJHGgTQ3f4JZ5G87SJHUBA=
-X-Google-Smtp-Source: ADFU+vv/dsAfj+I3v6er9aIU2nKtO/wQ5/JQlq1sKIQOIzhf8z5bRmfp21cvf0h20av/H5hD/WHeDA==
-X-Received: by 2002:a9d:3f5:: with SMTP id f108mr953744otf.103.1583184862374;
-        Mon, 02 Mar 2020 13:34:22 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id e206sm6809252oia.24.2020.03.02.13.34.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 13:34:21 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] coresight: cti: Remove unnecessary NULL check in cti_sig_type_name
-Date:   Mon,  2 Mar 2020 14:34:02 -0700
-Message-Id: <20200302213402.9650-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 2 Mar 2020 16:40:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583185204; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=XuegH4/ESXmv9jvimvm+jo54TN7v2f2NupKchkt4G/Q=;
+        b=NyD6MKC9v5RxFbr2uvUpwRJKdmd5O+n+22/rdOlK8byogzRzPlpAs/2lXQQnm+Ene1K/9r
+        ITuck8Bav+oLV49CApnUMYiOkYUi0lJEmUw2se054SXvjmMsnKIAsoCF3UpMj6/TtUTRZx
+        2vu/rU5E8JSyYJbdB0XhX36kSA4zH98=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/3] rtc: jz4740: Add support for JZ4760 SoC
+Date:   Mon,  2 Mar 2020 18:39:51 -0300
+Message-Id: <20200302213953.28834-1-paul@crapouillou.net>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+The WENR feature (set a magic value to enable RTC registers read-write)
+first appeared on the JZ4760; the JZ4780 came much later.
 
-drivers/hwtracing/coresight/coresight-cti-sysfs.c:948:11: warning:
-address of array 'grp->sig_types' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (grp->sig_types) {
-        ~~  ~~~~~^~~~~~~~~
-1 warning generated.
+Since it would be dangerous to specify a newer SoC's compatible string as
+the fallback of an older SoC's compatible string, we add support for the
+"ingenic,jz4760-rtc" compatible string in the driver.
 
-sig_types is at the end of a struct so it cannot be NULL.
+This will permit to support the JZ4770 by having:
+compatible = "ingenic,jz4770-rtc", "ingenic,jz4760-rtc";
 
-Fixes: 85b6684eab65 ("coresight: cti: Add connection information to sysfs")
-Link: https://github.com/ClangBuiltLinux/linux/issues/914
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Instead of doing:
+compatible = "ingenic,jz4770-rtc", "ingenic,jz4780-rtc";
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/hwtracing/coresight/coresight-cti-sysfs.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-jz4740.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-index abb7f492c2cb..214d6552b494 100644
---- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-@@ -945,10 +945,8 @@ cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
- 	int idx = 0;
- 	struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
+diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+index 18023e472cbc..d764cd525c9a 100644
+--- a/drivers/rtc/rtc-jz4740.c
++++ b/drivers/rtc/rtc-jz4740.c
+@@ -46,6 +46,7 @@
  
--	if (grp->sig_types) {
--		if (used_count < grp->nr_sigs)
--			idx = grp->sig_types[used_count];
--	}
-+	if (used_count < grp->nr_sigs)
-+		idx = grp->sig_types[used_count];
- 	return sig_type_names[idx];
- }
+ enum jz4740_rtc_type {
+ 	ID_JZ4740,
++	ID_JZ4760,
+ 	ID_JZ4780,
+ };
  
+@@ -106,7 +107,7 @@ static inline int jz4740_rtc_reg_write(struct jz4740_rtc *rtc, size_t reg,
+ {
+ 	int ret = 0;
+ 
+-	if (rtc->type >= ID_JZ4780)
++	if (rtc->type >= ID_JZ4760)
+ 		ret = jz4780_rtc_enable_write(rtc);
+ 	if (ret == 0)
+ 		ret = jz4740_rtc_wait_write_ready(rtc);
+@@ -298,6 +299,7 @@ static void jz4740_rtc_power_off(void)
+ 
+ static const struct of_device_id jz4740_rtc_of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-rtc", .data = (void *)ID_JZ4740 },
++	{ .compatible = "ingenic,jz4760-rtc", .data = (void *)ID_JZ4760 },
+ 	{ .compatible = "ingenic,jz4780-rtc", .data = (void *)ID_JZ4780 },
+ 	{},
+ };
 -- 
 2.25.1
 
