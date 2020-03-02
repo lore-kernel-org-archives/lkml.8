@@ -2,159 +2,89 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C71AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2726C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F3C24697
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92456246C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="feRHnOqm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tb8TiCEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCBGzz (ORCPT
+        id S1726728AbgCBHEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:55:55 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35359 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgCBGzz (ORCPT
+        Mon, 2 Mar 2020 02:04:32 -0500
+Received: from mail-pf1-f176.google.com ([209.85.210.176]:44925 "EHLO
+        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgCBHEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:55:55 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3829759plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 22:55:54 -0800 (PST)
+        Mon, 2 Mar 2020 02:04:31 -0500
+Received: by mail-pf1-f176.google.com with SMTP id y5so5095529pfb.11
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:04:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8/jJwfsO/hMGjU6F0xRuxSCi7oATNbVJFqcLWJXKQlU=;
-        b=feRHnOqmJGnxbNIJ7tQvRXUSZTZAY4fcBnHvsE+gESsXwSAbUzLjz5IMWboPq0rzV6
-         OzgA+oCfbGj1LMw4gwREdcllwOPUza4rmaL+ne/Hvzh+iIhCRaIQNHvfN4kWXFmoj2dV
-         18W9ubZM36V6O5n4JjEN47I2dKG2s6QgiaEPgxzsvjfltovM9j0b0xmEaQSm+7hxEQMo
-         nsRH/Bqp7GyYfzbktJILjyqKg2E6W5M7L+qUdYnmLRjMLvc24ZLKBmEnMuYaLEsFRn9Y
-         xckFCs9aQHRnOkP2NhS+UeqOny/2ExLCh2LAuD0sDtt2FnEQHCQZqcqhfdJyKxEd1pEL
-         /wOQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5/1GmsMDRuvHs8Eg5j1TKFca+X1oMnEPhFcLO24O9U=;
+        b=Tb8TiCEYbDpO95BnRwe4UuBaV0XYcxMv2Ehgm+Gt7SJ6XsysFXvQ1S2ZNyNVXhiAyR
+         yZxahi+RWghyoemPF2cy4NXypQf2zbtZ9t57oFUjT0fBpdt4eB2F0mQlOt/YiDaXwYvE
+         fI8lIjTffGo6vThX+f5FQzuqzhhELoauu+oYGeeAcZmKfew7bLPd5K1ay19xb4mSmBmd
+         MlmchOoJM7N1C3n1QcHMTZgpYTKP24c3MtjJ7LGrCPRrDfnGcj3pJF7AFXyJTOBpu+0s
+         SrDlqkbGUgG/mPeZiWi0r/zrIz+87S6u2ciwYi9+YJrsoXB2sLvfeWXjEs3noYYgWwGr
+         M2Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8/jJwfsO/hMGjU6F0xRuxSCi7oATNbVJFqcLWJXKQlU=;
-        b=ABpHfwNRbtF2H3OooryZfsNMfaNjkbf3thk6Sr6fFgYW+KlFittW6LscD+i2mruxr3
-         1hyLy0nI9ToCOK4GZCcck3IhFk1CmaP4FI+X6/kxKKY6n1IFSqlGYPVD5FmuzYXfmn+j
-         3+yZDW0s/Q0iJqV4pqeenGMIJ3d7cMWzWJ3KjLkTXHFB/IuRo+n4Y9dx5JhXtkHb6R7l
-         qGAaopladd4GouLvidFh9uiyMHo23R3593MKCi++jLx6jDYcNuoZUSyQKyKFwl6O/8Qc
-         658Sm+XIbVjeogmrfj1hDvKfD3c4DnoEII34bLVKhBSXKBjsHqJo/fM5mXrN+JpEL1BB
-         qkvQ==
-X-Gm-Message-State: APjAAAWJ0P75NO5KT5UQxi+AA0Ax7Dr5hYUg9tt0FNn/5qftEYu9q+H3
-        oLsTSp3LJJ+M030t0w6REy76Cg==
-X-Google-Smtp-Source: APXvYqxxF+h10WuOjzLNgSLgjC6x+I1GajyoqqglQhktKXV+4qMD0GWozaXB3VZHznTmWa7dzF/76w==
-X-Received: by 2002:a17:90a:da01:: with SMTP id e1mr20153262pjv.100.1583132154120;
-        Sun, 01 Mar 2020 22:55:54 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w25sm19164387pfi.106.2020.03.01.22.55.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5/1GmsMDRuvHs8Eg5j1TKFca+X1oMnEPhFcLO24O9U=;
+        b=AhJAshCqcV8fJcDsz3KVbE4StG7SdaB77h/V22yQrbO1Tyff4/4jXlCWsoUu2vr6u0
+         iM0GJaP9BGc9YJo5RasrwWLd7Mg74htZzmXK0iWud2lMXQT2MxNx6AIyQMbO7IBX++NS
+         qBF85t3zHPGbkiDoCBixC1iuLiV50BbKsII1E7FooiIAuxQG9DurTubusWzil14Qfn+G
+         OpzZ5B4MXPASaTiGnQbP1qZJzNHNtYCkAdDAM9qaEO5zONJYCo4npYYOPXxru09b+v0l
+         1a1SogK0+nkYP1SFyZ3MRdUaaiGuY65HBaNIxXEn5maAhLtKjjwtOzJIVLQjnu7yeTv2
+         WiNA==
+X-Gm-Message-State: APjAAAX4iX3zW7uf1N9xHz1UoeAFHELcWK770aGSWP+FyWtowY1aTBwi
+        q8p74Qr+op727J+7mxS8nCCRRw==
+X-Google-Smtp-Source: APXvYqxKwsQQNvUjAEKUOsN0wYCClSgfFm5zZ4GfHEU52jXT2j+PYAYd9E1K/tNWo1PmZh6rJsHUJA==
+X-Received: by 2002:a65:43cb:: with SMTP id n11mr17535148pgp.65.1583132671006;
+        Sun, 01 Mar 2020 23:04:31 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b3sm19969551pft.73.2020.03.01.23.04.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 22:55:53 -0800 (PST)
-Date:   Sun, 1 Mar 2020 22:55:51 -0800
+        Sun, 01 Mar 2020 23:04:30 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: qrtr: Fix FIXME related to qrtr_ns_init()
-Message-ID: <20200302065551.GH210720@yoga>
-References: <20200302032527.552916-1-bjorn.andersson@linaro.org>
- <20200302032527.552916-3-bjorn.andersson@linaro.org>
- <20200302055510.GB23607@Mani-XPS-13-9360>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 0/2] net: qrtr: Nameserver fixes
+Date:   Sun,  1 Mar 2020 23:03:03 -0800
+Message-Id: <20200302070305.612067-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302055510.GB23607@Mani-XPS-13-9360>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 01 Mar 21:55 PST 2020, Manivannan Sadhasivam wrote:
+The need to respond to the HELLO message from the firmware was lost in the
+translation from the user space implementation of the nameserver. Fixing this
+also means we can remove the FIXME related to launching the ns.
 
-> On Sun, Mar 01, 2020 at 07:25:27PM -0800, Bjorn Andersson wrote:
-> > The 2 second delay before calling qrtr_ns_init() meant that the remote
-> > processors would register as endpoints in qrtr and the say_hello() call
-> > would therefor broadcast the outgoing HELLO to them. With the HELLO
-> > handshake corrected this delay is no longer needed.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  net/qrtr/ns.c   | 2 +-
-> >  net/qrtr/qrtr.c | 6 +-----
-> >  net/qrtr/qrtr.h | 2 +-
-> >  3 files changed, 3 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
-> > index e3f11052b5f6..cfd4bd07a62b 100644
-> > --- a/net/qrtr/ns.c
-> > +++ b/net/qrtr/ns.c
-> > @@ -693,7 +693,7 @@ static void qrtr_ns_data_ready(struct sock *sk)
-> >  	queue_work(qrtr_ns.workqueue, &qrtr_ns.work);
-> >  }
-> >  
-> > -void qrtr_ns_init(struct work_struct *work)
-> > +void qrtr_ns_init(void)
-> >  {
-> >  	struct sockaddr_qrtr sq;
-> >  	int ret;
-> > diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-> > index 423310896285..313d3194018a 100644
-> > --- a/net/qrtr/qrtr.c
-> > +++ b/net/qrtr/qrtr.c
-> > @@ -1263,11 +1263,7 @@ static int __init qrtr_proto_init(void)
-> >  		return rc;
-> >  	}
-> >  
-> > -	/* FIXME: Currently, this 2s delay is required to catch the NEW_SERVER
-> > -	 * messages from routers. But the fix could be somewhere else.
-> > -	 */
-> > -	INIT_DELAYED_WORK(&qrtr_ns_work, qrtr_ns_init);
-> > -	schedule_delayed_work(&qrtr_ns_work, msecs_to_jiffies(2000));
-> > +	qrtr_ns_init();
-> >  
-> 
-> You forgot to remove the below instances of delayed_work:
-> 
-> #include <linux/workqueue.h>
-> struct delayed_work qrtr_ns_work;
-> cancel_delayed_work_sync(&qrtr_ns_work);
-> 
+Bjorn Andersson (2):
+  net: qrtr: Respond to HELLO message
+  net: qrtr: Fix FIXME related to qrtr_ns_init()
 
-I sure did, thanks for noticing.
+ net/qrtr/ns.c   | 56 +++++++++++++++++++++++++++----------------------
+ net/qrtr/qrtr.c | 10 +--------
+ net/qrtr/qrtr.h |  2 +-
+ 3 files changed, 33 insertions(+), 35 deletions(-)
 
-Regards,
-Bjorn
+-- 
+2.24.0
 
-> Other than that,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Thanks,
-> Mani
-> 
-> >  	return rc;
-> >  }
-> > diff --git a/net/qrtr/qrtr.h b/net/qrtr/qrtr.h
-> > index 53a237a28971..dc2b67f17927 100644
-> > --- a/net/qrtr/qrtr.h
-> > +++ b/net/qrtr/qrtr.h
-> > @@ -29,7 +29,7 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep);
-> >  
-> >  int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len);
-> >  
-> > -void qrtr_ns_init(struct work_struct *work);
-> > +void qrtr_ns_init(void);
-> >  
-> >  void qrtr_ns_remove(void);
-> >  
-> > -- 
-> > 2.24.0
-> > 
