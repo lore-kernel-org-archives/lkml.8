@@ -2,324 +2,160 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F57C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B143AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCE0246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92248246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCBBc7 (ORCPT
+        id S1726880AbgCBBdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 20:32:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbgCBBc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 20:32:59 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912CD24697;
-        Mon,  2 Mar 2020 01:32:56 +0000 (UTC)
-Subject: Re: [PATCH v5] m68k: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Finn Thain <fthain@telegraphics.com.au>
-References: <20200229153406.GA32479@afzalpc> <20200301012655.GA6035@afzalpc>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <c2c04a29-4fc8-7cb5-6cc6-5bc3b125d047@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 11:32:53 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 1 Mar 2020 20:33:15 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:38766 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbgCBBdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 20:33:14 -0500
+Received: by mail-il1-f197.google.com with SMTP id i67so9774090ilf.5
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 17:33:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZHQ6dKVlGjCZoQqsBTW4nwVoo3qttP8kTdP8UHNlm5Y=;
+        b=Q/4cQ5DYl+pu8uPpRojN0U/nVcVf72baA4/j7Svqhkw24NV6p5g32GVAhRyFCvq1+X
+         pBzZIenJVm4iEs/QHYahJUfRr5iy7qx3hIk5W3/uE/eKNf8x2fnok7WiX5F8kLAO4eKe
+         aHZsPvJcANrtEbx2QK4JHHOrdpEzV4JRyWNVR42bkURHhEylEJLQvhyQbR4QQnEPs6KN
+         ltGwPFd/IZf8cxVoCrQQqEJmYDoZI9g/uwlqk5/NuO0M3vGELXU/sSU1jIgJqu+WKpfw
+         1mzluHjT8MvjGmhc4c8FZSo3jWlsJ0wpJc5KE/3mBAI2PB7iePb4YPNVc09klKKhceJ9
+         7etw==
+X-Gm-Message-State: APjAAAXumIyKdsXkbwsTgYcaHVngAEeOFgl7wrSwlnj3f3NxMCzU52aC
+        syAkIiSZ7oDCSBu2WMwxmCa/2Od3lVbJBvX+zTSjuyR4jvRm
+X-Google-Smtp-Source: APXvYqxsubKI1wRCbwSnTbzzIuE6LbGN0p8GA9gpkt/F8jFFxCIST0+0eUyjWHQ5wXZuD/ZxUrnBHphOhzQhw3vhUVEu0ZIfrLZI
 MIME-Version: 1.0
-In-Reply-To: <20200301012655.GA6035@afzalpc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:410d:: with SMTP id n13mr11484786ioa.101.1583112792367;
+ Sun, 01 Mar 2020 17:33:12 -0800 (PST)
+Date:   Sun, 01 Mar 2020 17:33:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a0ed74059fd52b8d@google.com>
+Subject: WARNING: refcount bug in __sk_destruct
+From:   syzbot <syzbot+dd803bc0e8adf0003261@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
+        hawk@kernel.org, jasowang@redhat.com, jhs@mojatatu.com,
+        jiri@resnulli.us, john.fastabend@gmail.com, kafai@fb.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Afzal,
+Hello,
 
-On 1/3/20 11:26 am, afzal mohammed wrote:
-> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-> occur after memory allocators are ready.
-> 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
-> 
-> Hence replace setup_irq() by request_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> ---
-> 
-> v5:
->   * Revert to pr_err
+syzbot found the following crash on:
 
-You have been busy :-)
+HEAD commit:    fd786fb1 net: convert suitable drivers to use phy_do_ioctl..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e9726ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f93900a7904130d
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd803bc0e8adf0003261
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12af9369e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10583d76e00000
 
-I have retested and everything works as expected, so:
+The bug was bisected to:
 
-   Tested-by: Greg Ungerer <gerg@linux-m68k.org>
+commit 14215108a1fd7e002c0a1f9faf8fbaf41fdda50d
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Feb 21 05:37:42 2019 +0000
 
-I have applied this to the m68knommu git tree, for next branch.
+    net_sched: initialize net pointer inside tcf_exts_init()
 
-One comment below, but it is not important.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175b66bee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14db66bee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10db66bee00000
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dd803bc0e8adf0003261@syzkaller.appspotmail.com
+Fixes: 14215108a1fd ("net_sched: initialize net pointer inside tcf_exts_init()")
 
-> v4:
->   * Add modifications done per v3, but missed at couple of places
-> v3:
->   * Instead of tree wide series, arch specific patch (per tglx)
->   * Strip irrelevant portions & more tweaking in commit message
->   * Remove name indirection in pr_err string, print irq # and
->     symbolic error name in case of error
->   * s/pr_err/pr_debug
-> v2:
->   * Replace pr_err("request_irq() on %s failed" by
->             pr_err("%s: request_irq() failed"
->   * Commit message massage
->   * remove now irrelevant comment lines at 3 places
-> 
->   arch/m68k/68000/timers.c      | 16 +++++++---------
->   arch/m68k/coldfire/pit.c      | 16 +++++++---------
->   arch/m68k/coldfire/sltimers.c | 29 +++++++++++++++--------------
->   arch/m68k/coldfire/timers.c   | 31 +++++++++++++++----------------
->   4 files changed, 44 insertions(+), 48 deletions(-)
-> 
-> diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
-> index 71ddb4c98726..1c8e8a83c325 100644
-> --- a/arch/m68k/68000/timers.c
-> +++ b/arch/m68k/68000/timers.c
-> @@ -68,14 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
->   
->   /***************************************************************************/
->   
-> -static struct irqaction m68328_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = hw_tick,
-> -};
-> -
-> -/***************************************************************************/
-> -
->   static u64 m68328_read_clk(struct clocksource *cs)
->   {
->   	unsigned long flags;
-> @@ -102,11 +94,17 @@ static struct clocksource m68328_clk = {
->   
->   void hw_timer_init(irq_handler_t handler)
->   {
-> +	int ret;
-> +
->   	/* disable timer 1 */
->   	TCTL = 0;
->   
->   	/* set ISR */
-> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> +	ret = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-> +	if (ret) {
-> +		pr_err("Failed to request irq %d (timer): %pe\n", TMR_IRQ_NUM,
-> +		       ERR_PTR(ret));
-> +	}
->   
->   	/* Restart mode, Enable int, Set clock source */
->   	TCTL = TCTL_OM | TCTL_IRQEN | CLOCK_SOURCE;
-> diff --git a/arch/m68k/coldfire/pit.c b/arch/m68k/coldfire/pit.c
-> index eb6f16b0e2e6..fd1d9c915daa 100644
-> --- a/arch/m68k/coldfire/pit.c
-> +++ b/arch/m68k/coldfire/pit.c
-> @@ -111,14 +111,6 @@ static irqreturn_t pit_tick(int irq, void *dummy)
->   
->   /***************************************************************************/
->   
-> -static struct irqaction pit_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = pit_tick,
-> -};
-> -
-> -/***************************************************************************/
-> -
->   static u64 pit_read_clk(struct clocksource *cs)
->   {
->   	unsigned long flags;
-> @@ -146,6 +138,8 @@ static struct clocksource pit_clk = {
->   
->   void hw_timer_init(irq_handler_t handler)
->   {
-> +	int ret;
-> +
->   	cf_pit_clockevent.cpumask = cpumask_of(smp_processor_id());
->   	cf_pit_clockevent.mult = div_sc(FREQ, NSEC_PER_SEC, 32);
->   	cf_pit_clockevent.max_delta_ns =
-> @@ -156,7 +150,11 @@ void hw_timer_init(irq_handler_t handler)
->   	cf_pit_clockevent.min_delta_ticks = 0x3f;
->   	clockevents_register_device(&cf_pit_clockevent);
->   
-> -	setup_irq(MCF_IRQ_PIT1, &pit_irq);
-> +	ret = request_irq(MCF_IRQ_PIT1, pit_tick, IRQF_TIMER, "timer", NULL);
-> +	if (ret) {
-> +		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_PIT1,
-> +		       ERR_PTR(ret));
-> +	}
->   
->   	clocksource_register_hz(&pit_clk, FREQ);
->   }
-> diff --git a/arch/m68k/coldfire/sltimers.c b/arch/m68k/coldfire/sltimers.c
-> index 1b11e7bacab3..5ab81c9c552d 100644
-> --- a/arch/m68k/coldfire/sltimers.c
-> +++ b/arch/m68k/coldfire/sltimers.c
-> @@ -50,18 +50,19 @@ irqreturn_t mcfslt_profile_tick(int irq, void *dummy)
->   	return IRQ_HANDLED;
->   }
->   
-> -static struct irqaction mcfslt_profile_irq = {
-> -	.name	 = "profile timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcfslt_profile_tick,
-> -};
-> -
->   void mcfslt_profile_init(void)
->   {
-> +	int ret;
-> +
->   	printk(KERN_INFO "PROFILE: lodging TIMER 1 @ %dHz as profile timer\n",
->   	       PROFILEHZ);
->   
-> -	setup_irq(MCF_IRQ_PROFILER, &mcfslt_profile_irq);
-> +	ret = request_irq(MCF_IRQ_PROFILER, mcfslt_profile_tick, IRQF_TIMER,
-> +			  "profile timer", NULL);
-> +	if (ret) {
-> +		pr_err("Failed to request irq %d (profile timer): %pe\n",
-> +		       MCF_IRQ_PROFILER, ERR_PTR(ret));
-> +	}
->   
->   	/* Set up TIMER 2 as high speed profile clock */
->   	__raw_writel(MCF_BUSCLK / PROFILEHZ - 1, PA(MCFSLT_STCNT));
-> @@ -92,12 +93,6 @@ static irqreturn_t mcfslt_tick(int irq, void *dummy)
->   	return timer_interrupt(irq, dummy);
->   }
->   
-> -static struct irqaction mcfslt_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcfslt_tick,
-> -};
-> -
->   static u64 mcfslt_read_clk(struct clocksource *cs)
->   {
->   	unsigned long flags;
-> @@ -126,6 +121,8 @@ static struct clocksource mcfslt_clk = {
->   
->   void hw_timer_init(irq_handler_t handler)
->   {
-> +	int r;
-
-You used 'r' here as the error return value holder.
-But in the previous cases you used 'ret'.
-I would have used the same name everywhere ('ret' probably being the
-most commonly used in the kernel).
-
-Regards
-Greg
+RBP: 0000000000000000 R08: 0000000000000002 R09: 00000000bb1414ac
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000009 R14: 0000000000000000 R15: 0000000000000000
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 9577 at lib/refcount.c:28 refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9577 Comm: syz-executor327 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Code: e9 d8 fe ff ff 48 89 df e8 c1 f8 16 fe e9 85 fe ff ff e8 a7 77 d8 fd 48 c7 c7 e0 44 71 88 c6 05 9e 86 db 06 01 e8 93 27 a9 fd <0f> 0b e9 ac fe ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
+RSP: 0018:ffffc9000c067b00 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e5dd6 RDI: fffff5200180cf52
+RBP: ffffc9000c067b10 R08: ffff8880a8630340 R09: ffffed1015d26621
+R10: ffffed1015d26620 R11: ffff8880ae933107 R12: 0000000000000003
+R13: ffff888090256000 R14: ffff8880a7e5c040 R15: ffff8880a7e5c044
+ refcount_sub_and_test include/linux/refcount.h:261 [inline]
+ refcount_dec_and_test include/linux/refcount.h:281 [inline]
+ put_net include/net/net_namespace.h:259 [inline]
+ __sk_destruct+0x6d8/0x7f0 net/core/sock.c:1723
+ sk_destruct+0xd5/0x110 net/core/sock.c:1739
+ __sk_free+0xfb/0x3f0 net/core/sock.c:1750
+ sk_free+0x83/0xb0 net/core/sock.c:1761
+ sock_put include/net/sock.h:1719 [inline]
+ __tun_detach+0xbe0/0x1150 drivers/net/tun.c:728
+ tun_detach drivers/net/tun.c:740 [inline]
+ tun_chr_close+0xe0/0x180 drivers/net/tun.c:3455
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xba9/0x2f50 kernel/exit.c:801
+ do_group_exit+0x135/0x360 kernel/exit.c:899
+ __do_sys_exit_group kernel/exit.c:910 [inline]
+ __se_sys_exit_group kernel/exit.c:908 [inline]
+ __x64_sys_exit_group+0x44/0x50 kernel/exit.c:908
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441a48
+Code: Bad RIP value.
+RSP: 002b:00007fffe55809a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000441a48
+RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+RBP: 00000000004c8430 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006dba80 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> +
->   	mcfslt_cycles_per_jiffy = MCF_BUSCLK / HZ;
->   	/*
->   	 *	The coldfire slice timer (SLT) runs from STCNT to 0 included,
-> @@ -140,7 +137,11 @@ void hw_timer_init(irq_handler_t handler)
->   	mcfslt_cnt = mcfslt_cycles_per_jiffy;
->   
->   	timer_interrupt = handler;
-> -	setup_irq(MCF_IRQ_TIMER, &mcfslt_timer_irq);
-> +	r = request_irq(MCF_IRQ_TIMER, mcfslt_tick, IRQF_TIMER, "timer", NULL);
-> +	if (r) {
-> +		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_TIMER,
-> +		       ERR_PTR(r));
-> +	}
->   
->   	clocksource_register_hz(&mcfslt_clk, MCF_BUSCLK);
->   
-> diff --git a/arch/m68k/coldfire/timers.c b/arch/m68k/coldfire/timers.c
-> index 227aa5d13709..b8301fddf901 100644
-> --- a/arch/m68k/coldfire/timers.c
-> +++ b/arch/m68k/coldfire/timers.c
-> @@ -82,14 +82,6 @@ static irqreturn_t mcftmr_tick(int irq, void *dummy)
->   
->   /***************************************************************************/
->   
-> -static struct irqaction mcftmr_timer_irq = {
-> -	.name	 = "timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = mcftmr_tick,
-> -};
-> -
-> -/***************************************************************************/
-> -
->   static u64 mcftmr_read_clk(struct clocksource *cs)
->   {
->   	unsigned long flags;
-> @@ -118,6 +110,8 @@ static struct clocksource mcftmr_clk = {
->   
->   void hw_timer_init(irq_handler_t handler)
->   {
-> +	int r;
-> +
->   	__raw_writew(MCFTIMER_TMR_DISABLE, TA(MCFTIMER_TMR));
->   	mcftmr_cycles_per_jiffy = FREQ / HZ;
->   	/*
-> @@ -134,7 +128,11 @@ void hw_timer_init(irq_handler_t handler)
->   
->   	timer_interrupt = handler;
->   	init_timer_irq();
-> -	setup_irq(MCF_IRQ_TIMER, &mcftmr_timer_irq);
-> +	r = request_irq(MCF_IRQ_TIMER, mcftmr_tick, IRQF_TIMER, "timer", NULL);
-> +	if (r) {
-> +		pr_err("Failed to request irq %d (timer): %pe\n", MCF_IRQ_TIMER,
-> +		       ERR_PTR(r));
-> +	}
->   
->   #ifdef CONFIG_HIGHPROFILE
->   	coldfire_profile_init();
-> @@ -170,14 +168,10 @@ irqreturn_t coldfire_profile_tick(int irq, void *dummy)
->   
->   /***************************************************************************/
->   
-> -static struct irqaction coldfire_profile_irq = {
-> -	.name	 = "profile timer",
-> -	.flags	 = IRQF_TIMER,
-> -	.handler = coldfire_profile_tick,
-> -};
-> -
->   void coldfire_profile_init(void)
->   {
-> +	int ret;
-> +
->   	printk(KERN_INFO "PROFILE: lodging TIMER2 @ %dHz as profile timer\n",
->   	       PROFILEHZ);
->   
-> @@ -188,7 +182,12 @@ void coldfire_profile_init(void)
->   	__raw_writew(MCFTIMER_TMR_ENORI | MCFTIMER_TMR_CLK16 |
->   		MCFTIMER_TMR_RESTART | MCFTIMER_TMR_ENABLE, PA(MCFTIMER_TMR));
->   
-> -	setup_irq(MCF_IRQ_PROFILER, &coldfire_profile_irq);
-> +	ret = request_irq(MCF_IRQ_PROFILER, coldfire_profile_tick, IRQF_TIMER,
-> +			  "profile timer", NULL);
-> +	if (ret) {
-> +		pr_err("Failed to request irq %d (profile timer): %pe\n",
-> +		       MCF_IRQ_PROFILER, ERR_PTR(ret));
-> +	}
->   }
->   
->   /***************************************************************************/
-> 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
