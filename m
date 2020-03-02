@@ -2,150 +2,117 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E58C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C426C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A465E24677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAFA2469C
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 02:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fd6faAnG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQMVAY2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCBCaz (ORCPT
+        id S1726816AbgCBCdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 21:30:55 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:40008 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgCBCaz (ORCPT
+        Sun, 1 Mar 2020 21:33:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42608 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgCBCdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 21:30:55 -0500
-Received: by mail-vs1-f67.google.com with SMTP id c18so5560592vsq.7;
-        Sun, 01 Mar 2020 18:30:54 -0800 (PST)
+        Sun, 1 Mar 2020 21:33:20 -0500
+Received: by mail-qk1-f193.google.com with SMTP id o28so8678767qkj.9;
+        Sun, 01 Mar 2020 18:33:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=E5izDK+ngTpxKB1eZlc5Bj7076Z0jg6Dz5NVL5cyc4Q=;
-        b=fd6faAnGV6OhSlJ5ayDDMImjvxfA5IoSETnMfdzNVu2vkMjOmv39gAgWgYGAqAK4BT
-         9SA9Q8f8MBHxLF8aoXaNs4/Um40ycdponp+GL+31CmgpcnufX0BWYLdjMndwuRqieGd/
-         aXWSaEkLLSCJVMXQ2V7A3YkQEreI0zQo22a4fAQX3iRJ2bH3q2w+ndS5iKH156DrtAHJ
-         lN75iqIJQzjWQkffEuO2leCN1+ZlsAQICJYDrtBrPH6/sRttjrj0ewdPgtlKBdyM/Y5A
-         Ar96uIIycaOawKIUZ4E/JRPe5CgCOXQDIjZzIkHDyC70/Cl76GpnsjCwm0VYMphL9lAB
-         FQsA==
+        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
+        b=iQMVAY2Ndh6lL0ADxF8SUuHgZM9LffAiUH9Jvo+D7d/ez5K2m+Xaq6zuA4Va/AQqpV
+         4yIO1YhZtjdhB16NbDa+FGYPHncktlCZH9TI2o2TJd+0MrWrNFr8TYpNnC9Zv8PRmBz6
+         nb0vIZN2EZjNqdK+AoHPFEZjSupAG+P+IP6xup6n+0p5tkkTgPOsoXgFVAC9UqGaZH5t
+         x3mZmg7tOMLdkleO2q6pMA7krpmC0HGvpoWMZHheKpdGpVoGShjT8VdSTdvmuzwCL7Bh
+         7g2Y0Dn1NlknZDnen2WoNzmnDOHrIMLrpBk36ojLpStVKvCxsTswk2UEE8EIMhaP99XC
+         1BzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E5izDK+ngTpxKB1eZlc5Bj7076Z0jg6Dz5NVL5cyc4Q=;
-        b=K1Ik7YMJOVMTIsMBtRrJ9fWLobgg8XDV8ozFDrnobz4VlyHRyetJm+lGOxPErcd+qy
-         keQifAH9+FOW9P6aOoIxUDIW+NrTdAwpYNFXSW++vyWkPy9Tvp0HXbgS3nDsgufaqYm2
-         +RKRknR98gXt7ELmuTX1gFNXFff1yzbfvxpSprksQ9XfxfuU4G7CUWGpQap42hZOAkfj
-         3inw+/c81vhYitKm04CGzuIF2/gYTZRTz5yGJfmGDjvAjS4D+cev34UbjwpDkgYJx6Fa
-         goka89AfPKHG+VDqZivSFP310Ml/0vO6SZrtlcL5KdWrHcmZQ/YW0TvK3sezyVYjlXCp
-         30tQ==
-X-Gm-Message-State: ANhLgQ0lF4JleezDTOMK+bTW8Kt5pRRpfinalu+Yn6aRct7i0dWAOe75
-        DKw+WjE9ASsWIG5KJJXJfaEPyD/VeO7700XnoqY=
-X-Google-Smtp-Source: ADFU+vt12FaHT8Yae6lu5GUHnSThmSMUv+EVvSHdPQpR1BpZ+X2tFDWNyeyj251p0jfKZZf5Nxw6Y+77BolOXwD28HQ=
-X-Received: by 2002:a05:6102:103:: with SMTP id z3mr8360212vsq.23.1583116253401;
- Sun, 01 Mar 2020 18:30:53 -0800 (PST)
+        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
+        b=KO8LXoPI05mej1kczmiQx29UOwbitfFn9vD838sNi7LexBb3vHTa/GPnHfI7AioA4C
+         hDpeuAOFQIizyyz3kE2a+8ESMOeOEz7uxVJ/kxvxiPRX3kxrJw7VLmCOLhXM1WHEKhNm
+         AuTfRNEnhn6HAD3BvLGVIDgajD0DxKYbvuTehFgvNQUx6QXQLRnbbzBuawSwSpuUcHHO
+         tHtosL9nownggvjxVnEftCRV9R6USS9AGGIv4D1KDOqZ0qE7U0LZMSWT69o4WnQdwKpQ
+         bzSj7hOmEEkrg0b9aYzQiGBqPtqZs7rnyjouZ0hLZjoYza40oaK3uBF025DkF3pZF7/P
+         MrgA==
+X-Gm-Message-State: APjAAAXVMMB6UCJLH6xO9j4ZHDFswFoSRynv+uCk3fiCxb94p9G4NEl1
+        0pPiwDUp2TK568T3GBTySI98M4WVPFjnLHFn7x54F7HP
+X-Google-Smtp-Source: APXvYqxWCNUo+QCfgt2XoZOE8ooJt2tqa9zZ3mhTxXmdKAeQmDiToITnQJU/qN0uQKHKjwSjJ0PBZ4KYYvNyPiwzNug=
+X-Received: by 2002:a37:6447:: with SMTP id y68mr14513354qkb.114.1583116399569;
+ Sun, 01 Mar 2020 18:33:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228044518.20314-1-gmayyyha@gmail.com> <CAOi1vP-K+e0N26qpthLcst8HLE-FAMGSE9XwBhj1dPBiLyN-iA@mail.gmail.com>
- <CAB9OAC0dURDHgqGDVCg_Gd+EhH-9_n4-mycgsqfxS64GRgd4Og@mail.gmail.com> <CAOi1vP_opdc=OP70T2eiamMWa-o71nU8t_LYyTCytqT5BT8gdQ@mail.gmail.com>
-In-Reply-To: <CAOi1vP_opdc=OP70T2eiamMWa-o71nU8t_LYyTCytqT5BT8gdQ@mail.gmail.com>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Mon, 2 Mar 2020 10:30:42 +0800
-Message-ID: <CAB9OAC08TGgXGFJsZCNpMzqnorn=jw1S_i8Ux2euaG=4-=JGwg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: using POOL FULL flag instead of OSDMAP FULL flag
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
+ <202002290858.UhNBgssD%lkp@intel.com>
+In-Reply-To: <202002290858.UhNBgssD%lkp@intel.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 2 Mar 2020 10:33:08 +0800
+Message-ID: <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
+ into a module
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 10:02 PM Ilya Dryomov <idryomov@gmail.com> wrote:
->
-> On Fri, Feb 28, 2020 at 12:41 PM Yanhu Cao <gmayyyha@gmail.com> wrote:
-> >
-> > On Fri, Feb 28, 2020 at 6:23 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> > >
-> > > On Fri, Feb 28, 2020 at 5:45 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
-> > > >
-> > > > OSDMAP_FULL and OSDMAP_NEARFULL are deprecated since mimic.
-> > > >
-> > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > > ---
-> > > >  fs/ceph/file.c                  |  6 ++++--
-> > > >  include/linux/ceph/osd_client.h |  2 ++
-> > > >  include/linux/ceph/osdmap.h     |  3 ++-
-> > > >  net/ceph/osd_client.c           | 23 +++++++++++++----------
-> > > >  4 files changed, 21 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > > index 7e0190b1f821..60ea1eed1b84 100644
-> > > > --- a/fs/ceph/file.c
-> > > > +++ b/fs/ceph/file.c
-> > > > @@ -1482,7 +1482,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > > >         }
-> > > >
-> > > >         /* FIXME: not complete since it doesn't account for being at quota */
-> > > > -       if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-> > > > +       if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > > +                               CEPH_POOL_FLAG_FULL)) {
-> > > >                 err = -ENOSPC;
-> > > >                 goto out;
-> > > >         }
-> > > > @@ -1575,7 +1576,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > > >         }
-> > > >
-> > > >         if (written >= 0) {
-> > > > -               if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-> > > > +               if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > > +                                       CEPH_POOL_FLAG_NEARFULL))
-> > >
-> > > Hi Yanhu,
-> > >
-> > > Have you considered pre-mimic clusters here?  They are still supported
-> > > (and will continue to be supported for the foreseeable future).
-> > >
-> > > Thanks,
-> > >
-> > >                 Ilya
-> >
-> > I have tested it work on Luminous, I think it work too since
-> > ceph-v0.80(https://github.com/ceph/ceph/blob/b78644e7dee100e48dfeca32c9270a6b210d3003/src/osd/osd_types.h#L815)
-> > alread have pool FLAG_FULL.
->
-> But not FLAG_NEARFULL, which appeared in mimic.
-FLAG_NEARFULL appeared in Luminous.
+Hi
 
+On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
 >
-> >
-> > CephFS doesn't write synchronously even if CEPH_OSDMAP_NEARFULL is
-> > used, then should fixed by CEPH_POOL_FLAG_NEARFULL.
+> Hi Baolin,
 >
-> I'm not sure I follow.
+> I love your patch! Yet something to improve:
 >
-> -    if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-> +    if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> +                            CEPH_POOL_FLAG_NEARFULL))
+> [auto build test ERROR on pinctrl/devel]
+> [also build test ERROR on v5.6-rc3 next-20200228]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 >
-> AFAICT this change would effectively disable this branch for pre-mimic
-> clusters.  Are you saying this branch is already broken?
+> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+> config: i386-randconfig-d003-20200229 (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386
 >
-> Thanks,
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 >
->                 Ilya
-CEPH_OSDMAP_NEARFULL is not set in Jewel, so it has no effect. And in
-Luminous version, this flag is cleared as a legacy and has no effect
-too.
+> All errors (new ones prefixed by >>):
+>
+>    drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
+> >> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
+>      ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
+>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>            pinconf_generic_dump_config
+>    cc1: some warnings being treated as errors
+
+I followed your attached configuration, but I can not reproduce your
+building error. Did I miss anything else? Thanks.
+
+CONFIG_PINCTRL=y
+CONFIG_PINMUX=y
+CONFIG_GENERIC_PINMUX_FUNCTIONS=y
+CONFIG_PINCONF=y
+CONFIG_GENERIC_PINCONF=y
+CONFIG_PINCTRL_SPRD=y
+CONFIG_PINCTRL_SPRD_SC9860=y
