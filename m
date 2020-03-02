@@ -2,85 +2,214 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3260C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A343AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA382146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A21217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqoGx7Mn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WAdmnsDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgCBPwt (ORCPT
+        id S1727170AbgCBPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:52:49 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40911 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727000AbgCBPwt (ORCPT
+        Mon, 2 Mar 2020 10:54:22 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37866 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgCBPyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:52:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583164368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rc7S3GfEURPABvAMtPoo3IHj2IzyHVgUsHYiM/6+E1M=;
-        b=ZqoGx7Mnwyv1xuye10sCZmzvP561NT0GSQERIVhLKvqpIc/L9G2B4sTI/d/6z/N4WdyM7a
-        X0OiC++acdusO0VEpwUhkzyMYg5Qr3OA4/GbA6BtDnpt25d39VdPG8Op3TcKcS+V/X28j1
-        3WggVa1ErET5gTUKDS9ie0HfSeHVPzw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-48mENsD5NPCdcw6bZPT7Mg-1; Mon, 02 Mar 2020 10:52:44 -0500
-X-MC-Unique: 48mENsD5NPCdcw6bZPT7Mg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D67D0801A01;
-        Mon,  2 Mar 2020 15:52:42 +0000 (UTC)
-Received: from treble (ovpn-123-162.rdu2.redhat.com [10.10.123.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C88FA73884;
-        Mon,  2 Mar 2020 15:52:41 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 09:52:40 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: x86 entry perf unwinding failure (missing IRET_REGS annotation
- on stack switch?)
-Message-ID: <20200302155239.7ww7jfeu4yeevpkb@treble>
-References: <CAG48ez1rkN0YU-ieBaUZDKFYG5XFnd7dhDjSDdRmVfWyQzsA5g@mail.gmail.com>
- <20200302151829.brlkedossh7qs47s@treble>
+        Mon, 2 Mar 2020 10:54:21 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q8so319372wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:54:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=STQ7onEfJVpP/O8wQ/Viql6T2jtxsZUJhm2G28t0RdA=;
+        b=WAdmnsDl2mt7Fd58A4q1CGZexA5ZC6C6l/Tq93voHWBnx+SDkzKpzek2bffad/uCNZ
+         TWlKhbyhzZbCZkMZ+DAqAOw0EktKPWlMgtOhU/NW32yXRmd9YixfU6E4w3gHRFC6ZKBu
+         npeAxqpPm8lqx00cqNzVZAVyKgG3tkFZfc5hmfRavGQXn5VD1SLI0qB/3BLw7MuzQtAl
+         v7qjrM96+Pkyn6E9idckXdRkS4wD3/vIM4qHdqdydlf7fWJlEwzwbvd4Hbv08gUcDL9n
+         zyzG8TqyfbbWa/sXHfmzQ2M/2GGGveMSWhR6g0hyK2WtBYu/vHhVIgHH9J/Wjeptsazh
+         XmIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=STQ7onEfJVpP/O8wQ/Viql6T2jtxsZUJhm2G28t0RdA=;
+        b=a/kGMr9cjNL/klaB4mWz2N0bjqTqK7HTjq2Mss/Y58X2e83+H50crrQUY7so3mQ7Vr
+         z8v+J1LVIoQa8DQpTDuc1H2QyCRhDPPUna76rrAjYaOznrA236WW0HUdupFh43KpzBIK
+         VNkRJqu79onotSz/fRGtyQP5/VLdH3rfd+3NiU5dfp2XcG7FnhPgteummR/DIPOEZ1Gy
+         +D6/j3LGel49bHy3ma27QuHFctboEbFg7fbbAc4zWnNc3ILnYxBjTvRb5pAPhRbUYP3H
+         tjvkZiN+3HaUM8dJhJA+rGMqDelXe6kme2YfkquIV5GvtWfuyzlFWSmyR1P1s1SEhAIT
+         KcbQ==
+X-Gm-Message-State: ANhLgQ3fHpuoGbXnJ6V/EODGM856G+rnQmefeZqn74ilPB7lPx9nbEMu
+        8EuhuORmlERwHy/3BcbaB3J3TIq2E5H3tQ==
+X-Google-Smtp-Source: ADFU+vvxOsRhYTLfzIYQaASM6Jsr2eGlov5swoqObhLH6gxAuIaeZrjL9yfqc0ZUiF0YjRXpKiel5Q==
+X-Received: by 2002:a5d:6881:: with SMTP id h1mr259533wru.236.1583164458464;
+        Mon, 02 Mar 2020 07:54:18 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e11sm27800285wrm.80.2020.03.02.07.54.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 07:54:17 -0800 (PST)
+Subject: Re: [PATCH v4 01/11] drm/bridge: dw-hdmi: set mtmdsclock for deep
+ color
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+ <20200206191834.6125-2-narmstrong@baylibre.com>
+ <20200302090527.GB11960@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <a5b6d1f2-8f1c-ae3f-529d-baf7f4cecbe9@baylibre.com>
+Date:   Mon, 2 Mar 2020 16:54:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200302090527.GB11960@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200302151829.brlkedossh7qs47s@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 09:18:29AM -0600, Josh Poimboeuf wrote:
-> > So I think on machines without X86_FEATURE_SMAP, trying to unwind from
-> > the two NOPs at f41 and f42 will cause the unwinder to report an
-> > error? Looking at unwind_next_frame(), "sp:(und)" without the "end:1"
-> > marker seems to be reserved for errors.
+Hi,
 
-I think we can blame this one on Peter ;-)
+On 02/03/2020 10:05, Laurent Pinchart wrote:
+> Hi Neil and Jonas,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Feb 06, 2020 at 08:18:24PM +0100, Neil Armstrong wrote:
+>> From: Jonas Karlman <jonas@kwiboo.se>
+>>
+>> Configure the correct mtmdsclock for deep colors to prepare support
+>> for 10, 12 & 16bit output.
+>>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> index 67fca439bbfb..9e0927d22db6 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -1818,9 +1818,26 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+>>  
+>>  	dev_dbg(hdmi->dev, "final pixclk = %d\n", vmode->mpixelclock);
+> 
+> Nitpicking a bit, I would change
+> 
+> -	vmode->mtmdsclock = vmode->mpixelclock = mode->clock * 1000;
+> +	vmode->mpixelclock = mode->clock * 1000;
+> 
+> above, and here add
+> 
+> 	vmode->mtmdsclock = vmode->mpixelclock;
+> 
+> to keep all mtmdsclock calculation in a single place.
+> 
+>> +	if (!hdmi_bus_fmt_is_yuv422(hdmi->hdmi_data.enc_out_bus_format)) {
+>> +		switch (hdmi_bus_fmt_color_depth(
+>> +				hdmi->hdmi_data.enc_out_bus_format)) {
+>> +		case 16:
+>> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 2;
+> 
+> Both mpixelclock and mtmdsclock are unsigned int. Is the cast to u64
+> needed ?
+> 
+> On a separate but related note, what does the 'm' in tmdsclock stand for
+> ? It seems to originate from the 'm' prefix for mpixelclock, which has
+> been there from the start. Unless there's a good reason for the prefix,
+> renaming mtmdsclock to tmds_clock (and handling the other fields in the
+> hdmi_vmode structure similarly) would increase clarity I think.
+> 
+>> +			break;
+>> +		case 12:
+>> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 3 / 2;
+>> +			break;
+>> +		case 10:
+>> +			vmode->mtmdsclock = (u64)vmode->mpixelclock * 5 / 4;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>>  	if (hdmi_bus_fmt_is_yuv420(hdmi->hdmi_data.enc_out_bus_format))
+>>  		vmode->mtmdsclock /= 2;
+>>  
+>> +	dev_dbg(hdmi->dev, "final tmdsclk = %d\n", vmode->mtmdsclock);
+> 
+> s/tmdsclk/tmdsclock/ to match the field name ?
+> 
+>> +
+>>  	/* Set up HDMI_FC_INVIDCONF */
+>>  	inv_val = (hdmi->hdmi_data.hdcp_enable ||
+>>  		   (dw_hdmi_support_scdc(hdmi) &&
+> 
 
-  764eef4b109a ("objtool: Rewrite alt->skip_orig")
+I fixed the calculus and the cast, but I'll rename the mtmdsclock in a following patch.
 
-With X86_FEATURE_SMAP, alt->skip_orig gets set, which tells objtool to
-skip validation of the NOPs.  That has the side effect of not
-propagating the ORC state to the NOPs as well.
+is it ok for you ?
 
--- 
-Josh
-
+Neil
