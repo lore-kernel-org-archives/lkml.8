@@ -2,103 +2,131 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C2DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80984C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B8D21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQHBlnME"
+	by mail.kernel.org (Postfix) with ESMTP id 5B45521D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCBQbe (ORCPT
+        id S1727368AbgCBQcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:31:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31623 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727085AbgCBQbe (ORCPT
+        Mon, 2 Mar 2020 11:32:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:37384 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgCBQcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:31:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583166693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1x0ZM1xTpaIkqmKsVKdQPlGDF0qsj8hnKJSTjUcj/Aw=;
-        b=fQHBlnMEnRTtk57rFCbGRNAJeb95rlHRUmHhVDb2JnxLPROTFI86Wy5Xqm+kasmIIU+fFd
-        D8aCD1SzRF8ygVgZbiDyBFo99EooI91l5ZC7HOFO6FVUMBlIHx3sVQOORYyM1M2bHS4ddd
-        BjT0gU7IF4lkZ4F8YxOoKduimAtRqys=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-YN0MDv7TNfKWpEwlP2DjoA-1; Mon, 02 Mar 2020 11:31:32 -0500
-X-MC-Unique: YN0MDv7TNfKWpEwlP2DjoA-1
-Received: by mail-wr1-f69.google.com with SMTP id d9so6016688wrv.21
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:31:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1x0ZM1xTpaIkqmKsVKdQPlGDF0qsj8hnKJSTjUcj/Aw=;
-        b=iLs3x2hgOZGineuX6CQMVEpLn8nK6RxImFuvKdzRGXfh9AbrbVH4ktK3+Ys478+SJ3
-         mqy6/GuEDvQDU11PWkut1Lff2AcEIEM/JnZP8atPQOlIGUxB+UFaGO5u08o6O/Im4/mo
-         pT3SipNvw4ItHQw6nMbFo2BquSH1nXNoKbWJKzL9nb/y4GgFOLrfOThUIByoj4WdXVP7
-         rN4vtDp7e9utkQJCslCBIyrYILtD080m+7xWwjy9MIk9sjdeQn9YW5fKyMvwCSwgIyTL
-         2I5OTwIGF0fwK6CuAAe4hOtri2wtFg4/m9USICePbeb7y+mziqpf70LVxSrfYPXTdYGj
-         X6iA==
-X-Gm-Message-State: ANhLgQ1IKmEmd99SEfy15+K93kOlCxcv3WGAMtW+pGdOl0G55OIaBEd5
-        TqQXi4LDMzhdYeC4KBg1sm2sC7SVFqicrZ2awIarnyDQoq9S7zcs0w2qNSfWfKDJIpC68ocfYZN
-        mEJ1zlOCSnzJXqcb6p/HiKmye
-X-Received: by 2002:a05:6000:100d:: with SMTP id a13mr397865wrx.330.1583166690988;
-        Mon, 02 Mar 2020 08:31:30 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuDxQ+If1BB45iLB/FVzoEXWJKceXWuH/ax1Em/rcRFrXJ3iyu6XLdz3lh8x4VPNI6aPabRng==
-X-Received: by 2002:a05:6000:100d:: with SMTP id a13mr397846wrx.330.1583166690776;
-        Mon, 02 Mar 2020 08:31:30 -0800 (PST)
-Received: from [192.168.178.40] ([151.30.85.6])
-        by smtp.gmail.com with ESMTPSA id s22sm15544619wmc.16.2020.03.02.08.31.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 08:31:30 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
- <87ftewi7of.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6c78b2c8-98b2-a517-4426-511505ff9018@redhat.com>
-Date:   Mon, 2 Mar 2020 17:31:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 11:32:02 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8nz1-00070K-Mf; Mon, 02 Mar 2020 16:31:55 +0000
+Date:   Mon, 2 Mar 2020 17:31:54 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302163154.mpdf5oex3hxnrmvc@wittgenstein>
+References: <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <20200302120503.g5pt4ky3uvb2ly63@wittgenstein>
+ <20200302151046.447zgo36dmfdr2ik@wittgenstein>
+ <20200302153657.7k7qo4k5he2acxct@yavin>
 MIME-Version: 1.0
-In-Reply-To: <87ftewi7of.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302153657.7k7qo4k5he2acxct@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 12:36, Vitaly Kuznetsov wrote:
->> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
->> -			goto out;
->> -		r = 0;
->> +		r = -EINVAL;
->>  		break;
->>  	}
-> Braces are not really needed not but all other cases in the switch have
-> it so let's leave them here too.
+On Tue, Mar 03, 2020 at 02:36:57AM +1100, Aleksa Sarai wrote:
+> On 2020-03-02, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > On Mon, Mar 02, 2020 at 01:05:04PM +0100, Christian Brauner wrote:
+> > > On Mon, Mar 02, 2020 at 12:52:39PM +0100, Christian Brauner wrote:
+> > > > On Mon, Mar 02, 2020 at 12:30:47PM +0100, Florian Weimer wrote:
+> > > > > * Christian Brauner:
+> > > > > 
+> > > > > > [Cc Florian since that ends up on libc's table sooner or later...]
+> > > > > 
+> > > > > I'm not sure what you are after here …
+> > > > 
+> > > > Exactly what you've commented below. Input on whether any of these
+> > > > changes would be either problematic if you e.g. were to implement
+> > > > openat() on top of openat2() in the future or if it would be problematic
+> > > > if we e.g. were to really deprecate AT_* flags for new syscalls.
+> > > > 
+> > > > > 
+> > > > > > On Fri, Feb 28, 2020 at 02:53:32PM +0000, David Howells wrote:
+> > > > > >> 	
+> > > > > >> I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
+> > > > > >> should be used instead of the equivalent AT_* flags for new system calls.  Is
+> > > > > >> this the case?
+> > > > > >
+> > > > > > Imho, it would make sense to use RESOLVE_* flags for new system calls
+> > > > > > and afair this was the original intention.
+> > > > > > The alternative is that RESOLVE_* flags are special to openat2(). But
+> > > > > > that seems strange, imho. The semantics openat2() has might be very
+> > > > > > useful for new system calls as well which might also want to support
+> > > > > > parts of AT_* flags (see fsinfo()). So we either end up adding new AT_*
+> > > > > > flags mirroring the new RESOLVE_* flags or we end up adding new
+> > > > > > RESOLVE_* flags mirroring parts of AT_* flags. And if that's a
+> > > > > > possibility I vote for RESOLVE_* flags going forward. The have better
+> > > > > > naming too imho.
+> > > > > >
+> > > > > > An argument against this could be that we might end up causing more
+> > > > > > confusion for userspace due to yet another set of flags. But maybe this
+> > > > > > isn't an issue as long as we restrict RESOLVE_* flags to new syscalls.
+> > > > > > When we introduce a new syscall userspace will have to add support for
+> > > > > > it anyway.
+> > > > > 
+> > > > > I missed the start of the dicussion and what this is about, sorry.
+> > > > > 
+> > > > > Regarding open flags, I think the key point for future APIs is to avoid
+> > > > > using the set of flags for both control of the operation itself
+> > > > > (O_NOFOLLOW/AT_SYMLINK_NOFOLLOW, O_NOCTTY) and properaties of the
+> > > > > resulting descriptor (O_RDWR, O_SYNC).  I expect that doing that would
+> > > 
+> > > Yeah, we have touched on that already and we have other APIs having
+> > > related problems. A clean way to avoid this problem is to require new
+> > > syscalls to either have two flag arguments, or - if appropriate -
+> > > suggest they make use of struct open_how that was implemented for
+> > > openat2().
+> > 
+> > By the way, if we really means business wrt to: separate resolution from
+> > fd-property falgs then shouldn't we either require O_NOFOLLOW for
+> > openat2() be specified in open_how->resolve or disallow O_NOFOLLOW for
+> > openat2() and introduce a new RESOLVE_* variant?
 > 
+> I think we agreed a while ago we aren't touching O_ flags for openat2()
+> because it would hamper adoption (this is the same reason we aren't
+> fixing the whole O_ACCMODE mess, and O_LARGEFILE, and the arch-specific
+> O_ flags, and O_TMPFILE, and __O_SYNC, and FASYNC/O_ASYNC, and
+> __FMODE_EXEC and __FMODE_NONOTIFY, and ...).
+> 
+> To be fair, we did fix O_PATH|O_TMPFILE and invalid mode combinations
+> but that's only because those were fairly broken.
 
-We can remove the case altogether.
+Right, O_NOFOLLOW would've been kinda neat too because afaict it's the
+only flag left that is specifically related to path resolution in there
+that would fit nicely into open_how->resolve. :)
 
-Paolo
+> 
+> But as I mentioned in a sister mail, I do agree that allowing O_NOFOLLOW
+> and RESOLVE_NO_TRAILING_SYMLINKS makes me feel a little uneasy. But
 
+No version of this will be completey satisfying I fear.
+
+Christian
