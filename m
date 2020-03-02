@@ -2,121 +2,126 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57402C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A701C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261C32173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsJemNTs"
+	by mail.kernel.org (Postfix) with ESMTP id 500772173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgCBM2q (ORCPT
+        id S1727804AbgCBMcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:28:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57895 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727691AbgCBM2p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:28:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583152124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5DG/vW6TCeCX771cIMr5N8VanNi7DmSktqX7A9P5Lf4=;
-        b=VsJemNTsTuZC8xC8GcYvGTsNDuny4AfTVE+m+JgYgUCFwjOMh2BZbr0HoOo/epysYKo11R
-        4cCktcYhLAMpTZKJp87jzhO6aWFvM/Tapx5mutTE9jo8CwgILyAEF3LGzhGf6dSBbV8Ljp
-        iDxBD9K3wKFKQbDkBfGpmwwRAW0jcr8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-GBOwynXFNxyRVY2vU-jPUQ-1; Mon, 02 Mar 2020 07:28:40 -0500
-X-MC-Unique: GBOwynXFNxyRVY2vU-jPUQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 622221B2C988;
-        Mon,  2 Mar 2020 12:28:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DA8D99051B;
-        Mon,  2 Mar 2020 12:28:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon,  2 Mar 2020 13:28:36 +0100 (CET)
-Date:   Mon, 2 Mar 2020 13:28:29 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
+        Mon, 2 Mar 2020 07:32:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55726 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727644AbgCBMcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:32:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8467FAC9A;
+        Mon,  2 Mar 2020 12:32:51 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 13:32:49 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-Message-ID: <20200302122828.GA9769@redhat.com>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
- <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
+Message-ID: <20200302123249.6khdqpneu7t6l35s@pathway.suse.cz>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-2-john.ogness@linutronix.de>
+ <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
+ <87r1ybujm5.fsf@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <87r1ybujm5.fsf@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01, Bernd Edlinger wrote:
->
-> This fixes a deadlock in the tracer when tracing a multi-threaded
-> application that calls execve while more than one thread are running.
+On Mon 2020-03-02 11:38:42, John Ogness wrote:
+> On 2020-02-21, Petr Mladek <pmladek@suse.com> wrote:
+> >> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> >> new file mode 100644
+> >> index 000000000000..796257f226ee
+> >> --- /dev/null
+> >> +++ b/kernel/printk/printk_ringbuffer.c
+> >> +/*
+> >> + * Read the record @id and verify that it is committed and has the sequence
+> >> + * number @seq. On success, 0 is returned.
+> >> + *
+> >> + * Error return values:
+> >> + * -EINVAL: A committed record @seq does not exist.
+> >> + * -ENOENT: The record @seq exists, but its data is not available. This is a
+> >> + *          valid record, so readers should continue with the next seq.
+> >> + */
+> >> +static int desc_read_committed(struct prb_desc_ring *desc_ring,
+> >> +			       unsigned long id, u64 seq,
+> >> +			       struct prb_desc *desc)
+> >> +{
+> >
+> > I was few times confused whether this function reads the descriptor
+> > a safe way or not.
+> >
+> > Please, rename it to make it clear that does only a check.
+> > For example, check_state_commited().
+> 
+> This function _does_ read. It is a helper function of prb_read() to
+> _read_ the descriptor. It is an extended version of desc_read() that
+> also performs various checks that the descriptor is committed.
 
-Heh. Yes, known problem. See my attempt to fix it:
-https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+I see.
 
-> @@ -1224,7 +1224,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->  	struct mm_struct *mm;
->  	int err;
->  
-> -	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
-> +	err =  mutex_lock_killable(&task->signal->cred_change_mutex);
+> I will update the function description to be more similar to desc_read()
+> so that it is obvious that it is "getting a copy of a specified
+> descriptor".
 
-So if I understand correctly your patch doesn't fix other problems
-with debugger waiting for cred_guard_mutex.
+OK, what about having desc_read_by_seq() instead?
 
-I too do not think this can justify the new mutex in signal_struct...
+Also there is a bug in current desc_read_commited().
+desc->info.seq might contain a garbage when d_state is desc_miss
+or desc_reserved.
 
-Oleg.
+I would change it to:
 
+static enum desc_state
+desc_read_by_seq(struct prb_desc_ring *desc_ring,
+		 u64 seq, struct prb_desc *desc)
+{
+	struct prb_desc *rdesc = to_desc(desc_ring, seq);
+	atomic_long_t *state_var = &rdesc->state_var;
+	id = DESC_ID(atomic_long_read(state_var));
+	enum desc_state d_state;
+
+	d_state = desc_read(desc_ring, id, desc);
+	if (d_state == desc_miss ||
+	    d_state == desc_reserved ||
+	    desc->info.seq != seq)
+		return -EINVAL;
+
+	if (d_state == desc_reusable)
+		return -ENOENT;
+
+	if (d_state != desc_committed)
+		return -EINVAL;
+
+	return 0;
+}
+
+Best Regards,
+Petr
+
+PS: I am going to dive into the barriers again to answer the last
+letter about them.
