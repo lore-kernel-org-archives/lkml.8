@@ -2,106 +2,203 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AACC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DE22468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D68246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583131662;
+	bh=SiDpeCdDbzUvN9oPIojdN2kmTEqmOZp2IG2xnnVOft8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PRhDQc9IwVkwqyfv4AGr4W3ou+3PsrKtdz0Pf4ldb8/jNnaL+0+l/n5yBMK2OHIco
+	 6boS3OJ7DLJ1/rUwbLhp6QlUcXy2Mf7XnQQJj//86hWXB/Ivv6TdjbDFO2M7DAmLG9
+	 C4uGzBySGFcG1dpBAkHA/d3DF70X1E0z19rzeUwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCBGoR (ORCPT
+        id S1726436AbgCBGrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:44:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41169 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBGoR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:44:17 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8eo6-0004Yc-1e; Mon, 02 Mar 2020 07:44:02 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j8eo1-0005p9-Nk; Mon, 02 Mar 2020 07:43:57 +0100
-Date:   Mon, 2 Mar 2020 07:43:57 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Mon, 2 Mar 2020 01:47:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgCBGrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:47:40 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3999C2468E;
+        Mon,  2 Mar 2020 06:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583131660;
+        bh=SiDpeCdDbzUvN9oPIojdN2kmTEqmOZp2IG2xnnVOft8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NKjr2d3DxDMLcPJBgA9vJTBKLdy4YP1n78Se5Y9V/IRzObU5ys+SjAk+BNg6bFUBg
+         UsUQNWL68Na6zySoskZgDJLpccJWaCR0fPQ4R3c6AiMbcv9jQdm/Sjc6Ha9dZkKZgr
+         swofh+c0qWcAJuSwU1Fp2Tubdg/jVZRTrDBm6WNk=
+Date:   Mon, 2 Mar 2020 15:47:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>, paulmck@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH V9 3/3] Input: new da7280 haptic driver
-Message-ID: <20200302064357.ke57i2wchulph5f7@pengutronix.de>
-References: <cover.1582270025.git.Roy.Im@diasemi.com>
- <1569958274d409298695cf86184c7b67aaf19bef.1582270025.git.Roy.Im@diasemi.com>
- <20200226161307.6tv5q2yh62cp7vk6@pengutronix.de>
- <VE1PR10MB30859CB04A6F9DB58D921F7485E90@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
- <20200301212025.lw4f6uv453oulu22@pengutronix.de>
- <VE1PR10MB30856D67BB5ED36BED574FBF85E70@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <JGross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
+ C-code
+Message-Id: <20200302154734.42e538c66261146a6e69f064@kernel.org>
+In-Reply-To: <20200301193501.0a850859@oasis.local.home>
+References: <20200301193034.GY2935@paulmck-ThinkPad-P72>
+        <5BCFDB36-26B6-4881-94D9-4AB0731F8DC5@amacapital.net>
+        <20200301193501.0a850859@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VE1PR10MB30856D67BB5ED36BED574FBF85E70@VE1PR10MB3085.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Roy,
+On Sun, 1 Mar 2020 19:35:01 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Mon, Mar 02, 2020 at 01:52:30AM +0000, Roy Im wrote:
-> On Monday, March 2, 2020 6:20 AM, Uwe Kleine-König wrote:
-> > On Sat, Feb 29, 2020 at 12:59:20AM +0000, Roy Im wrote:
-> > > Okay, thanks. I have tried to update that as below.
-> > > Could I get your comment if you still see anything on this?
-> > >
-> > > 	/* Maximum gain is 0x7fff for PWM mode */
-> > > 	#define MAX_MAGNITUDE_SHIFT		15
-> > >        [...]
-> > > 	period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
-> > >
-> > > 	/* The interpretation of duty cycle depends on the acc_en,
-> > > 	* it should be from 50% to 100% for acc_en = 0.
-> > > 	* See datasheet 'PWM mode' section for more details.
-> > > 	*/
-> > > 	if (!haptics->acc_en) {
-> > > 		period_mag_multi += state.period;
-> > > 		period_mag_multi /= 2;
-> > > 	}
-> > 
-> > Much better. Extra points if you add a link to the datasheet at the top of the driver. I didn't look at the datasheet and
-> > assume that the reasoning is obvious then.
+> On Sun, 1 Mar 2020 11:39:42 -0800
+> Andy Lutomirski <luto@amacapital.net> wrote:
 > 
-> Okay, then do you think it would be better to remove that comment(the 3rd line - datasheet)?. 
+> > > On Mar 1, 2020, at 11:30 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > 
+> > > ï»¿On Sun, Mar 01, 2020 at 10:54:23AM -0800, Andy Lutomirski wrote:  
+> > >>> On Sun, Mar 1, 2020 at 10:26 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >>> 
+> > >>> On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:  
+> > >>>> Andy Lutomirski <luto@kernel.org> writes:  
+> > >>>>> On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:  
+> > >>>>>> Andy Lutomirski <luto@amacapital.net> writes:  
+> > >>>>>>>> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >>>>>>>> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
+> > >>>>>>>> except trace_hardirq_off/on() as those trace functions do not allow to
+> > >>>>>>>> attach anything AFAICT.  
+> > >>>>>>> 
+> > >>>>>>> Can you point to whatever makes those particular functions special?  I
+> > >>>>>>> failed to follow the macro maze.  
+> > >>>>>> 
+> > >>>>>> Those are not tracepoints and not going through the macro maze. See
+> > >>>>>> kernel/trace/trace_preemptirq.c  
+> > >>>>> 
+> > >>>>> That has:
+> > >>>>> 
+> > >>>>> void trace_hardirqs_on(void)
+> > >>>>> {
+> > >>>>>        if (this_cpu_read(tracing_irq_cpu)) {
+> > >>>>>                if (!in_nmi())
+> > >>>>>                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+> > >>>>>                tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+> > >>>>>                this_cpu_write(tracing_irq_cpu, 0);
+> > >>>>>        }
+> > >>>>> 
+> > >>>>>        lockdep_hardirqs_on(CALLER_ADDR0);
+> > >>>>> }
+> > >>>>> EXPORT_SYMBOL(trace_hardirqs_on);
+> > >>>>> NOKPROBE_SYMBOL(trace_hardirqs_on);
+> > >>>>> 
+> > >>>>> But this calls trace_irq_enable_rcuidle(), and that's the part of the
+> > >>>>> macro maze I got lost in.  I found:
+> > >>>>> 
+> > >>>>> #ifdef CONFIG_TRACE_IRQFLAGS
+> > >>>>> DEFINE_EVENT(preemptirq_template, irq_disable,
+> > >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> > >>>>>             TP_ARGS(ip, parent_ip));
+> > >>>>> 
+> > >>>>> DEFINE_EVENT(preemptirq_template, irq_enable,
+> > >>>>>             TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> > >>>>>             TP_ARGS(ip, parent_ip));
+> > >>>>> #else
+> > >>>>> #define trace_irq_enable(...)
+> > >>>>> #define trace_irq_disable(...)
+> > >>>>> #define trace_irq_enable_rcuidle(...)
+> > >>>>> #define trace_irq_disable_rcuidle(...)
+> > >>>>> #endif
+> > >>>>> 
+> > >>>>> But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
+> > >>>>> where I got lost in the macro maze.  I looked at the gcc asm output,
+> > >>>>> and there is, indeed:  
+> > >>>> 
+> > >>>> DEFINE_EVENT
+> > >>>>  DECLARE_TRACE
+> > >>>>    __DECLARE_TRACE
+> > >>>>       __DECLARE_TRACE_RCU
+> > >>>>         static inline void trace_##name##_rcuidle(proto)
+> > >>>>            __DO_TRACE
+> > >>>>               if (rcuidle)
+> > >>>>                  ....
+> > >>>>   
+> > >>>>> But I also don't see why this is any different from any other tracepoint.  
+> > >>>> 
+> > >>>> Indeed. I took a wrong turn at some point in the macro jungle :)
+> > >>>> 
+> > >>>> So tracing itself is fine, but then if you have probes or bpf programs
+> > >>>> attached to a tracepoint these use rcu_read_lock()/unlock() which is
+> > >>>> obviosly wrong in rcuidle context.  
+> > >>> 
+> > >>> Definitely, any such code needs to use tricks similar to that of the
+> > >>> tracing code.  Or instead use something like SRCU, which is OK with
+> > >>> readers from idle.  Or use something like Steve Rostedt's workqueue-based
+> > >>> approach, though please be very careful with this latter, lest the
+> > >>> battery-powered embedded guys come after you for waking up idle CPUs
+> > >>> too often.  ;-)  
+> > >> 
+> > >> Are we okay if we somehow ensure that all the entry code before
+> > >> enter_from_user_mode() only does rcuidle tracing variants and has
+> > >> kprobes off?  Including for BPF use cases?  
+> > > 
+> > > That would work, though if BPF used SRCU instead of RCU, this would
+> > > be unnecessary.  Sadly, SRCU has full memory barriers in each of
+> > > srcu_read_lock() and srcu_read_unlock(), but we are working on it.
+> > > (As always, no promises!)
+> > >   
+> > >> It would be *really* nice if we could statically verify this, as has
+> > >> been mentioned elsewhere in the thread.  It would also probably be
+> > >> good enough if we could do it at runtime.  Maybe with lockdep on, we
+> > >> verify rcu state in tracepoints even if the tracepoint isn't active?
+> > >> And we could plausibly have some widget that could inject something
+> > >> into *every* kprobeable function to check rcu state.  
 
-No, please keep the reference.
+I'm still not clear about this point, should I check rcuidle in kprobes
+int3 handler or jump optimized handler? (int3 handler will run in
+irq context so is not able to use srcu anyway...) Maybe I missed the point.
 
-Best regards
-Uwe
+> > > 
+> > > Or just have at least one testing step that activates all tracepoints,
+> > > but with lockdep enabled?  
+> > 
+> > Also kprobe.
+> > 
+> > I donâ€™t suppose we could make notrace imply nokprobe.  Then all
+> > kprobeable functions would also have entry/exit tracepoints, right?
+> 
+> There was some code before that prevented a kprobe from being allowed
+> in something that was not in the ftrace mcount table (which would make
+> this happen). But I think that was changed because it was too
+> restrictive.
+
+Would you mean CONFIG_KPROBE_EVENTS_ON_NOTRACE? By default notrace
+means noprobe too now. With CONFIG_KPROBE_EVENTS_ON_NOTRACE=y, we can
+put kprobe events on notrace functions. So if you unsure, we can put
+a kprobe on those functions and see what happens.
+(Note that this is only for kprobe event, not kprobes itself)
+
+It is actually very restrictive, but it is hard to make a whitelist
+maually, especially if the CC_FLAGS_FTRACE is removed while building.
+
+Thank you,
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Masami Hiramatsu <mhiramat@kernel.org>
