@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53D9C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F3EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5F4246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F237246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583134729;
-	bh=2TtBEHYP8On9sIWR4gcqIRwIEpYNaIxyBBVVuOhc88k=;
+	s=default; t=1583134731;
+	bh=rXmlHNjcwZ66whBYiZ2no0Ve3BHCz1Cma/OhwqSwrBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vG1nbLCXMhRb2Z5IUI+C3CWdCO1zdMJJZnQonsxHeUnTPSLwHZ90UJnKBa7FcPHVx
-	 ZQQJ3LvoaqNw53JPEYqEWD1JXe9DjVEsoWSLWAhXv0iYVryTURu+8i2bZ8jCa1rq+e
-	 ahUDUiXhiwQY+Jex2AC7YkNx8O9+tfD4xYaAqLk0=
+	b=z+jHXyJqDe/m9kTZPMwK0TOrnFwPtmTV0BtAC5ng9qZx2m9TNf+SEN/Jrcm8hQx9x
+	 tIWDuKeEzfe3WFK0HlYx6rloanOGPvYq0E1mFcA9nuQGUhjk36z87g/fmsiz7pdil9
+	 Ru+5UrgFfQPGvkm51WtFJocY6W2BirQSU/NVYyfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCBHis (ORCPT
+        id S1727273AbgCBHir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:38:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 02:38:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbgCBHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726918AbgCBHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 02:38:16 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EE50246C0;
-        Mon,  2 Mar 2020 07:38:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FCB1246BE;
+        Mon,  2 Mar 2020 07:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583134696;
-        bh=2TtBEHYP8On9sIWR4gcqIRwIEpYNaIxyBBVVuOhc88k=;
+        s=default; t=1583134694;
+        bh=rXmlHNjcwZ66whBYiZ2no0Ve3BHCz1Cma/OhwqSwrBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCBXGKPANlUHp5H68c6rvvpph0DqMP40oX+anruF05QYT6jHl3VyrMZIYeIVbOn/c
-         KFfLXiDogsL+AWMjs0S0zHEJgakwm3Pdkl5atTUdH8TpPJeHDjMWqjHdf7y1dOZ2pa
-         eXV7MDLuYm8xAREfvVBbItr3v2lWJ47V519Q0J8s=
+        b=O7mPgnBgXKONCWr/IjRW1MI2azVATuDMPMI4lL7SpQtzs38EUa2RRLUr4stjG+D/9
+         0D0qbCYLIoMQCvnbW58L1I/IE53os4gmkBjYVJJliN4hTH33dI/sSe4byHRaC1NrSM
+         YXrImFYFiuhxDMARFrs4WzDr+l/dbhe3ccLTO5pw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8feW-0003W6-2C; Mon, 02 Mar 2020 08:38:12 +0100
+        id 1j8feV-0003Vq-VL; Mon, 02 Mar 2020 08:38:11 +0100
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 11/12] docs: dt: convert submitting-patches.txt to ReST format
-Date:   Mon,  2 Mar 2020 08:38:06 +0100
-Message-Id: <4daa548a98f7fde56ed20cc30bcb31b7e8b1a9aa.1583134242.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 07/12] docs: dt: convert of_unittest.txt to ReST
+Date:   Mon,  2 Mar 2020 08:38:02 +0100
+Message-Id: <09f0a0877184ecdff1df1f6f6d38c164c6bdd8f6.1583134242.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
 References: <cover.1583134242.git.mchehab+samsung@kernel.org>
@@ -68,134 +65,313 @@ From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 - Add a SPDX header;
 - Adjust document and section titles;
+- Adjust numerated list markups;
+- Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
-- Add it to bindings/index.rst.
+- Add it to devicetree/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/devicetree/bindings/index.rst          |  1 +
- ...submitting-patches.txt => submitting-patches.rst} | 12 +++++++++---
- .../devicetree/bindings/writing-bindings.txt         |  2 +-
- Documentation/process/submitting-patches.rst         |  2 +-
- .../it_IT/process/submitting-patches.rst             |  2 +-
- scripts/checkpatch.pl                                |  2 +-
- 6 files changed, 14 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
+ Documentation/devicetree/index.rst            |   1 +
+ .../{of_unittest.txt => of_unittest.rst}      | 186 +++++++++---------
+ 2 files changed, 98 insertions(+), 89 deletions(-)
+ rename Documentation/devicetree/{of_unittest.txt => of_unittest.rst} (54%)
 
-diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
-index 98ebdab24b51..6b87875a049c 100644
---- a/Documentation/devicetree/bindings/index.rst
-+++ b/Documentation/devicetree/bindings/index.rst
-@@ -8,3 +8,4 @@ Device Tree
-    :maxdepth: 1
- 
-    ABI
-+   submitting-patches
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.rst
-similarity index 92%
-rename from Documentation/devicetree/bindings/submitting-patches.txt
-rename to Documentation/devicetree/bindings/submitting-patches.rst
-index 98bee6240b65..0aab2b3f16d0 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.rst
-@@ -1,13 +1,17 @@
+diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
+index 308cac9d7021..ca83258fbba5 100644
+--- a/Documentation/devicetree/index.rst
++++ b/Documentation/devicetree/index.rst
+@@ -12,3 +12,4 @@ Open Firmware and Device Tree
+    booting-without-of
+    changesets
+    dynamic-resolution-notes
++   of_unittest
+diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.rst
+similarity index 54%
+rename from Documentation/devicetree/of_unittest.txt
+rename to Documentation/devicetree/of_unittest.rst
+index 9fdd2de9b770..dea05214f3ad 100644
+--- a/Documentation/devicetree/of_unittest.txt
++++ b/Documentation/devicetree/of_unittest.rst
+@@ -1,9 +1,13 @@
 +.. SPDX-License-Identifier: GPL-2.0
++
++==================================
+ Open Firmware Device Tree Unittest
+-----------------------------------
++==================================
  
--  Submitting devicetree (DT) binding patches
-+==========================================
-+Submitting devicetree (DT) binding patches
-+==========================================
+ Author: Gaurav Minocha <gaurav.minocha.os@gmail.com>
  
- I. For patch submitters
-+=======================
+ 1. Introduction
++===============
  
-   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
-      applies.
+ This document explains how the test data required for executing OF unittest
+ is attached to the live tree dynamically, independent of the machine's
+@@ -11,8 +15,8 @@ architecture.
  
-   1) The Documentation/ and include/dt-bindings/ portion of the patch should
--     be a separate patch. The preferred subject prefix for binding patches is:
-+     be a separate patch. The preferred subject prefix for binding patches is::
+ It is recommended to read the following documents before moving ahead.
  
-        "dt-bindings: <binding dir>: ..."
+-[1] Documentation/devicetree/usage-model.rst
+-[2] http://www.devicetree.org/Device_Tree_Usage
++(1) Documentation/devicetree/usage-model.rst
++(2) http://www.devicetree.org/Device_Tree_Usage
  
-@@ -17,7 +21,7 @@ I. For patch submitters
- 
-   2) DT binding files are written in DT schema format using json-schema
-      vocabulary and YAML file format. The DT binding files must pass validation
--     by running:
-+     by running::
- 
-        make dt_binding_check
- 
-@@ -60,6 +64,7 @@ I. For patch submitters
+ OF Selftest has been designed to test the interface (include/linux/of.h)
+ provided to device driver developers to fetch the device information..etc.
+@@ -21,79 +25,82 @@ most of the device drivers in various use cases.
  
  
- II. For kernel maintainers
-+==========================
+ 2. Test-data
++============
  
-   1) If you aren't comfortable reviewing a given binding, reply to it and ask
-      the devicetree maintainers for guidance.  This will help them prioritize
-@@ -76,6 +81,7 @@ II. For kernel maintainers
-      kept with the driver using the binding.
+ The Device Tree Source file (drivers/of/unittest-data/testcases.dts) contains
+ the test data required for executing the unit tests automated in
+ drivers/of/unittest.c. Currently, following Device Tree Source Include files
+-(.dtsi) are included in testcases.dts:
++(.dtsi) are included in testcases.dts::
  
- III. Notes
-+==========
+-drivers/of/unittest-data/tests-interrupts.dtsi
+-drivers/of/unittest-data/tests-platform.dtsi
+-drivers/of/unittest-data/tests-phandle.dtsi
+-drivers/of/unittest-data/tests-match.dtsi
++    drivers/of/unittest-data/tests-interrupts.dtsi
++    drivers/of/unittest-data/tests-platform.dtsi
++    drivers/of/unittest-data/tests-phandle.dtsi
++    drivers/of/unittest-data/tests-match.dtsi
  
-   0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
+-When the kernel is build with OF_SELFTEST enabled, then the following make rule
++When the kernel is build with OF_SELFTEST enabled, then the following make
++rule::
  
-diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
-index 27dfd2d8016e..ca024b9c7433 100644
---- a/Documentation/devicetree/bindings/writing-bindings.txt
-+++ b/Documentation/devicetree/bindings/writing-bindings.txt
-@@ -4,7 +4,7 @@ This is a list of common review feedback items focused on binding design. With
- every rule, there are exceptions and bindings have many gray areas.
+-$(obj)/%.dtb: $(src)/%.dts FORCE
+-	$(call if_changed_dep, dtc)
++    $(obj)/%.dtb: $(src)/%.dts FORCE
++	    $(call if_changed_dep, dtc)
  
- For guidelines related to patches, see
--Documentation/devicetree/bindings/submitting-patches.txt
-+Documentation/devicetree/bindings/submitting-patches.rst
+ is used to compile the DT source file (testcases.dts) into a binary blob
+ (testcases.dtb), also referred as flattened DT.
+ 
+ After that, using the following rule the binary blob above is wrapped as an
+-assembly file (testcases.dtb.S).
++assembly file (testcases.dtb.S)::
+ 
+-$(obj)/%.dtb.S: $(obj)/%.dtb
+-	$(call cmd, dt_S_dtb)
++    $(obj)/%.dtb.S: $(obj)/%.dtb
++	    $(call cmd, dt_S_dtb)
+ 
+ The assembly file is compiled into an object file (testcases.dtb.o), and is
+ linked into the kernel image.
  
  
- Overall design
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index ba5e944c7a63..1699b7f8e63a 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -16,7 +16,7 @@ for a list of items to check before
- submitting code.  If you are submitting a driver, also read
- :ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`;
- for device tree binding patches, read
--Documentation/devicetree/bindings/submitting-patches.txt.
-+Documentation/devicetree/bindings/submitting-patches.rst.
+ 2.1. Adding the test data
++-------------------------
  
- Many of these steps describe the default behavior of the ``git`` version
- control system; if you use ``git`` to prepare your patches, you'll find much
-diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
-index cba1f8cb61ed..7c23c08e4401 100644
---- a/Documentation/translations/it_IT/process/submitting-patches.rst
-+++ b/Documentation/translations/it_IT/process/submitting-patches.rst
-@@ -21,7 +21,7 @@ Leggete anche :ref:`Documentation/translations/it_IT/process/submit-checklist.rs
- per una lista di punti da verificare prima di inviare del codice.  Se state
- inviando un driver, allora leggete anche :ref:`Documentation/translations/it_IT/process/submitting-drivers.rst <it_submittingdrivers>`;
- per delle patch relative alle associazioni per Device Tree leggete
--Documentation/devicetree/bindings/submitting-patches.txt.
-+Documentation/devicetree/bindings/submitting-patches.rst.
+ Un-flattened device tree structure:
  
- Molti di questi passi descrivono il comportamento di base del sistema di
- controllo di versione ``git``; se utilizzate ``git`` per preparare le vostre
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4480d5eec2fa..14c7277e60a0 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2607,7 +2607,7 @@ sub process {
- 				if (($last_binding_patch != -1) &&
- 				    ($last_binding_patch ^ $is_binding_patch)) {
- 					WARN("DT_SPLIT_BINDING_PATCH",
--					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt\n");
-+					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst\n");
- 				}
- 			}
+ Un-flattened device tree consists of connected device_node(s) in form of a tree
+-structure described below.
++structure described below::
  
+-// following struct members are used to construct the tree
+-struct device_node {
+-    ...
+-    struct  device_node *parent;
+-    struct  device_node *child;
+-    struct  device_node *sibling;
+-    ...
+- };
++    // following struct members are used to construct the tree
++    struct device_node {
++	...
++	struct  device_node *parent;
++	struct  device_node *child;
++	struct  device_node *sibling;
++	...
++    };
+ 
+ Figure 1, describes a generic structure of machine's un-flattened device tree
+ considering only child and sibling pointers. There exists another pointer,
+-*parent, that is used to traverse the tree in the reverse direction. So, at
++``*parent``, that is used to traverse the tree in the reverse direction. So, at
+ a particular level the child node and all the sibling nodes will have a parent
+ pointer pointing to a common node (e.g. child1, sibling2, sibling3, sibling4's
+-parent points to root node)
++parent points to root node)::
+ 
+-root ('/')
+-   |
+-child1 -> sibling2 -> sibling3 -> sibling4 -> null
+-   |         |           |           |
+-   |         |           |          null
+-   |         |           |
+-   |         |        child31 -> sibling32 -> null
+-   |         |           |          |
+-   |         |          null       null
+-   |         |
+-   |      child21 -> sibling22 -> sibling23 -> null
+-   |         |          |            |
+-   |        null       null         null
+-   |
+-child11 -> sibling12 -> sibling13 -> sibling14 -> null
+-   |           |           |            |
+-   |           |           |           null
+-   |           |           |
+-  null        null       child131 -> null
+-                           |
+-                          null
++    root ('/')
++    |
++    child1 -> sibling2 -> sibling3 -> sibling4 -> null
++    |         |           |           |
++    |         |           |          null
++    |         |           |
++    |         |        child31 -> sibling32 -> null
++    |         |           |          |
++    |         |          null       null
++    |         |
++    |      child21 -> sibling22 -> sibling23 -> null
++    |         |          |            |
++    |        null       null         null
++    |
++    child11 -> sibling12 -> sibling13 -> sibling14 -> null
++    |           |           |            |
++    |           |           |           null
++    |           |           |
++    null        null       child131 -> null
++			    |
++			    null
+ 
+ Figure 1: Generic structure of un-flattened device tree
+ 
+@@ -101,10 +108,10 @@ Figure 1: Generic structure of un-flattened device tree
+ Before executing OF unittest, it is required to attach the test data to
+ machine's device tree (if present). So, when selftest_data_add() is called,
+ at first it reads the flattened device tree data linked into the kernel image
+-via the following kernel symbols:
++via the following kernel symbols::
+ 
+-__dtb_testcases_begin - address marking the start of test data blob
+-__dtb_testcases_end   - address marking the end of test data blob
++    __dtb_testcases_begin - address marking the start of test data blob
++    __dtb_testcases_end   - address marking the end of test data blob
+ 
+ Secondly, it calls of_fdt_unflatten_tree() to unflatten the flattened
+ blob. And finally, if the machine's device tree (i.e live tree) is present,
+@@ -113,15 +120,15 @@ attaches itself as a live device tree.
+ 
+ attach_node_and_children() uses of_attach_node() to attach the nodes into the
+ live tree as explained below. To explain the same, the test data tree described
+- in Figure 2 is attached to the live tree described in Figure 1.
++in Figure 2 is attached to the live tree described in Figure 1::
+ 
+-root ('/')
+-    |
+- testcase-data
+-    |
+- test-child0 -> test-sibling1 -> test-sibling2 -> test-sibling3 -> null
+-    |               |                |                |
+- test-child01      null             null             null
++    root ('/')
++	|
++    testcase-data
++	|
++    test-child0 -> test-sibling1 -> test-sibling2 -> test-sibling3 -> null
++	|               |                |                |
++    test-child01      null             null             null
+ 
+ 
+ Figure 2: Example test data tree to be attached to live tree.
+@@ -134,39 +141,39 @@ In the function of_attach_node(), the new node is attached as the child of the
+ given parent in live tree. But, if parent already has a child then the new node
+ replaces the current child and turns it into its sibling. So, when the testcase
+ data node is attached to the live tree above (Figure 1), the final structure is
+- as shown in Figure 3.
++as shown in Figure 3::
+ 
+-root ('/')
+-   |
+-testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
+-   |               |          |           |           |
+- (...)             |          |           |          null
+-                   |          |         child31 -> sibling32 -> null
+-                   |          |           |           |
+-                   |          |          null        null
+-                   |          |
+-                   |        child21 -> sibling22 -> sibling23 -> null
+-                   |          |           |            |
+-                   |         null        null         null
+-                   |
+-                child11 -> sibling12 -> sibling13 -> sibling14 -> null
+-                   |          |            |            |
+-                  null       null          |           null
+-                                           |
+-                                        child131 -> null
+-                                           |
+-                                          null
+------------------------------------------------------------------------
++    root ('/')
++    |
++    testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
++    |               |          |           |           |
++    (...)             |          |           |          null
++		    |          |         child31 -> sibling32 -> null
++		    |          |           |           |
++		    |          |          null        null
++		    |          |
++		    |        child21 -> sibling22 -> sibling23 -> null
++		    |          |           |            |
++		    |         null        null         null
++		    |
++		    child11 -> sibling12 -> sibling13 -> sibling14 -> null
++		    |          |            |            |
++		    null       null          |           null
++					    |
++					    child131 -> null
++					    |
++					    null
++    -----------------------------------------------------------------------
+ 
+-root ('/')
+-   |
+-testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
+-   |               |          |           |           |
+-   |             (...)      (...)       (...)        null
+-   |
+-test-sibling3 -> test-sibling2 -> test-sibling1 -> test-child0 -> null
+-   |                |                   |                |
+-  null             null                null         test-child01
++    root ('/')
++    |
++    testcase-data -> child1 -> sibling2 -> sibling3 -> sibling4 -> null
++    |               |          |           |           |
++    |             (...)      (...)       (...)        null
++    |
++    test-sibling3 -> test-sibling2 -> test-sibling1 -> test-child0 -> null
++    |                |                   |                |
++    null             null                null         test-child01
+ 
+ 
+ Figure 3: Live device tree structure after attaching the testcase-data.
+@@ -176,7 +183,7 @@ Astute readers would have noticed that test-child0 node becomes the last
+ sibling compared to the earlier structure (Figure 2). After attaching first
+ test-child0 the test-sibling1 is attached that pushes the child node
+ (i.e. test-child0) to become a sibling and makes itself a child node,
+- as mentioned above.
++as mentioned above.
+ 
+ If a duplicate node is found (i.e. if a node with same full_name property is
+ already present in the live tree), then the node isn't attached rather its
+@@ -185,6 +192,7 @@ update_node_properties().
+ 
+ 
+ 2.2. Removing the test data
++---------------------------
+ 
+ Once the test case execution is complete, selftest_data_remove is called in
+ order to remove the device nodes attached initially (first the leaf nodes are
 -- 
 2.21.1
 
