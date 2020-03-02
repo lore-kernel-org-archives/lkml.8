@@ -2,70 +2,89 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22970C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB218C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEC120870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583143792;
-	bh=yDmug3kuIpXcihPyjyqqSEeMsAB5Qx8R9yAcgkDcOWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vWk/AJl8bmttAbML0NnZiXdYUj8PtGrmg0O3lf27NV+HOUmL9yoZ9LoqfdgPPSvxF
-	 oyzS+3sMcCWJhiZqjaqZOk8NvNeuLyODz/LzUd/gCLlFNIgahhd0+bceFfCAjtpMuq
-	 3lx2CLvzXt75gn1muduUkdS0HO6wRymtEUiOfbZY=
+	by mail.kernel.org (Postfix) with ESMTP id BD66C20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgCBKJv (ORCPT
+        id S1727334AbgCBKMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:09:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 05:12:16 -0500
+Received: from mga03.intel.com ([134.134.136.65]:26807 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgCBKJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:09:50 -0500
-Received: from localhost (unknown [171.76.77.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3342086A;
-        Mon,  2 Mar 2020 10:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583143790;
-        bh=yDmug3kuIpXcihPyjyqqSEeMsAB5Qx8R9yAcgkDcOWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T0QsVZJhGM4BHpctjqiPa0dNm1DAt1mLTA4XtE+PHNXDLJ1YI7Fgm+Pia43B7bf1E
-         1yHM0ecldCdivrRm5KxHTAu/SYMrZvumkB4avNOta9ZOFi8Xo40RPbeWm21kM1DttR
-         125QXREx+EZiDFgwTiG4RUVje329+ANLbioBV/Co=
-Date:   Mon, 2 Mar 2020 15:39:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] dmaengine: ti: edma: fix null dereference because
- of a typo in pointer name
-Message-ID: <20200302100945.GL4148@vkoul-mobl>
-References: <20200226185921.351693-1-colin.king@canonical.com>
+        id S1727076AbgCBKMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:12:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 02:12:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,506,1574150400"; 
+   d="scan'208";a="351511538"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 02 Mar 2020 02:12:11 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 02 Mar 2020 12:12:10 +0200
+Date:   Mon, 2 Mar 2020 12:12:10 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Martin Volf <martin.volf.42@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] i2c: i801: Fix iTCO_wdt resource creation if PMC
+ is not present
+Message-ID: <20200302101210.GW2667@lahna.fi.intel.com>
+References: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
+ <20200228170342.GC1130@ninjato>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226185921.351693-1-colin.king@canonical.com>
+In-Reply-To: <20200228170342.GC1130@ninjato>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-02-20, 18:59, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Fri, Feb 28, 2020 at 06:03:42PM +0100, Wolfram Sang wrote:
+> On Wed, Feb 26, 2020 at 04:21:19PM +0300, Mika Westerberg wrote:
+> > Hi all,
+> > 
+> > This series aims to fix the issue reported by Martin Volf [1] that prevents
+> > the nct6775 driver from loading.
+> > 
+> > I added Fixes tag to the last patch but not stable tag because the other
+> > two patches it depends are not really stable material IMO. Please let me
+> > know if there is a better way to organize these :)
+> > 
+> > I tested this on Intel Whiskey Lake based system (CNL derived) and on Comet
+> > Lake-V based system (SPT derived and the iTCO_wdt still works and I can see
+> > the expected resources in /proc/ioports and /proc/iomem.
+> > 
+> > The previous version of the patch series can be found here:
+> > 
+> >   https://lore.kernel.org/linux-hwmon/20200225123802.88984-1-mika.westerberg@linux.intel.com/
+> > 
+> > Changes from the previous version:
+> > 
+> >   * Call request_region() also for iTCO_vendorsupport
+> >   * Drop the core populating ICH_RES_IO_SMI completely from i2c-i801.c
+> > 
+> > [1] https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
 > 
-> Currently there is a dereference of the null pointer m_ddev.  This appears
-> to be a typo on the pointer, I believe s_ddev should be used instead.
-> Fix this by using the correct pointer.
+> I can take this series via I2C. Just wanted to let you know that I am
+> aiming for rc5, because I'd like to have this in linux-next for a week
+> to make sure we don't regress again (despite all precautions) somewhere
+> else.
 
-Applied, thanks
-
--- 
-~Vinod
+Makes sense, thanks!
