@@ -2,100 +2,146 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33873C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E18246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="skswSqAQ"
+	by mail.kernel.org (Postfix) with ESMTP id BCD6F246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgCBJ2W (ORCPT
+        id S1727334AbgCBJaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:28:22 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50494 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbgCBJ2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:28:14 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 178FE54A;
-        Mon,  2 Mar 2020 10:28:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583141292;
-        bh=9ZqrQgN1kicNCFdvQnafSQx8lmmfNjFur/cYDbP3rDY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=skswSqAQuA8w3fEw57iweTsG5i9uxgyuyyKNg3OiEsiYEb0M3CjsQQczW9udnAGEr
-         T2HSEz9s35KdPJUtHRFZ5Wm2YwCWHcLEITfyn+nNW7CqkZe5EGYbEb/hiEAjsId6bv
-         HuOSO3bAcOeA8l0Ibo4SK095T1jkIsyXt2Q/ZZ08=
-Date:   Mon, 2 Mar 2020 11:27:48 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] drm/bridge: dw-hdmi: Fix color space conversion
- detection
-Message-ID: <20200302092748.GE11960@pendragon.ideasonboard.com>
-References: <20200229163043.158262-1-jernej.skrabec@siol.net>
- <20200229163043.158262-3-jernej.skrabec@siol.net>
+        Mon, 2 Mar 2020 04:30:11 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2484 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbgCBJaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:30:11 -0500
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id D8351E6D818B170870C1;
+        Mon,  2 Mar 2020 09:30:09 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 2 Mar 2020 09:30:09 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 2 Mar 2020
+ 09:30:09 +0000
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
+ buswidth
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        <broonie@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <andriy.shevchenko@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linuxarm@huawei.com>,
+        <linux-spi@vger.kernel.org>
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
+ <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+ <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <07bb2213-5543-0ef0-9585-be83026c1199@huawei.com>
+Date:   Mon, 2 Mar 2020 09:30:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200229163043.158262-3-jernej.skrabec@siol.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <52ecb988-d842-c04b-a0e8-93e8850009c4@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jernej,
-
-Thank you for the patch.
-
-On Sat, Feb 29, 2020 at 05:30:41PM +0100, Jernej Skrabec wrote:
-> Currently, is_color_space_conversion() compares not only color spaces
-> but also formats. For example, function would return true if YCbCr 4:4:4
-> and YCbCr 4:2:2 would be set. Obviously in that case color spaces are
-> the same.
+On 01/03/2020 10:04, Sergei Shtylyov wrote:
+> Hello!
 > 
-> Fix that by comparing if both values represent RGB color space.
+
+Hi Sergei,
+
+> On 28.02.2020 18:18, John Garry wrote:
 > 
-> Fixes: b21f4b658df8 ("drm: imx: imx-hdmi: move imx-hdmi to bridge/dw_hdmi")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-This isn't implemented today, but could the CSC be used to convert
-between different YCbCr encodings ?
-
-In any case the patch is correct based on the current implementation, so
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>> Currently ACPI firmware description for a SPI device does not have any
+>> method to describe the data buswidth on the board.
+>>
+>> So even through the controller and device may support higher modes than
+>            ^^^^^^^
+>     Though?
 > 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 24965e53d351..9d7bfb1cb213 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -956,7 +956,8 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
->  
->  static int is_color_space_conversion(struct dw_hdmi *hdmi)
->  {
-> -	return hdmi->hdmi_data.enc_in_bus_format != hdmi->hdmi_data.enc_out_bus_format;
-> +	return hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) !=
-> +		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format);
->  }
->  
->  static int is_color_space_decimation(struct dw_hdmi *hdmi)
 
--- 
-Regards,
+right
 
-Laurent Pinchart
+>> standard SPI, it cannot be assumed that the board does - as such, that
+>> device is limited to standard SPI in such a circumstance.
+>>
+>> As a workaround, allow the controller driver supply buswidth override 
+>> bits,
+>> which are used inform the core code that the controller driver knows the
+>> buswidth supported on that board for that device.
+>>
+>> A host controller driver might know this info from DMI tables, for 
+>> example.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>   drivers/spi/spi.c       | 4 +++-
+>>   include/linux/spi/spi.h | 3 +++
+>>   2 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+>> index 38b4c78df506..292f26807b41 100644
+>> --- a/drivers/spi/spi.c
+>> +++ b/drivers/spi/spi.c
+>> @@ -510,6 +510,7 @@ struct spi_device *spi_alloc_device(struct 
+>> spi_controller *ctlr)
+>>       spi->dev.bus = &spi_bus_type;
+>>       spi->dev.release = spidev_release;
+>>       spi->cs_gpio = -ENOENT;
+>> +    spi->mode = ctlr->buswidth_override_bits;
+>>       spin_lock_init(&spi->statistics.lock);
+>> @@ -2181,9 +2182,10 @@ static acpi_status 
+>> acpi_register_spi_device(struct spi_controller *ctlr,
+>>           return AE_NO_MEMORY;
+>>       }
+>> +
+> 
+>     What for?
+
+slipped through the net
+
+> 
+>>       ACPI_COMPANION_SET(&spi->dev, adev);
+>>       spi->max_speed_hz    = lookup.max_speed_hz;
+>> -    spi->mode        = lookup.mode;
+>> +    spi->mode        |= lookup.mode;
+>>       spi->irq        = lookup.irq;
+>>       spi->bits_per_word    = lookup.bits_per_word;
+>>       spi->chip_select    = lookup.chip_select;
+> [...]
+
+TBH, I did not think that this series would be applied since I tagged it 
+as RFC, hence the typos which would have been caught. Indeed, this also 
+exposes an issue with enabling quad SPI for a spansion SPI NOR part, 
+which I need to debug now in the SPI NOR driver.
+
+Hi Mark,
+
+Do you want me to do anything about the above superfluous newline?
+
+Thanks,
+John
+
+> 
+> MBR, Sergei
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> .
+
