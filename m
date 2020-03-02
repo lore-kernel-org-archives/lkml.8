@@ -2,115 +2,210 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE17CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C54C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46B221739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583174675;
-	bh=hDtYO3C32pwwl+j+MIKuWJFXKB5fFLSdOPcA9MD/Zes=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=reJ/CwjsoeNPW3WTV0yXETsa0n4Ix8vM+uoWI8a2kliFJZCVZJFcuPLA+eMDwZ5OT
-	 cqae6UVtVFcgY3Ahu0RsarNtZOvOcpNAxQF+Prea3qAPMuhilh1izM3hcop+uOTopO
-	 2DBjvNTeBXaTFpSC4g42DclRKviLC2f0fZL2xr3k=
+	by mail.kernel.org (Postfix) with ESMTP id D85BC2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="FApU1YJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgCBSoe (ORCPT
+        id S1727514AbgCBSpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:44:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbgCBSoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:44:34 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B59DE2072A;
-        Mon,  2 Mar 2020 18:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583174673;
-        bh=hDtYO3C32pwwl+j+MIKuWJFXKB5fFLSdOPcA9MD/Zes=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=RRLY9a1vrOr7Yi49JbXWmSNy5zp6GZtYlcn8bvKtrZwt1hgP/l4qIclinDZnBfQGD
-         5SZM2CmoDaDWIjnzIqh5oJrVim+7Ln4mmyp/WsUnIwIsj+vrhH/2aqN7Ptaa/z36nn
-         p63w8tyULbT8h0OQq2UyzOz4pDkmbGaa2vWKxFkM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 91C0B35226C8; Mon,  2 Mar 2020 10:44:33 -0800 (PST)
-Date:   Mon, 2 Mar 2020 10:44:33 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, parri.andrea@gmail.com,
-        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com, dlustig@nvidia.com,
-        joel@joelfernandes.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3] tools/memory-model/Documentation: Fix "conflict"
- definition
-Message-ID: <20200302184433.GL2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200302172101.157917-1-elver@google.com>
- <Pine.LNX.4.44L0.2003021256130.1555-100000@iolanthe.rowland.org>
+        Mon, 2 Mar 2020 13:45:21 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45838 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgCBSpV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:45:21 -0500
+Received: by mail-ot1-f68.google.com with SMTP id f21so245409otp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=12/rZ6fsx6hBmJEsqbaXJ5G4NKHwEaEIjFun4ithZOM=;
+        b=FApU1YJ4AMLXq6gY4yHZy3O3+YQ5rdZ5ZXtB0qHwnZX4Zfv9rcvGBWmEEXeh1cIk+R
+         O3RAZT+sZiS6aJFDSqID8K2KjsZ5ee6JeF+wNPQ4Li/7/rjV11J3yf74iOnlP29XF4eg
+         Addovy0Cstcl8eyhFKS8xN+HiWCsCkxoFiKLt2k1Ip0hB2nBJv6QY5ZlLPxZQQFKel1S
+         tJoEoB7Ta1hjI+LOFRh3repS8VSztYx53SMC81+8CXByV+mlX5P1wqmTk/olWBpb/4VK
+         +yK4MXqGHyice3ICXPAlzn21iVarNr7dAanM2VZM2xLLxlTUVg+HqW4oyDDcNcNHe9rO
+         IWqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=12/rZ6fsx6hBmJEsqbaXJ5G4NKHwEaEIjFun4ithZOM=;
+        b=EertUQbwP8l/ctKCrjuyeOSN8DiRLgH4GNmX0LwSYVacDcSagbU/vRM6neD3jXIyb8
+         3AvpkqF2w/TKXdwBrwDlnWkoSyy75P71Et2tyqXGafE2iEg6vElx3JqMopFNAU80mzFl
+         Bzt06hn0vM8BD+xZPZnnGdcrxZmg+q4HOy4SzxENxmFbj5GZGYofuCDgW5zHfuefwyEo
+         3C3yXm85DvRJvzpWs69U+tZz3+B00gDMFOpU2cLew9nLPm3z26n99aGOgHO9mk8AJKhU
+         k8F3e4l8ekofSuODJCVJMDjc8mcZvCqw+znte5TZdFPuNQTAhuzZk9DxWvY5lQ23AZlz
+         N2Og==
+X-Gm-Message-State: ANhLgQ2Bf/3BjMyOq7CKXPDKUsAQyCKwsb7hmGTJRX5aoWPH3uVOK/6h
+        sBtRwTQ5ANVaeHLAyNW6aF8Cf/Y67ZNm7FxU8pr+w5RJ
+X-Google-Smtp-Source: ADFU+vuU2dswAMVUqhHfW4STg+g4kMHqpDxE1Gsd02iItsqjS4OmcfgkKZdArJ5AdrGU2vikXDbnmbWZAPG7/HJQYj8=
+X-Received: by 2002:a9d:5d09:: with SMTP id b9mr409956oti.207.1583174720075;
+ Mon, 02 Mar 2020 10:45:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2003021256130.1555-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <158291746615.1609624.7591692546429050845.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158291748226.1609624.8971922874557923784.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <87fterrmau.fsf@linux.ibm.com>
+In-Reply-To: <87fterrmau.fsf@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 2 Mar 2020 10:45:09 -0800
+Message-ID: <CAPcyv4iQR=e5AneCshT9xqWfKdG_oHBorahLqnNxYC3pz40D_g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] libnvdimm/namespace: Enforce memremap_compat_align()
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 12:56:59PM -0500, Alan Stern wrote:
-> On Mon, 2 Mar 2020, Marco Elver wrote:
-> 
-> > The definition of "conflict" should not include the type of access nor
-> > whether the accesses are concurrent or not, which this patch addresses.
-> > The definition of "data race" remains unchanged.
-> > 
-> > The definition of "conflict" as we know it and is cited by various
-> > papers on memory consistency models appeared in [1]: "Two accesses to
-> > the same variable conflict if at least one is a write; two operations
-> > conflict if they execute conflicting accesses."
-> > 
-> > The LKMM as well as the C11 memory model are adaptations of
-> > data-race-free, which are based on the work in [2]. Necessarily, we need
-> > both conflicting data operations (plain) and synchronization operations
-> > (marked). For example, C11's definition is based on [3], which defines a
-> > "data race" as: "Two memory operations conflict if they access the same
-> > memory location, and at least one of them is a store, atomic store, or
-> > atomic read-modify-write operation. In a sequentially consistent
-> > execution, two memory operations from different threads form a type 1
-> > data race if they conflict, at least one of them is a data operation,
-> > and they are adjacent in <T (i.e., they may be executed concurrently)."
-> > 
-> > [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
-> >     Programs that Share Memory", 1988.
-> > 	URL: http://snir.cs.illinois.edu/listed/J21.pdf
-> > 
-> > [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
-> >     Multiprocessors", 1993.
-> > 	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
-> > 
-> > [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
-> >     Model", 2008.
-> > 	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
-> > 
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+On Mon, Mar 2, 2020 at 4:09 AM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > The pmem driver on PowerPC crashes with the following signature when
+> > instantiating misaligned namespaces that map their capacity via
+> > memremap_pages().
+> >
+> >     BUG: Unable to handle kernel data access at 0xc001000406000000
+> >     Faulting instruction address: 0xc000000000090790
+> >     NIP [c000000000090790] arch_add_memory+0xc0/0x130
+> >     LR [c000000000090744] arch_add_memory+0x74/0x130
+> >     Call Trace:
+> >      arch_add_memory+0x74/0x130 (unreliable)
+> >      memremap_pages+0x74c/0xa30
+> >      devm_memremap_pages+0x3c/0xa0
+> >      pmem_attach_disk+0x188/0x770
+> >      nvdimm_bus_probe+0xd8/0x470
+> >
+> > With the assumption that only memremap_pages() has alignment
+> > constraints, enforce memremap_compat_align() for
+> > pmem_should_map_pages(), nd_pfn, and nd_dax cases. This includes
+> > preventing the creation of namespaces where the base address is
+> > misaligned and cases there infoblock padding parameters are invalid.
+> >
+>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>
+> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > Cc: Jeff Moyer <jmoyer@redhat.com>
+> > Fixes: a3619190d62e ("libnvdimm/pfn: stop padding pmem namespaces to section alignment")
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > > ---
-> > v3:
-> > * Apply Alan's suggestion.
-> > * s/two race candidates/race candidates/
-> 
-> Looks good!
+> >  drivers/nvdimm/namespace_devs.c |   12 ++++++++++++
+> >  drivers/nvdimm/pfn_devs.c       |   26 +++++++++++++++++++++++---
+> >  2 files changed, 35 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> > index 032dc61725ff..68e89855f779 100644
+> > --- a/drivers/nvdimm/namespace_devs.c
+> > +++ b/drivers/nvdimm/namespace_devs.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/nd.h>
+> >  #include "nd-core.h"
+> >  #include "pmem.h"
+> > +#include "pfn.h"
+> >  #include "nd.h"
+> >
+> >  static void namespace_io_release(struct device *dev)
+> > @@ -1739,6 +1740,17 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+> >               return ERR_PTR(-ENODEV);
+> >       }
+>
+> May be add a comment here that both dax/fsdax namespace details are
+> checked in nd_pfn_validate() so that we look at start_pad and end_trunc
+> while validating the namespace?
+>
+> >
+> > +     if (pmem_should_map_pages(dev)) {
+> > +             struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+> > +             struct resource *res = &nsio->res;
+> > +
+> > +             if (!IS_ALIGNED(res->start | (res->end + 1),
+> > +                                     memremap_compat_align())) {
+> > +                     dev_err(&ndns->dev, "%pr misaligned, unable to map\n", res);
+> > +                     return ERR_PTR(-EOPNOTSUPP);
+> > +             }
+> > +     }
+> > +
+> >       if (is_namespace_pmem(&ndns->dev)) {
+> >               struct nd_namespace_pmem *nspm;
+> >
+> > diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+> > index 79fe02d6f657..3bdd4b883d05 100644
+> > --- a/drivers/nvdimm/pfn_devs.c
+> > +++ b/drivers/nvdimm/pfn_devs.c
+> > @@ -446,6 +446,7 @@ static bool nd_supported_alignment(unsigned long align)
+> >  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+> >  {
+> >       u64 checksum, offset;
+> > +     struct resource *res;
+> >       enum nd_pfn_mode mode;
+> >       struct nd_namespace_io *nsio;
+> >       unsigned long align, start_pad;
+> > @@ -578,13 +579,14 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+> >        * established.
+> >        */
+> >       nsio = to_nd_namespace_io(&ndns->dev);
+> > -     if (offset >= resource_size(&nsio->res)) {
+> > +     res = &nsio->res;
+> > +     if (offset >= resource_size(res)) {
+> >               dev_err(&nd_pfn->dev, "pfn array size exceeds capacity of %s\n",
+> >                               dev_name(&ndns->dev));
+> >               return -EOPNOTSUPP;
+> >       }
+> >
+> > -     if ((align && !IS_ALIGNED(nsio->res.start + offset + start_pad, align))
+> > +     if ((align && !IS_ALIGNED(res->start + offset + start_pad, align))
+> >                       || !IS_ALIGNED(offset, PAGE_SIZE)) {
+> >               dev_err(&nd_pfn->dev,
+> >                               "bad offset: %#llx dax disabled align: %#lx\n",
+> > @@ -592,6 +594,18 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+> >               return -EOPNOTSUPP;
+> >       }
+> >
+> > +     if (!IS_ALIGNED(res->start + le32_to_cpu(pfn_sb->start_pad),
+> > +                             memremap_compat_align())) {
+> > +             dev_err(&nd_pfn->dev, "resource start misaligned\n");
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +
+> > +     if (!IS_ALIGNED(res->end + 1 - le32_to_cpu(pfn_sb->end_trunc),
+> > +                             memremap_compat_align())) {
+> > +             dev_err(&nd_pfn->dev, "resource end misaligned\n");
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +
+> >       return 0;
+> >  }
+> >  EXPORT_SYMBOL(nd_pfn_validate);
+> > @@ -750,7 +764,13 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
+> >       start = nsio->res.start;
+> >       size = resource_size(&nsio->res);
+> >       npfns = PHYS_PFN(size - SZ_8K);
+> > -     align = max(nd_pfn->align, SUBSECTION_SIZE);
+> > +     align = max(nd_pfn->align, memremap_compat_align());
+> > +     if (!IS_ALIGNED(start, memremap_compat_align())) {
+> > +             dev_err(&nd_pfn->dev, "%s: start %pa misaligned to %#lx\n",
+> > +                             dev_name(&ndns->dev), &start,
+> > +                             memremap_compat_align());
+> > +             return -EINVAL;
+> > +     }
+>
+> This validates start in case of a new namespace creation where the user
+> updated nd_region->align value? A comment there would help when looking
+> at the code later?
 
-Applied, thank you both!
-
-							Thanx, Paul
+Yeah, sounds good will respin with those updates.
