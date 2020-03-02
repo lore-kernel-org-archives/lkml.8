@@ -2,111 +2,121 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942D9C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653BE217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWL92tOa"
+	by mail.kernel.org (Postfix) with ESMTP id EC4162187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCBMx3 (ORCPT
+        id S1727907AbgCBMxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:53:29 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51221 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgCBMx0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:53:26 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l8so878850pjy.1;
-        Mon, 02 Mar 2020 04:53:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YVlIC+o1X5elmxMJP01HUn8upQiGdfU1sajDVIWbpjM=;
-        b=YWL92tOaLSZeNycLdLFxyiYmZMgQecJvctiYRM5E2vH1K2tV1g9ns3RtWySc7VDcVB
-         lu+I4DHw1AQLcMmiYpGfikkJAvWt1qn7EHh6VfvVcRye9+kWerZ7rtCvpfJYCzxl0ADu
-         NALgrdqJNF6zkOn8LWHmNdZ2ECtjgynPfqOyiIHkWw2bXXhomNFCHlkdovnPNQgSduZJ
-         SODLphzf3FGoIkbY6cygVsPUEHkEsZmf7MQZ5SZqaoxLpeiaS/2jw+KeSAL5PyQgoOe4
-         3SGO2mtSja/mE9lUxr/ltkOlX7xW/tpKp0CD22DG2XK9eAYzZ06UbLs5Jx7imW9YdzK9
-         LIWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YVlIC+o1X5elmxMJP01HUn8upQiGdfU1sajDVIWbpjM=;
-        b=dxkUUJ4NojSRGvhbNd0G/o5ahQf8Ty7yyW293U/zay6pN9VyVAWC2AGVN3hjknuLDa
-         BXAwYYo5ZIY9Q2oaIpHrM6vNJmrR+yy5FsbESllGyIP3e4J3xEJTsw04ccoRRoTEM9F2
-         aq2GNEqZk1V3g3fHK8llyyJ1s6f1/2LaoFEe+VtTh3+ch01YgnHpWp4O1JwzwofgKQEz
-         hdD+vkJDhH+4O57+v9H2epehJC6S+9QlciDx2N1Cmw8nkU/r4irF9Mhqx/nORsmZqlmA
-         MOhkod3cuj9KoirXsvPE63/WjGC1UoPRNoBFdSAGsXLBKAYLMyiye6MjarA4Ogyde8L9
-         TF3Q==
-X-Gm-Message-State: APjAAAXnoy5rHhBHJpk9o8WPBxC8WGa8iD1xxgfCcCN+nPU1bTdrMxUu
-        wNCz7o6m2efglS45XuuIOdY=
-X-Google-Smtp-Source: APXvYqya77N8AIuo7S/nQDOfsridOc39JQclxt2ko2cBQ4x1i6EExyxwGxTkdNnrd8pZDKP8I4C6Hw==
-X-Received: by 2002:a17:90b:f06:: with SMTP id br6mr20963620pjb.125.1583153605167;
-        Mon, 02 Mar 2020 04:53:25 -0800 (PST)
-Received: from localhost.localdomain ([103.51.74.208])
-        by smtp.gmail.com with ESMTPSA id p2sm2138238pfb.41.2020.03.02.04.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 04:53:24 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCHv2 0/2] Odroid N2 failes to boot using upstream kernel using microSD card
-Date:   Mon,  2 Mar 2020 12:53:07 +0000
-Message-Id: <20200302125310.742-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 2 Mar 2020 07:53:44 -0500
+Received: from mga02.intel.com ([134.134.136.20]:44317 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbgCBMxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:53:44 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 04:53:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="257943869"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 04:53:41 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j8kZr-0068NG-6Y; Mon, 02 Mar 2020 14:53:43 +0200
+Date:   Mon, 2 Mar 2020 14:53:43 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vishwanath.somayaji@intel.com, dvhart@infradead.org,
+        mika.westerberg@intel.com, peterz@infradead.org,
+        charles.d.prestopine@intel.com, Chen Zhou <chenzhou10@huawei.com>,
+        "David E . Box" <david.e.box@intel.com>
+Subject: Re: [PATCH v3 5/5] platform/x86: intel_pmc_core: fix: Make
+ pmc_core_lpm_display() generic for platforms that support sub-states
+Message-ID: <20200302125343.GU1224808@smile.fi.intel.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+ <5e28f488a6cc8b7c1e08b536868844b586a1eaf1.1583093898.git.gayatri.kammela@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e28f488a6cc8b7c1e08b536868844b586a1eaf1.1583093898.git.gayatri.kammela@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we try to boot the device from microSD card, the board will
-stall in between, on suggestion from Martin, Jerome and Neil it was
-narrowed down to clk not getting enable.
+On Sun, Mar 01, 2020 at 12:44:26PM -0800, Gayatri Kammela wrote:
+> Currently pmc_core_lpm_display() uses array of struct pointers i.e.,
+> tgl_lpm_maps for Tiger Lake directly to iterate through and to get the
+> number of status/live status registers which is hardcoded and cannot
+> be re-used for future platforms that support sub-states. To maintain
+> readability, make pmc_core_lpm_display() generic, so that it can re-used
+> for future platforms.
 
-Fix the clk driver help booting of the kernel.
-Any more suggestion or inputs are welcome.
+My comments below.
 
-Changes since PATCHv1:
-	[1] https://patchwork.kernel.org/cover/11384523/
-            drop the patch as it was not being parsed correctly.
-            https://patchwork.kernel.org/patch/11384533/
-            fixed the subject and message for core patch.
-            https://patchwork.kernel.org/patch/11384537/
-Changes since RFCv1:
-	[0] https://lore.kernel.org/linux-amlogic/20191007131649.1768-1-linux.amoon@gmail.com/
-	 drop some patches and fix the clk driver as suggested by Neil.
+...
 
--Anand
+> +static int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
+> +{
+> +	int idx, arr_size = 0;
 
-Anand Moon (2):
-  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
-    to FLASH_VDD
-  clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
+And why do you need arr_size variable at all?
 
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
- drivers/clk/meson/g12a.c                             | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+> +
+> +	for (idx = 0; maps[idx]; idx++)
+> +		arr_size++;
+> +
+> +	return arr_size;
+> +}
+
+...
+
+> -	int index, idx, len = 32, bit_mask;
+> +	int index, idx, bit_mask, len = 32;
+
+What's the point of shuffling this?
+
+> +	int arr_size = pmc_core_lpm_get_arr_size(maps);
+
+This would be better in a split manner, i.e.
+
+	int arr_size;
+
+	...
+
+	arr_size = ...;
+
+...
+
+> +	lpm_regs = kmalloc_array(arr_size, sizeof(*lpm_regs), GFP_KERNEL);
+> +	if(!lpm_regs)
+
+> +		goto err;
+
+There is no point to have the label. Simple return will work.
+
+> -	for (index = 0; tgl_lpm_maps[index]; index++) {
+> +	for (index = 0; maps[index]; index++) {
+
+Why not to reuse arr_size here?
+
+>  		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
+>  		offset += 4;
+>  	}
 
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
