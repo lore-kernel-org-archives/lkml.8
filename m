@@ -2,110 +2,102 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB535C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A621A246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA439246B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjhnHUAs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sH6kyBtD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCBJ2P (ORCPT
+        id S1727502AbgCBJ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:28:15 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39367 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbgCBJ2L (ORCPT
+        Mon, 2 Mar 2020 04:28:18 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37195 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgCBJ2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:28:11 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so11593626wrn.6;
-        Mon, 02 Mar 2020 01:28:09 -0800 (PST)
+        Mon, 2 Mar 2020 04:28:13 -0500
+Received: by mail-pj1-f66.google.com with SMTP id o2so2262759pjp.2;
+        Mon, 02 Mar 2020 01:28:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JT9LGJ3nprOFd57YdHFTo6kmk4rD0oOGffgTW8cRvZI=;
-        b=GjhnHUAs17IpwhpIp4EZFaFCjGdIMvqXOl3gcf0RMYe3UkTvWSpAM2NPK9wbb7+qzg
-         +ru36XkESaCNdY3Po6JQvG2rFJssKOi1GQYirmXNjKqntHvOAdLzqoqsMPJVASt2mY0L
-         Gk3yHOlg6JZXifIic6opV9dIFOimFgGi/YT1tW4+UxB9DgRrUIE/9SH4KAp2tGfR/HXO
-         MfFXTMG2DFuLXzDQn6kFdf1GUcM6EpEkbRJZnvuj8/6SC1uSr6w2TDs2b1gl6JeHaw6i
-         v2wowbsg+sPT5wAmlWnpwbxKEaG0kDPJgNszXWP0roOi9K+H95ibCVtCeqWjO8LGHLc5
-         D2HA==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PY4MuK9MtCzBBPb4BM+bF8sugRCFY9M8l8A3pQbpdiw=;
+        b=sH6kyBtDw0rtBL8JJCp0gjcaIXkgXwiRFurf3c/d+4vPM+9vWt287P81nKtqzYG0ay
+         5LF5ZvgufuVwc0sxB/FUyX4E8LUUFoOAqBgsnezhD8RT/9n1Uzt/1xc1wYuUa7OaLjiJ
+         lgvUFYzwNd0x0iY2+dE6EvBRCNCGQ6C2UUAxQAWhC5g251G7fQDxCdtCY1N+pkHQHt0O
+         nRGLbt9L3RCF+nWlrzzqpG2CEphWVeLnwASyFQOQLELIObjMpjURtbGasFsETeQh9gxM
+         TtVR69dovPrIrMvDbtFM2nyhKg3A2/j/5i6wGTahMAHbG0wgBl69tx4+TevNucn0A2kr
+         yKrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JT9LGJ3nprOFd57YdHFTo6kmk4rD0oOGffgTW8cRvZI=;
-        b=MvOEK6PZltNpJQmKgFym7zs/TGyToK11xefnivCuUuqwFAOsDx34nPSjtWj/ChnGYn
-         IeugxqT3Eg5dgUQlLDW0EzN22Dq+NQxz8ZgVf3dGgW9CrkC2L0gwNq1ZB5LOLiksMXoO
-         Y7AGWYb5WGdU02FcTDzzoFfLeFcl2NckfWC1toOmbJX6qSRw2skUFf566w0Dwk/zNtFz
-         0wn6FVM11cTPDz+O6AYwpnCqh3rrvAz4VdWErZD302Azd924/DHju7mzNqbWKFf+3sHr
-         ShFHKveMSanWrcnjXcl3AgD1StVfci9rs2W0QtVTpzwp3mc6hw0hD6Wj9k65CERwI6X3
-         4jxA==
-X-Gm-Message-State: APjAAAWv3JZ2YO2nfMpQ6GPzEogyW1TGMtSM+V+tf8GY0bfYvgelzZoS
-        MI96W+iwGwGz807O56s+wgs=
-X-Google-Smtp-Source: APXvYqzL+2Y04yOkKtalVlUtycPgO8/i1gUbA2dSLsaEONtKnP6nRDz3qDuKl9EaY2YE+bZHdqN2KA==
-X-Received: by 2002:adf:dd05:: with SMTP id a5mr21467583wrm.108.1583141289113;
-        Mon, 02 Mar 2020 01:28:09 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id m3sm6409586wrx.9.2020.03.02.01.28.08
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PY4MuK9MtCzBBPb4BM+bF8sugRCFY9M8l8A3pQbpdiw=;
+        b=n+/TvlhA9JEM2oGoRhrtIibXOmX2guZnA4cDYWb136V4KegQbgyaR1Z1IZSrmHNFh6
+         5YhAQHbjhmL+fpLrXPW7SaNLJ9Xlt4mnR4X5fP1Bnj5hBhfFiJp0KvsMV0sOoWafel6F
+         pcUAQTYnLr0993L5EaM5mPrup+OmpqploxxlcFhJD0ukyuBZ8G1uf7Zh6WIGjpyKyr/y
+         R8jkwQMtOkkgeCQemthVjC/IeOScXuyBEAq02iJuncUrkqmq/xuINs6BQZw/CW4eWMpW
+         aRSt66CwYjgVTqlLZ71jbKrd83kaIONCVdzXHGTlP2eZxoHWbjMvWdYPXKngn1j2DGqR
+         xQNw==
+X-Gm-Message-State: APjAAAUWJ64GhzqgurMOLoCeBK/PvDMj5SiLL119Yrq9y+ooFE6QbfOn
+        CdNebKBKaC+PvQbNNw9wdvY=
+X-Google-Smtp-Source: APXvYqyeNNsZf2cgZjbOAIPSLGSZ+N52xHOXT7mNYakDKjVkVzamzuWHN7a0r80GFylvRLX8MXK76g==
+X-Received: by 2002:a17:90a:d101:: with SMTP id l1mr21047899pju.130.1583141292001;
+        Mon, 02 Mar 2020 01:28:12 -0800 (PST)
+Received: from ?IPv6:2601:647:4700:9b2:999b:d09b:90a3:47d8? ([2601:647:4700:9b2:999b:d09b:90a3:47d8])
+        by smtp.gmail.com with ESMTPSA id x70sm11811963pgd.37.2020.03.02.01.28.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 01:28:08 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: fix compatible property for rk3399-evb
-Date:   Mon,  2 Mar 2020 10:27:59 +0100
-Message-Id: <20200302092759.3291-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302092759.3291-1-jbx6244@gmail.com>
-References: <20200302092759.3291-1-jbx6244@gmail.com>
+        Mon, 02 Mar 2020 01:28:11 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v2] x86/kvm: Handle async page faults directly through
+ do_page_fault()
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <53626d08de5df34eacce80cb74f19a06fdc690c6.1582998497.git.luto@kernel.org>
+Date:   Mon, 2 Mar 2020 01:28:04 -0800
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <34082A11-321D-4DF0-A076-7BBF332DCA66@gmail.com>
+References: <53626d08de5df34eacce80cb74f19a06fdc690c6.1582998497.git.luto@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives this error:
+> On Feb 29, 2020, at 9:50 AM, Andy Lutomirski <luto@kernel.org> wrote:
+> 
+> KVM overloads #PF to indicate two types of not-actually-page-fault
+> events.  Right now, the KVM guest code intercepts them by modifying
+> the IDT and hooking the #PF vector.  This makes the already fragile
+> fault code even harder to understand, and it also pollutes call
+> traces with async_page_fault and do_async_page_fault for normal page
+> faults.
+> 
+> Clean it up by moving the logic into do_page_fault() using a static
+> branch.  This gets rid of the platform trap_init override mechanism
+> completely.
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
 
-arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: /: compatible:
-['rockchip,rk3399-evb', 'rockchip,rk3399', 'google,rk3399evb-rev2']
-is not valid under any of the given schemas
+Indeed the async-PF mechanism is only used by KVM, and there is no need for
+over-engineering the solution just in case some other hypervisor ever
+introduces support for a similar paravirtual feature.
 
-'google,rk3399evb-rev2' was a no longer used variant for Google.
-The binding only mentions 'rockchip,rk3399-evb', 'rockchip,rk3399',
-so fix this error by removing 'google,rk3399evb-rev2' from
-the compatible property in rk3399-evb.dts and change it into
-generic rk3399-evb support only.
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 77008dca4..d1afd1e1d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -9,8 +9,7 @@
- 
- / {
- 	model = "Rockchip RK3399 Evaluation Board";
--	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
--		     "google,rk3399evb-rev2";
-+	compatible = "rockchip,rk3399-evb", "rockchip,rk3399";
- 
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
--- 
-2.11.0
+Yet, this might be a slippery slope, making Linux optimized to run on KVM
+(and maybe Xen). In other words, I wonder whether a similar change was
+acceptable for a paravirtual feature that is only supported by a proprietary
+hypervisor, such as Hyper-V or VMware.
 
