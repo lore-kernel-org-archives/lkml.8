@@ -6,207 +6,269 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE442C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4855AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816AA21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A44B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgCBQrV (ORCPT
+        id S1727268AbgCBQtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:47:21 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:33982 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727092AbgCBQrV (ORCPT
+        Mon, 2 Mar 2020 11:49:02 -0500
+Received: from mailoutvs40.siol.net ([185.57.226.231]:45780 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726775AbgCBQtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:47:21 -0500
-Received: (qmail 3316 invoked by uid 2102); 2 Mar 2020 11:47:20 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Mar 2020 11:47:20 -0500
-Date:   Mon, 2 Mar 2020 11:47:20 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Elver <elver@google.com>
-cc:     linux-kernel@vger.kernel.org, <kasan-dev@googlegroups.com>,
-        <parri.andrea@gmail.com>, <will@kernel.org>,
-        <peterz@infradead.org>, <boqun.feng@gmail.com>,
-        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
-        <luc.maranget@inria.fr>, <paulmck@kernel.org>, <akiyks@gmail.com>,
-        <dlustig@nvidia.com>, <joel@joelfernandes.org>,
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2] tools/memory-model/Documentation: Fix "conflict"
- definition
-In-Reply-To: <20200302141819.40270-1-elver@google.com>
-Message-ID: <Pine.LNX.4.44L0.2003021134360.1555-100000@iolanthe.rowland.org>
+        Mon, 2 Mar 2020 11:49:01 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id DBCE552341C;
+        Mon,  2 Mar 2020 17:48:57 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id uejcH_C1Zu8K; Mon,  2 Mar 2020 17:48:57 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 4476B523438;
+        Mon,  2 Mar 2020 17:48:57 +0100 (CET)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id CF9BC5233F0;
+        Mon,  2 Mar 2020 17:48:55 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] drm/bridge: dw-hdmi: Add support for RGB limited range
+Date:   Mon, 02 Mar 2020 17:48:55 +0100
+Message-ID: <3027794.oiGErgHkdL@jernej-laptop>
+In-Reply-To: <20200302095354.GG11960@pendragon.ideasonboard.com>
+References: <20200229163043.158262-1-jernej.skrabec@siol.net> <20200229163043.158262-5-jernej.skrabec@siol.net> <20200302095354.GG11960@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020, Marco Elver wrote:
+Hi Laurent!
 
-> Alan: I think this needs your Signed-off-by, since I added you as
-> Co-developed-by.
-
-Here you go:
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-
-> Let me know if this works for you.
-
-See below.
-
-> The definition of "conflict" should not include the type of access nor
-> whether the accesses are concurrent or not, which this patch addresses.
-> The definition of "data race" remains unchanged.
+Dne ponedeljek, 02. marec 2020 ob 10:53:54 CET je Laurent Pinchart napisal(a):
+> Hi Jernej,
 > 
-> The definition of "conflict" as we know it and is cited by various
-> papers on memory consistency models appeared in [1]: "Two accesses to
-> the same variable conflict if at least one is a write; two operations
-> conflict if they execute conflicting accesses."
+> Thank you for the patch.
 > 
-> The LKMM as well as the C11 memory model are adaptations of
-> data-race-free, which are based on the work in [2]. Necessarily, we need
-> both conflicting data operations (plain) and synchronization operations
-> (marked). For example, C11's definition is based on [3], which defines a
-> "data race" as: "Two memory operations conflict if they access the same
-> memory location, and at least one of them is a store, atomic store, or
-> atomic read-modify-write operation. In a sequentially consistent
-> execution, two memory operations from different threads form a type 1
-> data race if they conflict, at least one of them is a data operation,
-> and they are adjacent in <T (i.e., they may be executed concurrently)."
+> On Sat, Feb 29, 2020 at 05:30:43PM +0100, Jernej Skrabec wrote:
+> > CEA 861 standard request that RGB quantization range is "limited" for
 > 
-> [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
->     Programs that Share Memory", 1988.
-> 	URL: http://snir.cs.illinois.edu/listed/J21.pdf
+> s/request/requests/
 > 
-> [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
->     Multiprocessors", 1993.
-> 	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
+> > CEA modes. Support that by adding CSC matrix which downscales values.
 > 
-> [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
->     Model", 2008.
-> 	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+> Interesting, that's related to what I asked in the review of 2/4 :-)
 > 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
-> ---
-> v2:
-> * Apply Alan's suggested version.
->   - Move "from different CPUs (or threads)" from "conflict" to "data
->     race" definition. Update "race candidate" accordingly.
-> * Add citations to commit message.
+> > This allows to proper color reproduction on TV and PC monitor at the
+> > same time. In future, override property can be added, like "Broadcast
+> > RGB" in i915 driver.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 36 +++++++++++++++++++++--
+> >  1 file changed, 34 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > 3d6021119942..101c90156fa0 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -92,6 +92,12 @@ static const u16 csc_coeff_rgb_in_eitu709[3][4] = {
+> > 
+> >  	{ 0x6756, 0x78ab, 0x2000, 0x0200 }
+> >  
+> >  };
+> > 
+> > +static const u16 csc_coeff_rgb_limited[3][4] = {
 > 
-> v1: http://lkml.kernel.org/r/20200228164621.87523-1-elver@google.com
-> ---
->  .../Documentation/explanation.txt             | 77 +++++++++----------
->  1 file changed, 38 insertions(+), 39 deletions(-)
-> 
-> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> index e91a2eb19592a..7a59cadc2f4ca 100644
-> --- a/tools/memory-model/Documentation/explanation.txt
-> +++ b/tools/memory-model/Documentation/explanation.txt
-> @@ -1987,28 +1987,28 @@ outcome undefined.
->  
->  In technical terms, the compiler is allowed to assume that when the
->  program executes, there will not be any data races.  A "data race"
-> -occurs when two conflicting memory accesses execute concurrently;
-> -two memory accesses "conflict" if:
-> +occurs when two conflicting memory accesses from different CPUs (or
-> +different threads on the same CPU) execute concurrently, and at least
-> +one of them is plain.  Two memory accesses "conflict" if:
->  
->  	they access the same location,
->  
-> -	they occur on different CPUs (or in different threads on the
-> -	same CPU),
-> -
-> -	at least one of them is a plain access,
-> -
->  	and at least one of them is a store.
->  
-> -The LKMM tries to determine whether a program contains two conflicting
-> -accesses which may execute concurrently; if it does then the LKMM says
-> -there is a potential data race and makes no predictions about the
-> -program's outcome.
-> -
-> -Determining whether two accesses conflict is easy; you can see that
-> -all the concepts involved in the definition above are already part of
-> -the memory model.  The hard part is telling whether they may execute
-> -concurrently.  The LKMM takes a conservative attitude, assuming that
-> -accesses may be concurrent unless it can prove they cannot.
-> +We'll say that two accesses from different threads are "race
-> +candidates" if they conflict and at least one of them is plain.
-> +Whether or not two candidates actually do race in a given execution
-> +then depends on whether they are concurrent.  The LKMM tries to
-> +determine whether a program contains race candidates which may execute
-> +concurrently; if it does then the LKMM says there is a potential data
-> +race and makes no predictions about the program's outcome.
+> Could you name this to make it explicit that we're converting from RGB
+> to RGB ? Maybe csc_coeff_rgb_full_to_rgb_limited ?
 
-Hmmm.  Although the content is okay, I don't like the organization very
-much.  What do you think of this for the above portion of the patch)?
+Ok.
 
-Alan Stern
+> 
+> > +	{ 0x1B7C, 0x0000, 0x0000, 0x0020 },
+> > +	{ 0x0000, 0x1B7C, 0x0000, 0x0020 },
+> > +	{ 0x0000, 0x0000, 0x1B7C, 0x0020 }
+> 
+> Lowercase hex constants please.
+
+Ok.
+
+> 
+> > +};
+> > +
+> > 
+> >  struct hdmi_vmode {
+> >  
+> >  	bool mdataenablepolarity;
+> > 
+> > @@ -109,6 +115,7 @@ struct hdmi_data_info {
+> > 
+> >  	unsigned int pix_repet_factor;
+> >  	unsigned int hdcp_enable;
+> >  	struct hdmi_vmode video_mode;
+> > 
+> > +	bool rgb_limited_range;
+> > 
+> >  };
+> >  
+> >  struct dw_hdmi_i2c {
+> > 
+> > @@ -960,6 +967,13 @@ static int is_color_space_conversion(struct dw_hdmi
+> > *hdmi)> 
+> >  		hdmi_bus_fmt_is_rgb(hdmi-
+>hdmi_data.enc_out_bus_format);
+> >  
+> >  }
+> > 
+> > +static int is_rgb_downscale_needed(struct dw_hdmi *hdmi)
+> > +{
+> > +	return  hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) &&
+> > +		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format) 
+&&
+> > +		hdmi->hdmi_data.rgb_limited_range;
+> > +}
+> > +
+> > 
+> >  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+> >  {
+> >  
+> >  	if (!hdmi_bus_fmt_is_yuv422(hdmi->hdmi_data.enc_out_bus_format))
+> > 
+> > @@ -1006,6 +1020,8 @@ static void dw_hdmi_update_csc_coeffs(struct dw_hdmi
+> > *hdmi)> 
+> >  				csc_coeff = 
+&csc_coeff_rgb_in_eitu709;
+> >  			
+> >  			csc_scale = 0;
+> >  		
+> >  		}
+> > 
+> > +	} else if (is_rgb_downscale_needed(hdmi)) {
+> > +		csc_coeff = &csc_coeff_rgb_limited;
+> > 
+> >  	}
+> >  	
+> >  	/* The CSC registers are sequential, alternating MSB then LSB */
+> > 
+> > @@ -1615,6 +1631,18 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi,
+> > struct drm_display_mode *mode)> 
+> >  	drm_hdmi_avi_infoframe_from_display_mode(&frame,
+> >  	
+> >  						 &hdmi-
+>connector, mode);
+> > 
+> > +	if (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
+> > +		drm_hdmi_avi_infoframe_quant_range(&frame, &hdmi-
+>connector,
+> > +						   mode,
+> > +						   hdmi-
+>hdmi_data.rgb_limited_range ?
+> > +						   
+HDMI_QUANTIZATION_RANGE_LIMITED :
+> > +						   
+HDMI_QUANTIZATION_RANGE_FULL);
+> > +	} else {
+> > +		frame.quantization_range = 
+HDMI_QUANTIZATION_RANGE_DEFAULT;
+> > +		frame.ycc_quantization_range =
+> > +			HDMI_YCC_QUANTIZATION_RANGE_LIMITED;
+> > +	}
+> > +
+> > 
+> >  	if (hdmi_bus_fmt_is_yuv444(hdmi->hdmi_data.enc_out_bus_format))
+> >  	
+> >  		frame.colorspace = HDMI_COLORSPACE_YUV444;
+> >  	
+> >  	else if (hdmi_bus_fmt_is_yuv422(hdmi-
+>hdmi_data.enc_out_bus_format))
+> > 
+> > @@ -1990,13 +2018,13 @@ static void dw_hdmi_enable_video_path(struct
+> > dw_hdmi *hdmi)> 
+> >  	hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
+> >  	
+> >  	/* Enable csc path */
+> > 
+> > -	if (is_color_space_conversion(hdmi)) {
+> > +	if (is_color_space_conversion(hdmi) || 
+is_rgb_downscale_needed(hdmi)) {
+> 
+> I would fold this change in is_color_space_conversion(), and modify
+> dw_hdmi_update_csc_coeffs() accordingly with something like
+> 
+> 	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) &&
+> 	    hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
+> 		if (hdmi->hdmi_data.enc_out_encoding == 
+V4L2_YCBCR_ENC_601)
+> 			csc_coeff = &csc_coeff_rgb_out_eitu601;
+> 		else
+> 			csc_coeff = &csc_coeff_rgb_out_eitu709;
+> 	} else if (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) 
+&&
+> 		   !hdmi_bus_fmt_is_rgb(hdmi-
+>hdmi_data.enc_out_bus_format)) {
+> 		if (hdmi->hdmi_data.enc_out_encoding == 
+V4L2_YCBCR_ENC_601)
+> 			csc_coeff = &csc_coeff_rgb_in_eitu601;
+> 		else
+> 			csc_coeff = &csc_coeff_rgb_in_eitu709;
+> 		csc_scale = 0;
+> 	} else if (is_rgb_downscale_needed(hdmi)) {
+> 		csc_coeff = &csc_coeff_rgb_limited;
+> 	}
+
+Right, but for clarity reasons I'll introduce is_input_rgb and is_output_rgb 
+variables.
+
+Thanks for review.
+
+Best regards,
+Jernej
+
+> 
+> >  		hdmi->mc_clkdis &= ~HDMI_MC_CLKDIS_CSCCLK_DISABLE;
+> >  		hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
+> >  	
+> >  	}
+> >  	
+> >  	/* Enable color space conversion if needed */
+> > 
+> > -	if (is_color_space_conversion(hdmi))
+> > +	if (is_color_space_conversion(hdmi) || 
+is_rgb_downscale_needed(hdmi))
+> > 
+> >  		hdmi_writeb(hdmi, 
+HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_IN_PATH,
+> >  		
+> >  			    HDMI_MC_FLOWCTRL);
+> >  	
+> >  	else
+> > 
+> > @@ -2100,6 +2128,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi,
+> > struct drm_display_mode *mode)> 
+> >  	/* TOFIX: Default to RGB888 output format */
+> >  	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> > 
+> > +	hdmi->hdmi_data.rgb_limited_range = hdmi->sink_is_hdmi &&
+> > +		drm_default_rgb_quant_range(mode) ==
+> > +		HDMI_QUANTIZATION_RANGE_LIMITED;
+> > +
+> > 
+> >  	hdmi->hdmi_data.pix_repet_factor = 0;
+> >  	hdmi->hdmi_data.hdcp_enable = 0;
+> >  	hdmi->hdmi_data.video_mode.mdataenablepolarity = true;
 
 
-
-Index: usb-devel/tools/memory-model/Documentation/explanation.txt
-===================================================================
---- usb-devel.orig/tools/memory-model/Documentation/explanation.txt
-+++ usb-devel/tools/memory-model/Documentation/explanation.txt
-@@ -1987,28 +1987,36 @@ outcome undefined.
- 
- In technical terms, the compiler is allowed to assume that when the
- program executes, there will not be any data races.  A "data race"
--occurs when two conflicting memory accesses execute concurrently;
--two memory accesses "conflict" if:
-+occurs when there are two memory accesses such that:
- 
--	they access the same location,
-+1.	they access the same location,
- 
--	they occur on different CPUs (or in different threads on the
--	same CPU),
-+2.	at least one of them is a store,
-+
-+3.	at least one of them is plain,
- 
--	at least one of them is a plain access,
-+4.	they occur on different CPUs (or in different threads on the
-+	same CPU), and
- 
--	and at least one of them is a store.
-+5.	they execute concurrently.
- 
--The LKMM tries to determine whether a program contains two conflicting
--accesses which may execute concurrently; if it does then the LKMM says
--there is a potential data race and makes no predictions about the
-+In the literature, two accesses are said to "conflict" if they satisfy
-+1 and 2 above.  We'll go a little farther and say that two accesses
-+are "race candidates" if they satisfy 1 - 4.  Thus, whether or not two
-+race candidates actually do race in a given execution depends on
-+whether they are concurrent.
-+
-+The LKMM tries to determine whether a program contains two race
-+candidates which may execute concurrently; if it does then the LKMM
-+says there is a potential data race and makes no predictions about the
- program's outcome.
- 
--Determining whether two accesses conflict is easy; you can see that
--all the concepts involved in the definition above are already part of
--the memory model.  The hard part is telling whether they may execute
--concurrently.  The LKMM takes a conservative attitude, assuming that
--accesses may be concurrent unless it can prove they cannot.
-+Determining whether two accesses are race candidates is easy; you can
-+see that all the concepts involved in the definition above are already
-+part of the memory model.  The hard part is telling whether they may
-+execute concurrently.  The LKMM takes a conservative attitude,
-+assuming that accesses may be concurrent unless it can prove they
-+are not.
- 
- If two memory accesses aren't concurrent then one must execute before
- the other.  Therefore the LKMM decides two accesses aren't concurrent
 
 
