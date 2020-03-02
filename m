@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B350BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92492C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8BD24699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A22324699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j4PQZrVl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oWp+xew/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCBEMy (ORCPT
+        id S1727174AbgCBEM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 23:12:54 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37934 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgCBEMw (ORCPT
+        Sun, 1 Mar 2020 23:12:57 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46684 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgCBEM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 23:12:52 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q9so1977974pfs.5
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 20:12:50 -0800 (PST)
+        Sun, 1 Mar 2020 23:12:56 -0500
+Received: by mail-pf1-f194.google.com with SMTP id o24so4875711pfp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 20:12:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KcBsmcqC9Zy3qd/UWgqdrnUuk/NhCvM/xrZuIvcDti8=;
-        b=j4PQZrVlcD4GIoWCZnGkyRCynfgZmeRPchSumCRpuon/RnuCEeohc7LokPDbSULOxu
-         72a31S9tWTvxleYFiXnDMvuEF0GcAiuo0m6Ks7qPK65Si9/Ajl9tOkgGpCJ5hFYHM7JK
-         bcs4tyjSrkgHQWt2yaTeiC+rUS+G6Z36G2Yv4=
+        bh=eaNPcBjkoKZw1bZcJWbUbEpJEQzWw7qCsLqY7OuM15k=;
+        b=oWp+xew/5VjbY2VZwDp/ZZ+7rQIDc5nONr9JZ0WBHtYgxkp8TZKiW6Xt4YDwrvz/wQ
+         48yqizhHxj8W+QO0pIzDkLiTUq8OlPJp90EVOR8A/tYZgWea2xDVx9T89gpr0Xd3WfN3
+         T0EeKnLT5zM4RdcMPkPrY5pyjmF83jONU0rms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KcBsmcqC9Zy3qd/UWgqdrnUuk/NhCvM/xrZuIvcDti8=;
-        b=bCgRZX+8OOOKIdgIMSlUCUELmHgsA8jfGcywElNas2N8XT3QIpCwSHb/xY/vG938hX
-         LB6VxRmHTLe2CXpXyK+mB5dTHFkGE/Hae3ARiKYod12RJbcE2muDe3LWYLsA2sjVnOvI
-         Pkj/1UtF3VnmGi63ZQEq9tZGUxBRYgFc15Y7FwpDADJRC1WUdlGr3pvN0/KbbBalzU3H
-         peTHNGRk2R/dePKgbtqDGd95IoqNUUjCmN5HJ3B07tbTcjymnppDK81NKc06xUNZKjE1
-         x6Lx2Mw80Cl6YKGc1KyG3VOt8yK/jtXaYXXYhRSbNKfBbnM43kvUfJMI/EkUEu3B5/4/
-         usEA==
-X-Gm-Message-State: APjAAAXcpcEyRwqytf8iItx0NusYhfkQBFD1RtKghBk2MtWmWM/tPxjD
-        BFkGf7VdRrVfL9hhe4uwtl/AgQ==
-X-Google-Smtp-Source: APXvYqzWqYzaARJVSR+9sCYfnEzigtts3d3/gmrHrjKJhg8SRyJHiNsPGWNbQI8izO51VFAShoXAHQ==
-X-Received: by 2002:aa7:9218:: with SMTP id 24mr15996303pfo.145.1583122370242;
-        Sun, 01 Mar 2020 20:12:50 -0800 (PST)
+        bh=eaNPcBjkoKZw1bZcJWbUbEpJEQzWw7qCsLqY7OuM15k=;
+        b=g/qDqvzih/OzfULdd0vefrALv4HiQ4J4+0TwBdOyJYVQVBMY7xl/2MdmednHAGkbqT
+         v4sUHv5++a4sR54VGUqTTLyvbOnKkzLg/lboKdtAhtQ5aW/1THizYoTr9ZmLo89j0Mnk
+         LU8ljIXBUIhX+0AsaRIvusDiYI8MEJW6BodIdm6tIvx9og/e3MVfWwBCnmF4nZZOwn9O
+         OD3mN7g6Es3mDsz86ioxOQYu/GJImBHi6bOpFA8ZaD/rdlVSjH/kXnK2Ie+5xfa7jkMV
+         OdzHgV0GBb/X+xN4BYgWBppqRzi2FTuiinr8NgGABPs+WENdzGC4FKKlJvMCqsmTWOgy
+         HRCQ==
+X-Gm-Message-State: APjAAAXazBmYsZlu6juoJmYUTfkkrnXvk6+ajVWcPWGOqisnlxIFixSI
+        T0NhpLbnDDFhaiaoctiJnA0wwQ==
+X-Google-Smtp-Source: APXvYqxV8HL12nYDfQCZsn/ISpkGM1DIsy5iTaoNK/U3rk4TatYUKSuRZ0YeY+zUlf2XkmWLJvKI5g==
+X-Received: by 2002:a63:2b0a:: with SMTP id r10mr18087328pgr.213.1583122375798;
+        Sun, 01 Mar 2020 20:12:55 -0800 (PST)
 Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id d82sm1698114pfd.187.2020.03.01.20.12.47
+        by smtp.gmail.com with ESMTPSA id d82sm1698114pfd.187.2020.03.01.20.12.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 20:12:49 -0800 (PST)
+        Sun, 01 Mar 2020 20:12:55 -0800 (PST)
 From:   Sergey Senozhatsky <senozhatsky@chromium.org>
 To:     Hans Verkuil <hans.verkuil@cisco.com>,
         Tomasz Figa <tfiga@chromium.org>
@@ -64,9 +64,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Pawel Osciak <posciak@chromium.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv4 05/11] videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-Date:   Mon,  2 Mar 2020 13:12:07 +0900
-Message-Id: <20200302041213.27662-6-senozhatsky@chromium.org>
+Subject: [PATCHv4 06/11] videobuf2: factor out planes prepare/finish functions
+Date:   Mon,  2 Mar 2020 13:12:08 +0900
+Message-Id: <20200302041213.27662-7-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 In-Reply-To: <20200302041213.27662-1-senozhatsky@chromium.org>
 References: <20200302041213.27662-1-senozhatsky@chromium.org>
@@ -77,194 +77,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch lets user-space to request a non-consistent memory
-allocation during CREATE_BUFS and REQBUFS ioctl calls.
-
-= CREATE_BUFS
-
-  struct v4l2_create_buffers has seven 4-byte reserved areas,
-  so reserved[0] is renamed to ->flags. The struct, thus, now
-  has six reserved 4-byte regions.
-
-= REQBUFS
-
- We use one bit of a ->reserved[1] member of struct v4l2_requestbuffers,
- which is now renamed to ->flags. Unlike v4l2_create_buffers, struct
- v4l2_requestbuffers does not have enough reserved room. Therefore for
- backward compatibility  ->reserved and ->flags were put into anonymous
- union.
+Factor out the code, no functional changes.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- .../media/uapi/v4l/vidioc-create-bufs.rst     |  7 ++++-
- .../media/uapi/v4l/vidioc-reqbufs.rst         | 11 +++++--
- .../media/common/videobuf2/videobuf2-v4l2.c   | 31 +++++++++++++++++--
- drivers/media/v4l2-core/v4l2-ioctl.c          |  5 +--
- include/uapi/linux/videodev2.h                |  8 +++--
- 5 files changed, 50 insertions(+), 12 deletions(-)
+ .../media/common/videobuf2/videobuf2-core.c   | 52 +++++++++++--------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-index bd08e4f77ae4..a9c6c89f5098 100644
---- a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-@@ -121,7 +121,12 @@ than the number requested.
- 	other changes, then set ``count`` to 0, ``memory`` to
- 	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
-     * - __u32
--      - ``reserved``\ [7]
-+      - ``flags``
-+      - Specifies additional buffer management attributes.
-+	See :ref:`memory-flags`.
-+
-+    * - __u32
-+      - ``reserved``\ [6]
-       - A place holder for future extensions. Drivers and applications
- 	must set the array to zero.
- 
-diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-index 21ecacc72487..faf0df4f9bb6 100644
---- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-@@ -112,10 +112,17 @@ aborting or finishing any DMA in progress, an implicit
- 	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
- 	free any previously allocated buffers, so this is typically something
- 	that will be done at the start of the application.
-+    * - union {
-+      - (anonymous)
-+    * - __u32
-+      - ``flags``
-+      - Specifies additional buffer management attributes.
-+	See :ref:`memory-flags`.
-     * - __u32
-       - ``reserved``\ [1]
--      - A place holder for future extensions. Drivers and applications
--	must set the array to zero.
-+      - Kept for backwards compatibility. Use ``flags`` instead.
-+    * - }
-+      -
- 
- .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
- 
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index 6111d74f68c9..b4b379f3bf98 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -722,9 +722,18 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
- int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
- {
- 	int ret = vb2_verify_memory_type(q, req->memory, req->type);
-+	bool consistent = true;
-+
-+	if (!vb2_queue_allows_cache_hints(q))
-+		req->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
-+
-+	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-+		consistent = false;
- 
- 	fill_buf_caps(q, &req->capabilities);
--	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
-+	if (ret)
-+		return ret;
-+	return vb2_core_reqbufs(q, req->memory, consistent, &req->count);
- }
- EXPORT_SYMBOL_GPL(vb2_reqbufs);
- 
-@@ -753,6 +762,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
- 	unsigned requested_sizes[VIDEO_MAX_PLANES];
- 	struct v4l2_format *f = &create->format;
- 	int ret = vb2_verify_memory_type(q, create->memory, f->type);
-+	bool consistent = true;
- 	unsigned i;
- 
- 	fill_buf_caps(q, &create->capabilities);
-@@ -798,7 +808,14 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
- 	for (i = 0; i < requested_planes; i++)
- 		if (requested_sizes[i] == 0)
- 			return -EINVAL;
--	return ret ? ret : vb2_core_create_bufs(q, create->memory, true,
-+
-+	if (!vb2_queue_allows_cache_hints(q))
-+		create->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
-+
-+	if (create->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-+		consistent = false;
-+
-+	return ret ? ret : vb2_core_create_bufs(q, create->memory, consistent,
- 		&create->count, requested_planes, requested_sizes);
- }
- EXPORT_SYMBOL_GPL(vb2_create_bufs);
-@@ -968,13 +985,21 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
- {
- 	struct video_device *vdev = video_devdata(file);
- 	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
-+	bool consistent = true;
- 
- 	fill_buf_caps(vdev->queue, &p->capabilities);
- 	if (res)
- 		return res;
- 	if (vb2_queue_is_busy(vdev, file))
- 		return -EBUSY;
--	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
-+
-+	if (!vb2_queue_allows_cache_hints(vdev->queue))
-+		p->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
-+
-+	if (p->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-+		consistent = false;
-+
-+	res = vb2_core_reqbufs(vdev->queue, p->memory, consistent, &p->count);
- 	/* If count == 0, then the owner has released all buffers and he
- 	   is no longer owner of the queue. Otherwise we have a new owner. */
- 	if (res == 0)
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index fbcc7a20eedf..53b87bfd50d7 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1973,9 +1973,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
- 
- 	if (ret)
- 		return ret;
--
--	CLEAR_AFTER_FIELD(p, capabilities);
--
- 	return ops->vidioc_reqbufs(file, fh, p);
+diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+index 3ca0545db7ee..c2a1eadb26cf 100644
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -296,6 +296,32 @@ static void __vb2_buf_dmabuf_put(struct vb2_buffer *vb)
+ 		__vb2_plane_dmabuf_put(vb, &vb->planes[plane]);
  }
  
-@@ -2015,7 +2012,7 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
- 	if (ret)
- 		return ret;
- 
--	CLEAR_AFTER_FIELD(create, capabilities);
-+	CLEAR_AFTER_FIELD(create, flags);
- 
- 	v4l_sanitize_format(&create->format);
- 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index e92c29864730..12b1bd220347 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -938,7 +938,10 @@ struct v4l2_requestbuffers {
- 	__u32			type;		/* enum v4l2_buf_type */
- 	__u32			memory;		/* enum v4l2_memory */
- 	__u32			capabilities;
--	__u32			reserved[1];
-+	union {
-+		__u32		flags;
-+		__u32		reserved[1];
-+	};
- };
- 
- /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
-@@ -2446,7 +2449,8 @@ struct v4l2_create_buffers {
- 	__u32			memory;
- 	struct v4l2_format	format;
- 	__u32			capabilities;
--	__u32			reserved[7];
-+	__u32			flags;
-+	__u32			reserved[6];
- };
- 
++/*
++ * __vb2_buf_mem_prepare() - call ->prepare() on buffer's private memory
++ * to sync caches
++ */
++static void __vb2_buf_mem_prepare(struct vb2_buffer *vb)
++{
++	unsigned int plane;
++
++	for (plane = 0; plane < vb->num_planes; ++plane)
++		call_void_memop(vb, prepare, vb->planes[plane].mem_priv);
++	vb->synced = 1;
++}
++
++/*
++ * __vb2_buf_mem_finish() - call ->finish on buffer's private memory
++ * to sync caches
++ */
++static void __vb2_buf_mem_finish(struct vb2_buffer *vb)
++{
++	unsigned int plane;
++
++	for (plane = 0; plane < vb->num_planes; ++plane)
++		call_void_memop(vb, finish, vb->planes[plane].mem_priv);
++	vb->synced = 0;
++}
++
  /*
+  * __setup_offsets() - setup unique offsets ("cookies") for every plane in
+  * the buffer.
+@@ -951,7 +977,6 @@ void vb2_buffer_done(struct vb2_buffer *vb, enum vb2_buffer_state state)
+ {
+ 	struct vb2_queue *q = vb->vb2_queue;
+ 	unsigned long flags;
+-	unsigned int plane;
+ 
+ 	if (WARN_ON(vb->state != VB2_BUF_STATE_ACTIVE))
+ 		return;
+@@ -971,12 +996,8 @@ void vb2_buffer_done(struct vb2_buffer *vb, enum vb2_buffer_state state)
+ 	dprintk(4, "done processing on buffer %d, state: %d\n",
+ 			vb->index, state);
+ 
+-	if (state != VB2_BUF_STATE_QUEUED) {
+-		/* sync buffers */
+-		for (plane = 0; plane < vb->num_planes; ++plane)
+-			call_void_memop(vb, finish, vb->planes[plane].mem_priv);
+-		vb->synced = 0;
+-	}
++	if (state != VB2_BUF_STATE_QUEUED)
++		__vb2_buf_mem_finish(vb);
+ 
+ 	spin_lock_irqsave(&q->done_lock, flags);
+ 	if (state == VB2_BUF_STATE_QUEUED) {
+@@ -1301,7 +1322,6 @@ static int __buf_prepare(struct vb2_buffer *vb)
+ {
+ 	struct vb2_queue *q = vb->vb2_queue;
+ 	enum vb2_buffer_state orig_state = vb->state;
+-	unsigned int plane;
+ 	int ret;
+ 
+ 	if (q->error) {
+@@ -1345,11 +1365,7 @@ static int __buf_prepare(struct vb2_buffer *vb)
+ 		return ret;
+ 	}
+ 
+-	/* sync buffers */
+-	for (plane = 0; plane < vb->num_planes; ++plane)
+-		call_void_memop(vb, prepare, vb->planes[plane].mem_priv);
+-
+-	vb->synced = 1;
++	__vb2_buf_mem_prepare(vb);
+ 	vb->prepared = 1;
+ 	vb->state = orig_state;
+ 
+@@ -1969,14 +1985,8 @@ static void __vb2_queue_cancel(struct vb2_queue *q)
+ 				call_void_vb_qop(vb, buf_request_complete, vb);
+ 		}
+ 
+-		if (vb->synced) {
+-			unsigned int plane;
+-
+-			for (plane = 0; plane < vb->num_planes; ++plane)
+-				call_void_memop(vb, finish,
+-						vb->planes[plane].mem_priv);
+-			vb->synced = 0;
+-		}
++		if (vb->synced)
++			__vb2_buf_mem_finish(vb);
+ 
+ 		if (vb->prepared) {
+ 			call_void_vb_qop(vb, buf_finish, vb);
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
