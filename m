@@ -2,102 +2,197 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C4DC3F2DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C87D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244D722B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upJzOjhy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvXmHHsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgCBRfm (ORCPT
+        id S1727250AbgCBRhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:35:42 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39351 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgCBRfm (ORCPT
+        Mon, 2 Mar 2020 12:37:55 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45057 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgCBRhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:35:42 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n30so230588lfh.6;
-        Mon, 02 Mar 2020 09:35:40 -0800 (PST)
+        Mon, 2 Mar 2020 12:37:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f21so14529otp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:37:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+Ye8JOMYu3KUEXBI9a+PVBJSVB7KxcW9KKrC8f1zJ54=;
-        b=upJzOjhy2lmZxP8hF0aSUpHPT2GOtAEt6zE+bWnSG8tiy++hsjpnb9IQ+Ej3uAkWmz
-         oidV/ihLP2ybcvf7eDhIe1XTpIqfux/6tL/jQo7p6/8bJtUcsNhD++wV3wntbflRjpwt
-         aaIQ4fbY+AExrfOY9kpydmvdEJoLx/gpGXdzbMzoxS/A6rRCL/olqoZtCsbaF+Le6OC0
-         h4fk4tojHsMItBo+5Qny+aC2ScsYamcl6mDFlR8y1XSm36cu092AC3XfjdM3iV98Falq
-         USmRq5GznBBWLmsE3+gqMeXrY1/VQnARfM6BrGbHZBeFYyC6Qu/WLEkqo4IHnhGr8jFV
-         T0Hw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ZAKVb1y956pqysbIHLXaqWd9Ys3FR5AQaat5ayTW2U=;
+        b=tvXmHHsdwC2ZHXs+RdxnZLvNNTOIQtXQo8+c4NIG9SwSrx3X2qfM4PFM54/x5xFwJp
+         cfFlhvQc0zBKaRaTBUYJdf4weoUwAZE/jWkqSkDz7QQA2gBwflEvwBaARHqOO3jfoZWe
+         H3HzZ3d8YIZfEn42qsIaSNuiAQiMlVeuHwsGHfdJ91w4d3C9kQ6guQceh2DHy3g/ptV8
+         GD9luNMoxl/wmt0z1ZAyx7TT3Evb8ThhnGs8bzJ/crBzhPs02h3kMtaJVJfzx4+AOqh4
+         0/3m1NcszFU4y0wqzn15zw+AD7m87pgt2c5Z3r/ZdcO5TYFDuZe7cntLaqgpzosYUE3y
+         +q/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+Ye8JOMYu3KUEXBI9a+PVBJSVB7KxcW9KKrC8f1zJ54=;
-        b=r9OWGW4ZNODuYeR0NwWMkM4oRdQyYlalBMXDx6jX7f8R3o5tVg7caLbCm4pCoZmmuh
-         +hYFCm/2QbQftlAZnyr4YogHJQ7UpHQPPEJYenHIERIZiopuUoiXK4QOVWrfFmm7qVSO
-         5kSq2Y7cDWkZc8/iav97QIHI/sAaZt8GKF3YSB1rZi88Sc/5j5lqF//k+Qhab65mE8yp
-         cBnGVn8IWBkGg33CfbVb10ZtYUN1v2NMpClmizzMH94/dKMf16acpSbzNGakfMlgWaVU
-         l08RGReq/rA/b8+M9MOUJCJwGZy/eg7Hc1rF4XIEByK4nAbbMq+R88WTCzq2iqzj8yvg
-         2TeQ==
-X-Gm-Message-State: ANhLgQ1Pc+MrkJs3SS09o+7ZK3l7NTv7rn5/6xwxLaQoQhsGy+GW7B4K
-        rENic2WRKyzGyzCbAtFnoQZmsCJU
-X-Google-Smtp-Source: ADFU+vvBvSsw+grH09drAKkAsqMI2RyWtkWYoGftLUpOYmEd3fzMzeIjfNxKWlIxUhVItQb3hNwH5A==
-X-Received: by 2002:a19:230d:: with SMTP id j13mr111585lfj.189.1583170539899;
-        Mon, 02 Mar 2020 09:35:39 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id u6sm1534403lff.35.2020.03.02.09.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 09:35:39 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] i2c: tegra: Make timeout error more informative
-Date:   Mon,  2 Mar 2020 20:35:12 +0300
-Message-Id: <20200302173512.2743-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ZAKVb1y956pqysbIHLXaqWd9Ys3FR5AQaat5ayTW2U=;
+        b=KunwKsiZnDFx2x0xXovqsPhhxNoUtA1g4t7dDZQve2bOitFxYWL9j1hMr6PbRF11WO
+         JahZdEjA+990War+5tr89grYcCJWHFFfIKafiCBTQSt4TvDIC0U6gGC7x5TrivuZbs8p
+         ZGQJTifXbv6l9438wAHLdB1ypfKFZCHOWEShpfzNPl2Zv9GcJxBwnNh/azIMseiS5O9U
+         pUCo54ehyv8l/fcS/zZ9+Qmtg+UVy1KjC7Is1UfDzS7gTr8mxldZiuG+m7ac4nDxcteM
+         2/KkbUCqq0mzytuy7ohz6Ub2xTg5Zu/m7z6MGGp2R/r5SUbidTEKFEB1AzLwR2/vQi1V
+         KgcQ==
+X-Gm-Message-State: ANhLgQ06vomMz2YhDD0kEyvCjHngoAgFlyQ5AgO+FCf5FsIX81IFhFr9
+        TVYE27I4r0vPQIMXMeQqfa8Q7e+QhJB0mZb74NtpPA==
+X-Google-Smtp-Source: ADFU+vtHoXXslAIJ9PskP6M3hEdJM3ncRGi/PdHfdHEyUI3a6T8IzVZn8NhUDRURCHCZlf8D86bKwYn9TcyfdRsVwhY=
+X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr256675oti.32.1583170673984;
+ Mon, 02 Mar 2020 09:37:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+ <20200301185244.zkofjus6xtgkx4s3@wittgenstein> <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
+ <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74zmfc9.fsf@x220.int.ebiederm.org> <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org> <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org> <CAG48ez0iXMD0mduKWHG6GZZoR+s2jXy776zwiRd+tFADCEiBEw@mail.gmail.com>
+ <AM6PR03MB5170BD130F15CE1909F59B55E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB5170BD130F15CE1909F59B55E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 2 Mar 2020 18:37:27 +0100
+Message-ID: <CAG48ez1jj_J3PtENWvu8piFGsik6RvuyD38ie48TYr2k1Rbf3A@mail.gmail.com>
+Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The I2C timeout error message doesn't tell us what exactly failed and some
-I2C client drivers do not clarify the error either. Adding WARN_ON_ONCE()
-results in a stacktrace being dumped into KMSG, which is very useful for
-debugging purposes.
+On Mon, Mar 2, 2020 at 6:01 PM Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
+> On 3/2/20 5:43 PM, Jann Horn wrote:
+> > On Mon, Mar 2, 2020 at 5:19 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >>
+> >> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> >>
+> >>> On 3/2/20 4:57 PM, Eric W. Biederman wrote:
+> >>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> >>>>
+> >>>>>
+> >>>>> I tried this with s/EACCESS/EACCES/.
+> >>>>>
+> >>>>> The test case in this patch is not fixed, but strace does not freeze,
+> >>>>> at least with my setup where it did freeze repeatable.
+> >>>>
+> >>>> Thanks, That is what I was aiming at.
+> >>>>
+> >>>> So we have one method we can pursue to fix this in practice.
+> >>>>
+> >>>>> That is
+> >>>>> obviously because it bypasses the cred_guard_mutex.  But all other
+> >>>>> process that access this file still freeze, and cannot be
+> >>>>> interrupted except with kill -9.
+> >>>>>
+> >>>>> However that smells like a denial of service, that this
+> >>>>> simple test case which can be executed by guest, creates a /proc/$pid/mem
+> >>>>> that freezes any process, even root, when it looks at it.
+> >>>>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
+> >>>>
+> >>>> Yes.  Your the test case in your patch a variant of the original
+> >>>> problem.
+> >>>>
+> >>>>
+> >>>> I have been staring at this trying to understand the fundamentals of the
+> >>>> original deeper problem.
+> >>>>
+> >>>> The current scope of cred_guard_mutex in exec is because being ptraced
+> >>>> causes suid exec to act differently.  So we need to know early if we are
+> >>>> ptraced.
+> >>>>
+> >>>
+> >>> It has a second use, that it prevents two threads entering execve,
+> >>> which would probably result in disaster.
+> >>
+> >> Exec can fail with an error code up until de_thread.  de_thread causes
+> >> exec to fail with the error code -EAGAIN for the second thread to get
+> >> into de_thread.
+> >>
+> >> So no.  The cred_guard_mutex is not needed for that case at all.
+> >>
+> >>>> If that case did not exist we could reduce the scope of the
+> >>>> cred_guard_mutex in exec to where your patch puts the cred_change_mutex.
+> >>>>
+> >>>> I am starting to think reworking how we deal with ptrace and exec is the
+> >>>> way to solve this problem.
+> >>
+> >>
+> >> I am 99% convinced that the fix is to move cred_guard_mutex down.
+> >
+> > "move cred_guard_mutex down" as in "take it once we've already set up
+> > the new process, past the point of no return"?
+> >
+> >> Then right after we take cred_guard_mutex do:
+> >>         if (ptraced) {
+> >>                 use_original_creds();
+> >>         }
+> >>
+> >> And call it a day.
+> >>
+> >> The details suck but I am 99% certain that would solve everyones
+> >> problems, and not be too bad to audit either.
+> >
+> > Ah, hmm, that sounds like it'll work fine at least when no LSMs are involved.
+> >
+> > SELinux normally doesn't do the execution-degrading thing, it just
+> > blocks the execution completely - see their selinux_bprm_set_creds()
+> > hook. So I think they'd still need to set some state on the task that
+> > says "we're currently in the middle of an execution where the target
+> > task will run in context X", and then check against that in the
+> > ptrace_may_access hook. Or I suppose they could just kill the task
+> > near the end of execve, although that'd be kinda ugly.
+> >
+>
+> We have current->in_execve for that, right?
+> I think when the cred_guard_mutex is taken only in the critical section,
+> then PTRACE_ATTACH could take the guard_mutex, and look at current->in_execve,
+> and just return -EAGAIN in that case, right, everybody happy :)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/i2c/busses/i2c-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index cbc2ad49043e..b2bb19e05248 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1245,7 +1245,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 
- 	tegra_i2c_mask_irq(i2c_dev, int_mask);
- 
--	if (time_left == 0) {
-+	if (WARN_ON_ONCE(time_left == 0)) {
- 		dev_err(i2c_dev->dev, "i2c transfer timed out\n");
- 		tegra_i2c_init(i2c_dev, true);
- 		return -ETIMEDOUT;
--- 
-2.25.1
-
+It's probably going to mean that things like strace will just randomly
+fail to attach to processes if they happen to be in the middle of
+execve... but I guess that works?
