@@ -2,154 +2,123 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FD1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC98C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0001122B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3CB22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="aKks50wl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Btl64gHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCBVvV (ORCPT
+        id S1727059AbgCBVvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:51:21 -0500
-Received: from mail-bn7nam10on2073.outbound.protection.outlook.com ([40.107.92.73]:50881
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726700AbgCBVvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:51:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TTLzRpNB1i3/5zvz4mJ9oErqZ1lgDat7y21oEzbPntfYkCxBVtpAW8wMIw6pjbUItpbclPoW8xjWVlecaduBUCO3rhaWuRAWMwuU3lp0q2zjCDVvYIOtHK+6I4Y2JR3g9h3RoA1CVlxf7aDxFoTvC8ewqKdUjdemwstcnjQfOpIzSxAjF+vY1kX6lghzxuo0xWoucA0zxf4PqimVvZR+BZjEkR8S9up+Z8Dl8nOO4lFlSvZZi65IuO0tER52leXrOYvoN8IzrvekgmjFnF7N81YVJ7hTWVXb+m+GY5Ebju0RYmZBVR64LBSYMSxZd7D2khzCsFMBEd9HBYodPzj6LQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gqm49iQ2f8b5JNhlyypmPgKznqUkoQ8PeMoIK2kXNy0=;
- b=MVkirSrFuc5jgqqCRv63Cax7+I6tK+n8bGpIVZ/sy5IHSiSv3jzdzktUmx11piHSNFECcFo5G84tliWdQeL095Rb22DSSyWcGCXXkLBJkVymGfXPRDsYbPbflhkn3/DUiVEZu14mU+zB/5MElJY7Fta8staIHDzoL3QMQoyxfltJ/6UKBMEMUhLgyROBQeRQ22/QDlzk+kIlsyuubJQCzOu3ZiuOwkVMc6AxtPQ4kwJ+0btLhNiwo6aoEreOvtLUSlUUuXaPg4kJbvTGlKtw5a9jDcabvwjAYYymRH7UBXk8Ci0A3kEEp+lkXY3SAmkO5U4USdWWacIW8zsVOA3LIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 2 Mar 2020 16:51:23 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39281 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgCBVvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:51:20 -0500
+Received: by mail-pf1-f193.google.com with SMTP id l7so362167pff.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gqm49iQ2f8b5JNhlyypmPgKznqUkoQ8PeMoIK2kXNy0=;
- b=aKks50wlII2dhklK6Roj0gcmz7VquefHnUHPeaV40vjDmmRgRoyMk9Izzu9WQoBw/Yh/otjSGqC4xF17Wec255XCy3etmKgUwBdO4RHZmX3T+Bo8yAZfeTxK1NPIoVoPW5CTvTBk57oF1DunXI3ssH2UYrfWuFf8fs0P8pyqXc0=
-Received: from MN2PR20CA0020.namprd20.prod.outlook.com (2603:10b6:208:e8::33)
- by DM6PR02MB5340.namprd02.prod.outlook.com (2603:10b6:5:46::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Mon, 2 Mar
- 2020 21:51:05 +0000
-Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:e8:cafe::86) by MN2PR20CA0020.outlook.office365.com
- (2603:10b6:208:e8::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend
- Transport; Mon, 2 Mar 2020 21:51:04 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2772.15
- via Frontend Transport; Mon, 2 Mar 2020 21:51:04 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8sxr-00022Z-Vu; Mon, 02 Mar 2020 13:51:03 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8sxm-0005jv-Se; Mon, 02 Mar 2020 13:50:58 -0800
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 022LopGL018613;
-        Mon, 2 Mar 2020 13:50:51 -0800
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8sxf-0005fm-NP; Mon, 02 Mar 2020 13:50:51 -0800
-From:   Jolly Shah <jolly.shah@xilinx.com>
-To:     olof@lixom.net, mturquette@baylibre.com, sboyd@kernel.org,
-        michal.simek@xilinx.com, arm@kernel.org, linux-clk@vger.kernel.org
-Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v2 3/4] drivers: clk: zynqmp: Fix invalid clock name queries
-Date:   Mon,  2 Mar 2020 13:50:42 -0800
-Message-Id: <1583185843-20707-4-git-send-email-jolly.shah@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583185843-20707-1-git-send-email-jolly.shah@xilinx.com>
-References: <1583185843-20707-1-git-send-email-jolly.shah@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(199004)(189003)(107886003)(316002)(478600001)(2616005)(336012)(8936002)(8676002)(81156014)(81166006)(44832011)(36756003)(9786002)(426003)(2906002)(186003)(26005)(6666004)(54906003)(70586007)(5660300002)(4326008)(7696005)(356004)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5340;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A14QEnluAfy61zPlyOAgKgUKJNYdcdSbcWS256De/Mg=;
+        b=Btl64gHCqFESo8nzkD/TMtxRWNCqZzrgYn6cwLdnuYB9TEEF7ir6cyZWBScRS44MWv
+         TqFMv6lRCB7Mr39FnCTNoC+kxmXGcgFA5Tz6d64AOb5+4tVWJQ79oPnC9H56lGREje9f
+         MaS+L9jfToyMU1snIAbPtXgt+O6zUA3X6LQltJ2L+A1BUtrNEwD7gx1mkMhfAqM2ASUB
+         Phg4lSUI5S/a7fRw61fSdgk5Fiwxkxf1XZJCoL2B7c4vXZAvJ6asxaT1yif77FlTTAiv
+         UK1A+dkkNbxmM+5+uRgC1TnNbaKXbq8GP90rQ1iIfmduAOdgA12H27iqUIXb3GoJ5xLw
+         tUhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A14QEnluAfy61zPlyOAgKgUKJNYdcdSbcWS256De/Mg=;
+        b=HyzQGIL+QjZM7uzsaUKzZQSCmgjocXOM0bKbNAEitnrQj73lcOBN+x/qN6e/gCXq5c
+         SpT/WdYutoVIortf4xXiwadfbqFzFw2Ys1d6QnzsDt9UJDR2lsaoiTYBWbjcox507T2z
+         PMKs1LtbXgKbNMW4Q2EEn3TnVW+cBE0w+avdeROzBaFJ4N38d2cb5dR11P2hZRTJSh0b
+         Vc3xq+h0hsu+iVXcJt3DVnyL3rSMbMEocrl5PVEmNoko10PtURnuOPXXc8IpqCskS+6R
+         mxiTSOkxYKtPA+OqueWqc/USOdRt7CWgYR3+fTM738andXMkEPDYaZpdm25ejXzk+YuO
+         rOnA==
+X-Gm-Message-State: ANhLgQ3C+SGXRHvAgyNngTBUg332YThhl8wdClBHIarrBuntt1zaDx/B
+        lxxiQmKBVKi+yG08y2YY3VYfGEDsg+QFAUhIS217Lg==
+X-Google-Smtp-Source: ADFU+vsFiOsjnufNSWTYa5s4zkSsIXKEXTdX92uVw2XZoiuJmVru8rWfMLLCbtJLYVcGqCWGnrQZTfKtxW3jnd4ik6M=
+X-Received: by 2002:a63:4d6:: with SMTP id 205mr916704pge.10.1583185878849;
+ Mon, 02 Mar 2020 13:51:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3c7d54bd-edb9-478b-637c-08d7bef3ce90
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5340:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB53407F4545114F0D29CE233DB8E70@DM6PR02MB5340.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
-X-Forefront-PRVS: 033054F29A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E0WrAVdh41JsP0iULhWJkTQMqwRu/kj10/+t0Znh+qwxWT0NuVak5YOaYHajLQ9EG6i3weXIRm8pquLuOFpIT6ojRStl7/TwLuba9vnnRVtaaTXnAM/o0mhD9nbl15Z4meGyldl4dN6GKxJgL77Xympt0zXWu4hNYNL1OlcYeBW44AsqN3trHLpWQi5V/Ut4TGJRK/BFDiHGUeas+JMzRqcbyunPnR96OdqnVPUyEd0a3bQE60LVGaQFhAdfWLADy7XNlWdnDR9kp2QOpYjbeVan81jwo2cKdPgpPN4EVdw+NVwXDGjEtrtFtmeHawioYE8/VqHEhsw48Z8cp3Ge8EUnXQpanGQ4xTImuW7eOTyuF3zsk+rm+AhtMxymWIzR8M3hciqJEgQt/eY/OAvF4NynFXZYgH9tHL/fYo1aPB3Dh6rCVpc4vBatLz66zdql
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 21:51:04.5862
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c7d54bd-edb9-478b-637c-08d7bef3ce90
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5340
+References: <20200302213402.9650-1-natechancellor@gmail.com>
+In-Reply-To: <20200302213402.9650-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 2 Mar 2020 13:51:07 -0800
+Message-ID: <CAKwvOdn8SgY-C1YRGOcCnTn84MHHGirkDHPfg=mCONmUV_wqSQ@mail.gmail.com>
+Subject: Re: [PATCH] coresight: cti: Remove unnecessary NULL check in cti_sig_type_name
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+On Mon, Mar 2, 2020 at 1:34 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> drivers/hwtracing/coresight/coresight-cti-sysfs.c:948:11: warning:
+> address of array 'grp->sig_types' will always evaluate to 'true'
+> [-Wpointer-bool-conversion]
+>         if (grp->sig_types) {
+>         ~~  ~~~~~^~~~~~~~~
+> 1 warning generated.
+>
+> sig_types is at the end of a struct so it cannot be NULL.
+>
+> Fixes: 85b6684eab65 ("coresight: cti: Add connection information to sysfs")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/914
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-The clock driver makes EEMI call to get the name of invalid clk
-when executing versal_get_clock_info() function. This results in
-error messages.
-Added check for validating clock before saving clock attribute and
-calling zynqmp_pm_clock_get_name() in versal_get_clock_info() function.
+Yep, GCC and Clang both eliminate the false case as impossible:
+https://godbolt.org/z/tjbDqR
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
----
- drivers/clk/zynqmp/clkc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> ---
+>  drivers/hwtracing/coresight/coresight-cti-sysfs.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index abb7f492c2cb..214d6552b494 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -945,10 +945,8 @@ cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
+>         int idx = 0;
+>         struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
+>
+> -       if (grp->sig_types) {
+> -               if (used_count < grp->nr_sigs)
+> -                       idx = grp->sig_types[used_count];
+> -       }
+> +       if (used_count < grp->nr_sigs)
+> +               idx = grp->sig_types[used_count];
+>         return sig_type_names[idx];
+>  }
+>
+> --
 
-diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
-index 4dd8413..ff2d229 100644
---- a/drivers/clk/zynqmp/clkc.c
-+++ b/drivers/clk/zynqmp/clkc.c
-@@ -667,6 +667,11 @@ static void zynqmp_get_clock_info(void)
- 			continue;
- 
- 		clock[i].valid = FIELD_GET(CLK_ATTR_VALID, attr.attr[0]);
-+		/* skip query for Invalid clock */
-+		ret = zynqmp_is_valid_clock(i);
-+		if (ret != CLK_ATTR_VALID)
-+			continue;
-+
- 		clock[i].type = FIELD_GET(CLK_ATTR_TYPE, attr.attr[0]) ?
- 			CLK_TYPE_EXTERNAL : CLK_TYPE_OUTPUT;
- 
+
 -- 
-2.7.4
-
+Thanks,
+~Nick Desaulniers
