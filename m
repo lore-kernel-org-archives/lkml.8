@@ -2,158 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30428C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A56BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002002465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9AD217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8tjR1Bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCBQTq (ORCPT
+        id S1727308AbgCBQUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:19:46 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:33604 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgCBQTq (ORCPT
+        Mon, 2 Mar 2020 11:20:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44530 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726661AbgCBQUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:19:46 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j8nnD-0001jz-MG; Mon, 02 Mar 2020 09:19:43 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j8nnC-0000UA-Vb; Mon, 02 Mar 2020 09:19:43 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
-        <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
-        <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
-        <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74zmfc9.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87k142lpfz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 02 Mar 2020 10:17:32 -0600
-In-Reply-To: <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 2 Mar 2020 16:02:46 +0000")
-Message-ID: <875zfmloir.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 2 Mar 2020 11:20:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583166018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dy2VYWwVWhSvzuqB6gToR7pJSPiAWRfT7pUZn4SEGOw=;
+        b=d8tjR1BqFfdPiwtqFkescCL3KPqDlrOTV81uLA63qcSU/lB+AkmyaPNRJvXIJjMr4vOdZl
+        6Gno1c3VcOIaTxgp04uhGqvBIY6OmlIxss9j2jaVey3HyL54kJcvbU/plqMnE45wnK5gD6
+        WffpSiFBt4ihnVZynyPijNiVA6hxo5M=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-mJTb85PRM8SVgcXVQ_gvUQ-1; Mon, 02 Mar 2020 11:20:16 -0500
+X-MC-Unique: mJTb85PRM8SVgcXVQ_gvUQ-1
+Received: by mail-wr1-f72.google.com with SMTP id c6so5979327wrm.18
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:20:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dy2VYWwVWhSvzuqB6gToR7pJSPiAWRfT7pUZn4SEGOw=;
+        b=NOdP8bkitOw6ig4YTrUHvvW0ov8ncugY4vmscEDqzrTCCHslxSuDhYgmTs/sRa1DMW
+         FvHvYsls5wuc0yhe/pFLyuwA10w59LW3Nn+a7cJwF/hqDXJ1n02kxDMhq5FM/rr+SK8h
+         fzuBBy5KC6NztoIS+mkuoT87Wld4xlxp+cWOa3OpzzBkiFh5Bew2aBwSahUD2ENAA7Ev
+         od+azrasSkxkvrI6kuo4j1CwpW22BCjVtVnm3H39tbiqnFqz6v0gDGa5uGa/LQkpGrh8
+         cI3wWXJ398Hk4lEYYGibTBcTWoIl6gGNy/N7Xf9cCHIducOKil/RRebSePSbwFQ4EA80
+         EL5A==
+X-Gm-Message-State: ANhLgQ03JaXNbmnW+0k54lTVkdVDfI2KfSKTMYrWRqL+WCsHjjmTEe9z
+        U6e3x1lFdcdeJEu4aNAnnMiZO99OoTd6gNDoblT9WgoNzdHSu+TZKb3v1HslMy1kO4jnnXsLDkU
+        wLgX0wGmkMw0u8ABbbCPbeySD
+X-Received: by 2002:adf:e74a:: with SMTP id c10mr341818wrn.113.1583166014975;
+        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsFba2ap/3M2C8V1ZLS9AbnIszACse8Qml7+E+3tl18MRaCrS1ooNkZd4X3DTQzJig9UjS+Jw==
+X-Received: by 2002:adf:e74a:: with SMTP id c10mr341803wrn.113.1583166014808;
+        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.85.6])
+        by smtp.gmail.com with ESMTPSA id z14sm29021610wru.31.2020.03.02.08.20.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 08:20:14 -0800 (PST)
+Subject: Re: [PATCH 0/2] KVM: x86/mmu: Fast CR3 switch improvements
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200228225240.8646-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d930b38e-4306-4b1c-3bf9-20d1384b6788@redhat.com>
+Date:   Mon, 2 Mar 2020 17:20:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j8nnC-0000UA-Vb;;;mid=<875zfmloir.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/rDgyLYZJLEvddAZC2RnTuV8ERN149vpA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20200228225240.8646-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+On 28/02/20 23:52, Sean Christopherson wrote:
+> Two improvements for fast CR3 switch, implemented with nested VMX in mind,
+> but they should be helpful in general.
+> 
+> Sean Christopherson (2):
+>   KVM: x86/mmu: Ignore guest CR3 on fast root switch for direct MMU
+>   KVM: x86/mmu: Reuse the current root if possible for fast switch
+> 
+>  arch/x86/kvm/mmu/mmu.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
 
-> On 3/2/20 4:57 PM, Eric W. Biederman wrote:
->> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->> 
->>>
->>> I tried this with s/EACCESS/EACCES/.
->>>
->>> The test case in this patch is not fixed, but strace does not freeze,
->>> at least with my setup where it did freeze repeatable.
->> 
->> Thanks, That is what I was aiming at.
->> 
->> So we have one method we can pursue to fix this in practice.
->> 
->>> That is
->>> obviously because it bypasses the cred_guard_mutex.  But all other
->>> process that access this file still freeze, and cannot be
->>> interrupted except with kill -9.
->>>
->>> However that smells like a denial of service, that this
->>> simple test case which can be executed by guest, creates a /proc/$pid/mem
->>> that freezes any process, even root, when it looks at it.
->>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
->> 
->> Yes.  Your the test case in your patch a variant of the original
->> problem.
->> 
->> 
->> I have been staring at this trying to understand the fundamentals of the
->> original deeper problem.
->> 
->> The current scope of cred_guard_mutex in exec is because being ptraced
->> causes suid exec to act differently.  So we need to know early if we are
->> ptraced.
->> 
->
-> It has a second use, that it prevents two threads entering execve,
-> which would probably result in disaster.
+Queued, thanks.
 
-Exec can fail with an error code up until de_thread.  de_thread causes
-exec to fail with the error code -EAGAIN for the second thread to get
-into de_thread.
+Paolo
 
-So no.  The cred_guard_mutex is not needed for that case at all.
-
->> If that case did not exist we could reduce the scope of the
->> cred_guard_mutex in exec to where your patch puts the cred_change_mutex.
->> 
->> I am starting to think reworking how we deal with ptrace and exec is the
->> way to solve this problem.
-
-
-I am 99% convinced that the fix is to move cred_guard_mutex down.
-
-Then right after we take cred_guard_mutex do:
-	if (ptraced) {
-		use_original_creds();
-	}
-
-And call it a day.
-
-The details suck but I am 99% certain that would solve everyones
-problems, and not be too bad to audit either.
-
-Eric
