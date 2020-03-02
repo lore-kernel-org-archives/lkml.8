@@ -2,143 +2,139 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B6DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C3DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185892467E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B5A2187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AESyjToZ"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="y88UAVSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgCBNmo (ORCPT
+        id S1727939AbgCBNnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:42:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35697 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbgCBNmn (ORCPT
+        Mon, 2 Mar 2020 08:43:42 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33561 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgCBNnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:42:43 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m3so10715310wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:42:42 -0800 (PST)
+        Mon, 2 Mar 2020 08:43:41 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c62so11834654edf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:43:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sEpI61AXMhQk+/7FRgpCLnFcPQkSVnPoQZAeagfx6ys=;
-        b=AESyjToZUu4gv4B5N5XvM77kWp2ZhYaLupK1ZQJqpDx4a4CCjQfu/jqxbyZAX/RgKt
-         rYQHo/iO0XliI8SeLLw3tT6z3Mh1it69mfikc6+UmS0YCtoKcSqLZMo/Osucieugl/8n
-         MyFOeQ4DcnzLhvGSNWspHvMPwQONVKJ0AhRa0/bQVIYl2a4Sj+7L8bebkpjnNbn1LYBD
-         MQKGyRhLgYcohdC3/RNrycprC8HfMM6SPGBRNTwa3aa8XRyb/Vg1vLboeXf+5GLeRrpR
-         nJmWy1v3Nb8eyg+Biq4C037c+98DZdXBKNfjROLHRNb2Rgb9ZEWYXUJbrt7TGyxmLW9k
-         ZJmA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s6wHBP0VVsRK6PiQUs79yDBoMlD7zs+yQopGmLDQDrQ=;
+        b=y88UAVSCD0J+Txl5FpeGa/Z3e+iWNt9Zho2Iwu4hJA8faGpM9ebosIA/VlY63Xh4/G
+         mP7pWiA/W9FRdsqoElBYg1G9Gfa7MgkhrXhfHPumX6mjUXyxb1Fk8tZs8RRW0+jvMRJh
+         LaMlsozrF0FJrelLTQQ0utYve4/SSh8FfQoPmg8vVG6/VEjQ+kxUEBk0BZPyl/Mur/Ic
+         7lLR8xknEqddnEUuPXepX1DYOyMydy5Wu97WdU8sX2IiwSqOmCCrS33DeXrG/dlMW6Sh
+         eEXnFc4y9No16kG9Rn3Do/qH28ZOzrGGU1w/bgk0GdeFNWnnOZuqD0NUD7DiN6T4swIT
+         apBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sEpI61AXMhQk+/7FRgpCLnFcPQkSVnPoQZAeagfx6ys=;
-        b=Ns5jt1W+Yp09qY6AzdmyLdpUN+GI89kEPH/4FATQWRENHEOoJ5aFHfNxLvXXvXFw4q
-         8wl/uzS5NK+3g0vbkJ5oRyYlmwhny46KN2KEbWSDeHopCoGGld1YMQhPzo+zyIFEo2Db
-         d1yvuX3p+FlSPrM/4abC9aqaRrml5Bv5RVdClu1A00caobuYYErUyqHN97/vY1HzGLEj
-         BVAxU3Cj8GjNtjf9OgujxZL1hcRd8VgHZCTbnP6oRYyt9e03HCXrziM3yqXbJt+fjIbe
-         m8Rtb3fyfBYWcIkJ+lfJABxmPaKp2FJBrDg/3lrT26zOSLsi7wtSb+jOrck1syuSuazy
-         fTkw==
-X-Gm-Message-State: APjAAAWoXeIOW9oVt+Kuq0bzmmp0QBo14/v15t3bqGT0bUUvDoRZHl3g
-        7P+MWyHUehxDvYYcghkJXiI=
-X-Google-Smtp-Source: APXvYqxpj6QHHeJQgvkTZb7OrMvzHfNPEFpnzqAPc4r2kDX4obZp3lH0Q5h1vucsMBWn7C9J4QpJlw==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr19477104wmd.23.1583156561969;
-        Mon, 02 Mar 2020 05:42:41 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id z16sm27524843wrp.33.2020.03.02.05.42.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Mar 2020 05:42:41 -0800 (PST)
-Date:   Mon, 2 Mar 2020 13:42:40 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/swapfile: fix data races in try_to_unuse()
-Message-ID: <20200302134240.6i32e4qmgvqiztz2@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <1582578903-29294-1-git-send-email-cai@lca.pw>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s6wHBP0VVsRK6PiQUs79yDBoMlD7zs+yQopGmLDQDrQ=;
+        b=OeCgqnOPLcM2+syY5pU//UQghUmheaOp1NSGxnaxsJ0XRmp7/dtPqXJJG1/vKiJpRi
+         mv9F9fRebx3fGdEKO5KsrUdq5QcDuj08GJR0MA3mtXXKBHKjzvYyNdRQCjDcM8X8SthX
+         iEZN7IRT9bKSZB8RJE29/rXk5slWyxAqVDUYT+1ez/JMo3mT+db/0YAG4kAOTG5M6eFC
+         3HyIxWy35cBpPrcAKqKcSqv69OCUrHm1gBFZ+XYcHgW40TuclPM3op9hCbb3eElQNxP6
+         Ha5fEtilqmKRtetTSRp+h8mTjytgabYFZvMeEjZnhV2JsXdPbMekAigglqUlMk8iQnBa
+         i1mQ==
+X-Gm-Message-State: APjAAAWA7hFbJAV2XwQuIb3KSUFdjKvwg5gEEDnpuehmSva0A1SpKqTh
+        ZPsIpCXZVzZVSjhFAENhf5Trzj3+JG70Ee+SousF
+X-Google-Smtp-Source: APXvYqxo7EV7IJM9uJ5Z/Mg+v7MU65Kbb8K1dYVa+2g+mNBd9JKJTgiAz1HafS2Mvw4T/BYButk5U2vqpe+jX9zAnM0=
+X-Received: by 2002:a50:e108:: with SMTP id h8mr15496661edl.196.1583156619539;
+ Mon, 02 Mar 2020 05:43:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582578903-29294-1-git-send-email-cai@lca.pw>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <0000000000003cbb40059f4e0346@google.com> <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
+ <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
+ <CAHC9VhQnbdJprbdTa_XcgUJaiwhzbnGMWJqHczU54UMk0AFCtw@mail.gmail.com>
+ <CACT4Y+azQXLcPqtJG9zbj8hxqw4jE3dcwUj5T06bdL3uMaZk+Q@mail.gmail.com>
+ <CAHC9VhRRDJzyene2_40nhnxRV_ufgyaU=RrFxYGsnxR4Z_AWWw@mail.gmail.com>
+ <55b362f2-9e6b-2121-ad1f-61d34517520b@i-love.sakura.ne.jp>
+ <CAHC9VhT51-xezOmy1SM4eP_jFH9A8Tc05wY=cwDg7oC=FgYbYQ@mail.gmail.com> <CACT4Y+YgoyBCoPYxXOb8oQjXYc+Q-cZLPi6y1Yrx_mnfzOQafQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+YgoyBCoPYxXOb8oQjXYc+Q-cZLPi6y1Yrx_mnfzOQafQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 2 Mar 2020 08:43:28 -0500
+Message-ID: <CAHC9VhTsKCJf8bjOT+cxWZEX1y4c57KcVz0Y2c3vRGnJJQA4pA@mail.gmail.com>
+Subject: Re: kernel panic: audit: backlog limit exceeded
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 04:15:03PM -0500, Qian Cai wrote:
->si->inuse_pages could be accessed concurrently as noticed by KCSAN,
+On Mon, Mar 2, 2020 at 3:47 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> On Fri, Feb 28, 2020 at 2:09 PM Paul Moore <paul@paul-moore.com> wrote:
+> > On Fri, Feb 28, 2020 at 5:03 AM Tetsuo Handa
+> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> > > On 2020/02/28 9:14, Paul Moore wrote:
+> > > > We could consider adding a fuzz-friendly build time config which would
+> > > > disable the panic failsafe, but it probably isn't worth it at the
+> > > > moment considering the syzbot's pid namespace limitations.
+> > >
+> > > I think adding a fuzz-friendly build time config does worth. For example,
+> > > we have locations where printk() emits "BUG:" or "WARNING:" and fuzzer
+> > > misunderstands that a crash occurred. PID namespace is irrelevant.
+> > > I proposed one at
+> > > https://lkml.kernel.org/r/20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp .
+> > > I appreciate your response.
+> >
+> > To be clear, I was talking specifically about the intentional panic in
+> > audit_panic().  It is different from every other panic I've ever seen
+> > (perhaps there are others?) in that it doesn't indicate a serious
+> > error condition in the kernel, it indicates that audit records were
+> > dropped.  It seems extreme to most people, but some use cases require
+> > that the system panic rather than lose audit records.
+> >
+> > My suggestion was that we could introduce a Kconfig build flag that
+> > syzbot (and other fuzzers) could use to make the AUDIT_FAIL_PANIC case
+> > in audit_panic() less panicky.  However, as syzbot isn't currently
+> > able to test the kernel's audit code due to it's pid namespace
+> > restrictions, it doesn't make much sense to add this capability.  If
+> > syzbot removes that restriction, or when we get to the point that we
+> > support multiple audit daemons, we can revisit this.
 >
-> write to 0xffff98b00ebd04dc of 4 bytes by task 82262 on cpu 92:
->  swap_range_free+0xbe/0x230
->  swap_range_free at mm/swapfile.c:719
->  swapcache_free_entries+0x1be/0x250
->  free_swap_slot+0x1c8/0x220
->  __swap_entry_free.constprop.19+0xa3/0xb0
->  free_swap_and_cache+0x53/0xa0
->  unmap_page_range+0x7e0/0x1ce0
->  unmap_single_vma+0xcd/0x170
->  unmap_vmas+0x18b/0x220
->  exit_mmap+0xee/0x220
->  mmput+0xe7/0x240
->  do_exit+0x598/0xfd0
->  do_group_exit+0x8b/0x180
->  get_signal+0x293/0x13d0
->  do_signal+0x37/0x5d0
->  prepare_exit_to_usermode+0x1b7/0x2c0
->  ret_from_intr+0x32/0x42
+> Yes, we need some story for both panic and pid ns.
 >
-> read to 0xffff98b00ebd04dc of 4 bytes by task 82499 on cpu 46:
->  try_to_unuse+0x86b/0xc80
->  try_to_unuse at mm/swapfile.c:2185
->  __x64_sys_swapoff+0x372/0xd40
->  do_syscall_64+0x91/0xb05
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> We also use a separate net ns, but allow fuzzer to create some sockets
+> in the init net ns to overcome similar limitations. This is done using
+> a pseudo-syscall hack:
+> https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/executor/common_linux.h#L1546-L1562
 >
->The plain reads in try_to_unuse() are outside si->lock critical section
->which result in data races that could be dangerous to be used in a loop.
->Fix them by adding READ_ONCE().
+> But the pid ns is different and looks a bit harder as we need it
+> during send of netlink messages.
 >
->Signed-off-by: Qian Cai <cai@lca.pw>
->---
-> mm/swapfile.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
+> As a strawman proposal: the comment there says "for now":
 >
->diff --git a/mm/swapfile.c b/mm/swapfile.c
->index a65622eec66f..36fd1536a83d 100644
->--- a/mm/swapfile.c
->+++ b/mm/swapfile.c
->@@ -2137,7 +2137,7 @@ int try_to_unuse(unsigned int type, bool frontswap,
-> 	swp_entry_t entry;
-> 	unsigned int i;
-> 
->-	if (!si->inuse_pages)
->+	if (!READ_ONCE(si->inuse_pages))
-> 		return 0;
-> 
-> 	if (!frontswap)
->@@ -2153,7 +2153,7 @@ int try_to_unuse(unsigned int type, bool frontswap,
-> 
-> 	spin_lock(&mmlist_lock);
-> 	p = &init_mm.mmlist;
->-	while (si->inuse_pages &&
->+	while (READ_ONCE(si->inuse_pages) &&
+> /* Only support auditd and auditctl in initial pid namespace
+>  * for now. */
+> if (task_active_pid_ns(current) != &init_pid_ns)
+>   return -EPERM;
+>
+> What does that mean? Is it a kind of TODO? I mean if removing that
+> limitation is useful for other reasons, then maybe we could kill 2
+> birds with 1 stone.
 
-The change is not wrong. But since it is not protected by the lock, some
-status in swap_info_struct could still be modified after we test this
-inuse_pages is not zero. Would this be some problem?
-
+Long story made short - the audit subsystem doesn't handle namespaces
+or containers as well as it should.  Work is ongoing to add the
+necessary support, but it isn't there yet and I don't want us to just
+start removing restrictions until we have the proper support in place
+(this what I alluded to with my "... when we get to the point that we
+support multiple audit daemons, we can revisit this").
 
 -- 
-Wei Yang
-Help you, Help me
+paul moore
+www.paul-moore.com
