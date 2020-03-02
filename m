@@ -2,52 +2,156 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC3DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5608CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258A4217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDCF217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Lf+4WcS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCBPir (ORCPT
+        id S1727181AbgCBPlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:38:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:34160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbgCBPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:38:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC6732F;
-        Mon,  2 Mar 2020 07:38:46 -0800 (PST)
-Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E5EE3F534;
-        Mon,  2 Mar 2020 07:38:46 -0800 (PST)
-Subject: Re: [PATCH v2] drm: panfrost: Silence warnings during deferred probe
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <CGME20200228094033eucas1p2fa2f6cea3b882e758992d97da2fc50ed@eucas1p2.samsung.com>
- <20200228094026.26983-1-m.szyprowski@samsung.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <8a4249f4-77cd-d46c-5390-4b821873831d@arm.com>
-Date:   Mon, 2 Mar 2020 15:38:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 10:41:37 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46689 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:41:36 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154135euoutp02d9dc09a49136584b30c0c03dd598fab6~4hv4vlrJm1227412274euoutp027
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:41:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200302154135euoutp02d9dc09a49136584b30c0c03dd598fab6~4hv4vlrJm1227412274euoutp027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583163695;
+        bh=jBbmLTZcLgWnjwFk3OQEwQVbU45SnDTQVTfDSXIqN2s=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=Lf+4WcS/gGRIzZr//M5YbJ+OqGZ8SbYlqwB6zkr+tehezdViZN6+Gsg/qA4jvhN0d
+         W4zE4lKCHB31rt0rf9LqqJY6XS1uMdutEiKbx/9rRScewqAV3RFySU0xmjkpcdmVgD
+         xPdcetkquD42FT5pNYPTmHx1gLWZ+UTWbQg1/B4E=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200302154135eucas1p190a193cd9f6399d4090af5d34727b54e~4hv4fxdTl1688116881eucas1p1R;
+        Mon,  2 Mar 2020 15:41:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id E0.7D.61286.E292D5E5; Mon,  2
+        Mar 2020 15:41:34 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200302154134eucas1p2f331781cba9fca808cc50129f35e05f2~4hv4NDfFJ0750207502eucas1p2R;
+        Mon,  2 Mar 2020 15:41:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200302154134eusmtrp175cc8a4f1eec147388cb523b9e4bedea~4hv4MarJ72837828378eusmtrp1y;
+        Mon,  2 Mar 2020 15:41:34 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-47-5e5d292e3e8a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BA.DF.07950.E292D5E5; Mon,  2
+        Mar 2020 15:41:34 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200302154133eusmtip10621c2aca79c59c92381b24dda41de6e~4hv3YoBPT2417824178eusmtip1d;
+        Mon,  2 Mar 2020 15:41:33 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH -next] video: fbdev: pxa168fb: remove unnecessary
+ platform_get_irq
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     arnd@arndb.de, daniel.vetter@ffwll.ch,
+        christophe.jaillet@wanadoo.fr, jani.nikula@intel.com,
+        hslester96@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <a5c01548-9d80-f586-7d74-bd80458446ce@samsung.com>
+Date:   Mon, 2 Mar 2020 16:41:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200228094026.26983-1-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200117032241.59148-1-yuehaibing@huawei.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjlt3vvdidO76bip5XGSMUiTTK5ZUhCf9yKwggjCrWltym5KZta
+        Bpag1JgWPgmnWSo4M1/4zEdpak4T7Ikr0zIV8zUsbVGGkttV8r/zfeec7/wO/EhM0kO4kjHK
+        BFallMVK+TZ4c9+fob2+3mHh+5pIejWnT0A3Pb9P0CVfxzD6vXmRTxd2z2J0x+g8ovvvfifo
+        d21FfHrU/A0/ImT+ruQg5umvhzjTqhsTMOm9JoIp65jlMV8yDDxmud6NWR6rJULI8zaHo9jY
+        mCRW5Rt00Sb6VXseEZ8mvDZ1ZxFPRdUCLSJJoPzBWOGuRTakhKpAYNb/FnDDTwSTP3p43LCM
+        oKSzDNMiodVhyu7ic4QeQXvXKMYNJgTD+o/IouJThyD7dqUVO1DnoLexH7dgR8oT0l82Wg0Y
+        ZURQVqEhLISICoLp6XKrCKd2Qd2LZ9a907p5abxnQyOGgYIpq0ZIBUJh4zjPgjHKGUamHmxg
+        d2gxFVkDgBoWQG3aCsY1PQpDCw5cBQeYMzQKOLwdBnMzcU5fg2BVM7NhbkGgz13jc6pAGB1a
+        4VsOYZQ31Lb5cutg+LQ0ibj7dvDBJObeYAc5zfc2YkWguSXh1J5QV17H34zVtj7CspBUt6WZ
+        bksb3ZY2uv+5DxFeiZzZRLVCzqr9lOxVH7VMoU5Uyn0i4xT1aP1rDa4Zlp4g89tL3YgikdRW
+        FIKFhUsIWZI6WdGNgMSkjqKTwgvhElGULPk6q4qLUCXGsuputI3Epc6i/aWzYRJKLktgr7Bs
+        PKvaZHmk0DUV5WTkOVS/8RibGd9j6g850JOizez0qpFhI32lGQMBDYrjHv75N8yVAUaNMto4
+        31Fs/zo264TLgj0v4ky+V7Dcq+Py1M4U2zaDpqD88TGxkYqsmqhvYFLsTsc5TSR17nALrZ+7
+        6QbM59KD+iyX6sJZH23CYq9KfJZYKHavCj2VKsXV0TK/3ZhKLfsHcYv1C1YDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xu7p6mrFxBt8Pq1r8nXSM3WLrwbms
+        Fgsf3mW2uPL1PZvF7EMvmS323HnNaHGi7wOrxeVdc9gs7nx9zuLA6fH71yRGj73fFrB47Jx1
+        l92j5chbVo/Fe14yedzvPs7k8XmTnMfnu+tZAzii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSM
+        TCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DLO757CWtDMWfGk9z1LA+Na9i5GTg4JAROJtxMP
+        sHUxcnEICSxllDh6ZitrFyMHUEJG4vj6MogaYYk/17qgal4zSvxedYIVJMEmYCUxsX0VI4gt
+        LBAhcWTLCRYQW0RATaLl1BZmkAZmgeuMEpP+74Hq7mOU+PR3MRNIFa+AncSzZ8vAOlgEVCQ2
+        HN0HNlUUaNLhHbMYIWoEJU7OfAJWwylgLTF7ywOwXmYBdYk/8y4xQ9jiEreezIeKy0tsfzuH
+        eQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgZG67djPLTsY
+        u94FH2IU4GBU4uH9wRAbJ8SaWFZcmXuIUYKDWUmE15czOk6INyWxsiq1KD++qDQntfgQoynQ
+        cxOZpUST84FJJK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2Ms
+        f/qCS8WtyksFReeGNF0LaWefXc99MVy0RP5Vs+06Qc7GaRWpjvICRhYbivacTrBwCnknOzXs
+        2bQp2i4R85dOlLjgeDNyY51syEUnj8wVlru4r0cfmRbZ2X591dUF09VCo4W+hb+SmfBtyo33
+        rm9rjzIkPT7VdaIv+XJpcVah1L5Cc/+/u5VYijMSDbWYi4oTAVKfM4zqAgAA
+X-CMS-MailID: 20200302154134eucas1p2f331781cba9fca808cc50129f35e05f2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200117032301eucas1p29817dfa06b4140d9e30634cf0052a5dd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200117032301eucas1p29817dfa06b4140d9e30634cf0052a5dd
+References: <CGME20200117032301eucas1p29817dfa06b4140d9e30634cf0052a5dd@eucas1p2.samsung.com>
+        <20200117032241.59148-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2020 09:40, Marek Szyprowski wrote:
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+On 1/17/20 4:22 AM, YueHaibing wrote:
+> commit 640ba2444fa9 ("drivers/video/pxa168fb.c: use devm_ functions")
+> left behind this, it can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Patch queued for v5.7, thanks.
+ 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> ---
+>  drivers/video/fbdev/pxa168fb.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+> index 706c6943..aef8a30 100644
+> --- a/drivers/video/fbdev/pxa168fb.c
+> +++ b/drivers/video/fbdev/pxa168fb.c
+> @@ -779,7 +779,6 @@ static int pxa168fb_remove(struct platform_device *pdev)
+>  {
+>  	struct pxa168fb_info *fbi = platform_get_drvdata(pdev);
+>  	struct fb_info *info;
+> -	int irq;
+>  	unsigned int data;
+>  
+>  	if (!fbi)
+> @@ -799,8 +798,6 @@ static int pxa168fb_remove(struct platform_device *pdev)
+>  	if (info->cmap.len)
+>  		fb_dealloc_cmap(&info->cmap);
+>  
+> -	irq = platform_get_irq(pdev, 0);
+> -
+>  	dma_free_wc(fbi->dev, info->fix.smem_len,
+>  		    info->screen_base, info->fix.smem_start);
+>  
+
