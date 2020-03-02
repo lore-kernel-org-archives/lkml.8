@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4565C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A36C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA03C217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BADF217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgCBX5y (ORCPT
+        id S1727686AbgCBX5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25521 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 18:57:50 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25519 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbgCBX5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:31 -0500
+        id S1727498AbgCBX5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384752"
+   d="scan'208";a="243384734"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 43/66] KVM: x86: Use KVM cpu caps to mark CR4.LA57 as not-reserved
-Date:   Mon,  2 Mar 2020 15:56:46 -0800
-Message-Id: <20200302235709.27467-44-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 37/66] KVM: x86: Refactor handling of XSAVES CPUID adjustment
+Date:   Mon,  2 Mar 2020 15:56:40 -0800
+Message-Id: <20200302235709.27467-38-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,58 +49,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add accessor(s) for KVM cpu caps and use said accessor to detect
-hardware support for LA57 instead of manually querying CPUID.
-
-Note, the explicit conversion to bool via '!!' in kvm_cpu_cap_has() is
-technically unnecessary, but it gives people a warm fuzzy feeling.
+Invert the handling of XSAVES, i.e. set it based on boot_cpu_has() by
+default, in preparation for adding KVM cpu caps, which will generate the
+mask at load time before ->xsaves_supported() is ready.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.h | 13 +++++++++++++
- arch/x86/kvm/x86.c   |  2 +-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kvm/cpuid.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index b5155b8b4897..68c31d76e045 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -273,6 +273,19 @@ static __always_inline void kvm_cpu_cap_set(unsigned int x86_feature)
- 	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
- }
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index aacfd6af774a..c2e70cd0dbf1 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -422,7 +422,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	unsigned f_gbpages = 0;
+ 	unsigned f_lm = 0;
+ #endif
+-	unsigned f_xsaves = kvm_x86_ops->xsaves_supported() ? F(XSAVES) : 0;
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
  
-+static __always_inline u32 kvm_cpu_cap_get(unsigned int x86_feature)
-+{
-+	unsigned int x86_leaf = x86_feature / 32;
-+
-+	reverse_cpuid_check(x86_leaf);
-+	return kvm_cpu_caps[x86_leaf] & __feature_bit(x86_feature);
-+}
-+
-+static __always_inline bool kvm_cpu_cap_has(unsigned int x86_feature)
-+{
-+	return !!kvm_cpu_cap_get(x86_feature);
-+}
-+
- static __always_inline void kvm_cpu_cap_check_and_set(unsigned int x86_feature)
- {
- 	if (boot_cpu_has(x86_feature))
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b032fd144073..400d65125e91 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -910,7 +910,7 @@ static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
- {
- 	u64 reserved_bits = __cr4_reserved_bits(cpu_has, c);
+ 	/* cpuid 1.edx */
+@@ -479,7 +478,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
  
--	if (cpuid_ecx(0x7) & feature_bit(LA57))
-+	if (kvm_cpu_cap_has(X86_FEATURE_LA57))
- 		reserved_bits &= ~X86_CR4_LA57;
+ 	/* cpuid 0xD.1.eax */
+ 	const u32 kvm_cpuid_D_1_eax_x86_features =
+-		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | f_xsaves;
++		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES);
  
- 	if (kvm_x86_ops->umip_emulated())
+ 	/* all calls to cpuid_count() should be made on the same cpu */
+ 	get_cpu();
+@@ -610,6 +609,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 
+ 		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
+ 		cpuid_entry_mask(entry, CPUID_D_1_EAX);
++
++		if (!kvm_x86_ops->xsaves_supported())
++			cpuid_entry_clear(entry, X86_FEATURE_XSAVES);
++
+ 		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
+ 			entry->ebx = xstate_required_size(supported_xcr0, true);
+ 		else
 -- 
 2.24.1
 
