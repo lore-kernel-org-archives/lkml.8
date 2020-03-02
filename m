@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ECCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054D2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F61217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C991B2187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enXtbT3e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAB4d29/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgCBMye (ORCPT
+        id S1727984AbgCBMyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:54:34 -0500
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:43628 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbgCBMyd (ORCPT
+        Mon, 2 Mar 2020 07:54:38 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35394 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgCBMyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:54:33 -0500
-Received: by mail-pf1-f173.google.com with SMTP id s1so5529015pfh.10;
-        Mon, 02 Mar 2020 04:54:32 -0800 (PST)
+        Mon, 2 Mar 2020 07:54:37 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 7so5404573pgr.2;
+        Mon, 02 Mar 2020 04:54:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uMxGOYQ+JxxN+O1T925iEJ5h0tLf69vjSjHFydFp+AE=;
-        b=enXtbT3e+ROcThYr6oVqVBI/HVigs5WOu1/ul3YLMfB3mIdmxS1CxpT7IEA7njxp23
-         TQuVb6j2tl5NF7O61Rs268ipaiymB86PQAOD9213Ot1w4PoF/bJY7KeBtsJ6TQTqK1Ol
-         oCYlRxZJvMwX241uJ+6vAew3YJwZnlGpOQGFoyLXO1s0MsuX9zoxRGk2wO+s5nY50G8q
-         lgTMAAhwJBXR89m0STTfq+JAab1TZ1iVb5sX6GBWwMH53KDsoO/GgcuCaE4+jIVpg0wd
-         5ZF6YyLqpQByc10K8yK0MoA88WsgWn9KlHUPhIHxgqAhXK3EeC4Ksvovmhg3C2E69aIs
-         DP2w==
+        bh=HEh7CqSCXgWfailCBb8Rs+qB5N+bl/4veud+2lfhJ3c=;
+        b=kAB4d29/ko/klMw//ZuCCDjxlWJmKBj6aYjBLaaWpXUGa2HrPYNP995nR9WGuqSzEH
+         fluQ71pG7wsJkuGZvSsfu9JFGjGYfuE2cE151OiwrNC8PZl9x7XioTn+VbgU4RWQ6Ufw
+         GgU3QbFS+76CeEIMQMe0lV0COD1vE8CdUdiRrVXjRz3FrXNwnmW8+QUQN8L4Lafo/5fJ
+         BWFDW81BAltxPyU7ZV8VjT9u6VvUnvAjS5i2hgMj2ydh4iKsv9v1Vlqq5jEN1vpvIg0Y
+         QdIRXqAXYtyUBZ0QuRW7az7jsrlAdBclNrfA1UDgOlJbuZRMexRIy58eiuYpgu1KVA7m
+         xv/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uMxGOYQ+JxxN+O1T925iEJ5h0tLf69vjSjHFydFp+AE=;
-        b=uQh67voi36WQMb0MOW9bCtVKgIVsd40kOnSqgEr86IW5IicpBGe5uNNMXXy0DgzNSc
-         vAq/IGb+Kn+afL/eREVTQwJWoNJ3+wIf55wZwNgjKzBwnhKHSXAJ9og5ur85bW+w6WeP
-         MMkvahSjolASW3oQ8feuWLtXajh6jb2KUZ9AY+JM5M5HMvGjJZ3cHcAfpEwj6Iok7ZK7
-         fKOWr2KVw163Fni+5pLhyjn4q9HKzkc7tFo+unNJnxwh9hl6+3w+nUamrqrF77X7IOvA
-         yOeVcJWH3Ez41wY4D8QqGzJbbIkWIjxZxbiaxaV2cMfGv00ljLeJgosftrkG/JQ8I5tf
-         z8EA==
-X-Gm-Message-State: ANhLgQ2N1flupMB3Ha9btYxgq/pWtdla/zdWpDbh48KOm918DiPBdg+/
-        AZIq265pYF/hmMRkB4VhXdk=
-X-Google-Smtp-Source: ADFU+vv8UO5DZUj4Cm2KLq9PeaLrwLT/JEJcifzctp/QmapoHpejSvulRH8fj/9l9BGFUuZfvFAWJg==
-X-Received: by 2002:a63:ce4f:: with SMTP id r15mr6183820pgi.400.1583153671525;
-        Mon, 02 Mar 2020 04:54:31 -0800 (PST)
+        bh=HEh7CqSCXgWfailCBb8Rs+qB5N+bl/4veud+2lfhJ3c=;
+        b=dXv9KOnIxOcWCKz7Gd8sUyldUQGxv9VgaZMePu6gf08O+oPScLPsiji1qtOzim/Kpl
+         FQXr43HpOpkE6t7BT9mFG13M6JUNiHSt2Ce9aIrnpT4wFNTLogRJjM6hQ3317AItqyfO
+         XmwfPCmwixtkK6Hi4/Ntpe3auGx8m4EH73HKYqXGZpOF27vy+R7urty/3v3MioZmU1de
+         KrZnTO6ybvSUVt+x0XaX+hJkLMR+vuoX3JD0aYvwoUBpE+h9s8VR49l8WGafW/KTX7Iv
+         VRruhFTXvl3EzQb70EraJePLe6iU8jJnwi+tTsbtX/Y68RTNln34z9PTasEQvXXMH8mx
+         chrQ==
+X-Gm-Message-State: APjAAAUCvUiXgFaT97Hk2rlEtoIwmizrnaUkqydDXLQjgaZvYSyIU7g9
+        FVqyIWY6r7oGtKaXX/YzIFI=
+X-Google-Smtp-Source: APXvYqzvXVSEfr6bpf3GIPRYKUv7jKl6r8NlwZCenHEBeS4uW+3WkXAE27vkYrNhhLNvUn6R77Ka4w==
+X-Received: by 2002:aa7:8299:: with SMTP id s25mr17299604pfm.261.1583153675622;
+        Mon, 02 Mar 2020 04:54:35 -0800 (PST)
 Received: from localhost.localdomain ([103.51.74.208])
-        by smtp.gmail.com with ESMTPSA id p2sm2138238pfb.41.2020.03.02.04.54.27
+        by smtp.gmail.com with ESMTPSA id p2sm2138238pfb.41.2020.03.02.04.54.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 04:54:31 -0800 (PST)
+        Mon, 02 Mar 2020 04:54:35 -0800 (PST)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -69,9 +69,9 @@ Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCHv2 1/2] arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator to FLASH_VDD
-Date:   Mon,  2 Mar 2020 12:53:08 +0000
-Message-Id: <20200302125310.742-2-linux.amoon@gmail.com>
+Subject: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
+Date:   Mon,  2 Mar 2020 12:53:09 +0000
+Message-Id: <20200302125310.742-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200302125310.742-1-linux.amoon@gmail.com>
 References: <20200302125310.742-1-linux.amoon@gmail.com>
@@ -82,34 +82,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
-regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
+On Odroid n2, cpub_clk is not geting enable, which lead the stalling
+at booting of the device, updating flags to CLK_IS_CRITICAL which help
+enable all the parent for cpub_clk.
 
-Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+Fixes: ffae8475b90c (clk: meson: g12a: add notifiers to handle cpu clock change);
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-Previous changes:
-	drop the logs comments as they were not usefull.
----
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
- 1 file changed, 1 insertion(+)
+Previous changes
+	fix the commit $subject and $message as previously I was
+        wrong on the my findings.
+        Added the Fixed tags to the commit.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 0e54c1dc2842..fe5680411c07 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -54,6 +54,7 @@ tflash_vdd: regulator-tflash_vdd {
- 		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 		regulator-always-on;
-+		vin-supply = <&vddao_3v3>;
- 	};
+Following Neil's suggestion, I have prepared this patch.
+https://patchwork.kernel.org/patch/11177441/#22964889
+---
+ drivers/clk/meson/g12a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index d2760a021301..7237d08b4112 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -681,7 +681,7 @@ static struct clk_regmap g12b_cpub_clk = {
+ 			&g12a_sys_pll.hw
+ 		},
+ 		.num_parents = 2,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+ 	},
+ };
  
- 	tf_io: gpio-regulator-tf_io {
 -- 
 2.25.1
 
