@@ -2,82 +2,174 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126A5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8240C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82C0214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYkFLO6y"
+	by mail.kernel.org (Postfix) with ESMTP id 8EFFE214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583159262;
+	bh=bwldCJFhtgQ0re9versBSIOVc4YnNXHNL/us8dW9rR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uUzRkC+h2rWrW2XjU+m7LI3IEtSjvJjb/Da7XDthrCVbi7/iI7oxztgL25ZeVSGW4
+	 IBbWePWfm5Y2RzbINzZnwTKwv9BHvz80OemSetpUyV2RGB10hBgd6VPG0iAd4ohU/O
+	 MxINvcYsIdo80seEAK6ZozklzchRxh7I11qPv3tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCBO11 (ORCPT
+        id S1727291AbgCBO1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:27:27 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33524 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727075AbgCBO11 (ORCPT
+        Mon, 2 Mar 2020 09:27:41 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35685 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgCBO1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:27:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583159246;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3+UBgX7eoIkK/t5w+2bDxE2KMKopb4wrJcspZOaATZ0=;
-        b=FYkFLO6yOEtrELHtwzPZxfN051bsIKYVIo8f6FXEQLbSPwt9XE/Of51g0xfuK7YFNX9QMb
-        ucUSwXsh7qNJKb0cnqFNsrOEksUO4p0ujTCZMW9W5kAJ7Wt/MabQCZo3QszaTV7kgdUTsr
-        WsjY+ehtuo/wmO9BRg+tERE5kGOXpP4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-_RitG97wNkGAfE8aopeJaA-1; Mon, 02 Mar 2020 09:27:12 -0500
-X-MC-Unique: _RitG97wNkGAfE8aopeJaA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDC02107ACCC;
-        Mon,  2 Mar 2020 14:27:10 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D890C5D9C9;
-        Mon,  2 Mar 2020 14:27:08 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200302115239.pcxvej3szmricxzu@wittgenstein>
-References: <20200302115239.pcxvej3szmricxzu@wittgenstein> <96563.1582901612@warthog.procyon.org.uk> <20200228152427.rv3crd7akwdhta2r@wittgenstein> <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     dhowells@redhat.com, Florian Weimer <fweimer@redhat.com>,
-        linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
-        metze@samba.org, torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+        Mon, 2 Mar 2020 09:27:41 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m3so10859557wmi.0;
+        Mon, 02 Mar 2020 06:27:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wTQwmZBRvHVWlOUwzt39lRwPZP1PXvP9AI5qWhdX6Ho=;
+        b=lLViyt6ws2rVSQMulUT7Rfa1FZFjt8+5nMdc+4CsyhJ/OXLPhJNd5E83cUo2hLJSzv
+         cbKXLUjn8TfFQdKwX8z2Vs9sX4oit7HUVugFY/CnCYboMZvzRR64F+V0Jucd9SUCotNb
+         SiX16geHmZQe1NgY+x+xGdiWwO7dcTMzdGiHGJxLKaAOKKn165ai7cZxCq09PNuoI+YJ
+         QUEqNT04CV9wCGEbgoI+LHQYMFYYfPacXCJy8nB1XhGZRRU9qlWpdECwZtgOaH0m6jNN
+         QnaU252nqM1tRusiWizMVYXZp4E3Vu9WpQqr2Q06aleEu1NRbZxLjHe0uX/pOFOCO8lz
+         r1QQ==
+X-Gm-Message-State: APjAAAW+ri+Nvb558E+IGOYbajfs79kNDhAezDThccJSXi7bdDZkLUZP
+        BDFYytGzrxqo+Ttd9IfXWdw=
+X-Google-Smtp-Source: APXvYqwd+CHYryhKK2gAxaRfzTEgpelHGrh9Fbdww7O5/Nv7QJcXytR5reYcK2kbmxXWpKlqYuNkmw==
+X-Received: by 2002:a1c:6884:: with SMTP id d126mr19396061wmc.38.1583159259142;
+        Mon, 02 Mar 2020 06:27:39 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id v16sm10493929wrp.84.2020.03.02.06.27.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 06:27:38 -0800 (PST)
+Date:   Mon, 2 Mar 2020 15:27:37 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v1 08/11] mm/memory_hotplug: Introduce
+ offline_and_remove_memory()
+Message-ID: <20200302142737.GP4380@dhcp22.suse.cz>
+References: <20200302134941.315212-1-david@redhat.com>
+ <20200302134941.315212-9-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <848281.1583159228.1@warthog.procyon.org.uk>
-Date:   Mon, 02 Mar 2020 14:27:08 +0000
-Message-ID: <848282.1583159228@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302134941.315212-9-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> wrote:
-
-> > AT_SYMLINK_NOFOLLOW only applies to the last pathname component anyway,
-> > so it's relatively little protection.
+On Mon 02-03-20 14:49:38, David Hildenbrand wrote:
+> virtio-mem wants to offline and remove a memory block once it unplugged
+> all subblocks (e.g., using alloc_contig_range()). Let's provide
+> an interface to do that from a driver. virtio-mem already supports to
+> offline partially unplugged memory blocks. Offlining a fully unplugged
+> memory block will not require to migrate any pages. All unplugged
+> subblocks are PageOffline() and have a reference count of 0 - so
+> offlining code will simply skip them.
 > 
-> So this is partially why I think it's at least worth considerings: the
-> new RESOLVE_NO_SYMLINKS flag does block all symlink resolution, not just
-> for the last component in contrast to AT_SYMLINK_NOFOLLOW. This is
-> 278121417a72d87fb29dd8c48801f80821e8f75a
+> All we need is an interface to offline and remove the memory from kernel
+> module context, where we don't have access to the memory block devices
+> (esp. find_memory_block() and device_offline()) and the device hotplug
+> lock.
+> 
+> To keep things simple, allow to only work on a single memory block.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-That sounds like a potentially significant UAPI change.  What will that break?
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-David
+> ---
+>  include/linux/memory_hotplug.h |  1 +
+>  mm/memory_hotplug.c            | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f4d59155f3d4..a98aa16dbfa1 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -311,6 +311,7 @@ extern void try_offline_node(int nid);
+>  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+>  extern int remove_memory(int nid, u64 start, u64 size);
+>  extern void __remove_memory(int nid, u64 start, u64 size);
+> +extern int offline_and_remove_memory(int nid, u64 start, u64 size);
+>  
+>  #else
+>  static inline bool is_mem_section_removable(unsigned long pfn,
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ab1c31e67fd1..d0d337918a15 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1818,4 +1818,41 @@ int remove_memory(int nid, u64 start, u64 size)
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(remove_memory);
+> +
+> +/*
+> + * Try to offline and remove a memory block. Might take a long time to
+> + * finish in case memory is still in use. Primarily useful for memory devices
+> + * that logically unplugged all memory (so it's no longer in use) and want to
+> + * offline + remove the memory block.
+> + */
+> +int offline_and_remove_memory(int nid, u64 start, u64 size)
+> +{
+> +	struct memory_block *mem;
+> +	int rc = -EINVAL;
+> +
+> +	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
+> +	    size != memory_block_size_bytes())
+> +		return rc;
+> +
+> +	lock_device_hotplug();
+> +	mem = find_memory_block(__pfn_to_section(PFN_DOWN(start)));
+> +	if (mem)
+> +		rc = device_offline(&mem->dev);
+> +	/* Ignore if the device is already offline. */
+> +	if (rc > 0)
+> +		rc = 0;
+> +
+> +	/*
+> +	 * In case we succeeded to offline the memory block, remove it.
+> +	 * This cannot fail as it cannot get onlined in the meantime.
+> +	 */
+> +	if (!rc) {
+> +		rc = try_remove_memory(nid, start, size);
+> +		WARN_ON_ONCE(rc);
+> +	}
+> +	unlock_device_hotplug();
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(offline_and_remove_memory);
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+> -- 
+> 2.24.1
+> 
 
+-- 
+Michal Hocko
+SUSE Labs
