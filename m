@@ -2,119 +2,121 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1843C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C1DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C1E208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7174E208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIC8CzGu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WOFD+1Nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgCBWnB (ORCPT
+        id S1726969AbgCBWpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:43:01 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43648 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgCBWnB (ORCPT
+        Mon, 2 Mar 2020 17:45:34 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44320 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgCBWpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:43:01 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j5so1013949otn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 14:43:00 -0800 (PST)
+        Mon, 2 Mar 2020 17:45:34 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y5so412041pfb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 14:45:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VKkYrMHc3NgZY6dbFAxdV/unADRxNvh4mhPtiaguI7A=;
-        b=XIC8CzGuyPBHte2kKanC/RDwY5VvcDxMFGRUM3q2+jBbOW2li3dBerBSC11xv+DH9e
-         GaeGJz5+Yi3CFcQKM6fJTlQVDJLWvA35qyKbAs989RGnw1qVBS1wwggMGwSakNTsJnxK
-         u/Fdg+4TI7KlyqZERL4iiw2haAvtgnFFLGTct4PqKkg95i4WmVULc9aMsm8hNxmW7NC4
-         8A7Pt0CofzA5/KWr+6FKzyaIZQ6RBb89Eih1mBTHMrpdNE3CFclukXnFxiuz8Tpj25l9
-         KUex2dMzeDDGf4GWRSLcYFJylM1Chg/72lLAsMOQynwsHVdrMZd6WL1VdY4PBtF8MdPY
-         LbzA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to;
+        bh=GFD8ViXColObn8FM0PtoZqKUGLmCPza4UuJiavcTlUk=;
+        b=WOFD+1Nf4ROrRkdcS2D5Dsei0yXLkev6qnAqaLDLHleCetNWzzamUGvlzp/253O8jh
+         3r03SkffB+wUd+5cZAcVQv7IP2C7/s6hLTVHBBxDMhIH9Zl/ntMVEcd/f6KslWykbsLn
+         tCMHnOUaFbey1oPEdx6KV21wnn0J36dc3JzMI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VKkYrMHc3NgZY6dbFAxdV/unADRxNvh4mhPtiaguI7A=;
-        b=PLKu5RKFV4PrZ1BibJL50JqKMfyziMZkjOZ2rL17q4ltCLJtiInu+tlS7yCYtEHnNz
-         aDoTsIhRk7QDrBhADfKg1hEZyQyZCA3C7UDrDT4pcKbPjnJMskL34uVJm9uCKx9hIDAW
-         +NVLKI5Ptz3Mzlru7kU7CtowOkBhDl/T6wfjMbPOEA3nx9Fu8YSaBHe1k6POp1XHU/07
-         ZLSOLxJ45BPtZ7wCbc9O8d6tq5hN6a1yZkHe/bPK1ps/3dHsNXsA1Kk3VoDaE9j1VvNQ
-         yZDM8sUjfbaK2OG+U/pRJ0XHmdojd+H7UTNnEyoJb0Nh57stnoexlwl8POvEotlgjYAk
-         XpjQ==
-X-Gm-Message-State: ANhLgQ24M4Nx4p3UTYSbE+3JFpL89ExjHOyt2tTxRKGDZ8Ys2Jq4t3lF
-        fbF9mzdo/EiC/NyRmOvdR7c=
-X-Google-Smtp-Source: ADFU+vty9MCY56f8nz95gUPIYIdOBnALry7IQ1WdGNOz6pwfhseTHVUiUMvHy5m82PlJErnpCTe2Hg==
-X-Received: by 2002:a9d:21b4:: with SMTP id s49mr1078062otb.294.1583188980093;
-        Mon, 02 Mar 2020 14:43:00 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id z23sm2746739otm.79.2020.03.02.14.42.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to;
+        bh=GFD8ViXColObn8FM0PtoZqKUGLmCPza4UuJiavcTlUk=;
+        b=hls8ssDy2OFcwP8xHkocq/qrTrTlQ+It/c+X2y5EdZiXQApjzdnkkoB22x1lOpK7Ax
+         atFm47BL1AFv3Ele50M5SX5s5mC7d/O046vHfAhMOUurC+vEDUPNGeyxf3E/EIGGadA5
+         furidDya+YwtEL+1p9e/9iNVvyfOXEC2ADcaxaUX/rfNvwKO5uZ2oHuMAQ1D+20+XJkj
+         TZY4u9iHfDfhroBsA7paqLq+BWhHiPER70RzWxalj+ralewC2PO/SHydYxnqMofmJcxV
+         e3cIi3yGYomv5zLVGrAB07WC2hu17ixJ0bGPXdwdFPIFoAoiYHWf/LQKgLPo8MXgFXnV
+         dmdg==
+X-Gm-Message-State: ANhLgQ3WKHXxRMgRd/hMg/F7sYMYR10MBHkZctr47gou8tzt57OVmym4
+        SUP82Ze00lXxA/O2nSIO8/TY3w==
+X-Google-Smtp-Source: ADFU+vu7n6pQF0dWmSqvn0KXxGvBVGm4fqd9FgIsTrDfyQROBoSJtdUzEcRBWZnkK1aK2uDhIh2uwA==
+X-Received: by 2002:a63:4555:: with SMTP id u21mr1106380pgk.66.1583189132864;
+        Mon, 02 Mar 2020 14:45:32 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a10sm21559754pgk.71.2020.03.02.14.45.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 14:42:59 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/amd/display: Remove pointless NULL checks in dmub_psr_copy_settings
-Date:   Mon,  2 Mar 2020 15:42:17 -0700
-Message-Id: <20200302224217.22590-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 02 Mar 2020 14:45:31 -0800 (PST)
+Date:   Mon, 2 Mar 2020 14:45:30 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        skhan@linuxfoundation.org, alan.maguire@oracle.com,
+        yzaikin@google.com, davidgow@google.com, akpm@linux-foundation.org,
+        rppt@linux.ibm.com, gregkh@linuxfoundation.org, sboyd@kernel.org,
+        logang@deltatee.com, mcgrof@kernel.org,
+        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] init: main: add KUnit to kernel init
+Message-ID: <202003021439.A6B6FD8@keescook>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228012036.15682-5-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On 2/27/20 7:20 PM, Brendan Higgins wrote:
+> Remove KUnit from init calls entirely, instead call directly from
+> kernel_init().
+> 
+> Co-developed-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> [...]
+> diff --git a/init/main.c b/init/main.c
+> index ee4947af823f3..7875a5c486dc4 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -104,6 +104,8 @@
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/initcall.h>
+>  
+> +#include <kunit/test.h>
+> +
+>  static int kernel_init(void *);
+>  
+>  extern void init_IRQ(void);
+> @@ -1444,6 +1446,8 @@ static noinline void __init kernel_init_freeable(void)
+>  
+>  	do_basic_setup();
+>  
+> +	kunit_run_all_tests();
+> +
+>  	console_on_rootfs();
+>  
+>  	/*
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:31: warning:
-address of 'pipe_ctx->plane_res' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
-                         ~ ~~~~~~~~~~^~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:56: warning:
-address of 'pipe_ctx->stream_res' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
-                                                  ~ ~~~~~~~~~~^~~~~~~~~~
-2 warnings generated.
+I'm nervous about this happening before two key pieces of the kernel
+setup, which might lead to weird timing-sensitive bugs or false
+positives:
+	async_synchronize_full()
+	mark_readonly()
 
-As long as pipe_ctx is not NULL, the address of members in this struct
-cannot be NULL, which means these checks will always evaluate to false.
+Now, I realize kunit tests _should_ be self-contained, but this seems
+like a possible robustness problem. Is there any reason this can't be
+moved after rcu_end_inkernel_boot() in kernel_init() instead?
 
-Fixes: 4c1a1335dfe0 ("drm/amd/display: Driverside changes to support PSR in DMCUB")
-Link: https://github.com/ClangBuiltLinux/linux/issues/915
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-index 2c932c29f1f9..a9e1c01e9d9b 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-@@ -144,7 +144,7 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
- 		}
- 	}
- 
--	if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
-+	if (!pipe_ctx)
- 		return false;
- 
- 	// First, set the psr version
 -- 
-2.25.1
-
+Kees Cook
