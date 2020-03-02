@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3101FC3F2E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC85C3F2DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07EF8246C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073A2246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137103;
-	bh=GvP4vju05kdmGtfnW2lQXLeHqLhoRjSRhWQZFPyQmYk=;
+	s=default; t=1583137101;
+	bh=VSYlwxOgcKmsJPmO9XgVB01Y5bYH9oETiiWJbAEWE84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWly2DB9c31Dnc9RzlZR4iGy+ncf608MgEHO9dKb6f0dfhOGL7ip80js2GOIqhHNj
-	 RHS9guZj36GbySvP5T4taQV8oT3Yqs8wuRa1MtqpSZrf/LQVKM2swP6nwy9jBWtszI
-	 6m2LWtZW9iJssnff5SUDY9TVbxDlAvywsNr8O91U=
+	b=HBHa4FF8nxpimx0j7BI4mXZjMQ46+Gysp/JStQSS4Yq6i7XP6Po7/vpT1QFyKtoXJ
+	 VGgBHOzRw93pewCaixpPfG20iY8IafgVDZrCgjUpW8tpwAJNwSW8xKtEhi+1XlOQVy
+	 nnmGPg9+wX5TjpnrpsT9/DoC9ySE2RtrKPLvmR/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgCBISW (ORCPT
+        id S1727799AbgCBIST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:18:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57210 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 03:18:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727190AbgCBIQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 03:16:21 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7DE246E6;
+        by mail.kernel.org (Postfix) with ESMTPSA id 58489246DF;
         Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583136979;
-        bh=GvP4vju05kdmGtfnW2lQXLeHqLhoRjSRhWQZFPyQmYk=;
+        bh=VSYlwxOgcKmsJPmO9XgVB01Y5bYH9oETiiWJbAEWE84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZN5X21zTEIKDTB/Y9m+GsTynkhbbdJlzCYIekaDakbOwT+y28iFIkUAeJvZwCRu1
-         zhrvOQ1QXXNiXrpo0VgbqNIU7NNPsBtkCmlhmwgASD9SpxuVUzcJ5rgODrXjoW1hcJ
-         OlnPXLS1qdhPmRgM1woOYoXpf5bdlv8bEJ5Q8DzI=
+        b=JTaAzv8GDPNJB9SZmyvkuXFZp6FGwMbRh9WqXyiH4E0IDZ+9bZGG5c2i4hLdrV1K7
+         IHZglUKa4yJNEJZsXbrtei6xps1TWy6UkIRbGqZL+DOeSwJufLF4o9IJ2rF3zFgJ8P
+         CGDL6Ug7jHKYRFYBSa5RnG3EFa3l578T2trEhrg0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8gFN-0003yI-JF; Mon, 02 Mar 2020 09:16:17 +0100
+        id 1j8gFN-0003xa-BB; Mon, 02 Mar 2020 09:16:17 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH 22/42] docs: scsi: convert megaraid.txt to ReST
-Date:   Mon,  2 Mar 2020 09:15:55 +0100
-Message-Id: <b7ee59230c5a33ff6d60edba0d0bcf3e2aeaa88f.1583136624.git.mchehab+huawei@kernel.org>
+        Oliver Neukum <oliver@neukum.org>,
+        Ali Akcaagac <aliakc@web.de>,
+        Jamie Lenehan <lenehan@twibble.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        dc395x@twibble.org, linux-scsi@vger.kernel.org
+Subject: [PATCH 13/42] docs: scsi: convert dc395x.txt to ReST
+Date:   Mon,  2 Mar 2020 09:15:46 +0100
+Message-Id: <3c0876df0045695185f922a0404c497a69de36a9.1583136624.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
 References: <cover.1583136624.git.mchehab+huawei@kernel.org>
@@ -65,115 +67,185 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
+ Documentation/scsi/{dc395x.txt => dc395x.rst} | 75 +++++++++++--------
  Documentation/scsi/index.rst                  |  1 +
- .../scsi/{megaraid.txt => megaraid.rst}       | 47 +++++++++++--------
  MAINTAINERS                                   |  2 +-
- 3 files changed, 29 insertions(+), 21 deletions(-)
- rename Documentation/scsi/{megaraid.txt => megaraid.rst} (66%)
+ drivers/scsi/Kconfig                          |  2 +-
+ 4 files changed, 48 insertions(+), 32 deletions(-)
+ rename Documentation/scsi/{dc395x.txt => dc395x.rst} (64%)
 
+diff --git a/Documentation/scsi/dc395x.txt b/Documentation/scsi/dc395x.rst
+similarity index 64%
+rename from Documentation/scsi/dc395x.txt
+rename to Documentation/scsi/dc395x.rst
+index 88219f96633d..d779e782b1cb 100644
+--- a/Documentation/scsi/dc395x.txt
++++ b/Documentation/scsi/dc395x.rst
+@@ -1,5 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================================
+ README file for the dc395x SCSI driver
+-==========================================
++======================================
+ 
+ Status
+ ------
+@@ -18,14 +21,14 @@ http://lists.twibble.org/mailman/listinfo/dc395x/
+ 
+ Parameters
+ ----------
+-The driver uses the settings from the EEPROM set in the SCSI BIOS 
++The driver uses the settings from the EEPROM set in the SCSI BIOS
+ setup. If there is no EEPROM, the driver uses default values.
+ Both can be overridden by command line parameters (module or kernel
+ parameters).
+ 
+ The following parameters are available:
+ 
+- - safe
++safe
+    Default: 0, Acceptable values: 0 or 1
+ 
+    If safe is set to 1 then the adapter will use conservative
+@@ -33,52 +36,63 @@ The following parameters are available:
+ 
+ 		shortcut for dc395x=7,4,9,15,2,10
+ 
+- - adapter_id
++adapter_id
+    Default: 7, Acceptable values: 0 to 15
+ 
+    Sets the host adapter SCSI ID.
+ 
+- - max_speed
++max_speed
+    Default: 1, Acceptable value: 0 to 7
+-   0 = 20   Mhz
+-   1 = 12.2 Mhz
+-   2 = 10   Mhz
+-   3 = 8    Mhz
+-   4 = 6.7  Mhz
+-   5 = 5.8  Hhz
+-   6 = 5    Mhz
+-   7 = 4    Mhz
+ 
+- - dev_mode
++   ==  ========
++   0   20   Mhz
++   1   12.2 Mhz
++   2   10   Mhz
++   3   8    Mhz
++   4   6.7  Mhz
++   5   5.8  Hhz
++   6   5    Mhz
++   7   4    Mhz
++   ==  ========
++
++dev_mode
+    Bitmap for device configuration
+ 
+    DevMode bit definition:
++
++      === ======== ========  =========================================
+       Bit Val(hex) Val(dec)  Meaning
+-      *0    0x01       1     Parity check
+-      *1    0x02       2     Synchronous Negotiation
+-      *2    0x04       4     Disconnection
+-      *3    0x08       8     Send Start command on startup. (Not used)
+-      *4    0x10      16     Tagged Command Queueing
+-      *5    0x20      32     Wide Negotiation
++      === ======== ========  =========================================
++       0    0x01       1     Parity check
++       1    0x02       2     Synchronous Negotiation
++       2    0x04       4     Disconnection
++       3    0x08       8     Send Start command on startup. (Not used)
++       4    0x10      16     Tagged Command Queueing
++       5    0x20      32     Wide Negotiation
++      === ======== ========  =========================================
+ 
+- - adapter_mode
++adapter_mode
+    Bitmap for adapter configuration
+ 
+    AdaptMode bit definition
++
++    ===== ======== ========  ====================================================
+       Bit Val(hex) Val(dec)  Meaning
+-      *0    0x01       1     Support more than two drives. (Not used)
+-      *1    0x02       2     Use DOS compatible mapping for HDs greater than 1GB.
+-      *2    0x04       4     Reset SCSI Bus on startup.
+-      *3    0x08       8     Active Negation: Improves SCSI Bus noise immunity.
++    ===== ======== ========  ====================================================
++       0    0x01       1     Support more than two drives. (Not used)
++       1    0x02       2     Use DOS compatible mapping for HDs greater than 1GB.
++       2    0x04       4     Reset SCSI Bus on startup.
++       3    0x08       8     Active Negation: Improves SCSI Bus noise immunity.
+        4    0x10      16     Immediate return on BIOS seek command. (Not used)
+     (*)5    0x20      32     Check for LUNs >= 1.
++    ===== ======== ========  ====================================================
+ 
+- - tags
++tags
+    Default: 3, Acceptable values: 0-5
+-   
++
+    The number of tags is 1<<x, if x has been specified
+ 
+- - reset_delay
++reset_delay
+    Default: 1, Acceptable values: 0-180
+ 
+    The seconds to not accept commands after a SCSI Reset
+@@ -95,8 +109,9 @@ License (GPL). Please read it, before using this driver. It should be
+ included in your kernel sources and with your distribution. It carries the
+ filename COPYING. If you don't have it, please ask me to send you one by
+ email.
+-Note: The GNU GPL says also something about warranty and liability. 
++
++Note: The GNU GPL says also something about warranty and liability.
+ Please be aware the following: While we do my best to provide a working and
+-reliable driver, there is a chance, that it will kill your valuable data. 
++reliable driver, there is a chance, that it will kill your valuable data.
+ We refuse to take any responsibility for that. The driver is provided as-is
+ and YOU USE IT AT YOUR OWN RESPONSIBILITY.
 diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index 22427511e227..37be1fc9d128 100644
+index 3809213b83da..6fe00709cbce 100644
 --- a/Documentation/scsi/index.rst
 +++ b/Documentation/scsi/index.rst
-@@ -26,5 +26,6 @@ Linux SCSI Subsystem
-    libsas
-    link_power_management_policy
-    lpfc
-+   megaraid
+@@ -17,5 +17,6 @@ Linux SCSI Subsystem
+    bnx2fc
+    BusLogic
+    cxgb3i
++   dc395x
  
     scsi_transport_srp/figures
-diff --git a/Documentation/scsi/megaraid.txt b/Documentation/scsi/megaraid.rst
-similarity index 66%
-rename from Documentation/scsi/megaraid.txt
-rename to Documentation/scsi/megaraid.rst
-index 3c7cea51e687..22b75a86ba72 100644
---- a/Documentation/scsi/megaraid.txt
-+++ b/Documentation/scsi/megaraid.rst
-@@ -1,7 +1,10 @@
--			Notes on Management Module
--			~~~~~~~~~~~~~~~~~~~~~~~~~~
-+.. SPDX-License-Identifier: GPL-2.0
- 
--Overview:
-+==========================
-+Notes on Management Module
-+==========================
-+
-+Overview
- --------
- 
- Different classes of controllers from LSI Logic accept and respond to the
-@@ -25,28 +28,32 @@ ioctl commands. But this module is envisioned to handle all user space level
- interactions. So any 'proc', 'sysfs' implementations will be localized in this
- common module.
- 
--Credits:
-+Credits
- -------
- 
--"Shared code in a third module, a "library module", is an acceptable
--solution. modprobe automatically loads dependent modules, so users
--running "modprobe driver1" or "modprobe driver2" would automatically
--load the shared library module."
-+::
- 
--		- Jeff Garzik (jgarzik@pobox.com), 02.25.2004 LKML
-+	"Shared code in a third module, a "library module", is an acceptable
-+	solution. modprobe automatically loads dependent modules, so users
-+	running "modprobe driver1" or "modprobe driver2" would automatically
-+	load the shared library module."
- 
--"As Jeff hinted, if your userspace<->driver API is consistent between
--your new MPT-based RAID controllers and your existing megaraid driver,
--then perhaps you need a single small helper module (lsiioctl or some
--better name), loaded by both mptraid and megaraid automatically, which
--handles registering the /dev/megaraid node dynamically. In this case,
--both mptraid and megaraid would register with lsiioctl for each
--adapter discovered, and lsiioctl would essentially be a switch,
--redirecting userspace tool ioctls to the appropriate driver."
-+- Jeff Garzik (jgarzik@pobox.com), 02.25.2004 LKML
- 
--		- Matt Domsch, (Matt_Domsch@dell.com), 02.25.2004 LKML
-+::
- 
--Design:
-+	"As Jeff hinted, if your userspace<->driver API is consistent between
-+	your new MPT-based RAID controllers and your existing megaraid driver,
-+	then perhaps you need a single small helper module (lsiioctl or some
-+	better name), loaded by both mptraid and megaraid automatically, which
-+	handles registering the /dev/megaraid node dynamically. In this case,
-+	both mptraid and megaraid would register with lsiioctl for each
-+	adapter discovered, and lsiioctl would essentially be a switch,
-+	redirecting userspace tool ioctls to the appropriate driver."
-+
-+- Matt Domsch, (Matt_Domsch@dell.com), 02.25.2004 LKML
-+
-+Design
- ------
- 
- The Common Management Module is implemented in megaraid_mm.[ch] files. This
-@@ -61,7 +68,7 @@ uioc_t. The management module converts the older ioctl packets from the older
- applications into uioc_t. After driver handles the uioc_t, the common module
- will convert that back into the old format before returning to applications.
- 
--As new applications evolve and replace the old ones, the old packet format 
-+As new applications evolve and replace the old ones, the old packet format
- will be retired.
- 
- Common module dedicates one uioc_t packet to each controller registered. This
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e2bd7911baa9..6d28bfc72259 100644
+index aac8ef48dc08..1e2ab816fe66 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10699,7 +10699,7 @@ L:	megaraidlinux.pdl@broadcom.com
- L:	linux-scsi@vger.kernel.org
- W:	http://www.avagotech.com/support/
+@@ -4690,7 +4690,7 @@ L:	dc395x@twibble.org
+ W:	http://twibble.org/dist/dc395x/
+ W:	http://lists.twibble.org/mailman/listinfo/dc395x/
  S:	Maintained
--F:	Documentation/scsi/megaraid.txt
-+F:	Documentation/scsi/megaraid.rst
- F:	drivers/scsi/megaraid.*
- F:	drivers/scsi/megaraid/
+-F:	Documentation/scsi/dc395x.txt
++F:	Documentation/scsi/dc395x.rst
+ F:	drivers/scsi/dc395x.*
  
+ DCCP PROTOCOL
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 5ec7330f82b6..9f5b2ddec6e0 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -1187,7 +1187,7 @@ config SCSI_DC395x
+ 	  This driver works, but is still in experimental status. So better
+ 	  have a bootable disk and a backup in case of emergency.
+ 
+-	  Documentation can be found in <file:Documentation/scsi/dc395x.txt>.
++	  Documentation can be found in <file:Documentation/scsi/dc395x.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called dc395x.
 -- 
 2.21.1
 
