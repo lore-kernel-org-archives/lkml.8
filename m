@@ -2,208 +2,120 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D8FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA56A21739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B02821739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583186459;
+	bh=JHiMmmIQWA6N3yckKGXMQMB24XH5xJvTtVmQagYi/ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NHhvJmQWQYLxM986XnUrVOZAAqsXVo8LYgB5nfKuzim+73NVjzFzTCdTsjFRw3u+F
+	 2PUzrZnoIjB9pVKP5pkr3r1DmBDWuXPcPSaskrsRaBzY+72Ua5rIqEpIRITPKp5LIm
+	 SfnTyZIZ8kbzlrzcNXmmsVfJ7AKdSyZuQu98HNh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCBWAu convert rfc822-to-8bit (ORCPT
+        id S1726925AbgCBWA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:00:50 -0500
-Received: from mail-oln040092068021.outbound.protection.outlook.com ([40.92.68.21]:26576
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgCBWAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:00:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MN/Lz8sjgk+Yeusp0kxCT8xuPQtnn803Zmy4q6PWXvpIVlSdMWp6eyt8Io6L9QLs5c7UAEvyadfgeANAxsU3U9jYMwUiJdamR6RVRCqTetHL65TDhB84asI8DAnJyoNtT0T+nviMYwIJLrG6xRRZs7SefXh2JtpS8Ke2CrGkikCF27CGkkeENSG4xFjlIGlkiryXnqcbeu9rCJsDLZNtvApDO4mjRUX66McmDAqzAtOs/EZtwFnIIi7AdIdKJ1RqqhMBjZB4zY2sf8kBSzAjcNOQoFKSmKvSzlhNdto0rZ+JzpI0B5/ntEj0H/p69bFrxAh1ktLGYd/zCM1obfvvkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8QZzhBuWiWxXmMmyJixpYHm93oCz9K5B0k3XRFu8az4=;
- b=mhxdNGDtUoMAuC6P5Ey6T9xKbUlMna62f9c8o8onBYFYr38HJbrbmZQCODAEy7UyZvjUxvOk2+GO15DDcMUzW0SW+q15eWtH8NtBU3F3m8vIZydNqHgW8In9W2BCqXSP040jlX0b1h2nQCXMIbywaFQhGUheJ9CFZqsPvYRxZFTHNbS4e0RNMub70kzTpErR5yr9XXNwgmwmsq+xSIGyzOciOf4pgKzM6MCwfda0+jhL8jZp2vcjiQHh2fpVM/eJiauP4KMDGUQ2GnUUX9rRWJqsRMMb5eBMBMbiSEf+CeJtJnvHykmYKYsYkdb3n+E2lQm8XzPHCAEhmUoB69MUMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR02FT019.eop-EUR02.prod.protection.outlook.com
- (2a01:111:e400:7e1d::39) by
- HE1EUR02HT071.eop-EUR02.prod.protection.outlook.com (2a01:111:e400:7e1d::215)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
- 2020 22:00:42 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.10.57) by
- HE1EUR02FT019.mail.protection.outlook.com (10.152.10.70) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 22:00:42 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 22:00:42 +0000
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0045.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 22:00:40 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
-Thread-Topic: [PATCHv2] exec: Fix a deadlock in ptrace
-Thread-Index: AQHV8AjGwZG4WijWc0+aQpdADP+q6qg02ufjgACXoYCAAASqH4AAAMAAgAAEyVeAAA77AIAATaqLgAACk4A=
-Date:   Mon, 2 Mar 2020 22:00:42 +0000
-Message-ID: <AM6PR03MB51709689FF4A00A7DCFB26A4E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
- <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
- <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
- <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74zmfc9.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87v9nmjulm.fsf@x220.int.ebiederm.org>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZR0P278CA0045.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1d::14) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:C79D43E4464E020949E83EE8248B4C8508FE96D0A7F0B78AC8EE1607E5579DA3;UpperCasedChecksum:45647EE3E8772478C665432775C6FBCB0C8882DDD8F9E95CCBC9F5094683F914;SizeAsReceived:9617;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [RWcdFN4HY5W3ZZLaWdS6b+6Tvl0ONnw6]
-x-microsoft-original-message-id: <392ad677-231a-73aa-12cb-5b5f17fd6c26@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: cf74b29c-8767-4e40-6260-08d7bef5269d
-x-ms-traffictypediagnostic: HE1EUR02HT071:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FuLv4NiYOQauXnhGG8Y72ga4PODLHLJcHxvySTTnF9L2PcRxvt4c8guyOgzxVK0jjUwRa7b5fLvL2D7LwzpV31zA4Ufo4aIbZrqzxrStDt62/d4VvoF9NTYTftCJBIwEVzPZ6lYJIXeuR+KqJAQ/0yeM75WBkq7A1hC6PWwCrTdd3iuN4WKCjFGeIth+W92S
-x-ms-exchange-antispam-messagedata: vuioXtDVgWXSbj3tO0Iu7GmkNOoEcNvqs5cvH31eIg5Q1cAdHtDJwFvHIrA9s2n+CzuiV7rwGZlpTKr4f2qW8NGgl02ka4gj4NIBAD9RZGD8q7x2yFP6ebcJP8ftdAVes/SPlvxuk2PTInr96kyA7A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <0275423BDC635A4DB744AD8D7291FEDA@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Mon, 2 Mar 2020 17:00:58 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41191 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCBWA6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:00:58 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so846515oie.8;
+        Mon, 02 Mar 2020 14:00:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=REUIC2AfAnGT+owqjgQK+odBaQ6CyNbOXlKApYyt3Y0=;
+        b=WskOJGRtGyKfIkUUGO6jN9fXDu62GCRIVzUSBbOLBveVIdzipt5wnpEYsB8t9J+M/h
+         UfVaV3olYvMG+8gUpsLxoQTETOzBLn/peTGGanfU2RTmpjkocSjUdpUQnbSBPkO13NNY
+         GriZg18j4IzxxDZG8fCU6ECwzcvpr7Fr/Inqers+etVBq9SUrtuoPgbu0hVE7bPt6h5l
+         r5xonn6Jh+FRUdyXiDUrYmIgpAViffyXnaMQb5GLLCFgVJizmkoxGWIWgwA8fDdMAz9s
+         D1z1j5Au8Il8+P5OOAI/cjl8aXfMHTWLelOcWCVL+rGRHuMfTX+I0IWIOExx8+lyJtpE
+         tmdw==
+X-Gm-Message-State: ANhLgQ0uWRnZ9lrI7dj9Ys3INDBRGcmv2b2XLVnsLDKO7VI+OUcizR9m
+        zC66RakLni3zLPABsvAqxg==
+X-Google-Smtp-Source: ADFU+vvazweio8K6m4k3TUYFDYIvkV5M8sfuFvTaUiCHYZwjPTfgp2PcKt8UtITcY8R71ZKIO35YoA==
+X-Received: by 2002:aca:75c1:: with SMTP id q184mr369725oic.35.1583186457287;
+        Mon, 02 Mar 2020 14:00:57 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 67sm6819519oid.30.2020.03.02.14.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 14:00:56 -0800 (PST)
+Received: (nullmailer pid 6837 invoked by uid 1000);
+        Mon, 02 Mar 2020 22:00:55 -0000
+Date:   Mon, 2 Mar 2020 16:00:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Sebastian Reichel <sre@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: battery: add new battery parameters
+Message-ID: <20200302220055.GA6779@bogus>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <a834eda9015145e978da16d89857b78669a2b9c8.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf74b29c-8767-4e40-6260-08d7bef5269d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 22:00:42.3756
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a834eda9015145e978da16d89857b78669a2b9c8.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 10:49 PM, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+On Tue, 25 Feb 2020 10:52:04 +0200, Matti Vaittinen wrote:
+> Add:
 > 
->> On 3/2/20 5:17 PM, Eric W. Biederman wrote:
->>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->>>
->>>> On 3/2/20 4:57 PM, Eric W. Biederman wrote:
->>>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->>>>>
->>>>>>
->>>>>> I tried this with s/EACCESS/EACCES/.
->>>>>>
->>>>>> The test case in this patch is not fixed, but strace does not freeze,
->>>>>> at least with my setup where it did freeze repeatable.
->>>>>
->>>>> Thanks, That is what I was aiming at.
->>>>>
->>>>> So we have one method we can pursue to fix this in practice.
->>>>>
->>>>>> That is
->>>>>> obviously because it bypasses the cred_guard_mutex.  But all other
->>>>>> process that access this file still freeze, and cannot be
->>>>>> interrupted except with kill -9.
->>>>>>
->>>>>> However that smells like a denial of service, that this
->>>>>> simple test case which can be executed by guest, creates a /proc/$pid/mem
->>>>>> that freezes any process, even root, when it looks at it.
->>>>>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
->>>>>
->>>>> Yes.  Your the test case in your patch a variant of the original
->>>>> problem.
->>>>>
->>>>>
->>>>> I have been staring at this trying to understand the fundamentals of the
->>>>> original deeper problem.
->>>>>
->>>>> The current scope of cred_guard_mutex in exec is because being ptraced
->>>>> causes suid exec to act differently.  So we need to know early if we are
->>>>> ptraced.
->>>>>
->>>>
->>>> It has a second use, that it prevents two threads entering execve,
->>>> which would probably result in disaster.
->>>
->>> Exec can fail with an error code up until de_thread.  de_thread causes
->>> exec to fail with the error code -EAGAIN for the second thread to get
->>> into de_thread.
->>>
->>> So no.  The cred_guard_mutex is not needed for that case at all.
->>>
->>
->> Okay, but that will reset current->in_execve, right?
+>  - trickle-charge-current-microamp:
 > 
-> Absolutely.
+> Some chargers have 3 charging stages. First one when battery is almost
+> empty is often called as trickle-charge. Last state when battery has been
+> "woken up" is usually called as fast-charge. In addition to this some
+> chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+> pre-charge. Some batteries can benefit from this 3-phase charging
+> [citation needed].
 > 
-> The error handling kicks in and exec_binprm fails with a negative
-> return code.  Then __do_excve_file cleans up and clears
-> current->in_execve.
+> Introduce trickle-charge-current-microamp so that batteries can give
+> charging current limit for all three states.
+> 
+>  - precharge-upper-limit-microvolt:
+> 
+> When battery voltage has reached certain limit we change from
+> trickle-charge to next charging state (pre-charge for BD99954). Allow
+> battery to specify this limit.
+> 
+>  - re-charge-voltage-microvolt:
+> 
+> Allow giving a battery specific voltage limit for chargers which can
+> automatically re-start charging when battery has discharghed down to
+> this limit.
+> 
+> - over-voltage-threshold-microvolt
+> 
+> Allow specifying voltage threshold after which the battery is assumed to
+> be faulty.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> Changes from rfc-v3:
+>   Fixed typo in commit message battry => battery
+> 
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Yes of course.  I was under the wrong impression that that value is
-a kind of global, but it is a thread local.
-
-So I think I need a new boolean see v3 of the patch, and soon v4 (with
-just one comment fixed).
-
-I'm currently executing the strace v5.5 testsuite, and every test
-is passed so far.  I'll also look at gdb testsuite, before I send the
-next version.
-
-
-Thanks
-Bernd.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
