@@ -2,144 +2,102 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1A2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D32AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48E9222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UGPu8cMV"
+	by mail.kernel.org (Postfix) with ESMTP id E2639222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583168239;
+	bh=Rl4Y+FKJZ07cu7tnpiZX3HBhxfOMhi3eofy2/idg9pI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HHpyfCxYJDgWr7t/tNrRVdMtCSuHd6AmgmvNy6/bGpOysF7/ctFWWomMI5FIhpR7D
+	 Q9z/njgNESteUM4Uvar2mO/zvA+wq+/XU1wLXO+SZURSQeONgEXKEQh5n2bE3btwO/
+	 cb6USRm66PL85mEo6jzDTvq8rLSs4Z1mVpJ5UdTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCBQ5E (ORCPT
+        id S1727456AbgCBQ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:57:04 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:45765 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgCBQ5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:57:03 -0500
-Received: by mail-ua1-f68.google.com with SMTP id q17so599274uao.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:57:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Emi3zvh0GvAdchRt2bZiLjp8wJpgJ0s1FpAc2eNaRuE=;
-        b=UGPu8cMVzp70w7nVbEKjZtx9UFRGJyMmvWuiso/t2ciYBcXV4NidYkYwQAEfBh4QWG
-         aZpMq3EIRcnl8u2+zjl2+Jd5Vn/puw82z77b8eg+Ef8uol7aujjohP/vJUQqJTHtr8t8
-         J2Cqobj7UlwAIEEZ0i7+TZWAKL9aSaTZfnM2RqogQR6Kl3eC34GfLDXAEpNrwSyaDWoN
-         XhLfOL9n0HFgkugck2+qA6dntYdYc8tSvr4vw4jpypZ0iO7FTPHKDDrvJpKHCJlGidwX
-         exP6xZDfsfoWf5f3gQmolw9asucK2URju54NMvJssO8d95gZKWjAAVjgY4puF2stuAE3
-         CkYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Emi3zvh0GvAdchRt2bZiLjp8wJpgJ0s1FpAc2eNaRuE=;
-        b=ebH4yNuEl1FBZybe0KYAZUNkD+icOom/5Ze1yzZJ7p5rxs7HOpzNF4QcM9dyxSoF7x
-         +pxUrfOs2gChzqWJ934gi4CahKYLyMgwxyTmTuVQgMlAkC2Uxk0olGJP6+ZdMcxTSZMV
-         kf0g11woA7VV37+hUt/SLWHkewr46/s07cfRNS4GReeA4u/QTulfH/G6nHDQPxBzOPOY
-         sLI8/ijc0sX2bmxqD0Qb4ME1aYfXwOhgr9RynwjN1oSAMhKsKqpgdGGdnZibfZ87ym77
-         efGggBy3fTMAboGe/CMLyFNMThvZqrUSe/cXVgA34tPyQ5+nbMu1MKlTLGvbbnnQRF2z
-         Hztw==
-X-Gm-Message-State: ANhLgQ3SLjmL6l0dKrOj84tkXV67fMurVktY7OJaUsyZiGKTZ2aT8Smh
-        99Acp40LZ1oyeDHaUPhrzaSjZqzNO+nIFWJdcViV9g==
-X-Google-Smtp-Source: ADFU+vuWmdQz60uGm7dRu6x9AM6ilHJspWpQIG6duvbA7201l798XQKtBgH7CH8EdhToZchz7burnpQ0NzpfZLNjqow=
-X-Received: by 2002:ab0:1161:: with SMTP id g33mr392064uac.32.1583168221423;
- Mon, 02 Mar 2020 08:57:01 -0800 (PST)
+        Mon, 2 Mar 2020 11:57:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbgCBQ5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:57:17 -0500
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEF0B24677
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 16:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583168237;
+        bh=Rl4Y+FKJZ07cu7tnpiZX3HBhxfOMhi3eofy2/idg9pI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IGt2LFhuNtND1KUEJ7iwPF56n9xate40cL3N5mLsXlkkLrN717o6RJR2rUtPIt/P3
+         IwYTFG+lvC6BeuLJGwsKpANo42qItGTmFd+vkGaLxtfFbjJugiLRKkJCnZIFTj7by+
+         NGd0fH6jSC/0/Ms0J/ZcOEUDMsUwn8W6sZJRyrag=
+Received: by mail-wr1-f53.google.com with SMTP id y17so620741wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 08:57:16 -0800 (PST)
+X-Gm-Message-State: ANhLgQ23zCEO/c/nc0DO9o5aULda4sm7pZFPvZrzxBBKxMkC3cnUuG4D
+        wLLgGeLgcuk2w6J5FdClEWSsTw0F3/c5X23hpc1Spw==
+X-Google-Smtp-Source: ADFU+vtI5zaph+t1b2eMlFX6QKqVThmtz4xwh5jwBYKynJ3C9dOTh2GTpL1Z8kmQuRabDYaPETt4VI8cPo2lgnSi5zQ=
+X-Received: by 2002:adf:f84a:: with SMTP id d10mr536294wrq.208.1583168235249;
+ Mon, 02 Mar 2020 08:57:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-3-glider@google.com>
-In-Reply-To: <20200302130430.201037-3-glider@google.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Mon, 2 Mar 2020 08:56:50 -0800
-Message-ID: <CAHRSSEwe=jZAEVhGw4ACBU0m-76TzZfJFv1Rzw=_UVm6HbTvAw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] sched/wait: avoid double initialization in ___wait_event()
-To:     Alexander Potapenko <glider@google.com>
-Cc:     keescook@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jann Horn <jannh@google.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200301230436.2246909-1-nivedita@alum.mit.edu>
+ <20200301230436.2246909-4-nivedita@alum.mit.edu> <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
+ <20200302165359.GA2599505@rani.riverdale.lan>
+In-Reply-To: <20200302165359.GA2599505@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 2 Mar 2020 17:57:04 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu-8HeNaRYZNtTHr1_VF1aH=BRKF4CaeyP-PPfHNQN2paA@mail.gmail.com>
+Message-ID: <CAKv+Gu-8HeNaRYZNtTHr1_VF1aH=BRKF4CaeyP-PPfHNQN2paA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] efi/x86: Make efi32_pe_entry more readable
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 5:04 AM <glider@google.com> wrote:
+On Mon, 2 Mar 2020 at 17:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> With CONFIG_INIT_STACK_ALL enabled, the local __wq_entry is initialized
-> twice. Because Clang is currently unable to optimize the automatic
-> initialization away (init_wait_entry() is defined in another translation
-> unit), remove it with the __no_initialize annotation.
+> On Mon, Mar 02, 2020 at 08:49:17AM +0100, Ard Biesheuvel wrote:
+> > On Mon, 2 Mar 2020 at 00:04, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> ...
+> > >         call    1f
+> > > -1:     pop     %ebp
+> > > -       subl    $1b, %ebp
+> > > +1:     pop     %ebx
+> > > +       subl    $1b, %ebx
+> ...
+> > >
+> > > +       movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
+> >
+> > The code that follows efi32_pe_stub_entry still expects the runtime
+> > displacement in %ebp, so we'll need to pass that in another way here.
+> >
+> > >         jmp     efi32_pe_stub_entry
 >
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Alexander Potapenko <glider@google.com>
+> Didn't follow -- what do you mean by runtime displacement?
 >
-> ---
->  v2:
->   - changed __do_not_initialize to __no_initialize as requested by Kees
->     Cook
-> ---
->  drivers/android/binder.c | 4 ++--
->  include/linux/wait.h     | 3 ++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index a59871532ff6b..66984e7c33094 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -4827,7 +4827,7 @@ static int binder_ioctl_write_read(struct file *filp,
->         struct binder_proc *proc = filp->private_data;
->         unsigned int size = _IOC_SIZE(cmd);
->         void __user *ubuf = (void __user *)arg;
-> -       struct binder_write_read bwr __no_initialize;
-> +       struct binder_write_read bwr;
+> efi32_pe_stub_entry expects the runtime address of startup_32 to be in
+> %ebp, but with the changes for keeping the frame pointer in %ebp, I
+> changed the runtime address to be in %ebx instead. Hence I added that
+> movl %ebx, %ebp to put it in %ebp just before calling efi32_pe_stub_entry.
+> That should be fine, no?
 
-How did __no_initialize get set so that it can be removed here? Should
-the addition of __no_initilize be removed earlier in the series (tip
-doesn't have the __no_initialize).
+But how does that work with:
 
->
->         if (size != sizeof(struct binder_write_read)) {
->                 ret = -EINVAL;
-> @@ -5026,7 +5026,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->                         goto err;
->                 break;
->         case BINDER_SET_MAX_THREADS: {
-> -               int max_threads;
-> +               int max_threads __no_initialize;
+SYM_INNER_LABEL(efi32_pe_stub_entry, SYM_L_LOCAL)
+    movl %ecx, efi32_boot_args(%ebp)
+    movl %edx, efi32_boot_args+4(%ebp)
+    movb $0, efi_is64(%ebp)
 
-Is this really needed? A single integer in a rarely called ioctl()
-being initialized twice doesn't warrant this optimization.
 
->
->                 if (copy_from_user(&max_threads, ubuf,
->                                    sizeof(max_threads))) {
-> diff --git a/include/linux/wait.h b/include/linux/wait.h
-> index 3283c8d021377..b52a9bb2c7727 100644
-> --- a/include/linux/wait.h
-> +++ b/include/linux/wait.h
-> @@ -262,7 +262,8 @@ extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
->  #define ___wait_event(wq_head, condition, state, exclusive, ret, cmd)          \
->  ({                                                                             \
->         __label__ __out;                                                        \
-> -       struct wait_queue_entry __wq_entry;                                     \
-> +       /* Unconditionally initialized by init_wait_entry(). */                 \
-> +       struct wait_queue_entry __wq_entry __no_initialize;                     \
->         long __ret = ret;       /* explicit shadow */                           \
->                                                                                 \
->         init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);        \
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+?
