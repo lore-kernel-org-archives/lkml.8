@@ -2,99 +2,111 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF12C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16CFC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603BD246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2C8246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgCBJq0 (ORCPT
+        id S1727541AbgCBJqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:46:26 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2485 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727498AbgCBJq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:46:26 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id B2AAD9DF79AC803B8C56;
-        Mon,  2 Mar 2020 09:46:24 +0000 (GMT)
-Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 2 Mar 2020 09:46:24 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 2 Mar 2020 10:46:23 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Mon, 2 Mar 2020 10:46:23 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     kernel test robot <rong.a.chen@intel.com>
-CC:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "lkp@lists.01.org" <lkp@lists.01.org>
-Subject: RE: [ima] 9165b814d2: BUG:kernel_NULL_pointer_dereference,address
-Thread-Topic: [ima] 9165b814d2: BUG:kernel_NULL_pointer_dereference,address
-Thread-Index: AQHV8DEWZqyGfs8H/kW8+ywKreXaD6g1CQuA
-Date:   Mon, 2 Mar 2020 09:46:23 +0000
-Message-ID: <0b454d6825824d3d9e4a99b552cc5f84@huawei.com>
-References: <20200205103317.29356-9-roberto.sassu@huawei.com>
- <20200302012218.GU6548@shao2-debian>
-In-Reply-To: <20200302012218.GU6548@shao2-debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 2 Mar 2020 04:46:54 -0500
+Received: from mailoutvs21.siol.net ([185.57.226.212]:42100 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727490AbgCBJqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 04:46:54 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id B64A852352B;
+        Mon,  2 Mar 2020 10:46:50 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id LKSd7f3jTVIM; Mon,  2 Mar 2020 10:46:50 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 5AE61523492;
+        Mon,  2 Mar 2020 10:46:50 +0100 (CET)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 7D37A52319A;
+        Mon,  2 Mar 2020 10:46:49 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] drm/bridge: dw-hdmi: Fix color space conversion detection
+Date:   Mon, 02 Mar 2020 10:46:49 +0100
+Message-ID: <791571909.0ifERbkFSE@jernej-laptop>
+In-Reply-To: <c1cbcdc0-61a7-e5cb-4ad0-7057c33da154@baylibre.com>
+References: <20200229163043.158262-1-jernej.skrabec@siol.net> <20200229163043.158262-3-jernej.skrabec@siol.net> <c1cbcdc0-61a7-e5cb-4ad0-7057c33da154@baylibre.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBrZXJuZWwgdGVzdCByb2JvdCBb
-bWFpbHRvOnJvbmcuYS5jaGVuQGludGVsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBNYXJjaCAyLCAy
-MDIwIDI6MjIgQU0NCj4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNv
-bT4NCj4gQ2M6IHpvaGFyQGxpbnV4LmlibS5jb207IEphbWVzLkJvdHRvbWxleUBIYW5zZW5QYXJ0
-bmVyc2hpcC5jb207DQo+IGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb207IGxpbnV4LWlu
-dGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBzZWN1cml0eS1tb2R1bGVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTaWx2aXUNCj4gVmxhc2Nl
-YW51IDxTaWx2aXUuVmxhc2NlYW51QGh1YXdlaS5jb20+OyBSb2JlcnRvIFNhc3N1DQo+IDxyb2Jl
-cnRvLnNhc3N1QGh1YXdlaS5jb20+OyBsa3BAbGlzdHMuMDEub3JnDQo+IFN1YmplY3Q6IFtpbWFd
-IDkxNjViODE0ZDI6DQo+IEJVRzprZXJuZWxfTlVMTF9wb2ludGVyX2RlcmVmZXJlbmNlLGFkZHJl
-c3MNCj4gDQo+IEZZSSwgd2Ugbm90aWNlZCB0aGUgZm9sbG93aW5nIGNvbW1pdCAoYnVpbHQgd2l0
-aCBnY2MtNyk6DQo+IA0KPiBjb21taXQ6IDkxNjViODE0ZDJiZWE4Y2ZlYjU1NzUwNWJiMjA2Mzk2
-MzMxZTgxOTIgKCJbUEFUQ0ggdjIgOC84XQ0KPiBpbWE6IFVzZSBpbWFfaGFzaF9hbGdvIGZvciBj
-b2xsaXNpb24gZGV0ZWN0aW9uIGluIHRoZSBtZWFzdXJlbWVudCBsaXN0IikNCj4gdXJsOiBodHRw
-czovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL1JvYmVydG8tU2Fzc3UvaW1hLXN1
-cHBvcnQtDQo+IHN0cm9uZ2VyLWFsZ29yaXRobXMtZm9yLWF0dGVzdGF0aW9uLzIwMjAwMjA1LTIz
-MzkwMQ0KPiBiYXNlOiBodHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dp
-dC96b2hhci9saW51eC1pbnRlZ3JpdHkuZ2l0DQo+IG5leHQtaW50ZWdyaXR5DQoNCkhpDQoNCnRo
-YW5rcyBmb3IgdGhlIHJlcG9ydC4NCg0KWWVzLCB2ZXJzaW9uIDIgaGFkIGEgYnVnOg0KDQotLS0N
-CgkJaW1hX2FsZ29fYXJyYXlbaSsrXS5hbGdvID0gSEFTSF9BTEdPX1NIQTE7DQoJfQ0KDQoJaWYg
-KGltYV9oYXNoX2FsZ29faWR4ID49IG5yX2FsbG9jYXRlZF9iYW5rcykgew0KCQlpbWFfYWxnb19h
-cnJheVtpXS50Zm0gPSBpbWFfc2hhc2hfdGZtOw0KCQlpbWFfYWxnb19hcnJheVtpXS5hbGdvID0g
-aW1hX2hhc2hfYWxnbzsNCgl9DQotLS0NCg0KVGhlIGNvZGUgYWxsb2NhdGVkIGltYV9hbGdvX2Fy
-cmF5IHdpdGggc2l6ZSAxIChUUE0gd2FzIG5vdCBmb3VuZCBhbmQNCnRoZSBkZWZhdWx0IGFsZ29y
-aXRobSBpcyBTSEExKS4NCg0KSG93ZXZlciwgbGF0ZXIgaXQgaW5pdGlhbGl6ZXMgaW1hX2FsZ29f
-YXJyYXkgZm9yIFNIQTEgYW5kIGluY3JlbWVudHMgdGhlDQppIHZhcmlhYmxlLiBTaW5jZSB0aGUg
-Y29kZSBkb2VzIG5vdCBjaGVjayBpZiB0aGUgZGVmYXVsdCBhbGdvcml0aG0gaXMgU0hBMSwNCnRo
-ZSBsYXN0IHBhcnQgaXMgYWxzbyBleGVjdXRlZCBhbmQgY2F1c2VzIGNvcnJ1cHRpb24sIGJlY2F1
-c2UgaW1hX2FsZ29fYXJyYXkNCmhhcyBvbmx5IG9uZSBlbGVtZW50Lg0KDQpJIGZpeGVkIGFscmVh
-ZHkgdGhpcyBidWcgaW4gdmVyc2lvbiAzIG9mIHRoZSBwYXRjaCBzZXQuDQoNClRoYW5rcw0KDQpS
-b2JlcnRvDQoNCkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYz
-DQpNYW5hZ2luZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQo=
+Hi Neil!
+
+Dne ponedeljek, 02. marec 2020 ob 10:26:09 CET je Neil Armstrong napisal(a):
+> Hi Jernej,
+> 
+> On 29/02/2020 17:30, Jernej Skrabec wrote:
+> > Currently, is_color_space_conversion() compares not only color spaces
+> > but also formats. For example, function would return true if YCbCr 4:4:4
+> > and YCbCr 4:2:2 would be set. Obviously in that case color spaces are
+> > the same.
+> > 
+> > Fix that by comparing if both values represent RGB color space.
+> > 
+> > Fixes: b21f4b658df8 ("drm: imx: imx-hdmi: move imx-hdmi to
+> > bridge/dw_hdmi")
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > 24965e53d351..9d7bfb1cb213 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -956,7 +956,8 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
+> > 
+> >  static int is_color_space_conversion(struct dw_hdmi *hdmi)
+> >  {
+> > 
+> > -	return hdmi->hdmi_data.enc_in_bus_format !=
+> > hdmi->hdmi_data.enc_out_bus_format; +	return
+> > hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) !=
+> > +		hdmi_bus_fmt_is_rgb(hdmi-
+>hdmi_data.enc_out_bus_format);
+> > 
+> >  }
+> >  
+> >  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+> 
+> I think in this case you should also fix the CEC enablement to:
+
+you mean CSC, right?
+
+> if (is_color_space_conversion(hdmi) || is_color_space_decimation(hdmi))
+> 
+> in dw_hdmi_enable_video_path() otherwise CSC won't be enabled and will be
+> bypassed in decimation case only.
+> 
+
+Missed that one. I'll fix in v2.
+
+Best regards,
+Jernej
+
+
+
