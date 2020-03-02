@@ -2,259 +2,159 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770B6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECF6C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4744D246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F71246B4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E5RZ1AVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgCBJrc (ORCPT
+        id S1727526AbgCBJtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:47:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54127 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCBJrc (ORCPT
+        Mon, 2 Mar 2020 04:49:08 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57576 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgCBJtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:47:32 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1j8hfc-0000Ng-4Q; Mon, 02 Mar 2020 10:47:28 +0100
-Subject: Re: [PATCH V3 3/4] mailbox: imx: add SCU MU support
-To:     peng.fan@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, robh+dt@kernel.org
-Cc:     aisheng.dong@nxp.com, Anson.Huang@nxp.com,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-References: <1582692043-683-1-git-send-email-peng.fan@nxp.com>
- <1582692043-683-4-git-send-email-peng.fan@nxp.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <df1a4174-1632-717c-0d24-8812c1cdc1d2@pengutronix.de>
-Date:   Mon, 2 Mar 2020 10:47:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 04:49:08 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0229mXWF024857;
+        Mon, 2 Mar 2020 03:48:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583142513;
+        bh=8mylNuvbMkUyD9rWCtIxmMJyS7kJVNxinoSR3QWr/xU=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=E5RZ1AVSpIt/g0rMSH1E6MehYBpDwLns1mbervza/PIeplJ/3i903D3JChyiflGUX
+         udlfjay7F8V2/RogkH2QR8gpgPPUSDVAyV8VCx635HWvo4m+57IZG6HL1O5VrIkKb8
+         Vc0e5C7HscoOC/jll4acVVh5spjQslWWCkjSgA/I=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0229mXHC032787
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Mar 2020 03:48:33 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
+ 2020 03:48:33 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Mar 2020 03:48:32 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0229mWaZ019765;
+        Mon, 2 Mar 2020 03:48:32 -0600
+Date:   Mon, 2 Mar 2020 15:18:31 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v2 02/11] spi: set mode bits for "spi-rx-dtr" and
+ "spi-tx-dtr"
+Message-ID: <20200302094829.opazalwldrdn4s7y@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+ <20200226093703.19765-3-p.yadav@ti.com>
+ <20200227172247.0e8ec459@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <1582692043-683-4-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200227172247.0e8ec459@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Boris,
 
-On 26.02.20 05:40, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 27/02/20 05:23PM, Boris Brezillon wrote:
+> On Wed, 26 Feb 2020 15:06:54 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
 > 
-> i.MX8/8X SCU MU is dedicated for communication between SCU and Cortex-A
-> cores from hardware design, and could not be reused for other purpose.
+> > These two DT properties express DTR receive and transmit capabilities of
+> > a SPI flash and controller. Introduce two new mode bits: SPI_RX_DTR and
+> > SPI_TX_DTR which correspond to the new DT properties. Set these bits
+> > when the two corresponding properties are present in the device tree.
+> > Also update the detection of unsupported mode bits to include the new
+> > bits.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  drivers/spi/spi.c       | 10 +++++++++-
+> >  include/linux/spi/spi.h |  2 ++
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > index 38b4c78df506..25c8ed9343f9 100644
+> > --- a/drivers/spi/spi.c
+> > +++ b/drivers/spi/spi.c
+> > @@ -1927,6 +1927,13 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+> >  		}
+> >  	}
+> >  
+> > +	/* Device DTR mode. */
+> > +	if (of_property_read_bool(nc, "spi-tx-dtr"))
+> > +		spi->mode |= SPI_TX_DTR;
+> > +
+> > +	if (of_property_read_bool(nc, "spi-rx-dtr"))
+> > +		spi->mode |= SPI_RX_DTR;
+> > +
 > 
-> Per i.MX8/8X Reference mannual, Chapter "12.9.2.3.2 Messaging Examples",
->   Passing short messages: Transmit register(s) can be used to pass
->   short messages from one to four words in length. For example, when
->   a four-word message is desired, only one of the registers needs to
->   have its corresponding interrupt enable bit set at the receiver side;
->   the message’s first three words are written to the registers whose
->   interrupt is masked, and the fourth word is written to the other
->   register (which triggers an interrupt at the receiver side).
-> 
-> i.MX8/8X SCU firmware IPC is an implementation of passing short
-> messages. But current imx-mailbox driver only support one word
-> message, i.MX8/8X linux side firmware has to request four TX
-> and four RX to support IPC to SCU firmware. This is low efficent
-> and more interrupts triggered compared with one TX and
-> one RX.
-> 
-> To make SCU MU work,
->    - parse the size of msg.
->    - Only enable TR0/RR0 interrupt for transmit/receive message.
->    - For TX/RX, only support one TX channel and one RX channel
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V3:
->   Added scu type tx/rx and SCU MU type
-> 
->   drivers/mailbox/imx-mailbox.c | 65 ++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 64 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index 901a3431fdb5..41664a64c5fd 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -4,6 +4,7 @@
->    */
->   
->   #include <linux/clk.h>
-> +#include <linux/firmware/imx/ipc.h>
->   #include <linux/interrupt.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> @@ -38,11 +39,17 @@ enum imx_mu_chan_type {
->   
->   enum imx_mu_type {
->   	IMX_MU_TYPE_GENERIC,
-> +	IMX_MU_TYPE_SCU,
->   };
->   
->   struct imx_mu_priv;
->   struct imx_mu_con_priv;
->   
-> +struct imx_sc_rpc_msg_max {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 data[7];
-> +} __packed __aligned(4);;
-> +
->   struct imx_mu_dcfg {
->   	enum imx_mu_type type;
->   	int (*tx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp, void *data);
-> @@ -141,6 +148,48 @@ static int imx_mu_generic_rx(struct imx_mu_priv *priv,
->   	return 0;
->   }
->   
-> +static int imx_mu_scu_tx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp,
-> +			 void *data)
-> +{
-> +	struct imx_sc_rpc_msg_max *msg = data;
-> +	u32 *arg = data;
-> +	int i;
-> +
-> +	switch (cp->type) {
-> +	case IMX_MU_TYPE_TX:
-
-please add sanity check if msg->hdr.size can be handled by this driver version.
-
-> +		for (i = 0; i < msg->hdr.size; i++) {
-> +			imx_mu_write(priv, *arg++,
-> +				     priv->dcfg->xTR[i % 4]);
-> +		}
-> +		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
-> +		break;
-> +	default:
-> +		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_mu_scu_rx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp)
-> +{
-> +	struct imx_sc_rpc_msg_max msg;
-> +	u32 *data = (u32 *)&msg;
-> +	int i;
-> +
-> +	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
-> +	*data++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
-
-please add sanity check. the message size should not be higher then sizeof(msg)
-
-> +	for (i = 1; i < msg.hdr.size; i++)
-> +		*data++ = imx_mu_read(priv, priv->dcfg->xRR[i % 4]);
-> +
-> +	imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(0), 0);
-
-Please do not forget to handle properly new msg size in your rx_callback. In previous 
-implementation the message size was 4byte.
-
-> +	mbox_chan_received_data(cp->chan, (void *)&msg);
-> +
-> +	return 0;
-> +}
-> +
->   static void imx_mu_txdb_tasklet(unsigned long data)
->   {
->   	struct imx_mu_con_priv *cp = (struct imx_mu_con_priv *)data;
-> @@ -274,6 +323,7 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->   				       const struct of_phandle_args *sp)
->   {
->   	u32 type, idx, chan;
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(mbox);
->   
->   	if (sp->args_count != 2) {
->   		dev_err(mbox->dev, "Invalid argument count %d\n", sp->args_count);
-> @@ -284,7 +334,9 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->   	idx = sp->args[1]; /* index */
->   	chan = type * 4 + idx;
->   
-> -	if (chan >= mbox->num_chans) {
-> +	if (chan >= mbox->num_chans ||
-> +	    (priv->dcfg->type == IMX_MU_TYPE_SCU &&
-> +	     type < IMX_MU_TYPE_TXDB && idx > 0)) {
-
-We need this check since mbox->num_chans do not reflects new reality. Now we have only 2 
-channels. One RX and one TX. No idea if we need doorbell channels for SCU. If doorbells 
-are not supported, it is better to add a separate imx_mu_xlate for SCU
-
-and add SCU specific channel init in probe in addition to:
-         for (i = 0; i < IMX_MU_CHANS; i++) { 
-
-                 struct imx_mu_con_priv *cp = &priv->con_priv[i]; 
-
+> If this DTR mode is only used in spi-mem, maybe we shouldn't add those
+> flags. SPI mem devices are usually smart enough to advertise what they
+> support, and the subsystem in charge of those devices (in this specific
+> case, spi-nor) will check what the controller supports
+> using spi_mem_supports_op(). The only case we might have to deal with
+> at some point is board level limitations (disabling DTR because the
+> routing prevents using this mode).
  
+Yes, being able to handle board-level limitations is the main reason 
+behind this change. There should be a way to over-ride the use of DTR 
+for a given board. And IIUC, SPI allows doing the same for Rx and Tx 
+buswidth. So I don't see why we should deviate from that model.
 
-                 cp->idx = i % 4; 
-
-                 cp->type = i >> 2; 
-
-                 cp->chan = &priv->mbox_chans[i]; 
-
-                 priv->mbox_chans[i].con_priv = cp; 
-
-                 snprintf(cp->irq_desc, sizeof(cp->irq_desc), 
-
-                          "imx_mu_chan[%i-%i]", cp->type, cp->idx); 
-
-         }
-
-There is no need to init unsupported channels. Please pack it in separate function
-
->   		dev_err(mbox->dev, "Not supported channel number: %d. (type: %d, idx: %d)\n", chan, type, idx);
->   		return ERR_PTR(-EINVAL);
->   	}
-> @@ -401,9 +453,20 @@ static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
->   	.xCR	= 0x64,
->   };
->   
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx8_scu = {
-> +	.type	= IMX_MU_TYPE_SCU,
-> +	.tx	= imx_mu_scu_tx,
-> +	.rx	= imx_mu_scu_rx,
-> +	.xTR	= {0x0, 0x4, 0x8, 0xc},
-> +	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-> +	.xSR	= 0x20,
-> +	.xCR	= 0x24,
-> +};
-> +
->   static const struct of_device_id imx_mu_dt_ids[] = {
->   	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
->   	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
-> +	{ .compatible = "fsl,imx8-mu-scu", .data = &imx_mu_cfg_imx8_scu },
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+> >  	if (spi_controller_is_slave(ctlr)) {
+> >  		if (!of_node_name_eq(nc, "slave")) {
+> >  			dev_err(&ctlr->dev, "%pOF is not called 'slave'\n",
+> > @@ -3252,7 +3259,8 @@ int spi_setup(struct spi_device *spi)
+> >  		bad_bits &= ~SPI_CS_HIGH;
+> >  	ugly_bits = bad_bits &
+> >  		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+> > -		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
+> > +		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL |
+> > +		     SPI_TX_DTR  | SPI_RX_DTR);
+> >  	if (ugly_bits) {
+> >  		dev_warn(&spi->dev,
+> >  			 "setup: ignoring unsupported mode bits %x\n",
+> > diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> > index 6d16ba01ff5a..bf1108318389 100644
+> > --- a/include/linux/spi/spi.h
+> > +++ b/include/linux/spi/spi.h
+> > @@ -183,6 +183,8 @@ struct spi_device {
+> >  #define	SPI_TX_OCTAL	0x2000			/* transmit with 8 wires */
+> >  #define	SPI_RX_OCTAL	0x4000			/* receive with 8 wires */
+> >  #define	SPI_3WIRE_HIZ	0x8000			/* high impedance turnaround */
+> > +#define SPI_RX_DTR	0x10000			/* receive in DTR mode */
+> > +#define SPI_TX_DTR	0x20000			/* transmit in DTR mode */
+> >  	int			irq;
+> >  	void			*controller_state;
+> >  	void			*controller_data;
 > 
-
-Kind regards,
-Oleksij Rempel
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+Pratyush Yadav
+Texas Instruments India
