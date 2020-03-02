@@ -2,169 +2,250 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450A1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D952173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80A2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WG/2WBrb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WvHVySHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgCBORz (ORCPT
+        id S1727237AbgCBOSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:17:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20302 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727159AbgCBORy (ORCPT
+        Mon, 2 Mar 2020 09:18:37 -0500
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:55889 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgCBOSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:17:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583158672;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=aSlbqTfXB8KK40C4UbS0ygfhPT9hTLVPTl4nVXr8U48=;
-        b=WG/2WBrbf7lPNY5fvHa+BZo+XNIS8hra5g6m6R0qHrP9g3dbONuCd1Wfaivp+FE5rWsaV+
-        ebLTR44IpPcFR3LXgLphstSg3uskGFfrad7BwP6BDSpb1ewO5j2u47+HVxtXSJ0VQpOb07
-        uCfIRdJxqI6AWLnLCLnUnjIPxok0sOo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-cJl0n0beP5iUYhC6PrB-kA-1; Mon, 02 Mar 2020 09:17:50 -0500
-X-MC-Unique: cJl0n0beP5iUYhC6PrB-kA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBBE1190B2D3;
-        Mon,  2 Mar 2020 14:17:47 +0000 (UTC)
-Received: from [10.36.116.114] (ovpn-116-114.ams2.redhat.com [10.36.116.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BB7CD60C80;
-        Mon,  2 Mar 2020 14:17:39 +0000 (UTC)
-Subject: Re: [PATCH v1 04/11] mm: Export alloc_contig_range() /
- free_contig_range()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Potapenko <glider@google.com>
-References: <20200302134941.315212-1-david@redhat.com>
- <20200302134941.315212-5-david@redhat.com>
- <20200302140519.GN4380@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <dd34277f-21ad-cae8-8f07-10915fea305e@redhat.com>
-Date:   Mon, 2 Mar 2020 15:17:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200302140519.GN4380@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 09:18:37 -0500
+Received: by mail-wr1-f73.google.com with SMTP id m18so4613165wro.22
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:18:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fOeP7AroqcsyRTw6L8AA/q48quQG5ja31dye1VtPbXg=;
+        b=WvHVySHdGEtgJ0JON1kvEBAfJMdlOSc+5WYZ6S//3VWQ9Aci0gB4Z+6rL07YZCf0Ms
+         mdZLaFpgb2jzJQxzbbxGBpggieUflfZ40Z6EryoNQNKHFMJcpnfcyzo4++EbUYzRTAoH
+         00VjCjfNFE77ZG1/OjeyldJJfT5YPBUCcoKNFtHtZdLSNW0crq1RUXGEe7J0ogmIyJGE
+         818rS1qz/iZFtQe72W6lu+jnh+NtPz5bcwYhPu0+6HJUr71Bh4whz8jB8osmxdepg+qY
+         yXvriNM5a2cnh7sCPWPfYGFDU3xqwPqjzLiNKDj2mKEasONCigkkAztxQY7eiS9GBXZL
+         SGYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fOeP7AroqcsyRTw6L8AA/q48quQG5ja31dye1VtPbXg=;
+        b=rft9Jjiy0GmvU+U/sS/0Jak8uNsUKM+5GSyHsEYegGeZQvt5qsvpslh8qX4E38Osl+
+         EkiqOeV3rr7FDNZSfeoyhjMpYqw46tAze9LN1mF/TCZYz7OShO+wgIWFNubXHfkf4pd+
+         CG7CcE/4+BMvUDjKOFga2Cqc0dwcHelXwkOuBzV1z3XlwQNuhECEubrTsAFP0aw9jWU5
+         UNBNSBsH1+LG8ND9Vupmsp/q0fEGfedxfS3dVjZO0HD1XiNbqWduvZwL4GpYFS0ijtI0
+         y6suYvr/rdATRw4YPeJHkjsiHz3+Lz+1p28JfOkYhT2cbwrx339+FZpXw+n9Hyt9py8I
+         lh9g==
+X-Gm-Message-State: APjAAAV0ov49lDGgmz8skX8hpWMQj/iKiwzOIlrgL0baK06pziDuI/RD
+        8FH6+2mIu0y5aqCCEZwU4x1grTfS5w==
+X-Google-Smtp-Source: APXvYqzroFcifaZUNodmfvP9Bvug+ca2oUHyHP3HiTvlgyDHz5VJ8Z83t3OYcvaKvogmq3RbkjChaV4y5g==
+X-Received: by 2002:adf:f70f:: with SMTP id r15mr22945837wrp.269.1583158715118;
+ Mon, 02 Mar 2020 06:18:35 -0800 (PST)
+Date:   Mon,  2 Mar 2020 15:18:19 +0100
+Message-Id: <20200302141819.40270-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] tools/memory-model/Documentation: Fix "conflict" definition
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        paulmck@kernel.org, akiyks@gmail.com, dlustig@nvidia.com,
+        joel@joelfernandes.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.03.20 15:05, Michal Hocko wrote:
-> On Mon 02-03-20 14:49:34, David Hildenbrand wrote:
->> A virtio-mem device wants to allocate memory from the memory region it
->> manages in order to unplug it in the hypervisor - similar to
->> a balloon driver. Also, it might want to plug previously unplugged
->> (allocated) memory and give it back to Linux. alloc_contig_range() /
->> free_contig_range() seem to be the perfect interface for this task.
->>
->> In contrast to existing balloon devices, a virtio-mem device operates
->> on bigger chunks (e.g., 4MB) and only on physical memory it manages. I=
-t
->> tracks which chunks (subblocks) are still plugged, so it can go ahead
->> and try to alloc_contig_range()+unplug them on unplug request, or
->> plug+free_contig_range() unplugged chunks on plug requests.
->>
->> A virtio-mem device will use alloc_contig_range() / free_contig_range(=
-)
->> only on ranges that belong to the same node/zone in at least
->> MAX(MAX_ORDER - 1, pageblock_order) order granularity - e.g., 4MB on
->> x86-64. The virtio-mem device added that memory, so the memory
->> exists and does not contain any holes. virtio-mem will only try to all=
-ocate
->> on ZONE_NORMAL, never on ZONE_MOVABLE, just like when allocating
->> gigantic pages (we don't put unmovable data into the movable zone).
->=20
-> Same feedback as in pxm_to_node export. No objections to exporting the
-> symbol but it would be better to squash this function into the patch
-> which uses it. The changelog is highly virtio-mem specific anyway.
-> Maybe it is just a dejavu but I feel I have already said that but I do
-> not remember any details.
+The definition of "conflict" should not include the type of access nor
+whether the accesses are concurrent or not, which this patch addresses.
+The definition of "data race" remains unchanged.
 
-As I said back then, I am not a friend of squashing core changes into
-driver changes (and AFAIK separating such is the common practice - well
-I have never written a driver myself). I doubt it will make review
-easier or faster (especially when it comes to patch #1).
+The definition of "conflict" as we know it and is cited by various
+papers on memory consistency models appeared in [1]: "Two accesses to
+the same variable conflict if at least one is a write; two operations
+conflict if they execute conflicting accesses."
 
-I can squash #4 into #5, #6 into #7, #8 into #9 if it makes your review
-easier.
+The LKMM as well as the C11 memory model are adaptations of
+data-race-free, which are based on the work in [2]. Necessarily, we need
+both conflicting data operations (plain) and synchronization operations
+(marked). For example, C11's definition is based on [3], which defines a
+"data race" as: "Two memory operations conflict if they access the same
+memory location, and at least one of them is a store, atomic store, or
+atomic read-modify-write operation. In a sequentially consistent
+execution, two memory operations from different threads form a type 1
+data race if they conflict, at least one of them is a data operation,
+and they are adjacent in <T (i.e., they may be executed concurrently)."
 
---=20
-Thanks,
+[1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
+    Programs that Share Memory", 1988.
+	URL: http://snir.cs.illinois.edu/listed/J21.pdf
 
-David / dhildenb
+[2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
+    Multiprocessors", 1993.
+	URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
+
+[3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
+    Model", 2008.
+	URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
+
+Signed-off-by: Marco Elver <elver@google.com>
+Co-developed-by: Alan Stern <stern@rowland.harvard.edu>
+---
+v2:
+* Apply Alan's suggested version.
+  - Move "from different CPUs (or threads)" from "conflict" to "data
+    race" definition. Update "race candidate" accordingly.
+* Add citations to commit message.
+
+v1: http://lkml.kernel.org/r/20200228164621.87523-1-elver@google.com
+---
+ .../Documentation/explanation.txt             | 77 +++++++++----------
+ 1 file changed, 38 insertions(+), 39 deletions(-)
+
+diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+index e91a2eb19592a..7a59cadc2f4ca 100644
+--- a/tools/memory-model/Documentation/explanation.txt
++++ b/tools/memory-model/Documentation/explanation.txt
+@@ -1987,28 +1987,28 @@ outcome undefined.
+ 
+ In technical terms, the compiler is allowed to assume that when the
+ program executes, there will not be any data races.  A "data race"
+-occurs when two conflicting memory accesses execute concurrently;
+-two memory accesses "conflict" if:
++occurs when two conflicting memory accesses from different CPUs (or
++different threads on the same CPU) execute concurrently, and at least
++one of them is plain.  Two memory accesses "conflict" if:
+ 
+ 	they access the same location,
+ 
+-	they occur on different CPUs (or in different threads on the
+-	same CPU),
+-
+-	at least one of them is a plain access,
+-
+ 	and at least one of them is a store.
+ 
+-The LKMM tries to determine whether a program contains two conflicting
+-accesses which may execute concurrently; if it does then the LKMM says
+-there is a potential data race and makes no predictions about the
+-program's outcome.
+-
+-Determining whether two accesses conflict is easy; you can see that
+-all the concepts involved in the definition above are already part of
+-the memory model.  The hard part is telling whether they may execute
+-concurrently.  The LKMM takes a conservative attitude, assuming that
+-accesses may be concurrent unless it can prove they cannot.
++We'll say that two accesses from different threads are "race
++candidates" if they conflict and at least one of them is plain.
++Whether or not two candidates actually do race in a given execution
++then depends on whether they are concurrent.  The LKMM tries to
++determine whether a program contains race candidates which may execute
++concurrently; if it does then the LKMM says there is a potential data
++race and makes no predictions about the program's outcome.
++
++Determining whether two accesses are race candidates is easy; you can
++see that all the concepts involved in the definition above are already
++part of the memory model.  The hard part is telling whether they may
++execute concurrently.  The LKMM takes a conservative attitude,
++assuming that accesses may be concurrent unless it can prove they
++are not.
+ 
+ If two memory accesses aren't concurrent then one must execute before
+ the other.  Therefore the LKMM decides two accesses aren't concurrent
+@@ -2171,8 +2171,8 @@ again, now using plain accesses for buf:
+ 	}
+ 
+ This program does not contain a data race.  Although the U and V
+-accesses conflict, the LKMM can prove they are not concurrent as
+-follows:
++accesses are race candidates, the LKMM can prove they are not
++concurrent as follows:
+ 
+ 	The smp_wmb() fence in P0 is both a compiler barrier and a
+ 	cumul-fence.  It guarantees that no matter what hash of
+@@ -2326,12 +2326,11 @@ could now perform the load of x before the load of ptr (there might be
+ a control dependency but no address dependency at the machine level).
+ 
+ Finally, it turns out there is a situation in which a plain write does
+-not need to be w-post-bounded: when it is separated from the
+-conflicting access by a fence.  At first glance this may seem
+-impossible.  After all, to be conflicting the second access has to be
+-on a different CPU from the first, and fences don't link events on
+-different CPUs.  Well, normal fences don't -- but rcu-fence can!
+-Here's an example:
++not need to be w-post-bounded: when it is separated from the other
++race-candidate access by a fence.  At first glance this may seem
++impossible.  After all, to be race candidates the two accesses must
++be on different CPUs, and fences don't link events on different CPUs.
++Well, normal fences don't -- but rcu-fence can!  Here's an example:
+ 
+ 	int x, y;
+ 
+@@ -2367,7 +2366,7 @@ concurrent and there is no race, even though P1's plain store to y
+ isn't w-post-bounded by any marked accesses.
+ 
+ Putting all this material together yields the following picture.  For
+-two conflicting stores W and W', where W ->co W', the LKMM says the
++race-candidate stores W and W', where W ->co W', the LKMM says the
+ stores don't race if W can be linked to W' by a
+ 
+ 	w-post-bounded ; vis ; w-pre-bounded
+@@ -2380,8 +2379,8 @@ sequence, and if W' is plain then they also have to be linked by a
+ 
+ 	w-post-bounded ; vis ; r-pre-bounded
+ 
+-sequence.  For a conflicting load R and store W, the LKMM says the two
+-accesses don't race if R can be linked to W by an
++sequence.  For race-candidate load R and store W, the LKMM says the
++two accesses don't race if R can be linked to W by an
+ 
+ 	r-post-bounded ; xb* ; w-pre-bounded
+ 
+@@ -2413,20 +2412,20 @@ is, the rules governing the memory subsystem's choice of a store to
+ satisfy a load request and its determination of where a store will
+ fall in the coherence order):
+ 
+-	If R and W conflict and it is possible to link R to W by one
+-	of the xb* sequences listed above, then W ->rfe R is not
+-	allowed (i.e., a load cannot read from a store that it
++	If R and W are race candidates and it is possible to link R to
++	W by one of the xb* sequences listed above, then W ->rfe R is
++	not allowed (i.e., a load cannot read from a store that it
+ 	executes before, even if one or both is plain).
+ 
+-	If W and R conflict and it is possible to link W to R by one
+-	of the vis sequences listed above, then R ->fre W is not
+-	allowed (i.e., if a store is visible to a load then the load
+-	must read from that store or one coherence-after it).
++	If W and R are race candidates and it is possible to link W to
++	R by one of the vis sequences listed above, then R ->fre W is
++	not allowed (i.e., if a store is visible to a load then the
++	load must read from that store or one coherence-after it).
+ 
+-	If W and W' conflict and it is possible to link W to W' by one
+-	of the vis sequences listed above, then W' ->co W is not
+-	allowed (i.e., if one store is visible to a second then the
+-	second must come after the first in the coherence order).
++	If W and W' are race candidates and it is possible to link W
++	to W' by one of the vis sequences listed above, then W' ->co W
++	is not allowed (i.e., if one store is visible to a second then
++	the second must come after the first in the coherence order).
+ 
+ This is the extent to which the LKMM deals with plain accesses.
+ Perhaps it could say more (for example, plain accesses might
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
