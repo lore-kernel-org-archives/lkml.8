@@ -2,94 +2,133 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011CDC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13406C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6670214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82DF214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgCBOcq (ORCPT
+        id S1727305AbgCBOeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:32:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:33428 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 09:34:09 -0500
+Received: from mail.hallyn.com ([178.63.66.53]:46164 "EHLO mail.hallyn.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbgCBOco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:32:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9ADA101E;
-        Mon,  2 Mar 2020 06:32:43 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 599AC3F534;
-        Mon,  2 Mar 2020 06:32:43 -0800 (PST)
-Date:   Mon, 2 Mar 2020 14:32:42 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: Re: [PATCH v5 3/7] arm64/kvm: disable access to AMU registers from
- kvm guests
-Message-ID: <20200302143242.GB15709@arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-4-ionela.voinescu@arm.com>
- <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
+        id S1727053AbgCBOeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:34:08 -0500
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id 5E334B1A; Mon,  2 Mar 2020 08:34:05 -0600 (CST)
+Date:   Mon, 2 Mar 2020 08:34:05 -0600
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        mpawlowski@fb.com
+Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
+Message-ID: <20200302143405.GA25432@mail.hallyn.com>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+ <2b0fe94b-036a-919e-219b-cc1ba0641781@toxicpanda.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
+In-Reply-To: <2b0fe94b-036a-919e-219b-cc1ba0641781@toxicpanda.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On Thursday 27 Feb 2020 at 19:58:32 (+0000), Marc Zyngier wrote:
-[..]
-> >  static bool trap_ptrauth(struct kvm_vcpu *vcpu,
-> >  			 struct sys_reg_params *p,
-> >  			 const struct sys_reg_desc *rd)
-> > @@ -1078,8 +1092,10 @@ static u64 read_id_reg(const struct kvm_vcpu
-> > *vcpu,
-> >  			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
-> >  	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
+On Thu, Feb 27, 2020 at 02:33:04PM -0500, Josef Bacik wrote:
+> On 2/18/20 9:33 AM, Christian Brauner wrote:
+> > Hey everyone,
 > > 
-> > -	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
-> > -		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> > +	if (id == SYS_ID_AA64PFR0_EL1) {
-> > +		if (!vcpu_has_sve(vcpu))
-> > +			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> > +		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+> > This is v3 after (off- and online) discussions with Jann the following
+> > changes were made:
+> > - To handle nested user namespaces cleanly, efficiently, and with full
+> >    backwards compatibility for non fsid-mapping aware workloads we only
+> >    allow writing fsid mappings as long as the corresponding id mapping
+> >    type has not been written.
+> > - Split the patch which adds the internal ability in
+> >    kernel/user_namespace to verify and write fsid mappings into tree
+> >    patches:
+> >    1. [PATCH v3 04/25] fsuidgid: add fsid mapping helpers
+> >       patch to implement core helpers for fsid translations (i.e.
+> >       make_kfs*id(), from_kfs*id{_munged}(), kfs*id_to_k*id(),
+> >       k*id_to_kfs*id()
+> >    2. [PATCH v3 05/25] user_namespace: refactor map_write()
+> >       patch to refactor map_write() in order to prepare for actual fsid
+> >       mappings changes in the following patch. (This should make it
+> >       easier to review.)
+> >    3. [PATCH v3 06/25] user_namespace: make map_write() support fsid mappings
+> >       patch to implement actual fsid mappings support in mape_write()
+> > - Let the keyctl infrastructure only operate on kfsid which are always
+> >    mapped/looked up in the id mappings similar to what we do for
+> >    filesystems that have the same superblock visible in multiple user
+> >    namespaces.
+> > 
+> > This version also comes with minimal tests which I intend to expand in
+> > the future.
+> > 
+> >  From pings and off-list questions and discussions at Google Container
+> > Security Summit there seems to be quite a lot of interest in this
+> > patchset with use-cases ranging from layer sharing for app containers
+> > and k8s, as well as data sharing between containers with different id
+> > mappings. I haven't Cced all people because I don't have all the email
+> > adresses at hand but I've at least added Phil now. :)
+> > 
+> I put this into a kernel for our container guys to mess with in order to
+> validate it would actually be useful for real world uses.  I've cc'ed the
+> guy who did all of the work in case you have specific questions.
 > 
-> This will definitely conflict with some of the ongoing rework I have[1].
-> I'm happy to provide this as a stable branch for you to rebase on top,
-> or use an arm64 provided branch to rebase my stoff on top.
-> 
-> Just let me know how you want to proceed.
-> 
+> Good news is the interface is acceptable, albeit apparently the whole user
+> ns interface sucks in general.  But you haven't made it worse, so success!
 
-Sure, a stable branch with this would be great. I'll wait for a reply
-from Catalin for [1/7] and I'll rebase on top of your provided branch
-when it's clear whether other changes are needed to this set.
+Well I very much disagree here :)  With the first part!  But I do
+understand the shortcomings.  Anyway,
 
-Much appreciated,
-Ionela.
+I still hope we get to talk about this in person, but IMO this is the
+right approach (this being - thinking about how to make the uid mappings
+more flexible without making them too complicated to be safe to use),
+but a bit too static in terms of target.  There are at least two ways
+that I could see usefully generalizing it
 
-> Thanks,
-> 
->         M.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=kvm-arm64/debug-fixes-5.6&id=454fb7398d3626328f7f771c07d21e894e4e1a3b
-> -- 
-> Jazz is not dead. It just smells funny...
+From a user space pov, the following goal is indespensible (for my use
+cases):  that the fsuid be selectable based on fs, mountpoint, or file
+context (as in selinux).
+
+From a userns pov, one way to look at it is this:  when task t1 signals
+task t2, it's not only t1's namespace that's considered when filling in
+the sender uid, but also t2's.  Likewise, when writing a file, we should
+consider both t1's fsuid+userns, and the file's, mount's, or filesystem's
+userns.
+
+From that POV, your patch is a step in the right direction and could be
+taken as is (modulo any tmpfs fix Josef needs :)  From there I would
+propose adding a 'userns=<uidnsfd>' bind mount option, so we could create
+an empty userns with the desired mapping (subject to permissions granted
+by subuids), get an fd to the uidns, and say
+
+	mount --bind -o uidns=5 /shared /containers/c1/mnt/shared
+
+So now when I write a file /etc/hosts as container fsuid 0, it'll be
+subject to the container rootfs mount's uid mapping, presumably
+100000.  When I write /mnt/shared/hello, it'll be subject to the mount's
+uid mapping, which might be 1000.
+
+-serge
