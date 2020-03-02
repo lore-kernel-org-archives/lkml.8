@@ -2,71 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20334C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450DDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BBF2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583146333;
-	bh=WsMtWJf8fHtIkltd+06wePwQrfCiklsvt06eqYB2nLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G0hRB4aBLaIXPVBveN0FFelnoRvcoEUrcmyjakyhmkSIYoncPz3NLhLyyoC7YaU8e
-	 snhP+vTzJ27hkja2YKbbKvsBOTwBPM1T+Qm3BKZUgFy0qJwra5znRmv+yT2sl4SVkt
-	 CIgZdxBXpohCIZHkyQzhrP8uQoFMWKISy+uF+rZU=
+	by mail.kernel.org (Postfix) with ESMTP id 13AA12166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgCBKwM (ORCPT
+        id S1727671AbgCBKxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:52:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39164 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 05:53:10 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54599 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgCBKwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:52:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A0452166E;
-        Mon,  2 Mar 2020 10:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583146330;
-        bh=WsMtWJf8fHtIkltd+06wePwQrfCiklsvt06eqYB2nLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UWBRIKqd6cs+yR1Un7N/DsDL34/9Nzu4ENAOKwza2+71/YwKex9wLJ2VV/hecGwzj
-         HolYStWB5PBPMcj9SpxfKeMxdx8gLFvkHnQIbYz6ybQICOQ8WKNNCGXbg87a01amFP
-         JlDyKS/7qMGC0pc2jTHtsD6CPJjmL4T62/24Q5nc=
-Date:   Mon, 2 Mar 2020 11:52:07 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] tty: define and set show_fdinfo only if procfs is
- enabled
-Message-ID: <20200302105207.GB39968@kroah.com>
-References: <20200302104954.2812-1-tklauser@distanz.ch>
- <20200302104954.2812-2-tklauser@distanz.ch>
+        id S1727027AbgCBKxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:53:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 02:53:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,506,1574150400"; 
+   d="scan'208";a="228373133"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 02 Mar 2020 02:53:07 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j8ihB-0066wg-NL; Mon, 02 Mar 2020 12:53:09 +0200
+Date:   Mon, 2 Mar 2020 12:53:09 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: Fix inverted check in gpiochip_remove()
+Message-ID: <20200302105309.GP1224808@smile.fi.intel.com>
+References: <20200302082448.11795-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302104954.2812-2-tklauser@distanz.ch>
+In-Reply-To: <20200302082448.11795-1-geert+renesas@glider.be>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 11:49:54AM +0100, Tobias Klauser wrote:
-> Follow the pattern used with other *_show_fdinfo functions and only
-> define and use tty_show_fdinfo if CONFIG_PROC_FS is set.
+On Mon, Mar 02, 2020 at 09:24:48AM +0100, Geert Uytterhoeven wrote:
+> The optimization to check for requested lines actually optimized for the
+> uncomon error case, where one of the GPIO lines is still in use.
+> Hence the error message must be printed when the loop is terminated
+> early, not when it went through all available GPIO lines.
 > 
-> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> Fixes: 869233f81337bfb3 ("gpiolib: Optimize gpiochip_remove() when check for requested line")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/tty/tty_io.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Noticed by review, tested by creating and destroying an otherwise unused
+> GPIO aggregator, which triggers:
+> 
+>     gpio gpiochip8: REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED
 
-Same comments here as I made on patch 1/2.
+Thank you!
 
-thanks,
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-greg k-h
+Linus, see below.
+
+> ---
+>  drivers/gpio/gpiolib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 4e78bdc2739693c3..6180cf84fab7ce5e 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1823,7 +1823,7 @@ void gpiochip_remove(struct gpio_chip *chip)
+>  	}
+>  	spin_unlock_irqrestore(&gpio_lock, flags);
+>  
+> -	if (i == gdev->ngpio)
+> +	if (i != gdev->ngpio)
+
+I prefer more explicit <.
+
+I had sent a patch (before I noticed this), so it's up to Linus which one to choose.
+
+>  		dev_crit(&gdev->dev,
+>  			 "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED\n");
+>  
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
