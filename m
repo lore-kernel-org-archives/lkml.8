@@ -2,207 +2,163 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECB3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E41B222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A629D24677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZHQc0RES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgCBPml convert rfc822-to-8bit (ORCPT
+        id S1727590AbgCBPmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:42:41 -0500
-Received: from mail-oln040092253011.outbound.protection.outlook.com ([40.92.253.11]:6182
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727407AbgCBPmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:42:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eu96xXdnGNXvr6IdVLKrcNo/dL6IKd6Qj5mG3kZxtJMcRilW5dvoyO4X9znWtgdRKkh+159dK96SdUSWdDL5G2or1eA9p/3Z2Lqtvmnm6ZrRxTYaZJ6BR8udRW7aMcJsPPK1YZ4ssQ9k/DbGJnn+IA8rfBzGngZE4f555LUcxMIP9oAoLwsoVRoX90mMgVwHjRQxgtVN2HAxTIbe5aMvmpMCS5ra9Nc51G556eu1+IEw/HolqCymb6kk5PEhjzw1tahnkViefNjR6UiC0a7nMkzAY27Ch+fJYDHPks52HDx+9nV+euDgXqYvH/JKi7wqBDVPp0EAohzUd096PCC4uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NYtowb9+Ullj2M1uv1jXOw4L+VWGtADYKz7o6ZvE75I=;
- b=LVzKr7mxjuniuF2o/SWig0dMSrS+sn6WomkXFSsNMn/RRC8KsjzORzf+f86+GfqYfWmAaj+Mm8n/56gEcNSJ5y2Z6gmK8Av6VQ1T2wTw03iBup+ctKg9Ii7UZHBFZ70ZYCSlmv6focyWqV7s5qnpgIwEDz+8v8qAIkI9s2812WKAoQ/l5ljrEqS2xlwswXhOR0RJS7QPG40LjF6L2vZQzAOuMt+kB7abLb8Z8UZl0A3f0FJH0sV8jP9ysoXcClaSmzlS3ZYyPw4NuwBnV5HmHy1BaD370A/lDc0mEBBcwSNiW7vt/UaoradfTmG0gUdPcR42kphAuplYsUNyWfbUbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT111.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebe::3c) by
- PU1APC01HT238.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::449)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
- 2020 15:42:34 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
- PU1APC01FT111.mail.protection.outlook.com (10.152.252.236) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:42:34 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 15:42:34 +0000
-Received: from nicholas-dell-linux (2001:44b8:6065:1c:44cc:a624:8145:fa79) by ME2PR01CA0066.ausprd01.prod.outlook.com (2603:10c6:201:2b::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 15:42:32 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v2 1/3] nvmem: Add support for write-only instances
-Thread-Topic: [PATCH v2 1/3] nvmem: Add support for write-only instances
-Thread-Index: AQHV8KkxXdrLTxYhU0iNsiLC1KLatw==
-Date:   Mon, 2 Mar 2020 15:42:34 +0000
-Message-ID: <PSXP216MB0438930B1FC30EF79F15FD1780E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-In-Reply-To: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0066.ausprd01.prod.outlook.com
- (2603:10c6:201:2b::30) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:1D69E5E86D08E5CE96CC82BAC60CFBA750E491E14BCD01DFCC7294E6CE8F875A;UpperCasedChecksum:3FD8DA9CFFC61089773B005CA77A50849166B5D5E68AA0783AF424B738FD7A0D;SizeAsReceived:7800;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [pfYjh1WR1BZS+6mZwieJqUMAJ+HXqvRdUwVUbCwrjccnshfHVq29yOlFAZpQP3gG]
-x-microsoft-original-message-id: <20200302154227.GA480962@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 6c240aa6-3173-41b5-3cc2-08d7bec05386
-x-ms-exchange-slblob-mailprops: gjx25WM8ZNWYKaTQvYk/UtONeFal8oaUNZI/HkFRNrR33q31c7duxzaGctdAwA3O8vIIzArerEUbX+TFZHYzxFxqvxOlA+iZoNoCmOGtbrMqgFkTC+lJ4/EIwl0RNKVzhpsAzDQgeBR3F5Y/eQqSJp/vsImnpPKEIfsjxtV3v5OAsPeFdgy8+Jy5IrmposNAiDCo2iHCeY9y0onNNg/gx0Ctp1smdmcHPo0G5//Y2T0Mic9781KfX8nj6ksbf5o3avhvPn8yHf8pee+lFHivrTqOkZrkoOFiCqliWRIW9Eif3bbFNkqoXlrn9QE01EShYxCw/9maqL9XWWTXfXNbCMgDC1mCAL0JXfMPYfVBKQSL2ilUK1DhOUmakERqsFgMeYDRSqlicPc7txCXvXFlUgBsU0qCVp+txrKoO+EFOrDi4Wg50X8e6eAkPwYUX8KE7wnYCpHkGJ0eW9bQjXKz6Dq7jdUDY9uR1W+lwI2Ex5/WCsvkuo704g8DSfTgxqWvcwKdOC/UhZ2frl771b2k4YvKnAcJPC76UPe4A2d9FbCzxWFerBue7+wLdL21ag7eZr76ksPOqJ6PbIulgOqbetyfnjulnaQQ8u1O0u8Bj7+B+ClcApB9FGYA3kSExfejdTgHmAdAzVwU4US5fo0IQeBdJngjeo3leJkimMsDc/uhO6YgaRU5qycrO/49CKf/HMMzEiDznEPtCMJT+EanDzHa70nkRytgjigLu+wLlBo=
-x-ms-traffictypediagnostic: PU1APC01HT238:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fUB4sd2iqfnk780PFibW5IEQGZNbuBT83AYMRxFZqAmyv3Iw9typxQIiN4wFYD7VnooM/SLv6q/VT1LK8dD8ovUhsWboZuifK3amjqQ6FFpLi1evLrb5GNMsRGeOVzQuZk79IqKBdEFM2NgVJdabT4OJpKgYJIQM4Ulm4Q273nTfESR5dtF1RdCD0+WyiT8h
-x-ms-exchange-antispam-messagedata: AcKr+nV2rbjlNwBCrWdn5HrRc+OGTOuS3WiDgy+3+KUBdeacUVhkSdhpw0KZWCeWydqREKEFDJ5+uaI7vqkOW47lvGe5PIfBR1uvavEh8oxbxUC6U7puR2T1tI1ocARZauIP8XgNqXZ4ew56a59m5MJZ/60kw1xrCssYlbd0AjwhP5qYxKkikbtbrMt2b3JIvEm/FqjtQhrcRdD3yKlseQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <258C4A77CD0E704DA0F560BB3459A2CA@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 2 Mar 2020 10:42:44 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47097 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgCBPmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 10:42:42 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200302154240euoutp0260b343ebcaf38123a0336cd9abd8fe8d~4hw1mOPat1227412274euoutp02j
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 15:42:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200302154240euoutp0260b343ebcaf38123a0336cd9abd8fe8d~4hw1mOPat1227412274euoutp02j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583163760;
+        bh=KWzOteUQaHJimJ522eyRNnUZIVwvvujxlZPPxP9BqIA=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=ZHQc0RESSl8K6Ftivo41sDPRdup7cZCMZEsgLzyfg121Fkr4OGMU5ybM/ONNrQQsG
+         BkMH0hsBcFbuHm3ojr1W47yCsU7DTALa6PuururxBmOSz+kMCktKbOLlL5OqTakz46
+         qlPisHxoUg+U7KMxY0avtSsF0ORBX+BP3ztOdUKE=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200302154240eucas1p13c93cc0a78c632aa4bc02b5803bb67d1~4hw1Z0j6M0821908219eucas1p1k;
+        Mon,  2 Mar 2020 15:42:40 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4B.20.60679.0792D5E5; Mon,  2
+        Mar 2020 15:42:40 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200302154239eucas1p1a0bec3246c7e62f1698b46fdd5f4d087~4hw0xJhk92477324773eucas1p1s;
+        Mon,  2 Mar 2020 15:42:39 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200302154239eusmtrp1c9c4771037707be72791a4124d74faf1~4hw0wgOEh2922329223eusmtrp1g;
+        Mon,  2 Mar 2020 15:42:39 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-39-5e5d29703169
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id C6.20.08375.F692D5E5; Mon,  2
+        Mar 2020 15:42:39 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200302154239eusmtip17adf9ee8f0c96b9ac9baa9a9c1ffce59~4hw0dpRVB1015510155eusmtip1j;
+        Mon,  2 Mar 2020 15:42:39 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH V2] video: remove set but not used variable
+ 'mach64RefFreq'
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com
+Message-ID: <d2c1eb0f-2129-a658-b0ab-5c7c1ba203c1@samsung.com>
+Date:   Mon, 2 Mar 2020 16:42:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c240aa6-3173-41b5-3cc2-08d7bec05386
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 15:42:34.3797
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT238
+In-Reply-To: <20200120063327.43548-1-yukuai3@huawei.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsWy7djP87oFmrFxBrtPC1tc+fqezeJE3wdW
+        i8u75rBZXHt3hs1izkI2i4WPbrA5sHm0HHnL6nG/+ziTx+dNcgHMUVw2Kak5mWWpRfp2CVwZ
+        jROfMBfM5Kn4tPIySwPjD84uRg4OCQETiU9v3LsYuTiEBFYwSnS/P80M4XwBcqZPZoJwPjNK
+        NEydAORwgnU8ub6UHSKxnFHi/fNXUM5bRomJK5eyglSxCVhJTGxfxQhiCwsESpyZuoAdxBYR
+        UJC41fwCrIFZoIdR4sCXPSwgCV4BO4mu5b/YQY5iEVCROHvaCyQsKhAh8enBYVaIEkGJkzOf
+        gJVzClhI7Jy3FMxmFhCXuPVkPhOELS/RvHU22A8SAovYJS71XGSHONtFYu/tk4wQtrDEq+Nb
+        oOIyEqcn97BANKxjlPjb8QKqezujxPLJ/9ggqqwl7pz7xQZyHbOApsT6XfoQYUeJ6S+eMkJC
+        kk/ixltBiCP4JCZtm84MEeaV6GgTgqhWk9iwbAMbzNqunSuZJzAqzULy2iwk78xC8s4shL0L
+        GFlWMYqnlhbnpqcWG+WllusVJ+YWl+al6yXn525iBCaZ0/+Of9nBuOtP0iFGAQ5GJR7eAObY
+        OCHWxLLiytxDjBIczEoivL6c0XFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnN
+        Tk0tSC2CyTJxcEo1MIZd9n37uez6SZ9Yc6av6bsKmEq//k+vqrrbwa17hGFh696JRxZ0P41Q
+        nSd+1nPnw/KjMm/qvtzh93I/ZOFwYqbAkaQm77XH0zNmMRXU5FtecC9OXNkl3MZQf0Ds+T+h
+        Vf+Du9u6M/MXOnIfzV18wZ7xuUj8m8o73n5H2c0iel99/PDqG9vHbCWW4oxEQy3mouJEAAGa
+        1YguAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsVy+t/xu7r5mrFxBptm61hc+fqezeJE3wdW
+        i8u75rBZXHt3hs1izkI2i4WPbrA5sHm0HHnL6nG/+ziTx+dNcgHMUXo2RfmlJakKGfnFJbZK
+        0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZjROfMBfM5Kn4tPIySwPjD84u
+        Rk4OCQETiSfXl7J3MXJxCAksZZRYcewZYxcjB1BCRuL4+jKIGmGJP9e62CBqXjNK7LlyiQkk
+        wSZgJTGxfRUjiC0sEChxZuoCdhBbREBB4lbzCzCbWaCHUeLXvHiI5m5Gibn/57CBJHgF7CS6
+        lv9iB1nGIqAicfa0F0hYVCBC4vCOWYwQJYISJ2c+YQGxOQUsJHbOW8oCMVNd4s+8S8wQtrjE
+        rSfzmSBseYnmrbOZJzAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltsqFecmFtcmpeul5yf
+        u4kRGFPbjv3cvIPx0sbgQ4wCHIxKPLwBzLFxQqyJZcWVuYcYJTiYlUR4fTmj44R4UxIrq1KL
+        8uOLSnNSiw8xmgL9NpFZSjQ5HxjveSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
+        Uotg+pg4OKUaGF2Cmw6Wbqhs31e3hn2+6gY30cqXL1/O+7n0zlplr3mVm56WvPz1YpFF716F
+        mo+r/2gx/Lo+fWv6zCthv+zfPJv8+afH3XsyOyMTGpVm/31juPHllR6tiGKz3zFn7A+pzD1/
+        WPiD57T+mlv7TymfEGs4ttn86HclvrdHoq4ukHioPWnzT235dT2HlViKMxINtZiLihMBCnfB
+        dL8CAAA=
+X-CMS-MailID: 20200302154239eucas1p1a0bec3246c7e62f1698b46fdd5f4d087
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200120063426eucas1p278d9f947fad536a5af16356afddab0e4
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200120063426eucas1p278d9f947fad536a5af16356afddab0e4
+References: <CGME20200120063426eucas1p278d9f947fad536a5af16356afddab0e4@eucas1p2.samsung.com>
+        <20200120063327.43548-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is at least one real-world use-case for write-only nvmem
-instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
-non-active NVMem file is read").
 
-Add support for write-only nvmem instances by adding attrs for 0200.
+On 1/20/20 7:33 AM, yu kuai wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/video/fbdev/aty/mach64_gx.c: In function ‘aty_var_to_pll_8398’:
+> drivers/video/fbdev/aty/mach64_gx.c:621:36: warning: variable
+> ‘mach64RefFreq’ set but not used [-Wunused-but-set-variable]
+> 
+> It is never used, and so can be removed.
+> 
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
 
-Change nvmem_register() to abort if NULL group is returned from
-nvmem_sysfs_get_groups().
+Patch queued for v5.7, thanks.
+ 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Return NULL from nvmem_sysfs_get_groups() in invalid cases.
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/nvmem/core.c        |  2 ++
- drivers/nvmem/nvmem-sysfs.c | 53 ++++++++++++++++++++++++++++++++-----
- 2 files changed, 48 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index ef326f243..27bd4c4e3 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -388,6 +388,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 			   config->read_only || !nvmem->reg_write;
- 
- 	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-+	if (!nvmem->dev.groups)
-+		return NULL;
- 
- 	device_initialize(&nvmem->dev);
- 
-diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-index 9e0c429cd..00d3259ea 100644
---- a/drivers/nvmem/nvmem-sysfs.c
-+++ b/drivers/nvmem/nvmem-sysfs.c
-@@ -196,16 +196,50 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
- 	NULL,
- };
- 
-+/* write only permission, root only */
-+static struct bin_attribute bin_attr_wo_root_nvmem = {
-+	.attr	= {
-+		.name	= "nvmem",
-+		.mode	= 0200,
-+	},
-+	.write	= bin_attr_nvmem_write,
-+};
-+
-+static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
-+	&bin_attr_wo_root_nvmem,
-+	NULL,
-+};
-+
-+static const struct attribute_group nvmem_bin_wo_root_group = {
-+	.bin_attrs	= nvmem_bin_wo_root_attributes,
-+	.attrs		= nvmem_attrs,
-+};
-+
-+static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
-+	&nvmem_bin_wo_root_group,
-+	NULL,
-+};
-+
- const struct attribute_group **nvmem_sysfs_get_groups(
- 					struct nvmem_device *nvmem,
- 					const struct nvmem_config *config)
- {
--	if (config->root_only)
--		return nvmem->read_only ?
--			nvmem_ro_root_dev_groups :
--			nvmem_rw_root_dev_groups;
--
--	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
-+	/* Read-only */
-+	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
-+		return config->root_only ?
-+			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
-+
-+	/* Read-write */
-+	if (nvmem->reg_read && nvmem->reg_write)
-+		return config->root_only ?
-+			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
-+
-+	/* Write-only, do not honour request for global writable entry */
-+	if (!nvmem->reg_read && nvmem->reg_write)
-+		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
-+
-+	/* Neither reg_read nor reg_write are provided, abort */
-+	return NULL;
- }
- 
- /*
-@@ -224,11 +258,16 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
- 	if (!config->base_dev)
- 		return -EINVAL;
- 
--	if (nvmem->read_only) {
-+	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only)) {
- 		if (config->root_only)
- 			nvmem->eeprom = bin_attr_ro_root_nvmem;
- 		else
- 			nvmem->eeprom = bin_attr_ro_nvmem;
-+	} else if (!nvmem->reg_read && nvmem->reg_write) {
-+		if (config->root_only)
-+			nvmem->eeprom = bin_attr_wo_root_nvmem;
-+		else
-+			return -EPERM;
- 	} else {
- 		if (config->root_only)
- 			nvmem->eeprom = bin_attr_rw_root_nvmem;
--- 
-2.25.1
-
+> ---
+> changes in V2:
+>  Fix the mistake that definition of 'mach64MinFreq' and 'mach64MaxFreq'
+>  was removed.
+> 
+>  drivers/video/fbdev/aty/mach64_gx.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/aty/mach64_gx.c b/drivers/video/fbdev/aty/mach64_gx.c
+> index 27cb65fa2ba2..9c37e28fb78b 100644
+> --- a/drivers/video/fbdev/aty/mach64_gx.c
+> +++ b/drivers/video/fbdev/aty/mach64_gx.c
+> @@ -618,14 +618,13 @@ static int aty_var_to_pll_8398(const struct fb_info *info, u32 vclk_per,
+>  	u32 mhz100;		/* in 0.01 MHz */
+>  	u32 program_bits;
+>  	/* u32 post_divider; */
+> -	u32 mach64MinFreq, mach64MaxFreq, mach64RefFreq;
+> +	u32 mach64MinFreq, mach64MaxFreq;
+>  	u16 m, n, k = 0, save_m, save_n, twoToKth;
+>  
+>  	/* Calculate the programming word */
+>  	mhz100 = 100000000 / vclk_per;
+>  	mach64MinFreq = MIN_FREQ_2595;
+>  	mach64MaxFreq = MAX_FREQ_2595;
+> -	mach64RefFreq = REF_FREQ_2595;	/* 14.32 MHz */
+>  
+>  	save_m = 0;
+>  	save_n = 0;
+> 
