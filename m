@@ -2,126 +2,91 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206CBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E3820848
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2045720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EIMWrRJP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2+CtWcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgCBPWi (ORCPT
+        id S1727335AbgCBPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:22:38 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:36374 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgCBPWi (ORCPT
+        Mon, 2 Mar 2020 10:23:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24413 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:22:38 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022Evu5U086099;
-        Mon, 2 Mar 2020 15:22:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : references : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=G/kvItGwy0v2Fs3ftwbEd0rVlgOOyAgL4aj7wJ7qNZM=;
- b=EIMWrRJPFCTSlxyodnP+JR3GxBOUIuWyd7a2GHh2qEZGyIOK7tm6Es2IRnu9+UxIr0/W
- BgUDOve59skYLmTgSRy8qJCz3QhHJhtuHbJEw09tVHV5EpjjCiNAUu/k7jFlFIngxAN1
- 7/w0Zd9Jegr7vONcmgo5Y7tPkFkJPZcl9dhAFNh2EphBQ4Upnp7awxmdBagwPOAXLt89
- vOwvyZ8ZZrtoBxNaSNVinZaQDGSVUNczekNjAE68JjpLr3Eb8P0MF+2zASrFZbbkF5cK
- PR/RNoBxs/qsmBlDZ0WF4qx5xYr0yfFxV2T5P+gZkGPIAl30ACTI8T6ZU0AhmaR5nbsE Qw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2yffwqgbv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Mar 2020 15:22:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022FKxk9001574;
-        Mon, 2 Mar 2020 15:22:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2yg1eh83un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Mar 2020 15:22:29 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 022FMRdO021370;
-        Mon, 2 Mar 2020 15:22:27 GMT
-Received: from kadam (/129.205.23.165) by default (Oracle Beehive Gateway
- v4.0) with ESMTP ; Mon, 02 Mar 2020 07:21:23 -0800
-USER-AGENT: Mutt/1.9.4 (2018-02-28)
+        Mon, 2 Mar 2020 10:23:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583162611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QnN+iIj+lJ/C1dzRk6vOrtrA8A6rdXY2O4R067Olucc=;
+        b=h2+CtWcv6Pi6aeAcAbNRvRjbpJQBGBzNAEVNSV6WrGKPR+dbhisi9kZGKLxmHqKsM4S5Zb
+        0bF0jw7PpKKSp6IGOkDgFgVGUPCOYJTJGvixvIqKqLt53ZcROVqouQwVGpmNCjjh/f0MhH
+        PwiieKrAyrAFNamivaoOdA5l1ANl6zU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-HUcrpoOwNeSKqK0Ek5dKSg-1; Mon, 02 Mar 2020 10:23:29 -0500
+X-MC-Unique: HUcrpoOwNeSKqK0Ek5dKSg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6464101FC6B;
+        Mon,  2 Mar 2020 15:23:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 077B18D553;
+        Mon,  2 Mar 2020 15:23:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200302151021.x5mm54jtoukg4tdk@yavin>
+References: <20200302151021.x5mm54jtoukg4tdk@yavin> <20200302143546.srzk3rnh4o6s76a7@wittgenstein> <20200302115239.pcxvej3szmricxzu@wittgenstein> <96563.1582901612@warthog.procyon.org.uk> <20200228152427.rv3crd7akwdhta2r@wittgenstein> <87h7z7ngd4.fsf@oldenburg2.str.redhat.com> <848282.1583159228@warthog.procyon.org.uk> <888183.1583160603@warthog.procyon.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     dhowells@redhat.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fweimer@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
 MIME-Version: 1.0
-Message-ID: <20200302152058.GB24372@kadam>
-Date:   Mon, 2 Mar 2020 07:20:58 -0800 (PST)
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-tegra@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v1] media: staging: tegra-vde: Use
- devm_platform_ioremap_resource_byname()
-References: <20200227180915.9541-1-digetx@gmail.com>
- <20200302080456.GD4140@kadam>
- <d748bf2c-e38c-dabb-59ad-39e14813e40a@gmail.com>
-In-Reply-To: <d748bf2c-e38c-dabb-59ad-39e14813e40a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003020110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003020110
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <927227.1583162604.1@warthog.procyon.org.uk>
+Date:   Mon, 02 Mar 2020 15:23:24 +0000
+Message-ID: <927228.1583162604@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:04:20PM +0300, Dmitry Osipenko wrote:
-> 02.03.2020 11:04, Dan Carpenter пишет:
-> > On Thu, Feb 27, 2020 at 09:09:15PM +0300, Dmitry Osipenko wrote:
-> >> This helps to make code cleaner a tad.
-> > 
-> > Please don't start the commit message in the middle of a sentence.
-> 
-> Could you please clarify what do you mean by the "middle of a sentence"?
-> The commit's message doesn't sound "middle" to me at all.
-> 
-> > It looks like this for some of us:
-> > 
-> > https://marc.info/?l=linux-driver-devel&m=158282701430176&w=2
-> 
-> This link points to this patch, I don't quite understand what you're
-> trying to convey here.
-> 
-> > I generally read the subject or the full commit message but seldom
-> > both.
-> 
-> The commit's title describes the change briefly, while the message gives
-> a rational for the change. Usually reviewer should consult the code
-> changes themselves for more details.
-> 
-> Do you have some kind of a email filter that shows only the commit's
-> message? Otherwise I'm not sure what's the problem.
+Aleksa Sarai <cyphar@cyphar.com> wrote:
 
+> My counter-argument is that most people actually want
+> RESOLVE_NO_SYMLINKS (as evidenced by the countless symlink-related
+> security bugs -- many of which used O_NOFOLLOW incorrectly), it just
+> wasn't available before Linux 5.6.
 
-The commit message just says "This helps to make code cleaner a tad."
-but it doesn't mention devm_platform_ioremap_resource_byname().  That
-information is there in the subject but not in the commit message itself.
-Take a look at the link I sent you and try to find the subject.  It's
-far away from the commit message.
+I would quibble as to whether they actually want this in all situations.
+There are some in which the difference in behaviour will conceivably break
+things - though that's more the case for things like stat(), statx(), fsinfo()
+and getxattr() where you might want to be able to query a specific symlink
+than for openat2() where you almost always want to follow it (save O_PATH |
+O_NOFOLLOW).
 
-regards,
-dan carpenter
+However, if you're okay with me adding, say, RESOLVE_NO_TERMINAL_SYMLINK and
+RESOLVE_NO_TERMINAL_AUTOMOUNT, I can use these flags.
+
+I don't want to have to allow both RESOLVE_* and AT_*.
+
+David
 
