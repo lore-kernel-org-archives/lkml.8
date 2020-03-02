@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16FAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5C5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75C324699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1781A24697
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOxgWJ8m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNHTZs2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgCBAUS (ORCPT
+        id S1726755AbgCBAUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:20:18 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36588 "EHLO
+        Sun, 1 Mar 2020 19:20:21 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46425 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgCBAUQ (ORCPT
+        with ESMTP id S1726562AbgCBAUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:20:16 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j16so10373641wrt.3;
-        Sun, 01 Mar 2020 16:20:15 -0800 (PST)
+        Sun, 1 Mar 2020 19:20:14 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j7so10260630wrp.13;
+        Sun, 01 Mar 2020 16:20:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XwflzW73qPOe/GTQwpcOAM7KQXM3qVC8t1TrgTjVHHc=;
-        b=aOxgWJ8mTfaIRVcpC1itBRUKh01kGUyqzp5M7fP5fK2xssn7ysN26LLER/EMNzDS4u
-         K5dkYmZmPAL+Tfjmzc7dwJ/yv8EupAjBHxcRf5OrEsDoXap7hDWtt14DPAiuLR6/E2ZR
-         EZhqyKab3y/acB+b8rdSMDY4HIwJAwvj4NYcovKQqg6j093ItmG5AHIDpqcAEOJbko0A
-         htLrlQqxdHK8SwdXU+EjPYPsPtM6UGNCo7BUpEzZKm/8VOb52jlQMteika7Fp+6H2Mtq
-         TmsW6xAqwyfebMcMy8Eq4PtbrUS5Tly1+Y20886qfJAdG+uCk5lVCD8gK8Ckqq2jyQoj
-         VR6w==
+        bh=q/4hkXZDf7Y1E5NQ67SwQKMTujilQp/qfoqcDOmzaLU=;
+        b=GNHTZs2ukLki4SQaZBCE/FutoDq8Fsii4TzuX4EujqDccxF0ZRgw445Zdr9QPhShfL
+         C12xjV1YT2qaDiQXNBDfN9xWemQm336RFisfkdBm4Y/JwzJ8woxeaw/qoowoK6hj6A9J
+         cDMQROwtd0CXcQw0MlULvGgdTg0UTJX0+qGPIu8ufwTV2xoUc8oj/1exzTFS3Lq+QwuY
+         br8MFpHAWI5js4z5VC5kMVf0QWWjl9N+yctolxd+HuyLMCPYFDylxyvFJOGZm3ZJ/48W
+         E04lSuWKhzYD9x5eizt7YPBTsnHgb+x1cMB0Zg/Kiy7m7e/XfONc2b2qOfOFF5PlsZnr
+         MQcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XwflzW73qPOe/GTQwpcOAM7KQXM3qVC8t1TrgTjVHHc=;
-        b=KwaDJ6JV2+agr0xhdbJrL94euczB1poNWZOfeBeqa7stzuSlFRKf/6lFKurBiYF/nL
-         +x2LS44Uxhd10ytI6IG2DHez/ItJ2MBNYJl3jOU70KfkhDun2i/NZzQ3O4bJbLVs/iYT
-         xNOKs5w+YyAGmcqT5iqOaWKGBG7UMxsBDaa3kgDcmn1oMrxFpLsvEXswWy+x+0SfVeCi
-         Cb8MRQ+rHZj/BcJvDIEUMHepAxQAGEKEAygmJslB5/7IojYedECl+KVPAqP55KDoriQu
-         6uspYlb8W+FMauVYrfWNnKqBTuXWP7Xyn/Z3KihhYzRUjRxg31DRO7yL7sFyN5Ajk+aG
-         7yBQ==
-X-Gm-Message-State: APjAAAV+ag6vL72OWokn9fxxW6dsTKyH2+lE85B7Y4OEU6xrwN9/vBZe
-        jo3iiAmimjLqYqC5BeElh/k=
-X-Google-Smtp-Source: APXvYqymqA/RB6sE4CysvUiIUuKxrT81mIHqBRFBWPQ30CrkRgQ03AJFoViOTZJv0Hh8kRwrwoZGkA==
-X-Received: by 2002:a5d:4692:: with SMTP id u18mr18595761wrq.206.1583108414631;
-        Sun, 01 Mar 2020 16:20:14 -0800 (PST)
+        bh=q/4hkXZDf7Y1E5NQ67SwQKMTujilQp/qfoqcDOmzaLU=;
+        b=r1zUxAOTkLLQQ0cW7+Nsu5LU17DV6Z2AUjEn1Fb3ieS9FRyxCsO5OzWyE1a7fxYBNc
+         FYIJ7QbpgiVkmHrz22/YCzFa2ERj1If/dPGYOTY8xMB/K5+Sg4qtisVYHXdXo6brf2Zq
+         lsvWKvuayr3QYZzBYwx3vLQEfMJXWp+QqWMff75GABbTAJdhzxJKFLKycXqvXPDqcviz
+         OjlQmSoPk39IQIv5cYM+kiV5LLETDnsjvIltnBra0XH+LoqeBAv7jjFVZM4QfHZ+kkRK
+         vNPMPU5XTWO/jWERa1q2eFBhfw5omN6EDKRgsWaYz+U0t9qJcQIOT0yL14xgI1K3A1c8
+         i4+w==
+X-Gm-Message-State: APjAAAU/VgU/cxp5PqriAusN+64zdnmOpCCkhOGaS7f6tah0ABam9Pkd
+        ++PXh8DV8WCbO0V5lxyew9OgksMc
+X-Google-Smtp-Source: APXvYqxlhEO85aDLHrHAVDprxv1+3m5IUtOFLygycpVgyj4wi+Amnfr1rKl4h7KNy/bEnhX7rrExXw==
+X-Received: by 2002:adf:edd0:: with SMTP id v16mr19159284wro.357.1583108411767;
+        Sun, 01 Mar 2020 16:20:11 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id k16sm25428417wrd.17.2020.03.01.16.20.13
+        by smtp.gmail.com with ESMTPSA id k16sm25428417wrd.17.2020.03.01.16.20.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 16:20:14 -0800 (PST)
+        Sun, 01 Mar 2020 16:20:11 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] spi: spi-fsl-dspi: Support SPI software timestamping in all non-DMA modes
-Date:   Mon,  2 Mar 2020 02:19:57 +0200
-Message-Id: <20200302001958.11105-6-olteanv@gmail.com>
+Subject: [PATCH 2/6] spi: spi-fsl-dspi: Use specific compatible strings for all SoC instantiations
+Date:   Mon,  2 Mar 2020 02:19:54 +0200
+Message-Id: <20200302001958.11105-3-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200302001958.11105-1-olteanv@gmail.com>
 References: <20200302001958.11105-1-olteanv@gmail.com>
@@ -72,85 +72,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-There's no reason to keep this .ptp_sts_supported property explicitly in
-devtype_data, since it can be deduced from the operating mode alone.
+Currently, the device tree bindings submitted in mainline for Layerscape
+SoCs look like this:
+
+LS1021A:
+compatible = "fsl,ls1021a-v1.0-dspi";
+
+LS1012A:
+compatible = "fsl,ls1012a-dspi", "fsl,ls1021a-v1.0-dspi";
+
+LS2085A:
+compatible = "fsl,ls2085a-dspi";
+
+LS2088A:
+compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
+
+LX2160A:
+compatible = "fsl,lx2160a-dspi", "fsl,ls2085a-dspi";
+
+LS1043A:
+compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+
+LS1046A:
+compatible = "fsl,ls1021a-v1.0-dspi";
+
+Due to a lack of a more specific compatible string, LS1012A, LS1043A and
+LS1046A will fall under the LS1021A umbrella, and LS2088A and LX2160A
+under the LS2085A umbrella.
+
+They do work in those modes, but there are slight differences in the
+hardware instantiations, mostly related to FIFO sizes (with the more
+specific compatible strings, the FIFO size can be increased properly).
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/spi/spi-fsl-dspi.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 108 +++++++++++++++++++++++++++++--------
+ 1 file changed, 85 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index d21cc5cdc8a4..c26a42f8ecbc 100644
+index 6ec2dcb8c57a..021c658886d4 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -122,7 +122,6 @@ enum dspi_trans_mode {
- struct fsl_dspi_devtype_data {
- 	enum dspi_trans_mode	trans_mode;
- 	u8			max_clock_factor;
--	bool			ptp_sts_supported;
+@@ -133,27 +133,66 @@ struct fsl_dspi_devtype_data {
  	bool			xspi_mode;
- 	int			fifo_size;
- 	int			dma_bufsize;
-@@ -150,48 +149,41 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
- 	[LS1021A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
- 	},
- 	[LS1012A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS1043A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS1046A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 16,
- 	},
- 	[LS2080A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
- 	},
- 	[LS2085A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.fifo_size		= 4,
- 	},
- 	[LX2160A] = {
- 		.trans_mode		= DSPI_TCFQ_MODE,
- 		.max_clock_factor	= 8,
--		.ptp_sts_supported	= true,
- 		.xspi_mode		= true,
- 		.fifo_size		= 4,
- 	},
-@@ -1246,7 +1238,8 @@ static int dspi_probe(struct platform_device *pdev)
- 	ctlr->max_speed_hz =
- 		clk_get_rate(dspi->clk) / dspi->devtype_data->max_clock_factor;
+ };
  
--	ctlr->ptp_sts_supported = dspi->devtype_data->ptp_sts_supported;
-+	if (dspi->devtype_data->trans_mode != DSPI_DMA_MODE)
-+		ctlr->ptp_sts_supported = true;
+-static const struct fsl_dspi_devtype_data vf610_data = {
+-	.trans_mode		= DSPI_DMA_MODE,
+-	.max_clock_factor	= 2,
++enum {
++	LS1021A,
++	LS1012A,
++	LS1043A,
++	LS1046A,
++	LS2080A,
++	LS2085A,
++	LX2160A,
++	MCF5441X,
++	VF610,
+ };
  
- 	platform_set_drvdata(pdev, ctlr);
+-static const struct fsl_dspi_devtype_data ls1021a_v1_data = {
+-	.trans_mode		= DSPI_TCFQ_MODE,
+-	.max_clock_factor	= 8,
+-	.ptp_sts_supported	= true,
+-	.xspi_mode		= true,
+-};
+-
+-static const struct fsl_dspi_devtype_data ls2085a_data = {
+-	.trans_mode		= DSPI_TCFQ_MODE,
+-	.max_clock_factor	= 8,
+-	.ptp_sts_supported	= true,
+-};
+-
+-static const struct fsl_dspi_devtype_data coldfire_data = {
+-	.trans_mode		= DSPI_EOQ_MODE,
+-	.max_clock_factor	= 8,
++static const struct fsl_dspi_devtype_data devtype_data[] = {
++	[VF610] = {
++		.trans_mode		= DSPI_DMA_MODE,
++		.max_clock_factor	= 2,
++	},
++	[LS1021A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++		.xspi_mode		= true,
++	},
++	[LS1012A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++		.xspi_mode		= true,
++	},
++	[LS1043A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++		.xspi_mode		= true,
++	},
++	[LS1046A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++		.xspi_mode		= true,
++	},
++	[LS2080A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++	},
++	[LS2085A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++	},
++	[LX2160A] = {
++		.trans_mode		= DSPI_TCFQ_MODE,
++		.max_clock_factor	= 8,
++		.ptp_sts_supported	= true,
++	},
++	[MCF5441X] = {
++		.trans_mode		= DSPI_EOQ_MODE,
++		.max_clock_factor	= 8,
++	},
+ };
  
+ struct fsl_dspi_dma {
+@@ -909,9 +948,31 @@ static void dspi_cleanup(struct spi_device *spi)
+ }
+ 
+ static const struct of_device_id fsl_dspi_dt_ids[] = {
+-	{ .compatible = "fsl,vf610-dspi", .data = &vf610_data, },
+-	{ .compatible = "fsl,ls1021a-v1.0-dspi", .data = &ls1021a_v1_data, },
+-	{ .compatible = "fsl,ls2085a-dspi", .data = &ls2085a_data, },
++	{
++		.compatible = "fsl,vf610-dspi",
++		.data = &devtype_data[VF610],
++	}, {
++		.compatible = "fsl,ls1021a-v1.0-dspi",
++		.data = &devtype_data[LS1021A],
++	}, {
++		.compatible = "fsl,ls1012a-dspi",
++		.data = &devtype_data[LS1012A],
++	}, {
++		.compatible = "fsl,ls1043a-dspi",
++		.data = &devtype_data[LS1043A],
++	}, {
++		.compatible = "fsl,ls1046a-dspi",
++		.data = &devtype_data[LS1046A],
++	}, {
++		.compatible = "fsl,ls2080a-dspi",
++		.data = &devtype_data[LS2080A],
++	}, {
++		.compatible = "fsl,ls2085a-dspi",
++		.data = &devtype_data[LS2085A],
++	}, {
++		.compatible = "fsl,lx2160a-dspi",
++		.data = &devtype_data[LX2160A],
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_dspi_dt_ids);
+@@ -1064,7 +1125,8 @@ static int dspi_probe(struct platform_device *pdev)
+ 		ctlr->num_chipselect = pdata->cs_num;
+ 		ctlr->bus_num = pdata->bus_num;
+ 
+-		dspi->devtype_data = &coldfire_data;
++		/* Only Coldfire uses platform data */
++		dspi->devtype_data = &devtype_data[MCF5441X];
+ 	} else {
+ 
+ 		ret = of_property_read_u32(np, "spi-num-chipselects", &cs_num);
 -- 
 2.17.1
 
