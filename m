@@ -2,106 +2,73 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA51BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8006C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2C921556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZLX1keKi"
+	by mail.kernel.org (Postfix) with ESMTP id 8703821556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCBUFB (ORCPT
+        id S1726857AbgCBUFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:05:01 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58052 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgCBUE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:04:57 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 022K4ckN059606;
-        Mon, 2 Mar 2020 14:04:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583179478;
-        bh=MnQUCS2p5FfCgMGaa35GROR+KFXSAuN1485gewbObmg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZLX1keKiYtyS0FUD45taRcFpUwfFkfBMyi3jzP9Rxv/onati4HHfBQHC5nHw+ae8Y
-         dOLQC9QPemVMdnQFEwGNSgcmpRmGoTCJ/tU6butsaANoQnbW+LwJveCXoA6l2SQNlW
-         swuP32dY9bX5OKiAfQLBFDa+eYAQikpeBKfq1A28=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 022K4ccu029339
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 2 Mar 2020 14:04:38 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Mar
- 2020 14:04:37 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 2 Mar 2020 14:04:37 -0600
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 022K4UtE074555;
-        Mon, 2 Mar 2020 14:04:36 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCHv2 4/4] arm64: dts: ti: k3-j721e-main: Add MAIN domain watchdog entries
-Date:   Mon, 2 Mar 2020 22:04:26 +0200
-Message-ID: <20200302200426.6492-5-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200302200426.6492-1-t-kristo@ti.com>
-References: <20200302200426.6492-1-t-kristo@ti.com>
+        Mon, 2 Mar 2020 15:05:19 -0500
+Received: from ms.lwn.net ([45.79.88.28]:58470 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgCBUFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:05:18 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 03FC8823;
+        Mon,  2 Mar 2020 20:05:17 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 13:05:17 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <linux-doc@vger.kernel.org>, <paulmck@kernel.org>, <tj@kernel.org>,
+        <jiangshanlai@gmail.com>, <wanghaibin.wang@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: kthread: Fix WQ_SYSFS workqueues path
+ name
+Message-ID: <20200302130517.075f97ee@lwn.net>
+In-Reply-To: <20200225124052.1506-1-yuzenghui@huawei.com>
+References: <20200225124052.1506-1-yuzenghui@huawei.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT entries for main domain watchdog0 and 1 instances.
+On Tue, 25 Feb 2020 20:40:52 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> The set of WQ_SYSFS workqueues should be displayed using
+> "ls /sys/devices/virtual/workqueue", add the missing '/'.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  Documentation/admin-guide/kernel-per-CPU-kthreads.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+> index baeeba8762ae..21818aca4708 100644
+> --- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+> +++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+> @@ -234,7 +234,7 @@ To reduce its OS jitter, do any of the following:
+>  	Such a workqueue can be confined to a given subset of the
+>  	CPUs using the ``/sys/devices/virtual/workqueue/*/cpumask`` sysfs
+>  	files.	The set of WQ_SYSFS workqueues can be displayed using
+> -	"ls sys/devices/virtual/workqueue".  That said, the workqueues
+> +	"ls /sys/devices/virtual/workqueue".  That said, the workqueues
+>  	maintainer would like to caution people against indiscriminately
+>  	sprinkling WQ_SYSFS across all the workqueues.	The reason for
+>  	caution is that it is easy to add WQ_SYSFS, but because sysfs is
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 0b9d14b838a1..7ab989496c2c 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -963,4 +963,22 @@
- 
- 		status = "disabled";
- 	};
-+
-+	main_rti0: rti@2200000 {
-+		compatible = "ti,rti-wdt";
-+		reg = <0x0 0x2200000 0x0 0x100>;
-+		clocks = <&k3_clks 252 1>;
-+		power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 252 1>;
-+		assigned-clock-parents = <&k3_clks 252 5>;
-+	};
-+
-+	main_rti1: rti@2210000 {
-+		compatible = "ti,rti-wdt";
-+		reg = <0x0 0x2210000 0x0 0x100>;
-+		clocks = <&k3_clks 253 1>;
-+		power-domains = <&k3_pds 253 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 253 1>;
-+		assigned-clock-parents = <&k3_clks 253 5>;
-+	};
- };
--- 
-2.17.1
+Applied, thanks.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+jon
