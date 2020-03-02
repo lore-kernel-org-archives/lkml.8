@@ -4,110 +4,201 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80629C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B4AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577BC21D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C912166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgCBOst (ORCPT
+        id S1727299AbgCBOsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:48:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:33684 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbgCBOst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:48:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DDBF2F;
-        Mon,  2 Mar 2020 06:48:48 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 807FB3F534;
-        Mon,  2 Mar 2020 06:48:45 -0800 (PST)
-Date:   Mon, 2 Mar 2020 14:48:43 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, peterz@infradead.org, mpe@ellerman.id.au,
-        paulus@samba.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, alexey.budankov@linux.intel.com,
-        yao.jin@linux.intel.com, robert.richter@amd.com,
-        kim.phillips@amd.com, maddy@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Subject: Re: [RFC 02/11] perf/core: Data structure to present hazard data
-Message-ID: <20200302144842.GD56497@lakrids.cambridge.arm.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302052355.36365-3-ravi.bangoria@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302052355.36365-3-ravi.bangoria@linux.ibm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Mon, 2 Mar 2020 09:48:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18320 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727194AbgCBOsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:48:55 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EiTwM045237
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 09:48:54 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfhqpqr68-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:48:53 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Mar 2020 14:48:51 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 14:48:48 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022EmkZv56623236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 14:48:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF63A11C05C;
+        Mon,  2 Mar 2020 14:48:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 840F811C052;
+        Mon,  2 Mar 2020 14:48:45 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.229.179])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 14:48:45 +0000 (GMT)
+Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-efi@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 02 Mar 2020 09:48:44 -0500
+In-Reply-To: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030214-0016-0000-0000-000002EC4F1B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030214-0017-0000-0000-0000334F9204
+Message-Id: <1583160524.8544.91.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 10:53:46AM +0530, Ravi Bangoria wrote:
-> From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
+> Every time a new architecture defines the IMA architecture specific
+> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> include file needs to be updated. To avoid this "noise", this patch
+> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> the different architectures to select it.
 > 
-> Introduce new perf sample_type PERF_SAMPLE_PIPELINE_HAZ to request kernel
-> to provide cpu pipeline hazard data. Also, introduce arch independent
-> structure 'perf_pipeline_haz_data' to pass hazard data to userspace. This
-> is generic structure and arch specific data needs to be converted to this
-> format.
-> 
-> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Philipp Rudo <prudo@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
 > ---
->  include/linux/perf_event.h            |  7 ++++++
->  include/uapi/linux/perf_event.h       | 32 ++++++++++++++++++++++++++-
->  kernel/events/core.c                  |  6 +++++
->  tools/include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++-
->  4 files changed, 75 insertions(+), 2 deletions(-)
+>  arch/powerpc/Kconfig           | 2 +-
+>  arch/s390/Kconfig              | 1 +
+>  arch/x86/Kconfig               | 1 +
+>  include/linux/ima.h            | 3 +--
+>  security/integrity/ima/Kconfig | 9 +++++++++
+>  5 files changed, 13 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 547773f5894e..d5b606e3c57d 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1001,6 +1001,7 @@ struct perf_sample_data {
->  	u64				stack_user_size;
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 497b7d0b2d7e..b8ce1b995633 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -246,6 +246,7 @@ config PPC
+>  	select SYSCTL_EXCEPTION_TRACE
+>  	select THREAD_INFO_IN_TASK
+>  	select VIRT_TO_BUS			if !PPC64
+> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if PPC_SECURE_BOOT
+>  	#
+>  	# Please keep this list sorted alphabetically.
+>  	#
+> @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
+>  	prompt "Enable secure boot support"
+>  	bool
+>  	depends on PPC_POWERNV
+> -	depends on IMA_ARCH_POLICY
+>  	help
+>  	  Systems with firmware secure boot enabled need to define security
+>  	  policies to extend secure boot to the OS. This config allows a user
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 8abe77536d9d..90ff3633ade6 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -195,6 +195,7 @@ config S390
+>  	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+>  	select SWIOTLB
+>  	select GENERIC_ALLOCATOR
+> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT
 >  
->  	u64				phys_addr;
-> +	struct perf_pipeline_haz_data	pipeline_haz;
->  } ____cacheline_aligned;
 >  
->  /* default value for data source */
-> @@ -1021,6 +1022,12 @@ static inline void perf_sample_data_init(struct perf_sample_data *data,
->  	data->weight = 0;
->  	data->data_src.val = PERF_MEM_NA;
->  	data->txn = 0;
-> +	data->pipeline_haz.itype = PERF_HAZ__ITYPE_NA;
-> +	data->pipeline_haz.icache = PERF_HAZ__ICACHE_NA;
-> +	data->pipeline_haz.hazard_stage = PERF_HAZ__PIPE_STAGE_NA;
-> +	data->pipeline_haz.hazard_reason = PERF_HAZ__HREASON_NA;
-> +	data->pipeline_haz.stall_stage = PERF_HAZ__PIPE_STAGE_NA;
-> +	data->pipeline_haz.stall_reason = PERF_HAZ__SREASON_NA;
->  }
+>  config SCHED_OMIT_FRAME_POINTER
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index beea77046f9b..cafa66313fe2 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -230,6 +230,7 @@ config X86
+>  	select VIRT_TO_BUS
+>  	select X86_FEATURE_NAMES		if PROC_FS
+>  	select PROC_PID_ARCH_STATUS		if PROC_FS
+> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if EFI
+
+Not everyone is interested in enabling IMA or requiring IMA runtime
+policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
+still left up to the person building the kernel.  As a result, I'm
+seeing the following warning, which is kind of cool.
+
+WARNING: unmet direct dependencies detected for
+IMA_SECURE_AND_OR_TRUSTED_BOOT
+  Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
+  Selected by [y]:
+  - X86 [=y] && EFI [=y]
+
+Ard, Michael, Martin, just making sure this type of warning is
+acceptable before upstreaming this patch.  I would appreciate your
+tags.
+
+thanks!
+
+Mimi
+
 >  
->  extern void perf_output_sample(struct perf_output_handle *handle,
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 377d794d3105..ff252618ca93 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -142,8 +142,9 @@ enum perf_event_sample_format {
->  	PERF_SAMPLE_REGS_INTR			= 1U << 18,
->  	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
->  	PERF_SAMPLE_AUX				= 1U << 20,
-> +	PERF_SAMPLE_PIPELINE_HAZ		= 1U << 21,
+>  config INSTRUCTION_DECODER
+>  	def_bool y
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 1659217e9b60..aefe758f4466 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+>  #endif
+>  
+> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> -	|| defined(CONFIG_PPC_SECURE_BOOT)
+> +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+>  extern bool arch_ima_get_secureboot(void);
+>  extern const char * const *arch_get_ima_policy(void);
+>  #else
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 3f3ee4e2eb0d..d17972aa413a 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+>  	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+>  	depends on SYSTEM_TRUSTED_KEYRING
+>  	default y
+> +
+> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> +	bool
+> +	depends on IMA
+> +	depends on IMA_ARCH_POLICY
+> +	default n
+> +	help
+> +	   This option is selected by architectures to enable secure and/or
+> +	   trusted boot based on IMA runtime policies.
 
-Can we please have perf_event_open() reject this sample flag for PMUs
-without the new callback (introduced in the next patch)?
 
-That way it'll be possible to detect whether the PMU exposes this.
 
-Thanks,
-Mark.
+
