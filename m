@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A1DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9261217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324AC20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgCBX51 (ORCPT
+        id S1727736AbgCCAAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:57:27 -0500
-Received: from mga17.intel.com ([192.55.52.151]:37739 "EHLO mga17.intel.com"
+        Mon, 2 Mar 2020 19:00:47 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25519 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCBX5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:25 -0500
+        id S1727398AbgCBX51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384740"
+   d="scan'208";a="243384640"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:23 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:21 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 39/66] KVM: SVM: Convert feature updates from CPUID to KVM cpu caps
-Date:   Mon,  2 Mar 2020 15:56:42 -0800
-Message-Id: <20200302235709.27467-40-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 06/66] KVM: x86: Move CPUID 0xD.1 handling out of the index>0 loop
+Date:   Mon,  2 Mar 2020 15:56:09 -0800
+Message-Id: <20200302235709.27467-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -49,135 +49,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the recently introduced KVM CPU caps to propagate SVM-only (kernel)
-settings to supported CPUID flags.
+Mov the sub-leaf 1 handling for CPUID 0xD out of the index>0 loop so
+that the loop only handles index>2.  Sub-leafs 2+ have identical
+semantics, whereas sub-leaf 1 is effectively a feature sub-leaf.
 
-Note, there are a few subtleties:
-
-  - Setting a flag based on a *different* feature is effectively
-    emulation, and must be done at runtime via ->set_supported_cpuid().
-
-  - CPUID 0x8000000A.EDX is a feature leaf that was previously not
-    adjusted by kvm_cpu_cap_mask() because all features are hidden by
-    default.
-
-Opportunistically add a technically unnecessary break and fix an
-indentation issue in svm_set_supported_cpuid().
+Moving sub-leaf 1 out of the loop does duplicate a bit of code, but
+the nent/maxnent code will be consolidated in a future patch, and
+duplicating the clear of ECX/EDX is arguably a good thing as the reasons
+for clearing said registers are completely different.
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c |  6 ++++++
- arch/x86/kvm/svm.c   | 51 +++++++++++++++++++++++++++-----------------
- 2 files changed, 38 insertions(+), 19 deletions(-)
+ arch/x86/kvm/cpuid.c | 37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index f0b6885d2415..e26644d8280b 100644
+index e5cf1e0cf84a..fc8540596386 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -376,6 +376,12 @@ void kvm_set_cpu_caps(void)
- 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
- 	);
+@@ -653,26 +653,33 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		if (!supported)
+ 			break;
  
-+	/*
-+	 * Hide all SVM features by default, SVM will set the cap bits for
-+	 * features it emulates and/or exposes for L1.
-+	 */
-+	kvm_cpu_cap_mask(CPUID_8000_000A_EDX, 0);
+-		for (idx = 1, i = 1; idx < 64; ++idx) {
++		if (*nent >= maxnent)
++			goto out;
 +
- 	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
- 		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
- 		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 0725a67e3480..8ce07f6ebe8e 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1367,6 +1367,25 @@ static void svm_hardware_teardown(void)
- 	iopm_base = 0;
- }
++		do_host_cpuid(&entry[1], function, 1);
++		++*nent;
++
++		entry[1].eax &= kvm_cpuid_D_1_eax_x86_features;
++		cpuid_mask(&entry[1].eax, CPUID_D_1_EAX);
++		if (entry[1].eax & (F(XSAVES)|F(XSAVEC)))
++			entry[1].ebx = xstate_required_size(supported, true);
++		else
++			entry[1].ebx = 0;
++		/* Saving XSS controlled state via XSAVES isn't supported. */
++		entry[1].ecx = 0;
++		entry[1].edx = 0;
++
++		for (idx = 2, i = 2; idx < 64; ++idx) {
+ 			u64 mask = ((u64)1 << idx);
++
+ 			if (*nent >= maxnent)
+ 				goto out;
  
-+static __init void svm_set_cpu_caps(void)
-+{
-+	/* CPUID 0x1 */
-+	if (avic)
-+		kvm_cpu_cap_clear(X86_FEATURE_X2APIC);
-+
-+	/* CPUID 0x80000001 */
-+	if (nested)
-+		kvm_cpu_cap_set(X86_FEATURE_SVM);
-+
-+	/* CPUID 0x8000000A */
-+	/* Support next_rip if host supports it */
-+	if (boot_cpu_has(X86_FEATURE_NRIPS))
-+		kvm_cpu_cap_set(X86_FEATURE_NRIPS);
-+
-+	if (npt_enabled)
-+		kvm_cpu_cap_set(X86_FEATURE_NPT);
-+}
-+
- static __init int svm_hardware_setup(void)
- {
- 	int cpu;
-@@ -1479,6 +1498,8 @@ static __init int svm_hardware_setup(void)
- 			pr_info("Virtual GIF supported\n");
- 	}
- 
-+	svm_set_cpu_caps();
-+
- 	return 0;
- 
- err:
-@@ -6027,20 +6048,20 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
- 					 APICV_INHIBIT_REASON_NESTED);
- }
- 
-+/*
-+ * Vendor specific emulation must be handled via ->set_supported_cpuid(), not
-+ * svm_set_cpu_caps(), as capabilities configured during hardware_setup() are
-+ * masked against hardware/kernel support, i.e. they'd be lost.
-+ *
-+ * Note, setting a flag based on a *different* feature, e.g. setting VIRT_SSBD
-+ * if LS_CFG_SSBD or AMD_SSBD is supported, is effectively emulation.
-+ */
- static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- {
- 	switch (entry->function) {
--	case 0x1:
--		if (avic)
--			cpuid_entry_clear(entry, X86_FEATURE_X2APIC);
--		break;
--	case 0x80000001:
--		if (nested)
--			cpuid_entry_set(entry, X86_FEATURE_SVM);
--		break;
- 	case 0x80000008:
- 		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
--		     boot_cpu_has(X86_FEATURE_AMD_SSBD))
-+		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
- 		break;
- 	case 0x8000000A:
-@@ -6048,16 +6069,8 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
- 				   ASID emulation to nested SVM */
- 		entry->ecx = 0; /* Reserved */
--		entry->edx = 0; /* Per default do not support any
--				   additional features */
--
--		/* Support next_rip if host supports it */
--		if (boot_cpu_has(X86_FEATURE_NRIPS))
--			cpuid_entry_set(entry, X86_FEATURE_NRIPS);
--
--		/* Support NPT for the guest if enabled */
--		if (npt_enabled)
--			cpuid_entry_set(entry, X86_FEATURE_NPT);
-+		/* Note, 0x8000000A.EDX is managed via kvm_cpu_caps. */;
-+		break;
- 	}
- }
- 
+ 			do_host_cpuid(&entry[i], function, idx);
+-			if (idx == 1) {
+-				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
+-				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+-				entry[i].ebx = 0;
+-				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
+-					entry[i].ebx =
+-						xstate_required_size(supported,
+-								     true);
+-			} else {
+-				if (entry[i].eax == 0 || !(supported & mask))
+-					continue;
+-				if (WARN_ON_ONCE(entry[i].ecx & 1))
+-					continue;
+-			}
++			if (entry[i].eax == 0 || !(supported & mask))
++				continue;
++			if (WARN_ON_ONCE(entry[i].ecx & 1))
++				continue;
+ 			entry[i].ecx = 0;
+ 			entry[i].edx = 0;
+ 			++*nent;
 -- 
 2.24.1
 
