@@ -2,92 +2,70 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E18C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46A6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9061124695
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C2724677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oG436vtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgCBFrt (ORCPT
+        id S1726426AbgCBFyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:47:49 -0500
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:1126 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBFrt (ORCPT
+        Mon, 2 Mar 2020 00:54:00 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11339 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725446AbgCBFx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:47:49 -0500
-X-Greylist: delayed 553 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 00:47:46 EST
-Received: from ubuntu.localdomain (unknown [58.251.74.227])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id DA66B4E14F3;
-        Mon,  2 Mar 2020 13:38:26 +0800 (CST)
-From:   WANG Wenhu <wenhu.wang@vivo.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        wangwenhu <wenhu.wang@vivo.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, wenhu.pku@gmail.com
-Subject: [PATCH] powerpc/sysdev: fix compile errors
-Date:   Sun,  1 Mar 2020 21:37:59 -0800
-Message-Id: <20200302053801.26027-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 2 Mar 2020 00:53:59 -0500
+X-UUID: da4ad93e0dab4b2f8cc91e498331ea9c-20200302
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=t4He3J1fTTd1ShvzHhVtQAeAmIgLfyTFftjbZWTdLIo=;
+        b=oG436vtj99R9yR9HMOop9/lWBcqrx9FlOlgs4SH1S7PLeSKHjd+FyV+i3TPawFSoLd3aiJcyxAGPdZ7+9lAXb8yqEreONqg+AMxjEaJS3fWhXq1SiKFqh2MHQfJH4DxzL4jghxgyV1Wxz5nHgrQmtQ1JpFzHfMT131lxeKSQVFA=;
+X-UUID: da4ad93e0dab4b2f8cc91e498331ea9c-20200302
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1626716386; Mon, 02 Mar 2020 13:53:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 2 Mar 2020 13:51:13 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 2 Mar 2020 13:51:25 +0800
+Message-ID: <1583128432.18202.3.camel@mtkswgap22>
+Subject: Re: Applied "regulator: mt6359: Add support for MT6359 regulator"
+ to the regulator tree
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+Date:   Mon, 2 Mar 2020 13:53:52 +0800
+In-Reply-To: <20200226114706.GE4136@sirena.org.uk>
+References: <20200226114706.GE4136@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOS0tCQkJCSUxOSUtMTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PE06ODo4Ejg1IUIOVgk9HB1P
-        CDBPCRZVSlVKTkNISklMTktCTk5KVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlMWVdZCAFZQUhKSks3Bg++
-X-HM-Tid: 0a7099c0b1c19376kuwsda66b4e14f3
+X-TM-SNTS-SMTP: 942391240DD208876DE14664B578D3ED6A5B0C160211EB22242DAAFE98F653942000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-implicit-declaration compile errors when building Cache-Sram.
-
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
-cc1: all warnings being treated as errors
-
-Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
----
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..be3aef4229d7 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <linux/io.h>
- 
- #include "fsl_85xx_cache_ctlr.h"
- 
--- 
-2.17.1
+SGkgTWFyaywgDQoNCk9uIFdlZCwgMjAyMC0wMi0yNiBhdCAxMTo0NyArMDAwMCwgTWFyayBCcm93
+biB3cm90ZToNCj4gT24gVHVlLCBGZWIgMjUsIDIwMjAgYXQgMDE6MjQ6MTFQTSArMDAwMCwgTWFy
+ayBCcm93biB3cm90ZToNCj4gPiBUaGUgcGF0Y2gNCj4gPiANCj4gPiAgICByZWd1bGF0b3I6IG10
+NjM1OTogQWRkIHN1cHBvcnQgZm9yIE1UNjM1OSByZWd1bGF0b3INCj4gPiANCj4gPiBoYXMgYmVl
+biBhcHBsaWVkIHRvIHRoZSByZWd1bGF0b3IgdHJlZSBhdA0KPiANCj4gLi4uYW5kIGRyb3BwZWQg
+YmVjYXVzZSB0aGUgTUZEIGRlcGVuZGVuY3kgaXNuJ3Qgb24gYSBuZXdseSBhZGRlZCBkcml2ZXIN
+Cj4gbGlrZSBpdCBhcHBlYXJlZC4NCg0KSSBhbSBzb3JyeSB0byBib3RoZXIgeW91LiBIb3cgc2hv
+dWxkIEkgcHJvY2VlZCBmb3IgdGhpcyBwYXRjaCBzZXQgd2hpY2gNCmluY2x1ZGluZyByZWd1bGF0
+b3IgZHJpdmVyIGFuZCBNRkQgaGVhZGVyIGZpbGUgPyBQbGVhc2UgZ2l2ZSBhZHZpY2UuDQoNClRo
+YW5rIHlvdS4NCg0K
 
