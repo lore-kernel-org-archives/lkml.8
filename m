@@ -2,124 +2,86 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591DBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B83C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8B22187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6617B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583152594;
+	bh=80IAKKurJipGulBY6qxmnAmtFvPSGi71jpYvqjCAfTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e9NXxWAcUJ4vkjv39ERgb22X121ZoVVmllIbOcB46m8eGHXU9edWa04UZ7vVxMVrL
+	 T9dfM3oNM0KUPvaB1cv+mGyidg2bMxzappplGI572wxpKEcpNAx4W1irMe7TcH2GOI
+	 5GcYQS0iR7U9xV6bZyaotSGzALefzCXb/qMHaJqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgCBMfU (ORCPT
+        id S1727834AbgCBMgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:35:20 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2493 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727519AbgCBMfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:35:19 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5CB611CD9B5172B7698A;
-        Mon,  2 Mar 2020 12:35:18 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 2 Mar 2020 12:35:18 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 2 Mar 2020
- 12:35:17 +0000
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     Sinan Kaya <okaya@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-CC:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
-Date:   Mon, 2 Mar 2020 12:35:17 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 2 Mar 2020 07:36:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:60316 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727644AbgCBMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:36:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5453C2F;
+        Mon,  2 Mar 2020 04:36:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAB243F534;
+        Mon,  2 Mar 2020 04:36:31 -0800 (PST)
+Date:   Mon, 2 Mar 2020 12:36:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Applied "regulator: mt6359: Add support for MT6359 regulator" to
+ the regulator tree
+Message-ID: <20200302123630.GB4166@sirena.org.uk>
+References: <20200226114706.GE4136@sirena.org.uk>
+ <1583128432.18202.3.camel@mtkswgap22>
 MIME-Version: 1.0
-In-Reply-To: <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
+Content-Disposition: inline
+In-Reply-To: <1583128432.18202.3.camel@mtkswgap22>
+X-Cookie: Whistler's mother is off her rocker.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sinan,
 
-Thanks for getting back to me.
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On 2/28/2020 4:52 AM, John Garry wrote:
->> About the commit in the $subject 87fe2d543f81, would there be any
->> specific reason why the logic pio versions of these functions did not
->> get the same treatment 
+On Mon, Mar 02, 2020 at 01:53:52PM +0800, Wen Su wrote:
+> On Wed, 2020-02-26 at 11:47 +0000, Mark Brown wrote:
 
-In fact, your changes and the logic PIO changes went in at the same time.
+> > ...and dropped because the MFD dependency isn't on a newly added driver
+> > like it appeared.
 
-or should not? I'm talking about lib/logic_pio.c
->> here - commit 031e3601869c ("lib: Add generic PIO mapping method")
->> introduced this.
->>
->> In fact, logic pio will override these for arm64 with the vanilla
->> defconfig these days.
-> 
-> We only looked at inX()/inY() and readX()/writeX() API because the
-> semantics of these API are defined in the kernel documentation.
+> I am sorry to bother you. How should I proceed for this patch set which
+> including regulator driver and MFD header file ? Please give advice.
 
-Could we consider adding __io_pbr() et al to the kernel Documentation? I 
-couldn't find them and I had to rely on checking 64e2c67738 ("io: define 
-several IO & PIO barrier types for the asm-generic version") commit 
-message to find the definition.
+It should be fine as is once the MFD bits are figured out.
 
-> We looked at how to generalize this so that there is a uniform
-> behavior across different architectures.
-> 
-> Is logic PIO subject to ordering issues?
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Well the point is that we're still concerned here with using 
-readX/writeX for MMIO-based IO port accesses, see *** from logic_pio.c:
+-----BEGIN PGP SIGNATURE-----
 
-#define BUILD_LOGIC_IO(bw, type)					
-type logic_in##bw(unsigned long addr)					
-{									
-	type ret = (type)~0;						
-	if (addr < MMIO_UPPER_LIMIT) {					
-		ret = read##bw(PCI_IOBASE + addr); ***	
-	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
-		struct logic_pio_hwaddr *entry = find_io_range(addr);	
-									
-		if (entry)						
-			ret = entry->ops->in(entry->hostdata,		
-					addr, sizeof(type));		
-		else							
-			WARN_ON_ONCE(1);				
-	}								
-	return ret;							
-}		
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5c/c0ACgkQJNaLcl1U
+h9BcJwf/XJDjZQSsmGlG/Lu26eX7KcXXJnlMCF2ky0Y78TBxx6kwwWXCDrf/wbRU
+b5xFLQVZeFjfVi7TB7QaWrlXQT58SaxznkbRaQnOl+UbqnhWeMBCQb5HtRAAicsy
+zNCgd14C/YSeR8GfzEAulauMaITxBtSSYeANDBU5r7a/Vgxafb5sUyS8wlGBYf+X
+CRz7e8h28Q3PjezthC4l8mETSyKU0XYP3GCf8GIPoagDpRnxTI0FulifHS4iaDz4
+bT8kJwFnBR1Y+ynuAEoEbkfExesTzpmQANv1+Uyi7pcbEtviTVa9kntmBmRcB++S
+xEqCpWNPNM37q+Pb2PGzi4YM2vPFYw==
+=4c4P
+-----END PGP SIGNATURE-----
 
- > How is the behavior on different architectures?
-
-So today only ARM64 uses it for this relevant code, above. But maybe 
-others in future will want to use it - any arch without native IO port 
-access is a candidate.
-
-> 
-> As long as the expectations are set, I see no reason why it shouldn't
-> but, I'll let Arnd comment on it too.
-
-ok, so it looks reasonable consider replicating your change for ***, above.
-
-Thanks,
-John
+--hHWLQfXTYDoKhP50--
