@@ -2,111 +2,114 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80314C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7644BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AF2214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PhLRf+jp"
+	by mail.kernel.org (Postfix) with ESMTP id 57495214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCBPJX (ORCPT
+        id S1726982AbgCBPKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:09:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38063 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727070AbgCBPJX (ORCPT
+        Mon, 2 Mar 2020 10:10:36 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:30624 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgCBPKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:09:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583161762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KN1fqfQyEbwXImklW+2ThcI2BflCcy0zp7lyoZJOx4k=;
-        b=PhLRf+jp5XK2F3uLRpWmFRiCXsqdl3YeL9bsb36eGqig+KHyFT80v5PxTzsRqWbBjzqG0q
-        SktH0VrLyRppA3Z3W91QYVDRSBiafyfPUFxQ9iCJtNtwJ8xDNIl9RL0fgmrqsGJJzer0hO
-        aA3hsUFpaSOdBqO6OQs0EWboOqlwNNg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-3hkzKmMsNLKPX4c2s3YGhg-1; Mon, 02 Mar 2020 10:09:18 -0500
-X-MC-Unique: 3hkzKmMsNLKPX4c2s3YGhg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 2 Mar 2020 10:10:36 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39933801E76;
-        Mon,  2 Mar 2020 15:09:15 +0000 (UTC)
-Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D4F39CA3;
-        Mon,  2 Mar 2020 15:09:06 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 16:09:03 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v3 6/8] perf/tools: Enhance JSON/metric infrastructure to
- handle "?"
-Message-ID: <20200302150903.GC259142@krava>
-References: <20200229094159.25573-1-kjain@linux.ibm.com>
- <20200229094159.25573-7-kjain@linux.ibm.com>
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 48WNqs5Tn3zKmgv;
+        Mon,  2 Mar 2020 16:10:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id BoVpdSSri02n; Mon,  2 Mar 2020 16:10:30 +0100 (CET)
+Date:   Tue, 3 Mar 2020 02:10:21 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fweimer@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302151021.x5mm54jtoukg4tdk@yavin>
+References: <20200302143546.srzk3rnh4o6s76a7@wittgenstein>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <848282.1583159228@warthog.procyon.org.uk>
+ <888183.1583160603@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="42vyj6s72ngbbu3r"
 Content-Disposition: inline
-In-Reply-To: <20200229094159.25573-7-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <888183.1583160603@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 03:11:57PM +0530, Kajol Jain wrote:
 
-SNIP
+--42vyj6s72ngbbu3r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +					*dst++ = paramval[i++];
-> +				free(paramval);
-> +			}
-> +		}
->  		else
->  			*dst++ = *str;
->  		str++;
-> @@ -72,8 +86,8 @@ number		[0-9]+
->  
->  sch		[-,=]
->  spec		\\{sch}
-> -sym		[0-9a-zA-Z_\.:@]+
-> -symbol		{spec}*{sym}*{spec}*{sym}*
-> +sym            [0-9a-zA-Z_\.:@?]+
-> +symbol         {spec}*{sym}*{spec}*{sym}*{spec}*{sym}
->  
->  %%
->  	{
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 4720cbe79357..0f3ef0f37bf4 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -38,6 +38,8 @@
->  %type <num> expr if_expr
->  
->  %{
-> +int expr__runtimeparam;
+On 2020-03-02, David Howells <dhowells@redhat.com> wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> wrote:
+>=20
+> > I think we settled this and can agree on RESOLVE_NO_SYMLINKS being the
+> > right thing to do, i.e. not resolving symlinks will stay opt-in.
+> > Or is your worry even with the current semantics of openat2()? I don't
+> > see the issue since O_NOFOLLOW still works with openat2().
+>=20
+> Say, for example, my home dir is on a network volume somewhere and /home =
+has a
+> symlink pointing to it.  RESOLVE_NO_SYMLINKS cannot be used to access a f=
+ile
+> inside my homedir if the pathwalk would go through /home/dhowells - this =
+would
+> affect fsinfo()
 
-we don't like global variables.. could this be part of the
-contaxt struct?
+Yes, though this only happens if you're opening "/home/dhowells/foobar".
+If you are doing "./foobar" from within "/home/dhowells" it will work
+(or if you open a dirfd to "/home/dhowells") -- because no symlink
+resolution is done as part of that openat2() call.
 
-jirka
+> So RESOLVE_NO_SYMLINKS is not a substitute for AT_SYMLINK_NOFOLLOW
+> (O_NOFOLLOW would not come into it).
 
+This is what I was saying up-thread -- the semantics are not the same
+*on purpose*. If you want "don't follow symlinks *only for the final
+component*" then you need to have an AT_SYMLINK_NOFOLLOW equivalent.
+
+My counter-argument is that most people actually want
+RESOLVE_NO_SYMLINKS (as evidenced by the countless symlink-related
+security bugs -- many of which used O_NOFOLLOW incorrectly), it just
+wasn't available before Linux 5.6.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--42vyj6s72ngbbu3r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXl0h2gAKCRCdlLljIbnQ
+EpMTAP95ffUjqS37ZYriNgIdtHux4Y3D4HV/fCw6z5s7POmk9wD/XALcyw1lQ95P
+oClztyDXpLWzGUBlyXyIjwfr8nXAPw4=
+=PmLG
+-----END PGP SIGNATURE-----
+
+--42vyj6s72ngbbu3r--
