@@ -2,165 +2,163 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE8DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F1C2084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24912084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSQIFwJD"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="cb0gklsR";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="yCWE4Ce1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCBPbH (ORCPT
+        id S1727250AbgCBPby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:31:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38682 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgCBPbF (ORCPT
+        Mon, 2 Mar 2020 10:31:54 -0500
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:62715 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:31:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t11so193562wrw.5;
-        Mon, 02 Mar 2020 07:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eFDMzvNJhb9C/gjmO5CDDLNllKw2BwatUidg0r9OWqc=;
-        b=NSQIFwJD1hXMDRKHfbPuIpu/mXLa55KLrT5j9PkX2LU2p6fhyD5ya9mMjqqi9hYXns
-         ojy+Xua5CGm/m0RBQPSaq2h6039qAft3JpLhUHEFvmilxIJM7zps6og557U91v93+M/S
-         lYz1C1YMUA8gKmbKd5PDDp3nHPW1kJbvQ/Rvsj2NwajiE5d/5dgwslqDIJ+QV+ubL921
-         e+kmE0tuiwM4jTR2vUUVzi3J9iWRp4xpFRhiGTgKquBIqWqb2PGCj5L+xNvLw+K32d/C
-         xvSrsD/d3RvqeiYWxUDCMW8XtKGORklwjwOIbe3l6XJ3F1dDSyoeUEP3x7jAPBEL0DPy
-         V4YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=eFDMzvNJhb9C/gjmO5CDDLNllKw2BwatUidg0r9OWqc=;
-        b=ZF3ZhB65LRZSRkJbjZBs/XU50hPrw5AovugVsyM5l828UfH6AQUDYtK7UMV4iO4tXJ
-         aF4OkdsbxwRe5MmOY5N2YaJ7j3MN/Jxd8b8Sn2HEMStfKkKqDsPoyDNCeOjmrMot7VB5
-         swsA9npbdpd9NpqPvz+MjhsxLKuXpJrpoho7wB0XkAJI+xO0QcLdz0cTz92v2OzEPyOX
-         g2xyq67xL+eM7GSP0CKbWftdsdjS2YWDTp8tthJfb69bHU70wtspZjTtqKxJJorm34rq
-         CSkpATcCWwLQdpkiWC2lNk3la6kJ3vSXxlYUJQHDXZDoXnlsYyzKikM6vAXy3Vvc5JSh
-         DSqw==
-X-Gm-Message-State: ANhLgQ1rWBQNkITB1+/u3ZOZfxkei/vtE8EWJS9Q9umGNclC39bY+5mU
-        1c3XSF0Q97hQTDenNiCUm/I=
-X-Google-Smtp-Source: ADFU+vvbIMHFtMOd/nNEBuz9Sck5/PZWnPzOs6+fSxM1d70yAvo48rCFI0OCKH6irEXdAFZNLy9kgw==
-X-Received: by 2002:adf:dfcc:: with SMTP id q12mr140710wrn.171.1583163063985;
-        Mon, 02 Mar 2020 07:31:03 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g7sm23967540wrm.72.2020.03.02.07.31.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 07:31:03 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: add bus to rockchip amba nodenames
-Date:   Mon,  2 Mar 2020 16:30:47 +0100
-Message-Id: <20200302153047.17101-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200302153047.17101-1-jbx6244@gmail.com>
-References: <20200302153047.17101-1-jbx6244@gmail.com>
+        Mon, 2 Mar 2020 10:31:54 -0500
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 2251A5E9EC;
+        Mon,  2 Mar 2020 10:31:52 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=+w0TjN0sgfinY77qlaN2DDq+4MI=; b=cb0gkl
+        sR9djEG5wDD+oYCv2F3RvKhPPaRBTl/O6Ggvc1WGCUxCwBCXQf4pwa5G7sGePs0J
+        CXZlkE/Iui3yN8WVlMVJM+oNm0cSfMabp029SBfGlCzMUMaHz8kGLAkeT9ifkoNt
+        sgSvdg6x8LLdue7BMqx+jhhIsuPQdiQlvV8Qc=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 1911B5E9EB;
+        Mon,  2 Mar 2020 10:31:52 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=WFfea9XXdTCiyqDrZWumH0aOM0ikm6o03o4Ib1MKO6s=; b=yCWE4Ce18rB4VWGl5FYMYYxA+GIP4zQNaSZyYucR4+/AEs6OmTN0GMXiiDy1K/XddT0lduzhElCaZiMbTQ6l21cVmm8dJytVjhbgxI/O3D2h1cajHQE4LBg/YPkwJuEJZ5lflyNXArr5v7aVZ6vA33/DTf2gI1mFCdL+C9C2zhs=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 804655E9EA;
+        Mon,  2 Mar 2020 10:31:51 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 9FBC12DA0227;
+        Mon,  2 Mar 2020 10:31:50 -0500 (EST)
+Date:   Mon, 2 Mar 2020 10:31:50 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/2] kconfig: allow symbols implied by y to become m
+In-Reply-To: <20200302062340.21453-1-masahiroy@kernel.org>
+Message-ID: <nycvar.YSQ.7.76.2003021024370.1559@knanqh.ubzr>
+References: <20200302062340.21453-1-masahiroy@kernel.org>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: F05AC3AE-5C9A-11EA-B458-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example this error:
+On Mon, 2 Mar 2020, Masahiro Yamada wrote:
 
-arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: amba: $nodename:0:
-'amba' does not match
-'^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> The 'imply' keyword restricts a symbol to y or n, excluding m
+> when it is implied by y. This is the original behavior since
+> commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword").
+> 
+> However, the author of the 'imply' keyword, Nicolas Pitre, stated
+> that the 'imply' keyword should not impose any restrictions. [1]
+> 
+> I agree, and want to get rid of this tricky behavior.
+> 
+> [1]: https://lkml.org/lkml/2020/2/19/714
+> 
+> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-AMBA is a open standard for the connection and
-management of functional blocks in a SoC.
-It's compatible with 'simple-bus', so fix this error
-by adding 'bus' to all Rockchip 'amba' nodes.
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-schemas/simple-bus.yaml
+In addition to the IS_REACHABLE() note, it might be a good idea to 
+suggest adding an "imply" reference to the dependency if the feature 
+provided by BAZ is highli desirable, e.g.:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 2 +-
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+config FOO
+	tristate
+	imply BAR
+	imply BAZ
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 4f484119f..215515ccb 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -700,7 +700,7 @@
- 		clock-names = "pclk", "timer";
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index 3bd5bc860..ac43bc3f7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -513,7 +513,7 @@
- 		status = "disabled";
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index bad41bc6f..d9490f417 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -142,7 +142,7 @@
- 		};
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index a0df61c61..2079e877a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -136,7 +136,7 @@
- 		};
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33cc21fcf..63355ba7c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -197,7 +197,7 @@
- 		#clock-cells = <0>;
- 	};
- 
--	amba {
-+	amba: bus {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--- 
-2.11.0
 
+> ---
+> 
+>  Documentation/kbuild/kconfig-language.rst | 12 +++++++++++-
+>  scripts/kconfig/symbol.c                  |  5 +----
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+> index d0111dd26410..d4d988aea679 100644
+> --- a/Documentation/kbuild/kconfig-language.rst
+> +++ b/Documentation/kbuild/kconfig-language.rst
+> @@ -173,7 +173,7 @@ applicable everywhere (see syntax).
+>  	===		===		=============	==============
+>  	n		y		n		N/m/y
+>  	m		y		m		M/y/n
+> -	y		y		y		Y/n
+> +	y		y		y		Y/m/n
+>  	y		n		*		N
+>  	===		===		=============	==============
+>  
+> @@ -181,6 +181,16 @@ applicable everywhere (see syntax).
+>    ability to hook into a secondary subsystem while allowing the user to
+>    configure that subsystem out without also having to unset these drivers.
+>  
+> +  Note: If the combination of FOO=y and BAR=m causes a link error,
+> +  you can guard the function call with IS_REACHABLE()::
+> +
+> +	foo_init()
+> +	{
+> +		if (IS_REACHABLE(CONFIG_BAZ))
+> +			baz_register(&foo);
+> +		...
+> +	}
+> +
+>  - limiting menu display: "visible if" <expr>
+>  
+>    This attribute is only applicable to menu blocks, if the condition is
+> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+> index 8d38b700b314..b101ef3c377a 100644
+> --- a/scripts/kconfig/symbol.c
+> +++ b/scripts/kconfig/symbol.c
+> @@ -401,8 +401,7 @@ void sym_calc_value(struct symbol *sym)
+>  				sym_warn_unmet_dep(sym);
+>  			newval.tri = EXPR_OR(newval.tri, sym->rev_dep.tri);
+>  		}
+> -		if (newval.tri == mod &&
+> -		    (sym_get_type(sym) == S_BOOLEAN || sym->implied.tri == yes))
+> +		if (newval.tri == mod && sym_get_type(sym) == S_BOOLEAN)
+>  			newval.tri = yes;
+>  		break;
+>  	case S_STRING:
+> @@ -484,8 +483,6 @@ bool sym_tristate_within_range(struct symbol *sym, tristate val)
+>  		return false;
+>  	if (sym->visible <= sym->rev_dep.tri)
+>  		return false;
+> -	if (sym->implied.tri == yes && val == mod)
+> -		return false;
+>  	if (sym_is_choice_value(sym) && sym->visible == yes)
+>  		return val == yes;
+>  	return val >= sym->rev_dep.tri && val <= sym->visible;
+> -- 
+> 2.17.1
+> 
+> 
