@@ -2,288 +2,90 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A573BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AABC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6263B214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BFF2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583186842;
-	bh=C2LcAa63Yzz+d2MGp+XhzHgCKTSvm7/rhgMSB/wWqbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KiK2iL9uf/1ds1sZVCTm8YPK7r+Se+VweaYpxPPwzdU2eajmAFItLhSX3Om+HsTZ/
-	 m+rN9xs+4ZI9+XWES+sbersqoXzCqsQcP9b3+HSf5PCf040dFSc67imHbrHBX2fXEB
-	 bhcUMGtXU9uSfb/+wPrvkgj5JC2TUppcxfyu+w9o=
+	s=default; t=1583187107;
+	bh=nmmuEpxmCjc0aKsztvjVXQXja7/rg6W/P3XUJuNzzKc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Up9PfCD+COo57b/pfmN9tYtesVKdBxP17Gqc1DnYPwNJxrQGKvA/RppnIxOwy3rov
+	 yMkP8654DXjhCjKgD+ExTKx/nzA9XM0Ntzh9O94UccAH6Ak84KZT3w0qTE3CnA+Drk
+	 EOu4/zuDL3MyHuvbLL/jwCdibbAJ+E0gl+wgxZ4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCBWHV (ORCPT
+        id S1726843AbgCBWLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:07:21 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36124 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBWHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:07:21 -0500
-Received: by mail-oi1-f196.google.com with SMTP id t24so905972oij.3;
-        Mon, 02 Mar 2020 14:07:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gaUz4RmK015uYG8BySpYbmsbCNuhkAc0ZAKHDWN8k64=;
-        b=gSqRy9dfKLL/4+a3ER5b0kwLvJrdsLWj8C27jZ8f6IeoifVGNN6IxQZpo5NcJ7Nabo
-         qy2qcKKiMIQr2WjIkLaiTFf5DeuKUM/sT6BTy4FQAvjTPDpIZsrPs03Xa+0fUmjRDJDe
-         s2pnQFQ98NLI8w2pAnqCZNjYqTz0MTmSfTMmF9wj9cRdsTG6i6MwcEOIx03p6huUZtdr
-         PgsizelI4flFHktqwmjZNYxU88hxFEzlaU7mmH4uEH7hnr8mt/hBo+CM42Cknaw5B0bs
-         odFQrPWywsAAuR2qXkcdijnzS0Cb6ZFuuzytlUfT5gTdokfPgBBunCH54C6SIL+eZf3O
-         naBA==
-X-Gm-Message-State: ANhLgQ1AZkiQQnrRrqvM9tlAPNp3rOkCJc/LY1uHmTzbbs5nVqJ40BeO
-        VxEtTN9FA93u3DojCefSsg==
-X-Google-Smtp-Source: ADFU+vvUuYVypGT7Of+XmcvliyS4jcdOlyo88WbR4BiyU6iXmlR36utGbseh6RZ+0ug7eW8zPn/lWA==
-X-Received: by 2002:aca:b4c3:: with SMTP id d186mr358069oif.131.1583186839487;
-        Mon, 02 Mar 2020 14:07:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a14sm7066619otr.54.2020.03.02.14.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 14:07:18 -0800 (PST)
-Received: (nullmailer pid 15846 invoked by uid 1000);
-        Mon, 02 Mar 2020 22:07:17 -0000
-Date:   Mon, 2 Mar 2020 16:07:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v4 2/9] dt_bindings: ROHM BD99954 Charger
-Message-ID: <20200302220717.GA6981@bogus>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <7aa7f2646077228924d596edbc4d076a787d9312.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7aa7f2646077228924d596edbc4d076a787d9312.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 2 Mar 2020 17:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgCBWLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:11:46 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D4921739;
+        Mon,  2 Mar 2020 22:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583187105;
+        bh=nmmuEpxmCjc0aKsztvjVXQXja7/rg6W/P3XUJuNzzKc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0q18elEUkRaxUtioBVBS0syNq3bikiyHmmqzQeYjY9AB/5R2JiOBn5bl54IyRZzmt
+         nLXzchT4MCXx8AoVjhcjC4USN/LyuG9qHeJn15K86f757YVqpUM0rb9wmH5F0hqdSj
+         AWBD+bnAAE4uWywcgoAr66YGhiWsV1IXA2regTt8=
+Date:   Mon, 2 Mar 2020 14:11:44 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v9 07/20] mm/lru: introduce TestClearPageLRU
+Message-Id: <20200302141144.b30abe0d89306fd387e13a92@linux-foundation.org>
+In-Reply-To: <1583146830-169516-8-git-send-email-alex.shi@linux.alibaba.com>
+References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
+        <1583146830-169516-8-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:52:32AM +0200, Matti Vaittinen wrote:
-> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-> secondary battery. Intended to be used in space-constraint equipment such
-> as Low profile Notebook PC, Tablets and other applications. BD99954
-> provides a Dual-source Battery Charger, two port BC1.2 detection and a
-> Battery Monitor.
-> 
-> Document the DT bindings for BD99954
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes from rfc-v3:
->   - uncomment multipleOf
->   - add address and size cells properties to example I2C node
-> 
->  .../bindings/power/supply/rohm,bd9995x.yaml   | 155 ++++++++++++++++++
->  1 file changed, 155 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
-> new file mode 100644
-> index 000000000000..547403773ec5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
-> @@ -0,0 +1,155 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/supply/rohm,bd9995x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD99954 Battery charger driver
+On Mon,  2 Mar 2020 19:00:17 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-Bindings are for h/w devices, not drivers.
-
-> +
-> +maintainers:
-> +  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> +  - Markus Laine <markus.laine@fi.rohmeurope.com>
-> +  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-> +
-> +description: |
-> +  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-> +  secondary battery intended to be used in space-constraint equipment such
-> +  as Low profile Notebook PC, Tablets and other applications. BD99954
-> +  provides a Dual-source Battery Charger, two port BC1.2 detection and a
-> +  Battery Monitor.
-> +
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd9995x-charger
-
-You can drop '-charger' if the whole chip is a charger IC. If it is not, 
-then your example is wrong.
-
-You use BD99954 elsewhere, use that here too. We don't do wildcards in 
-compatible strings.
-
-> +#
-> +#    The battery charging profile of BD99954.
-> +#
-> +#    Curve (1) represents charging current.
-> +#    Curve (2) represents battery voltage.
-> +#
-> +#    The BD99954 data sheet divides charging to three phases.
-> +#    a) Trickle-charge with constant current (8).
-> +#    b) pre-charge with constant current (6)
-> +#    c) fast-charge with:
-> +#       First a constant current (5) phase (CC)
-> +#       Then constant voltage (CV) phase (after the battery voltage has reached
-> +#       target level - until charging current has dropped to termination
-> +#       level (7)
-> +#
-> +#     V ^                                                        ^ I
-> +#       .                                                        .
-> +#       .                                                        .
-> +# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
-> +#       .                            /                           .
-> +#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
-> +#       .                     +    /  +                          .
-> +#       .                     +   -   --                         .
-> +#       .                     +  -     +                         .
-> +#       .                     +.-      -:                        .
-> +#       .                    .+         +`                       .
-> +#       .                  .- +       | `/                       .
-> +#       .               .."   +          .:                      .
-> +#       .             -"      +           --                     .
-> +#       .    (2)  ..."        +       |    :-                    .
-> +#       .    ...""            +             -:                   .
-> +# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
-> +#       .             +                       `:.                .
-> +#       .             +               |         -:               .
-> +#       .             +                           -:             .
-> +#       .             +                             ..           .
-> +#       .   (1)       +               |               "+++- - - -.- - (7)
-> +#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
-> +#       .                                                +       -
-> +#       -------------------------------------------------+++++++++-->
-> +#       |             |       |   CC   |      CV         |
-> +#       | --trickle-- | -pre- | ---------fast----------- |
-> +#
-> +#   The charger uses the following battery properties
-> +# - trickle-charge-current-microamp:
-> +#     Current used at trickle-charge phase (8 in above chart)
-> +#     minimum: 64000
-> +#     maximum: 1024000
-> +#     multipleOf: 64000
-
-Why is all of this commented out still?
-
-> +# - precharge-current-microamp:
-> +#     Current used at pre-charge phase (6 in above chart)
-> +#     minimum: 64000
-> +#     maximum: 1024000
-> +#     multipleOf: 64000
-> +# - constant-charge-current-max-microamp
-> +#     Current used at fast charge constant current phase (5 in above chart)
-> +#     minimum: 64000
-> +#     maximum: 1024000
-> +#     multipleOf: 64000
-> +# - constant-charge-voltage-max-microvolt
-> +#     The constant voltage used in fast charging phase (4 in above chart)
-> +#     minimum: 2560000
-> +#     maximum: 19200000
-> +#     multipleOf: 16000
-> +# - precharge-upper-limit-microvolt
-> +#     charging mode is changed from trickle charging to pre-charging
-> +#     when battery voltage exceeds this limit voltage (3 in above chart)
-> +#     minimum: 2048000
-> +#     maximum: 19200000
-> +#     multipleOf: 64000
-> +# - re-charge-voltage-microvolt
-> +#     minimum: 2560000
-> +#     maximum: 19200000
-> +#     multipleOf: 16000
-> +#     re-charging is automatically started when battry has been discharging
-> +#     to the point where the battery voltage drops below this limit
-> +# - over-voltage-threshold-microvolt
-> +#     battery is expected to be faulty if battery voltage exceeds this limit.
-> +#     Charger will then enter to a "battery faulty" -state
-> +#     minimum: 2560000
-> +#     maximum: 19200000
-> +#     multipleOf: 16000
-> +# - charge-term-current-microamp
-> +#     minimum: 0
-> +#     maximum: 1024000
-> +#     multipleOf: 64000
-> +#     a charge cycle terminates when the battery voltage is above recharge
-> +#     threshold, and the current is below this setting (7 in above chart)
-> +#   See also Documentation/devicetree/bindings/power/supply/battery.txt
-> +
-> +  monitored-battery:
-> +    description:
-> +      phandle of battery characteristics devicetree node
-> +
-> +  rohm,vsys-regulation-microvolt:
-> +    description: system specific lower limit for system voltage.
-> +    minimum: 2560000
-> +    maximum: 19200000
-> +    multipleOf: 64000
-> +
-> +  rohm,vbus-input-current-limit-microamp:
-> +    description: system specific VBUS input current limit (in microamps).
-> +    minimum: 32000
-> +    maximum: 16352000
-> +    multipleOf: 32000
-> +
-> +  rohm,vcc-input-current-limit-microamp:
-> +    description: system specific VCC/VACP input current limit (in microamps).
-> +    minimum: 32000
-> +    maximum: 16352000
-> +    multipleOf: 32000
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        charger@9 {
-> +            compatible = "rohm,bd9995x-charger";
-> +            monitored-battery = <&battery>;
-> +            reg = <0x9>;
-> +            interrupt-parent = <&gpio1>;
-> +            interrupts = <29 8>;
-> +            rohm,vsys-regulation-microvolt = <8960000>;
-> +            rohm,vbus-input-current-limit-microamp = <1472000>;
-> +            rohm,vcc-input-current-limit-microamp = <1472000>;
-> +        };
-> +    };
-> -- 
-> 2.21.0
+> Combined PageLRU check and ClearPageLRU into one function by new
+> introduced func TestClearPageLRU. This function will be used as page
+> isolation precondition.
 > 
+> No functional change yet.
 > 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+> ...
+>
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2588,9 +2588,8 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
+>  		pgdat = page_pgdat(page);
+>  		spin_lock_irq(&pgdat->lru_lock);
+>  
+> -		if (PageLRU(page)) {
+> +		if (TestClearPageLRU(page)) {
+>  			lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> -			ClearPageLRU(page);
+>  			del_page_from_lru_list(page, lruvec, page_lru(page));
+>  		} else
+
+The code will now get exclusive access of the page->flags cacheline and
+will dirty that cacheline, even for !PageLRU() pages.  What is the
+performance impact of this?
+
