@@ -2,113 +2,130 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93053C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77C3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6904721739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC00121739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FPSeLrB7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeAa4GF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCBXCK (ORCPT
+        id S1726910AbgCBXCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:02:10 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38266 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCBXCJ (ORCPT
+        Mon, 2 Mar 2020 18:02:55 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41755 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBXCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:02:09 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so549593pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:02:07 -0800 (PST)
+        Mon, 2 Mar 2020 18:02:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id v19so1069331ote.8;
+        Mon, 02 Mar 2020 15:02:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=alU+BgvFGo59yM0O+ldee5pOjl7Ty1NQ+17QZiMtzMo=;
-        b=FPSeLrB7GcxGD/0n0DkgZRMYdBUiZeQ+laPMlp2Pb3icU44iK9eIgS7nJheSVzUk4x
-         XzQrD4vw1cKLDfSG7T4p+rZUN5/fWPWf5odYIvQHZz0B3JCIvnVMia0pRtb1FtCenogk
-         e82T6ScsKsm8DbFN0db3OAll3/2xdOIMdHVxU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQJUvsCfdhXZTMuK5P/1s7YDv4YpFHdf94n7B4huL1w=;
+        b=TeAa4GF1Uo6zEiC8wTfqSOdSDq+sIm2r7mCILqG9rM1RSOusW87Nsqi4KFuFyqI6vl
+         L/6lC0DVayS+mWxkMhRUVIz1IQM7m47N9X5Wf0BSlohxkF+FuDUUZZuNlEsA0xy58pIW
+         sUrKv9E+nU9x6wkIvrTvK/60H4W9/0TMM4y8VR0BUnmT/TnYVpB3fkr+inR+O/U4/tUe
+         zspe0kB15glmsBQRwzBtjcjedPuqbP6U7mpCMGBODv8LbQrSHhsgcF6wb5M96ZpFpkvG
+         NZJ14VcRepgy03TaDNOr1ggNuwqrGJS91UavFhd8UuiWEd/Cri3ZJq3qg1hg4/ltQcpk
+         INkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=alU+BgvFGo59yM0O+ldee5pOjl7Ty1NQ+17QZiMtzMo=;
-        b=Z6/SnCLYs3K5mJbtOMyfL3ezwiABs5aDkakDLA9hlpHFv3ZLoQEtjh3mUCkg5MFypA
-         eY8CbbLMJOp8/SStqt2HHaDS63Q1HgBzq8GJ7tLuYVrWPSpPs8Gt1LFljzKxWkBMW5xD
-         wJJFEqdZ9D5evg4jucxpHCKRYprwPXcTg/PUOmgV1MvjJ5Fyokya5FRuxBZdpV7eVbGz
-         gxxZYY+ZLCORrizFXAOnUBmhTe0F3rZ9lIXIc7XnRA4KVI5qG3H7QbDkv6X3BpdVi7nu
-         qPUSBBAnpmUy00Us20olaoDkakx20Oi8NndA0r05d0K4hfmgZy54jNhYJvOYl8v6FpLl
-         a8hw==
-X-Gm-Message-State: ANhLgQ3rfL9CqKzgca/xq9dKARhwIDEZ3haiTjr9nkiX5HKBYXxezIqy
-        XAX/n81OPUQOsRj72dU3NwTjuw==
-X-Google-Smtp-Source: ADFU+vvaMShTu4H+Bx5ShEjs077RseA1NzW7/myf8UYsI/g5oF2fIvhSkSOhJhD1EMHTIgkyXbQ4Ug==
-X-Received: by 2002:aa7:8bc1:: with SMTP id s1mr1226128pfd.215.1583190127144;
-        Mon, 02 Mar 2020 15:02:07 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v29sm22024356pgc.72.2020.03.02.15.02.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQJUvsCfdhXZTMuK5P/1s7YDv4YpFHdf94n7B4huL1w=;
+        b=Yk3Tio7HN+7GWktpKA4Q568sZYAY1eVNVSEZCnx3DRWHO4NkuRVQP+I95Cg3H40x2Y
+         Kkg/dc1egLd7yGG4RNf5BW5mzCiYLRdsJ9zK8w05YfubSpMUL2LMWOeGjXL5Ij9KvOcp
+         7bNv5sT+33Xrs2fArN395lJoR4g31LO3xEf5zgtYtn6eRj2HPP7UDGK1cqk9kLAx+3pw
+         fBdfS0Rq5kTAf1jAy+M5dfuaZMtK+6fkThMBqwacAZiObVbDQHxdqWz3HavXwvcbDQJj
+         a9qBhtW+deWu+wpVMS3OMzt+qCMXib649KMMDjZl2lDcyXQHF0UFwAQpSdIvr2+s2mZt
+         jCdw==
+X-Gm-Message-State: ANhLgQ2xi3uTjXNycCFTyYjyTgLcCk8bqllTF+RAnjSCR4zvka0XWVuC
+        YhKyf1FSujyIFvWo6fMVzb4=
+X-Google-Smtp-Source: ADFU+vtT/VAYIDqCROuLs8VdcZOa2gBOUF2LQnnMwdX+01+Q4urmJWJJdPh+mhZ/DkVLtSS0Qo/1RQ==
+X-Received: by 2002:a9d:3c1:: with SMTP id f59mr1248078otf.170.1583190174381;
+        Mon, 02 Mar 2020 15:02:54 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n9sm3317261otq.73.2020.03.02.15.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 15:02:06 -0800 (PST)
-Date:   Mon, 2 Mar 2020 15:02:05 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>
-Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
-Message-ID: <202003021500.9E0FEE1BEF@keescook>
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <CACT4Y+Z_fGz2zVpco4kuGOVeCK=jv4zH0q9Uj5Hv5TAFxY3yRg@mail.gmail.com>
- <CAKFsvULZqJT3-NxYLsCaHpxemBCdyZN7nFTuQM40096UGqVzgQ@mail.gmail.com>
- <CACT4Y+YTNZRfKLH1=FibrtGj34MY=naDJY6GWVnpMvgShSLFhg@mail.gmail.com>
- <CAGXu5jKbpbH4sm4sv-74iHa+VzWuvF5v3ci7R-KVt+StRpMESg@mail.gmail.com>
- <CAFd5g47OHZ-6Fao+JOMES+aPd2vyWXSS0zKCkSwL6XczN4R7aQ@mail.gmail.com>
+        Mon, 02 Mar 2020 15:02:53 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH -next] io_uring: Ensure mask is initialized in io_arm_poll_handler
+Date:   Mon,  2 Mar 2020 16:01:19 -0700
+Message-Id: <20200302230118.12060-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g47OHZ-6Fao+JOMES+aPd2vyWXSS0zKCkSwL6XczN4R7aQ@mail.gmail.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 02:36:48PM -0800, Brendan Higgins wrote:
-> On Mon, Mar 2, 2020 at 9:52 AM Kees Cook <keescook@chromium.org> wrote:
-> > I'm all for unittests (I have earlier kind-of-unit-tests in
-> > lib/test_user_copy.c lib/test_overflow.c etc), but most of LKDTM is
-> 
-> <Minor tangent (sorry)>
-> 
-> I took a brief look at lib/test_user_copy.c, it looks like it doesn't
-> use TAP formatted output. How do you feel about someone converting
-> them over to use KUnit? If nothing else, it would be good getting all
-> the unit-ish tests to output in the same format.
-> 
-> I proposed converting over some of the runtime tests over to KUnit as
-> a LKMP project (Linux Kernel Mentorship Program) here:
-> 
-> https://wiki.linuxfoundation.org/lkmp/lkmp_project_list#convert_runtime_tests_to_kunit_tests
-> 
-> I am curious what you think about this.
-> 
-> </Minor tangent>
+Clang warns:
 
-Yes please! Anything that helps these tests get more exposure/wider
-testing is good. (That said, I don't want to lose any of the existing
-diagnostic messages -- _adding_ TAP would be lovely.)
+fs/io_uring.c:4178:6: warning: variable 'mask' is used uninitialized
+whenever 'if' condition is false [-Wsometimes-uninitialized]
+        if (def->pollin)
+            ^~~~~~~~~~~
+fs/io_uring.c:4182:2: note: uninitialized use occurs here
+        mask |= POLLERR | POLLPRI;
+        ^~~~
+fs/io_uring.c:4178:2: note: remove the 'if' if its condition is always
+true
+        if (def->pollin)
+        ^~~~~~~~~~~~~~~~
+fs/io_uring.c:4154:15: note: initialize the variable 'mask' to silence
+this warning
+        __poll_t mask, ret;
+                     ^
+                      = 0
+1 warning generated.
 
+io_op_defs has many definitions where pollin is not set so mask indeed
+might be uninitialized. Initialize it to zero and change the next
+assignment to |=, in case further masks are added in the future to avoid
+missing changing the assignment then.
+
+Fixes: d7718a9d25a6 ("io_uring: use poll driven retry for files that support it")
+Link: https://github.com/ClangBuiltLinux/linux/issues/916
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+I noticed that for-next has been force pushed; if you want to squash
+this into the commit that it fixes (or fix it in a different way), feel
+free.
+
+ fs/io_uring.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8cdd3870cd4e..70e4624af3c2 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3738,8 +3738,9 @@ static bool io_arm_poll_handler(struct io_kiocb *req)
+ 	req->apoll = apoll;
+ 	INIT_HLIST_NODE(&req->hash_node);
+ 
++	mask = 0;
+ 	if (def->pollin)
+-		mask = POLLIN | POLLRDNORM;
++		mask |= POLLIN | POLLRDNORM;
+ 	if (def->pollout)
+ 		mask |= POLLOUT | POLLWRNORM;
+ 	mask |= POLLERR | POLLPRI;
 -- 
-Kees Cook
+2.25.1
+
