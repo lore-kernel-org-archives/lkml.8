@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FA9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508702465D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A53022B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="q+Ol0Al1"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZucypnZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCBVbS (ORCPT
+        id S1726901AbgCBVbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:31:18 -0500
-Received: from mail-bn8nam12on2061.outbound.protection.outlook.com ([40.107.237.61]:6065
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Mon, 2 Mar 2020 16:31:21 -0500
+Received: from mail-co1nam11on2048.outbound.protection.outlook.com ([40.107.220.48]:27360
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgCBVbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:31:17 -0500
+        id S1726720AbgCBVbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 16:31:19 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E6zms39CqjHPu1KJb2bGZUpKeNuQkyy0D3y9twqj0QiRh5Fyd9u20kngU1sHeTpAwweaPDwvfjbUlk151OsfdM6kQoqzIgChk2O7dIWhW4wXMWrlvvvsueRf38Fgkb8vbErOJBY/BKpecJpcjFnTQEAwamqESbH8+s5ZUqRUf42XF4sUPUE2OAP7fjWSVTb3IfxSZ3r15SrTmDsp1UovGYos8HWC73Dn155wYiPKsnN/UvXVv4HDfSEVSdSGN7TfRJHr2LgHTONkknXsnjFF8jgExndLqDRKaappuPlKNKnstVWXUm1sZFtQvwQyooBhbhPCSAO9u00QF9wqypcGJA==
+ b=nHqHSckRLwE+JjkH6sKV1N2OqvjUb5MVnnv1+Cmbft6eVhJ9iCl0TXWKveS+jzl6rPiiHLmdMl0pkPYP3GbeqTeMkFlTRxRneu1pjcSEwFTAp7aN0PhiJ1qg1dvqm9JViiDv+ZDYumxWyuTqjXRbYSISaqTQm9HpxYI38qPMm1cXWNgRHxzICRo3kty3j6lZ1atWF5jKmGjQfg3jpgF0wWKJtBCg6sUrxDmqGrGBilAUzvjTbApITMYwRkcslh3i6o1wAFBwkRTObzSV7y0LzpiSRHTuo/VBG1X0Emn4EwDlrHVCTYe46ZkcaYUd1kAoYRge1p44BwVpCs8zNxQdVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5zy8Vdei8otRnmwBOCPOxF2o3s0WjtIlq9N9z8mQZro=;
- b=PCwGsjMKWCCSF555n0B/5NKqUpF9LdpBZz6KufIP5MNp+KnKnikyIu+RhfnZE4wi54Pb5ppCGfuZsQVb9lji5jdm92dWyXz5XMyAG7vzp6ezAGmxCKk2GLompozet6yM/jO/S7eEn059Y+4YZSEdUwsvzdUSds9v0Tkejvxin3HDIhxT7XWCKqjUwuVTgYJFia7s3agOb3OJHbdJZehPx4XO3Jq/3ruVbjFMwfSjciLAaMaYbhp+liX2Wr6jTxyjDM+bW8BirlRU2BQpU83H7sO8ceGmOixusqJ+cWNtKTmtssgpZ+LaUF/HrelRr9XoG33W2UZRkIbPAuY2rx7XVQ==
+ bh=3yJf1f0mIxDvXiv4OsERXQoRbFfow58jM0+Mecczycc=;
+ b=LV+SjBOPThotr3ZdYuc2kb56EQRfsdPddQjkO/P2edsg2kgTj9XIwCGEZ/8NZ0dmwB0cic9f5d89S72SScmJoLT0THHQu/kisFPflethn6RH5cUIQRjpddoz3naEaOwKYEsah6eHgSWdDtcR/qpFVDewzlEKDQqjXXjo8X+dRUKUZ+79GWD1/Ow1+jehMgX+Y4YL3UY8Eca8BdIk9WlDUB+09dN72Eaohv+T4YlMO9IvJiHubW6ig66NRz2Em2yn6+1qMnHxYeFmkmNc6m4awDK21tHHHcPpNVvcNX7ZWrI1yd+LjHyL3dJ/7M9t+OmKYGGwXbDuj8DGC72DilrLGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5zy8Vdei8otRnmwBOCPOxF2o3s0WjtIlq9N9z8mQZro=;
- b=q+Ol0Al1I4d6ho6fk+DZz63WjTpzVjz6JUIhWSjPqrS6R4BeuKV25FdTz1tsVNO9mwVVPMUaLv3I3Nq5r38pmYC1PXNReLtDSfFwWuahb0keJawDQcX/xW/HMWI6OWH6n8SBZhcN0kLzM11FrVUmpmPS2meq0MOLzh1pZwiC7XY=
-Received: from MN2PR10CA0012.namprd10.prod.outlook.com (2603:10b6:208:120::25)
- by BYAPR02MB5416.namprd02.prod.outlook.com (2603:10b6:a03:a4::14) with
+ bh=3yJf1f0mIxDvXiv4OsERXQoRbFfow58jM0+Mecczycc=;
+ b=ZucypnZKdpn/6jhqcwo7h13iYKnDkJ/xSanwydBF2HhtJglbGGDpFLdKQEQlzjnoDM8TFLPUv7thY3Ectw1En8yDS+WYGnqYSZOTDMfk8Y0RjhU/jBSczJ5duLJKFsXT5x73JIDgfRrFLUu7A22NRCNNhFnxNme1ONE+ry/HFHs=
+Received: from MN2PR11CA0007.namprd11.prod.outlook.com (2603:10b6:208:23b::12)
+ by BN7PR02MB3939.namprd02.prod.outlook.com (2603:10b6:406:f5::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Mon, 2 Mar
- 2020 21:31:10 +0000
-Received: from BL2NAM02FT029.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:120:cafe::bf) by MN2PR10CA0012.outlook.office365.com
- (2603:10b6:208:120::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.19; Mon, 2 Mar
+ 2020 21:31:13 +0000
+Received: from BL2NAM02FT004.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:23b:cafe::22) by MN2PR11CA0007.outlook.office365.com
+ (2603:10b6:208:23b::12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend
- Transport; Mon, 2 Mar 2020 21:31:10 +0000
+ Transport; Mon, 2 Mar 2020 21:31:13 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,34 +57,34 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT029.mail.protection.outlook.com (10.152.77.100) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2772.15
- via Frontend Transport; Mon, 2 Mar 2020 21:31:10 +0000
+ BL2NAM02FT004.mail.protection.outlook.com (10.152.76.168) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2772.14
+ via Frontend Transport; Mon, 2 Mar 2020 21:31:12 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8seb-0001vB-Ic; Mon, 02 Mar 2020 13:31:09 -0800
+        id 1j8seb-0001vA-H9; Mon, 02 Mar 2020 13:31:09 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8seW-0005hD-Fc; Mon, 02 Mar 2020 13:31:04 -0800
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 022LUxKl030793;
+        id 1j8seW-0005hD-Dx; Mon, 02 Mar 2020 13:31:04 -0800
+Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 022LUxwR030791;
         Mon, 2 Mar 2020 13:31:00 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1j8seR-0005dg-Rh; Mon, 02 Mar 2020 13:30:59 -0800
+        id 1j8seR-0005dg-Pi; Mon, 02 Mar 2020 13:30:59 -0800
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     olof@lixom.net, mturquette@baylibre.com, sboyd@codeaurora.org,
         michal.simek@xilinx.com, arm@kernel.org, linux-clk@vger.kernel.org
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 2/2] drivers: clk: zynqmp: Update fraction clock check from custom type flags
-Date:   Mon,  2 Mar 2020 13:30:43 -0800
-Message-Id: <1583184643-19191-3-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH 1/2] drivers: clk: zynqmp: Add support for custom type flags
+Date:   Mon,  2 Mar 2020 13:30:42 -0800
+Message-Id: <1583184643-19191-2-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583184643-19191-1-git-send-email-jolly.shah@xilinx.com>
 References: <1583184643-19191-1-git-send-email-jolly.shah@xilinx.com>
@@ -93,78 +93,78 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(346002)(136003)(189003)(199004)(70586007)(8936002)(336012)(54906003)(44832011)(107886003)(186003)(70206006)(26005)(4326008)(478600001)(15650500001)(9786002)(2616005)(5660300002)(81166006)(81156014)(7696005)(2906002)(36756003)(8676002)(6666004)(356004)(316002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5416;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(478600001)(8936002)(4326008)(8676002)(186003)(44832011)(26005)(81156014)(81166006)(2906002)(9786002)(426003)(316002)(336012)(36756003)(54906003)(70206006)(70586007)(2616005)(7696005)(6666004)(107886003)(356004)(5660300002)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB3939;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 86f547d9-fd28-4f66-8f43-08d7bef106a0
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5416:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB54164C2C83E30019E037B8D6B8E70@BYAPR02MB5416.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: dfc03e55-62bf-42c2-7f28-08d7bef1080c
+X-MS-TrafficTypeDiagnostic: BN7PR02MB3939:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB3939C84BF06F1F7AAAC06ACAB8E70@BN7PR02MB3939.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Oob-TLC-OOBClassifiers: OLM:172;
 X-Forefront-PRVS: 033054F29A
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ERsXiYVeu/zSrkCyKKKd2C4PBoH+BrW7jxmDv3wyZ/MjZrTjlXxQ2Pjcp7G4A5KW9MwHnwHuQ9hBwgV00/Uu05P8lw+Up4GLtPMF9/2xFaWbjRHYW1ARc+LXoCGtokpJaac7UoSjGoFEIWlrybPvEvShf2XUYK1sK8/Udae0DmuQKB6PASgA3UrUs+y9tlqp3vGWbassacFtChYapZuTE4l0WsP2CVjIZmapWgATqwdO6pQpxUxjyideX8T2cWOVdeDvy9kNmzst4ZZrqIgI43pdU9ZeZDzi4d7mvaMGju1604+KgglIuvcOhJHXkGvdKFjsc1EI+PilBdLdH8zjMwOPo74soGIwfdBlFEtbZBSdHDyj369LV/ESihTVKrB7FLf7LRGX+Rz63TH7h3Bra/7p2SmNGYqilo3rGeRyCksgGJhDx3X1hRjbNJfhRLeX
+X-Microsoft-Antispam-Message-Info: pr1vrrWy9xz8F6YYGX2S+7D7de2+GfeZe6cX60UFi7ApJZk5HZHF/JZfDU8rpgle8JFutkzlI/XnpAKrdxevEoSujU7OyB6mJxFQPbUHaRNYWBnSOjxHGFIeRRCa9HggM6tzlhyOkqf9lPeV0xicM5KYEuqjYY9Q1wpmME3QCGGmTAiozgeiaPocGyhEckERhQPGDrNV4ZjBylcKlSCl0fAjPdOPzzOm3r55qeJVzyEKZrQZlFU1mENqdAyQA+EtvYT7h7R8IGEpHcrGu5iZf1B7/3PE4jLCsDRSvafgBAeKIAqFbOfZAFWKYK6jVoyR4XVIQT0vULVFzXoZujldbh6ISZWr803xsHRN064qyaBHlmS06rjhPDhcgty+/LLwAAELhuUB4ehRsMmW7K5WOeNWkQQSWDchXgVnjZn8j9fCqCwhqdjo5u40+Pfce8u7wqXi/FHrwvKcAe6z3q+ukduvFiMW2cSTmG9hluroJZT5DBCNtipTj9j3r24eF8tv
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 21:31:10.1994
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2020 21:31:12.5505
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86f547d9-fd28-4f66-8f43-08d7bef106a0
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfc03e55-62bf-42c2-7f28-08d7bef1080c
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5416
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB3939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejas Patel <tejas.patel@xilinx.com>
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Older firmware version sets BIT(13) in clkflag to mark a
-divider as fractional divider. Updated firmware version sets BIT(4)
-in custom type flags to mark a divider as fractional divider since
-BIT(13) is defined as CLK_DUTY_CYCLE_PARENT in the common clk
-framework flags.
+Store extra custom type flags received from firmware.
 
-To support both old and new firmware version, consider BIT(13) from
-clkflag and BIT(4) from type_flag to check if divider is fractional
-or not.
-
-To maintain compatibility BIT(13) of clkflag in firmware will not be
-used in future for any purpose and will be marked as unused.
-
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- drivers/clk/zynqmp/divider.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/zynqmp/clk-zynqmp.h | 1 +
+ drivers/clk/zynqmp/clkc.c       | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-index 4be2cc7..973cdf0 100644
---- a/drivers/clk/zynqmp/divider.c
-+++ b/drivers/clk/zynqmp/divider.c
-@@ -25,7 +25,8 @@
- #define to_zynqmp_clk_divider(_hw)		\
- 	container_of(_hw, struct zynqmp_clk_divider, hw)
+diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqmp.h
+index fec9a15..5beeb41 100644
+--- a/drivers/clk/zynqmp/clk-zynqmp.h
++++ b/drivers/clk/zynqmp/clk-zynqmp.h
+@@ -30,6 +30,7 @@ struct clock_topology {
+ 	u32 type;
+ 	u32 flag;
+ 	u32 type_flag;
++	u8 custom_type_flag;
+ };
  
--#define CLK_FRAC	BIT(13) /* has a fractional parent */
-+#define CLK_FRAC		BIT(13) /* has a fractional parent */
-+#define CUSTOM_FLAG_CLK_FRAC	BIT(4) /* has a fractional parent in custom type flag */
+ struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
+diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
+index 10e89f2..4dd8413 100644
+--- a/drivers/clk/zynqmp/clkc.c
++++ b/drivers/clk/zynqmp/clkc.c
+@@ -84,6 +84,7 @@ struct name_resp {
  
- /**
-  * struct zynqmp_clk_divider - adjustable divider clock
-@@ -311,7 +312,8 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
- 	init.num_parents = 1;
+ struct topology_resp {
+ #define CLK_TOPOLOGY_TYPE		GENMASK(3, 0)
++#define CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS	GENMASK(7, 4)
+ #define CLK_TOPOLOGY_FLAGS		GENMASK(23, 8)
+ #define CLK_TOPOLOGY_TYPE_FLAGS		GENMASK(31, 24)
+ 	u32 topology[CLK_GET_TOPOLOGY_RESP_WORDS];
+@@ -396,6 +397,9 @@ static int __zynqmp_clock_get_topology(struct clock_topology *topology,
+ 		topology[*nnodes].type_flag =
+ 				FIELD_GET(CLK_TOPOLOGY_TYPE_FLAGS,
+ 					  response->topology[i]);
++		topology[*nnodes].custom_type_flag =
++			FIELD_GET(CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS,
++				  response->topology[i]);
+ 		(*nnodes)++;
+ 	}
  
- 	/* struct clk_divider assignments */
--	div->is_frac = !!(nodes->flag & CLK_FRAC);
-+	div->is_frac = !!((nodes->flag & CLK_FRAC) |
-+			  (nodes->custom_type_flag & CUSTOM_FLAG_CLK_FRAC));
- 	div->flags = nodes->type_flag;
- 	div->hw.init = &init;
- 	div->clk_id = clk_id;
 -- 
 2.7.4
 
