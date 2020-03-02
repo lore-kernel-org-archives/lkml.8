@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAAAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16FAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8194E246B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75C324699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEYXrGzk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOxgWJ8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCBAUM (ORCPT
+        id S1726951AbgCBAUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:20:12 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41998 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgCBAUM (ORCPT
+        Sun, 1 Mar 2020 19:20:18 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36588 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgCBAUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:20:12 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z11so1583000wro.9;
-        Sun, 01 Mar 2020 16:20:11 -0800 (PST)
+        Sun, 1 Mar 2020 19:20:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j16so10373641wrt.3;
+        Sun, 01 Mar 2020 16:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jwhY+knTdQifg64CQcyFlmXWmsjzGep6/zqhcI9bJvM=;
-        b=UEYXrGzkRs5DtYBt/rn6AQsmMC/2Z9xKSVunv1RGBVw6cAikyysRPrb65690a71+bs
-         kWztWGQTn33hcIcRINH81JDbnieZvQ0r4aUruqit/laHDkzI1G203Pf4RQBnTx6Jbihd
-         musKu5Lq4Ur7mkf3+urjMjin/dxeqbd9SEfrNp4cSXV3YikI3jrQ7sR2dkw89TxZdo68
-         o7wu2taZdQXEXPC1+QYjPKUkRMN03MCqWjcNW2UclCfnsQN8LX5139Eo9iALtz8IWeyl
-         YKBNk4tinRBG3PTXOUDWSI9mIpqlmnBS7srQDebEfcZWG1xdaDwav3w2pVXt+9JQgrJZ
-         xofA==
+        bh=XwflzW73qPOe/GTQwpcOAM7KQXM3qVC8t1TrgTjVHHc=;
+        b=aOxgWJ8mTfaIRVcpC1itBRUKh01kGUyqzp5M7fP5fK2xssn7ysN26LLER/EMNzDS4u
+         K5dkYmZmPAL+Tfjmzc7dwJ/yv8EupAjBHxcRf5OrEsDoXap7hDWtt14DPAiuLR6/E2ZR
+         EZhqyKab3y/acB+b8rdSMDY4HIwJAwvj4NYcovKQqg6j093ItmG5AHIDpqcAEOJbko0A
+         htLrlQqxdHK8SwdXU+EjPYPsPtM6UGNCo7BUpEzZKm/8VOb52jlQMteika7Fp+6H2Mtq
+         TmsW6xAqwyfebMcMy8Eq4PtbrUS5Tly1+Y20886qfJAdG+uCk5lVCD8gK8Ckqq2jyQoj
+         VR6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=jwhY+knTdQifg64CQcyFlmXWmsjzGep6/zqhcI9bJvM=;
-        b=bI3osHsFzwpRMSJCWDnKNz/26KLuBk2cghUbIKZljCYffhQzt19rW5xrBD13damtai
-         44/3bUzgKAsIabo+5vL6adQ7w8Pvas1lGU75pKtN1Kvf0mvbi04FGoa68riCw8LDq8Bn
-         hV/tM308gDCUjYT6dFmlNUcZR1+MLOOH9r8beGIwNyZ72Zeci0AVEfgmN81YN1jZIvv8
-         lRyR7p6UxpBSciuavh9VjdqGni3u+LgfSavEZBylOiOovKmzC5b3gQnmtnH2oEO8NW9/
-         3tv17qtdG6YKD2ksV/eckQ4/ckQF3DtEOY+eujnMjoyo0Z0DZPNpWz2W2CosceNz7lfx
-         fb+A==
-X-Gm-Message-State: APjAAAUvm47VvNZw1dKdZl7fODcurHI8uaCALAnavlHm25JM3VOBy/ME
-        JhzuCmzD5pvpKNMNvCO/1BcF/2bM
-X-Google-Smtp-Source: APXvYqxv7k5QTum7D+PAa3XIZQelSvxMB/afGjTLGnBe6kljV+v8gm3/OqrURI0kfLQ52cz1sJg4Zg==
-X-Received: by 2002:adf:e9cc:: with SMTP id l12mr17152540wrn.131.1583108410561;
-        Sun, 01 Mar 2020 16:20:10 -0800 (PST)
+        bh=XwflzW73qPOe/GTQwpcOAM7KQXM3qVC8t1TrgTjVHHc=;
+        b=KwaDJ6JV2+agr0xhdbJrL94euczB1poNWZOfeBeqa7stzuSlFRKf/6lFKurBiYF/nL
+         +x2LS44Uxhd10ytI6IG2DHez/ItJ2MBNYJl3jOU70KfkhDun2i/NZzQ3O4bJbLVs/iYT
+         xNOKs5w+YyAGmcqT5iqOaWKGBG7UMxsBDaa3kgDcmn1oMrxFpLsvEXswWy+x+0SfVeCi
+         Cb8MRQ+rHZj/BcJvDIEUMHepAxQAGEKEAygmJslB5/7IojYedECl+KVPAqP55KDoriQu
+         6uspYlb8W+FMauVYrfWNnKqBTuXWP7Xyn/Z3KihhYzRUjRxg31DRO7yL7sFyN5Ajk+aG
+         7yBQ==
+X-Gm-Message-State: APjAAAV+ag6vL72OWokn9fxxW6dsTKyH2+lE85B7Y4OEU6xrwN9/vBZe
+        jo3iiAmimjLqYqC5BeElh/k=
+X-Google-Smtp-Source: APXvYqymqA/RB6sE4CysvUiIUuKxrT81mIHqBRFBWPQ30CrkRgQ03AJFoViOTZJv0Hh8kRwrwoZGkA==
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr18595761wrq.206.1583108414631;
+        Sun, 01 Mar 2020 16:20:14 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id k16sm25428417wrd.17.2020.03.01.16.20.09
+        by smtp.gmail.com with ESMTPSA id k16sm25428417wrd.17.2020.03.01.16.20.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2020 16:20:10 -0800 (PST)
+        Sun, 01 Mar 2020 16:20:14 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] doc: spi-fsl-dspi: Add specific compatibles for all Layerscape SoCs
-Date:   Mon,  2 Mar 2020 02:19:53 +0200
-Message-Id: <20200302001958.11105-2-olteanv@gmail.com>
+Subject: [PATCH 5/6] spi: spi-fsl-dspi: Support SPI software timestamping in all non-DMA modes
+Date:   Mon,  2 Mar 2020 02:19:57 +0200
+Message-Id: <20200302001958.11105-6-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200302001958.11105-1-olteanv@gmail.com>
 References: <20200302001958.11105-1-olteanv@gmail.com>
@@ -72,50 +72,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Make the second compatible string optional for LS1012A, LS1088A and
-LS2080A. Old versions of the spi-fsl-dspi.c driver still need to probe
-on the old, generic compatible string for these controllers (such as
-"fsl,ls1021a-v1.0-dspi") which provides less functionality.
-
-Document the device tree bindings for LS1043A and LS1046A, whose
-bindings are already in use in fsl-ls1043a.dtsi and fsl-ls1046a.dtsi.
-
-Introduce new compatible strings for LS1028A and LX2160A. There will be
-no second compatible string for these.
+There's no reason to keep this .ptp_sts_supported property explicitly in
+devtype_data, since it can be deduced from the operating mode alone.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- .../devicetree/bindings/spi/spi-fsl-dspi.txt    | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-index 162e024b95a0..99b94cfe1623 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-@@ -1,12 +1,17 @@
- ARM Freescale DSPI controller
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index d21cc5cdc8a4..c26a42f8ecbc 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -122,7 +122,6 @@ enum dspi_trans_mode {
+ struct fsl_dspi_devtype_data {
+ 	enum dspi_trans_mode	trans_mode;
+ 	u8			max_clock_factor;
+-	bool			ptp_sts_supported;
+ 	bool			xspi_mode;
+ 	int			fifo_size;
+ 	int			dma_bufsize;
+@@ -150,48 +149,41 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
+ 	[LS1021A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LS1012A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS1043A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS1046A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS2080A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LS2085A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LX2160A] = {
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+-		.ptp_sts_supported	= true,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
+ 	},
+@@ -1246,7 +1238,8 @@ static int dspi_probe(struct platform_device *pdev)
+ 	ctlr->max_speed_hz =
+ 		clk_get_rate(dspi->clk) / dspi->devtype_data->max_clock_factor;
  
- Required properties:
--- compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi",
--		"fsl,ls2085a-dspi"
--		or
--		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
--		"fsl,ls1012a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
--		"fsl,ls1088a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
-+- compatible : must be one of:
-+	"fsl,vf610-dspi",
-+	"fsl,ls1021a-v1.0-dspi",
-+	"fsl,ls1012a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1028a-dspi",
-+	"fsl,ls1043a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1046a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1088a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls2080a-dspi" (optionally followed by "fsl,ls2085a-dspi"),
-+	"fsl,ls2085a-dspi",
-+	"fsl,lx2160a-dspi",
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain SPI controller interrupt
- - clocks: from common clock binding: handle to dspi clock.
+-	ctlr->ptp_sts_supported = dspi->devtype_data->ptp_sts_supported;
++	if (dspi->devtype_data->trans_mode != DSPI_DMA_MODE)
++		ctlr->ptp_sts_supported = true;
+ 
+ 	platform_set_drvdata(pdev, ctlr);
+ 
 -- 
 2.17.1
 
