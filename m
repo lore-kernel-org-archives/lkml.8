@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7CCC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C72CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82C2721D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EFD24676
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ifY/Bd7g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHewCuWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgCBNEq (ORCPT
+        id S1727978AbgCBNEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:04:46 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:52712 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgCBNEp (ORCPT
+        Mon, 2 Mar 2020 08:04:52 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:50571 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgCBNEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:04:45 -0500
-Received: by mail-wr1-f73.google.com with SMTP id n12so5758472wrp.19
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:04:44 -0800 (PST)
+        Mon, 2 Mar 2020 08:04:51 -0500
+Received: by mail-wr1-f74.google.com with SMTP id p5so5729500wrj.17
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:04:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=JEYVQ/93cUIIc6BO5V/NQlPPY1ArQwYADsRJbFdijd8=;
-        b=ifY/Bd7g+2OhtayWGvfN9k47hFCAyCdcGk5ycHkoHFt8uMYtYWW/iEampGrQfd00jA
-         NhMrguaHSkQJVtHIyOtncYN4AdA6RkzmuDiqALK2XONIpaXftSzaORyPsma/X0e67210
-         2dp05VBpxYq6vTcF0b1otLbf7BCFz9tusGS262gHtr0F/jJohXRbyDV4UjhwEi8yQLym
-         vy/+nvRVT/VDr3kOvQvqK7WXNln1+VG7JUtD4IYmrtd+F2GzFBp2099skMDQBOZBaCnR
-         c7Z3ayvTiUb+Azio8W+ZoGneaD7wE3R3dm0UcEJD5Ab5vt3Cd9s+PflF5vkgxSCgRqk2
-         R2Zw==
+        bh=j3aDuvHmNNb8lZp62OUl5ijcLNjosW5sWfAg0aQm8tI=;
+        b=vHewCuWK7XwWw+VRmDWzRLkq61RHy9RnkX3i1kaJ8fw0M0PseejKlj/CZ68p864I5Y
+         N9SGMmkirAc/jgX9ro369d5IupRgP9uXpmgTu6qWv8iSKdgEsMlJCz2VRmtvOWTC/16r
+         grP1CWYBHUL0E9jvxhIWnmwDxoKIWwJkXclff8CBxM+bx6bGzs+trjRunmDlTB2f/ISR
+         4gaf0upeQTTq1XGdTweSwITQOJ96unRsDb0Lq9uWCv3/Qh1ver1HInXxiCT1JaF/IrcZ
+         6+l3xZm5rOWOQFpx9N2kSsUuQHMUqx615nH6Ov9dq4D2fJQYRKhTRasXzzX8hyCASUJc
+         Yr+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=JEYVQ/93cUIIc6BO5V/NQlPPY1ArQwYADsRJbFdijd8=;
-        b=X9F9glRE/6R7FxDWEPqHfwnTQA906EivAJwv4GX+aV3WvxGS5u3QM6NR36rx2Fg4nm
-         kTwUflhvSmgra+IrwOPTbMsM9LuRshenlf5eiJ2DMK+4hWyYVNHJKElO5fOX0TYBUB7+
-         qnEyAdkERz85EF256o9qCGHJX66s6df98paTJIdxYxYlA7aRGt3uxyqlmPdIzBiaO5k9
-         u8eMC7SNGu6NXJss0wjeT4wa/8FTKVNQeN6X/pCRp5eoqu9OgbGA+C5sEoczcg/ll/Rv
-         iA6RTFgN4cVsRYUnOWnsLH808CL+E2gN0LcI/WJ19SMxbMS3Fe6KLnKLbHDIML1MQajh
-         buLw==
-X-Gm-Message-State: APjAAAUd6iSyTpYU/E9F1XYFxab8kXSdDh16mD0HBEFv0gQDAd0huh+V
-        amGk3QII7wAZTD1N8giOkNq/Rh8mXjQ=
-X-Google-Smtp-Source: APXvYqylIVXtOKiOFEzyHNHRqhYhFLw9Oy4b+pL2He/Fq3tNdkrsSiy4aLsLJ5pp9R9QUaRQhrSKuXkn2FM=
-X-Received: by 2002:a5d:5286:: with SMTP id c6mr15916314wrv.418.1583154283684;
- Mon, 02 Mar 2020 05:04:43 -0800 (PST)
-Date:   Mon,  2 Mar 2020 14:04:29 +0100
+        bh=j3aDuvHmNNb8lZp62OUl5ijcLNjosW5sWfAg0aQm8tI=;
+        b=nFZ0cDXnqB5nQoc5LKL0v7JMnkP6vwIDe5JqpkDysSg79s7nIepBtO8yvOyX0x9Bk5
+         5hRjC4dAjOuMI9TvtO9L5Eo2ScDL2g4htJxpALk1UmvW3uQDMH5V4qSEv8nw0qFMchG5
+         xFFsLiOQyaiOyzeehJOUktLE9zEiwmbdPTqf/12wQFwhU9CGqMZcIxzXuShbeR5e2WEw
+         R4nDP7FEPKGcBvkJS8ZqvHIK9A8Jw4GdgsYcXd2RnnvYma45+Aei84jWBRAxTIbmyRGx
+         9gjRjUuD70kuTaee12t0zE22shTI9YCxmvuPI2LSVCPzhiEbiqOx3DcqEt0jD9GpDNvG
+         VNCg==
+X-Gm-Message-State: ANhLgQ31DRkJ5gwGHvkOgr/mgVncBQ2kdEqexGFl+g6zgzguLEen//3N
+        Ry3hRy78k41TJ2Jh25DmZC2YK1sWuoo=
+X-Google-Smtp-Source: ADFU+vvhEHHYZJ73Yy0CimVvZXBOlQbztjelV2mMGDGzouPCkzbXetIp+8NAtW54Y5Fi1/JwnKRZO766kE8=
+X-Received: by 2002:adf:ce12:: with SMTP id p18mr5676203wrn.88.1583154287784;
+ Mon, 02 Mar 2020 05:04:47 -0800 (PST)
+Date:   Mon,  2 Mar 2020 14:04:30 +0100
 In-Reply-To: <20200302130430.201037-1-glider@google.com>
-Message-Id: <20200302130430.201037-2-glider@google.com>
+Message-Id: <20200302130430.201037-3-glider@google.com>
 Mime-Version: 1.0
 References: <20200302130430.201037-1-glider@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2 2/3] binder: do not initialize locals passed to copy_from_user()
+Subject: [PATCH v2 3/3] sched/wait: avoid double initialization in ___wait_event()
 From:   glider@google.com
 To:     tkjos@google.com, keescook@chromium.org,
         gregkh@linuxfoundation.org, arve@android.com, mingo@redhat.com
@@ -71,49 +71,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain copy_from_user() invocations in binder.c are known to
-unconditionally initialize locals before their first use, like e.g. in
-the following case:
-
-	struct binder_transaction_data tr;
-	if (copy_from_user(&tr, ptr, sizeof(tr)))
-		return -EFAULT;
-
-In such cases enabling CONFIG_INIT_STACK_ALL leads to insertion of
-redundant locals initialization that the compiler fails to remove.
-To work around this problem till Clang can deal with it, we apply
-__no_initialize to local Binder structures.
-
-This patch was generated using the following Coccinelle script:
-
-  @match@
-  type T;
-  identifier var;
-  position p0, p1;
-  @@
-  T var@p0;
-  ...
-  copy_from_user(&var,..., sizeof(var))@p1
-
-  @escapes depends on match@
-  type match.T;
-  identifier match.var;
-  position match.p0,match.p1;
-  @@
-  T var@p0;
-  ... var ...
-  copy_from_user(&var,..., sizeof(var))@p1
-
-  @local_inited_by_cfu depends on !escapes@
-  type T;
-  identifier var;
-  position match.p0,match.p1;
-  fresh identifier var_noinit = var##" __no_initialize";
-  @@
-  -T var@p0;
-  +T var_noinit;
-  ...
-  copy_from_user(&var,..., sizeof(var))@p1
+With CONFIG_INIT_STACK_ALL enabled, the local __wq_entry is initialized
+twice. Because Clang is currently unable to optimize the automatic
+initialization away (init_wait_entry() is defined in another translation
+unit), remove it with the __no_initialize annotation.
 
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -123,69 +84,47 @@ Signed-off-by: Alexander Potapenko <glider@google.com>
  v2:
   - changed __do_not_initialize to __no_initialize as requested by Kees
     Cook
-  - wrote a Coccinelle script to generate the patch
 ---
- drivers/android/binder.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/android/binder.c | 4 ++--
+ include/linux/wait.h     | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index a6b2082c24f8f..a59871532ff6b 100644
+index a59871532ff6b..66984e7c33094 100644
 --- a/drivers/android/binder.c
 +++ b/drivers/android/binder.c
-@@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
- 
- 		case BC_TRANSACTION_SG:
- 		case BC_REPLY_SG: {
--			struct binder_transaction_data_sg tr;
-+			struct binder_transaction_data_sg tr __no_initialize;
- 
- 			if (copy_from_user(&tr, ptr, sizeof(tr)))
- 				return -EFAULT;
-@@ -3799,7 +3799,7 @@ static int binder_thread_write(struct binder_proc *proc,
- 		}
- 		case BC_TRANSACTION:
- 		case BC_REPLY: {
--			struct binder_transaction_data tr;
-+			struct binder_transaction_data tr __no_initialize;
- 
- 			if (copy_from_user(&tr, ptr, sizeof(tr)))
- 				return -EFAULT;
 @@ -4827,7 +4827,7 @@ static int binder_ioctl_write_read(struct file *filp,
  	struct binder_proc *proc = filp->private_data;
  	unsigned int size = _IOC_SIZE(cmd);
  	void __user *ubuf = (void __user *)arg;
--	struct binder_write_read bwr;
-+	struct binder_write_read bwr __no_initialize;
+-	struct binder_write_read bwr __no_initialize;
++	struct binder_write_read bwr;
  
  	if (size != sizeof(struct binder_write_read)) {
  		ret = -EINVAL;
-@@ -5039,7 +5039,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+@@ -5026,7 +5026,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 			goto err;
  		break;
- 	}
- 	case BINDER_SET_CONTEXT_MGR_EXT: {
--		struct flat_binder_object fbo;
-+		struct flat_binder_object fbo __no_initialize;
+ 	case BINDER_SET_MAX_THREADS: {
+-		int max_threads;
++		int max_threads __no_initialize;
  
- 		if (copy_from_user(&fbo, ubuf, sizeof(fbo))) {
- 			ret = -EINVAL;
-@@ -5076,7 +5076,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		break;
- 	}
- 	case BINDER_GET_NODE_INFO_FOR_REF: {
--		struct binder_node_info_for_ref info;
-+		struct binder_node_info_for_ref info __no_initialize;
- 
- 		if (copy_from_user(&info, ubuf, sizeof(info))) {
- 			ret = -EFAULT;
-@@ -5095,7 +5095,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		break;
- 	}
- 	case BINDER_GET_NODE_DEBUG_INFO: {
--		struct binder_node_debug_info info;
-+		struct binder_node_debug_info info __no_initialize;
- 
- 		if (copy_from_user(&info, ubuf, sizeof(info))) {
- 			ret = -EFAULT;
+ 		if (copy_from_user(&max_threads, ubuf,
+ 				   sizeof(max_threads))) {
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index 3283c8d021377..b52a9bb2c7727 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -262,7 +262,8 @@ extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
+ #define ___wait_event(wq_head, condition, state, exclusive, ret, cmd)		\
+ ({										\
+ 	__label__ __out;							\
+-	struct wait_queue_entry __wq_entry;					\
++	/* Unconditionally initialized by init_wait_entry(). */			\
++	struct wait_queue_entry __wq_entry __no_initialize;			\
+ 	long __ret = ret;	/* explicit shadow */				\
+ 										\
+ 	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
