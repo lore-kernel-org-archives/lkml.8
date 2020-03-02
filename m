@@ -2,72 +2,127 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A969BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C7EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF162465D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583187906;
-	bh=SVYiFvX92VuCsAsK08u1bS2yUwPnhkO1YCCCd/qjESc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mcnOY6MaX6Ju38zgAPIoWcIgVYHQamH/R1cfYyQa2zZSGfrDKEsuaN1X4FnIolAfj
-	 cLBlmizmKezQi4HbaqlqTDuZJ7Xg7Z+wGu/VsA0snQDiWQRNzib6GLiEXDBtGKb3mx
-	 srUAAVv44GOiE5on6F1MpnZcfHTSudlGxb1E8rKI=
+	by mail.kernel.org (Postfix) with ESMTP id CFE6620866
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCBWZF (ORCPT
+        id S1726968AbgCBW0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:25:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgCBWZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:25:04 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        Mon, 2 Mar 2020 17:26:12 -0500
+Received: from hosting.gsystem.sk ([212.5.213.30]:33146 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCBW0M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 17:26:12 -0500
+Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93FB21775;
-        Mon,  2 Mar 2020 22:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583187904;
-        bh=SVYiFvX92VuCsAsK08u1bS2yUwPnhkO1YCCCd/qjESc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nbNlVyzdc1wWnE6hQv9qUhiKjyavbJQtJRzgZTSYoP4S72CXP5SXVuwGFdckih7f7
-         6POXFe3rMwNkpXFyE/ygkfTZoExlmIl6QbPmfc9og3csYI7bvzMoRqfuhmQvmEUsFn
-         yO4VqpGzM2IYOmhaN+HAeOgrI0uavAF6W2UagrJg=
-Date:   Mon, 2 Mar 2020 23:25:01 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 02/24] x86/entry/64: Avoid pointless code when
- CONTEXT_TRACKING=n
-Message-ID: <20200302222500.GA25705@lenoir>
-References: <20200225221606.511535280@linutronix.de>
- <20200225222648.395059616@linutronix.de>
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id 1FA2B7A02F6;
+        Mon,  2 Mar 2020 23:26:11 +0100 (CET)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Bart Van Assche <bvanassche@acm.org>
+Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
+Date:   Mon, 2 Mar 2020 23:26:08 +0100
+User-Agent: KMail/1.9.10
+Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Hernandez <michael.hernandez@cavium.com>,
+        Sawan Chandak <sawan.chandak@cavium.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>
+References: <202002231929.01662.linux@zary.sk> <1fbad673-1b8c-0813-c60e-a4f56330a972@acm.org> <202002271809.07717.linux@zary.sk>
+In-Reply-To: <202002271809.07717.linux@zary.sk>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20200225222648.395059616@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-Id: <202003022326.08698.linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:16:08PM +0100, Thomas Gleixner wrote:
-> GAS cannot optimize out the test and conditional jump when context tracking
-> is disabled and CALL_enter_from_user_mode is an empty macro.
+On Thursday 27 February 2020 18:09:07 Ondrej Zary wrote:
 > 
-> Wrap it in #ifdeffery. Will go away once all this is moved to C.
+> On Tuesday 25 February 2020 04:41:48 Bart Van Assche wrote:
+> > On 2020-02-24 00:20, Ondrej Zary wrote:
+> > > Looks like it's in some inlined function.
+> > > 
+> > > /usr/src/linux-source-4.19# gdb /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
+> > > GNU gdb (Debian 8.2.1-2+b3) 8.2.1
+> > > ...
+> > > Reading symbols from /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...Reading symbols 
+> > > from /usr/lib/debug//lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...done.
+> > > done.
+> > > 
+> > > (gdb) list *(qla24xx_async_abort_cmd+0x1b)
+> > > 0xf88b is in qla24xx_async_abort_cmd (./arch/x86/include/asm/atomic.h:97).
+> > > 92       *
+> > > 93       * Atomically increments @v by 1.
+> > > 94       */
+> > > 95      static __always_inline void arch_atomic_inc(atomic_t *v)
+> > > 96      {
+> > > 97              asm volatile(LOCK_PREFIX "incl %0"
+> > > 98                           : "+m" (v->counter) :: "memory");
+> > > 99      }
+> > > 100     #define arch_atomic_inc arch_atomic_inc
+> > >
+> > > [ ... ]
+> > > 
+> > > (gdb) disassemble qla24xx_async_abort_cmd
+> > > Dump of assembler code for function qla24xx_async_abort_cmd:
+> > >    0x000000000000f870 <+0>:     callq  0xf875 <qla24xx_async_abort_cmd+5>
+> > >    0x000000000000f875 <+5>:     push   %r15
+> > >    0x000000000000f877 <+7>:     push   %r14
+> > >    0x000000000000f879 <+9>:     push   %r13
+> > >    0x000000000000f87b <+11>:    push   %r12
+> > >    0x000000000000f87d <+13>:    push   %rbp
+> > >    0x000000000000f87e <+14>:    push   %rbx
+> > >    0x000000000000f87f <+15>:    mov    0x28(%rdi),%r13
+> > >    0x000000000000f883 <+19>:    mov    0x20(%rdi),%r15
+> > >    0x000000000000f887 <+23>:    mov    0x48(%rdi),%r14
+> > >    0x000000000000f88b <+27>:    lock incl 0x4(%r14)
+> > >    0x000000000000f890 <+32>:    mfence
+> > 
+> > Thanks, this is very helpful. I think the above means that the crash is
+> > triggered by the following code:
+> > 
+> > 	sp = qla2xxx_get_qpair_sp(cmd_sp->qpair, cmd_sp->fcport,
+> > 		GFP_KERNEL);
+> > 
+> > From the start of qla2xxx_get_qpair_sp():
+> > 
+> > 	QLA_QPAIR_MARK_BUSY(qpair, bail);
+> > 
+> > From qla_def.h:
+> > 
+> > #define QLA_QPAIR_MARK_BUSY(__qpair, __bail) do {	\
+> > 	atomic_inc(&__qpair->ref_count);		\
+> > 	mb();						\
+> > 	if (__qpair->delete_in_progress) {		\
+> > 		atomic_dec(&__qpair->ref_count);	\
+> > 		__bail = 1;				\
+> > 	} else {					\
+> > 	       __bail = 0;				\
+> > 	}						\
+> > } while (0)
+> > 
+> > One of the changes between kernel version v4.9.210 and v4.19.98 is the
+> > following: "qla2xxx: Add multiple queue pair functionality". I think the
+> >  above information means that the cmd_sp->qpair pointer is NULL. I will
+> > let QLogic recommend a solution.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Thank you very much for the analysis.
+> Unfortunately, QLogic does not seem to care...
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Let's try to CC the people at Cavium that signed-off the commit.
+
+-- 
+Ondrej Zary
