@@ -2,163 +2,242 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95769C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24912084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="cb0gklsR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="yCWE4Ce1"
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E02084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCBPby (ORCPT
+        id S1727299AbgCBPcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:31:54 -0500
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:62715 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgCBPby (ORCPT
+        Mon, 2 Mar 2020 10:32:45 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43870 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBPcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:31:54 -0500
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 2251A5E9EC;
-        Mon,  2 Mar 2020 10:31:52 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=+w0TjN0sgfinY77qlaN2DDq+4MI=; b=cb0gkl
-        sR9djEG5wDD+oYCv2F3RvKhPPaRBTl/O6Ggvc1WGCUxCwBCXQf4pwa5G7sGePs0J
-        CXZlkE/Iui3yN8WVlMVJM+oNm0cSfMabp029SBfGlCzMUMaHz8kGLAkeT9ifkoNt
-        sgSvdg6x8LLdue7BMqx+jhhIsuPQdiQlvV8Qc=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 1911B5E9EB;
-        Mon,  2 Mar 2020 10:31:52 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=WFfea9XXdTCiyqDrZWumH0aOM0ikm6o03o4Ib1MKO6s=; b=yCWE4Ce18rB4VWGl5FYMYYxA+GIP4zQNaSZyYucR4+/AEs6OmTN0GMXiiDy1K/XddT0lduzhElCaZiMbTQ6l21cVmm8dJytVjhbgxI/O3D2h1cajHQE4LBg/YPkwJuEJZ5lflyNXArr5v7aVZ6vA33/DTf2gI1mFCdL+C9C2zhs=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 804655E9EA;
-        Mon,  2 Mar 2020 10:31:51 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 9FBC12DA0227;
-        Mon,  2 Mar 2020 10:31:50 -0500 (EST)
-Date:   Mon, 2 Mar 2020 10:31:50 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/2] kconfig: allow symbols implied by y to become m
-In-Reply-To: <20200302062340.21453-1-masahiroy@kernel.org>
-Message-ID: <nycvar.YSQ.7.76.2003021024370.1559@knanqh.ubzr>
-References: <20200302062340.21453-1-masahiroy@kernel.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 2 Mar 2020 10:32:45 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j5so9205057otn.10;
+        Mon, 02 Mar 2020 07:32:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=ZZC2Pupfl/eFbEiQmQK8DrdbI5TFes5OKB8zq+O8R1I=;
+        b=BPCImpaVZVUxdzN5KKku2FS9cxnyrj2VqNM3qtKB+QZ+0w9mHciBcdIIq9B8Vs/PQE
+         FIKNtt+NuYy4FCTC5IjNNaAFtQOPszr4h0ypcY1VSUshP2mp4EV6gk6EHkaMFRBn71i7
+         ODVRkeg9V3uFlgVMh9HiEJJ2u/UXX+aBL1tDAMLQBgclcn8uyTl+RqgsA3t8IRIQdV/K
+         eDATaKp3BhNmetgxJUUJIxxAqzSwqwHzBnxNlibDnB1rxTOWIzkTCvoXnPsTRoo+FQcp
+         FVw5wAQuXjgRm8/IyfM8Dv7KJTSCHFJdX7XY9+NG+rKBtAMd6wJ96EjHeqxTNqIG8E/P
+         wOeg==
+X-Gm-Message-State: APjAAAUBl9fdkQGci9LxDqxfeJjDKANX0hxiS0brY6T+q68oG9G18gxW
+        REcgnlNh1xFj3yfI0IcT+OJkHWgvmO9MCt/cDmE=
+X-Google-Smtp-Source: APXvYqwgjIFCSqSj4qBpYRjDRfnQGcUTZSl3tHFJqbuFk9d/EBsOPPhJjGzJbigayYo0pnbjUOze3Cw83b79RAdw6Sc=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr13477946ots.250.1583163163733;
+ Mon, 02 Mar 2020 07:32:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: F05AC3AE-5C9A-11EA-B458-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+ <20200302134011.GA3717@pflmari> <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+ <20200302150706.GB3717@pflmari>
+In-Reply-To: <20200302150706.GB3717@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 16:32:32 +0100
+Message-ID: <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020, Masahiro Yamada wrote:
+Hi Alex,
 
-> The 'imply' keyword restricts a symbol to y or n, excluding m
-> when it is implied by y. This is the original behavior since
-> commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword").
-> 
-> However, the author of the 'imply' keyword, Nicolas Pitre, stated
-> that the 'imply' keyword should not impose any restrictions. [1]
-> 
-> I agree, and want to get rid of this tricky behavior.
-> 
-> [1]: https://lkml.org/lkml/2020/2/19/714
-> 
-> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On Mon, Mar 2, 2020 at 4:07 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Mon, Mar 02, 2020 14:47:46 +0100:
+> > On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > > @@ -322,6 +322,10 @@
+> > > > >         clock-frequency = <22579200>;
+> > > > >  };
+> > > > >
+> > > > > +&audio_clk_c {
+> > > > > +       clock-frequency = <12288000>;
+> > > > > +};
+> > > >
+> > > > Does the ADV7482 always generate a 12.288 MHz clock signal?
+> > > > Or is this programmable?
+> > >
+> > > Oops. It looks like it is and the value is derived from the sampling rate
+> > > (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+> >
+> > Where are these hardcoded in the board file?
+>
+> In the endpoint definition, arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dts
+>
+> So the frequency can be set at the run-time, perhaps even derived from
+> endpoint connected to the output. In this case, rsnd_endpoint3,
+> which has the "mclk-fs" setting. Not sure if the sampling rate
+> can be set to something else for the HDMI, though.
+>
+> > Even if they are, technically this is a clock output of the ADV7482.
+>
+> ... which I hope to correct as soon as I steal the hardware from whoever stole
+> it from me...
+>
+> > > > > video-receiver@70 {
+> > > > >     compatible = "adi,adv7482";
+> > > > > ...
+> > > > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
+> > > > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
+> > > >
+> > > > The above declares the Audio CLK C to be a clock input of the ADV7482, while
+> > > > it is an output.
+> > >
+> > > I would gladly give it right direction if I *really* understood what I was
+> > > doing...
+> >
+> > :-)
+> >
+> > > > Furthermore, the DT bindings do not document that clocks can be specified.
+> > >
+> > > Should the DT bindings document that the clock cannot be specified than?
+> >
+> > It currently does say so, as it doesn't list "clocks" in its properties section.
+>
+> The bindings documentation file, which we're talking about here and which does
+> not list the specifiable input clocks in its properties, is it the
+>
+>     Documentation/devicetree/bindings/media/i2c/adv748x.txt
+>
+> ?
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+Yes.
 
-In addition to the IS_REACHABLE() note, it might be a good idea to 
-suggest adding an "imply" reference to the dependency if the feature 
-provided by BAZ is highli desirable, e.g.:
+>
+> And this absence of documentation also means that whatever clocks (both input
+> in "clocks=" and output in "#clock-cells") listed in a specific .dts are just
+> an integration detail?
 
-config FOO
-	tristate
-	imply BAR
-	imply BAZ
+No, the absence probably means that any clock-related properties in a .dts
+file will just be ignored.
 
+Looking at the driver source, it indeed has no support related to clocks at all.
 
-> ---
-> 
->  Documentation/kbuild/kconfig-language.rst | 12 +++++++++++-
->  scripts/kconfig/symbol.c                  |  5 +----
->  2 files changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index d0111dd26410..d4d988aea679 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -173,7 +173,7 @@ applicable everywhere (see syntax).
->  	===		===		=============	==============
->  	n		y		n		N/m/y
->  	m		y		m		M/y/n
-> -	y		y		y		Y/n
-> +	y		y		y		Y/m/n
->  	y		n		*		N
->  	===		===		=============	==============
->  
-> @@ -181,6 +181,16 @@ applicable everywhere (see syntax).
->    ability to hook into a secondary subsystem while allowing the user to
->    configure that subsystem out without also having to unset these drivers.
->  
-> +  Note: If the combination of FOO=y and BAR=m causes a link error,
-> +  you can guard the function call with IS_REACHABLE()::
-> +
-> +	foo_init()
-> +	{
-> +		if (IS_REACHABLE(CONFIG_BAZ))
-> +			baz_register(&foo);
-> +		...
-> +	}
-> +
->  - limiting menu display: "visible if" <expr>
->  
->    This attribute is only applicable to menu blocks, if the condition is
-> diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> index 8d38b700b314..b101ef3c377a 100644
-> --- a/scripts/kconfig/symbol.c
-> +++ b/scripts/kconfig/symbol.c
-> @@ -401,8 +401,7 @@ void sym_calc_value(struct symbol *sym)
->  				sym_warn_unmet_dep(sym);
->  			newval.tri = EXPR_OR(newval.tri, sym->rev_dep.tri);
->  		}
-> -		if (newval.tri == mod &&
-> -		    (sym_get_type(sym) == S_BOOLEAN || sym->implied.tri == yes))
-> +		if (newval.tri == mod && sym_get_type(sym) == S_BOOLEAN)
->  			newval.tri = yes;
->  		break;
->  	case S_STRING:
-> @@ -484,8 +483,6 @@ bool sym_tristate_within_range(struct symbol *sym, tristate val)
->  		return false;
->  	if (sym->visible <= sym->rev_dep.tri)
->  		return false;
-> -	if (sym->implied.tri == yes && val == mod)
-> -		return false;
->  	if (sym_is_choice_value(sym) && sym->visible == yes)
->  		return val == yes;
->  	return val >= sym->rev_dep.tri && val <= sym->visible;
-> -- 
-> 2.17.1
-> 
-> 
+> Does this below makes more sense, than?
+>
+>     video-receiver@70 {
+>         compatible = "adi,adv7482";
+>         clocks = <&rcar_sound 3>;
+>         clock-names = "clk-hdmi-video";
+>         adv748x_mclk: mclk {
+>             compatible = "fixed-clock";
+>             #clock-cells =  <0>;
+>             /* frequency hard-coded for illustration */
+>             clock-frequency = <12288000>;
+>             clock-output-names = "clk-hdmi-i2s-mclk";
+>         };
+>     };
+
+The #clock-cells should be in the main video-receiver node.
+Probably there is more than one clock output, so #clock-cells may be 1?
+There is no need for a fixed-clock compatible, nor for clock-frequency
+and clock-output-names.
+
+But most important: this should be documented in the adv748x DT bindings,
+and implemented in the adv748x driver.
+
+> Now I'm a bit hazy on how to declare that the MCLK output of the
+> video-receiver@70 is connected to the Audio Clock C of the SoC...
+> Probably remove use of "audio_clk_c" completely?
+
+Yes, the current audio_clk_c definition in the DTS assumes a fixed
+crystal.
+
+> > > > > @@ -686,7 +700,8 @@
+> > > > >         };
+> > > > >
+> > > > >         sound_pins: sound {
+> > > > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+> > > > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
+> > > > > +                        "ssi4_data";
+> > > >
+> > > > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
+> > >
+> > > I'll add them.
+> > > As the device seems to function even without thoes, does this mean the
+> > > pins in the group are used "on demand" by whatever needs them?
+> >
+> > Probably the SCK4/WS4 functions are the reset-state defaults.
+>
+> That ... might require some trial and testing: when I add them to the group,
+> the reset defaults will be overridden by the platform initialization, which is
+> not necessarily the reset default. Will see.
+
+Or by the boot loader.  Anyway, you need to specify these in the DTS.
+
+> > > Does a "clocks = ..." statement always mean input clocks?
+> >
+> > Yes it does.
+> > If a device has clock outputs and is thus a clock provider, it should
+> > have a #clock-cells property, and this should be documented in the bindings.
+> >
+> > A clock consumer will refer to clocks of a provider using the "clocks"
+> > property, specifying a clock specifier (phandle and zero or more indices)
+> > for each clock referenced.
+>
+> Something like this?
+>
+>     &rcar_sound {
+>         clocks = ...,
+>                  <&adv748x_mclk>,
+>                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+>         clock-names = ...,
+>                       "clk_c",
+>                       "clk_i";
+>     };
+
+More or less.
+
+Might become
+
+    find_a_better_label_choice: video-receiver@70 {
+            ...
+    };
+
+    &rcar_sound {
+            clock = ...,
+                    <&find_a_better_label_choice 0>,
+                    ...
+    };
+
+as there may be multiple clock outputs on the ADV7482.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
