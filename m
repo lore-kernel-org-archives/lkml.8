@@ -2,70 +2,104 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46A6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E26C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C2724677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054CA24677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oG436vtj"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="CPr77l7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCBFyA (ORCPT
+        id S1726874AbgCBFys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:54:00 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:11339 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725446AbgCBFx7 (ORCPT
+        Mon, 2 Mar 2020 00:54:48 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:40581 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBFys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:53:59 -0500
-X-UUID: da4ad93e0dab4b2f8cc91e498331ea9c-20200302
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=t4He3J1fTTd1ShvzHhVtQAeAmIgLfyTFftjbZWTdLIo=;
-        b=oG436vtj99R9yR9HMOop9/lWBcqrx9FlOlgs4SH1S7PLeSKHjd+FyV+i3TPawFSoLd3aiJcyxAGPdZ7+9lAXb8yqEreONqg+AMxjEaJS3fWhXq1SiKFqh2MHQfJH4DxzL4jghxgyV1Wxz5nHgrQmtQ1JpFzHfMT131lxeKSQVFA=;
-X-UUID: da4ad93e0dab4b2f8cc91e498331ea9c-20200302
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <wen.su@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1626716386; Mon, 02 Mar 2020 13:53:54 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 2 Mar 2020 13:51:13 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 2 Mar 2020 13:51:25 +0800
-Message-ID: <1583128432.18202.3.camel@mtkswgap22>
-Subject: Re: Applied "regulator: mt6359: Add support for MT6359 regulator"
- to the regulator tree
-From:   Wen Su <Wen.Su@mediatek.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Date:   Mon, 2 Mar 2020 13:53:52 +0800
-In-Reply-To: <20200226114706.GE4136@sirena.org.uk>
-References: <20200226114706.GE4136@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 2 Mar 2020 00:54:48 -0500
+Received: by mail-ua1-f67.google.com with SMTP id t20so3183031uao.7
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:54:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xaVFZKXkYwadGJPmxWSyTrfKN4QDA7x77UvzbDi6hYw=;
+        b=CPr77l7kD5D+rAiwuZyWv8zJQjAQzrZ2SaX5O2HwQfDvb7nfHwgMHYMKB/gDZFMkU/
+         hp4j50gGKIAeYlYuClcTqi6vwyt/nf3iceTzGL7aNCOe3LpLnTo9xxtuLd9s2u4emmki
+         d1AiObF/E9n73EjuUtApBgiVqckrKAiE4IJ9mgutkBLgyp1BcRCAOnONvw3fteUiFVVA
+         79dkuS2hylinTvRyOh14/8EHEGPAfdVK7ZHcHofybDXihzL9HSjGPKukITYYTxHjSHKM
+         FpUcaY+ypDV92ZR62HEp5QvYKo4CTQEDvovh+34M5achweW6EW8YfmTOkPv+29Hd5ZeG
+         YvUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xaVFZKXkYwadGJPmxWSyTrfKN4QDA7x77UvzbDi6hYw=;
+        b=bZEBrYPfdcSFTotUA8tujWogTHyaKP+9+j6LOoFI/+qs72nbM3CFDh7balBJSsStWE
+         aIsq7Ms96NHf5d6DBi0fcf1UcNW1upLVVpxRwq3zHpWviqgZu4/cvsg+uQuL885IFjRm
+         yHQaQSc3NYAsN45cdkoMMGVLmdGkF1ByPnoVj2g8APb9gXT17hUx6xMxwQiMKwa8Hw4Z
+         yxc8WT+cEvt8wmLh2pUeDIcGOrHOb6Zx27x8JPYfwa5JlTSAAMmPxNqI43DmzL5kOTSf
+         Xg/gBAlkf/6pjw2NUd3jNorhQzM4JIFVX5c7JSc7l64vmCCXpNFszcj/sSBZ2qGzultO
+         6r+w==
+X-Gm-Message-State: ANhLgQ3cNyd71OnJaIQNQxTrBeRTD3pfNTE7WEQmjlsRQ0Pxp2mCI3zy
+        JcW9Xo0U7r5hiyGVSgnueNBFshD6v3+cRGsqvv666Q==
+X-Google-Smtp-Source: ADFU+vtnQNxDfyhIydJNfyBpdE0lGq6GsJ6tyObK59DOF5xuyYZSJgq3fkaYxljupt7e3lTfBookfoG23Ynd14+Qjt0=
+X-Received: by 2002:ab0:2758:: with SMTP id c24mr6576762uap.94.1583128485802;
+ Sun, 01 Mar 2020 21:54:45 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 942391240DD208876DE14664B578D3ED6A5B0C160211EB22242DAAFE98F653942000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
+In-Reply-To: <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 2 Mar 2020 13:53:56 +0800
+Message-ID: <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyaywgDQoNCk9uIFdlZCwgMjAyMC0wMi0yNiBhdCAxMTo0NyArMDAwMCwgTWFyayBCcm93
-biB3cm90ZToNCj4gT24gVHVlLCBGZWIgMjUsIDIwMjAgYXQgMDE6MjQ6MTFQTSArMDAwMCwgTWFy
-ayBCcm93biB3cm90ZToNCj4gPiBUaGUgcGF0Y2gNCj4gPiANCj4gPiAgICByZWd1bGF0b3I6IG10
-NjM1OTogQWRkIHN1cHBvcnQgZm9yIE1UNjM1OSByZWd1bGF0b3INCj4gPiANCj4gPiBoYXMgYmVl
-biBhcHBsaWVkIHRvIHRoZSByZWd1bGF0b3IgdHJlZSBhdA0KPiANCj4gLi4uYW5kIGRyb3BwZWQg
-YmVjYXVzZSB0aGUgTUZEIGRlcGVuZGVuY3kgaXNuJ3Qgb24gYSBuZXdseSBhZGRlZCBkcml2ZXIN
-Cj4gbGlrZSBpdCBhcHBlYXJlZC4NCg0KSSBhbSBzb3JyeSB0byBib3RoZXIgeW91LiBIb3cgc2hv
-dWxkIEkgcHJvY2VlZCBmb3IgdGhpcyBwYXRjaCBzZXQgd2hpY2gNCmluY2x1ZGluZyByZWd1bGF0
-b3IgZHJpdmVyIGFuZCBNRkQgaGVhZGVyIGZpbGUgPyBQbGVhc2UgZ2l2ZSBhZHZpY2UuDQoNClRo
-YW5rIHlvdS4NCg0K
+Daniel Drake <drake@endlessm.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=8828=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:43=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wr=
+ote:
+> > The purpose of this series of update of the ACPI EC driver is to make i=
+ts
+> > initialization more straightforward.
+> >
+> > They fix a couple of issues, clean up some things, remove redundant cod=
+e etc.
+> >
+> > Please refer to the changelogs of individual patches for details.
+> >
+> > For easier access, the series is available in the git branch at
+> >
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> >  acpi-ec-work
+> >
+> > on top of 5.6-rc3.
+>
+> Jian-Hong, can you please test this on Asus UX434DA?
+> Check if the screen brightness hotkeys are still working after these chan=
+ges.
 
+Hi Rafael,
+
+Thanks for your patches, but we found an issue:
+The laptops like ASUS UX434DA's screen brightness hotkeys work before
+this patch series.  However, the hotkeys are failed with the patch
+"ACPI: EC: Unify handling of event handler installation failures".
+
+Jian-Hong Pan
