@@ -2,147 +2,187 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D95C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90353C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2EA2187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E58C2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rU5J4TqU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fO7oLiXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgCBMdq (ORCPT
+        id S1727769AbgCBMfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:33:46 -0500
-Received: from gateway33.websitewelcome.com ([192.185.146.85]:17266 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727361AbgCBMdq (ORCPT
+        Mon, 2 Mar 2020 07:35:04 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:41555 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgCBMfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:33:46 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 389B840D64A
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:33:44 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8kGWjzSk6Efyq8kGWj42wG; Mon, 02 Mar 2020 06:33:44 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cgFXzrhuRasjv4le4yADv0Z7+ShHUhX/2A3FnoweDww=; b=rU5J4TqUzLvVYwG032wvogzd0E
-        /nWWn+RQwRKKAFiSaNBeh90i8nKpnwtvcuIw3jV2Zr1M4B8XKv/pUPbJXp615vCjT2UNznr+nXQm7
-        4lDsKm/wuc2OZz6Had57w2G00Y35GP9XU9ofDE0DZuPto8+cz9JvCSn53/JCAUObzZxkvW1UCbl+8
-        kXKQp7IbpE9/dCux20fMGa0ALcVKm+2VZ124G+V9jv0FUfvTz2JP8JLPFEln+bc/HGllHDP7hdQzT
-        /nl5ZvomCgsjO6mE+0H96/kgTp5PW0HqKnrwTYYmx6ISKLs6dfNzU9kcWGm6ld+9NgquNOhEynPwK
-        IUtqeU2Q==;
-Received: from [200.39.29.131] (port=48066 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8kGV-004HVF-BF; Mon, 02 Mar 2020 06:33:43 -0600
-Subject: Re: [PATCH][next] netfilter: Replace zero-length array with
- flexible-array member
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20200220135914.GA14062@embeddedor>
- <20200302122318.ookpzldcqltlz5wx@salvia>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <8e415003-8948-a1f6-6009-39bd44e4b161@embeddedor.com>
-Date:   Mon, 2 Mar 2020 06:36:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 07:35:03 -0500
+Received: by mail-vk1-f196.google.com with SMTP id y201so2879072vky.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:35:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uzcQiw5bmowt4+ulow/RplAnqB+Uaeou/IGgfRNu6BY=;
+        b=fO7oLiXzPRKQPba+voegh2apwnuQlM/BjsEMB5z3mgFhslsVplpSFNRCJQ1xwtsZ6G
+         Mk1tqFJHS7WArliEtpqf4A+y5AZy7OnwGrJ8V3Tt85OXKyAAQ/G+JZf/5LycM89GzxtF
+         yO7+dWorbsSIin6ccAB79DTVSRBfWH7jPqt1k6E6+d/dSpvshtFxpj9g0bZweNa8BLC8
+         9RZs1j0xaR/CYCPUFJ0gKkoRhchY0l1Irfm7I5NLaprd0LOUZFuuBGLMYf/TEvX9V4df
+         OLgfu/DVEJZ8VhNnBsMrTQK7xBwt6clX/spAK0iRpcuChoUpJ0YgCbODYY5M11C+wMpF
+         SrUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uzcQiw5bmowt4+ulow/RplAnqB+Uaeou/IGgfRNu6BY=;
+        b=dMwSTsGyTY6nf5l5WpX+TcrM/vDPWaTK9Bm7j00syrmiVmsOt4TtKU1QfFx2hT/Wgx
+         s4xBsld+9jsqLoZcIyDs+6xkeW6W1rJHOONn3qaVGkqzb19GgopNU7PpVst6SYkS+adm
+         OZvM/dS3u8XHf0zHck1DX3j5XwYkqy0hGc+Ajh3pdzat0sW4vg2egwaJT4R2PGtAXiJB
+         sChis2x1djnr6BR/+TCghj7TJkkm/Z0Ek6W47CZaL/+ah1PDCKEH3okcECb6wdKLQJXs
+         whrZzTO+KqXXSAnwi16WQYzpIZc+FdfGFDMMRFh3ZVDT6BdsK4v0nLr62ycc/FoSKZFV
+         Kq7w==
+X-Gm-Message-State: ANhLgQ3s6/WO89KjFvoja1uoI1ufkyS+XIzSzCkoZ4yirnDQla6mVJVA
+        DV8cisLxOyxoxN1ldh7Mr3fDRl2+hgOmcQJ5N4pQEA==
+X-Google-Smtp-Source: ADFU+vv1Ix4lqUJj1Zwh8N0IaleUdxli6lUO6WccegGqHmVmzk7zMOAn34MAm7qmk0j/zN7sxXbwHPZwYq8L0HLp4CE=
+X-Received: by 2002:a1f:9d8a:: with SMTP id g132mr8967505vke.39.1583152500830;
+ Mon, 02 Mar 2020 04:35:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200302122318.ookpzldcqltlz5wx@salvia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.29.131
-X-Source-L: No
-X-Exim-ID: 1j8kGV-004HVF-BF
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [200.39.29.131]:48066
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 45
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
+ <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com> <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 2 Mar 2020 13:34:49 +0100
+Message-ID: <CACT4Y+aBvofv8AQqiWr7M77FODSUqruMMoVcHHA5ROfv5VN7tw@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in ovl_llseek
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 2, 2020 at 1:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> > > On Sun, Mar 1, 2020 at 9:13 PM syzbot
+> > > <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    f8788d86 Linux 5.6-rc3
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
+> > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
+> > > >
+> > >
+> > > Dmitry,
+> > >
+> > > There is something strange about the C repro.
+> > > It passes an invalid address for the first arg of mount syscall:
+> > >
+> > >     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
+> > >             0x20000100ul);
+> > >
+> > > With this address mount syscall returns -EFAULT on my system.
+> > > I fixed this manually, but repro did not trigger the reported bug on my system.
+> >
+> > Hi Amir,
+> >
+> > This is not strange in the context of fuzzer, it's goal is to pass
+> > random data. Generally if it says 0x400000ul, that's what it is, don't
+> > fix it, or you are running a different program that may not reproduce
+> > the bug. If syzbot attaches a reproducer, the bug was triggered by
+> > precisely this program.
+> >
+>
+> What's strange it that a bug in overlay code cannot be triggered if overlay
+> isn't mounted and as it is the repro couldn't mount overlayfs at all, at
+> lease with my kernel config.
 
+Can it depend on kernel config? The bug was triggered by the program
+provided somehow.
 
-On 3/2/20 06:23, Pablo Neira Ayuso wrote:
-> Applied, thanks.
-> 
+Separate question: why is it failing? Isn't src unused for overlayfs?
+Where/how does vfs code look at src?
 
-Thanks, Pablo.
---
-Gustavo
+> The bounds check that causes mount failure is in vfs code, not in
+> overlayfs code,
+> so not sure what exactly went on there.
+>
+>
+> > The reason why it passes non-pointers here is we think the src
+> > argument of overlay mount is unused:
+> > https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/sys/linux/filesystem.txt#L12
+> > If it's not true, it needs to be fixed (or almost all overlay mounts
+> > fail with EFAULT during fuzzing).
+> >
+> >
+> > > > The bug was bisected to:
+> > > >
+> > > > commit b1f9d3858f724ed45b279b689fb5b400d91352e3
+> > > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > > Date:   Sat Dec 21 09:42:29 2019 +0000
+> > > >
+> > > >     ovl: use ovl_inode_lock in ovl_llseek()
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
+> > > > Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
+> > > >
+> > > > =====================================
+> > > > WARNING: bad unlock balance detected!
+> > > > 5.6.0-rc3-syzkaller #0 Not tainted
+> > > > -------------------------------------
+> > > > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
+> > > > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
+> > > > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
+> > > > but there are no more locks to release!
+> > > >
+> > >
+> > > This is strange. I don't see how that can happen nor how my change would
+> > > have caused this regression. If anything, the lock chance may have brought
+> > > a bug in stack file ops to light, but don't see the bug.
+> > >
+> > > The repro is multi-threaded but when I ran the repro, a single thread did:
+> > > - open lower file (pre copy up)
+> > > - lchown file (copy up)
+> > > - llseek the open file (so llseek is on a temporary ovl_open_realfile())
+> > >
+> > > Perhaps when bug was triggered ops above were executed by different
+> > > threads?
+> >
+> > Perfectly possible.
+> >
+> > > Dmitry, I may have asked this before - how hard would it be to attach an
+> > > strace of the repro to a bug report?
+> >
+> > This is tracked in https://github.com/google/syzkaller/issues/197 but
+> > no progress so far.
+> > What exactly were the main pain points in this case? But note that
+> > strace is not atomic with actual execution, so it may lead you down
+> > even worse rabbit hole...
+>
+> Sure, but it can add more insight for analysis.
+>
+> Thanks,
+> Amir.
