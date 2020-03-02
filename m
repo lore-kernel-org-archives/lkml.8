@@ -2,214 +2,119 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161E9C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1A9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C8C2465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD8021D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ofnLSi+j"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KrHXnZUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCBXMl (ORCPT
+        id S1726915AbgCBXMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:12:41 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37299 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCBXMl (ORCPT
+        Mon, 2 Mar 2020 18:12:51 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34082 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCBXMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:12:41 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so458949pfn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:12:40 -0800 (PST)
+        Mon, 2 Mar 2020 18:12:51 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t3so570615pgn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:12:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cZHkLPyQi4lEOu+PeEyqnnKuw6NNgD2Yqbp/RubP2bc=;
-        b=ofnLSi+jS3OXUcK8vE0gMbM1QBDxh7b5jS1IxWi3HkGpKKOEcm3WJd9aEk0Us7IUKO
-         8nmFWDJfiuwlFyqsXCcVKRAwIBQaYQl/evwVVX80Y3CPQhjcxITZ1o5Jk7P5xhZf2YmV
-         JUbFU5wRnrXfDlxWlBhwcEx9xdQfFjkkoY8zYrA9cLB/YTtxDa+Ix3UgLS37laXFK+lF
-         YO5R32/SpDIyenCGvur0FFCxabBbXTYfaf1ITOLkeTmU1Kzvh/HtnQ2WmKgFvoaxK9pj
-         quRJ7rwJz3FmBNE/PilR6rrZsmbZ6ywl2wXJqkGSS2Gt0C8UBc0UKbqYmILkeUOjgzI9
-         blIA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PGCq0Yxy6j7pG4Hgd2v0OpuTunQST9E5OQ5veDQNTCg=;
+        b=KrHXnZUYAhKGPwUXQ7QATo42DDOE+114Ge1Ieb8g15n1qqbGcfEQwltwgTA1D+lH4i
+         qfQy1RhrgyxdN+HTFUf3qDSoXHXfu8vYjFhMoDhQMxk+YqtkRWevbLTtfzKzomvfD0YB
+         C4X5GhQz/J7LzuG7cXtkEwTxChsQQOsT2S8I5VMuV3v6PRduAmACWb2VicfhPJw3Revt
+         YFl82Ix73WEG5QlH/JbydfuKSEd/fTMpVQg5FCC6hhq478J28Uy34XkiG7Bpf90cOOll
+         ySatTnIc6JtVrvtvOJilc7o8YsGC/x30Ee3su3mO/6r1+5fbQdoCcZlS6ou+gup3KZ91
+         VSyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cZHkLPyQi4lEOu+PeEyqnnKuw6NNgD2Yqbp/RubP2bc=;
-        b=RAUAr4PMcselqcylCFB0cgJcxe4DS8FdnnrQpgnrKnvP8Hry2p3LSLYmB2A9OXs/x7
-         RsfiiugUCtFq3B64MnLRX+SU6gF/8ahnv9NrJTTBAIUFgcUCNCNqB299AuAaQhjfNv3P
-         VwEcTex5sFC7RwHWqobyuZ+JdIGtW2/NGfHwSXzqmB+PRWDrUTs9BYqeeOCWbeqXVfQ3
-         88FjtKDn8fNnrmrkozD7PDympkQoNaRFPiVTZY3zl1Mmb6HrM5tJZUdER/7ilZW+z1EB
-         /kgqeEYP/q18uYJynAUjNGzLnjEiki0IUtuIn59Xl6JYArVd70zfSkvPxF/0uE4hfQlC
-         /btQ==
-X-Gm-Message-State: ANhLgQ1JkU1u2QLuiub4n6h23ATmMCp/eNzJgcGiByjGui+eUsCA9V0e
-        JfPB3xw25kLE172tRniVGsctww==
-X-Google-Smtp-Source: ADFU+vsbt7xW95b/HirVpnFvyPznPrDnd/h85vDaRcM55B9JmCtuRXICrRpYIjC1wXlERTK8an7NHg==
-X-Received: by 2002:a63:f403:: with SMTP id g3mr1256700pgi.62.1583190759696;
-        Mon, 02 Mar 2020 15:12:39 -0800 (PST)
-Received: from yoga (pat_11.qualcomm.com. [192.35.156.11])
-        by smtp.gmail.com with ESMTPSA id x65sm9095993pfd.34.2020.03.02.15.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 15:12:39 -0800 (PST)
-Date:   Mon, 2 Mar 2020 15:12:36 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v5 4/8] remoteproc: Add elf helpers to access elf64 and
- elf32 fields
-Message-ID: <20200302231236.GD262924@yoga>
-References: <20200210162209.23149-1-cleger@kalray.eu>
- <20200302093902.27849-1-cleger@kalray.eu>
- <20200302093902.27849-5-cleger@kalray.eu>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PGCq0Yxy6j7pG4Hgd2v0OpuTunQST9E5OQ5veDQNTCg=;
+        b=QeL+IFMCE7Doau7rBhC+cM4EZ+Jv32Di97eJdJpVRt2G/cEOyHAfWTbniyhHWcfI8O
+         lF7Xip8A1W3CbpMTGnXHtwioX12JTVAYipZaBOFJIdYTZpXb5d1bPjqaPYpljamyTYNb
+         jybbpVOGY0nQ0FQA1XkZBJJ9IAOGiUOHdi2v2YIl06l80DEpmZvVyfNAWeg2R8eZr2hj
+         CmXZ47h6G66RSpWpQLf1VMfZku6ihHo36JTXQYSp7XJG1Uk1uoXLH8jeKksxfMddMhWj
+         SxrYO/3x5O85ZVc1b5d1GTZKQ6ZdWo9vq6epDsKxN4gSHGwK5gAQFcUZNiLxXL8O7ByK
+         WI4w==
+X-Gm-Message-State: ANhLgQ3JM25N16KUB/KSXuZ9fKWvkrdwVvjIT2xABUQz3vlKa/cOq5dE
+        F5UsjWnGcSdq25/rNwQcVv8r9Q==
+X-Google-Smtp-Source: ADFU+vtJmj/Ml44U7waVC2V86PxWEvYlH6wIHLS8TEXnapOegAfQw93a0gQzrYPIzBamNk82KXK6Lw==
+X-Received: by 2002:a63:aa07:: with SMTP id e7mr1193941pgf.90.1583190770018;
+        Mon, 02 Mar 2020 15:12:50 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id k5sm6476833pfp.66.2020.03.02.15.12.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 15:12:49 -0800 (PST)
+Subject: Re: [PATCH -next] io_uring: Ensure mask is initialized in
+ io_arm_poll_handler
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20200302230118.12060-1-natechancellor@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <afe86a1d-dcc4-856e-48ea-f12761036e98@kernel.dk>
+Date:   Mon, 2 Mar 2020 16:12:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302093902.27849-5-cleger@kalray.eu>
+In-Reply-To: <20200302230118.12060-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 02 Mar 01:38 PST 2020, Clement Leger wrote:
-
-> elf32 and elf64 mainly differ by their types. In order to avoid
-> copy/pasting the whole loader code, generate static inline functions
-> which will access values according to the elf class. It allows to
-> keep a common loader basis.
-> In order to accommodate both elf types sizes, the maximum size for a
-> elf header member is chosen using the maximum value of the field for
-> both elf class.
+On 3/2/20 4:01 PM, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+> fs/io_uring.c:4178:6: warning: variable 'mask' is used uninitialized
+> whenever 'if' condition is false [-Wsometimes-uninitialized]
+>         if (def->pollin)
+>             ^~~~~~~~~~~
+> fs/io_uring.c:4182:2: note: uninitialized use occurs here
+>         mask |= POLLERR | POLLPRI;
+>         ^~~~
+> fs/io_uring.c:4178:2: note: remove the 'if' if its condition is always
+> true
+>         if (def->pollin)
+>         ^~~~~~~~~~~~~~~~
+> fs/io_uring.c:4154:15: note: initialize the variable 'mask' to silence
+> this warning
+>         __poll_t mask, ret;
+>                      ^
+>                       = 0
+> 1 warning generated.
+> 
+> io_op_defs has many definitions where pollin is not set so mask indeed
+> might be uninitialized. Initialize it to zero and change the next
+> assignment to |=, in case further masks are added in the future to avoid
+> missing changing the assignment then.
+> 
+> Fixes: d7718a9d25a6 ("io_uring: use poll driven retry for files that support it")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/916
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->  drivers/remoteproc/remoteproc_elf_helpers.h | 96 +++++++++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
 > 
-> diff --git a/drivers/remoteproc/remoteproc_elf_helpers.h b/drivers/remoteproc/remoteproc_elf_helpers.h
-> new file mode 100644
-> index 000000000000..4b6be7b6bf4d
-> --- /dev/null
-> +++ b/drivers/remoteproc/remoteproc_elf_helpers.h
-> @@ -0,0 +1,96 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Remote processor elf helpers defines
-> + *
-> + * Copyright (C) 2020 Kalray, Inc.
-> + */
-> +
-> +#ifndef REMOTEPROC_ELF_LOADER_H
-> +#define REMOTEPROC_ELF_LOADER_H
-> +
-> +#include <linux/elf.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * fw_elf_get_class - Get elf class
-> + * @fw: the ELF firmware image
-> + *
-> + * Note that we use and elf32_hdr to access the class since the start of the
-> + * struct is the same for both elf class
-> + *
-> + * Return: elf class of the firmware
-> + */
-> +static inline u8 fw_elf_get_class(const struct firmware *fw)
-> +{
-> +	struct elf32_hdr *ehdr = (struct elf32_hdr *)fw->data;
-> +
-> +	return ehdr->e_ident[EI_CLASS];
-> +}
-> +
-> +static inline void elf_hdr_init_ident(struct elf32_hdr *hdr, u8 class)
-> +{
-> +	memcpy(hdr->e_ident, ELFMAG, SELFMAG);
-> +	hdr->e_ident[EI_CLASS] = class;
-> +	hdr->e_ident[EI_DATA] = ELFDATA2LSB;
-> +	hdr->e_ident[EI_VERSION] = EV_CURRENT;
-> +	hdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
-> +}
-> +
-> +/* Generate getter and setter for a specific elf struct/field */
-> +#define ELF_GEN_FIELD_GET_SET(__s, __field, __type) \
-> +static inline __type elf_##__s##_get_##__field(u8 class, const void *arg) \
-> +{ \
-> +	if (class == ELFCLASS32) \
-> +		return (__type) ((const struct elf32_##__s *) arg)->__field; \
-> +	else \
-> +		return (__type) ((const struct elf64_##__s *) arg)->__field; \
-> +} \
-> +static inline void elf_##__s##_set_##__field(u8 class, void *arg, \
-> +					     __type value) \
-> +{ \
-> +	if (class == ELFCLASS32) \
-> +		((struct elf32_##__s *) arg)->__field = (__type) value; \
-> +	else \
-> +		((struct elf64_##__s *) arg)->__field = (__type) value; \
-> +}
-> +
-> +ELF_GEN_FIELD_GET_SET(hdr, e_entry, u64)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_phnum, u16)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_shnum, u16)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_phoff, u64)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_shoff, u64)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_shstrndx, u16)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_machine, u16)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_type, u16)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_version, u32)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_ehsize, u32)
-> +ELF_GEN_FIELD_GET_SET(hdr, e_phentsize, u16)
-> +
-> +ELF_GEN_FIELD_GET_SET(phdr, p_paddr, u64)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_vaddr, u64)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_filesz, u64)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_memsz, u64)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_type, u32)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_offset, u64)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_flags, u32)
-> +ELF_GEN_FIELD_GET_SET(phdr, p_align, u64)
-> +
-> +ELF_GEN_FIELD_GET_SET(shdr, sh_size, u64)
-> +ELF_GEN_FIELD_GET_SET(shdr, sh_offset, u64)
-> +ELF_GEN_FIELD_GET_SET(shdr, sh_name, u32)
-> +ELF_GEN_FIELD_GET_SET(shdr, sh_addr, u64)
-> +
-> +#define ELF_STRUCT_SIZE(__s) \
-> +static inline unsigned long elf_size_of_##__s(u8 class) \
-> +{ \
-> +	if (class == ELFCLASS32)\
-> +		return sizeof(struct elf32_##__s); \
-> +	else \
-> +		return sizeof(struct elf64_##__s); \
-> +}
-> +
-> +ELF_STRUCT_SIZE(shdr)
-> +ELF_STRUCT_SIZE(phdr)
-> +ELF_STRUCT_SIZE(hdr)
-> +
-> +#endif /* REMOTEPROC_ELF_LOADER_H */
-> -- 
-> 2.15.0.276.g89ea799
-> 
+> I noticed that for-next has been force pushed; if you want to squash
+> this into the commit that it fixes (or fix it in a different way), feel
+> free.
+
+Great thanks, applied. I wonder why gcc doesn't warn about that...
+
+-- 
+Jens Axboe
+
