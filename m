@@ -2,122 +2,115 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F5FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D6DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEE92086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED11C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjjiT+/X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/AGgvBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCBTxU (ORCPT
+        id S1726890AbgCBTyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:53:20 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:33233 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgCBTxT (ORCPT
+        Mon, 2 Mar 2020 14:54:10 -0500
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:56715 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBTyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:53:19 -0500
-Received: by mail-yw1-f68.google.com with SMTP id j186so1050824ywe.0;
-        Mon, 02 Mar 2020 11:53:19 -0800 (PST)
+        Mon, 2 Mar 2020 14:54:10 -0500
+Received: by mail-wr1-f73.google.com with SMTP id y28so149445wrd.23
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 11:54:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cGLSsu89YwSGXsGLVjYTzgPcmvmOj0k8jfa+3OUZmz4=;
-        b=GjjiT+/XlL3wmNr6FBO1wm+U7RhUuihrNi3KJhbC6ouk8uQzlXMdi0RuEJMdlCK92h
-         aZoEuWfpflrHAMkelEVPQYb1vOTaNwff1T9eQi4AkHJJbbOhw3XYf0IIeN2Z03cT2bwa
-         u29WNshVxVG+X4vFPOVIRRcQeiSoIeMudqi4bU2FMcBULZjNtf6T1lICYd41OL9e0g9M
-         fazKjjCJzW7Y4lK0KBq8oQd4PhqnMhjzPZNaOqr/MoaKCVQj0LhIFzhP4KDtVm7GSkZx
-         aHDCguGg28S3cSJvxoNnz2i+WkUISleaJtgi6P3W82g+fDppX+n+ULKtww3Rn0PrZ0Pq
-         e+EA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=86LZFv4eZo53SSwyBwzfXdxODBVPa+iTavg97swv4R0=;
+        b=Q/AGgvBt+xOk3jknddfoshOdwqoMXHa72ijlNLUSyAFI9TZp9avXFsIrqc2J9cp2oO
+         tQyBy42R6/lBwYoaCl76Z8ii6SUmy6KPU8ZyUqIizvUi7bSKAiekIGJKQRlXvZUmdjat
+         R4zIHASKUgWOuzrcUQWO3P7eKcIiZtbDbLoVo2CmqWdsS9QA2v6neBspKQtHroJQDkNJ
+         m7BVZSaeE/M4sCXUeM37ugqNqyPmEc2Ozns3hyw+6WWLJkE7nUlTrBD8g72QrBOnEumc
+         77Ll4R9QgGVPB78qmV+rUbrTFPQjTC73d9WvfTHfJs1LiBRhyFR0Jkn5Ns9vvs9OmijI
+         GKBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cGLSsu89YwSGXsGLVjYTzgPcmvmOj0k8jfa+3OUZmz4=;
-        b=GF0qMFjHqh57hiXJYZ0I/FWN62EaKv6Djnlq+JsynFDBRBWPH74Mq1mtg474aXih8B
-         g3SCwLnWGlE+6/2QqhSfqbEASZHuAzo7MlHnZO8KjaoZyJivoJOe45/jmGSgHaZnaUqz
-         jX1N5jUJ+guKWjjBV8UzSfyuwdFqmNARqb3ktZX1Ilr2DsdYiqG2BfNXvimTiQNfLB/y
-         jAjE3XjSBOren8UDtGZz1xvBjeUFa6+Cw+jJ4YM1eOItFQ+4pTc8xgT5IAuBvbCp1glI
-         hqvw3gh2MUUeM+fzFGPCQ7hqen5jb/KpA+pn6JZ38FkNKtoEsq7pYyhd/SiAPp+W9+d2
-         t+Pw==
-X-Gm-Message-State: ANhLgQ2qDPMN+df7wNw7levywHXagnqS8ymAaTZFabQWIRgWai4gh9ED
-        nP1hOkQapnmipVQavpUcheU=
-X-Google-Smtp-Source: ADFU+vvAuYQjhvPkkUnsogitbNWkioPE32dakfCx2+phZZ9zvzRt6m3vpuOPE378xJWay3ZJWHNB1g==
-X-Received: by 2002:a81:4b43:: with SMTP id y64mr965433ywa.248.1583178798784;
-        Mon, 02 Mar 2020 11:53:18 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id d4sm5557134ywb.67.2020.03.02.11.53.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 11:53:18 -0800 (PST)
-Subject: Re: [PATCH v5 kunit-next 4/4] kunit: update documentation to describe
- debugfs representation
-To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org
-References: <1582129030-22282-1-git-send-email-alan.maguire@oracle.com>
- <1582129030-22282-5-git-send-email-alan.maguire@oracle.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <3eb74fc3-1423-54d2-8381-0f9b9a8d79eb@gmail.com>
-Date:   Mon, 2 Mar 2020 13:53:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1582129030-22282-5-git-send-email-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=86LZFv4eZo53SSwyBwzfXdxODBVPa+iTavg97swv4R0=;
+        b=YWGHwZPrHaAsyZ12k0t5hI3JbT2U4s6N2f6KbEb0RhgBUOobW3jxpp30D1M9g7RHUf
+         zLcPwuPr2IkQ/mAzfDbEn2Z9j9BxTy8IqdFzcPdSexU33rdMN+7IdSDqv+JBCPXJnRnP
+         +PPsYOKUBHyOp/lR72QPDCDz19vbG+dqj8SWVVbNZDHWBD/cbbgyUG2+Z/0eGHZ3WgvA
+         2qnK65Cc7N/gqYdLOus1GXTLYYfJZc4FhMI8s5b1CZPHbtX27M1X7A3uU7aRA9m1mSmP
+         f2VmvUsQNJYzzvP38PYjUxlpAxl8tsyJk8aRkXL3jgK8awxtgK5+NYa3FnZ+tEEuX6OP
+         o3gQ==
+X-Gm-Message-State: ANhLgQ0XWZvVR37bQ3nct6wOV7g1deU/lb3AzHH6FnhKbR75G5Ivlt2V
+        ogogRRCx+PAQIaR78up2P5va9cHpGw==
+X-Google-Smtp-Source: ADFU+vt/9SCyMTvBNmBtQ0AELHNBGv27CwG9g8XXMbI1ACGrYgB20YXt8HjBJ2lJhCFu/FwKfBa4nYBIig==
+X-Received: by 2002:adf:fc81:: with SMTP id g1mr1215093wrr.410.1583178846987;
+ Mon, 02 Mar 2020 11:54:06 -0800 (PST)
+Date:   Mon,  2 Mar 2020 20:53:52 +0100
+Message-Id: <20200302195352.226103-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] lib/refcount: Document interaction with PID_MAX_LIMIT
+From:   Jann Horn <jannh@google.com>
+To:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 10:17 AM, Alan Maguire wrote:
-> Documentation should describe debugfs layout and semantics.
-> 
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->  Documentation/dev-tools/kunit/usage.rst | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index 607758a..14b0236 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -591,3 +591,16 @@ able to run one test case per invocation.
->  
->  .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
->     dependent KUnit test.
-> +
-> +KUnit debugfs representation
-> +============================
-> +When kunit test suites are initialized, they create an associated directory
-> +in /sys/kernel/debug/kunit/<test-suite>.  The directory contains one file
-> +
-> +- results: "cat results" displays results of each test case and the results
-> +  of the entire suite for the last test run.
-> +
-> +The debugfs representation is primarily of use when kunit test suites are
-> +run in a native environment, either as modules or builtin.  Having a way
-> +to display results like this is valuable as otherwise results can be
-> +intermixed with other events in dmesg output.
-> 
+Document the circumstances under which refcount_t's saturation mechanism
+works deterministically.
 
-Given my corrected understanding of kunit_log():
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ include/linux/refcount.h | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-  +The maximum size of each 'results' file is KUNIT_LOG_SIZE bytes.
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 0ac50cf62d062..cf14db393d89d 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -38,11 +38,20 @@
+  * atomic operations, then the count will continue to edge closer to 0. If it
+  * reaches a value of 1 before /any/ of the threads reset it to the saturated
+  * value, then a concurrent refcount_dec_and_test() may erroneously free the
+- * underlying object. Given the precise timing details involved with the
+- * round-robin scheduling of each thread manipulating the refcount and the need
+- * to hit the race multiple times in succession, there doesn't appear to be a
+- * practical avenue of attack even if using refcount_add() operations with
+- * larger increments.
++ * underlying object.
++ * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
++ * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
++ * With the current PID limit, if no batched refcounting operations are used and
++ * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
++ * operations, this makes it impossible for a saturated refcount to leave the
++ * saturation range, even if it is possible for multiple uses of the same
++ * refcount to nest in the context of a single task.
++ * If hundreds of references are added/removed with a single refcounting
++ * operation, it may potentially be possible to leave the saturation range; but
++ * given the precise timing details involved with the round-robin scheduling of
++ * each thread manipulating the refcount and the need to hit the race multiple
++ * times in succession, there doesn't appear to be a practical avenue of attack
++ * even if using refcount_add() operations with larger increments.
+  *
+  * Memory ordering
+  * ===============
 
-Am I understanding this correctly?
+base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
--Frank
