@@ -2,250 +2,199 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFA9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E44AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEE12468D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D2324699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 01:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Zr+lvoxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCBAnP (ORCPT
+        id S1726690AbgCBBKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:43:15 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39058 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgCBAnP (ORCPT
+        Sun, 1 Mar 2020 20:10:21 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40974 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgCBBKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:43:15 -0500
-Received: by mail-io1-f70.google.com with SMTP id i62so7120979ioa.6
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 16:43:13 -0800 (PST)
+        Sun, 1 Mar 2020 20:10:21 -0500
+Received: by mail-qk1-f194.google.com with SMTP id b5so8568932qkh.8
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 17:10:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ak4xhRTNGLPFYUIccVBSL7a8+9B1JWMD28S10CklEbI=;
+        b=Zr+lvoxa8+9hKdkiQAmVvVUkvUqv0SYpKBW16OpBTf+y40qkpZYbBdybpfAPryiKii
+         ShaOvN5Rd4xcHNaymar8o4z2Y/dv8W1ZHZ0LFALp9XyDPosWcmUheYeY62+jEFgdMS+C
+         XL6q1ZVfbppw6+5Ikic69m4LraEQ2b2TbaW3M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=uInTjzS+4l/o6yCqkWZPEijTE7YGaDvR9aQ+4U99Rdw=;
-        b=cr0h/k6eVmiSn0Z1OblqHAGrSjfXhbZxaQr+R39XNedKGuPQrpyRTwXkAdqVqLmqEw
-         gSdLsPL1POn5PQo27G59aZP1PolCYN2MLP2Map+tTHWtYrdoPuwsQy9ZbrfCQIKER7Kc
-         rgHdyKv9RFt8D1GDulNNl83CA/DfijHJpndRgd8HyFEyfGlWnLBKr8GrFPKyqTpMlcjc
-         dGQSL/hR/XwT0QOhQXiAC2wW1PR03lkTMzyNNqYUSiL9bfCjwbJBjqzk5kE0tp6uWpII
-         Y8J2QhWvB3ceJmexK+k0SCeQlIx7hH8HpM1PLe+SJiwnhnZ+Uzge+2DadaXfgNJAEy/x
-         xc5Q==
-X-Gm-Message-State: APjAAAWI+5ByWiqhWCW2cyJHCJA3lf6C4IhXjIyf5eYllG+NkHq7ZEgb
-        ukuz+2taDH7WolM3rI7m4ndGzjuzhMeuU0d9DYb8dFSgtTGf
-X-Google-Smtp-Source: APXvYqygF8bq38dgbkjR3p+FHeTbfmc+HO/osoGi12n5E+woyR1o6UiUv64CZSzIYEKbfco1IddCOV+0lXc9ZrAOFt+5Z7KQJH3r
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ak4xhRTNGLPFYUIccVBSL7a8+9B1JWMD28S10CklEbI=;
+        b=sT//a9caJEvyMn2sLR9gnRBVwM5vLq90A+7qc0DtJUI7cYiRDVsNMgS+jBrXctv1NT
+         amWUEdelLpeZjxtHsO1d+H64cmavkXhe6ZpUrrGG61rs4jU6Bxciv6qEpAKKEzvu8Lqp
+         XkPGKevZpwGxLWOvZc7RLJPTaX+ssu3H4PtAO08ArEXpb6vatuAXSl3GE0ZusKnLEP3y
+         4r5tipJhyBSmjkGEpQwLoV602UkEYdMA7//wjfn4BNkXLcRIp4qvL376CHFRvjn0Bjyn
+         3Tw83L+LL1G/+xZumaqgsgnBFOg/Y1eEEpG1OMcYVpN23xHNLQjZcglwXzkkORhT0Pmy
+         JjRQ==
+X-Gm-Message-State: APjAAAVm3nVWKZG79mPeLjXSa63c9JHGnPTbe/YnTc/5UAnJVDG2Zl0q
+        DUR2+T/Cb22aFSJ3NaYd7EQdXQ==
+X-Google-Smtp-Source: APXvYqwBbdankEEtRcHLqyFdag8V3+7dl5PAmfCVL3gkPa+/XhfbcMpr0TD+BHCm2JgcUjEAlJsJDA==
+X-Received: by 2002:a37:bfc2:: with SMTP id p185mr12788506qkf.428.1583111419830;
+        Sun, 01 Mar 2020 17:10:19 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v12sm7800338qti.84.2020.03.01.17.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Mar 2020 17:10:19 -0800 (PST)
+Date:   Sun, 1 Mar 2020 20:10:18 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <JGross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
+ C-code
+Message-ID: <20200302011018.GA161499@google.com>
+References: <87imjofkhx.fsf@nanos.tec.linutronix.de>
+ <AED99B11-8739-450F-932C-EF38C20D44CA@amacapital.net>
+ <87d09wf6dw.fsf@nanos.tec.linutronix.de>
+ <CALCETrVNcpoubrpVrtGjXSQrod8jzjweszEPX_WSJM747xr8wQ@mail.gmail.com>
+ <878skkeygm.fsf@nanos.tec.linutronix.de>
+ <20200301182605.GT2935@paulmck-ThinkPad-P72>
+ <CALCETrVfXmKLN9AxOeizr1mHTA9CSG5-_UgoH8hruTMrrA-0vA@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:89c2:: with SMTP id w63mr14167555ilk.252.1583109792747;
- Sun, 01 Mar 2020 16:43:12 -0800 (PST)
-Date:   Sun, 01 Mar 2020 16:43:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d65890059fd4787b@google.com>
-Subject: possible deadlock in walk_component
-From:   syzbot <syzbot+a84f8e843059b8bb50c3@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVfXmKLN9AxOeizr1mHTA9CSG5-_UgoH8hruTMrrA-0vA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Mar 01, 2020 at 10:54:23AM -0800, Andy Lutomirski wrote:
+> On Sun, Mar 1, 2020 at 10:26 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Sun, Mar 01, 2020 at 07:12:25PM +0100, Thomas Gleixner wrote:
+> > > Andy Lutomirski <luto@kernel.org> writes:
+> > > > On Sun, Mar 1, 2020 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> Andy Lutomirski <luto@amacapital.net> writes:
+> > > >> >> On Mar 1, 2020, at 2:16 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> >> Ok, but for the time being anything before/after CONTEXT_KERNEL is unsafe
+> > > >> >> except trace_hardirq_off/on() as those trace functions do not allow to
+> > > >> >> attach anything AFAICT.
+> > > >> >
+> > > >> > Can you point to whatever makes those particular functions special?  I
+> > > >> > failed to follow the macro maze.
+> > > >>
+> > > >> Those are not tracepoints and not going through the macro maze. See
+> > > >> kernel/trace/trace_preemptirq.c
+> > > >
+> > > > That has:
+> > > >
+> > > > void trace_hardirqs_on(void)
+> > > > {
+> > > >         if (this_cpu_read(tracing_irq_cpu)) {
+> > > >                 if (!in_nmi())
+> > > >                         trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+> > > >                 tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+> > > >                 this_cpu_write(tracing_irq_cpu, 0);
+> > > >         }
+> > > >
+> > > >         lockdep_hardirqs_on(CALLER_ADDR0);
+> > > > }
+> > > > EXPORT_SYMBOL(trace_hardirqs_on);
+> > > > NOKPROBE_SYMBOL(trace_hardirqs_on);
+> > > >
+> > > > But this calls trace_irq_enable_rcuidle(), and that's the part of the
+> > > > macro maze I got lost in.  I found:
+> > > >
+> > > > #ifdef CONFIG_TRACE_IRQFLAGS
+> > > > DEFINE_EVENT(preemptirq_template, irq_disable,
+> > > >              TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> > > >              TP_ARGS(ip, parent_ip));
+> > > >
+> > > > DEFINE_EVENT(preemptirq_template, irq_enable,
+> > > >              TP_PROTO(unsigned long ip, unsigned long parent_ip),
+> > > >              TP_ARGS(ip, parent_ip));
+> > > > #else
+> > > > #define trace_irq_enable(...)
+> > > > #define trace_irq_disable(...)
+> > > > #define trace_irq_enable_rcuidle(...)
+> > > > #define trace_irq_disable_rcuidle(...)
+> > > > #endif
+> > > >
+> > > > But the DEFINE_EVENT doesn't have the "_rcuidle" part.  And that's
+> > > > where I got lost in the macro maze.  I looked at the gcc asm output,
+> > > > and there is, indeed:
+> > >
+> > > DEFINE_EVENT
+> > >   DECLARE_TRACE
+> > >     __DECLARE_TRACE
+> > >        __DECLARE_TRACE_RCU
+> > >          static inline void trace_##name##_rcuidle(proto)
+> > >             __DO_TRACE
+> > >                if (rcuidle)
+> > >                   ....
+> > >
+> > > > But I also don't see why this is any different from any other tracepoint.
+> > >
+> > > Indeed. I took a wrong turn at some point in the macro jungle :)
+> > >
+> > > So tracing itself is fine, but then if you have probes or bpf programs
+> > > attached to a tracepoint these use rcu_read_lock()/unlock() which is
+> > > obviosly wrong in rcuidle context.
+> >
+> > Definitely, any such code needs to use tricks similar to that of the
+> > tracing code.  Or instead use something like SRCU, which is OK with
+> > readers from idle.  Or use something like Steve Rostedt's workqueue-based
+> > approach, though please be very careful with this latter, lest the
+> > battery-powered embedded guys come after you for waking up idle CPUs
+> > too often.  ;-)
+> >
+> 
+> Are we okay if we somehow ensure that all the entry code before
+> enter_from_user_mode() only does rcuidle tracing variants and has
+> kprobes off?  Including for BPF use cases?
+> 
+> It would be *really* nice if we could statically verify this, as has
+> been mentioned elsewhere in the thread.  It would also probably be
+> good enough if we could do it at runtime.  Maybe with lockdep on, we
+> verify rcu state in tracepoints even if the tracepoint isn't active?
+> And we could plausibly have some widget that could inject something
+> into *every* kprobeable function to check rcu state.
 
-syzbot found the following crash on:
+You are talking about verifying that a non-rcuidle tracepoint is not called
+into when RCU is not watching right? I think that's fine, though I feel
+lockdep kernels should not be slowed down any more than they already are. I
+feel over time if we add too many checks to lockdep enabled kernels, then it
+becomes too slow even for "debug" kernels. May be it is time for a
+CONFIG_LOCKDEP_SLOW or some such? And then anyone who wants to go crazy on
+runtime checking can do so. I myself want to add a few.
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=173a3529e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=a84f8e843059b8bb50c3
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Note that the checking is being added into "non rcu-idle" tracepoints many of
+which are probably always called when RCU is watching, making such checking
+useless for those tracepoints (and slowing them down however less).
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Also another note would be that the whole reason we are getting rid of the
+"make RCU watch when rcuidle" logic in DO_TRACE is because it is slow for
+tracepoints that are frequently called into. Another reason to do it is
+because tracepoint callbacks are expected to know what they are doing and
+turn on RCU watching as appropriate (as consensus on the matter suggests).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a84f8e843059b8bb50c3@syzkaller.appspotmail.com
+thanks,
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-rc3-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.3/1694 is trying to acquire lock:
-ffff888025e9e220 (&ovl_i_mutex_dir_key[depth]){++++}, at: inode_lock_shared include/linux/fs.h:801 [inline]
-ffff888025e9e220 (&ovl_i_mutex_dir_key[depth]){++++}, at: lookup_slow fs/namei.c:1773 [inline]
-ffff888025e9e220 (&ovl_i_mutex_dir_key[depth]){++++}, at: walk_component+0x2c2/0x5f0 fs/namei.c:1915
+ - Joel
 
-but task is already holding lock:
-ffff88808c28e750 (&sig->cred_guard_mutex){+.+.}, at: __do_sys_perf_event_open kernel/events/core.c:11266 [inline]
-ffff88808c28e750 (&sig->cred_guard_mutex){+.+.}, at: __se_sys_perf_event_open+0xb50/0x4140 kernel/events/core.c:11160
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&sig->cred_guard_mutex){+.+.}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-       __mutex_lock kernel/locking/mutex.c:1103 [inline]
-       mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-       lock_trace fs/proc/base.c:408 [inline]
-       proc_pid_stack+0xd9/0x200 fs/proc/base.c:452
-       proc_single_show+0xe7/0x180 fs/proc/base.c:758
-       seq_read+0x4d8/0xdb0 fs/seq_file.c:229
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-       vfs_readv+0xc2/0x120 fs/read_write.c:1053
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x579/0xa40 fs/splice.c:422
-       do_splice_to fs/splice.c:892 [inline]
-       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
-       do_splice_direct+0x200/0x330 fs/splice.c:1080
-       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1520
-       __do_sys_sendfile64 fs/read_write.c:1581 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1567 [inline]
-       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1567
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #2 (&p->lock){+.+.}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-       __mutex_lock kernel/locking/mutex.c:1103 [inline]
-       mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
-       seq_read+0x6b/0xdb0 fs/seq_file.c:161
-       proc_reg_read+0x1d5/0x2e0 fs/proc/inode.c:223
-       do_loop_readv_writev fs/read_write.c:714 [inline]
-       do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-       vfs_readv+0xc2/0x120 fs/read_write.c:1053
-       kernel_readv fs/splice.c:365 [inline]
-       default_file_splice_read+0x579/0xa40 fs/splice.c:422
-       do_splice_to fs/splice.c:892 [inline]
-       splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
-       do_splice_direct+0x200/0x330 fs/splice.c:1080
-       do_sendfile+0x7e4/0xfd0 fs/read_write.c:1520
-       __do_sys_sendfile64 fs/read_write.c:1581 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1567 [inline]
-       __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1567
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (sb_writers#3){.+.+}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-       __sb_start_write+0x189/0x420 fs/super.c:1674
-       sb_start_write include/linux/fs.h:1649 [inline]
-       mnt_want_write+0x4a/0xa0 fs/namespace.c:354
-       ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
-       ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
-       ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
-       lookup_open fs/namei.c:3309 [inline]
-       do_last fs/namei.c:3401 [inline]
-       path_openat+0x230c/0x4380 fs/namei.c:3607
-       do_filp_open+0x192/0x3d0 fs/namei.c:3637
-       do_sys_openat2+0x42b/0x6f0 fs/open.c:1149
-       do_sys_open fs/open.c:1165 [inline]
-       __do_sys_openat fs/open.c:1179 [inline]
-       __se_sys_openat fs/open.c:1174 [inline]
-       __x64_sys_openat+0x1e6/0x210 fs/open.c:1174
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&ovl_i_mutex_dir_key[depth]){++++}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
-       __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       down_read+0x39/0x50 kernel/locking/rwsem.c:1495
-       inode_lock_shared include/linux/fs.h:801 [inline]
-       lookup_slow fs/namei.c:1773 [inline]
-       walk_component+0x2c2/0x5f0 fs/namei.c:1915
-       lookup_last fs/namei.c:2391 [inline]
-       path_lookupat+0x19f/0x680 fs/namei.c:2436
-       filename_lookup+0x1d4/0x690 fs/namei.c:2466
-       kern_path+0x35/0x40 fs/namei.c:2552
-       create_local_trace_uprobe+0x40/0x610 kernel/trace/trace_uprobe.c:1568
-       perf_uprobe_init+0x10c/0x1b0 kernel/trace/trace_event_perf.c:323
-       perf_uprobe_event_init+0xe0/0x170 kernel/events/core.c:9171
-       perf_try_init_event+0x14e/0x3c0 kernel/events/core.c:10471
-       perf_init_event kernel/events/core.c:10523 [inline]
-       perf_event_alloc+0x1032/0x2810 kernel/events/core.c:10803
-       __do_sys_perf_event_open kernel/events/core.c:11286 [inline]
-       __se_sys_perf_event_open+0x6cf/0x4140 kernel/events/core.c:11160
-       __x64_sys_perf_event_open+0xbf/0xd0 kernel/events/core.c:11160
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-  &ovl_i_mutex_dir_key[depth] --> &p->lock --> &sig->cred_guard_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sig->cred_guard_mutex);
-                               lock(&p->lock);
-                               lock(&sig->cred_guard_mutex);
-  lock(&ovl_i_mutex_dir_key[depth]);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.3/1694:
- #0: ffff88808c28e750 (&sig->cred_guard_mutex){+.+.}, at: __do_sys_perf_event_open kernel/events/core.c:11266 [inline]
- #0: ffff88808c28e750 (&sig->cred_guard_mutex){+.+.}, at: __se_sys_perf_event_open+0xb50/0x4140 kernel/events/core.c:11160
- #1: ffffffff8a48b8f0 (&pmus_srcu){....}, at: rcu_lock_acquire+0xd/0x40 include/linux/rcupdate.h:208
-
-stack backtrace:
-CPU: 0 PID: 1694 Comm: syz-executor.3 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1684
- check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
- __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
- lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
- down_read+0x39/0x50 kernel/locking/rwsem.c:1495
- inode_lock_shared include/linux/fs.h:801 [inline]
- lookup_slow fs/namei.c:1773 [inline]
- walk_component+0x2c2/0x5f0 fs/namei.c:1915
- lookup_last fs/namei.c:2391 [inline]
- path_lookupat+0x19f/0x680 fs/namei.c:2436
- filename_lookup+0x1d4/0x690 fs/namei.c:2466
- kern_path+0x35/0x40 fs/namei.c:2552
- create_local_trace_uprobe+0x40/0x610 kernel/trace/trace_uprobe.c:1568
- perf_uprobe_init+0x10c/0x1b0 kernel/trace/trace_event_perf.c:323
- perf_uprobe_event_init+0xe0/0x170 kernel/events/core.c:9171
- perf_try_init_event+0x14e/0x3c0 kernel/events/core.c:10471
- perf_init_event kernel/events/core.c:10523 [inline]
- perf_event_alloc+0x1032/0x2810 kernel/events/core.c:10803
- __do_sys_perf_event_open kernel/events/core.c:11286 [inline]
- __se_sys_perf_event_open+0x6cf/0x4140 kernel/events/core.c:11160
- __x64_sys_perf_event_open+0xbf/0xd0 kernel/events/core.c:11160
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2bd4543c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f2bd45446d4 RCX: 000000000045c479
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000813 R14: 00000000004ca8bf R15: 000000000076bf2c
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
