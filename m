@@ -2,172 +2,121 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7176BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04842C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD042465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583172156;
-	bh=FtRqmbetKtzAhjYcG5f4Oa0sNs/qid5+5M0b5btzGXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WU8rjckj40QgbHsDlOMNkd15UXwdIciCQwNijl4SHGTsbLX++A3rtAHnE6JNFUjcs
-	 kK4n/HngioDrxgAUiwE/eF0OmLwrtVeiI7E/Ku2yuJcolXe2FnnHsswgqJIDcKMamT
-	 wflfEpOKNTY/VdeZzy4KHygIIifd4huylnqSbxFA=
+	by mail.kernel.org (Postfix) with ESMTP id CF5602465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8gwmQFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgCBSCf (ORCPT
+        id S1727452AbgCBSCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:02:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgCBSCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:02:34 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05EF21D56;
-        Mon,  2 Mar 2020 18:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583172153;
-        bh=FtRqmbetKtzAhjYcG5f4Oa0sNs/qid5+5M0b5btzGXw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aFeNoIFDszMPgvo966bttNOOPowGZjl/VVfDXEcrJi0so2an1200uOYyaWsv48ldC
-         dzPZ0wic/6rn1UtkodXalYFqQcXtOx/eM//smEXWhvfrZCvfBZqmJf7T17G3ncpaFi
-         2KQ09Y5RU+F9ezU8baBANM6Rgk203ig1r50yyNkc=
-Date:   Mon, 2 Mar 2020 10:02:31 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, cang@codeaurora.org, satyat@google.com,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, kuohong.wang@mediatek.com,
-        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
-        andy.teng@mediatek.com, light.hsieh@mediatek.com
-Subject: Re: [RFC PATCH v1] scsi: ufs-mediatek: add inline encryption support
-Message-ID: <20200302180231.GB98133@gmail.com>
-References: <20200302091138.10341-1-stanley.chu@mediatek.com>
+        Mon, 2 Mar 2020 13:02:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40880 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgCBSCt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:02:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583172167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yD5hbojE45I5UYgGJAZzmvYTSa8iAlNKgqw5IjcBjbc=;
+        b=c8gwmQFEFeUG3ZrOUik1gFGxl8PR2+rhl167nugU7SMt3XBvMvY7RJ6YgqFsy0bbyxZmgq
+        XqQ1MMYsQB8oISzrAbitr7S5ChE1avT9RsTGW7noyPFKblth6UDOPhbWq+/J3+xhcE4CU8
+        URUAH1jpcVY8vvnLOsmkkaoOHyhmOCg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-g0VUJTFgNGquv1TWLwW5wg-1; Mon, 02 Mar 2020 13:02:45 -0500
+X-MC-Unique: g0VUJTFgNGquv1TWLwW5wg-1
+Received: by mail-wr1-f70.google.com with SMTP id n12so35511wrp.19
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:02:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yD5hbojE45I5UYgGJAZzmvYTSa8iAlNKgqw5IjcBjbc=;
+        b=kk6Rnr9MkhSpWAlQ+tzSlStF268mWZmcso/zIs4aDWR6GjXLYSaKZiS4u/JJ37C/m0
+         sSy9enGp8Eub0GSX11JskmxGJOJLPkt8JYN4OugLWNzT/Z1eTON1Wfjy+Ni2j/IkceiD
+         84ihb4U+bqU/SWCQV0LC0xmCkgqChZR8owes1MQZW+WxOwxHn2E9XoxJ7Fny8b//WnVr
+         R5T/NFNkj/IpBIHEW9GSEKGsE3ckwvDar8iFnp3wICnoYprzHfOnHZb7o6bf+uKmul1N
+         UibIAEuuF1qLAHg3YLeU/ACKVGICK6AnVXOYvLozHWqPrX3OSDOLUfYvuBYuuwM0es5M
+         hGIQ==
+X-Gm-Message-State: ANhLgQ3gL2koSHkeB3N0NdBopbvtLYTr5JJm/a9PjyqDKkjr1abJPAuZ
+        LU5W99EHY/AzO/d4PJiH++kywdX+dlo+wdNniK2qFFSxCmkv11ocut1YaYBbqhopBwpLDH7iMjn
+        /2EloIo2ZmNyYhCbOqfuxEb00
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr254408wmi.108.1583172161674;
+        Mon, 02 Mar 2020 10:02:41 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvnDdxXMDxb+073m/6FgQ+6hKR1fRUhw2fF6Rkr7smuqXbzAyvrEli0YvGlH3qZ+ybKBGn1qg==
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr254378wmi.108.1583172161435;
+        Mon, 02 Mar 2020 10:02:41 -0800 (PST)
+Received: from [192.168.178.40] ([151.30.85.6])
+        by smtp.gmail.com with ESMTPSA id s14sm17033764wrv.44.2020.03.02.10.02.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 10:02:40 -0800 (PST)
+Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
+To:     Jim Mattson <jmattson@google.com>
+Cc:     linmiaohe <linmiaohe@huawei.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+ <CALMp9eSaZ557-GaQUVXW6-ZrMkz8jxOC1S6QPk-EVNJ-f2pT5w@mail.gmail.com>
+ <a1ff3db1-1f5a-7bab-6c4b-f76e6d76d468@redhat.com>
+ <CALMp9eQqFKnCLYGXdab-k=Q=h-H5x8VnV20F3HH9fDZTDuQcEQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e173c489-dee7-a86d-3ec4-6fe45938a2d8@redhat.com>
+Date:   Mon, 2 Mar 2020 19:02:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302091138.10341-1-stanley.chu@mediatek.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CALMp9eQqFKnCLYGXdab-k=Q=h-H5x8VnV20F3HH9fDZTDuQcEQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:11:38PM +0800, Stanley Chu wrote:
-> Add inline encryption support to ufs-mediatek.
+On 02/03/20 18:44, Jim Mattson wrote:
+> On Mon, Mar 2, 2020 at 9:09 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>> On 02/03/20 18:01, Jim Mattson wrote:
+>>>> And in fact, it's not used anywhere. So it should be
+>>>> deprecated.
+>>> I don't know how you can make the assertion that this ioctl is not
+>>> used anywhere. For instance, I see a use of it in Google's code base.
+>>
+>> Right, it does not seem to be used anywhere according to e.g. Debian
+>> code search but of course it can have users.
+>>
+>> What are you using it for?  It's true that cpuid->nent is never written
+>> back to userspace, so the ioctl is basically unusable unless you already
+>> know how many entries are written.  Or unless you fill the CPUID entries
+>> with garbage before calling it, I guess; is that what you are doing?
 > 
-> The standards-compliant parts, such as querying the crypto capabilities
-> and enabling crypto for individual UFS requests, are already handled by
-> ufshcd-crypto.c, which itself is wired into the blk-crypto framework.
-> 
-> However MediaTek UFS host requires a vendor-specific hce_enable operation
-> to allow crypto-related registers being accessed normally in kernel.
-> After this step, MediaTek UFS host can work as standard-compliant host
-> for inline-encryption related functions.
-> 
-> This patch is rebased to the latest wip-inline-encryption branch in
-> Eric Biggers's git:
-> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/
+> One could use GET_CPUID2 after SET_CPUID2, to see what changes kvm
+> made to the requested guest CPUID information without telling you.
 
-Please don't use a random work-in-progress branch from my git repository (which
-hasn't been updated to the v7 patchset yet and will be rebased); use instead:
+Yeah, I think GET_CPUID2 with the same number of leaves that you have
+passed to SET_CPUID2 should work.
 
-	Repo: https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
-	Tag: inline-encryption-v7
+Paolo
 
-Also, this patch doesn't apply to either branch anyway:
-
-Applying: scsi: ufs-mediatek: add inline encryption support
-Using index info to reconstruct a base tree...
-error: patch failed: drivers/scsi/ufs/ufs-mediatek.c:15
-error: drivers/scsi/ufs/ufs-mediatek.c: patch does not apply
-error: patch failed: drivers/scsi/ufs/ufs-mediatek.h:58
-error: drivers/scsi/ufs/ufs-mediatek.h: patch does not apply
-error: Did you hand edit your patch?
-
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-> index 53eae5fe2ade..12d01fd3d5e1 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.c
-> +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> @@ -15,6 +15,7 @@
->  #include <linux/soc/mediatek/mtk_sip_svc.h>
->  
->  #include "ufshcd.h"
-> +#include "ufshcd-crypto.h"
->  #include "ufshcd-pltfrm.h"
->  #include "ufs_quirks.h"
->  #include "unipro.h"
-> @@ -24,6 +25,9 @@
->  	arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
->  		      cmd, val, 0, 0, 0, 0, 0, &(res))
->  
-> +#define ufs_mtk_crypto_ctrl(res, enable) \
-> +	ufs_mtk_smc(UFS_MTK_SIP_CRYPTO_CTRL, enable, res)
-> +
->  #define ufs_mtk_ref_clk_notify(on, res) \
->  	ufs_mtk_smc(UFS_MTK_SIP_REF_CLK_NOTIFICATION, on, res)
->  
-> @@ -66,7 +70,27 @@ static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
->  	}
->  }
->  
-> -static int ufs_mtk_bind_mphy(struct ufs_hba *hba)
-> +static void ufs_mtk_crypto_enable(struct ufs_hba *hba)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	ufs_mtk_crypto_ctrl(res, 1);
-> +	if (res.a0) {
-> +		dev_info(hba->dev, "%s: crypto enable failed, err: %lu\n",
-> +			 __func__, res.a0);
-> +	}
-> +}
-> +
-> +static int ufs_mtk_hce_enable_notify(struct ufs_hba *hba,
-> +				     enum ufs_notify_change_status status)
-> +{
-> +	if (status == PRE_CHANGE && ufshcd_hba_is_crypto_supported(hba))
-> +		ufs_mtk_crypto_enable(hba);
-> +
-> +	return 0;
-> +}
-> +
-> +int ufs_mtk_bind_mphy(struct ufs_hba *hba)
->  {
->  	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
->  	struct device *dev = hba->dev;
-> @@ -494,6 +518,7 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
->  	.name                = "mediatek.ufshci",
->  	.init                = ufs_mtk_init,
->  	.setup_clocks        = ufs_mtk_setup_clocks,
-> +	.hce_enable_notify   = ufs_mtk_hce_enable_notify,
->  	.link_startup_notify = ufs_mtk_link_startup_notify,
->  	.pwr_change_notify   = ufs_mtk_pwr_change_notify,
->  	.apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.h b/drivers/scsi/ufs/ufs-mediatek.h
-> index fccdd979d6fb..5ebaa59898bf 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.h
-> +++ b/drivers/scsi/ufs/ufs-mediatek.h
-> @@ -58,6 +58,7 @@
->   */
->  #define MTK_SIP_UFS_CONTROL               MTK_SIP_SMC_CMD(0x276)
->  #define UFS_MTK_SIP_DEVICE_RESET          BIT(1)
-> +#define UFS_MTK_SIP_CRYPTO_CTRL           BIT(2)
->  #define UFS_MTK_SIP_REF_CLK_NOTIFICATION  BIT(3)
-
-But if this is all that's needed to get inline crypto working with Mediatek UFS,
-that's great news.
-
-Thanks!
-
-- Eric
