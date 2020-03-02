@@ -2,106 +2,103 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B945C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A65C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6DE246B4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D47246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 06:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCBG1S (ORCPT
+        id S1727065AbgCBG2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 01:27:18 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:56252 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgCBG0X (ORCPT
+        Mon, 2 Mar 2020 01:28:15 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:41503 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725446AbgCBG2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:26:23 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 3091929E8B;
-        Mon,  2 Mar 2020 01:26:20 -0500 (EST)
-Date:   Mon, 2 Mar 2020 17:26:17 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-In-Reply-To: <20200301061327.GA5229@afzalpc>
-Message-ID: <alpine.LNX.2.22.394.2003021717150.8@nippy.intranet>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <20200229131553.GA4985@afzalpc> <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet> <20200301010511.GA5195@afzalpc>
- <alpine.LNX.2.22.394.2003011337590.15@nippy.intranet> <20200301061327.GA5229@afzalpc>
+        Mon, 2 Mar 2020 01:28:15 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TrMqUGR_1583130473;
+Received: from 30.25.170.53(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TrMqUGR_1583130473)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 02 Mar 2020 14:28:10 +0800
+Subject: Re: [PATCH] Introduce OSCCA certificate and SM2 asymmetric algorithm
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        ebiggers@kernel.org, pvanleeuwen@rambus.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@intel.com, penguin-kernel@I-love.SAKURA.ne.jp,
+        jmorris@namei.org, rusty@rustcorp.com.au, nicstange@gmail.com,
+        tadeusz.struk@intel.com, gilad@benyossef.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
+Message-ID: <b48a70cf-8f3d-011c-275e-0c508ca212f5@linux.alibaba.com>
+Date:   Mon, 2 Mar 2020 14:27:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200216085928.108838-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 1 Mar 2020, afzal mohammed wrote:
 
-> Hi,
-> 
-> On Sun, Mar 01, 2020 at 02:26:33PM +1100, Finn Thain wrote:
-> 
-> > BTW, how do you distinguish between "new code" and "legacy code"?
-> 
-> setup_irq() was used in olden days, nowadays request_irq(). Though there 
-> are exceptions of trying to use setup_irq() even recently, but there has 
-> been pushback when people notice it like Thomas had done [1], and i saw 
-> recently one in mips smp support series & suggested not to use it (that 
-> code iiuc they had it out of upstream for a long time).
-> 
-> So existence of setup_irq() in general i have considered to be legacy 
-> code.
-> 
 
-I see. You're defining "legacy code" in this case to mean code that uses a 
-deprecated API, that needs to be modernized.
-
-> > And why would you choose to do that when you are writing a tree-wide 
-> > semantic patch?
+On 2020/2/16 16:59, Tianjia Zhang wrote:
+> Hello all,
 > 
-> The way i came up with this series is that while trying to understand 
-> irq internals, came across [1], so then decided to do cleanup and i 
-> thought scripting it would make it easy & also had been wanting to get 
-> familiar w/ cocci, so decided to try it, but also realized that i cannot 
-> fully automate it (Julia said my patch is okay, so i felt cocci cannot 
-> fully automate w/o investing considerable effort in cocci), so even w/ 
-> this v2, there are lot of manual changes, though cocci made it easier.
+> This new module implement the OSCCA certificate and SM2 public key
+> algorithm. It was published by State Encryption Management Bureau, China.
+> List of specifications for OSCCA certificate and SM2 elliptic curve
+> public key cryptography:
 > 
-> > I took Geert's comments to be architecture agnostic but perhaps I 
-> > misunderstood.
+> * GM/T 0003.1-2012
+> * GM/T 0003.2-2012
+> * GM/T 0003.3-2012
+> * GM/T 0003.4-2012
+> * GM/T 0003.5-2012
+> * GM/T 0015-2012
+> * GM/T 0009-2012
 > 
-> And Thomas suggested to make improvements over script generated o/p [2] 
-> and only consider scripting as an initial first step. So the way i am 
-> making changes now is to take suggestions from Thomas to be applied 
-> treewide, at the same time also take care of suggestions from 
-> arch/subsytem maintainer/mailing list in the relevant patches, since 
-> arch maintainers are the ones owning it.
+> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
+> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+> scctc: http://www.gmbz.org.cn/main/bzlb.html
+> 
+> These patchs add the OID object identifier defined by OSCCA. The
+> x509 certificate supports sm2-with-sm3 type certificate parsing
+> and verification.
+> 
+> The sm2 algorithm is based on libgcrypt's mpi implementation, and has
+> made some additions to the kernel's original mpi library, and added the
+> implementation of ec to better support elliptic curve-like algorithms.
+> 
+> sm2 has good support in both openssl and gnupg projects, and sm3 and sm4
+> of the OSCCA algorithm family have also been implemented in the kernel.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> 
+> Thanks,
+> Tianjia
 > 
 
-Thanks for the detailed explanation.
+Hello all,
 
-I had assumed that your intention was to find a consensus so that the 
-whole tree could be consistently and automatically improved. My mistake.
+This is the review request.
 
-> Sometimes had a feeling as though the changes in this series is akin to 
-> cutting the foot to fit the shoe ;), but still went ahead as it was 
-> legacy code, easier & less error prone. But now based on the overall 
-> feedback, to proceed, i had to change.
-> 
+The OSCCA certificate and related algorithms used to verify the 
+certificate are newly introduced. Among them, sm3 and sm4 have been well 
+implemented in the kernel. This group of patches has newly introduced sm2.
+In order to implement sm2 more perfectly, I expanded the mpi library and 
+introduced the ec implementation of the mpi library as the basic 
+algorithm. Compared to the kernel's crypto/ecc.c, the implementation of 
+mpi/ec.c is more complete and elegant, sm2 is implemented based on these 
+algorithms.
+At this point, the kernel can parse and verify sm2-with-sm3 certificates 
+normally.
 
-Not based on feedback from me I hope -- I have no veto in this case, as 
-you can see from MAINTAINERS.
-
-> Regards
-> afzal
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> [2] https://lore.kernel.org/lkml/87sgiwma3x.fsf@nanos.tec.linutronix.de/
-> 
+Thanks,
+Tianjia
