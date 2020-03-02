@@ -2,106 +2,106 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3049C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA66C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FA32187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583151170;
-	bh=Lymq4yucP910jG3yAZt3+nbi5KerTQ3U6G6bpUjy4to=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zvV4nj7d5uR7fO2RpqT0owakJDizZc9HVD5E6Y3yVpWLPRX+Rm6bpAqPzsEBT5BrK
-	 8v8pb0JLXX0RqnMHSPBN6HD3E9DRs52EvYbUYfnWVn98QP+4ocHsC1TO1yHlCSaoZH
-	 ivdEOApCvZfqqLpyXetv4qzTe68L0QPo1cAsigKo=
+	by mail.kernel.org (Postfix) with ESMTP id 174022173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCBMMt (ORCPT
+        id S1727681AbgCBMPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:12:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 07:15:16 -0500
+Received: from gate.crashing.org ([63.228.1.57]:40759 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgCBMMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:12:49 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD112173E;
-        Mon,  2 Mar 2020 12:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583151168;
-        bh=Lymq4yucP910jG3yAZt3+nbi5KerTQ3U6G6bpUjy4to=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dzgfqg0/uVS23vSco9JoTIf3WbWIp+BhFrKQRBlscAYzmJYe1JdXz3LW0em6JDra0
-         tHlUlPG/PDhJIX9GqwoQxKCaqE0RTbt1LDJzflgr3/znEysTywuYph/kfJ5dwTwg0Y
-         onrCNZAOCAvxq/Pfy0xNMTkNhDf65AnnCIt5R2bQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j8jwE-009N9H-TY; Mon, 02 Mar 2020 12:12:47 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 02 Mar 2020 12:12:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        tglx@linutronix.de, jason@lakedaemon.net,
-        wanghaibin.wang@huawei.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] irqchip/gic-v4.1: Wait for completion of redistributor's
- INVALL operation
-In-Reply-To: <20200302092145.899-1-yuzenghui@huawei.com>
-References: <20200302092145.899-1-yuzenghui@huawei.com>
-Message-ID: <c46464a4c570e4aa12231bbd5ddefc07@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1725802AbgCBMPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:15:16 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 022CEvNK020865;
+        Mon, 2 Mar 2020 06:14:58 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 022CEtSw020859;
+        Mon, 2 Mar 2020 06:14:55 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 2 Mar 2020 06:14:55 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>
+Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
+Message-ID: <20200302121455.GH22482@gate.crashing.org>
+References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com> <CAHk-=wiin_LkqP2Cm5iPc5snUXYqZVoMFawZ-rjhZnawven8SA@mail.gmail.com> <87pndvrpvj.fsf@mpe.ellerman.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pndvrpvj.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-02 09:21, Zenghui Yu wrote:
-> In GICv4.1, we emulate a guest-issued INVALL command by a direct write
-> to GICR_INVALLR.  Before we finish the emulation and go back to guest,
-> let's make sure the physical invalidate operation is actually completed
-> and no stale data will be left in redistributor. Per the specification,
-> this can be achieved by polling the GICR_SYNCR.Busy bit (to zero).
+On Mon, Mar 02, 2020 at 09:51:44PM +1100, Michael Ellerman wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+> > Michael, what tends to be the triggers for people using
+> > PPC_DISABLE_WERROR? Do you have reports for it?
 > 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 2 ++
->  1 file changed, 2 insertions(+)
+> My memory is that we have had very few reports of it actually causing
+> problems. But I don't have hard data to back that up.
+
+I build all archs with GCC trunk.
+
+It always breaks for me, with thousands of errors, which is why since
+many years I carry 21 lines of patch to thoroughly disable -Werror for
+the powerpc arch.  It takes over a year from when a warning is added to
+the kernel taking care of it -- and of course, I build with the current
+development version of the compiler, so I get to see many misfiring
+warnings and other fallout as well.  (Currently there are more than 100
+warnings, this is way too many to consider attacking that as well).
+
+> It has tripped up the Clang folks, but that's partly because they're
+> building clang HEAD, and also because ~zero powerpc kernel developers
+> are building regularly with clang. I'm trying to fix the latter ...
+
+Is anyone building regularly with GCC HEAD?  Power or any other arch?
+
+> And then building with GCC head sometimes requires disabling -Werror
+> because of some new warning, sometimes valid sometimes not.
+
+Yes.  And never worth breaking the build for.
+
+-Werror is something you use if you do not trust your developers.
+
+Warnings are not errors.  The compiler warns for things that
+heuristically look suspicious.  And it errors for things that are wrong.
+
+Some warnings have many false positives, but are so useful (find many
+nasty problems, for example) that it is worth enabling them often.
+-Werror sabotages that, giving people an extra incentive to disable
+useful warnings.
+
+> I think we could mostly avoid those problems by having the option only
+> on by default for known compiler versions.
+
+Well, the kernel disables most useful warnings anyway, so that might
+even work, sure.
+
+> It'd also be nice if we could do:
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 83b1186ffcad..fc8c2970cee4 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3784,6 +3784,8 @@ static void its_vpe_4_1_invall(struct its_vpe 
-> *vpe)
->  	/* Target the redistributor this vPE is currently known on */
->  	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
->  	gic_write_lpir(val, rdbase + GICR_INVALLR);
-> +
-> +	wait_for_syncr(rdbase);
->  }
+>  $ make WERROR=0
 > 
->  static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void 
-> *vcpu_info)
+> Or something similarly obvious to turn off the WERROR option. That way
+> users don't even have to edit their .config manually, they just rerun
+> make with WERROR=0 and it works.
 
-Yup, well spotted. I'll add that to the series.
+That would be nice, yes, that would help my situation as well.
 
-Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Segher
