@@ -2,192 +2,113 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FCAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4C1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9062146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD832465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCBRcw convert rfc822-to-8bit (ORCPT
+        id S1727250AbgCBRdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:32:52 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15996 "EHLO
+        Mon, 2 Mar 2020 12:33:11 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29090 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbgCBRcv (ORCPT
+        by vger.kernel.org with ESMTP id S1727101AbgCBRdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:32:51 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022HKmgJ132357
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:32:51 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmqa2x7x-1
+        Mon, 2 Mar 2020 12:33:11 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022HL1B1084278
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:33:09 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfhs3xn6x-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:32:50 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:33:09 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Mon, 2 Mar 2020 17:32:49 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Mar 2020 17:33:07 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 17:32:45 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HWiiV45220140
+        Mon, 2 Mar 2020 17:33:04 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HX3jL64749652
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 17:32:44 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31EB34C040;
-        Mon,  2 Mar 2020 17:32:44 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1ECB4C04A;
-        Mon,  2 Mar 2020 17:32:43 +0000 (GMT)
-Received: from localhost (unknown [9.199.48.41])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 17:32:43 +0000 (GMT)
-Date:   Mon, 02 Mar 2020 23:02:42 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: eh_frame confusion
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
-        <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-In-Reply-To: <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+        Mon, 2 Mar 2020 17:33:03 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1111B52050;
+        Mon,  2 Mar 2020 17:33:03 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.229.179])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 015595204E;
+        Mon,  2 Mar 2020 17:33:01 +0000 (GMT)
+Subject: Re: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Mon, 02 Mar 2020 12:33:01 -0500
+In-Reply-To: <a5e0cdc4839e478d926b90bd5ba0857c@huawei.com>
+References: <20200210100048.21448-1-roberto.sassu@huawei.com>
+         <20200210100048.21448-3-roberto.sassu@huawei.com>
+         <1581373420.5585.920.camel@linux.ibm.com>
+         <6955307747034265bd282bf68c368f34@huawei.com>
+         <1583156506.8544.60.camel@linux.ibm.com>
+         <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
+         <1583160394.8544.89.camel@linux.ibm.com>
+         <a5e0cdc4839e478d926b90bd5ba0857c@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20030217-0016-0000-0000-000002EC5DC4
+x-cbid: 20030217-0028-0000-0000-000003E013D9
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030217-0017-0000-0000-0000334FA18A
-Message-Id: <1583169883.zo43kx69lm.naveen@linux.ibm.com>
+x-cbparentid: 20030217-0029-0000-0000-000024A53D9C
+Message-Id: <1583170381.8544.113.camel@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020116
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=876 malwarescore=0 impostorscore=0
+ suspectscore=0 clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003020116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naveen N. Rao wrote:
-> Rasmus Villemoes wrote:
->> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
->> to gcc-8 all object files now end up having .eh_frame section. For
->> vmlinux, that's not a problem, because they all get discarded in
->> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
->> modules, which doesn't seem to be useful - given that everything worked
->> just fine with gcc-7, and I don't see anything in the module loader that
->> handles .eh_frame.
->> 
->> The reason I care is that my target has a rather tight rootfs budget,
->> and the .eh_frame section seem to occupy 10-30% of the file size
->> (obviously very depending on the particular module).
->> 
->> Comparing the .foo.o.cmd files, I don't see change in options that might
->> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
->> is apparently no longer supported in gcc-8). Both before and after, there's
->> 
->> -fno-dwarf2-cfi-asm
->> 
->> about which gcc's documentation says
->> 
->> '-fno-dwarf2-cfi-asm'
->>      Emit DWARF unwind info as compiler generated '.eh_frame' section
->>      instead of using GAS '.cfi_*' directives.
->> 
->> Looking into where that comes from got me even more confused, because
->> both arm and unicore32 say
->> 
->> # Never generate .eh_frame
->> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
->> 
->> while the ppc32 case at hand says
->> 
->> # FIXME: the module load should be taught about the additional relocs
->> # generated by this.
->> # revert to pre-gcc-4.4 behaviour of .eh_frame
-> 
-> Michael opened a task to look into this recently and I had spent some 
-> time last week on this. The original commit/discussion adding 
-> -fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
-> handled by our module loader:
-> http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
-> 
-> However, that is now handled thanks to commit 9f751b82b491d:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
-> 
-> I did a test build and a simple module loaded fine, so I think 
-> -fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
-> some breakages with it. Michael?
-> 
->> 
->> but prior to gcc-8, .eh_frame didn't seem to get generated anyway.
->> 
->> Can .eh_frame sections be discarded for modules (on ppc32 at least), or
->> is there some magic that makes them necessary when building with gcc-8?
-> 
-> As Segher points out, it looks like we need to add 
-> -fno-asynchronous-unwind-tables. Most other architectures seem to use 
-> that too.
-
-Can you check if the below patch works? I am yet to test this in more 
-detail, but would be good to know the implications for ppc32.
-
-- Naveen
+On Mon, 2020-03-02 at 15:11 +0000, Roberto Sassu wrote:
 
 
----
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index f35730548e42..5b5bf98b8217 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -239,10 +239,7 @@ KBUILD_CFLAGS += $(call cc-option,-mno-vsx)
- KBUILD_CFLAGS += $(call cc-option,-mno-spe)
- KBUILD_CFLAGS += $(call cc-option,-mspe=no)
- 
--# FIXME: the module load should be taught about the additional relocs
--# generated by this.
--# revert to pre-gcc-4.4 behaviour of .eh_frame
--KBUILD_CFLAGS  += $(call cc-option,-fno-dwarf2-cfi-asm)
-+KBUILD_CFLAGS  += $(call cc-option,-fno-asynchronous-unwind-tables)
- 
- # Never use string load/store instructions as they are
- # often slow when they are implemented at all
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index e147bbdc12cd..d43b0b18137c 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -25,6 +25,7 @@ KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
- ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-+       -fasynchronous-unwind-tables \
-        -Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
- asflags-y := -D__VDSO32__ -s
- 
-diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
-index 32ebb3522ea1..b2cbb5c49bad 100644
---- a/arch/powerpc/kernel/vdso64/Makefile
-+++ b/arch/powerpc/kernel/vdso64/Makefile
-@@ -13,6 +13,7 @@ KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
- ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-+       -fasynchronous-unwind-tables \
-        -Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
- asflags-y := -D__VDSO64__ -s
- 
- 
+> > Yes, preference is given to the IMA default algorithm, but it should
+> > fall back to using SHA256 or SHA1, based on the TPM.
+> 
+> Ok. The patch already does it even if the TPM version is not checked.
+> For TPM 1.2, if the default algorithm is not SHA1 the patch will select
+> the first PCR bank (SHA1).
+> 
+> Should I send a new patch which explicitly checks the TPM version?
+
+Checking the TPM version shouldn't be necessary.  The code currently
+sets bank_idx to the HASH_ALGO_SHA256.  If instead of initializing
+bank_idx to 0, initialize it to the nr_allocated_banks or -1.  As long
+as the bank_idx value is the same as the initialized value, set the
+bank_idx to HASH_ALGO_SHA1.
+
+The subsequent bank_idx would then be limited to testing for the
+initialized value.
+
+Mimi
 
