@@ -2,123 +2,204 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA53C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43340C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE0C22B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583168991;
-	bh=wOOJalJ6H53XXQk1DAauUesmJQFNORcTG2bDbS4jTOI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pQZeM7jD9sZuvElpG9MnYtdUA8zZSj8VqKj1tdC1RxDL7Ee6hZidkq/v5ntq8ebyP
-	 fwjFA6E5/4izgkcATT62gQkwPOCGJKwIZTujs+/y7BiEt78Mk5UO6CuIqxTLFZkfln
-	 r3GUgN6qWS/OAvwxRdzzlIJ1HfdTxIl0su2NbEZg=
+	by mail.kernel.org (Postfix) with ESMTP id 1BE9721775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCBRJt (ORCPT
+        id S1727372AbgCBRNh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:09:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbgCBRJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:09:47 -0500
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD1F02465E
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 17:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583168986;
-        bh=wOOJalJ6H53XXQk1DAauUesmJQFNORcTG2bDbS4jTOI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sBlRkkgxt6D2/JozMgjWEI09F+LrMw1oMwtTu/eWsPxGikV+EZyIU832PuFwNMuZR
-         EsEQ0Pid29Fz4t0caF+nnxrMfGseFnOZgerLycnpy+UDXCcgU55njWpdZgfiA1RUgZ
-         9bQ2Nm80zXEBPQbkvUVs1i1HKpv1GMSDUURHuJ5M=
-Received: by mail-wr1-f43.google.com with SMTP id y17so681748wrn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:09:45 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3MDxcVL8FhPKvkw87CJvqtbRLXc824ATePsoHVlOQm3CcorH7+
-        D9kMaK5Yp99DRXm61i20iE/B2aLtfiX1pa+fD50ieQ==
-X-Google-Smtp-Source: ADFU+vulOOyRBC0j8mmKmW/9sKyLi7JLKHuZJbI1cY4csL1kVUSZ58d6JD2kDoI8OSDSrqqv0eu9kTb7HeKZb9iJbEQ=
-X-Received: by 2002:adf:e742:: with SMTP id c2mr563486wrn.262.1583168984232;
- Mon, 02 Mar 2020 09:09:44 -0800 (PST)
+        Mon, 2 Mar 2020 12:13:37 -0500
+Received: from mail-vi1eur05olkn2013.outbound.protection.outlook.com ([40.92.90.13]:28162
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726451AbgCBRNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:13:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cuZdh4Q3G0BdUqKFlSBo4CRVCUuUSpPKxfZQhMjEy7Hg4mrD33IA7POZB2GB5LdPvU7hPk6i7JAxo6EpDgZfbmeWghA9hVRyjml0tEd4YVxklJDwbfLNURbSyxQuCwWC28UWDEui+rdkeOGtkV4+ZfFZ0Dsn2TNP6anIhv9Qw9MsALK4fVDaRiNGiPccjxRnOSlbur0XodFoj0t2mbKAbmqSxM2gBsmLoldxV0g8gQ4Sxlyvl+nJVAlNPMhwRF73/GJ2cgc8T0LX+T8zY1GXYQrdl/iKi5WL/7UaqycYKOuSUQOUSCZA+K7D+ZpZbOpk5l7wfuF1AP1ssJHZOY900g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4Qr6lLw8CV2Brnq7qtJZ08k3XwrEVL/z6ssdJEf8X0=;
+ b=hoqRa7Ya6FMJzaS22tJKYatlMUbYWrPOdzm8UR/2embysCjvR4DxthW29gxrIsJ7kZeCoQX2dNKkVc+32OpRxafswQwla9KrneslJHFPP6BpT7NqVYTKUptnUdkieLOirk2zZcJmd5SW0BQ4JdeWpfpksm+km6o67TaqVYcBfjKrMndlUnSLzZGp88Nofp8ajoAfoq9SXRynpM/kkqA/K6B3p+CQEvKLDYMFVX0SPeDlCPppd+x8R3/+H/ttcYs0p9sV0fBhWHOLdCasWkcb9uVKCt8723SSUTr/1G943j3HfWmeTbJfe7msgZa36e9WMVqUt8oHcnehbn8kifTtWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM6EUR05FT020.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc11::3a) by
+ AM6EUR05HT022.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc11::122)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
+ 2020 17:13:31 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.240.60) by
+ AM6EUR05FT020.mail.protection.outlook.com (10.233.241.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14 via Frontend Transport; Mon, 2 Mar 2020 17:13:31 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 17:13:31 +0000
+Received: from [192.168.1.101] (92.77.140.102) by AM4PR05CA0016.eurprd05.prod.outlook.com (2603:10a6:205::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Mon, 2 Mar 2020 17:13:29 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Topic: [PATCHv2] exec: Fix a deadlock in ptrace
+Thread-Index: AQHV8AjGwZG4WijWc0+aQpdADP+q6qg02ufjgACXoYCAAASqH4AAAMAAgAAEyVeAAA77AA==
+Date:   Mon, 2 Mar 2020 17:13:31 +0000
+Message-ID: <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAG48ez3QHVpMJ9Rb_Q4LEE6uAqQJeS1Myu82U=fgvUfoeiscgw@mail.gmail.com>
+ <20200301185244.zkofjus6xtgkx4s3@wittgenstein>
+ <CAG48ez3mnYc84iFCA25-rbJdSBi3jh9hkp569XZTbFc_9WYbZw@mail.gmail.com>
+ <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74zmfc9.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org>
+In-Reply-To: <875zfmloir.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR05CA0016.eurprd05.prod.outlook.com (2603:10a6:205::29)
+ To AM6PR03MB5170.eurprd03.prod.outlook.com (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:1EFB63CF3AF28D0CE965C79CF93DD2F8A834E2DCD45D2150F076C6F3B6452180;UpperCasedChecksum:E34ABCC5BF6FF0D37F9A3E2D38963EB269F629B1F0D78CFF8019DC3DD628152E;SizeAsReceived:9455;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [iQMbvCt4QB+8RYQmxvOQCC70cu5hAA7g]
+x-microsoft-original-message-id: <8c11f6ae-fd06-1709-c2bc-9c14d4dc8e86@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 085f4925-c2f8-4ea6-5d78-08d7becd080a
+x-ms-traffictypediagnostic: AM6EUR05HT022:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2kl4YEj/Wt7IFxUqz2HDx3Ve6X8We3z6+gcU3nAHyHPK48lqkyBMAiuqNoRh618KWY9DUb0W9tZK1aiApHrLewDLZFKqvxGhuATb3Uw9SiX2JwV1xgDcj+chq0+hd6O9eF942vhPzM8Oh4u1MM91ziWkrOciCvtjzmXNH0YHnDzA2m/quh3V+iWvfZ5n18WA
+x-ms-exchange-antispam-messagedata: FfPzUEdcNfmy1xcsymD7IjyWW4dbm0GNwEyEz0rgZ7vN4JV8uFK2I2uZLLKI5Xq5HsTr/6ndmhPiibZx9chTVLtTSONXd5+DbXMNdraBzElWD6VSOQZUXTYFamekJFPiN8OVzSxpVR2MvTfskngT6A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1BC8A6ED600912469119746F1E8115F3@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200301230436.2246909-1-nivedita@alum.mit.edu>
- <20200301230436.2246909-4-nivedita@alum.mit.edu> <CAKv+Gu9RRDidiJ8WAnSta1kZoioFU_ZLxwGPQuhepd9N23HUJw@mail.gmail.com>
- <20200302165359.GA2599505@rani.riverdale.lan> <CAKv+Gu-8HeNaRYZNtTHr1_VF1aH=BRKF4CaeyP-PPfHNQN2paA@mail.gmail.com>
- <20200302170205.GA2937123@rani.riverdale.lan>
-In-Reply-To: <20200302170205.GA2937123@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 2 Mar 2020 18:09:33 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_2JBC5mx=4xqz3Rfr=m8O3RBh8j5Yxfot_W5RJ6AsrYA@mail.gmail.com>
-Message-ID: <CAKv+Gu_2JBC5mx=4xqz3Rfr=m8O3RBh8j5Yxfot_W5RJ6AsrYA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] efi/x86: Make efi32_pe_entry more readable
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 085f4925-c2f8-4ea6-5d78-08d7becd080a
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 17:13:31.2172
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 18:02, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Mar 02, 2020 at 05:57:04PM +0100, Ard Biesheuvel wrote:
-> > On Mon, 2 Mar 2020 at 17:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Mon, Mar 02, 2020 at 08:49:17AM +0100, Ard Biesheuvel wrote:
-> > > > On Mon, 2 Mar 2020 at 00:04, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > ...
-> > > > >         call    1f
-> > > > > -1:     pop     %ebp
-> > > > > -       subl    $1b, %ebp
-> > > > > +1:     pop     %ebx
-> > > > > +       subl    $1b, %ebx
-> > > ...
-> > > > >
-> > > > > +       movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
-> > > >
-> > > > The code that follows efi32_pe_stub_entry still expects the runtime
-> > > > displacement in %ebp, so we'll need to pass that in another way here.
-> > > >
-> > > > >         jmp     efi32_pe_stub_entry
-> > >
-> > > Didn't follow -- what do you mean by runtime displacement?
-> > >
-> > > efi32_pe_stub_entry expects the runtime address of startup_32 to be in
-> > > %ebp, but with the changes for keeping the frame pointer in %ebp, I
-> > > changed the runtime address to be in %ebx instead. Hence I added that
-> > > movl %ebx, %ebp to put it in %ebp just before calling efi32_pe_stub_entry.
-> > > That should be fine, no?
-> >
-> > But how does that work with:
-> >
-> > SYM_INNER_LABEL(efi32_pe_stub_entry, SYM_L_LOCAL)
-> >     movl %ecx, efi32_boot_args(%ebp)
-> >     movl %edx, efi32_boot_args+4(%ebp)
-> >     movb $0, efi_is64(%ebp)
-> >
-> >
-> > ?
->
-> Why wouldn't it work? Before this change, efi32_pe_entry set %ebp to
-> startup_32 (via the call/pop/sub sequence), so efi32_pe_stub_entry was
-> entered with %ebp == startup_32.
->
-> After this change, the call/pop/sub sequence puts startup_32 into %ebx,
-> and then I copy it into %ebp just before branching to efi32_pe_stub_entry.
-> So everything should continue to work the same way as before?
 
-Ah ok, so the sequence
 
-   call 1f
-1: pop %ebp
-   subl $1b, %ebp
+On 3/2/20 5:17 PM, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> 
+>> On 3/2/20 4:57 PM, Eric W. Biederman wrote:
+>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>>>
+>>>>
+>>>> I tried this with s/EACCESS/EACCES/.
+>>>>
+>>>> The test case in this patch is not fixed, but strace does not freeze,
+>>>> at least with my setup where it did freeze repeatable.
+>>>
+>>> Thanks, That is what I was aiming at.
+>>>
+>>> So we have one method we can pursue to fix this in practice.
+>>>
+>>>> That is
+>>>> obviously because it bypasses the cred_guard_mutex.  But all other
+>>>> process that access this file still freeze, and cannot be
+>>>> interrupted except with kill -9.
+>>>>
+>>>> However that smells like a denial of service, that this
+>>>> simple test case which can be executed by guest, creates a /proc/$pid/mem
+>>>> that freezes any process, even root, when it looks at it.
+>>>> I mean: "ln -s README /proc/$pid/mem" would be a nice bomb.
+>>>
+>>> Yes.  Your the test case in your patch a variant of the original
+>>> problem.
+>>>
+>>>
+>>> I have been staring at this trying to understand the fundamentals of the
+>>> original deeper problem.
+>>>
+>>> The current scope of cred_guard_mutex in exec is because being ptraced
+>>> causes suid exec to act differently.  So we need to know early if we are
+>>> ptraced.
+>>>
+>>
+>> It has a second use, that it prevents two threads entering execve,
+>> which would probably result in disaster.
+> 
+> Exec can fail with an error code up until de_thread.  de_thread causes
+> exec to fail with the error code -EAGAIN for the second thread to get
+> into de_thread.
+> 
+> So no.  The cred_guard_mutex is not needed for that case at all.
+> 
 
-happens to produce the value of startup_32, which is obvious now that
-I think of it, but it wasn't before.
+Okay, but that will reset current->in_execve, right?
+
+>>> If that case did not exist we could reduce the scope of the
+>>> cred_guard_mutex in exec to where your patch puts the cred_change_mutex.
+>>>
+>>> I am starting to think reworking how we deal with ptrace and exec is the
+>>> way to solve this problem.
+> 
+> 
+> I am 99% convinced that the fix is to move cred_guard_mutex down.
+> 
+> Then right after we take cred_guard_mutex do:
+> 	if (ptraced) {
+> 		use_original_creds();
+> 	}
+> 
+> And call it a day.
+> 
+> The details suck but I am 99% certain that would solve everyones
+> problems, and not be too bad to audit either.
+> 
+> Eric
+> 
