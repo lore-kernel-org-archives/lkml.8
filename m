@@ -2,121 +2,148 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1751C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E270C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B252468E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583137057;
-	bh=aPFhGQiNbY9NE+xS+194iu0qMlLBO4+2ynIr21JV2uk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FybWy4mx/mdKXZJjgrX8xV/KpJjnE6x60x2jEZV3HcNW8wmsJ2vEnZBdevobWy+sR
-	 g0Z3OvpFQETRN0NBY7seRFsiiqYTuYFl9W8a7naGrZphpsskJSNc3a+MW02s1xYTvw
-	 ki4H6p2sD6iph9damaakucsX5yKJQtTD3E6+lw4Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1A6A42468E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DPbqMB03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgCBIRh (ORCPT
+        id S1727675AbgCBIRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:17:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbgCBIQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:16:23 -0500
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E74D124706;
-        Mon,  2 Mar 2020 08:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583136980;
-        bh=aPFhGQiNbY9NE+xS+194iu0qMlLBO4+2ynIr21JV2uk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xtW2UnueyCepl2oS0Vtd/stXdrzaTs23IulgdyIOHwGWknPyVlLDjJBa34dS8lcEY
-         FWLs2TfYIKjkpNKi50cLDgdb/2aLmCF5B8F4Tw//XRJUx9WzcJ0f2Ezn/y8fjkUCWB
-         lMp6QQXhnTb+oTuy99mPStVlT8BGI3Bbxgr8ICWs=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j8gFO-0003zs-3X; Mon, 02 Mar 2020 09:16:18 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 41/42] docs: scsi: convert wd719x.txt to ReST
-Date:   Mon,  2 Mar 2020 09:16:14 +0100
-Message-Id: <23e5b13d810b7dd8126b126173999c02eac50e74.1583136624.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1583136624.git.mchehab+huawei@kernel.org>
-References: <cover.1583136624.git.mchehab+huawei@kernel.org>
+        Mon, 2 Mar 2020 03:17:33 -0500
+Received: from mail-am6eur05on2060.outbound.protection.outlook.com ([40.107.22.60]:6016
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727648AbgCBIR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 03:17:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oMl5xZiZDYxmA9IER81/Ms3V13HSmPtm7+J5gmZr2l9lX8x2jRYpuz9uSfKXcImyeJxSntvJGuGFNV1GLywSjwmozDT1KRKmPTwLc56qNzeLdu99SVZb62tGThWwmeE/TW0dhbIdebrAJZymJWuWb8FKC2hsavR9wlUXwJe8L8EvQqhrcsvAj7GrYfwr75oFX33+2EWQqMp3zCS5cnO7TS0fnlaGoiI781qX7Ivbr8K9GybHf9roMFeMgeNbxLUyRS0xm6cTHmnPXgXEBgYWsHiXqF1OSTJZ+7STbioLgya7g54bh2KeE5HOcag5LtoqGVRUc0nSZoyE/YBsEYdG/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AacDFEEEq0oC3BZUdYs1DCJEO11Omnm4+cgCsxyXKSE=;
+ b=GlgAMomynL558sVhD2Ufx6fRJFYAhalN1U94nHG1zYwEX4kU5czXOmqLJ2oWSP2QoukXZt/S8Km+qQtfxRUBFGmqdgGP6jpLBB09Zoro+CJ/ZWLa8wXCIJvA4Z0JNSdndme8eBzDRO0MLmvvh9QpHu1a1u+4MNsvltv2TSKZIMrCO27fd5oRGrgPcri6uIaGcVQ0vOM7DcexoDu5OJt2girZkTqY0babFSm1/AJLy9jZWE9bV6tW4C8WJ+N7UqzNlm0So8vy+ZEZHIjIq490k6e88fMUYbc4WS8ner3sm6Fhg0fbf8FF6a69NWz9lbVFQb2ZFhHXohQd6PBFs3Q1YQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AacDFEEEq0oC3BZUdYs1DCJEO11Omnm4+cgCsxyXKSE=;
+ b=DPbqMB03XLFUXU2SWGzHoFBL4fTxoW6bi1KpyPsvN3sm9MwnoSzKWLhJ3YiKIE5mtbNoWuze8WZIJO4R+aNKmZx5puGcO1SWtMEeFUetE36Rlc95E465tMyq3TfP6LgzNi87GI4ud4D10HymGULQH1CuzPSJnCGV3LkkrbvBa8Q=
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
+ AM0PR0402MB3556.eurprd04.prod.outlook.com (52.133.43.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Mon, 2 Mar 2020 08:17:23 +0000
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::dc6e:5cc4:dd53:3088]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::dc6e:5cc4:dd53:3088%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
+ 08:17:23 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     =?iso-8859-2?Q?Andr=E9_Draszik?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to
+ pwrkey
+Thread-Topic: [PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to
+ pwrkey
+Thread-Index: AQHV6/ZSv/DVqZ+iC02h9uEXERTtvg==
+Date:   Mon, 2 Mar 2020 08:17:23 +0000
+Message-ID: <AM0PR0402MB347685AB405373EBED8A386498E70@AM0PR0402MB3476.eurprd04.prod.outlook.com>
+References: <20200225161201.1975-1-git@andred.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 197ad76b-7fb0-462a-d815-08d7be822305
+x-ms-traffictypediagnostic: AM0PR0402MB3556:|AM0PR0402MB3556:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0402MB35568B27391383708C495DF398E70@AM0PR0402MB3556.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1002;
+x-forefront-prvs: 033054F29A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(189003)(199004)(33656002)(55016002)(9686003)(110136005)(54906003)(26005)(2906002)(186003)(7416002)(76116006)(7696005)(6506007)(71200400001)(64756008)(66446008)(5660300002)(4326008)(66946007)(66556008)(52536014)(66476007)(53546011)(91956017)(478600001)(316002)(4744005)(44832011)(8676002)(81166006)(81156014)(8936002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3556;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fdDP+iDFFTIcvN3C7M08xoNNbI7FaLi7LgTwdR+GubC33BqJ8gNWByo6NOUgw/ftqja6AZiEDhwfLTwatPcU10n0k/4pOUcyT7Vt0pNe5IEUtL92zC2ULgI2fXmFGqZNmLCvnECwi1s/XqdjuQSr04hp5Z1MGS1LeXIkZDP4dI9PDYN2SMAm9erDCYv73+kZaocG4/IfUsVJRAYOiXDCjcmeI3CwMqdJrQfy0ZrylkDGmaiDNw8NPEiVfy/dVByrtGjcToqrJRZm5jqkIm53iZamidKXtjeAJagWbs5F62wyI21cHnRcTyut8L9HwF4HH0+boqE/iqElwzVcX4rNdn0XsBtClyAbqu1wJGsmO8A/rhgR6odgQpjhWn4NA5tZeZvgFHAPITrnC9Fq1U1ILMgbTTVvzPZqICeaHq9aWRONaMHajvYktiVPOEJ9DgqE
+x-ms-exchange-antispam-messagedata: gHr8CuxSNKT77vOO5YAwFQMyghbVCWFmCVdFtyyk7RcnRnWbTxuQaeNn3G91bAGS353LPiiN6ItIXXU15KzW6qoyKww6hI7f0nfeifACuKJXwrK2M/OUxMj+6z5ooEyn/AX5fqihNCsZZEigZll8rA==
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 197ad76b-7fb0-462a-d815-08d7be822305
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 08:17:23.7746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TsPH7FCxkyNqZQfbkzm3KAOp74O3WPGU7MmpSdv6rBvbyRfN8Aeln4d3KepL6ihBV9yNScyqlpZX2ausndAchg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3556
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/scsi/index.rst                  |  1 +
- Documentation/scsi/{wd719x.txt => wd719x.rst} | 23 +++++++++++--------
- 2 files changed, 14 insertions(+), 10 deletions(-)
- rename Documentation/scsi/{wd719x.txt => wd719x.rst} (46%)
-
-diff --git a/Documentation/scsi/index.rst b/Documentation/scsi/index.rst
-index 27720d145eff..260f1145431d 100644
---- a/Documentation/scsi/index.rst
-+++ b/Documentation/scsi/index.rst
-@@ -45,5 +45,6 @@ Linux SCSI Subsystem
-    sym53c8xx_2
-    tcm_qla2xxx
-    ufs
-+   wd719x
- 
-    scsi_transport_srp/figures
-diff --git a/Documentation/scsi/wd719x.txt b/Documentation/scsi/wd719x.rst
-similarity index 46%
-rename from Documentation/scsi/wd719x.txt
-rename to Documentation/scsi/wd719x.rst
-index 0816b0220238..a35015dfedd9 100644
---- a/Documentation/scsi/wd719x.txt
-+++ b/Documentation/scsi/wd719x.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============================================================
- Driver for Western Digital WD7193, WD7197 and WD7296 SCSI cards
-----------------------------------------------------------------
-+===============================================================
- 
- The card requires firmware that can be cut out of the Windows NT driver that
- can be downloaded from WD at:
-@@ -9,13 +12,13 @@ There is no license anywhere in the file or on the page - so the firmware
- probably cannot be added to linux-firmware.
- 
- This script downloads and extracts the firmware, creating wd719x-risc.bin and
--d719x-wcs.bin files. Put them in /lib/firmware/.
-+d719x-wcs.bin files. Put them in /lib/firmware/::
- 
--#!/bin/sh
--wget http://support.wdc.com/download/archive/pciscsi.exe
--lha xi pciscsi.exe pci-scsi.exe
--lha xi pci-scsi.exe nt/wd7296a.sys
--rm pci-scsi.exe
--dd if=wd7296a.sys of=wd719x-risc.bin bs=1 skip=5760 count=14336
--dd if=wd7296a.sys of=wd719x-wcs.bin bs=1 skip=20096 count=514
--rm wd7296a.sys
-+	#!/bin/sh
-+	wget http://support.wdc.com/download/archive/pciscsi.exe
-+	lha xi pciscsi.exe pci-scsi.exe
-+	lha xi pci-scsi.exe nt/wd7296a.sys
-+	rm pci-scsi.exe
-+	dd if=wd7296a.sys of=wd719x-risc.bin bs=1 skip=5760 count=14336
-+	dd if=wd7296a.sys of=wd719x-wcs.bin bs=1 skip=20096 count=514
-+	rm wd7296a.sys
--- 
-2.21.1
-
+On 2/25/2020 6:12 PM, Andr=E9 Draszik wrote:=0A=
+> On i.MX7 and i.MX8M, the SNVS requires a clock. This is similar to the=0A=
+> clock bound to the SNVS RTC node, but if the SNVS RTC driver isn't=0A=
+> enabled, then SNVS doesn't work, and as such the pwrkey driver doesn't=0A=
+> work (i.e. hangs the kernel, as the clock isn't enabled).=0A=
+> =0A=
+> Also see commit ec2a844ef7c1=0A=
+> ("ARM: dts: imx7s: add snvs rtc clock")=0A=
+> for a similar fix.=0A=
+> =0A=
+> Signed-off-by: Andr=E9 Draszik <git@andred.net>=0A=
+> Acked-by: Rob Herring <robh@kernel.org>=0A=
+> Cc: "Horia Geant=E3" <horia.geanta@nxp.com>=0A=
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: "David S. Miller" <davem@davemloft.net>=0A=
+> Cc: Rob Herring <robh+dt@kernel.org>=0A=
+> Cc: Mark Rutland <mark.rutland@arm.com>=0A=
+> Cc: Shawn Guo <shawnguo@kernel.org>=0A=
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>=0A=
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>=0A=
+> Cc: Fabio Estevam <festevam@gmail.com>=0A=
+> Cc: NXP Linux Team <linux-imx@nxp.com>=0A=
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>=0A=
+> Cc: Anson Huang <Anson.Huang@nxp.com>=0A=
+> Cc: Robin Gong <yibin.gong@nxp.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: devicetree@vger.kernel.org=0A=
+> Cc: linux-arm-kernel@lists.infradead.org=0A=
+> Cc: linux-input@vger.kernel.org=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
