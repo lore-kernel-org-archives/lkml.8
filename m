@@ -2,52 +2,51 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC85C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ED4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0AD2468A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A30F24677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgCBFLN (ORCPT
+        id S1726980AbgCBFMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:11:13 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:38685 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCBFLN (ORCPT
+        Mon, 2 Mar 2020 00:12:12 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:32987 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgCBFML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:11:13 -0500
-Received: by mail-il1-f199.google.com with SMTP id i67so10114587ilf.5
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:11:12 -0800 (PST)
+        Mon, 2 Mar 2020 00:12:11 -0500
+Received: by mail-il1-f200.google.com with SMTP id x14so4360287ilp.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:12:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rVXWG6I2Docu/l6TEelQQ6kA2g+m3kqyIZlYlybmkwo=;
-        b=TPFf4GiQuu2dx6/OEdJi6wOFTRmdab2y3QvitpA76jclOAth6y4Pix6ptNM3G0789N
-         NMI7IB76iNiy6VzsjAiuKxwC+Vgpm8cEIc4DNO7U6d1IKULe25ja5+mOMhvXSDFQPfk/
-         ONuB4sWFXnFB5Q4pSeVhlHBoLRvQhNUgkNjJORyFLrjQJpgUj4e8yQC+AAiGqc0SwOr+
-         ESCFKHliBqxVJPw+ZRnltPRRG1CcU+21XkRoLXOQ2lWXcgECh9gqmYT2LziXvXcmt4Ja
-         VbBDDxm3cCpFUYq51yfU7r09esgsrF9Lnp4smX2eN0XLDVaJqwOxOUKFLU8Blup165jA
-         R7JA==
-X-Gm-Message-State: APjAAAW20ZEdJRimgr58/XbNNPKxY+ahS7rlMJF8l/naQSSoOeaHDoJt
-        +/m1b/b8uG57WaRoOREotPlkLkEfeHDdmIN9oAM6i5u/DBNP
-X-Google-Smtp-Source: APXvYqzSc8GFjXA/MA2ZmJf4WdSfc+oPzmo1obgWuI1E/TAeLQhVwX4Lovym2prkbzqMESaqM5uZyT9kuTbPIiV1PcLWyrdKBa6F
+        bh=XqZKveBobBiwl0AcbXytSoKgoD9CmbhVMu+cMaGUVdU=;
+        b=cDnSn5+37iVQ5/USyzVD0vXJIYve8M/NHpQbTXm7tY4GrWnETCcXHEhKuyDDL8t7V0
+         JQO62i6UcSUNRLX9NMoIqNGshTDTrIPEUFAQ2egyhziEa/JyvaBF+Sph5ZO1nianodjk
+         H2beLk6qMXeob8YrqfRJX77+zRQiPSeeVXnmZBPRXqSjm02Uw8qA9JbA88/e9Wf2cgGx
+         6iETiwG46wuswQ5i0yLVqHHGR66EfkDBnwvWzV80z8QRseEvbNDKbUJ8YfqoJWQOOi7r
+         +8iqeRA4cLJQ9BlZ4yKNIF1fDl5IaLsR4IcZH9oB2jb8KNn28rYv2YTYEn84jumtHx1E
+         mrQQ==
+X-Gm-Message-State: ANhLgQ2/x5+yEffhrC2umjfEpuCu6JpvPGuNsEYXPgrneumapanM++v/
+        F/cjR260ThE+wG9H+mq3EEAZWUwbYo+393rMk0T5ymE6CNwE
+X-Google-Smtp-Source: ADFU+vsBjB7bEx1SrJcDf0XBJrejw80kl/9b5RP32LuqJY8JBLV1TJ79i14KHuuiSCkaGrmkxr7GQr7S34dYT3Z9LBA8wpDe9Ymz
 MIME-Version: 1.0
-X-Received: by 2002:a92:798d:: with SMTP id u135mr15743801ilc.49.1583125872396;
- Sun, 01 Mar 2020 21:11:12 -0800 (PST)
-Date:   Sun, 01 Mar 2020 21:11:12 -0800
+X-Received: by 2002:a92:1ddb:: with SMTP id g88mr4531042ile.56.1583125931272;
+ Sun, 01 Mar 2020 21:12:11 -0800 (PST)
+Date:   Sun, 01 Mar 2020 21:12:11 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004251e4059fd83720@google.com>
-Subject: WARNING: ODEBUG bug in smc_ib_remove_dev
-From:   syzbot <syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
+Message-ID: <000000000000c4b371059fd83a92@google.com>
+Subject: general protection fault in kobject_get
+From:   syzbot <syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,58 +57,79 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12873645e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=b297c6825752e7a07272
+HEAD commit:    3b3e808c Merge tag 'mac80211-next-for-net-next-2020-02-24'..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15e20a2de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ec9623400ee72
+dashboard link: https://syzkaller.appspot.com/bug?extid=46fe08363dbba223dec5
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
+Reported-by: syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint: smc_ib_port_event_work+0x0/0x350 net/smc/smc_ib.c:312
-WARNING: CPU: 0 PID: 14236 at lib/debugobjects.c:485 debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 14236 Comm: kworker/u4:10 Not tainted 5.6.0-rc3-syzkaller #0
+general protection fault, probably for non-canonical address 0xdffffc00000000ba: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000005d0-0x00000000000005d7]
+CPU: 0 PID: 20851 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events_unbound ib_unregister_work
+RIP: 0010:kobject_get+0x35/0x150 lib/kobject.c:640
+Code: 53 e8 3f b0 8b f9 4d 85 e4 0f 84 a2 00 00 00 e8 31 b0 8b f9 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 eb 00 00 00
+RSP: 0018:ffffc9000946f1a0 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffffffff85bdbbb0 RCX: ffffc9000bf22000
+RDX: 00000000000000ba RSI: ffffffff87e9d78f RDI: 00000000000005d4
+RBP: ffffc9000946f1b8 R08: ffff8880581a6440 R09: ffff8880581a6cd0
+R10: fffffbfff154b838 R11: ffffffff8aa5c1c7 R12: 0000000000000598
+R13: 0000000000000000 R14: ffffc9000946f278 R15: ffff88805cb0c4d0
+FS:  00007faa9e8af700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30121000 CR3: 000000004515d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Code: dd 00 e7 91 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48 8b 14 dd 00 e7 91 88 48 c7 c7 60 dc 91 88 e8 07 6e 9f fd <0f> 0b 83 05 03 6c ff 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffffc90001807ae0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000300f4e
-RBP: ffffc90001807b20 R08: ffff8880485a61c0 R09: ffffed1015d045c9
-R10: ffffed1015d045c8 R11: ffff8880ae822e43 R12: 0000000000000001
-R13: ffffffff89b7a220 R14: ffffffff814c8610 R15: ffff88806058e348
- __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
- debug_check_no_obj_freed+0x2d6/0x441 lib/debugobjects.c:998
- kfree+0xf8/0x2c0 mm/slab.c:3756
- smc_ib_remove_dev+0x1a9/0x2e0 net/smc/smc_ib.c:583
- remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
- disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
- ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1545
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ get_device+0x25/0x40 drivers/base/core.c:2574
+ __ib_get_client_nl_info+0x205/0x2e0 drivers/infiniband/core/device.c:1861
+ ib_get_client_nl_info+0x35/0x180 drivers/infiniband/core/device.c:1881
+ nldev_get_chardev+0x575/0xac0 drivers/infiniband/core/nldev.c:1621
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c479
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007faa9e8aec78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007faa9e8af6d4 RCX: 000000000045c479
+RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009a2 R14: 00000000004d56c0 R15: 000000000076bf2c
+Modules linked in:
+---[ end trace 48adc6d1ec9b227c ]---
+RIP: 0010:kobject_get+0x35/0x150 lib/kobject.c:640
+Code: 53 e8 3f b0 8b f9 4d 85 e4 0f 84 a2 00 00 00 e8 31 b0 8b f9 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 eb 00 00 00
+RSP: 0018:ffffc9000946f1a0 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffffffff85bdbbb0 RCX: ffffc9000bf22000
+RDX: 00000000000000ba RSI: ffffffff87e9d78f RDI: 00000000000005d4
+RBP: ffffc9000946f1b8 R08: ffff8880581a6440 R09: ffff8880581a6cd0
+R10: fffffbfff154b838 R11: ffffffff8aa5c1c7 R12: 0000000000000598
+R13: 0000000000000000 R14: ffffc9000946f278 R15: ffff88805cb0c4d0
+FS:  00007faa9e8af700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff582e8e000 CR3: 000000004515d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
