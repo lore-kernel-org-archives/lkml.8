@@ -2,217 +2,142 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C37C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45714C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D722467B
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FBD21556
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:09:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVKPRCHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgCBOGo (ORCPT
+        id S1727092AbgCBOJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:06:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:33164 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726890AbgCBOGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:06:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF8BE2F;
-        Mon,  2 Mar 2020 06:06:43 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEEDF3F534;
-        Mon,  2 Mar 2020 06:06:42 -0800 (PST)
-Date:   Mon, 2 Mar 2020 14:06:40 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        shan.gavin@gmail.com
-Subject: Re: [PATCH] arm64/kernel: Simplify __cpu_up() by bailing out early
-Message-ID: <20200302140640.GC56497@lakrids.cambridge.arm.com>
-References: <20200302020340.119588-1-gshan@redhat.com>
- <20200302122135.GB56497@lakrids.cambridge.arm.com>
- <ddbb5cb2-e8b6-ab1c-d283-fb0f402d2a4f@redhat.com>
+        Mon, 2 Mar 2020 09:09:25 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50204 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726878AbgCBOJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:09:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583158163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=lsSEpDEIdaSjPCaTAzHcypnn9SKd5JBtv3AdQccvjrA=;
+        b=aVKPRCHiYsIFEl3/MBKMbpiG9cXyCIV71hJ/5mprlEirmxID/GtKKSi4AJrULED9GzjPzk
+        ldHewZYJoVAxL+9VF8BuQnho+Rr74aFV4lCkPbZ4ceaenrwtnsCNcFOxautwvibBHiHSv7
+        o7BAIn8KNS+nkLpcVs6eMH/tEHPcqHs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-436-gB2LR1ftNb2ukcpmkyuakw-1; Mon, 02 Mar 2020 09:09:19 -0500
+X-MC-Unique: gB2LR1ftNb2ukcpmkyuakw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25D581005510;
+        Mon,  2 Mar 2020 14:09:18 +0000 (UTC)
+Received: from [10.36.116.114] (ovpn-116-114.ams2.redhat.com [10.36.116.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C0C15C122;
+        Mon,  2 Mar 2020 14:09:11 +0000 (UTC)
+Subject: Re: [PATCH v1 01/11] ACPI: NUMA: export pxm_to_node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+References: <20200302134941.315212-1-david@redhat.com>
+ <20200302134941.315212-2-david@redhat.com>
+ <20200302140309.GM4380@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <baff6701-fc75-d205-2e78-904166f63030@redhat.com>
+Date:   Mon, 2 Mar 2020 15:09:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ddbb5cb2-e8b6-ab1c-d283-fb0f402d2a4f@redhat.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20200302140309.GM4380@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:38:48AM +1100, Gavin Shan wrote:
-> On 3/2/20 11:21 PM, Mark Rutland wrote:
-> > On Mon, Mar 02, 2020 at 01:03:40PM +1100, Gavin Shan wrote:
-> > > The function __cpu_up() is invoked to bring up the target CPU through
-> > > the backend, PSCI for example. The nested if statements won't be needed
-> > > if we bail out early on the following two conditions where the status
-> > > won't be checked. The code looks simplified in that case.
-> > > 
-> > >     * Error returned from the backend (e.g. PSCI)
-> > >     * The target CPU has been marked as onlined
-> > > 
-> > > Signed-off-by: Gavin Shan <gshan@redhat.com>
-> > 
-> > FWIW, this looks like a nice cleanup to me:
-> > 
-> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > While this patch leaves secondary_data.{task,stack} stale on a
-> > successful onlining, that was already the case for a timeout, and should
-> > be fine (since the next attempt at onlining will configure those before
-> > poking the CPU).
-> > 
-> > Thanks,
-> > Mark.
-> > 
+On 02.03.20 15:03, Michal Hocko wrote:
+> On Mon 02-03-20 14:49:31, David Hildenbrand wrote:
+>> Will be needed by virtio-mem to identify the node from a pxm.
 > 
-> Thanks, Mark. Yeah, it should be fine as you said. There are something else,
-> which might be not relevant. @secondary_data could be accessed by multiple CPUs
-> in parallel. For example, the master CPU boots CPU#1 and timeouts to wait it
-> to be online in 5 seconds. CPU#1 isn't necessarily stuck in somewhere. After
-> that, CPU#2 is brought up and might be accessing @secondary_data. At this point,
-> CPU#1 can come back to access it either. However, @secondary_data isn't valid
-> for CPU#1 anymore.
+> No objection to export the symbol. But it is almost always better to add
+> the export in the patch that actually uses it. The intention is much
+> more clear that way.
 
-Sure; I'm aware of improvements that could be made here, but I don't
-think they need to block this patch.
+Yeah, but I guess this way people might take more likely a look as if
+this would be squashed into a
+ 5 files changed, 1786 insertions(+)
 
-> I was thinking of something to improve the situation, but not sure if it makes
-> any sense to do so. There are several options: (1) Make @secondary_data per-cpu
-> variable, which looks a nature way to go. (2) To shutdown the CPU on timeout.
-> The shutdown request can be failed to be served in theory, but it seems still
-> an improvement.
+patch. At least that's what my experience tells me :)
 
-I think #2 is a bad idea, since if the CPU gets into the kernel at all,
-it may have done stuff (e.g. acquiring locks), and ripping it out is
-liable to cause more problems.
+If there are hard feelings, I can squash (but I am afraid it will be
+even harder to get ACKs/RBs for core-mm changes that way ...)
 
-I think doing #1 might be nice, but some caveats apply.
+Thanks for having a look!
 
-I'd like to clean up the secondary stack/task hand-over to use an atomic
-cmpxchg pair, so that we can detect when the secondary has possibly
-tried to use the stack/task. That requires splitting that from the
-MMU-off bits from the MMU-on bits, and I'm not sure how well that
-interacts with #1. It might mean that the per-cpu part isn't that
-worthwhile.
-
+-- 
 Thanks,
-Mark.
 
-> 
-> Thanks,
-> Gavin
-> 
-> > > ---
-> > >   arch/arm64/kernel/smp.c | 79 +++++++++++++++++++----------------------
-> > >   1 file changed, 37 insertions(+), 42 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> > > index d4ed9a19d8fe..2a9d8f39dc58 100644
-> > > --- a/arch/arm64/kernel/smp.c
-> > > +++ b/arch/arm64/kernel/smp.c
-> > > @@ -115,60 +115,55 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
-> > >   	update_cpu_boot_status(CPU_MMU_OFF);
-> > >   	__flush_dcache_area(&secondary_data, sizeof(secondary_data));
-> > > -	/*
-> > > -	 * Now bring the CPU into our world.
-> > > -	 */
-> > > +	/* Now bring the CPU into our world */
-> > >   	ret = boot_secondary(cpu, idle);
-> > > -	if (ret == 0) {
-> > > -		/*
-> > > -		 * CPU was successfully started, wait for it to come online or
-> > > -		 * time out.
-> > > -		 */
-> > > -		wait_for_completion_timeout(&cpu_running,
-> > > -					    msecs_to_jiffies(5000));
-> > > -
-> > > -		if (!cpu_online(cpu)) {
-> > > -			pr_crit("CPU%u: failed to come online\n", cpu);
-> > > -			ret = -EIO;
-> > > -		}
-> > > -	} else {
-> > > +	if (ret) {
-> > >   		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
-> > >   		return ret;
-> > >   	}
-> > > +	/*
-> > > +	 * CPU was successfully started, wait for it to come online or
-> > > +	 * time out.
-> > > +	 */
-> > > +	wait_for_completion_timeout(&cpu_running,
-> > > +				    msecs_to_jiffies(5000));
-> > > +	if (cpu_online(cpu))
-> > > +		return 0;
-> > > +
-> > > +	pr_crit("CPU%u: failed to come online\n", cpu);
-> > >   	secondary_data.task = NULL;
-> > >   	secondary_data.stack = NULL;
-> > >   	__flush_dcache_area(&secondary_data, sizeof(secondary_data));
-> > >   	status = READ_ONCE(secondary_data.status);
-> > > -	if (ret && status) {
-> > > -
-> > > -		if (status == CPU_MMU_OFF)
-> > > -			status = READ_ONCE(__early_cpu_boot_status);
-> > > +	if (status == CPU_MMU_OFF)
-> > > +		status = READ_ONCE(__early_cpu_boot_status);
-> > > -		switch (status & CPU_BOOT_STATUS_MASK) {
-> > > -		default:
-> > > -			pr_err("CPU%u: failed in unknown state : 0x%lx\n",
-> > > -					cpu, status);
-> > > -			cpus_stuck_in_kernel++;
-> > > -			break;
-> > > -		case CPU_KILL_ME:
-> > > -			if (!op_cpu_kill(cpu)) {
-> > > -				pr_crit("CPU%u: died during early boot\n", cpu);
-> > > -				break;
-> > > -			}
-> > > -			pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
-> > > -			/* Fall through */
-> > > -		case CPU_STUCK_IN_KERNEL:
-> > > -			pr_crit("CPU%u: is stuck in kernel\n", cpu);
-> > > -			if (status & CPU_STUCK_REASON_52_BIT_VA)
-> > > -				pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
-> > > -			if (status & CPU_STUCK_REASON_NO_GRAN)
-> > > -				pr_crit("CPU%u: does not support %luK granule \n", cpu, PAGE_SIZE / SZ_1K);
-> > > -			cpus_stuck_in_kernel++;
-> > > +	switch (status & CPU_BOOT_STATUS_MASK) {
-> > > +	default:
-> > > +		pr_err("CPU%u: failed in unknown state : 0x%lx\n",
-> > > +		       cpu, status);
-> > > +		cpus_stuck_in_kernel++;
-> > > +		break;
-> > > +	case CPU_KILL_ME:
-> > > +		if (!op_cpu_kill(cpu)) {
-> > > +			pr_crit("CPU%u: died during early boot\n", cpu);
-> > >   			break;
-> > > -		case CPU_PANIC_KERNEL:
-> > > -			panic("CPU%u detected unsupported configuration\n", cpu);
-> > >   		}
-> > > +		pr_crit("CPU%u: may not have shut down cleanly\n", cpu);
-> > > +		/* Fall through */
-> > > +	case CPU_STUCK_IN_KERNEL:
-> > > +		pr_crit("CPU%u: is stuck in kernel\n", cpu);
-> > > +		if (status & CPU_STUCK_REASON_52_BIT_VA)
-> > > +			pr_crit("CPU%u: does not support 52-bit VAs\n", cpu);
-> > > +		if (status & CPU_STUCK_REASON_NO_GRAN) {
-> > > +			pr_crit("CPU%u: does not support %luK granule\n",
-> > > +				cpu, PAGE_SIZE / SZ_1K);
-> > > +		}
-> > > +		cpus_stuck_in_kernel++;
-> > > +		break;
-> > > +	case CPU_PANIC_KERNEL:
-> > > +		panic("CPU%u detected unsupported configuration\n", cpu);
-> > >   	}
-> > >   	return ret;
-> > > -- 
-> > > 2.23.0
-> > > 
-> > 
-> 
+David / dhildenb
+
