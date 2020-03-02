@@ -2,266 +2,205 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E4C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AA9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29058222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B8B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 19:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="g09F7/at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCBTe2 (ORCPT
+        id S1727631AbgCBTfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 14:34:28 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:54615 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727234AbgCBTe1 (ORCPT
+        Mon, 2 Mar 2020 14:35:39 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:48898 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbgCBTfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:34:27 -0500
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 02 Mar 2020 11:34:26 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 02 Mar 2020 11:34:26 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 75C924B04; Mon,  2 Mar 2020 11:34:26 -0800 (PST)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND v6 1/2] pwm: Convert drivers to use 64-bit period and duty cycle
-Date:   Mon,  2 Mar 2020 11:34:22 -0800
-Message-Id: <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1583177501.git.gurus@codeaurora.org>
-References: <cover.1583177501.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1583177501.git.gurus@codeaurora.org>
-References: <cover.1583177501.git.gurus@codeaurora.org>
+        Mon, 2 Mar 2020 14:35:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583177736; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DGfSMIikOY3kreg6w/PuWqLAcsa2i58iD5RE/ITwXCY=;
+        b=g09F7/at4RhFLxEG/sswSLYFCPUn929KYVnYN8sQRSeEB0Pdtvcon4Ttu3ACgx7WFWbv84
+        ibS5uRHTmcIoVZ7kOPe1LZVUAKR5NxNKUaaDPU7xtMpX7+Z0LUOXn5HOmX4hxHmPV42byW
+        jkOTjhHZ8kYe5bKuVTU7tcx7T8WL3Gg=
+Date:   Mon, 02 Mar 2020 16:35:20 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/1] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Message-Id: <1583177720.3.6@crapouillou.net>
+In-Reply-To: <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
+References: <20200301174636.63446-1-paul@crapouillou.net>
+        <20200301174636.63446-2-paul@crapouillou.net>
+        <CAL_JsqKGzxdMj4_+i4ycKj6ZjiuGMY8F+yBzVPt_b2CLhrcdKg@mail.gmail.com>
+        <1583173481.3.0@crapouillou.net>
+        <CAL_JsqL7b8mwtg3XyNS2fdA4fxaFdUpsfqTPx521pW5xqSPneg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined in the PWM framework structs
-as ints with units of nanoseconds, the maximum time duration that can be
-set is limited to ~2.147 seconds. Redefining them as u64 values will
-enable larger time durations to be set.
 
-As a first step, prepare drivers to handle the switch to u64 period and
-duty_cycle by making the relevant fixes to those drivers that use the
-period and duty_cycle pwm struct members in division operations, viz.
-replacing the division operations with 64-bit division macros as
-appropriate. The actual switch to u64 period and duty_cycle follows as a
-separate patch.
 
-Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-macros:
-- DIV_ROUND_UP_ULL
-- DIV_ROUND_CLOSEST_ULL
-- div_u64
+Le lun., mars 2, 2020 at 13:07, Rob Herring <robh+dt@kernel.org> a=20
+=E9crit :
+> On Mon, Mar 2, 2020 at 12:25 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Hi Rob,
+>>=20
+>>=20
+>>  Le lun., mars 2, 2020 at 11:06, Rob Herring <robh+dt@kernel.org> a
+>>  =E9crit :
+>>  > On Sun, Mar 1, 2020 at 11:47 AM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > wrote:
+>>  >>
+>>  >
+>>  > Well, this flew into linux-next quickly and breaks 'make
+>>  > dt_binding_check'... Please drop, revert or fix quickly.
+>>=20
+>>  For my defense I said to merge "provided Rob acks it" ;)
+>>=20
+>>  >>  Convert the ingenic,tcu.txt file to YAML.
+>>  >>
+>>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  >>  ---
+>>  >>   .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ----------
+>>  >>   .../bindings/timer/ingenic,tcu.yaml           | 235
+>>  >> ++++++++++++++++++
+>>  >>   2 files changed, 235 insertions(+), 138 deletions(-)
+>>  >>   delete mode 100644
+>>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  >>   create mode 100644
+>>  >> Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+>>  >
+>>  >
+>>  >>  diff --git
+>>  >> a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+>>  >> b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+>>  >>  new file mode 100644
+>>  >>  index 000000000000..1ded3b4762bb
+>>  >>  --- /dev/null
+>>  >>  +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+>>  >>  @@ -0,0 +1,235 @@
+>>  >>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>  >>  +%YAML 1.2
+>>  >>  +---
+>>  >>  +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
+>>  >>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  >>  +
+>>  >>  +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree=20
+>> bindings
+>>  >>  +
+>>  >>  +description: |
+>>  >>  +  For a description of the TCU hardware and drivers, have a=20
+>> look at
+>>  >>  +  Documentation/mips/ingenic-tcu.rst.
+>>  >>  +
+>>  >>  +maintainers:
+>>  >>  +  - Paul Cercueil <paul@crapouillou.net>
+>>  >>  +
+>>  >>  +properties:
+>>  >>  +  $nodename:
+>>  >>  +    pattern: "^timer@.*"
+>>  >
+>>  > '.*' is redundant.
+>>  >
+>>  >>  +
+>>  >>  +  "#address-cells":
+>>  >>  +    const: 1
+>>  >>  +
+>>  >>  +  "#size-cells":
+>>  >>  +    const: 1
+>>  >>  +
+>>  >>  +  "#clock-cells":
+>>  >>  +    const: 1
+>>  >>  +
+>>  >>  +  "#interrupt-cells":
+>>  >>  +    const: 1
+>>  >>  +
+>>  >>  +  interrupt-controller: true
+>>  >>  +
+>>  >>  +  ranges: true
+>>  >>  +
+>>  >>  +  compatible:
+>>  >>  +    items:
+>>  >>  +      - enum:
+>>  >>  +        - ingenic,jz4740-tcu
+>>  >>  +        - ingenic,jz4725b-tcu
+>>  >>  +        - ingenic,jz4770-tcu
+>>  >>  +        - ingenic,x1000-tcu
+>>  >>  +      - const: simple-mfd
+>>  >
+>>  > This breaks several examples in dt_binding_check because this=20
+>> schema
+>>  > will be applied to every 'simple-mfd' node. You need a custom=20
+>> select
+>>  > entry that excludes 'simple-mfd'. There should be several=20
+>> examples in
+>>  > tree to copy.
+>>=20
+>>  Why would it be applied to all 'single-mfd' nodes?
+>=20
+> single-mfd?
 
-Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-DIV64_* macros:
-- DIV64_U64_ROUND_CLOSEST
-- div64_u64
+simple-mfd* of course, sorry.
 
-The kbuild test robot helped to improve this patch by catching a couple
-of code sites that had to be adapted.
+> The way the tool decides to apply a schema or not is my matching on
+> any of the compatible strings (or node name if no compatible
+> specified). You can override this with 'select'.
+>=20
+>>  Doesn't what I wrote
+>>  specify that it needs one of ingenic,*-tcu _and_ simple-mfd?
+>=20
+> Yes, but matching is on any of them. You need to add:
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/clk/clk-pwm.c                      | 2 +-
- drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
- drivers/hwmon/pwm-fan.c                    | 2 +-
- drivers/media/rc/ir-rx51.c                 | 3 ++-
- drivers/pwm/pwm-clps711x.c                 | 2 +-
- drivers/pwm/pwm-imx-tpm.c                  | 2 +-
- drivers/pwm/pwm-imx27.c                    | 5 ++---
- drivers/pwm/pwm-sifive.c                   | 2 +-
- drivers/pwm/pwm-sti.c                      | 5 +++--
- drivers/pwm/pwm-stm32-lp.c                 | 2 +-
- drivers/pwm/pwm-sun4i.c                    | 2 +-
- drivers/video/backlight/pwm_bl.c           | 3 ++-
- 12 files changed, 17 insertions(+), 15 deletions(-)
+Alright, will do. Is there a reason why it's done that way? It sounds a=20
+bit counter-intuitive.
 
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-index 87fe0b0e..7b1f7a0 100644
---- a/drivers/clk/clk-pwm.c
-+++ b/drivers/clk/clk-pwm.c
-@@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
- 	}
- 
- 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
--		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-+		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
- 
- 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
- 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index bc14e9c..843cac1 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 
- 	panel->backlight.min = 0; /* 0% */
- 	panel->backlight.max = 100; /* 100% */
--	panel->backlight.level = DIV_ROUND_UP(
-+	panel->backlight.level = DIV_ROUND_UP_ULL(
- 				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
- 				 CRC_PMIC_PWM_PERIOD_NS);
- 	panel->backlight.enabled = panel->backlight.level != 0;
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 42ffd2e..283423a 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -437,7 +437,7 @@ static int pwm_fan_resume(struct device *dev)
- 		return 0;
- 
- 	pwm_get_args(ctx->pwm, &pargs);
--	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
-+	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
- 	ret = pwm_config(ctx->pwm, duty, pargs.period);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 8574eda..9a5dfd7 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
- 	}
- 
- 	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
-+			NSEC_PER_SEC);
- 	pwm_put(pwm);
- 
- 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..ba9500a 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
- }
- 
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index 9145f61..53bf364 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -126,7 +126,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
- 		real_state->duty_cycle = state->duty_cycle;
- 
- 	tmp = (u64)p->mod * real_state->duty_cycle;
--	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
-+	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
- 
- 	real_state->polarity = state->polarity;
- 	real_state->enabled = state->enabled;
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 35a7ac42..b7d38d0 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -208,7 +208,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
- 
-@@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index cc63f9b..62de0bb 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * consecutively
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
--	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
- 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 1508616..5a7f337 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -371,10 +371,11 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 		effective_ticks = clk_get_rate(pc->cpt_clk);
- 
- 		result->period = (high + low) * NSEC_PER_SEC;
--		result->period /= effective_ticks;
-+		result->period = div_u64(result->period, effective_ticks);
- 
- 		result->duty_cycle = high * NSEC_PER_SEC;
--		result->duty_cycle /= effective_ticks;
-+		result->duty_cycle = div_u64(result->duty_cycle,
-+				effective_ticks);
- 
- 		break;
- 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 67fca62..134c146 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 3e3efa6..772fdf4 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -286,7 +286,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
- 	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
- 
- 	if (state->polarity != PWM_POLARITY_NORMAL)
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index efb4efc..3e5dbcf 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		pb->scale = data->max_brightness;
- 	}
- 
--	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-+	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
-+				pb->scale));
- 
- 	props.type = BACKLIGHT_RAW;
- 	props.max_brightness = data->max_brightness;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> select:
+>   properties:
+>     compatible:
+>       contains:
+>         enum:
+>           - ingenic,jz4740-tcu
+>           - ingenic,jz4725b-tcu
+>           - ingenic,jz4770-tcu
+>           - ingenic,x1000-tcu
+>   required:
+>     - compatible
+>=20
+>>  I'm not sure I understand what you mean.
+>>=20
+>>  I did grep for 'single-mfd' in all YAML files in Documentation/ and
+>>  nothing really stands out.
+>=20
+> I guess even without the typo it was harder to find an example than I=20
+> thought.
+>=20
+> Note that I think I'll make the tool exclude 'simple-mfd', but it will
+> take some time for users to update so you still need to fix this.
+
+Alright, thanks for the help.
+
+-Paul
+
+=
 
