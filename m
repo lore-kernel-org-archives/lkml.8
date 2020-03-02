@@ -2,96 +2,114 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C314C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE77C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE50221739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ihIvwAFt"
+	by mail.kernel.org (Postfix) with ESMTP id 4856720656
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCBNxd (ORCPT
+        id S1727430AbgCBNx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:53:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41724 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727406AbgCBNxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:53:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583157210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HhbhIkhXjn/AwJ4ncntCvKScFqYIEEVt6rsSJbYgZY8=;
-        b=ihIvwAFtRED4ISeqobpxiezcwh+ulsWCKT5QzQ+kLZoXxZ7wR2NjKOBszQMjAaFfqsvm4T
-        /uGqSkwIOhBEuCbP7s2Er+sq9mra7ATk0r1OJ+PUyw9KUzkYzpresgng6ZfEfvzsI7EAKm
-        Tbtbof8BVn2CxO1vjS/1DtsY4U6SUag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-LijAYyNSPC-rwnsAlvjscA-1; Mon, 02 Mar 2020 08:53:29 -0500
-X-MC-Unique: LijAYyNSPC-rwnsAlvjscA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DCF1F1005512;
-        Mon,  2 Mar 2020 13:53:27 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-116-114.ams2.redhat.com [10.36.116.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E179B19C4F;
-        Mon,  2 Mar 2020 13:53:24 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 11/11] MAINTAINERS: Add myself as virtio-mem maintainer
-Date:   Mon,  2 Mar 2020 14:49:41 +0100
-Message-Id: <20200302134941.315212-12-david@redhat.com>
-In-Reply-To: <20200302134941.315212-1-david@redhat.com>
-References: <20200302134941.315212-1-david@redhat.com>
+        Mon, 2 Mar 2020 08:53:57 -0500
+Received: from mga11.intel.com ([192.55.52.93]:22884 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgCBNx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:53:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 05:53:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="351544499"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 05:53:54 -0800
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH v3 0/9] usb: typec: Driver for Intel PMC Mux-Agent
+Date:   Mon,  2 Mar 2020 16:53:44 +0300
+Message-Id: <20200302135353.56659-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's make sure patches/bug reports find the right person.
+Hi,
 
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+The statements were ended incorrectly with comma instead of semicolon
+in drivers/usb/cdns3/core.c (PATCH 5/9) as pointed out by Peter. I've
+fixed that in this version. There are no other changes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1636ce4613e3..fc7371c4b7eb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17855,6 +17855,13 @@ S:	Maintained
- F:	drivers/iommu/virtio-iommu.c
- F:	include/uapi/linux/virtio_iommu.h
-=20
-+VIRTIO MEM DRIVER
-+M:	David Hildenbrand <david@redhat.com>
-+L:	virtualization@lists.linux-foundation.org
-+S:	Maintained
-+F:	drivers/virtio/virtio_mem.c
-+F:	include/uapi/linux/virtio_mem.h
-+
- VIRTUAL BOX GUEST DEVICE DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- M:	Arnd Bergmann <arnd@arndb.de>
---=20
-2.24.1
+v2 commit message:
+
+I've unified the driver data handling in all drivers in patch 5/9 as
+requested by Peter, and also now using consistently dev_set_drvdata()
+in patch 4/9 as requested by Chunfeng Yun. Those were the only
+changes in this version.
+
+The original (v1) commit message:
+
+The Intel PMC (Power Management Controller) microcontroller, which is
+available on most SOCs from Intel, has a function called mux-agent.
+The mux-agent, when visible to the operating system, makes it possible
+to control the various USB muxes on the system.
+
+In practice the mux-agent is a device that controls multiple muxes.
+Unfortunately both the USB Type-C Class and the USB Role Class don't
+have proper support for that kind of devices that handle multiple
+muxes, which is why I had to tweak the APIs a bit.
+
+On top of the API changes, and the driver of course, I'm adding a
+header for the Thunderbolt 3 alt mode since the "mux-agent" supports
+it.
+
+thanks,
+
+
+Heikki Krogerus (9):
+  usb: typec: mux: Allow the muxes to be named
+  usb: typec: mux: Add helpers for setting the mux state
+  usb: typec: mux: Allow the mux handles to be requested with fwnode
+  usb: roles: Leave the private driver data pointer to the drivers
+  usb: roles: Provide the switch drivers handle to the switch in the API
+  usb: roles: Allow the role switches to be named
+  device property: Export fwnode_get_name()
+  usb: typec: Add definitions for Thunderbolt 3 Alternate Mode
+  usb: typec: driver for Intel PMC mux control
+
+ drivers/base/property.c                       |   1 +
+ drivers/usb/cdns3/core.c                      |  22 +-
+ drivers/usb/chipidea/core.c                   |  10 +-
+ drivers/usb/dwc3/dwc3-meson-g12a.c            |  10 +-
+ drivers/usb/gadget/udc/renesas_usb3.c         |  26 +-
+ drivers/usb/gadget/udc/tegra-xudc.c           |   8 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |   9 +-
+ drivers/usb/musb/mediatek.c                   |  16 +-
+ drivers/usb/roles/class.c                     |  29 +-
+ .../usb/roles/intel-xhci-usb-role-switch.c    |  26 +-
+ drivers/usb/typec/class.c                     |  10 +-
+ drivers/usb/typec/mux.c                       |  47 +-
+ drivers/usb/typec/mux/Kconfig                 |   9 +
+ drivers/usb/typec/mux/Makefile                |   1 +
+ drivers/usb/typec/mux/intel_pmc_mux.c         | 434 ++++++++++++++++++
+ include/linux/usb/role.h                      |  23 +-
+ include/linux/usb/typec_mux.h                 |  25 +-
+ include/linux/usb/typec_tbt.h                 |  53 +++
+ 18 files changed, 677 insertions(+), 82 deletions(-)
+ create mode 100644 drivers/usb/typec/mux/intel_pmc_mux.c
+ create mode 100644 include/linux/usb/typec_tbt.h
+
+-- 
+2.25.0
 
