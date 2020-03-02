@@ -2,124 +2,78 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3874EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96605C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122B9246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFDE246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCBIYj (ORCPT
+        id S1727364AbgCBIYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:24:39 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:40493 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgCBIYj (ORCPT
+        Mon, 2 Mar 2020 03:24:52 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:55554 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgCBIYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:24:39 -0500
-X-Greylist: delayed 583 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 03:24:38 EST
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="34654534"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 02 Mar 2020 16:14:54 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(2834:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Mon, 02 Mar 2020 16:14:56 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2486:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Mon, 02 Mar 2020 16:14:55 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Peter Hutterer'" <peter.hutterer@who-t.net>,
-        "'Johnny Chuang'" <johnny.chuang.emc@gmail.com>
-Cc:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        "'Jennifer Tsai'" <jennifer.tsai@emc.com.tw>,
-        "'James Chen'" <james.chen@emc.com.tw>,
-        "'Paul Liang'" <paul.liang@emc.com.tw>,
-        "'Jeff Chuang'" <jeff.chuang@emc.com.tw>
-References: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com> <20200227223608.GB1087116@jelly>
-In-Reply-To: <20200227223608.GB1087116@jelly>
-Subject: RE: [PATCH] Input: elants_i2c - Report resolution information for touch major
-Date:   Mon, 2 Mar 2020 16:14:51 +0800
-Message-ID: <007201d5f06a$a5f341c0$f1d9c540$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQKWH33oxoD7nuWwmg1Q/5rISp31bAHeLyTrpqWIE/A=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1lMGYxMjliOS01YzVkLTExZWEtODUyMC03YzVjZjg3NDk0NzhcYW1lLXRlc3RcZTBmMTI5YmItNWM1ZC0xMWVhLTg1MjAtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIyMjc3IiB0PSIxMzIyNzYxMDQ5MTI5NDI1OTkiIGg9Ik9jTEovN3VSbFA2eE5CRjlCK3J2Z2J6WXZvcz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Mon, 2 Mar 2020 03:24:52 -0500
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id 9LQp220075USYZQ06LQpE9; Mon, 02 Mar 2020 09:24:49 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j8gNd-0007XT-4J; Mon, 02 Mar 2020 09:24:49 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j8gNd-0003EV-27; Mon, 02 Mar 2020 09:24:49 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpiolib: Fix inverted check in gpiochip_remove()
+Date:   Mon,  2 Mar 2020 09:24:48 +0100
+Message-Id: <20200302082448.11795-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
-> Sent: Friday, February 28, 2020 6:36 AM
-> To: Johnny Chuang
-> Cc: Dmitry Torokhov; Benjamin Tissoires; linux-kernel@vger.kernel.org;
-> linux-input@vger.kernel.org; Johnny Chuang; Jennifer Tsai; James Chen;
-Paul
-> Liang; Jeff Chuang
-> Subject: Re: [PATCH] Input: elants_i2c - Report resolution information for
-touch
-> major
-> 
-> On Thu, Feb 27, 2020 at 09:13:20AM +0800, Johnny Chuang wrote:
-> > From: Johnny Chuang <johnny.chuang@emc.com.tw>
-> >
-> > This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR event.
-> > This information is needed in showing pressure/width radius.
-> >
-> > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > ---
-> >  drivers/input/touchscreen/elants_i2c.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> b/drivers/input/touchscreen/elants_i2c.c
-> > index 4911799..14c577c 100644
-> > --- a/drivers/input/touchscreen/elants_i2c.c
-> > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > @@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct i2c_client
-> *client,
-> >  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> >  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> > +	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> 
-> official resolution for absinfo is "units per mm", so a value of 3 would
-> mean 3mm, is that correct?
+The optimization to check for requested lines actually optimized for the
+uncomon error case, where one of the GPIO lines is still in use.
+Hence the error message must be printed when the loop is terminated
+early, not when it went through all available GPIO lines.
 
-Correct.
-This resolution (1 unit/mm) is for all elan I2C touchscreen devices, 
-including the touchscreen devices in the future.
-This information is from our firmware members.
+Fixes: 869233f81337bfb3 ("gpiolib: Optimize gpiochip_remove() when check for requested line")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Noticed by review, tested by creating and destroying an otherwise unused
+GPIO aggregator, which triggers:
 
-> 
-> Not that it matters too much, since touch major is already all over the
-> place and needs userspace overrides for every device but it'd be nice to
-at
-> least make this useful out of the box on one device class.
-> 
-> Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
-> 
-> otherwise
-> 
-> Cheers,
->    Peter
-> 
-> >
-> >  	error = input_register_device(ts->input);
-> >  	if (error) {
-> > --
-> > 2.7.4
-> >
+    gpio gpiochip8: REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4e78bdc2739693c3..6180cf84fab7ce5e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1823,7 +1823,7 @@ void gpiochip_remove(struct gpio_chip *chip)
+ 	}
+ 	spin_unlock_irqrestore(&gpio_lock, flags);
+ 
+-	if (i == gdev->ngpio)
++	if (i != gdev->ngpio)
+ 		dev_crit(&gdev->dev,
+ 			 "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED\n");
+ 
+-- 
+2.17.1
 
