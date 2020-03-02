@@ -2,33 +2,32 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C052C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D12C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7113924677
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D0324677
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCBX7m (ORCPT
+        id S1727926AbgCCAAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:59:42 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25524 "EHLO mga02.intel.com"
+        Mon, 2 Mar 2020 19:00:18 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25520 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbgCBX52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:57:28 -0500
+        id S1727413AbgCBX51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 18:57:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 15:57:22 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="243384680"
+   d="scan'208";a="243384656"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:22 -0800
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 15:57:21 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -37,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2 19/66] KVM: VMX: Add helpers to query Intel PT mode
-Date:   Mon,  2 Mar 2020 15:56:22 -0800
-Message-Id: <20200302235709.27467-20-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 11/66] KVM: x86: Drop the explicit @index from do_cpuid_7_mask()
+Date:   Mon,  2 Mar 2020 15:56:14 -0800
+Message-Id: <20200302235709.27467-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
 References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
@@ -50,200 +49,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helpers to query which of the (two) supported PT modes is active.
-The primary motivation is to help document that there is a third PT mode
-(host-only) that's currently not supported by KVM.  As is, it's not
-obvious that PT_MODE_SYSTEM != !PT_MODE_HOST_GUEST and vice versa, e.g.
-that "pt_mode == PT_MODE_SYSTEM" and "pt_mode != PT_MODE_HOST_GUEST" are
-two distinct checks.
+Drop the index param from do_cpuid_7_mask() and instead switch on the
+entry's index, which is guaranteed to be set by do_host_cpuid().
 
 No functional change intended.
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/capabilities.h | 18 ++++++++++++++++++
- arch/x86/kvm/vmx/nested.c       |  2 +-
- arch/x86/kvm/vmx/vmx.c          | 26 +++++++++++++-------------
- arch/x86/kvm/vmx/vmx.h          |  4 ++--
- 4 files changed, 34 insertions(+), 16 deletions(-)
+ arch/x86/kvm/cpuid.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index f486e2606247..80eec8cffbe2 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -354,4 +354,22 @@ static inline bool cpu_has_vmx_intel_pt(void)
- 		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_RTIT_CTL);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index b626893a11d5..fd04f17d1836 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -346,7 +346,7 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
+ 	return 0;
  }
  
-+/*
-+ * Processor Trace can operate in one of three modes:
-+ *  a. system-wide: trace both host/guest and output to host buffer
-+ *  b. host-only:   only trace host and output to host buffer
-+ *  c. host-guest:  trace host and guest simultaneously and output to their
-+ *                  respective buffer
-+ *
-+ * KVM currently only supports (a) and (c).
-+ */
-+static inline bool vmx_pt_mode_is_system(void)
-+{
-+	return pt_mode == PT_MODE_SYSTEM;
-+}
-+static inline bool vmx_pt_mode_is_host_guest(void)
-+{
-+	return pt_mode == PT_MODE_HOST_GUEST;
-+}
-+
- #endif /* __KVM_X86_VMX_CAPS_H */
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 0946122a8d3b..ae84b3c66e0d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4602,7 +4602,7 @@ static int enter_vmx_operation(struct kvm_vcpu *vcpu)
- 	vmx->nested.vmcs02_initialized = false;
- 	vmx->nested.vmxon = true;
+-static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
++static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ {
+ 	unsigned f_invpcid = kvm_x86_ops->invpcid_supported() ? F(INVPCID) : 0;
+ 	unsigned f_mpx = kvm_mpx_supported() ? F(MPX) : 0;
+@@ -380,7 +380,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 	const u32 kvm_cpuid_7_1_eax_x86_features =
+ 		F(AVX512_BF16);
  
--	if (pt_mode == PT_MODE_HOST_GUEST) {
-+	if (vmx_pt_mode_is_host_guest()) {
- 		vmx->pt_desc.guest.ctl = 0;
- 		pt_update_intercept_for_msr(vmx);
+-	switch (index) {
++	switch (entry->index) {
+ 	case 0:
+ 		entry->eax = min(entry->eax, 1u);
+ 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+@@ -573,7 +573,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	case 7: {
+ 		int i;
+ 
+-		do_cpuid_7_mask(entry, 0);
++		do_cpuid_7_mask(entry);
+ 
+ 		for (i = 1; i <= entry->eax; i++) {
+ 			if (*nent >= maxnent)
+@@ -582,7 +582,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 			do_host_cpuid(&entry[i], function, i);
+ 			++*nent;
+ 
+-			do_cpuid_7_mask(&entry[i], i);
++			do_cpuid_7_mask(&entry[i]);
+ 		}
+ 		break;
  	}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a04017bdae05..2dcf27e3a7a6 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1059,7 +1059,7 @@ static unsigned long segment_base(u16 selector)
- 
- static inline bool pt_can_write_msr(struct vcpu_vmx *vmx)
- {
--	return (pt_mode == PT_MODE_HOST_GUEST) &&
-+	return vmx_pt_mode_is_host_guest() &&
- 	       !(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
- }
- 
-@@ -1093,7 +1093,7 @@ static inline void pt_save_msr(struct pt_ctx *ctx, u32 addr_range)
- 
- static void pt_guest_enter(struct vcpu_vmx *vmx)
- {
--	if (pt_mode == PT_MODE_SYSTEM)
-+	if (vmx_pt_mode_is_system())
- 		return;
- 
- 	/*
-@@ -1110,7 +1110,7 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
- 
- static void pt_guest_exit(struct vcpu_vmx *vmx)
- {
--	if (pt_mode == PT_MODE_SYSTEM)
-+	if (vmx_pt_mode_is_system())
- 		return;
- 
- 	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
-@@ -1904,24 +1904,24 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 							&msr_info->data);
- 		break;
- 	case MSR_IA32_RTIT_CTL:
--		if (pt_mode != PT_MODE_HOST_GUEST)
-+		if (!vmx_pt_mode_is_host_guest())
- 			return 1;
- 		msr_info->data = vmx->pt_desc.guest.ctl;
- 		break;
- 	case MSR_IA32_RTIT_STATUS:
--		if (pt_mode != PT_MODE_HOST_GUEST)
-+		if (!vmx_pt_mode_is_host_guest())
- 			return 1;
- 		msr_info->data = vmx->pt_desc.guest.status;
- 		break;
- 	case MSR_IA32_RTIT_CR3_MATCH:
--		if ((pt_mode != PT_MODE_HOST_GUEST) ||
-+		if (!vmx_pt_mode_is_host_guest() ||
- 			!intel_pt_validate_cap(vmx->pt_desc.caps,
- 						PT_CAP_cr3_filtering))
- 			return 1;
- 		msr_info->data = vmx->pt_desc.guest.cr3_match;
- 		break;
- 	case MSR_IA32_RTIT_OUTPUT_BASE:
--		if ((pt_mode != PT_MODE_HOST_GUEST) ||
-+		if (!vmx_pt_mode_is_host_guest() ||
- 			(!intel_pt_validate_cap(vmx->pt_desc.caps,
- 					PT_CAP_topa_output) &&
- 			 !intel_pt_validate_cap(vmx->pt_desc.caps,
-@@ -1930,7 +1930,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		msr_info->data = vmx->pt_desc.guest.output_base;
- 		break;
- 	case MSR_IA32_RTIT_OUTPUT_MASK:
--		if ((pt_mode != PT_MODE_HOST_GUEST) ||
-+		if (!vmx_pt_mode_is_host_guest() ||
- 			(!intel_pt_validate_cap(vmx->pt_desc.caps,
- 					PT_CAP_topa_output) &&
- 			 !intel_pt_validate_cap(vmx->pt_desc.caps,
-@@ -1940,7 +1940,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		break;
- 	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
- 		index = msr_info->index - MSR_IA32_RTIT_ADDR0_A;
--		if ((pt_mode != PT_MODE_HOST_GUEST) ||
-+		if (!vmx_pt_mode_is_host_guest() ||
- 			(index >= 2 * intel_pt_validate_cap(vmx->pt_desc.caps,
- 					PT_CAP_num_address_ranges)))
- 			return 1;
-@@ -2146,7 +2146,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		return vmx_set_vmx_msr(vcpu, msr_index, data);
- 	case MSR_IA32_RTIT_CTL:
--		if ((pt_mode != PT_MODE_HOST_GUEST) ||
-+		if (!vmx_pt_mode_is_host_guest() ||
- 			vmx_rtit_ctl_check(vcpu, data) ||
- 			vmx->nested.vmxon)
- 			return 1;
-@@ -4024,7 +4024,7 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
- 
- 	u32 exec_control = vmcs_config.cpu_based_2nd_exec_ctrl;
- 
--	if (pt_mode == PT_MODE_SYSTEM)
-+	if (vmx_pt_mode_is_system())
- 		exec_control &= ~(SECONDARY_EXEC_PT_USE_GPA | SECONDARY_EXEC_PT_CONCEAL_VMX);
- 	if (!cpu_need_virtualize_apic_accesses(vcpu))
- 		exec_control &= ~SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
-@@ -4265,7 +4265,7 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 	if (cpu_has_vmx_encls_vmexit())
- 		vmcs_write64(ENCLS_EXITING_BITMAP, -1ull);
- 
--	if (pt_mode == PT_MODE_HOST_GUEST) {
-+	if (vmx_pt_mode_is_host_guest()) {
- 		memset(&vmx->pt_desc, 0, sizeof(vmx->pt_desc));
- 		/* Bit[6~0] are forced to 1, writes are ignored. */
- 		vmx->pt_desc.guest.output_mask = 0x7F;
-@@ -6314,7 +6314,7 @@ static bool vmx_has_emulated_msr(int index)
- 
- static bool vmx_pt_supported(void)
- {
--	return pt_mode == PT_MODE_HOST_GUEST;
-+	return vmx_pt_mode_is_host_guest();
- }
- 
- static void vmx_recover_nmi_blocking(struct vcpu_vmx *vmx)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index e64da06c7009..9a51a3a77233 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -452,7 +452,7 @@ static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
- static inline u32 vmx_vmentry_ctrl(void)
- {
- 	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
--	if (pt_mode == PT_MODE_SYSTEM)
-+	if (vmx_pt_mode_is_system())
- 		vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
- 				  VM_ENTRY_LOAD_IA32_RTIT_CTL);
- 	/* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
-@@ -463,7 +463,7 @@ static inline u32 vmx_vmentry_ctrl(void)
- static inline u32 vmx_vmexit_ctrl(void)
- {
- 	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
--	if (pt_mode == PT_MODE_SYSTEM)
-+	if (vmx_pt_mode_is_system())
- 		vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
- 				 VM_EXIT_CLEAR_IA32_RTIT_CTL);
- 	/* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
 -- 
 2.24.1
 
