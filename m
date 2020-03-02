@@ -2,198 +2,288 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DB1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A573BC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D522B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MBl9lRa2"
+	by mail.kernel.org (Postfix) with ESMTP id 6263B214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 22:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583186842;
+	bh=C2LcAa63Yzz+d2MGp+XhzHgCKTSvm7/rhgMSB/wWqbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KiK2iL9uf/1ds1sZVCTm8YPK7r+Se+VweaYpxPPwzdU2eajmAFItLhSX3Om+HsTZ/
+	 m+rN9xs+4ZI9+XWES+sbersqoXzCqsQcP9b3+HSf5PCf040dFSc67imHbrHBX2fXEB
+	 bhcUMGtXU9uSfb/+wPrvkgj5JC2TUppcxfyu+w9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCBWBF (ORCPT
+        id S1726783AbgCBWHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 17:01:05 -0500
-Received: from gateway30.websitewelcome.com ([192.185.179.30]:43925 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgCBWBE (ORCPT
+        Mon, 2 Mar 2020 17:07:21 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36124 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCBWHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 17:01:04 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 49BA6451EE8
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 14:02:43 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8rH1jjnu3AGTX8rH1js9Z3; Mon, 02 Mar 2020 14:02:43 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NryDNxu/ODoeBsi1LY9dVerLlUdhHrWu4vysD9oZ7G0=; b=MBl9lRa2uQdQRhFCMyAYyQi7Eu
-        nnvWFpcQylvlPU55gp9C1kURKOBDzpVGjkuh0XLZ/BWjLcBbbs4WDMhqaA1Jtv+CVdwoDQ94ZIPsb
-        8LJx5Vaz5NTeknNadIfgzrrme1o+1i6gpiGjCKtKCBMT8CkUk+fzq7yjFEJqUAKjf7cltIszsICfT
-        xXShumusMdWQiwl02Z2/ndc9TaKK1jlUsFSzYBYsOvr9f1SNeV+hG7D2qcrzQIfyERqG9K17/uY5J
-        qgQYyrIuJvVh5k/RDDJZLiZV9TD9Mx4fWn7EA0FAtx9U2zH0ZRsubRmSJULpN/iT5v7zMLAo3wAa+
-        CKF7lQ8A==;
-Received: from [201.166.169.19] (port=30074 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8rH0-003xYk-7z; Mon, 02 Mar 2020 14:02:42 -0600
-Subject: Re: [PATCH][next] sunrpc: Replace zero-length array with
- flexible-array member
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200228132323.GA20181@embeddedor>
- <20200302195829.GD1149@fieldses.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ae7a3879-3344-b50e-6187-3ee898026ec5@embeddedor.com>
-Date:   Mon, 2 Mar 2020 14:05:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 17:07:21 -0500
+Received: by mail-oi1-f196.google.com with SMTP id t24so905972oij.3;
+        Mon, 02 Mar 2020 14:07:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gaUz4RmK015uYG8BySpYbmsbCNuhkAc0ZAKHDWN8k64=;
+        b=gSqRy9dfKLL/4+a3ER5b0kwLvJrdsLWj8C27jZ8f6IeoifVGNN6IxQZpo5NcJ7Nabo
+         qy2qcKKiMIQr2WjIkLaiTFf5DeuKUM/sT6BTy4FQAvjTPDpIZsrPs03Xa+0fUmjRDJDe
+         s2pnQFQ98NLI8w2pAnqCZNjYqTz0MTmSfTMmF9wj9cRdsTG6i6MwcEOIx03p6huUZtdr
+         PgsizelI4flFHktqwmjZNYxU88hxFEzlaU7mmH4uEH7hnr8mt/hBo+CM42Cknaw5B0bs
+         odFQrPWywsAAuR2qXkcdijnzS0Cb6ZFuuzytlUfT5gTdokfPgBBunCH54C6SIL+eZf3O
+         naBA==
+X-Gm-Message-State: ANhLgQ1AZkiQQnrRrqvM9tlAPNp3rOkCJc/LY1uHmTzbbs5nVqJ40BeO
+        VxEtTN9FA93u3DojCefSsg==
+X-Google-Smtp-Source: ADFU+vvUuYVypGT7Of+XmcvliyS4jcdOlyo88WbR4BiyU6iXmlR36utGbseh6RZ+0ug7eW8zPn/lWA==
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr358069oif.131.1583186839487;
+        Mon, 02 Mar 2020 14:07:19 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a14sm7066619otr.54.2020.03.02.14.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 14:07:18 -0800 (PST)
+Received: (nullmailer pid 15846 invoked by uid 1000);
+        Mon, 02 Mar 2020 22:07:17 -0000
+Date:   Mon, 2 Mar 2020 16:07:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 2/9] dt_bindings: ROHM BD99954 Charger
+Message-ID: <20200302220717.GA6981@bogus>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <7aa7f2646077228924d596edbc4d076a787d9312.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302195829.GD1149@fieldses.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.169.19
-X-Source-L: No
-X-Exim-ID: 1j8rH0-003xYk-7z
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.166.169.19]:30074
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7aa7f2646077228924d596edbc4d076a787d9312.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/2/20 13:58, J. Bruce Fields wrote:
-> On Fri, Feb 28, 2020 at 07:23:23AM -0600, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
+On Tue, Feb 25, 2020 at 10:52:32AM +0200, Matti Vaittinen wrote:
+> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+> secondary battery. Intended to be used in space-constraint equipment such
+> as Low profile Notebook PC, Tablets and other applications. BD99954
+> provides a Dual-source Battery Charger, two port BC1.2 detection and a
+> Battery Monitor.
 > 
-> I don't understand the quoted sentences at all.  But I assume you're
-> telling me that sizeof(struct svc_deferred_req) won't be changed by this
-> patch, so, good, applied.  Thanks!
+> Document the DT bindings for BD99954
 > 
-
-Correct! :)
-
-Thanks
---
-Gustavo
-
-> --b.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 > 
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  include/linux/sunrpc/svc.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
->> index 1afe38eb33f7..7f0a83451bc0 100644
->> --- a/include/linux/sunrpc/svc.h
->> +++ b/include/linux/sunrpc/svc.h
->> @@ -380,7 +380,7 @@ struct svc_deferred_req {
->>  	struct cache_deferred_req handle;
->>  	size_t			xprt_hlen;
->>  	int			argslen;
->> -	__be32			args[0];
->> +	__be32			args[];
->>  };
->>  
->>  struct svc_process_info {
->> -- 
->> 2.25.0
+> Changes from rfc-v3:
+>   - uncomment multipleOf
+>   - add address and size cells properties to example I2C node
+> 
+>  .../bindings/power/supply/rohm,bd9995x.yaml   | 155 ++++++++++++++++++
+>  1 file changed, 155 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+> new file mode 100644
+> index 000000000000..547403773ec5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+> @@ -0,0 +1,155 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/rohm,bd9995x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ROHM BD99954 Battery charger driver
+
+Bindings are for h/w devices, not drivers.
+
+> +
+> +maintainers:
+> +  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> +  - Markus Laine <markus.laine@fi.rohmeurope.com>
+> +  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+> +
+> +description: |
+> +  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+> +  secondary battery intended to be used in space-constraint equipment such
+> +  as Low profile Notebook PC, Tablets and other applications. BD99954
+> +  provides a Dual-source Battery Charger, two port BC1.2 detection and a
+> +  Battery Monitor.
+> +
+> +
+> +properties:
+> +  compatible:
+> +    const: rohm,bd9995x-charger
+
+You can drop '-charger' if the whole chip is a charger IC. If it is not, 
+then your example is wrong.
+
+You use BD99954 elsewhere, use that here too. We don't do wildcards in 
+compatible strings.
+
+> +#
+> +#    The battery charging profile of BD99954.
+> +#
+> +#    Curve (1) represents charging current.
+> +#    Curve (2) represents battery voltage.
+> +#
+> +#    The BD99954 data sheet divides charging to three phases.
+> +#    a) Trickle-charge with constant current (8).
+> +#    b) pre-charge with constant current (6)
+> +#    c) fast-charge with:
+> +#       First a constant current (5) phase (CC)
+> +#       Then constant voltage (CV) phase (after the battery voltage has reached
+> +#       target level - until charging current has dropped to termination
+> +#       level (7)
+> +#
+> +#     V ^                                                        ^ I
+> +#       .                                                        .
+> +#       .                                                        .
+> +# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
+> +#       .                            /                           .
+> +#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
+> +#       .                     +    /  +                          .
+> +#       .                     +   -   --                         .
+> +#       .                     +  -     +                         .
+> +#       .                     +.-      -:                        .
+> +#       .                    .+         +`                       .
+> +#       .                  .- +       | `/                       .
+> +#       .               .."   +          .:                      .
+> +#       .             -"      +           --                     .
+> +#       .    (2)  ..."        +       |    :-                    .
+> +#       .    ...""            +             -:                   .
+> +# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
+> +#       .             +                       `:.                .
+> +#       .             +               |         -:               .
+> +#       .             +                           -:             .
+> +#       .             +                             ..           .
+> +#       .   (1)       +               |               "+++- - - -.- - (7)
+> +#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
+> +#       .                                                +       -
+> +#       -------------------------------------------------+++++++++-->
+> +#       |             |       |   CC   |      CV         |
+> +#       | --trickle-- | -pre- | ---------fast----------- |
+> +#
+> +#   The charger uses the following battery properties
+> +# - trickle-charge-current-microamp:
+> +#     Current used at trickle-charge phase (8 in above chart)
+> +#     minimum: 64000
+> +#     maximum: 1024000
+> +#     multipleOf: 64000
+
+Why is all of this commented out still?
+
+> +# - precharge-current-microamp:
+> +#     Current used at pre-charge phase (6 in above chart)
+> +#     minimum: 64000
+> +#     maximum: 1024000
+> +#     multipleOf: 64000
+> +# - constant-charge-current-max-microamp
+> +#     Current used at fast charge constant current phase (5 in above chart)
+> +#     minimum: 64000
+> +#     maximum: 1024000
+> +#     multipleOf: 64000
+> +# - constant-charge-voltage-max-microvolt
+> +#     The constant voltage used in fast charging phase (4 in above chart)
+> +#     minimum: 2560000
+> +#     maximum: 19200000
+> +#     multipleOf: 16000
+> +# - precharge-upper-limit-microvolt
+> +#     charging mode is changed from trickle charging to pre-charging
+> +#     when battery voltage exceeds this limit voltage (3 in above chart)
+> +#     minimum: 2048000
+> +#     maximum: 19200000
+> +#     multipleOf: 64000
+> +# - re-charge-voltage-microvolt
+> +#     minimum: 2560000
+> +#     maximum: 19200000
+> +#     multipleOf: 16000
+> +#     re-charging is automatically started when battry has been discharging
+> +#     to the point where the battery voltage drops below this limit
+> +# - over-voltage-threshold-microvolt
+> +#     battery is expected to be faulty if battery voltage exceeds this limit.
+> +#     Charger will then enter to a "battery faulty" -state
+> +#     minimum: 2560000
+> +#     maximum: 19200000
+> +#     multipleOf: 16000
+> +# - charge-term-current-microamp
+> +#     minimum: 0
+> +#     maximum: 1024000
+> +#     multipleOf: 64000
+> +#     a charge cycle terminates when the battery voltage is above recharge
+> +#     threshold, and the current is below this setting (7 in above chart)
+> +#   See also Documentation/devicetree/bindings/power/supply/battery.txt
+> +
+> +  monitored-battery:
+> +    description:
+> +      phandle of battery characteristics devicetree node
+> +
+> +  rohm,vsys-regulation-microvolt:
+> +    description: system specific lower limit for system voltage.
+> +    minimum: 2560000
+> +    maximum: 19200000
+> +    multipleOf: 64000
+> +
+> +  rohm,vbus-input-current-limit-microamp:
+> +    description: system specific VBUS input current limit (in microamps).
+> +    minimum: 32000
+> +    maximum: 16352000
+> +    multipleOf: 32000
+> +
+> +  rohm,vcc-input-current-limit-microamp:
+> +    description: system specific VCC/VACP input current limit (in microamps).
+> +    minimum: 32000
+> +    maximum: 16352000
+> +    multipleOf: 32000
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        charger@9 {
+> +            compatible = "rohm,bd9995x-charger";
+> +            monitored-battery = <&battery>;
+> +            reg = <0x9>;
+> +            interrupt-parent = <&gpio1>;
+> +            interrupts = <29 8>;
+> +            rohm,vsys-regulation-microvolt = <8960000>;
+> +            rohm,vbus-input-current-limit-microamp = <1472000>;
+> +            rohm,vcc-input-current-limit-microamp = <1472000>;
+> +        };
+> +    };
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+> 
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =] 
