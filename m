@@ -2,118 +2,84 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A72C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289C0214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583149518;
-	bh=vIoBeIWjUNLTuoGcAXMCEry0YLOFGilpxKVJx7rdzZs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GJOulaqaXG37uqWLJkkKAUxXJAJw/EwHm5g8kEDM/go9SO0iWgUtyWx+34UC9DhLn
-	 HQ2tycXkmbR5Bvh//1/akR9KFb+xen81S4GcYE9zKN0txn00YjjzIPkrEG63E/NLW5
-	 glfVDWs2hPffjqhTZscxWIJJEdBX4Jkm8099RKRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6B4842086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="flXngT8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgCBLpO convert rfc822-to-8bit (ORCPT
+        id S1727538AbgCBLv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:45:14 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41910 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgCBLpN (ORCPT
+        Mon, 2 Mar 2020 06:51:59 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35065 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgCBLv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:45:13 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so9946699oie.8;
-        Mon, 02 Mar 2020 03:45:13 -0800 (PST)
+        Mon, 2 Mar 2020 06:51:59 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r7so12214063wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:51:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=/rHHl6KiQFstCbJm9Q4e8qxVTuasj3sB26DLZAjgwA0=;
+        b=flXngT8rwKOxE5BOh/O+vL0l6yqTuAsuCvysZSvRb3FKN8FZWnaXjVnUS/DOjMcn/Y
+         4eTchIL2gM+FUZAc6D0uA2Wpvj9M/YpKCRJepV++nwOB8Z2WtM1L2UVvwfrYX7DkVJaK
+         sMTSftsb0Qn3ncNHw6VQDYbZgQQKuDsocuv8vfSebWtaiBlmnu4Ixcuj+t9gaxtO4KD+
+         69814S+OhRkjFIvJnVVjnXpEVUHqbDboHUd+hTZcpG/NiRTnXwoRU3tpf9uyEOua0/Yg
+         tA51r/6uHH4OlcwlTANqoTzuIW2Lnyc1ed0w54wAqmeAvHXsgDEtHRdoG3fA4ya6xzPv
+         Mrkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SLNYhHV8VgjuhrZ6PkGrsfgyd81HsPtycIyiuh3CoLI=;
-        b=qENEVz8ucXvymnHgkfj+OlQhRD8RsxUadDyJjGTJEth/6yrV8vPp5nFarAG/HC+AAp
-         MQn4+BKUrWj/4HurMKjV0l7Gha8LRsWf5rTHn/763dkOR4ZsesPSEIvKZ0iL4OkRklHC
-         hDhuxHo9uSjcuNs/aH40v4J22tDbBqB2f22Y/Mg6zUcUCeyOOdoe+ZpPvG9nw19q+4Us
-         8D9zCZnysUwtNJIT+GmG11fICAzMl9t8AFEn9OGRnPhDsUV7QLWQ/DwaE0Bcq5RaoaWi
-         6TX1s3tMlpUQiZdxg7mRtJ5MV7uAWlw1N0jqc0Q9X0oxixriwXEUNJHBoORTX2JL49KE
-         wl8Q==
-X-Gm-Message-State: APjAAAWHVrzvly8KAGnhapmyoyevWgIem1sRBTRel9V/XJ6Y1xBHtZoE
-        Fbd/bJmCweKkCQe+0KRECJ0yDcmmnmp/NKbHuww=
-X-Google-Smtp-Source: APXvYqw52kt1OueUejBSTej59FJzkSRmsyOjRvbmPvah+zgjVX4FkHL5Pr4NN28Le28iXSOTo5WdzOdiIxXYm+925zU=
-X-Received: by 2002:aca:ebcf:: with SMTP id j198mr9618581oih.115.1583149512878;
- Mon, 02 Mar 2020 03:45:12 -0800 (PST)
-MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
- <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com> <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Mar 2020 12:45:01 +0100
-Message-ID: <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/rHHl6KiQFstCbJm9Q4e8qxVTuasj3sB26DLZAjgwA0=;
+        b=NGKLA6awEWU90rG04fnp4v5TUM7uyUbUYjVue520m+rXAsFnyawJWMOxChWFM7z2LP
+         H8i3Z9h0YP+GdOoSWts0+JFBkVjJOI4NqN4AIbILvxhljDFIMqti5F1OOsh/udeiYy0d
+         8ycHDZydU/Cn/OyJlR4XHcPN+z0JFPHTY3luzb1ns/WuVepGBn2649hYVOxqZdg3Cm9S
+         f/rtJi2ZhafXlexjF4nZ9J4tmJDXOOPoQcvxecZhctfjba4g1PUbOhmgqTD/SZe0ruew
+         OMncv0CYKyLG37s0mxGEVgxNJZyNZGEtZv6ZKqiHqGH/+FmPbxF+BoDwYb3lRhY1VSxM
+         kaGQ==
+X-Gm-Message-State: APjAAAVVQ9MNl5mDNgpTAMLL8Bc4PAzqDVjCE5Cua/ZbLwUb87yNZMEd
+        3+yW54YAqFswJ3e1xD/LmhUl0Q==
+X-Google-Smtp-Source: APXvYqzOtVclswSZyIGBO1O3Bre1Sv8RV3Hy5Yj/o+23zB0EGZ5TSdI7NZOfUNuDS4YtUDwvWO9dTw==
+X-Received: by 2002:a5d:4fc9:: with SMTP id h9mr21894695wrw.400.1583149917331;
+        Mon, 02 Mar 2020 03:51:57 -0800 (PST)
+Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
+        by smtp.gmail.com with ESMTPSA id f17sm16840364wrj.28.2020.03.02.03.51.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 02 Mar 2020 03:51:56 -0800 (PST)
+From:   Yuri Benditovich <yuri.benditovich@daynix.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     yan@daynix.com, virtio-dev@lists.oasis-open.org
+Subject: [PATCH v4 0/3] virtio-net: introduce features defined in the spec
+Date:   Mon,  2 Mar 2020 13:50:00 +0200
+Message-Id: <20200302115003.14877-1-yuri.benditovich@daynix.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 11:38 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
-> >
-> > Daniel Drake <drake@endlessm.com> 於 2020年2月28日 週五 下午5:43寫道：
-> > >
-> > > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > > The purpose of this series of update of the ACPI EC driver is to make its
-> > > > initialization more straightforward.
-> > > >
-> > > > They fix a couple of issues, clean up some things, remove redundant code etc.
-> > > >
-> > > > Please refer to the changelogs of individual patches for details.
-> > > >
-> > > > For easier access, the series is available in the git branch at
-> > > >
-> > > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> > > >  acpi-ec-work
-> > > >
-> > > > on top of 5.6-rc3.
-> > >
-> > > Jian-Hong, can you please test this on Asus UX434DA?
-> > > Check if the screen brightness hotkeys are still working after these changes.
-> >
-> > Hi Rafael,
-> >
-> > Thanks for your patches, but we found an issue:
-> > The laptops like ASUS UX434DA's screen brightness hotkeys work before
-> > this patch series.  However, the hotkeys are failed with the patch
-> > "ACPI: EC: Unify handling of event handler installation failures".
->
-> So I have modified the series to avoid the change that can possibly break this.
->
-> Can you please pull the new series from
->
->  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->  acpi-ec-work
->
-> (same branch) and retest?
+This series introduce virtio-net features VIRTIO_NET_F_RSC_EXT,
+VIRTIO_NET_F_RSS and VIRTIO_NET_F_HASH_REPORT.
 
-Note that the current top-most commit in that branch is
+Changes from v3: reformatted structure in patch 1
 
-0957d98f50da ACPI: EC: Consolidate event handler installation code
+Yuri Benditovich (3):
+  virtio-net: Introduce extended RSC feature
+  virtio-net: Introduce RSS receive steering feature
+  virtio-net: Introduce hash report feature
 
+ include/uapi/linux/virtio_net.h | 102 ++++++++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 4 deletions(-)
 
+-- 
+2.17.1
 
->
-> I'll post the updated patches later this week, but it would be good to
-> try them on now if possible.
->
-> Thanks!
