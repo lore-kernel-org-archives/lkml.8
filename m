@@ -2,108 +2,94 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E30C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BA5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA8B2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F3E2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xoS0LtVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCBR6z (ORCPT
+        id S1727417AbgCBSAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:58:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19170 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgCBR6z (ORCPT
+        Mon, 2 Mar 2020 13:00:02 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34504 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBSAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:58:55 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022HpmZb021174
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 12:58:54 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbf2fg7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 12:58:54 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Mon, 2 Mar 2020 17:58:51 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 17:58:43 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022HwfGx50790480
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 17:58:42 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1D094C044;
-        Mon,  2 Mar 2020 17:58:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC4A84C04A;
-        Mon,  2 Mar 2020 17:58:40 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.49.157])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 17:58:40 +0000 (GMT)
-Subject: Re: [PATCH v3 15/27] powerpc/powernv/pmem: Add support for near
- storage commands
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-16-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Mon, 2 Mar 2020 18:58:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 13:00:02 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022Hs4BF082955;
+        Mon, 2 Mar 2020 17:59:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=YRsOs8UtvLJRJRm9CbEjtxPq7z+8aNBpSFEMh7HhU+Q=;
+ b=xoS0LtVWKHjtLcx/X5V8doFbcySP9BPSNiUSRiIqqsN5mD7k7Jto1rdYiy//BqwtTa4M
+ AMVtatFrmSDdji2QZIEBaP2WwLG1pWQfm5sP81Y+H0M8LAVWu2pz7huH30tnfLna819O
+ g4xNIWmMgHf7l7yACtw0Yr48miiAvdUQi9g1eepCCpRp/RTODhuVMwn+Q7lgDFYzgODk
+ 6FYb/mfEmq/L2d5/yoLACFrKeJGTMZV3fRpHFlb/3co01G3mUxA1mOcNiAYRQckHVUWC
+ gg0OY1Wmao3EUQnC8h3hJdAxtQPuzrb4ZPZtqYIyBJ9NWg0JcIj7kBLi8xRw4TpMh5/n ig== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yffwqhbet-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 17:59:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 022HqbJf062058;
+        Mon, 2 Mar 2020 17:59:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2yg1rg2xpn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 02 Mar 2020 17:59:47 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 022Hxk0k095166;
+        Mon, 2 Mar 2020 17:59:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2yg1rg2xmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 17:59:46 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 022HxiAu028691;
+        Mon, 2 Mar 2020 17:59:44 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 02 Mar 2020 09:59:44 -0800
+Subject: Re: general protection fault in rds_ib_add_one
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        syzkaller-bugs@googlegroups.com,
+        Andy Grover <andy.grover@oracle.com>
+References: <20200224103913.2776-1-hdanton@sina.com>
+ <20200225044734.14680-1-hdanton@sina.com>
+ <b35981ca-f565-0169-5f99-35d67828d0b7@oracle.com>
+ <E8CFF16A-4C5C-46B8-9F6E-8406765591A7@oracle.com>
+ <20200302025120.13936-1-hdanton@sina.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <133f282f-8e13-0452-20d5-e06fdce3809c@oracle.com>
+Date:   Mon, 2 Mar 2020 09:59:42 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-16-alastair@au1.ibm.com>
+In-Reply-To: <20200302025120.13936-1-hdanton@sina.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030217-0008-0000-0000-000003588719
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030217-0009-0000-0000-00004A79B3A6
-Message-Id: <9e40ad40-6fa8-0fd2-a53a-8a3029a3639c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_06:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003020118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -111,154 +97,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 3/1/20 6:51 PM, Hillf Danton wrote:
 > 
-> Similar to the previous patch, this adds support for near storage commands.
+> On Sun, 1 Mar 2020 11:55:25 -0800 Santosh Shilimkar wrote:
+>>
+>> On 3/1/20 9:46 AM, Håkon Bugge wrote:
+>>>
+>>> I would strongly advice this fix to be applied to the define itself,
+>>> so the fix will be made for all 4 calls as well. Aka:
+>>>
+>>> #define ibdev_to_node(ibdev) (ibdev)->dev.parent ? dev_to_node((ibdev)->dev.parent) : NUMA_NO_NODE
+>>>
+>> Indeed.
+>>
+>> Hillf, Can you please spin V2 with it ?
+>>
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---8<---
+> Subject: [PATCH v2] net/rds: fix gpf in rds_ib_add_one
+> From: Hillf Danton <hdanton@sina.com>
+> 
+> The devoted syzbot reported a gpf.
+> 
+> general protection fault, probably for non-canonical address 0xdffffc0000000086: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000430-0x0000000000000437]
+> CPU: 0 PID: 8852 Comm: syz-executor043 Not tainted 5.6.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:dev_to_node include/linux/device.h:663 [inline]
+> RIP: 0010:rds_ib_add_one+0x81/0xe50 net/rds/ib.c:140
+> Code: b7 a8 06 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89 f7 e8 0e e4 1d fa bb 30 04 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 8a 04 28 84 c0 0f 85 f0 0a 00 00 8b 1b 48 c7 c0 28 0c 09 89 48
+> RSP: 0018:ffffc90003087298 EFLAGS: 00010202
+> RAX: 0000000000000086 RBX: 0000000000000430 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000001
+> RBP: ffffc900030872f0 R08: ffffffff87964c3c R09: ffffed1014fd109c
+> R10: ffffed1014fd109c R11: 0000000000000000 R12: 0000000000000000
+> R13: dffffc0000000000 R14: ffff8880a7e886a8 R15: ffff8880a7e88000
+> FS:  0000000000c3d880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f0318ed0000 CR3: 00000000a3167000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>    add_client_context+0x482/0x660 drivers/infiniband/core/device.c:681
+>    enable_device_and_get+0x15b/0x370 drivers/infiniband/core/device.c:1316
+>    ib_register_device+0x124d/0x15b0 drivers/infiniband/core/device.c:1382
+>    rxe_register_device+0x3f6/0x530 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
+>    rxe_add+0x1373/0x14f0 drivers/infiniband/sw/rxe/rxe.c:302
+>    rxe_net_add+0x79/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:539
+>    rxe_newlink+0x31/0x90 drivers/infiniband/sw/rxe/rxe.c:318
+>    nldev_newlink+0x403/0x4a0 drivers/infiniband/core/nldev.c:1538
+>    rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+>    rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+>    rdma_nl_rcv+0x701/0xa20 drivers/infiniband/core/netlink.c:259
+>    netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>    netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
+>    netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
+>    sock_sendmsg_nosec net/socket.c:652 [inline]
+>    sock_sendmsg net/socket.c:672 [inline]
+>    ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+>    ___sys_sendmsg net/socket.c:2397 [inline]
+>    __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
+>    __do_sys_sendmsg net/socket.c:2439 [inline]
+>    __se_sys_sendmsg net/socket.c:2437 [inline]
+>    __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+>    do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> 
+> It's fixed by falling back to NUMA_NO_NODE if needed while setting up
+> device at some cost of runtime dip in performance.
+> 
+> Reported-by: syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>
+> Fixes: e4c52c98e049 ("RDS/IB: add _to_node() macros for numa and use {k,v}malloc_node()")
+> Cc: Andy Grover <andy.grover@oracle.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
 > ---
-
-
-Is any of these new functions ever called?
-
-   Fred
-
-
->   arch/powerpc/platforms/powernv/pmem/ocxl.c    |  6 +++
->   .../platforms/powernv/pmem/ocxl_internal.c    | 41 +++++++++++++++++++
->   .../platforms/powernv/pmem/ocxl_internal.h    | 37 +++++++++++++++++
->   3 files changed, 84 insertions(+)
 > 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index 4e782d22605b..b8bd7e703b19 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -259,12 +259,18 @@ static int setup_command_metadata(struct ocxlpmem *ocxlpmem)
->   	int rc;
->   
->   	mutex_init(&ocxlpmem->admin_command.lock);
-> +	mutex_init(&ocxlpmem->ns_command.lock);
->   
->   	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_ACMA_CREQO,
->   				      &ocxlpmem->admin_command);
->   	if (rc)
->   		return rc;
->   
-> +	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_NSCMA_CREQO,
-> +					  &ocxlpmem->ns_command);
-> +	if (rc)
-> +		return rc;
-> +
->   	return 0;
->   }
->   
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> index 583f48023025..3e0b133feddf 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> @@ -133,6 +133,47 @@ int admin_response_handled(const struct ocxlpmem *ocxlpmem)
->   				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_ACRA);
->   }
->   
-> +int ns_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
-> +{
-> +	u64 val;
-> +	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHI,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!(val & GLOBAL_MMIO_CHI_NSCRA))
-> +		return -EBUSY;
-> +
-> +	return scm_command_request(ocxlpmem, &ocxlpmem->ns_command, op_code);
-> +}
-> +
-> +int ns_response(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return command_response(ocxlpmem, &ocxlpmem->ns_command);
-> +}
-> +
-> +int ns_command_execute(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_HCI_NSCRW);
-> +}
-> +
-> +bool ns_command_complete(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	u64 val = 0;
-> +	int rc = ocxlpmem_chi(ocxlpmem, &val);
-> +
-> +	WARN_ON(rc);
-> +
-> +	return (val & GLOBAL_MMIO_CHI_NSCRA) != 0;
-> +}
-> +
-> +int ns_response_handled(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_NSCRA);
-> +}
-> +
->   void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
->   		     u8 status)
->   {
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> index 2fef68c71271..28e2020f6355 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> @@ -107,6 +107,7 @@ struct ocxlpmem {
->   	struct ocxl_context *ocxl_context;
->   	void *metadata_addr;
->   	struct command_metadata admin_command;
-> +	struct command_metadata ns_command;
->   	struct resource pmem_res;
->   	struct nd_region *nd_region;
->   	char fw_version[8+1];
-> @@ -175,6 +176,42 @@ int admin_command_complete_timeout(const struct ocxlpmem *ocxlpmem,
->    */
->   int admin_response_handled(const struct ocxlpmem *ocxlpmem);
->   
-> +/**
-> + * ns_command_request() - Issue a near storage command request
-> + * @ocxlpmem: the device metadata
-> + * @op_code: The op-code for the command
-> + * Returns an identifier for the command, or negative on error
-> + */
-> +int ns_command_request(struct ocxlpmem *ocxlpmem, u8 op_code);
-> +
-> +/**
-> + * ns_response() - Validate a near storage response
-> + * @ocxlpmem: the device metadata
-> + * Returns the status code of the command, or negative on error
-> + */
-> +int ns_response(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * ns_command_execute() - Notify the controller to start processing a pending near storage command
-> + * @ocxlpmem: the device metadata
-> + * Returns 0 on success, negative on error
-> + */
-> +int ns_command_execute(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * ns_command_complete() - Is a near storage command executing
-> + * @ocxlpmem: the device metadata
-> + * Returns true if the previous admin command has completed
-> + */
-> +bool ns_command_complete(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * ns_response_handled() - Notify the controller that the near storage response has been handled
-> + * @ocxlpmem: the device metadata
-> + * Returns 0 on success, negative on failure
-> + */
-> +int ns_response_handled(const struct ocxlpmem *ocxlpmem);
-> +
->   /**
->    * warn_status() - Emit a kernel warning showing a command status.
->    * @ocxlpmem: the device metadata
-> 
-
+Thanks Hillf !!
