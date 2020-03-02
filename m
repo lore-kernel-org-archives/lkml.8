@@ -2,108 +2,211 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FACC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B753C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAEF2187F
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxQHiOKF"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF3B21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgCBNjV (ORCPT
+        id S1727989AbgCBNk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:39:21 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43881 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbgCBNjV (ORCPT
+        Mon, 2 Mar 2020 08:40:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:57521 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbgCBNk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:39:21 -0500
-Received: by mail-wr1-f68.google.com with SMTP id e10so11184978wrr.10;
-        Mon, 02 Mar 2020 05:39:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=y30GtIKkLuXdZ608Vv+U7ffueQj6lNYrKY5cOlCGJWA=;
-        b=CxQHiOKFe7ZzXJLcK5wp6OzvJvmZhhnV3uPVF6sEObJThCvTywHm8YZkYstRXorFtY
-         7mU6xsDnjrR/6k3jR1AYFAQn5Uwiuja6zn8KU7YoC5n0uduGhqpcVvP2Dba76Ppwbi0R
-         9NxBAMor0dOD2dR1HJ6BNmuB1cf3aFMAxmkufUXxY4h6g8i3JZFL4iHkMgrLS0SPMj/u
-         WKUfh9XLzYr30ODN+dvZawdfLcFiFWe6OopI7ymd+ctdnc6NbgWiY1spwu2b0HLTrb9T
-         DuBhLhtea87ZQc6j/cCB9rndfb3eZ4sJn+3jEY1kUuuWSdPlkM1oYNy/QWv/B6qhS8Lq
-         926A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y30GtIKkLuXdZ608Vv+U7ffueQj6lNYrKY5cOlCGJWA=;
-        b=sVoHrQkmDs8g/UqUILnMhL1p1HJ3D/bwSfsF/nE72KqLyHdVW04sZhW8SHMIVEgeU9
-         DdOBWSjjZO0GHDx49QGBAfWGCNAN4/pnrjkitdprMCak7tvOFCmQNAAXZj+Sb1fCaFgh
-         xsN9Zi5ZWJIiXE/EUMT+zAwcoU8SvpFy1CvBayma/bw/Dv+FrURaJHwDK54fHkT003ou
-         YUVVEi1Wyr4GVZ5B3wbqSiacVFmCTcCIkOWmSr6muP13Wffz3vjUejO2x6VGDS7ZWhHn
-         VCaV5Le2FtP3ZGBYvoXsjMmW1w9874Ald5pOMCpu7m4w02Tth+zqkCSgSFxTYxhQZigJ
-         sydA==
-X-Gm-Message-State: APjAAAWnEt+rbF/Bs8ohdCHjQjUUQohon1a+DfbkJn7XYYQULHcbYks9
-        OV4QUSI1OXuuNZ4NmVLhHFNYhn54
-X-Google-Smtp-Source: APXvYqz0713bLlc6REVU5kywq15hHrHb7olDzMQo8OCB1Bf4rscbNsPKwBFQkUjKwLNK1Tn05DNDhg==
-X-Received: by 2002:adf:de83:: with SMTP id w3mr22815692wrl.275.1583156357691;
-        Mon, 02 Mar 2020 05:39:17 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j12sm28710917wrt.35.2020.03.02.05.39.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Mar 2020 05:39:17 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: serial: snps-dw-apb-uart: add compatible property for rk3308 uart
-Date:   Mon,  2 Mar 2020 14:39:10 +0100
-Message-Id: <20200302133910.10942-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 2 Mar 2020 08:40:26 -0500
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MGgRW-1jDlV93PvO-00Dkhz; Mon, 02 Mar 2020 14:40:13 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id EB3F164FF0D;
+        Mon,  2 Mar 2020 13:40:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WWMbcQw5Ey6r; Mon,  2 Mar 2020 14:40:12 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4199864ED3F;
+        Mon,  2 Mar 2020 14:40:12 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 2 Mar 2020 14:40:11 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id E5D86804EF; Mon,  2 Mar 2020 14:40:11 +0100 (CET)
+Date:   Mon, 2 Mar 2020 14:40:11 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200302134011.GA3717@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141556.GI3606@pflmari>
+ <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29536F936F63776B
+X-Provags-ID: V03:K1:gvQ7Is8n0lpg67NQuR/HsSkPH2SLWS727/gSY2xDGIs3RA0zszq
+ c41zsFwgNphFi0WrOkpGBh3AzzHd3Tyc1STiHmPaS9Jo8WdSzExm7tziq8NIpDNjrbjDkJk
+ /1l5CnDXlkFc1D81I9TJwOTPHlj45jzZhexz02c8d0vddrafKIjiaRO+NU+Y4idhJEci/0I
+ 78w5CCpGwKFJhCN4lxFvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8RssGpzGfu0=:DPiPlhp3bW5ME/WwSl80xy
+ W2kU4HNPhI8Qbs7HNx+ix3N6v2FQ++3dP0ZwXVbf+ErWqATVz7lMoLtT42vvoVc3G57fLsjEY
+ 98mZ/W2HfkyjHEr73xhqfVKeeMiArH1iDjZ8JdZCbJiJd8TkLABRHTuNcz80GupuhnNgnkL/0
+ bnWh5Qv8lFThGBe+w9U2dYR/B/4x6elJkkkdaxJ2k1gDysDNeUBbQbLsQIqCG7vE6ghas7Lcg
+ TLTiZz4k0p4uB01JOhojhM9HMEBNcUFI9nnPVhW1A6sBQh7T4uWU4cAoSLvgRy6OQwyzcqblH
+ 4ErstnI4t+CosJwFBUIScHdnq2pu19O+UnoYXi/xEER+l6wvj7i0KxQgNAtIel0kAXkpFuI2c
+ B00sc0ab+leJH8HB7VAQjnqOldb6VkMdfu3Sb5LbG9ePvcYzWYQjB9l5Q7WwZAA7YRGALcMqS
+ POIXLleBI0fzWxIm+/JchXgnJW+EVuoYVoAsSaBjS16GIS2f5drrP7TBozvOidQQ8jZStkzWH
+ +8k1JT8g+PNltYTQeW6NF76bO3VddpsIC4X8ZFBLX9UT6vJjP9frD1SrWU2onaNNQLhrW1zG6
+ HRnMkwPaFJxOJiDxNMR+nhd3jELL4j9lH/CNMx21noSmU9eK2G4LDlnnwP/V8FAw/cELEZxM0
+ dtDohagGnstqUQ0xZHVACZ/paNI+kmWlqifeYAvnA3PmrEtRagmQ+bfUEApv695dj3QUrIjs1
+ WwlIVhU7CwF3xN+PaIYX637Ki4M3bjgZRRW+p7AoCxG997xi4JV4OvFkpiupbux3Apj4E+YNV
+ JfiFsbRvLDa6BcZbWM5jBqeMJsbSrbnT5igG/KkBIoqSCxt1rjj94xPKLXyzVS5Dx4MpQAm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives these errors:
+Geert Uytterhoeven, Mon, Mar 02, 2020 13:28:13 +0100:
+> Hi Alex,
+> 
+> Thanks for your patch!
+> 
+> On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
+> <alexander.riesen@cetitec.com> wrote:
+> > Not sure if all variants of the Salvator board have the HDMI decoder
+> > chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
+> > Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
+> > are placed in the board file.
+> 
+> Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
+> 
+> > I do assume though that all Salvator variants have the CLK_C clock line
+> > hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
+> > clocks provided by the R-Car sound system.
+> 
+> Yes, both Salvator-X and Salvator-XS have it wired that way.
 
-arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: serial@ff0d0000: compatible:
-['rockchip,rk3308-uart', 'snps,dw-apb-uart']
-is not valid under any of the given schemas
-arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dt.yaml: serial@ff0a0000: compatible:
-['rockchip,rk3308-uart', 'snps,dw-apb-uart']
-is not valid under any of the given schemas
+Ok, seems like I can move that part into the common file as well.
+Integrations of ADV7482 and R-Car which use salvator-common.dts can still
+redefine the endpoint settings in their board files, right?
 
-The compatible property for the Rockchip rk3308 uart was somehow never
-added to the documention. Fix this error by adding 'rockchip,rk3308-uart'
-to snps-dw-apb-uart.yaml.
+> But please see below.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/serial/
-snps-dw-apb-uart.yaml
+...
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> > The I2C wiring is also likely to persist across the variants (similar
+> > to ak4613, connected to the same interface), so that is in the common
+> > file.
+> >
+> > Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> 
+> Below are my comments w.r.t. the board-specific wiring.
+> I'll defer to the multimedia people for commenting on the audio parts.
+> 
+> BTW, what is the status of the other patches in this series?
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-index b42002542..b962f8db4 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-@@ -27,6 +27,7 @@ properties:
-               - rockchip,rk3066-uart
-               - rockchip,rk3188-uart
-               - rockchip,rk3288-uart
-+              - rockchip,rk3308-uart
-               - rockchip,rk3328-uart
-               - rockchip,rk3368-uart
-               - rockchip,rk3399-uart
--- 
-2.11.0
+"Submitted", at the moment. Besides you and Rob Herring no one said anything
+yet (either that or I missed the replies).
 
+> > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > @@ -322,6 +322,10 @@
+> >         clock-frequency = <22579200>;
+> >  };
+> >
+> > +&audio_clk_c {
+> > +       clock-frequency = <12288000>;
+> > +};
+> 
+> Does the ADV7482 always generate a 12.288 MHz clock signal?
+> Or is this programmable?
+
+Oops. It looks like it is and the value is derived from the sampling rate
+(48kHz) and the master clock multiplier. Both hard-coded in the board file.
+
+> > video-receiver@70 {
+> > 	compatible = "adi,adv7482";
+> > ...
+> > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
+> > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
+> 
+> The above declares the Audio CLK C to be a clock input of the ADV7482, while
+> it is an output.
+
+I would gladly give it right direction if I *really* understood what I was
+doing...
+
+> Furthermore, the DT bindings do not document that clocks can be specified.
+
+Should the DT bindings document that the clock cannot be specified than?
+
+> > @@ -686,7 +700,8 @@
+> >         };
+> >
+> >         sound_pins: sound {
+> > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+> > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
+> > +                        "ssi4_data";
+> 
+> Missing "ss4_ctrl", for the SCK4 and WS4 pins.
+
+I'll add them.
+As the device seems to function even without thoes, does this mean the pins in
+the group are used "on demand" by whatever needs them?
+
+> > @@ -760,8 +775,18 @@
+> >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+> >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+> >                  <&audio_clk_a>, <&cs2000>,
+> > -                <&audio_clk_c>,
+> 
+> Why remove it? This is the list of clock inputs, not outputs.
+
+...probably because I was thinking the specification was exactly the other way
+around.
+
+Does a "clocks = ..." statement always mean input clocks?
+
+I shall correct that and re-test (might take a while, I don't have the
+hardware anymore).
+
+Thanks for looking!
+Regards,
+Alex
