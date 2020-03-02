@@ -2,234 +2,122 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E82C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3226AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26CE2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137B02166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgCBOoc (ORCPT
+        id S1727255AbgCBOqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:44:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46610 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgCBOoc (ORCPT
+        Mon, 2 Mar 2020 09:46:44 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727113AbgCBOqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:44:32 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4B76F295793;
-        Mon,  2 Mar 2020 14:44:30 +0000 (GMT)
-Date:   Mon, 2 Mar 2020 15:44:26 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
- P/B0/B1 reflists
-Message-ID: <20200302154426.5fb09f91@collabora.com>
-In-Reply-To: <20200302142433.0ad1b383@coco.lan>
-References: <20200220163016.21708-1-ezequiel@collabora.com>
-        <20200220163016.21708-3-ezequiel@collabora.com>
-        <20200302142433.0ad1b383@coco.lan>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Mar 2020 09:46:44 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EjtcH006223
+        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 09:46:43 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnbeuvsh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 09:46:42 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 2 Mar 2020 14:46:40 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 14:46:37 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022EkarV55705680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 14:46:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 248075204F;
+        Mon,  2 Mar 2020 14:46:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.229.179])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 105105204E;
+        Mon,  2 Mar 2020 14:46:34 +0000 (GMT)
+Subject: Re: [PATCH v3 2/8] ima: Switch to ima_hash_algo for boot aggregate
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Mon, 02 Mar 2020 09:46:34 -0500
+In-Reply-To: <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
+References: <20200210100048.21448-1-roberto.sassu@huawei.com>
+         <20200210100048.21448-3-roberto.sassu@huawei.com>
+         <1581373420.5585.920.camel@linux.ibm.com>
+         <6955307747034265bd282bf68c368f34@huawei.com>
+         <1583156506.8544.60.camel@linux.ibm.com>
+         <8a6fb34e18b147fa811e82c78fb30d66@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030214-0016-0000-0000-000002EC4EF2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030214-0017-0000-0000-0000334F91DB
+Message-Id: <1583160394.8544.89.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 14:24:33 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-> Em Thu, 20 Feb 2020 13:30:12 -0300
-> Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> > > > On Mon, 2020-02-10 at 11:00 +0100, Roberto Sassu wrote: 
+> > My initial patch attempted to use any common TPM and kernel hash
+> > algorithm to calculate the boot_aggregate.  The discussion with James
+> > was pretty clear, which you even stated in the Changelog.  Either we
+> > use the IMA default hash algorithm, SHA256 for TPM 2.0 or SHA1 for TPM
+> > 1.2 for the boot-aggregate.
 > 
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > 
-> > Building those list is a standard procedure described in section
-> > '8.2.4 Decoding process for reference picture lists construction' of
-> > the H264 specification.
-> > 
-> > We already have 2 drivers needing the same logic (hantro and rkvdec) and
-> > I suspect we will soon have more.
-> > 
-> > Let's provide generic helpers to create those lists.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/media/v4l2-core/Kconfig     |   4 +
-> >  drivers/media/v4l2-core/Makefile    |   1 +
-> >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
-> >  include/media/v4l2-h264.h           |  85 +++++++++
-> >  4 files changed, 348 insertions(+)
-> >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
-> >  create mode 100644 include/media/v4l2-h264.h
-> > 
-> > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
-> > index 39e3fb30ba0b..8a4ccfbca8cf 100644
-> > --- a/drivers/media/v4l2-core/Kconfig
-> > +++ b/drivers/media/v4l2-core/Kconfig
-> > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
-> >  config VIDEO_TUNER
-> >  	tristate
-> >  
-> > +# Used by drivers that need v4l2-h264.ko
-> > +config V4L2_H264
-> > +	tristate
-> > +
-> >  # Used by drivers that need v4l2-mem2mem.ko
-> >  config V4L2_MEM2MEM_DEV
-> >  	tristate
-> > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
-> > index 786bd1ec4d1b..c5c53e0941ad 100644
-> > --- a/drivers/media/v4l2-core/Makefile
-> > +++ b/drivers/media/v4l2-core/Makefile
-> > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
-> >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
-> >  
-> >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
-> > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
-> >  
-> >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
-> >  
-> > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
-> > new file mode 100644
-> > index 000000000000..4f68c27ec7fd
-> > --- /dev/null
-> > +++ b/drivers/media/v4l2-core/v4l2-h264.c
-> > @@ -0,0 +1,258 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * V4L2 H264 helpers.
-> > + *
-> > + * Copyright (C) 2019 Collabora, Ltd.
-> > + *
-> > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/sort.h>
-> > +
-> > +#include <media/v4l2-h264.h>
-> > +
-> > +/**
-> > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
-> > + *				      builder
-> > + *
-> > + * @b: the builder context to initialize
-> > + * @dec_params: decode parameters control
-> > + * @slice_params: first slice parameters control
-> > + * @sps: SPS control
-> > + * @dpb: DPB to use when creating the reference list
-> > + */
-> > +void
-> > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
-> > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
-> > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
-> > +		const struct v4l2_ctrl_h264_sps *sps,
-> > +		const struct v4l2_h264_dpb_entry *dpb)  
-> 
-> The prototype here is not nice...
-> 
-> > +{
-> > +	int cur_frame_num, max_frame_num;
-> > +	unsigned int i;
-> > +
-> > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
-> > +	cur_frame_num = slice_params->frame_num;
-> > +
-> > +	memset(b, 0, sizeof(*b));
-> > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
-> > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
-> > +					     dec_params->top_field_order_cnt);
-> > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
-> > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
-> > +	else
-> > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
-> > +
-> > +	for (i = 0; i < 16; i++) {
-> > +		u32 pic_order_count;
-> > +
-> > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-> > +			continue;
-> > +
-> > +		b->refs[i].pic_num = dpb[i].pic_num;  
-> 
-> ... as you're expecting a fixed number of elements at DPB array, and using
-> a magic number (16) inside the for loop.
+> Ok, I didn't understand fully. I thought we should use the default IMA
+> algorithm and select SHA256 as fallback choice for TPM 2.0 if there is no
+> PCR bank for default algorithm.
 
-I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
-told that this is an arbitrary limitation (the spec does not explicitly
-limit the DPB size, even if all the HW we've seen seem to limit it to
-16). Maybe we can pass the DPB array size as an argument so it stays
-HW-specific.
+Yes, preference is given to the IMA default algorithm, but it should
+fall back to using SHA256 or SHA1, based on the TPM.
 
+> I additionally implemented the logic to
+> select the first PCR bank if the SHA256 PCR bank is not available but I can
+> remove it.
 > 
-> > +
-> > +		/*
-> > +		 * Handle frame_num wraparound as described in section
-> > +		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
-> > +		 * TODO: This logic will have to be adjusted when we start
-> > +		 * supporting interlaced content.
-> > +		 */
-> > +		if (dpb[i].frame_num > cur_frame_num)
-> > +			b->refs[i].frame_num = (int)dpb[i].frame_num -
-> > +					       max_frame_num;
-> > +		else
-> > +			b->refs[i].frame_num = dpb[i].frame_num;
-> > +
-> > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> > +			pic_order_count = min(dpb[i].top_field_order_cnt,
-> > +					      dpb[i].bottom_field_order_cnt);
-> > +		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> > +			pic_order_count = dpb[i].bottom_field_order_cnt;
-> > +		else
-> > +			pic_order_count = dpb[i].top_field_order_cnt;
-> > +
-> > +		b->refs[i].pic_order_count = pic_order_count;
-> > +		b->unordered_reflist[b->num_valid] = i;
-> > +		b->num_valid++;
-> > +	}
-> > +
-> > +	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
-> > +		b->unordered_reflist[i] = i;
-> > +}
-> > +EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
-> > +
-> > +static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
-> > +				    const void *data)
-> > +{
-> > +	const struct v4l2_h264_reflist_builder *builder = data;
-> > +	u8 idxa, idxb;
-> > +
-> > +	idxa = *((u8 *)ptra);
-> > +	idxb = *((u8 *)ptrb);
-> > +
-> > +	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {  
-> 
-> Where do you ensure that idxa and idxb won't be bigger than NUM_DPB_ENTRIES?
+> SHA256 should be the minimum requirement for boot aggregate. The
+> advantage of using the default IMA algorithm is that it will be possible to
+> select stronger algorithms when they are supported by the TPM. We might
+> introduce a new option to specify only the algorithm for boot aggregate,
+> like James suggested to support embedded systems. Let me know which
+> option you prefer.
 
-If it does that means something went wrong in the init func. I can add
-a WARN_ON() and bail out if you want, but I can't return an error here
-(that's not what the caller of the callback expects).
+I don't remember James saying that, but if the community really wants
+that support, then it should be upstreamed independently, as a
+separate patch.  Let's first get the basics working.
+
+thanks,
+
+Mimi
+
