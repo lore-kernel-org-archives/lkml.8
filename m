@@ -2,185 +2,178 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A27DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E794BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF28424695
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC5E24695
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 08:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="RvPPIlWx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vr7vwpmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgCBIx1 (ORCPT
+        id S1726946AbgCBIyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 03:53:27 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:46582 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBIx1 (ORCPT
+        Mon, 2 Mar 2020 03:54:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37970 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBIyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 03:53:27 -0500
-Received: by mail-yw1-f65.google.com with SMTP id y62so83452ywd.13
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:53:26 -0800 (PST)
+        Mon, 2 Mar 2020 03:54:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u9so3948587wml.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:54:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J9M0oBKN1OQnBWGJPk3lWi6DUIW2zQCCN42nNOnH9q4=;
-        b=RvPPIlWxEzXPSYQKBCE6Xsn9KoqF0QFiB+UGlVcm/4DyUQV+qKg1uHLIv8wdRGLx2W
-         mtulw6HLFDhhKT71chmt13bwWGF48MASKyp2DYbAtI3kC7dYxJ3sCAkfa42MgVzk0Qd0
-         3r8NyrKd3IKjTv1uxuCJSNZpuz7mjfuG+iUmDUCIArjpn+lfmrDRzhWonDa0y7kteChi
-         uWucQA2YXB9k0aS5YRtUeg+i9P/PDjQDi6EGs+CE5XqQGsygmgyxLQhFOvPeaxjlU6bG
-         oLtfU1Qf0+z7hDA9vQpZ3C01jxoKTu1ZQK/RHN15RSqTvn4WAij8LdpRjLh0avyCXo5E
-         YKqg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4YZfjsCvu9CwlHj80welQEfPEMnEw2It7DS5iksYhjk=;
+        b=Vr7vwpmmJG6nBUUVQQEiP9d41XX8zkAvjQgronn8qFZBnmQ34xiDkBtc0/JYorZk8q
+         vaHsryoa7/NzV61ajMC29PXQxHiVKHkgOVzW/01D02YMhY1wmOSs+Tf43+tIzNI8HzDK
+         kA887ScYVaQN+gsPUSV18kD/lpskyM7bw4yfSlJj7LqD56eD3av+z2xdb9NvemdUqy6h
+         mGkJoXcPx6MBHx7T5AqJRTnDyyHoqc/d/bW0W9MYH077MHob3FMgF3bJ65a68fCDL7X0
+         zoIgzjuUuDz/ZqB9SvnSo1qL75zMDApAfx9B45Cc7XNXp+BLCr5eAPNGhckMSet9Kutb
+         HdfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J9M0oBKN1OQnBWGJPk3lWi6DUIW2zQCCN42nNOnH9q4=;
-        b=trAlm3+B7wFzDfcF0RjjOBNwX7KGxJbBMe/00dgsRnBpS9ZdUYfBOXUr9JRROpUv6x
-         bxJG+7llNXADL1jXtBEqZOou+dN63rG/VI8vbviins5sTwZBVaW/36wd3KLxwkeNLhX4
-         Ku//DyhncaVAkcm2s/+N/umVNlw8CUdQPRuUmSmz9gWptiWjbw2IZJOrzNzl7kUr0pV9
-         3zbbkL7bsaWH7JgYgWL7fnTczGgkzI2lkC5o02aUqfyMnsXk8a+xXL2fF4KHJvc1QF1O
-         sW89gn9oXzRLwkDfm/uDibxmugQshhGA0DTPHPwFwwRVtrwHwCccyEN7+k6rS773sRl5
-         SaIQ==
-X-Gm-Message-State: ANhLgQ0bCuFmJV/CLH6a9wkJym8ssXOBqCKrHFLTHcm9kVr9v2MmM2n0
-        +8f40QtILdq4MUoj/RZ/g3xc1oiKKygHUwwFyjAnJQ==
-X-Google-Smtp-Source: ADFU+vs+98yuAZb/4vcpynxksSVpHYPTpcb4O7pd+ReOP2xeKEezddDfFEqhgHL+gYnnNGGZCg3H0FetvOu/dlBPhzY=
-X-Received: by 2002:a0d:ffc2:: with SMTP id p185mr811323ywf.496.1583139205976;
- Mon, 02 Mar 2020 00:53:25 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4YZfjsCvu9CwlHj80welQEfPEMnEw2It7DS5iksYhjk=;
+        b=nleP2KAUFu+P1yz/kMeGSoEysLuHBz+sL3ho86IBEqt/pNV4xkG73M6UhfuT+geOfM
+         fsrvctP1hHcS6W3fGVOUBXvDrHLfd3ulqMuZ6p+YVti4MqRIxpIKo15TrqhZq3YaPfpl
+         DnrOtXe8ddWjtBf3qvQWm9GGr6TnSpRAGMuFltRoBwtx1Q6+EPSB4L9MP03Z7B1HMmxQ
+         KPY6TSQOhQgzXQfXQUaw+RLv4rq7mlqo68xyNsjbnX9XtVwDD5C1z+nEJM91/ZxFVbcW
+         fxPvEbTIlKPYD9Cdh7NlyrFyg8chsdAn0T0GlqQTcS4VpTAIay1skAx1IUCnhjb1hTf0
+         m5FQ==
+X-Gm-Message-State: APjAAAVmxzUpZ67rV5oPP9p0QBWH/dq8WkHQVmQeGQdG+qjVgUAGzJpY
+        JVKK+w1XCU59qM27bGI+X9flFQ==
+X-Google-Smtp-Source: APXvYqz1OP/Lyc6kYL9qNLNkpWtWb14MuhY9UNvE9kM6L21XpD4c37aQiI21RoaosqYxKWqZSeOOHQ==
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr18307807wmc.18.1583139276372;
+        Mon, 02 Mar 2020 00:54:36 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:4810:160f:ae1a:893f? ([2a01:e34:ed2f:f020:4810:160f:ae1a:893f])
+        by smtp.googlemail.com with ESMTPSA id z5sm8913587wml.48.2020.03.02.00.54.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 00:54:35 -0800 (PST)
+Subject: Re: [PATCH V2] thermal: imx_thermal: Use __maybe_unused instead of
+ CONFIG_PM_SLEEP
+To:     Anson Huang <anson.huang@nxp.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <1583135410-7496-1-git-send-email-Anson.Huang@nxp.com>
+ <20200302080700.ubnboqklhbva7bas@pengutronix.de>
+ <DB3PR0402MB3916DC28A21BE0B9B8BFFC25F5E70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c5ecab57-cc38-762c-ae06-fed0433e0246@linaro.org>
+Date:   Mon, 2 Mar 2020 09:54:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200301143302.8556-1-yuri.benditovich@daynix.com>
- <20200301143302.8556-3-yuri.benditovich@daynix.com> <20200301145811-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200301145811-mutt-send-email-mst@kernel.org>
-From:   Yuri Benditovich <yuri.benditovich@daynix.com>
-Date:   Mon, 2 Mar 2020 10:53:14 +0200
-Message-ID: <CAOEp5Oc07THyvZghMBjns=aTVEPMxb4w6LFGFtUsS93h4xsSJQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] virtio-net: Introduce RSS receive steering feature
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Yan Vugenfirer <yan@daynix.com>,
-        virtio-dev@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <DB3PR0402MB3916DC28A21BE0B9B8BFFC25F5E70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 1, 2020 at 9:58 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Sun, Mar 01, 2020 at 04:33:01PM +0200, Yuri Benditovich wrote:
-> > RSS (Receive-side scaling) defines hash calculation
-> > rules and decision on receive virtqueue according to
-> > the calculated hash, provided mask to apply and
-> > provided indirection table containing indices of
-> > receive virqueues. The driver sends the control
-> > command to enable multiqueue and provide parameters
-> > for receive steering.
-> >
-> > Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
-> > ---
-> >  include/uapi/linux/virtio_net.h | 42 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 40 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-> > index 19e76b3e3a64..188ad3eecdc8 100644
-> > --- a/include/uapi/linux/virtio_net.h
-> > +++ b/include/uapi/linux/virtio_net.h
-> > @@ -57,6 +57,7 @@
-> >                                        * Steering */
-> >  #define VIRTIO_NET_F_CTRL_MAC_ADDR 23        /* Set MAC address */
-> >
-> > +#define VIRTIO_NET_F_RSS       60    /* Supports RSS RX steering */
-> >  #define VIRTIO_NET_F_RSC_EXT   61    /* extended coalescing info */
-> >  #define VIRTIO_NET_F_STANDBY   62    /* Act as standby for another device
-> >                                        * with the same MAC.
-> > @@ -70,6 +71,17 @@
-> >  #define VIRTIO_NET_S_LINK_UP 1       /* Link is up */
-> >  #define VIRTIO_NET_S_ANNOUNCE        2       /* Announcement is needed */
-> >
-> > +/* supported/enabled hash types */
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_IPv4          (1 << 0)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_TCPv4         (1 << 1)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_UDPv4         (1 << 2)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_IPv6          (1 << 3)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_TCPv6         (1 << 4)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_UDPv6         (1 << 5)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_IP_EX         (1 << 6)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_TCP_EX        (1 << 7)
-> > +#define VIRTIO_NET_RSS_HASH_TYPE_UDP_EX        (1 << 8)
-> > +
-> >  struct virtio_net_config {
-> >       /* The config defining mac address (if VIRTIO_NET_F_MAC) */
-> >       __u8 mac[ETH_ALEN];
-> > @@ -93,6 +105,12 @@ struct virtio_net_config {
-> >        * Any other value stands for unknown.
-> >        */
-> >       __u8 duplex;
-> > +     /* maximum size of RSS key */
-> > +     __u8 rss_max_key_size;
-> > +     /* maximum number of indirection table entries */
-> > +     __le16 rss_max_indirection_table_length;
-> > +     /* bitmask of supported VIRTIO_NET_RSS_HASH_ types */
-> > +     __le32 supported_hash_types;
-> >  } __attribute__((packed));
-> >
-> >  /*
-> > @@ -246,7 +264,9 @@ struct virtio_net_ctrl_mac {
-> >
-> >  /*
-> >   * Control Receive Flow Steering
-> > - *
-> > + */
-> > +#define VIRTIO_NET_CTRL_MQ   4
-> > +/*
-> >   * The command VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET
-> >   * enables Receive Flow Steering, specifying the number of the transmit and
-> >   * receive queues that will be used. After the command is consumed and acked by
-> > @@ -259,11 +279,29 @@ struct virtio_net_ctrl_mq {
-> >       __virtio16 virtqueue_pairs;
-> >  };
-> >
-> > -#define VIRTIO_NET_CTRL_MQ   4
-> >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET        0
-> >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MIN        1
-> >   #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_MAX        0x8000
-> >
-> > +/*
-> > + * The command VIRTIO_NET_CTRL_MQ_RSS_CONFIG has the same effect as
-> > + * VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET does and additionally configures
-> > + * the receive steering to use a hash calculated for incoming packet
-> > + * to decide on receive virtqueue to place the packet. The command
-> > + * also provides parameters to calculate a hash and receive virtqueue.
-> > + */
-> > +struct virtio_net_rss_config {
-> > +     __le32 hash_types;
-> > +     __le16 indirection_table_mask;
-> > +     __le16 unclassified_queue;
-> > +     __le16 indirection_table[1/* + indirection_table_mask */];
-> > +     __le16 max_tx_vq;
-> > +     __u8 hash_key_length;
-> > +     __u8 hash_key_data[/* hash_key_length */];
-> > +};
-> > +
-> > + #define VIRTIO_NET_CTRL_MQ_RSS_CONFIG          1
-> > +
->
->
-> Extra space here.
+On 02/03/2020 09:26, Anson Huang wrote:
+> Hi, Uwe
+> 
+> 
+>> Subject: Re: [PATCH V2] thermal: imx_thermal: Use __maybe_unused instead
+>> of CONFIG_PM_SLEEP
+>>
+>> On Mon, Mar 02, 2020 at 03:50:10PM +0800, Anson Huang wrote:
+>>> Use __maybe_unused for power management related functions instead of
+>>> #if CONFIG_PM_SLEEP to simplify the code.
+>>>
+>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>>
+>> IMHO translating my "otherwise looks fine" in a "Reviewed-by" is a bit bold.
+>> Please don't assume this.
+> 
+> OK, will keep it in mind next time, thanks.
 
-Where exactly you want to remove the empty line?
-The format here is exactly as in other places:
-comment - structure - space - command - space
+When applying a patch, now we add the link to the lkml archive
+automatically. I can't apply this patch if the Reviewed-by is not accepted.
+
+Or the Reviewed-by tag is confirmed or a V3 without the Reviewed-by must
+be resent.
 
 
->
-> >  /*
-> >   * Control network offloads
-> >   *
-> > --
-> > 2.17.1
->
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
