@@ -2,200 +2,108 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF4FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDCDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC3124677
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2838424676
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="L/cWQC2C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofrDh/W0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgCBS3g (ORCPT
+        id S1727463AbgCBSaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:29:36 -0500
-Received: from mga03.intel.com ([134.134.136.65]:59966 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgCBS3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:29:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 10:29:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
-   d="scan'208";a="233457280"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Mar 2020 10:29:31 -0800
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 2 Mar 2020 10:29:31 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 2 Mar 2020 10:29:31 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=efPBPJUAzRXvhOezBpsMTooMficFLx3RVZ2i2tpPiliXU8kgMupvdfSq5moGAt8UWB/81rbbd55RGJgi+8jrrCzNf0kmyNJtRqwfl5tSrVyirg8fh6fkA0fCOZFh7ZYjCEVK4E7v54+OhFG2OzxCCsHOy3UbJLSg6rUhf0Zvwe5zhUN7KM52FTR8yjw9C/saMAwr6r1BAhWcoa/XfrRnMBC+RnkVF7Mtc4z8nT1XTqGz3GzTcoxPlcw94n1ft2bp+4/pUKFGt29coTmKeCojizd9tlfzWGDYoOVrl9d31E0H6YnJ8wUqY4SqNYqwc1d9NkCHO+cqroHExU8eabAKGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RTmJk80nQOgoQmg6DzNFYFG2vI8GlIV9e2IeyAlpGV4=;
- b=C0+g+fvAadojTu0Ro6Ei8Cc4wRqq0GetjWJGq0P21mmwYB/sD1f7MCtIxsf4xeU8H8n69Sfh1886HzsAHbKPYQmpv2mN3ksu+YvXF+ewPIIlHwsWs7EGdy9qbyCNmQ17J8bF1UJi4NcUgyuJad+gVlO1NsnTI3/5gx+6gtsNIZrUDsmpdT22rIAlP54KPXp7cQtaXKoRX2wvnyl+l5W/2DF2eZq4Id5iTPIQyOjobowZRh6iR0g437t6muijEsjGHysr/6ss1MmEVD9nwd+bVza227jNv8GjG3fX1TWCXQvfgX0CdsB4+MM/fuQE6Hb9vslX5Bp0e9nWLJsXgFVmgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RTmJk80nQOgoQmg6DzNFYFG2vI8GlIV9e2IeyAlpGV4=;
- b=L/cWQC2CzBG+XDk5ZUZ4zZqmWwQl8aOaCPfgNcoNeB3mXd2LzaFqmz5uxFM5+jcZknTuOzV8RwoASREw3uu9URi0u2aM21YxbaQY+pwJof6kl9I1Dlk2DHz7zOaBpU2SUM5blKFrIBrMbcNMhqOTrOlvD08WGNe3IW7fSAMVNNo=
-Received: from BYAPR11MB3624.namprd11.prod.outlook.com (2603:10b6:a03:b1::33)
- by BYAPR11MB3096.namprd11.prod.outlook.com (2603:10b6:a03:8f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Mon, 2 Mar
- 2020 18:29:29 +0000
-Received: from BYAPR11MB3624.namprd11.prod.outlook.com
- ([fe80::d17e:dcc4:4196:87ab]) by BYAPR11MB3624.namprd11.prod.outlook.com
- ([fe80::d17e:dcc4:4196:87ab%7]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 18:29:29 +0000
-From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "Westerberg, Mika" <mika.westerberg@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        "Box, David E" <david.e.box@intel.com>
-Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
- code
-Thread-Topic: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
- code
-Thread-Index: AQHV8ArQghD0dS6yzkaNkpM4RGGi9qg1Q1OAgABJMxA=
-Date:   Mon, 2 Mar 2020 18:29:29 +0000
-Message-ID: <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1583093898.git.gayatri.kammela@intel.com>
- <20200302125427.GV1224808@smile.fi.intel.com>
-In-Reply-To: <20200302125427.GV1224808@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gayatri.kammela@intel.com; 
-x-originating-ip: [134.134.136.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 816dbcca-8049-4920-eeb5-08d7bed7a531
-x-ms-traffictypediagnostic: BYAPR11MB3096:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB3096893FF1088B8E55FD5577F2E70@BYAPR11MB3096.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:635;
-x-forefront-prvs: 033054F29A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(366004)(136003)(346002)(396003)(189003)(199004)(9686003)(2906002)(55016002)(6916009)(54906003)(26005)(6506007)(81156014)(81166006)(7696005)(33656002)(8936002)(53546011)(52536014)(186003)(5660300002)(71200400001)(4326008)(966005)(66946007)(66476007)(66556008)(64756008)(478600001)(316002)(66446008)(86362001)(76116006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB3096;H:BYAPR11MB3624.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yOTMLu4wFqk2TOh0Ik2DkhyhO4Zm8cuinLzGMa7XtI5RI0jEYn8G8jRkYwwdA8irLuXXthaDcyXGaBOhK/goqXcTcVsmLTLG76TwdInM9JysX7+gBMp3ThS624PY4HyrM6kgvipTYa5tSs15I9HzoMbHlLnZ/DZN5UhmLLaWS7lIb/lshjgRjvj7+O+sAasdFWH5qA9ii+E1VXq8ZRbqdMZB16SsS1Ex5/o2w2n+ZtTeq9EjZzUSwMUEHue0B7qhW/Otoox1RtlZwDS4xT2CuuQ5MWzzyxam2dAA1Dk4yemThPxo6X12Epnm+rQ37K13lAHd+rScDtXOdN9jZ4eq9xT1ZtJeARv8lxPtWJs8WA+HVLhPeRZ/BdIk8LofKswzQ6+TzhLSlZZJvOOLCR47nKiuS8XNw8mrz37DCVFI7qbHmsVVUg3YKZk/b6jI26fTiMvegwXmzi3fAwLnul43jl+3XGsv5txHdThSp+W8BsONUtn2Ha5hO6barFPhFdBOPZUUhxw3TN3+rxlRSPNVPg==
-x-ms-exchange-antispam-messagedata: Ga2aHfWfLShRx5+TBQB+eIC71qocFVmGBK/DoUJNe3n4lxqOyF6tRgykkd7FMHETazVxuMnBtUD/dKvpHe/jP/w0YpfRN9jQVWzy4Ye3CpTlFCjsEGtTuK1E0upX8D0HWIEW+0zyfJJbhihpT2yvgQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 2 Mar 2020 13:30:35 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43062 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgCBSae (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:30:34 -0500
+Received: by mail-il1-f196.google.com with SMTP id o18so353202ilg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:30:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c9N8pmiznJwsvAz0Mn6RIRQBpDbT8QYW9ssTcn5Srt0=;
+        b=ofrDh/W03+qXgcSrm3KyNkAyQydWdBRXEXFaC9ZchLmfzEVU1Y60uEB3nFcuG7bgJE
+         +Z6e5pb9O93lPOefpvXtL85n8V3UhvZmr4hxaKsvf53treihjwahZH6t5cQrwZHUDEl6
+         gZhEGy5ZG9qzRUf/4W8I3f2w3G2NKzmf01J6xyd2jottQIPjMYgYuSoQGuqfSRtKjvmE
+         07hYHcN8TjXtTAE2BvqPIdSOtRvhkmrXJ4GwZeKtmuAH1YSRA6vlSXYp9Hsz86kJPPjl
+         cOnbrQyg9ijriyRgciuxqarlh4bzlG28g0N3DuIdHVZwU6SX40gRznJheV22kpJvu8fs
+         zL3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c9N8pmiznJwsvAz0Mn6RIRQBpDbT8QYW9ssTcn5Srt0=;
+        b=uBmhKY+W4B/yMxZwcPQ3P71rM4bOFRYPEnvLjHlL9jSQZlUb+9rDI6J1BFzYLAA2AF
+         e6hiKidwxqetoTl/UJ17qBig/r5IcmahnzyQ2C81UT6UT71gxdpYEnOkY9PCRnF1TFHr
+         tgo4/md/Du+kwpkE0JCGj7qo8qTGphln85ZLBFAYxjovovTOJw5MpqMTrPIEZ3wU4gbQ
+         mZQKctQHHaSD3pNC0Jx7Cd+u7W4g9/7itpdu1/7HvVvghpRtGq3rPtFqFdCuurtuTrdK
+         m+LQ5dGwz/u6vTp+IympGZlPNvUbw6tZshro+xQRtPA/lzxqRwj1OomUP9cCMGf7DleN
+         ZuDQ==
+X-Gm-Message-State: ANhLgQ3LX72LrcQNMKVEPIo0laCxYHp28A1tWkARd0nV1EI4AU/ArZB6
+        kTN/XQJ1oTeEOS6XyNiTnamIWDvoW50j7VyJ/KHMYg==
+X-Google-Smtp-Source: ADFU+vvfk/PTke3DmzOx8p1qiyiPWh39Gz/B81yPLGojcctURiXpbxbIgA4e1hpdnL9cY23/exLfgXJeZpz9wnvlANI=
+X-Received: by 2002:a92:8547:: with SMTP id f68mr976871ilh.26.1583173833493;
+ Mon, 02 Mar 2020 10:30:33 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 816dbcca-8049-4920-eeb5-08d7bed7a531
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:29:29.3394
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oeIVNwgoVhZipn3L525KEjwcmZtMjWp+3XMreujVqGD5NJZN7EaqXqx4t9mCBXkKk5KoIl44v27GnnyGczU1aK67OgOIhugX/wA9Zq0X4SU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3096
-X-OriginatorOrg: intel.com
+References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+ <CALMp9eSaZ557-GaQUVXW6-ZrMkz8jxOC1S6QPk-EVNJ-f2pT5w@mail.gmail.com>
+ <a1ff3db1-1f5a-7bab-6c4b-f76e6d76d468@redhat.com> <CALMp9eQqFKnCLYGXdab-k=Q=h-H5x8VnV20F3HH9fDZTDuQcEQ@mail.gmail.com>
+ <e173c489-dee7-a86d-3ec4-6fe45938a2d8@redhat.com>
+In-Reply-To: <e173c489-dee7-a86d-3ec4-6fe45938a2d8@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 2 Mar 2020 10:30:22 -0800
+Message-ID: <CALMp9eR9uanguked_O97BXMVGSE032m8QVsBP2qe2SS97j+qmg@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linmiaohe <linmiaohe@huawei.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Sent: Monday, March 2, 2020 4:54 AM
-> To: Kammela, Gayatri <gayatri.kammela@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
-> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
-> peterz@infradead.org; Prestopine, Charles D
-> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
-> Box, David E <david.e.box@intel.com>
-> Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes o=
-r
-> code
->=20
-> On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
-> > Hi,
+On Mon, Mar 2, 2020 at 10:02 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 02/03/20 18:44, Jim Mattson wrote:
+> > On Mon, Mar 2, 2020 at 9:09 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 02/03/20 18:01, Jim Mattson wrote:
+> >>>> And in fact, it's not used anywhere. So it should be
+> >>>> deprecated.
+> >>> I don't know how you can make the assertion that this ioctl is not
+> >>> used anywhere. For instance, I see a use of it in Google's code base.
+> >>
+> >> Right, it does not seem to be used anywhere according to e.g. Debian
+> >> code search but of course it can have users.
+> >>
+> >> What are you using it for?  It's true that cpuid->nent is never written
+> >> back to userspace, so the ioctl is basically unusable unless you already
+> >> know how many entries are written.  Or unless you fill the CPUID entries
+> >> with garbage before calling it, I guess; is that what you are doing?
 > >
-> > This patch series consists of bug fixes and code optimization for the
-> > series https://patchwork.kernel.org/patch/11365325/
-> >
->=20
-> I had applied first four, the fifth requires additional work.
-> When send a new version, do it only for last one.
+> > One could use GET_CPUID2 after SET_CPUID2, to see what changes kvm
+> > made to the requested guest CPUID information without telling you.
+>
+> Yeah, I think GET_CPUID2 with the same number of leaves that you have
+> passed to SET_CPUID2 should work.
 
-Thanks Andy! I will send the 5th patch alone in new version.
-
->=20
-> > Patch 1: Relocate both pmc_core_slps0_display() and
-> > pmc_core_lpm_display() Patch 2: Remove the duplicate if() condition to
-> > create debugfs entry Patch 3: Add back slp_s0_offset attribute back to
-> > tgl_reg_map Patch 4: Make pmc_core_substate_res_show() generic Patch
-> > 5: Make pmc_core_lpm_display() generic
-> >
-> > Changes since v1:
-> > 1) Changed the order of the patches i.e., patch 2 in v1 is made first i=
-n
-> >    the order for v2.
-> > 2) Fixed the warnings reported by kbuild test robot.
-> >
-> > Changes since v2:
-> > 1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
-> > 2) Fixed the memory leak issue in pmc_core_lpm_display().
-> > 3) Moved patch 2 in v2 to the last in the series in v3.
-> >
-> > Gayatri Kammela (5):
-> >   platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display()
-> >     and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
-> >   platform/x86: intel_pmc_core: fix: Remove the duplicate if() to creat=
-e
-> >     debugfs entry for substate_live_status_registers
-> >   platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back t=
-o
-> >     tgl_reg_map
-> >   platform/x86: intel_pmc_core: Make pmc_core_substate_res_show()
-> >     generic
-> >   platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generi=
-c
-> >     for platforms that support sub-states
-> >
-> >  drivers/platform/x86/intel_pmc_core.c | 148 +++++++++++++++-----------
-> >  drivers/platform/x86/intel_pmc_core.h |   3 +-
-> >  2 files changed, 85 insertions(+), 66 deletions(-)
-> >
-> > base-commit: 7adb1e8aeeb5d4d88012568b2049599c1a247cf2
-> >
-> > Cc: Chen Zhou <chenzhou10@huawei.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: David Box <david.e.box@intel.com>
-> > --
-> > 2.17.1
-> >
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
-
+Having said that, it doesn't look like the method that invokes this
+ioctl (in Google's code base) gets called from anywhere.
