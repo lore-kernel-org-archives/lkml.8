@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E04AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3667C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA26F2465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB93924677
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 23:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTlTzZOu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eZUIbJD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCBXtP (ORCPT
+        id S1726910AbgCBXux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 18:49:15 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:56670 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgCBXtP (ORCPT
+        Mon, 2 Mar 2020 18:50:53 -0500
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:34288 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgCBXux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 18:49:15 -0500
-Received: by mail-pl1-f202.google.com with SMTP id m1so727538pll.23
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:49:13 -0800 (PST)
+        Mon, 2 Mar 2020 18:50:53 -0500
+Received: by mail-ua1-f74.google.com with SMTP id z17so382110uaa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 15:50:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
         bh=up9k0ELoc2nbld5DDuzluLMDE9ZGs9dXZH/M3N/0vIs=;
-        b=cTlTzZOuRu8qbRKnk7EkJoSpCEQiXPyJqY1PCJN3iYerTkuC/m980uP+HeafGTunBe
-         brZZYltraD/sehOJTbzll6BEkrr5ekwV/SGQPZBD47llMrt0XZNIx1x+Ai5b+tyno03a
-         Fggrk+FQGIpHckSbyrHy+FlGpZl0JttKJDM7UE/ZJugSI8ZlAiyVhSGhmIVUfKxEjzeL
-         aWyNdo/xT/8s/BWziCcLrhgOqK9HZaXBIdse+fCEmkCdex1xZtQ88JU+5LV73TnoRMOg
-         q2Ie09SX28A9z4/e+RAWd5INR2ROyPwXDX+0coSORyh6Nuvv8nfacgsqGO1jMNgzNj1U
-         RP4A==
+        b=eZUIbJD2tGiI+qBg3zVBcp3glefFf43oDhTNIgSAEbIs86N3haoaB0kV/M0flCFZx9
+         5oSu0wMkz7Gtm+nK3HPJ4JSbripWpxZrhXRP9cEf9oORqO308pxrQYouqfpyowOk/gAr
+         hTkJqy4zmI9WjORQfQaeQlNR1wKSoFkhTJy4TbHiIL2FyXif3JpHl19yt2hcO2aE7dNZ
+         Y0REfztHgXLhscRwArHpNNReyxTfU4QuwYHx8ZiBJ1L8seHvJ+0O4Vj2DEbkhlSAdXFW
+         OEo5QRCgJcQ9Zy8dbg9+fBshlMEnTyK3h6jfkKpk9JOmdMymS6j8RwR79fb/ImmHQ8qq
+         qbKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
         bh=up9k0ELoc2nbld5DDuzluLMDE9ZGs9dXZH/M3N/0vIs=;
-        b=dJp+qWFOlW7iji9NwhkLsJlUtMS39kQhbwlr+GqBjJgR5X/IBaUQSykjEJUyHsOoN/
-         utVgTENXxJDHV3+Lq3zH2hQHMV9oEsomWGk7KasjY7Z6DBrCn1QpATrMAhKt6FlYVwyg
-         MzlSmCd4c25FUdoGD4JLxWuo27NrBMvy0i/oc91QEnNCq458FfGCf6HP/Wnj8EY/vmnQ
-         d4k6usbYvupPpqmY2Vchg0A549I+7+EHMauU2xSaXkeMpaZrrxiRHexwNH5KPyo6lHeD
-         k/vKNKg0JJ93o7lCq3NLytFDvS50Pj+gV+ChoDhyEQyioumzpqG001YCp/lgOgCp2RBV
-         aFEA==
-X-Gm-Message-State: ANhLgQ1XFrwWzg9PwFQUimwjfbV6rrkCi2Kn1v9l1L2ElSU1SV9HMF9W
-        uROJc49oEyDOgHg2zLC6hhPJcjXrpGg=
-X-Google-Smtp-Source: ADFU+vtnRMLqd8jVblj7Leu8qW+vfxlfA1sEO5Hkada1cnzy5s6z9T7p5/fPw0cTeHoJjFdxLuHyGTmjaUP/
-X-Received: by 2002:a63:6dc5:: with SMTP id i188mr1293362pgc.82.1583192952483;
- Mon, 02 Mar 2020 15:49:12 -0800 (PST)
-Date:   Mon,  2 Mar 2020 15:48:40 -0800
+        b=W+8E6+oyLhwL3ON0iTaCMdRfOJbIcyGFR5/aztPSZF8dKZ62civw3eg01C/F1PlvwJ
+         QkGvypfPqXi4Pkqwkg4dlNnHP3T7ZFQXQFvfGVot1J37xEtj2oqBbZHDT4RxS+6qlcxp
+         GS5ZLoLiDZxJYHe1wz9xyjLRNKcOAurpUfYbneYpBW5c0GiIgbVT2m35azfzEIwxQKCw
+         5OWsPrQLwFc0JgK2rlv/bCzLTG4aSOLWvg7djeWuSRtmnz0vKqnpVRW5Claw3tl3SCap
+         iBf5I4qZzo3Zx4MgGAE76wMEdztO+gOAg9qS+OkLNeD7HoFpH/0/p+bl7b1jpFz3mqN0
+         NOXg==
+X-Gm-Message-State: ANhLgQ0UgeEe8BX4fePmg27LJJmT/8VWVGBtg69eF1KIJFPWOUjM0G1i
+        g1wnOT67zVSdksXmTrr/UvLPVIaKZvk=
+X-Google-Smtp-Source: ADFU+vt7pTrdwBJOYeJ4STFw81KKE2tmwyGEcJL9J9sIBXEqSi3WYYzro0g41M29s2LHSYrTFaKs7wFHAatl
+X-Received: by 2002:a9f:3733:: with SMTP id z48mr1316829uad.140.1583193051414;
+ Mon, 02 Mar 2020 15:50:51 -0800 (PST)
+Date:   Mon,  2 Mar 2020 15:50:44 -0800
 In-Reply-To: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
-Message-Id: <20200302234840.57188-1-zzyiwei@google.com>
+Message-Id: <20200302235044.59163-1-zzyiwei@google.com>
 Mime-Version: 1.0
 References: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] [PATCH v4] gpu/trace: add a gpu total memory usage tracepoint
+Subject: [PATCH v4] gpu/trace: add a gpu total memory usage tracepoint
 From:   zzyiwei@google.com
 To:     rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org,
         elder@kernel.org, federico.vaga@cern.ch, tony.luck@intel.com,
