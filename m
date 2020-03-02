@@ -2,106 +2,128 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E348C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95C7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2057020836
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2C820836
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9/BYT0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgCBSQZ (ORCPT
+        id S1727363AbgCBSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:16:25 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21250 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgCBSQY (ORCPT
+        Mon, 2 Mar 2020 13:17:17 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50508 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCBSRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:16:24 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022I8vds018378
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 13:16:23 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfm51nps9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:16:23 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bmt@zurich.ibm.com>;
-        Mon, 2 Mar 2020 18:16:20 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 18:16:17 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022IGG8N58392724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 18:16:16 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1BD2A4053;
-        Mon,  2 Mar 2020 18:16:16 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A67BA4051;
-        Mon,  2 Mar 2020 18:16:16 +0000 (GMT)
-Received: from spoke.zurich.ibm.com (unknown [9.4.69.152])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 18:16:16 +0000 (GMT)
-From:   Bernard Metzler <bmt@zurich.ibm.com>
-To:     jgg@ziepe.ca, dledford@redhat.com, kamalheib1@gmail.com,
-        krishna2@chelsio.com, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>
-Subject: [PATCH for-rc] RDMA/iwcm: Fix iwcm work deallocation
-Date:   Mon,  2 Mar 2020 19:16:14 +0100
-X-Mailer: git-send-email 2.17.2
-X-TM-AS-GCONF: 00
-x-cbid: 20030218-0012-0000-0000-0000038C5F85
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030218-0013-0000-0000-000021C91379
-Message-Id: <20200302181614.17042-1-bmt@zurich.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_07:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 bulkscore=0 spamscore=0 mlxlogscore=917 suspectscore=2
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020119
+        Mon, 2 Mar 2020 13:17:17 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so97497wmb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 10:17:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dkIKEunspbm7vvq6Vi7LSmhvIa5CNrgbE4fc3Br8gcw=;
+        b=h9/BYT0VV2933Zm22oDgQkHPwM72o7HYQz9S7NzgkkgRrea96GrmK83XN6Dos7mqKs
+         z4GsyLPp8KOMpPr6Qp7h0GIQUDd/oE7wFSAu3cZTEY1S/wneOyE1xhZZBGFe0IGKk0Ts
+         qtwVg0tg/yQp8T9kt88RWKiynfu8Fmp9+rAZnaRihMEzD/ult8LcDzHiVjvkYYaTjTC3
+         ZveMnddiHf7gGU9/jMOSKKManlXqEBYg1zO4ylD2sjOSUYsnkjiL6U79qox495/8jEvB
+         aWAR/SBOK2sWQCLb8/6GdrKTuP7OUdoQUkbh6enUFhDMXtSbaiaVZozLzSlJlqFUFFUr
+         wPAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dkIKEunspbm7vvq6Vi7LSmhvIa5CNrgbE4fc3Br8gcw=;
+        b=FLU2yhrY8WIffRhDPFmH5XInUyKyQKv/cPwXGB8RgdPUeFhhWvwjkYt+lt3ZvUHPSD
+         K+MOLxzOmXICRKNOTZ+DHfJ9qJ6aD/VpT8n6weVzsgu9mftBCfr1IRnhigMRJNzHQKfD
+         mdYZ7nvTn5Sio2539tJ/lD8j9aFR6MtgwH2Ry4S6syocLQOWJA0TkmAXt4BTRvenBY0d
+         d2vDzE1MDI0ziP7gnI4XWr1ZcUzWAheaOLiDW+Mcq9sAHbJX7KRNire6EMteNr0cbJly
+         A8KDnNo0DMJbTT5nNIQzRD5aY3/M6ciA7mPirYnGs7RQzberKbhjiKALHgvmFlWTukmM
+         hPhw==
+X-Gm-Message-State: ANhLgQ1Lvk+pyDHoxEcCPe1TP7WOlVZauwihGwIOpd7xq0mTYxt1L6N6
+        5YLfw1ojdmPjcmWT/A1Z53rdLTPbOqJeBKCTbdQnJg==
+X-Google-Smtp-Source: ADFU+vvJUfmM/0m2Kl1r0i8TEF6siBJ+sIaFFcE7R5SjUcp7lrhaI05WmNC97vrwgYF1aGK1og4oSP3PEBQrrbmvIW4=
+X-Received: by 2002:a1c:e0d6:: with SMTP id x205mr122589wmg.29.1583173035221;
+ Mon, 02 Mar 2020 10:17:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-2-glider@google.com>
+ <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
+ <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com> <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+In-Reply-To: <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 2 Mar 2020 19:17:02 +0100
+Message-ID: <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to copy_from_user()
+To:     Joe Perches <joe@perches.com>
+Cc:     Todd Kjos <tkjos@google.com>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Jann Horn <jannh@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dealloc_work_entries() function must update the
-work_free_list pointer while freeing its entries, since
-potentially called again on same list. A second iteration
-of the work list caused system crash. This happens, if
-work allocation fails during cma_iw_listen() and
-free_cm_id() tries to free the list again during cleanup.
+On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Mon, 2020-03-02 at 14:25 +0100, Alexander Potapenko wrote:
+> > On Mon, Mar 2, 2020 at 2:11 PM Joe Perches <joe@perches.com> wrote:
+> > > On Mon, 2020-03-02 at 14:04 +0100, glider@google.com wrote:
+> > > > Certain copy_from_user() invocations in binder.c are known to
+> > > > unconditionally initialize locals before their first use, like e.g. in
+> > > > the following case:
+> > > []
+> > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > []
+> > > > @@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
+> > > >
+> > > >               case BC_TRANSACTION_SG:
+> > > >               case BC_REPLY_SG: {
+> > > > -                     struct binder_transaction_data_sg tr;
+> > > > +                     struct binder_transaction_data_sg tr __no_initialize;
+> > > >
+> > > >                       if (copy_from_user(&tr, ptr, sizeof(tr)))
+> > >
+> > > I fail to see any value in marking tr with __no_initialize
+> > > when it's immediately written to by copy_from_user.
+> >
+> > This is being done exactly because it's immediately written to by copy_to_user()
+> > Clang is currently unable to figure out that copy_to_user() initializes memory.
+> > So building the kernel with CONFIG_INIT_STACK_ALL=y basically leads to
+> > the following code:
+> >
+> >   struct binder_transaction_data_sg tr;
+> >   memset(&tr, 0xAA, sizeof(tr));
+> >   if (copy_from_user(&tr, ptr, sizeof(tr))) {...}
+> >
+> > This unnecessarily slows the code down, so we add __no_initialize to
+> > prevent the compiler from emitting the redundant initialization.
+>
+> So?  CONFIG_INIT_STACK_ALL by design slows down code.
+Correct.
 
-Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
----
- drivers/infiniband/core/iwcm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> This marking would likely need to be done for nearly all
+> 3000+ copy_from_user entries.
+Unfortunately, yes. I was just hoping to do so for a handful of hot
+cases that we encounter, but in the long-term a compiler solution must
+supersede them.
 
-diff --git a/drivers/infiniband/core/iwcm.c b/drivers/infiniband/core/iwcm.c
-index ade71823370f..da8adadf4755 100644
---- a/drivers/infiniband/core/iwcm.c
-+++ b/drivers/infiniband/core/iwcm.c
-@@ -159,8 +159,10 @@ static void dealloc_work_entries(struct iwcm_id_private *cm_id_priv)
- {
- 	struct list_head *e, *tmp;
- 
--	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
-+	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
-+		list_del(e);
- 		kfree(list_entry(e, struct iwcm_work, free_list));
-+	}
- }
- 
- static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
--- 
-2.17.2
-
+> Why not try to get something done on the compiler side
+> to mark the function itself rather than the uses?
+This is being worked on in the meantime as well (see
+http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
+Do you have any particular requisitions about how this should look on
+the source level?
