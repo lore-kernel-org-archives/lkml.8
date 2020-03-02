@@ -2,282 +2,231 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC0FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01246C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E0D2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24E62166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B17OkTtp"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hroE/SB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgCBLcO (ORCPT
+        id S1727749AbgCBLdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:32:14 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46015 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgCBLcN (ORCPT
+        Mon, 2 Mar 2020 06:33:23 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35914 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725996AbgCBLdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:32:13 -0500
-Received: by mail-lf1-f66.google.com with SMTP id d27so4606444lfq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:32:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/kQf81rwzljo+6gF4uOJIiK/FdkF076Jj7P20yuqrLY=;
-        b=B17OkTtp58QXZK66qMZ3R/xgCcUxh1WTGqlRJA4NBLKFm5HNCmkQTqrLWPlS7zyUOU
-         PdFBTIsnNFLqSqLVG+qjflvau4hKviTljbIm703H5NufbaNClc4JocUGpC784KVuvgDj
-         oAbCzJVQAjRZkmh+BLaLsdWpS1HJCNPeaf78CQljahHy70U4mXY9yhR7eSI1wuLDFzVf
-         mLI0p7pezu1i7B5xxGzWdQSMuKxdwI72jz9sw2hn0LUtRb5lXBRN2LbcaEV6xohNmjBG
-         heV7uZoDEeOpl9wQHnH83Nd/AmhAGErJywZExJ7uu+dUEtcjhEEdLCvrnCrBszMGzTlG
-         PcFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/kQf81rwzljo+6gF4uOJIiK/FdkF076Jj7P20yuqrLY=;
-        b=XucsMN0ANQbWfwmpe1qzM/zHHm/vYGjnXppvoU+SykPJ6U2pLBJEGRTGCY5+gC8X27
-         CE9DIpSsAo3B5edFwzklqH2mqEtHvV8CBkt5iszbcxIteDBpLKqhW+NJBt8Oqs8rw60d
-         9UFBiLVm1vjqca60p7Mk3tJ8ktXrE99y814cRGMUhb1T2t11q+gxeWSUJcLStwX+Jlo+
-         GYAuaKpyiVcZYNUcbDlTvjsXmub903PdLj4McwxXhj//c6kilxcLmh/Vnm1uCAxeTNNy
-         uVn+iKmuTXWpdmaY+4NtuThhNTAT6h3/C46IqUiAJUVLWaaTa4wgN+Iq8ZFW60twumoV
-         5CZg==
-X-Gm-Message-State: ANhLgQ1+jUFG5yt7nicVCbwkdXPewVVnMaU0yHxzznsppsL49wfRyOpl
-        YYzCzn3+TrVnhX+SXcwallI8LpXCsGqq0ebclTlMWQ==
-X-Google-Smtp-Source: ADFU+vsWDngGp/y/+N0BEtKvcE+Ul5m5tiJ5cWskMSsuRvEDURGi1Kwqgt/FF6WgEtxeLaXKCdROxSjiAAqgvk6brJk=
-X-Received: by 2002:a19:5508:: with SMTP id n8mr10644269lfe.105.1583148729807;
- Mon, 02 Mar 2020 03:32:09 -0800 (PST)
+        Mon, 2 Mar 2020 06:33:23 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022BNSR4012757;
+        Mon, 2 Mar 2020 12:33:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=u/3EhNUAqwCWTExaWSBfRQATTiR3E5D/Mz6MD04Bw6g=;
+ b=hroE/SB9DqDFrKs9iZAYGAth3FHpPCSF2PwHBTCDXKs6bKcFTYxxZy3HgE9vlH37iJWJ
+ q3oZhfIcf0AIj/hdDLM8IVeHWwDZosAL7Y1wLaSUkuHTHWpmVBU9iNYhtfsAX1i2MIxw
+ Z+obZ34ju/0lt+Eoxo/fFFRbB1dCSDIA8xpQ8e8eSDJ0Dtf2Jl8p3H4pV4XEF9kfBj4G
+ 5b35NZFozO9eYthzqX+CivTHoJYcERlrdyJoWj5e8/hSl5+zLouWUR06hYK3/8BAN1YM
+ xfw5lEd/S2wmKCbJi/T8esYF8mzxM+rtZcaMFJzWpeFJvWJ1IyP4f/pntGSQB92urKe0 Dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yffqpk3w1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 12:33:12 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3BBDF100034;
+        Mon,  2 Mar 2020 12:33:08 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C8DA2BEC69;
+        Mon,  2 Mar 2020 12:33:08 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar 2020 12:33:07
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: [PATCHv2 1/5] i2c: i2c-stm32f7: disable/restore Fast Mode Plus bits in low power modes
+Date:   Mon, 2 Mar 2020 12:33:07 +0100
+Message-ID: <1583148787-24236-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
- <CA+G9fYtYqEbH9AUtVr744BKxLq0s1YuD=_kT9Ej=85dteHME4Q@mail.gmail.com> <CANRm+CyYLQ45wK86odRcDNpQfpgytnH-2qKoChi6w90byN624w@mail.gmail.com>
-In-Reply-To: <CANRm+CyYLQ45wK86odRcDNpQfpgytnH-2qKoChi6w90byN624w@mail.gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Mon, 2 Mar 2020 12:31:58 +0100
-Message-ID: <CADYN=9L3BeL+dfqO8BoNzRPHMWwM=a4kuwN9GD361egowFEhyw@mail.gmail.com>
-Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, oupton@google.com,
-        Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-02-28,2020-03-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 08:21, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Mon, 2 Mar 2020 at 13:39, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Mon, 2 Mar 2020 at 00:33, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > >
-> > > Linus,
-> > >
-> > > The following changes since commit a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
-> > >
-> > >   KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
-> > >
-> > > are available in the git repository at:
-> > >
-> > >   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-> > >
-> > > for you to fetch changes up to 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
-> > >
-> > >   KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
-> > >
-> > > ----------------------------------------------------------------
-> > > More bugfixes, including a few remaining "make W=1" issues such
-> > > as too large frame sizes on some configurations.  On the
-> > > ARM side, the compiler was messing up shadow stacks between
-> > > EL1 and EL2 code, which is easily fixed with __always_inline.
-> > >
-> > > ----------------------------------------------------------------
-> > > Christian Borntraeger (1):
-> > >       KVM: let declaration of kvm_get_running_vcpus match implementation
-> > >
-> > > Erwan Velu (1):
-> > >       kvm: x86: Limit the number of "kvm: disabled by bios" messages
-> > >
-> > > James Morse (3):
-> > >       KVM: arm64: Ask the compiler to __always_inline functions used at HYP
-> > >       KVM: arm64: Define our own swab32() to avoid a uapi static inline
-> > >       arm64: Ask the compiler to __always_inline functions used by KVM at HYP
-> > >
-> > > Jeremy Cline (1):
-> > >       KVM: arm/arm64: Fix up includes for trace.h
-> > >
-> > > Mark Rutland (1):
-> > >       kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
-> > >
-> > > Oliver Upton (1):
-> > >       KVM: VMX: check descriptor table exits on instruction emulation
-> > >
-> > > Paolo Bonzini (4):
-> > >       KVM: SVM: allocate AVIC data structures based on kvm_amd module parameter
-> > >       KVM: allow disabling -Werror
-> > >       KVM: x86: avoid useless copy of cpufreq policy
-> > >       Merge tag 'kvmarm-fixes-5.6-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-> > >
-> > > Valdis Kletnieks (1):
-> > >       KVM: x86: allow compiling as non-module with W=1
-> > >
-> > > Wanpeng Li (2):
-> > >       KVM: Introduce pv check helpers
-> > >       KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
-> >
-> > Kernel panic noticed on latest Linux mainline kernel.
-> > qemu_x86_64 boot failed due to kernel panic.
-> > Please investigate this problem.
-> >
->
-> Just give a quick shot. https://lkml.org/lkml/2020/3/2/78
+Defer the initial enabling of the Fast Mode Plus bits after the
+stm32f7_i2c_setup_timing call in probe function in order to avoid
+enabling them if speed is downgraded.
+Clear & restore the Fast Mode Plus bits in the suspend/resume
+handlers of the driver.
 
-I gave it a quick test and it worked.
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-Cheers,
-Anders
+----
+v2: rename struct stm32f7_i2c_msg regmap_reg/regmap_mask into fmp_reg/fmp_mask
+    remove useless brackets
+    remove useless if (ret) ... return 0 
+    use true/false in stm32f7_i2c_write_fm_plus_bits calls
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 52 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 39 insertions(+), 13 deletions(-)
 
->
-> > Meanwhile we will also investigate by using git bisect to identify bad patch.
-> >
-> > /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic \
-> >  -net nic,model=virtio,macaddr=DE:AD:BE:EF:66:05 -net tap \
-> > -m 1024 -monitor none -kernel
-> > bzImage--5.5+git0+98d54f81e3-r0-intel-corei7-64-20200301225337-2502.bin
-> > \
-> > --append "root=/dev/sda  rootwait console=ttyS0,115200" \
-> >  -hda rpb-console-image-lkft-intel-corei7-64-20200301225337-2502.rootfs.ext4 \
-> >  -m 4096 -smp 4 -nographic \
-> >  -drive format=qcow2,file=lava-guest.qcow2,media=disk,if=virtio,id=lavatest
-> >
-> > [    0.000000] Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
-> > 7.3.0 (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
-> > <trim>
-> > [    0.762542] kvm: no hardware support
-> > [    0.763123] BUG: kernel NULL pointer dereference, address: 000000000000028c
-> > [    0.763425] #PF: supervisor read access in kernel mode
-> > [    0.763425] #PF: error_code(0x0000) - not-present page
-> > [    0.763425] PGD 0 P4D 0
-> > [    0.763425] Oops: 0000 [#1] SMP NOPTI
-> > [    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
-> > [    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> > BIOS 1.12.0-1 04/01/2014
-> > [    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
-> > [    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
-> > 0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
-> > 41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
-> > c1 43
-> > [    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
-> > [    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
-> > [    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
-> > [    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
-> > [    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > [    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
-> > [    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
-> > knlGS:0000000000000000
-> > [    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
-> > [    0.763425] Call Trace:
-> > [    0.763425]  cpufreq_cpu_put+0x15/0x20
-> > [    0.763425]  kvm_arch_init+0x1f6/0x2b0
-> > [    0.763425]  kvm_init+0x31/0x290
-> > [    0.763425]  ? svm_check_processor_compat+0xd/0xd
-> > [    0.763425]  ? svm_check_processor_compat+0xd/0xd
-> > [    0.763425]  svm_init+0x21/0x23
-> > [    0.763425]  do_one_initcall+0x61/0x2f0
-> > [    0.763425]  ? rdinit_setup+0x30/0x30
-> > [    0.763425]  ? rcu_read_lock_sched_held+0x4f/0x80
-> > [    0.763425]  kernel_init_freeable+0x219/0x279
-> > [    0.763425]  ? rest_init+0x250/0x250
-> > [    0.763425]  kernel_init+0xe/0x110
-> > [    0.763425]  ret_from_fork+0x27/0x50
-> > [    0.763425] Modules linked in:
-> > [    0.763425] CR2: 000000000000028c
-> > [    0.763425] ---[ end trace 239abf40c55c409b ]---
-> > [    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
-> > [    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
-> > 0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
-> > 41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
-> > c1 43
-> > [    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
-> > [    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
-> > [    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
-> > [    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
-> > [    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > [    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
-> > [    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
-> > knlGS:0000000000000000
-> > [    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
-> > [    0.763425] BUG: sleeping function called from invalid context at
-> > /usr/src/kernel/include/linux/percpu-rwsem.h:38
-> > [    0.763425] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
-> > 1, name: swapper/0
-> > [    0.763425] INFO: lockdep is turned off.
-> > [    0.763425] irq event stamp: 696816
-> > [    0.763425] hardirqs last  enabled at (696815):
-> > [<ffffffff98c929d1>] _raw_read_unlock_irqrestore+0x31/0x50
-> > [    0.763425] hardirqs last disabled at (696816):
-> > [<ffffffff97e01f3b>] trace_hardirqs_off_thunk+0x1a/0x1c
-> > [    0.763425] softirqs last  enabled at (696776):
-> > [<ffffffff99000338>] __do_softirq+0x338/0x43a
-> > [    0.763425] softirqs last disabled at (696769):
-> > [<ffffffff97f045e8>] irq_exit+0xb8/0xc0
-> > [    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G      D
-> >   5.6.0-rc4 #1
-> > [    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> > BIOS 1.12.0-1 04/01/2014
-> > [    0.763425] Call Trace:
-> > [    0.763425]  dump_stack+0x7a/0xa5
-> > [    0.763425]  ___might_sleep+0x163/0x250
-> > [    0.763425]  __might_sleep+0x4a/0x80
-> > [    0.763425]  exit_signals+0x33/0x2d0
-> > [    0.763425]  do_exit+0xb6/0xcf0
-> > [    0.763425]  ? kernel_init_freeable+0x219/0x279
-> > [    0.763425]  ? rest_init+0x250/0x250
-> > [    0.763425]  rewind_stack_do_exit+0x17/0x20
-> > [    0.763425] Kernel panic - not syncing: Attempted to kill init!
-> > exitcode=0x00000009
-> >
-> >
-> > metadata:
-> >   git branch: master
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> >   git describe: v5.6-rc4
-> >   kernel-config:
-> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2502/config
-> >
-> > git log --online
-> > 98d54f81e36b (HEAD -> master, tag: v5.6-rc4, origin/master,
-> > origin/HEAD) Linux 5.6-rc4
-> > e70869821a46 Merge tag 'ext4_for_linus_stable' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4
-> > f853ed90e2e4 Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-> > 86f7e90ce840 KVM: VMX: check descriptor table exits on instruction emulation
-> > fb279f4e2386 Merge branch 'i2c/for-current-fixed' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
-> > 37b0b6b8b99c ext4: potential crash on allocation error in
-> > ext4_alloc_flex_bg_array()
-> > 38b17afb0ebb macintosh: therm_windtunnel: fix regression when
-> > instantiating devices
-> > 6c5d91124929 jbd2: fix data races at struct journal_head
-> > 7557c1b3f715 Merge tag 'scsi-fixes' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> >
-> >
-> > ref:
-> > https://lkft.validation.linaro.org/scheduler/job/1261774#L461
-> > https://lkft.validation.linaro.org/scheduler/job/1261816#L477
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 378956ac6d1d..cfe6d790a8fc 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -303,6 +303,8 @@ struct stm32f7_i2c_msg {
+  * @dma: dma data
+  * @use_dma: boolean to know if dma is used in the current transfer
+  * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
++ * @fmp_reg: register address for setting Fast Mode Plus bits
++ * @fmp_mask: mask for Fast Mode Plus bits in set register
+  * @wakeup_src: boolean to know if the device is a wakeup source
+  */
+ struct stm32f7_i2c_dev {
+@@ -326,6 +328,8 @@ struct stm32f7_i2c_dev {
+ 	struct stm32_i2c_dma *dma;
+ 	bool use_dma;
+ 	struct regmap *regmap;
++	u32 fmp_reg;
++	u32 fmp_mask;
+ 	bool wakeup_src;
+ };
+ 
+@@ -1830,28 +1834,37 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+ 	return 0;
+ }
+ 
++static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
++					  bool enable)
++{
++	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
++	    IS_ERR_OR_NULL(i2c_dev->regmap))
++		/* Optional */
++		return 0;
++
++	return regmap_update_bits(i2c_dev->regmap, i2c_dev->fmp_reg,
++				  i2c_dev->fmp_mask,
++				  enable ? i2c_dev->fmp_mask : 0);
++}
++
+ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+ 					  struct stm32f7_i2c_dev *i2c_dev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	int ret;
+-	u32 reg, mask;
+ 
+ 	i2c_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg-fmp");
+-	if (IS_ERR(i2c_dev->regmap)) {
++	if (IS_ERR(i2c_dev->regmap))
+ 		/* Optional */
+ 		return 0;
+-	}
+-
+-	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1, &reg);
+-	if (ret)
+-		return ret;
+ 
+-	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2, &mask);
++	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1,
++					 &i2c_dev->fmp_reg);
+ 	if (ret)
+ 		return ret;
+ 
+-	return regmap_update_bits(i2c_dev->regmap, reg, mask, mask);
++	return of_property_read_u32_index(np, "st,syscfg-fmp", 2,
++					  &i2c_dev->fmp_mask);
+ }
+ 
+ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+@@ -1929,9 +1942,6 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 				       &clk_rate);
+ 	if (!ret && clk_rate >= 1000000) {
+ 		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
+-		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
+-		if (ret)
+-			goto clk_free;
+ 	} else if (!ret && clk_rate >= 400000) {
+ 		i2c_dev->speed = STM32_I2C_SPEED_FAST;
+ 	} else if (!ret && clk_rate >= 100000) {
+@@ -1991,6 +2001,15 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto clk_free;
+ 
++	if (i2c_dev->speed == STM32_I2C_SPEED_FAST_PLUS) {
++		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
++		if (ret)
++			goto clk_free;
++		ret = stm32f7_i2c_write_fm_plus_bits(i2c_dev, true);
++		if (ret)
++			goto clk_free;
++	}
++
+ 	adap = &i2c_dev->adap;
+ 	i2c_set_adapdata(adap, i2c_dev);
+ 	snprintf(adap->name, sizeof(adap->name), "STM32F7 I2C(%pa)",
+@@ -2015,7 +2034,7 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev,
+ 				"Failed to request dma error %i\n", ret);
+-		goto clk_free;
++		goto fmp_clear;
+ 	}
+ 
+ 	if (i2c_dev->wakeup_src) {
+@@ -2069,6 +2088,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		i2c_dev->dma = NULL;
+ 	}
+ 
++fmp_clear:
++	stm32f7_i2c_write_fm_plus_bits(i2c_dev, false);
++
+ clk_free:
+ 	clk_disable_unprepare(i2c_dev->clk);
+ 
+@@ -2101,6 +2123,8 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+ 		i2c_dev->dma = NULL;
+ 	}
+ 
++	stm32f7_i2c_write_fm_plus_bits(i2c_dev, false);
++
+ 	clk_disable_unprepare(i2c_dev->clk);
+ 
+ 	return 0;
+@@ -2148,6 +2172,7 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+ 	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+ 	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
+ 	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
++	stm32f7_i2c_write_fm_plus_bits(i2c_dev, false);
+ 
+ 	pm_runtime_put_sync(i2c_dev->dev);
+ 
+@@ -2179,6 +2204,7 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+ 	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+ 	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+ 	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
++	stm32f7_i2c_write_fm_plus_bits(i2c_dev, true);
+ 
+ 	pm_runtime_put_sync(i2c_dev->dev);
+ 
+-- 
+2.7.4
+
