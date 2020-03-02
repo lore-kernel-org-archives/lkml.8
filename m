@@ -5,30 +5,31 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF63C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF177C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42E72173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EE62173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rtImn0oM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qz6i/Gf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgCBMX3 (ORCPT
+        id S1727810AbgCBMZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:23:29 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.73]:32648 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727644AbgCBMX2 (ORCPT
+        Mon, 2 Mar 2020 07:25:27 -0500
+Received: from gateway36.websitewelcome.com ([50.116.124.69]:11884 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727644AbgCBMZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:23:28 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 68884A9B9E
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:20:07 -0600 (CST)
+        Mon, 2 Mar 2020 07:25:27 -0500
+X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 07:25:26 EST
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 162F340DABC77
+        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 05:40:32 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 8k3Lj42KISl8q8k3LjhI89; Mon, 02 Mar 2020 06:20:07 -0600
+        id 8k8UjTDYQvBMd8k8UjO7b3; Mon, 02 Mar 2020 06:25:26 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +37,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LzPJ/4uvjh/hNTol+mYUIodA/9OpKpqV2PAXxF3nbT0=; b=rtImn0oMt1FNc1RKrglfJoSYbX
-        ItmzVSPy3kMLLOP7VGbn0W/KpNEz4y8QDPGhFm0zl4awyXhCXyIYjwvQ8j9ZhCT952qCsVfK6cW1G
-        Ics4BQiwBxmb97rpkclGpczXvUfo4ZZ/Dykp26y9RplkObJN4p1iUVG/SQJf8chRXITJCz1Xjp6sC
-        vdBDDbpPLLUciwZxsckcmrVkt+WMyZjqT0ttsLJzCfAr/iyOWJIsSmKX6lJGr5P7vbPc9TmxdZW+c
-        OeSVTRDZrGGYaifbvRW2aFLP0q770wZYhcgaDpkilM8oEU6iF9wcpkviJCmijUZFWoD58a1sjlV+u
-        CmesmJoQ==;
-Received: from [200.39.29.128] (port=42554 helo=embeddedor)
+        bh=tmrBVwLF1GrBgphU2OaUU3NzXEY7Y/RAayCavGXGVGQ=; b=qz6i/Gf6gzF9Rkyk5oV4G6UY5L
+        9sZXGU2DwebYfe2FbT2Cj+HtAoGeyltfzNE1fC6vNSX4bAVUVMdBCnnBzfIqRkbgYpyA1/YfZgXvB
+        G4Ogb1LHC/+TknvTiat+IjgId8UVeV1Y3ebxibbHV4z9ExXNr7AAzc58ZmiDKCN5saaJshi11/LHe
+        r6cStESS3nNpT1nYm8AMUCTCwpPKjDn+PxbfRLdTnmjqVFs25/sSjDJkXjzeMhDzxoyS24EUYGpAQ
+        EroyvBqaXgRXacXBSdrD5bW4KN3a+jwEVyoxwoD5SPovTNts5+k8dPrnnwhOSuddRuFc+NR+H0ZV8
+        I8+7RZ+w==;
+Received: from [201.162.161.240] (port=42570 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j8k3J-0046va-1u; Mon, 02 Mar 2020 06:20:05 -0600
-Date:   Mon, 2 Mar 2020 06:23:05 -0600
+        id 1j8k8S-004BHO-Md; Mon, 02 Mar 2020 06:25:24 -0600
+Date:   Mon, 2 Mar 2020 06:28:26 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] r8152: Replace zero-length array with flexible-array
+Subject: [PATCH][next] tehuti: Replace zero-length array with flexible-array
  member
-Message-ID: <20200302122305.GA1200@embeddedor>
+Message-ID: <20200302122826.GA2300@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -65,15 +66,15 @@ X-AntiAbuse: Original Domain - vger.kernel.org
 X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
 X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
-X-Source-IP: 200.39.29.128
+X-Source-IP: 201.162.161.240
 X-Source-L: No
-X-Exim-ID: 1j8k3J-0046va-1u
+X-Exim-ID: 1j8k8S-004BHO-Md
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.39.29.128]:42554
+X-Source-Sender: (embeddedor) [201.162.161.240]:42570
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 29
+X-Email-Count: 33
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,40 +112,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/usb/r8152.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/tehuti/tehuti.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index feedc0f964d8..9adfa2bbf593 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -891,7 +891,7 @@ struct fw_block {
- struct fw_header {
- 	u8 checksum[32];
- 	char version[RTL_VER_SIZE];
--	struct fw_block blocks[0];
-+	struct fw_block blocks[];
+diff --git a/drivers/net/ethernet/tehuti/tehuti.h b/drivers/net/ethernet/tehuti/tehuti.h
+index 5fc03c8eba0c..909e7296cecf 100644
+--- a/drivers/net/ethernet/tehuti/tehuti.h
++++ b/drivers/net/ethernet/tehuti/tehuti.h
+@@ -330,7 +330,7 @@ struct txd_desc {
+ 	u16 length;
+ 	u32 va_lo;
+ 	u32 va_hi;
+-	struct pbl pbl[0];	/* Fragments */
++	struct pbl pbl[];	/* Fragments */
  } __packed;
  
- /**
-@@ -930,7 +930,7 @@ struct fw_mac {
- 	__le32 reserved;
- 	__le16 fw_ver_reg;
- 	u8 fw_ver_data;
--	char info[0];
-+	char info[];
- } __packed;
- 
- /**
-@@ -982,7 +982,7 @@ struct fw_phy_nc {
- 	__le16 bp_start;
- 	__le16 bp_num;
- 	__le16 bp[4];
--	char info[0];
-+	char info[];
- } __packed;
- 
- enum rtl_fw_type {
+ /* Register region size */
 -- 
 2.25.0
 
