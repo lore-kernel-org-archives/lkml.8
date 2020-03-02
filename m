@@ -2,146 +2,120 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3715C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57202C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C806214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J7auA5MD"
+	by mail.kernel.org (Postfix) with ESMTP id 29EDF214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583159155;
+	bh=TIo+veEs16hslvlH82AiTf1xcl3jofNIs60au7Ay0M0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TbAqulXGBBTvtLoojMUlDE2sHOa4I2aGxDSelLaauCFCLhjj2/PoPw7yOVTFuHH+3
+	 b6+AZI7/Ec9oG+lcxbmFdmtgC12j12qHYXRThymbg/K1jdcr5N5Jf8sHUkiJK6Nse4
+	 tvg3EPWz29i6iDIbVuv8PokhKOXMXMKxxqU45a7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCBOZt (ORCPT
+        id S1727329AbgCBOZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:25:49 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40034 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCBOZs (ORCPT
+        Mon, 2 Mar 2020 09:25:54 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:46326 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgCBOZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:25:48 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m2so10120428qka.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:25:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lmUh8YY8ynplPa3dGXZIi9wFulS7zPcu7CuZdhanZXQ=;
-        b=J7auA5MDFr2qqbjZP4Kcx2XgvkIVefmjam+S1vE5Yr/H6T0wmWuCENZrf/UwxRPGYk
-         YnIpiGm0zyKRB2rcVQdvt1T6ssglc4GHXnHRsc39ED7oKswuiGGYkyOYRXVjoDCGFGv9
-         IogF27dnR8wFP87Zm7mvGJHy4gzsNU7ACDWu9Y3QKxSgT7SHvz6E8MG19epG3WgAUVlW
-         UqUN29DYFuhmGxIdcy0SiOL1jIBa+sy1VcITHDf3wfyXIrzvhufshwrEAc+ZM8d6ZPPz
-         Mf/LW96HhBJaoNAFECZwo5cCAz8LDrsH6oiEm4en+KZ2QFtKTFGGUYYGiACswStES6NO
-         YRyA==
+        Mon, 2 Mar 2020 09:25:53 -0500
+Received: by mail-wr1-f48.google.com with SMTP id j7so12749099wrp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:25:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lmUh8YY8ynplPa3dGXZIi9wFulS7zPcu7CuZdhanZXQ=;
-        b=OeBrhidTHx6jWhZRt2Jf5roiulvOTIZxVC1Ybmsj/iFdw2bo1sTpKMBE9XWEv7ESqa
-         B/wRzk0fTpk6qRKE1CwRmryWc/0kwJBKjXPw69r/eEMz0P3kYCi5K2ti+D6i8e+vywy2
-         9xOeWbucPthKfxOTiPLhwmFeRyax1R8/TRfDvIcnnEsJFk/1BFjr0dA0svDiBSgG4Li2
-         fKPNUCmC0jZjO+P0FLh3mlEXgyP1H/XjvxKUunfJMhY5RW7BoSDbQrIodCWQPmwutJcQ
-         9ATR3M6NX1MH7ln66chiMyMGsXvOkJjKr2D2y9Exv92nrio78Vl4zUlj+hNeQysBwwbm
-         xhYQ==
-X-Gm-Message-State: APjAAAVgfTeGWe47umr/US/3EtNBtZZqaKR163ntISn70/PVfYlOHdks
-        z5Lv0emoq+UZO7LoiI3PJaHnjbw8mFwaXlj/okLukQ==
-X-Google-Smtp-Source: APXvYqwDlqh3lh0XUXAR770jEfFmjHFeSpPxkDZZzRR62/nhK1NcL8KQ6zaZFa7ORSuAAf4nKeZsy/i2ppA7uidgKIU=
-X-Received: by 2002:a37:88b:: with SMTP id 133mr15643952qki.256.1583159146786;
- Mon, 02 Mar 2020 06:25:46 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=91i00x+r3ObU17/Jn02LmIVt8253x20peMqSjQ89ikI=;
+        b=uP9ETzMp5LSht6suRXGaPQBDmuKMfa42FlUlgv2DAi77X5ZjtiQ9/mE3L+YAhpKJx8
+         fh+TgBtTR9xv5GVWSZSb04hVxppKC8sa+nwhGRldsO3Wb7piMkfRqC3g1FjBDN6IDezT
+         1Q+f4K6/HGKVfZfu+mtWa8U8ZFTVk8QCD6XptNDjNZ8XbAaLuVfsWtlvYWrFDCRS/pcY
+         YEN2XQ/Z8YmCQQuWPgtybiFlVB3/M1JQ0r+qEArlT83AU1C3q6BJ2YjVCf1y0FcuCEfc
+         hBBxMvHFciJ89p92YvfHqc0KhAqNh3XV7YpxHg4iO5/kfRUqofFqmCpqKrkPgxWXGHss
+         RAug==
+X-Gm-Message-State: APjAAAXN0Y83Ai6f84GCScSFYsiuMwOslSJeq2eiEkMoiqFOCK5vv70J
+        APcyLg/dKid1QBobmhSpTrQ=
+X-Google-Smtp-Source: APXvYqwdAQL3VnZNwjPeETAbUL+bLXtL8v4BUHFJcIm/NTpDVwnZDrNB/j65t032OBVc8SsE4bQMYg==
+X-Received: by 2002:a5d:5286:: with SMTP id c6mr16208977wrv.418.1583159151203;
+        Mon, 02 Mar 2020 06:25:51 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id q12sm30065989wrg.71.2020.03.02.06.25.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 06:25:50 -0800 (PST)
+Date:   Mon, 2 Mar 2020 15:25:49 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+Message-ID: <20200302142549.GO4380@dhcp22.suse.cz>
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+ <20200228034248.GE29971@bombadil.infradead.org>
+ <87a7538977.fsf@yhuang-dev.intel.com>
+ <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+ <871rqf850z.fsf@yhuang-dev.intel.com>
+ <20200228095048.GK3771@dhcp22.suse.cz>
+ <87d09u7sm2.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-References: <0000000000003cbb40059f4e0346@google.com> <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
- <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
- <CAHC9VhQnbdJprbdTa_XcgUJaiwhzbnGMWJqHczU54UMk0AFCtw@mail.gmail.com>
- <CACT4Y+azQXLcPqtJG9zbj8hxqw4jE3dcwUj5T06bdL3uMaZk+Q@mail.gmail.com>
- <CAHC9VhRRDJzyene2_40nhnxRV_ufgyaU=RrFxYGsnxR4Z_AWWw@mail.gmail.com>
- <55b362f2-9e6b-2121-ad1f-61d34517520b@i-love.sakura.ne.jp>
- <CAHC9VhT51-xezOmy1SM4eP_jFH9A8Tc05wY=cwDg7oC=FgYbYQ@mail.gmail.com>
- <CACT4Y+YgoyBCoPYxXOb8oQjXYc+Q-cZLPi6y1Yrx_mnfzOQafQ@mail.gmail.com> <CAHC9VhTsKCJf8bjOT+cxWZEX1y4c57KcVz0Y2c3vRGnJJQA4pA@mail.gmail.com>
-In-Reply-To: <CAHC9VhTsKCJf8bjOT+cxWZEX1y4c57KcVz0Y2c3vRGnJJQA4pA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 2 Mar 2020 15:25:35 +0100
-Message-ID: <CACT4Y+bjB1TWZgrQiq0m57NL8T6rJX4b_vPRsoYTY0Lwqh2qVw@mail.gmail.com>
-Subject: Re: kernel panic: audit: backlog limit exceeded
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d09u7sm2.fsf@yhuang-dev.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 2:43 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Mon, Mar 2, 2020 at 3:47 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > On Fri, Feb 28, 2020 at 2:09 PM Paul Moore <paul@paul-moore.com> wrote:
-> > > On Fri, Feb 28, 2020 at 5:03 AM Tetsuo Handa
-> > > <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> > > > On 2020/02/28 9:14, Paul Moore wrote:
-> > > > > We could consider adding a fuzz-friendly build time config which would
-> > > > > disable the panic failsafe, but it probably isn't worth it at the
-> > > > > moment considering the syzbot's pid namespace limitations.
-> > > >
-> > > > I think adding a fuzz-friendly build time config does worth. For example,
-> > > > we have locations where printk() emits "BUG:" or "WARNING:" and fuzzer
-> > > > misunderstands that a crash occurred. PID namespace is irrelevant.
-> > > > I proposed one at
-> > > > https://lkml.kernel.org/r/20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp .
-> > > > I appreciate your response.
-> > >
-> > > To be clear, I was talking specifically about the intentional panic in
-> > > audit_panic().  It is different from every other panic I've ever seen
-> > > (perhaps there are others?) in that it doesn't indicate a serious
-> > > error condition in the kernel, it indicates that audit records were
-> > > dropped.  It seems extreme to most people, but some use cases require
-> > > that the system panic rather than lose audit records.
-> > >
-> > > My suggestion was that we could introduce a Kconfig build flag that
-> > > syzbot (and other fuzzers) could use to make the AUDIT_FAIL_PANIC case
-> > > in audit_panic() less panicky.  However, as syzbot isn't currently
-> > > able to test the kernel's audit code due to it's pid namespace
-> > > restrictions, it doesn't make much sense to add this capability.  If
-> > > syzbot removes that restriction, or when we get to the point that we
-> > > support multiple audit daemons, we can revisit this.
-> >
-> > Yes, we need some story for both panic and pid ns.
-> >
-> > We also use a separate net ns, but allow fuzzer to create some sockets
-> > in the init net ns to overcome similar limitations. This is done using
-> > a pseudo-syscall hack:
-> > https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/executor/common_linux.h#L1546-L1562
-> >
-> > But the pid ns is different and looks a bit harder as we need it
-> > during send of netlink messages.
-> >
-> > As a strawman proposal: the comment there says "for now":
-> >
-> > /* Only support auditd and auditctl in initial pid namespace
-> >  * for now. */
-> > if (task_active_pid_ns(current) != &init_pid_ns)
-> >   return -EPERM;
-> >
-> > What does that mean? Is it a kind of TODO? I mean if removing that
-> > limitation is useful for other reasons, then maybe we could kill 2
-> > birds with 1 stone.
->
-> Long story made short - the audit subsystem doesn't handle namespaces
-> or containers as well as it should.  Work is ongoing to add the
-> necessary support, but it isn't there yet and I don't want us to just
-> start removing restrictions until we have the proper support in place
-> (this what I alluded to with my "... when we get to the point that we
-> support multiple audit daemons, we can revisit this").
+On Mon 02-03-20 22:12:53, Huang, Ying wrote:
+> Michal Hocko <mhocko@kernel.org> writes:
+[...]
+> > And MADV_FREE pages are a kind of cache as well. If the target node is
+> > short on memory then those will be reclaimed as a cache so a
+> > pro-active freeing sounds counter productive as you do not have any
+> > idea whether that cache is going to be used in future. In other words
+> > you are not going to free a clean page cache if you want to use that
+> > memory as a migration target right? So you should make a clear case
+> > about why MADV_FREE cache is less important than the clean page cache
+> > and ideally have a good justification backed by real workloads.
+> 
+> Clean page cache still have valid contents, while clean MADV_FREE pages
+> has no valid contents.  So penalty of discarding the clean page cache is
+> reading from disk, while the penalty of discarding clean MADV_FREE pages
+> is just page allocation and zeroing.
 
-I see. Thanks for context.
+And "just page allocation and zeroing" overhead is the primary
+motivation to keep the page in memory. It is a decision of the workload
+to use MADV_FREE because chances are that this will speed things up. All
+that with a contract that the memory goes away under memory pressure so
+with a good workload/memory sizing you do not really lose that
+optimization. Now you want to make decision on behalf of the consumer of
+the MADV_FREE memory.
 
-FTR we've started collecting such cases
-(panic-but-working-as-intended-and-hard-to-selectively-filter-out) in
-https://github.com/google/syzkaller/issues/1622. So that they are not
-lost in future.
+> I understand that MADV_FREE is another kind of cache and has its value.
+> But in the original implementation, during migration, we have already
+> freed the original "cache", then reallocate the cache elsewhere and
+> copy.  This appears more like all pages are populated in mmap() always.
+> I know there's value to populate all pages in mmap(), but does that need
+> to be done always by default?
+
+It is not. You have to explicitly request MAP_POPULATE to initialize
+mmap.
+
+-- 
+Michal Hocko
+SUSE Labs
