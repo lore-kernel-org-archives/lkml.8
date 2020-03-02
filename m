@@ -2,106 +2,87 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D21C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11605C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D4721739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E2121739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 15:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JyzupQSt"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="Ka8fcbUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCBP1u (ORCPT
+        id S1727104AbgCBP3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 10:27:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54718 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726751AbgCBP1t (ORCPT
+        Mon, 2 Mar 2020 10:29:14 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52429 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgCBP3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 10:27:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583162868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JEaoL0NQ8YVPWWyRVDVCR6lLWIpeqTebjG8iPOD9Bmg=;
-        b=JyzupQStQi8/1XphmwQdxK4rPr6C5W4llKwqafdCLn4ByN2AilQ/6sI1Sdrva/9dvLKPI3
-        bf/4lajld5j1orR0hnaVOoRLqDypcll/n+PN4EimFtACBjZNBNnHg/R4dTRt4ApLABWufZ
-        6chxmsFGWlF+8uzjhheQjWxi1a3ciZ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-WeqELKtxNR2vKMOTZb8t9w-1; Mon, 02 Mar 2020 10:27:46 -0500
-X-MC-Unique: WeqELKtxNR2vKMOTZb8t9w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CB13CF98F;
-        Mon,  2 Mar 2020 15:27:45 +0000 (UTC)
-Received: from krava (ovpn-205-46.brq.redhat.com [10.40.205.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 077039CA3;
-        Mon,  2 Mar 2020 15:27:43 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 16:27:41 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf parse-events: Use asprintf() instead of strncpy()
- for tracepoints
-Message-ID: <20200302152741.GA263077@krava>
-References: <20200302145535.GA28183@kernel.org>
+        Mon, 2 Mar 2020 10:29:14 -0500
+Received: by mail-pj1-f65.google.com with SMTP id lt1so1856586pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 07:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZELvoTh0xXCJ16TM4LMcgSPymnk+qgV/Io9vwrxStOI=;
+        b=Ka8fcbUomoExO8dMtRavZ6xdQDFoqTL+dMYjjXJnplJQqNty6kInHp/SA8oQqkNfoc
+         mGep+DT/B7MFOUmHtYk3Eyuppv9vkrOcmRjAuJUUYww44Ms+jsBHeJpww+mCDbHSZAAo
+         RBzbstkJYS1XpxL0UmA1+0+jaBFLusmx5PUpRtILwXTlfTbNUuTesemYQ7OGCVxovv3j
+         DF0Aed3Nhf2ftEM8pWNsvWYJC8mmM6oEG2lFzB7anqXDcc8Z8x/65c9/4D2oV9vGlHyq
+         ry9YkJu6JP4Kr19aM9RJmNgMs/42jsFIay1p87AEAgxzNxMwLhQXcz+W8wNEcv4h32Rx
+         rgwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZELvoTh0xXCJ16TM4LMcgSPymnk+qgV/Io9vwrxStOI=;
+        b=BzsMXAbUG28ehaSp6QRdIkY4RwlLrmXTCoJz2tkyAGFeQ7YXjRd4I1us9O3FCNHDDG
+         t/E6ld4RcUssgSPLnXel8ITabyUJn25QdjrmWPZPDVGD4eR5z8rwdfCLcO+3yexndlpG
+         iUI8PZ7/3OXrNcDbp01ngjiX2663SAR3Fz7GRBh3tJXXWAjVV8PI6ip+iPlSErWXNIkU
+         x0xt/AYZ8Hb58sTyf6mAa7ifX1Ih7Hr0QhOmsHxQtdReDTBvp0HxBiA9m3w0muOL30kh
+         edcC/qOFvYabY4GLqB/F0IcFqqn4o1iiMjCgl7cRryWxOvEp1LT4Dezm9zBsqTjbDE7y
+         Gd8Q==
+X-Gm-Message-State: APjAAAVVuHdHibrQ/2++2QjP+GMutdA4sOU0zm6ypbQjyYZYwXQJycqY
+        uenlFtPRnj41Um/ZxOZh5AGEMg==
+X-Google-Smtp-Source: APXvYqyxlU/eQXwoIsbmUvLYYQ4AbS80Gp7//bZAGJ2KIFGK4BxXwB+sNYYCGL1sq8Z5F8aZXJNFig==
+X-Received: by 2002:a17:902:b40c:: with SMTP id x12mr18636387plr.70.1583162953095;
+        Mon, 02 Mar 2020 07:29:13 -0800 (PST)
+Received: from cisco ([2001:420:c0c8:1003::427])
+        by smtp.gmail.com with ESMTPSA id z6sm38762pjd.34.2020.03.02.07.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 07:29:12 -0800 (PST)
+Date:   Mon, 2 Mar 2020 08:29:09 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "Tobin C . Harding" <me@tobin.cc>,
+        kernel-hardening@lists.openwall.com,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/mm/init_32: Stop printing the virtual memory
+ layout
+Message-ID: <20200302152909.GA7777@cisco>
+References: <202002291534.ED372CC@keescook>
+ <20200301002209.1304982-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302145535.GA28183@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200301002209.1304982-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 11:55:35AM -0300, Arnaldo Carvalho de Melo wrote:
-
-SNIP
-
->       |          ^~~~~~
->   CC       /tmp/build/perf/util/call-path.o
+On Sat, Feb 29, 2020 at 07:22:09PM -0500, Arvind Sankar wrote:
+> For security, don't display the kernel's virtual memory layout.
 > 
-> So I replaced it with asprintf to make the code shorter, use a bit less
-> memory and deal with the above problem, ok?
-> 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index c01ba6f8fdad..a14995835d85 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -257,21 +257,15 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
->  				path = zalloc(sizeof(*path));
->  				if (!path)
->  					return NULL;
-> -				path->system = malloc(MAX_EVENT_LENGTH);
-> -				if (!path->system) {
-> +				if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
->  					free(path);
->  					return NULL;
->  				}
-> -				path->name = malloc(MAX_EVENT_LENGTH);
-> -				if (!path->name) {
-> +				if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
->  					zfree(&path->system);
->  					free(path);
->  					return NULL;
->  				}
-> -				strncpy(path->system, sys_dirent->d_name,
-> -					MAX_EVENT_LENGTH);
-> -				strncpy(path->name, evt_dirent->d_name,
-> -					MAX_EVENT_LENGTH);
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-looks good to me, and we can probably remove MAX_EVENT_LENGTH as well?
-
-jirka
-
+Acked-by: Tycho Andersen <tycho@tycho.ws>
