@@ -2,63 +2,140 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6F2C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92599C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC71824699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694EA24699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 00:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OWl34R2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCBAgw (ORCPT
+        id S1726809AbgCBAhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 19:36:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
+        Sun, 1 Mar 2020 19:37:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:37479 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgCBAgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 19:36:51 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726592AbgCBAhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 19:37:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6391246B7;
-        Mon,  2 Mar 2020 00:36:50 +0000 (UTC)
-Date:   Sun, 1 Mar 2020 19:36:49 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] trace: Export anonymous tracing
-Message-ID: <20200301193649.71da6747@oasis.local.home>
-In-Reply-To: <158310134594.5508.5362429296192213548@skylake-alporthouse-com>
-References: <20200301155248.4132645-1-chris@chris-wilson.co.uk>
-        <20200301131816.277dd398@oasis.local.home>
-        <158310134594.5508.5362429296192213548@skylake-alporthouse-com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48W1Sf0twSz9sSV;
+        Mon,  2 Mar 2020 11:37:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583109458;
+        bh=jvcFUHM117CyrBq3WcbbM9BOYsmO5EEKz50Jjm+Zmyc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OWl34R2/McLkAOjUevN9acm7ZVlvSftz6DcTRl940Ou2BX4qiDFr+uIknAcVxbCRM
+         pu8maZX+UHGTHSGIFjD+OSFwruHd7dZgavFSQhWn5SOy3N/Eth9lVPSg0wURbZHOX4
+         sMLzuJMHJZJkPfGvzecoNHxvdu6UtIjKzd6pAbYtG+dkzOjl8me/uCv7msoFy6tTNZ
+         Cgo3YnSqIBlXMgqGdbMxJWQCDnl/ihm0/6mZMeuQIPUSqrujG+s/us+j5TqULL/RAo
+         tcklbqOnhMmS13xEgjcAhsGYcieBi1YkFHG03FUI/iR6FldXrqEukKwP1zgwXg+2dJ
+         Ag/jZHKNhpVow==
+Date:   Mon, 2 Mar 2020 11:37:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: linux-next: build failure after merge of the keys tree
+Message-ID: <20200302113737.7c3fdee0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/HA33pD_FuR9008Kr8+hkX0h";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 01 Mar 2020 22:22:25 +0000
-Chris Wilson <chris@chris-wilson.co.uk> wrote:
+--Sig_/HA33pD_FuR9008Kr8+hkX0h
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > I'm curious to why we need it to be anonymous. Why not allow them to be
-> > visible from the tracing directory. This could allow for easier
-> > debugging. Note, the trace instances have ref counters thus they can't
-> > be removed if something has a reference to it.  
-> 
-> Do you really want a few thousand (or even tens) i915-client-%d? That
-> does not particularly seem like it adds ease-of-use, and would need to be
-> restricted to the client [or root]. The intent is for the client to have
-> a private channel for detailed debug/error reporting of its own calls
-> into the kernel.
+Hi all,
 
-Wow! I didn't expect this to have that many anonymous users. What is
-the use case for again?
+After merging the keys tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
--- Steve
+fs/io_uring.c: In function 'io_splice_punt':
+fs/io_uring.c:2473:6: error: too few arguments to function 'get_pipe_info'
+ 2473 |  if (get_pipe_info(file))
+      |      ^~~~~~~~~~~~~
+In file included from include/linux/splice.h:12,
+                 from include/linux/skbuff.h:36,
+                 from include/linux/if_ether.h:19,
+                 from include/uapi/linux/ethtool.h:19,
+                 from include/linux/ethtool.h:18,
+                 from include/linux/netdevice.h:37,
+                 from include/net/sock.h:46,
+                 from fs/io_uring.c:64:
+include/linux/pipe_fs_i.h:267:25: note: declared here
+  267 | struct pipe_inode_info *get_pipe_info(struct file *file, bool for_s=
+plice);
+      |                         ^~~~~~~~~~~~~
+
+Caused by commit
+
+  549d46d3827d ("pipe: Add general notification queue support")
+
+interacting with commit
+
+  52b31bc9aabc ("io_uring: add splice(2) support")
+
+from the block tree.
+
+I have added the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 2 Mar 2020 11:27:27 +1100
+Subject: [PATCH] io_uring: fix up for get_pipe_info() API change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index fb8fe0bd5e18..8cdd3870cd4e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2470,7 +2470,7 @@ static int io_splice_prep(struct io_kiocb *req, const=
+ struct io_uring_sqe *sqe)
+=20
+ static bool io_splice_punt(struct file *file)
+ {
+-	if (get_pipe_info(file))
++	if (get_pipe_info(file, true))
+ 		return false;
+ 	if (!io_file_supports_async(file))
+ 		return true;
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HA33pD_FuR9008Kr8+hkX0h
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5cVVEACgkQAVBC80lX
+0GwfLwf/cot/JmEiiZU7+2qsvBtR14DOu7e/gM2Ew6NfefRoNC7a2/NPVlRvCz8A
+8omh0PvgzWjK4XaxGPm0XTte0ZwF+BDRTgh/zY4nTzlpPJQEqxF+Ggw1UyVqNjZg
+RCVH05IGikTEwUTJ3FLik6Zm89I4NCtBACllQp/o+EAbyOcOXlgm9MzB/RTXrIDc
+2OMx0mzutudj+2zkozRdDguGWJIK97nw3mkOYbh4WAaXhpxyETE73B3l+5B0wV6m
+s7+2cUrdW6S2bi+EpaG+sTviyNKrIzmQNItB+oF3J2FFHDyK84FuWcPMLGJN+8lR
+JmCgdX9jhxxlyHRPibPwhoQ7hOfsTw==
+=8Nn9
+-----END PGP SIGNATURE-----
+
+--Sig_/HA33pD_FuR9008Kr8+hkX0h--
