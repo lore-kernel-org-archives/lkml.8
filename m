@@ -2,91 +2,167 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D85AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEC9C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183A821D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583152744;
-	bh=C7a6EUgZA8cgtVm5DXvgq0axiDNM2HTgCWAAXg+n4w4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Idj5n+D9R9+1zW/ePxlmRIJAKIHKwVt4s8gKdfBC+9Ffl/jDUU47el19ZEMth8lE
-	 1Tj3zjjpdIK5Ke4vKGbp+yGr60nMHIvMgacBQytPG8fZ/XCZMz75zU0XBOHAZeju+Q
-	 UpoiNxaxoDL1bJcfUpF9AJxCxjoM0MjKzsxHdc00=
+	by mail.kernel.org (Postfix) with ESMTP id 5F90A21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nYaQcCZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgCBMjC (ORCPT
+        id S1727734AbgCBMkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:39:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:60334 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbgCBMjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:39:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0F172F;
-        Mon,  2 Mar 2020 04:39:01 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 444823F534;
-        Mon,  2 Mar 2020 04:39:01 -0800 (PST)
-Date:   Mon, 2 Mar 2020 12:38:59 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        jonas.gorski@gmail.com, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] spi: bcm63xx-hsspi: Really keep pll clk enabled
-Message-ID: <20200302123859.GC4166@sirena.org.uk>
-References: <20200228213838.7124-1-christophe.jaillet@wanadoo.fr>
+        Mon, 2 Mar 2020 07:40:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43640 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727361AbgCBMkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 07:40:39 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022CRZP1031014;
+        Mon, 2 Mar 2020 13:40:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=od867/NqQ0zAhpHSh/6j6bad1lhZJnIKCi8AtM5gVIw=;
+ b=nYaQcCZhWBqb0nnxjzdyHnMifIGYDGQmQCWWG5kdWwKEKVrNwC3nRiXqsAi90ofqa3xj
+ Z2UsyY28A1h8UIB63mu4eEJ5ksxdcuhzyFZJ3rgH2dLzu2pHs0hMtJJxpm76LgCPxBg7
+ RGUKdLHwmMEBjLy+KjYAPeQVGkKWuzYRr5aCrh+bR3c7WQ4RUGYHUaD9gn7X5Z6rBdka
+ ZiCS6Um2JKrBMYxenV9juKDDpeO3x6hpaTG2JSlz3I3Xhv46QEk7oCJSBj97bo+3wL+Z
+ 616UieuuMdLVeQjCMYab5TuNyw2lp2cSMZbMqVTe5fGjBTj4sg3bpI9tMTiiR241Fpo5 aw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfea6khun-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 13:40:09 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A724D100034;
+        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 943FD2C38B1;
+        Mon,  2 Mar 2020 13:40:03 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 2 Mar
+ 2020 13:40:02 +0100
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+ <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <866a8137-4152-da6e-f6d6-03aa245ddbb0@st.com>
+Date:   Mon, 2 Mar 2020 13:40:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZmUaFz6apKcXQszQ"
-Content-Disposition: inline
-In-Reply-To: <20200228213838.7124-1-christophe.jaillet@wanadoo.fr>
-X-Cookie: Whistler's mother is off her rocker.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqJuj1=ae+_-L7_R6+ZfcbNW99BDUDSvuYSsN1=gRcvQqQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-03-02,2020-03-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ZmUaFz6apKcXQszQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Feb 28, 2020 at 10:38:38PM +0100, Christophe JAILLET wrote:
+On 2/21/20 8:38 PM, Rob Herring wrote:
+> On Fri, Feb 21, 2020 at 11:52 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+>>> This commit adds a new script to create a file (in dts file directory) with
+>>> some information (date, Linux version, user). This file could then be used
+>>> to populate "build-info" property in every dts file that would use this
+>>> build information:
+>>>
+>>> Example:
+>>>
+>>> / {
+>>>        ...
+>>>        build-info = /incbin/("dtb-build.txt");
+>>
+>> s/.txt/.dtsi/
+>>
+>> and same wherever the file name is used.
+>>
+>>
+>>>        ...
+>>> };
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>>
+>>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>>> index bae62549e3d2..a5af84ef4ffc 100644
+>>> --- a/scripts/Makefile.lib
+>>> +++ b/scripts/Makefile.lib
+>>> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>>>   # DTC
+>>>   # ---------------------------------------------------------------------------
+>>>   DTC ?= $(objtree)/scripts/dtc/dtc
+>>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+>>>
+>>>   # Disable noisy checks by default
+>>>   ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>>> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>>>
+>>>   quiet_cmd_dtc = DTC     $@
+>>>   cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>>> +     $(DTB_GEN_INFO) $(src) ; \
+>>>        $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>>>        $(DTC) -O $(2) -o $@ -b 0 \
+>>>                $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>>> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+>>> new file mode 100755
+>>> index 000000000000..0cd8bd98e410
+>>> --- /dev/null
+>>> +++ b/scripts/gen_dtb_build_info.sh
+>>> @@ -0,0 +1,10 @@
+>>> +#!/bin/bash
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +set -o nounset
+>>> +
+>>> +DTB_DIR=$1
+>>> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+>>> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+>>
+>> I would remove the filler words "From", "by", "the", and the trailing
+>> period ('.').
+>>
+>> <bikeshed>
+>> You might consider using a format more like the Linux
+>> kernel version line, which puts parenthesis around the
+>> compiled by info.
+> 
+> IMO, we should use exactly the Linux kernel version line. Or exactly
+> the u-boot version line when built in u-boot.
 
-> To be honest, I don't see why we need to keep pll clk, or hsspi clk
-> enabled during the lifetime of the driver. My understanding of the code is
-> that it is only used to get the 'speed_hz' value in the probe function.
-> This value is never refreshed afterwards.
-> I don't see the point in enabling/disabling the clks. I think that they
-> both could be disabled in the probe function, without the need to keep
-> track in the bcm63xx_hsspi structure, neither during pm cycles or the
-> remove fucntion.
+I agree to keep the same format than Linux banner. But does it make 
+sense to keep uts version, config flags ?
 
-If the device has a clock there's a good chance it's needed for the
-device to operate and that disabling it will save a little power when
-the device isn't doing anything.
+regards
+Alex
 
---ZmUaFz6apKcXQszQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5c/mMACgkQJNaLcl1U
-h9Cwewf+LaiDuAFWakLpTKZ/xUwqWqdMeVhPJMgEYCToIfMYYsMsBLLvE57s71+Z
-Se4OYGwCbmz75sJq7KZTHEt7TStQ0Wfwtb2VTQ6e1nhoT0q6Vh/p0Xos0dapsFkw
-sERlnAbZzf0t9rrXQB6yLjBPnU9X8iS/tatAOYylTZb3g2KO31ZxT1/jg6op1+us
-bK4fcoLF+8W2G5leWAr9rn0YOTycey9CtBLnsyB6YUWGkUBx7rGhdW6sO2VWFcpy
-WkrryYV+AudPf1OU0PEtdS8acdzB6QCxIzTjyXwZXDyDlcYF9VVMrAuvMZy/XoPn
-rb3dzStyqbqmU+y0ZF4jWo+HDIeKig==
-=mNDy
------END PGP SIGNATURE-----
-
---ZmUaFz6apKcXQszQ--
+> 
+> Rob
+> 
