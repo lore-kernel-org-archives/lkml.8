@@ -2,207 +2,87 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE80EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C071A2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583159827;
-	bh=J6yFcYaIyDQrcndk5c6IfzHpFuwW8HHEeMP+7HBq2xM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1lWte8eWeLw2ffdT1/wDEVrYnfxrzKPP8B/l/OWdCt2lzgfl87JsGBuS9pCDZGZfT
-	 MkZKw2BSkJmkwurDCoeDIkooUS9O4KSl+rPH2JBjRz5o6Js2wGPcKRyy6OTKmg6TjA
-	 uA7rixqouD0aMWHc2T7/SdO3hHOxIj5RircN72/o=
+	by mail.kernel.org (Postfix) with ESMTP id 30FC321775
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 14:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="jWhtjW8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgCBOhG (ORCPT
+        id S1727350AbgCBOhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 09:37:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:33524 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgCBOhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 09:37:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA5CC101E;
-        Mon,  2 Mar 2020 06:37:05 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E05A3F534;
-        Mon,  2 Mar 2020 06:37:05 -0800 (PST)
-Date:   Mon, 02 Mar 2020 14:37:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, alsa-devel@alsa-project.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoc: amd: Add DMIC switch capability to machine driver" to the asoc tree
-In-Reply-To:  <20200302082443.51587-1-akshu.agrawal@amd.com>
-Message-Id:  <applied-20200302082443.51587-1-akshu.agrawal@amd.com>
-X-Patchwork-Hint: ignore
+        Mon, 2 Mar 2020 09:37:53 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43473 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCBOhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:37:53 -0500
+Received: by mail-io1-f66.google.com with SMTP id n21so11718002ioo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 06:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fmChl07tCnnnsdQkbYOcsmPILzyShLh33qBmgjXyxkA=;
+        b=jWhtjW8byNV5i6zYn7TLRszuxZRXo+KsJDCRQNqMJxy4mxFW6SnjBqFPbllWCdiz1Z
+         vSZtoEf4aWL9hhjLep45IC4+bNTaq9pt5eKC+7nuCeFX4LdBjvaVVZYOKBto5dDPmc+T
+         ApyO6v+VFuYhFl9pSTY5dcurg8VNvxgwjDPcQQzBC3ydlusa+PlxEggxirhemmvaspww
+         fJvqe0xyjFt8IX75KsbYqUodLnB1+D7tUCfuLt7iLqbBoM1gvEDYAArmW/dIVo6votI7
+         onnLTrXtd0ivQoMl0j1nvFrpMKbS4PY52CbGZ5FhNEgTkJ5KFzYSyzINWwRgMG06rjZi
+         mncw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fmChl07tCnnnsdQkbYOcsmPILzyShLh33qBmgjXyxkA=;
+        b=FMQWFsw8DpLHUoD/HaTj8Nh7HEuda/ChIM+UTEWvJVQW79a3dgaiwhm+A8Kl3eAYKo
+         +Tcwllk5sfF5BKIN0nUcH/gTpWbY4Y9auNPCjEvLHwJziHlTEQTRT/jAGQL+EuzLH8+E
+         tzgy14hX2xiOEaqqFws4bAbJlvsvYtfTidJpYUQoADh+HLQwt8z0r9WFp2Ul7bhYuWTY
+         HOp3nxpta97f9hCtC1SE/cVKaViXmTuQks0LG3SgCpGFSmmCJ50zIeRwTDEh6kGKYS/d
+         Km3TG/DEXeXjFNnjHGzKsUHG0tZP71bvEojqTdxakI60xVQW4XLAAjNwPbPVoXtdwHMg
+         92lg==
+X-Gm-Message-State: APjAAAWurZxIKwdcZ5K9lshn3a2tHrbKV0gsFKwmvMH2XK++nUM8uK5/
+        I9Ccsw4t4g0Mg5tguzsK4WFrFQ6Dedc+jChJK+tytg==
+X-Google-Smtp-Source: APXvYqwpTrVreRlhOJstucnPx7hIH1xJIKArYs7wGfkg+h8SN/KzbOrQMY8TYI6vLJO0hKUh/OE4DxkfB83yk2X5bx4=
+X-Received: by 2002:a6b:5a06:: with SMTP id o6mr12550360iob.54.1583159871960;
+ Mon, 02 Mar 2020 06:37:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221104721.350-1-jinpuwang@gmail.com> <20200221104721.350-2-jinpuwang@gmail.com>
+ <8131773d-cf6e-9c1d-faad-a250f7135432@acm.org>
+In-Reply-To: <8131773d-cf6e-9c1d-faad-a250f7135432@acm.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 2 Mar 2020 15:37:41 +0100
+Message-ID: <CAMGffEn5tPDCsGZNMO9wZE6RGJ+VKM4mTp4ynjW13CKrv+Fh3Q@mail.gmail.com>
+Subject: Re: [PATCH v9 01/25] sysfs: export sysfs_remove_file_self()
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
-
-   ASoc: amd: Add DMIC switch capability to machine driver
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 72c3b2b09fcdaa6a63e17e9a715e2a8236af529a Mon Sep 17 00:00:00 2001
-From: Akshu Agrawal <akshu.agrawal@amd.com>
-Date: Mon, 2 Mar 2020 13:54:36 +0530
-Subject: [PATCH] ASoc: amd: Add DMIC switch capability to machine driver
-
-Switch between DMIC0 and DMIC1 based on recording device selected.
-This is done by toggling the dmic select gpio.
-
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-Link: https://lore.kernel.org/r/20200302082443.51587-1-akshu.agrawal@amd.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 53 ++++++++++++++++++++++++----
- 1 file changed, 47 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 96fbcd29e3ed..511b8b1722aa 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -12,6 +12,7 @@
- #include <sound/jack.h>
- #include <linux/clk.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/input.h>
-@@ -27,6 +28,7 @@
- static struct snd_soc_jack pco_jack;
- static struct clk *rt5682_dai_wclk;
- static struct clk *rt5682_dai_bclk;
-+static struct gpio_desc *dmic_sel;
- 
- static int acp3x_5682_init(struct snd_soc_pcm_runtime *rtd)
- {
-@@ -176,7 +178,7 @@ static int acp3x_max_startup(struct snd_pcm_substream *substream)
- 	return rt5682_clk_enable(substream);
- }
- 
--static int acp3x_ec_startup(struct snd_pcm_substream *substream)
-+static int acp3x_ec_dmic0_startup(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_soc_card *card = rtd->card;
-@@ -185,6 +187,23 @@ static int acp3x_ec_startup(struct snd_pcm_substream *substream)
- 
- 	machine->cap_i2s_instance = I2S_BT_INSTANCE;
- 	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
-+	if (dmic_sel)
-+		gpiod_set_value(dmic_sel, 0);
-+
-+	return rt5682_clk_enable(substream);
-+}
-+
-+static int acp3x_ec_dmic1_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_card *card = rtd->card;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct acp3x_platform_info *machine = snd_soc_card_get_drvdata(card);
-+
-+	machine->cap_i2s_instance = I2S_BT_INSTANCE;
-+	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
-+	if (dmic_sel)
-+		gpiod_set_value(dmic_sel, 1);
- 
- 	return rt5682_clk_enable(substream);
- }
-@@ -204,8 +223,13 @@ static const struct snd_soc_ops acp3x_max_play_ops = {
- 	.shutdown = rt5682_shutdown,
- };
- 
--static const struct snd_soc_ops acp3x_ec_cap_ops = {
--	.startup = acp3x_ec_startup,
-+static const struct snd_soc_ops acp3x_ec_cap0_ops = {
-+	.startup = acp3x_ec_dmic0_startup,
-+	.shutdown = rt5682_shutdown,
-+};
-+
-+static const struct snd_soc_ops acp3x_ec_cap1_ops = {
-+	.startup = acp3x_ec_dmic1_startup,
- 	.shutdown = rt5682_shutdown,
- };
- 
-@@ -246,12 +270,21 @@ static struct snd_soc_dai_link acp3x_dai_5682_98357[] = {
- 		SND_SOC_DAILINK_REG(acp3x_bt, max, platform),
- 	},
- 	{
--		.name = "acp3x-ec-capture",
--		.stream_name = "Capture",
-+		.name = "acp3x-ec-dmic0-capture",
-+		.stream_name = "Capture DMIC0",
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
-+				| SND_SOC_DAIFMT_CBS_CFS,
-+		.dpcm_capture = 1,
-+		.ops = &acp3x_ec_cap0_ops,
-+		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
-+	},
-+	{
-+		.name = "acp3x-ec-dmic1-capture",
-+		.stream_name = "Capture DMIC1",
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
- 				| SND_SOC_DAIFMT_CBS_CFS,
- 		.dpcm_capture = 1,
--		.ops = &acp3x_ec_cap_ops,
-+		.ops = &acp3x_ec_cap1_ops,
- 		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
- 	},
- };
-@@ -302,6 +335,14 @@ static int acp3x_probe(struct platform_device *pdev)
- 	acp3x_card.dev = &pdev->dev;
- 	platform_set_drvdata(pdev, card);
- 	snd_soc_card_set_drvdata(card, machine);
-+
-+	dmic_sel = devm_gpiod_get(&pdev->dev, "dmic", GPIOD_OUT_LOW);
-+	if (IS_ERR(dmic_sel)) {
-+		dev_err(&pdev->dev, "DMIC gpio failed err=%d\n",
-+			PTR_ERR(dmic_sel));
-+		return PTR_ERR(dmic_sel);
-+	}
-+
- 	ret = devm_snd_soc_register_card(&pdev->dev, &acp3x_card);
- 	if (ret) {
- 		dev_err(&pdev->dev,
--- 
-2.20.1
-
+On Sun, Mar 1, 2020 at 1:24 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2020-02-21 02:46, Jack Wang wrote:
+> > Function is going to be used in transport over RDMA module
+> > in subsequent patches, so export it to GPL modules.
+>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Thanks Bart!
