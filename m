@@ -2,147 +2,125 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C1FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12278C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBFB20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD8F20863
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DOBQYN/n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL/p5u5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgCBNBO (ORCPT
+        id S1727888AbgCBNDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:01:14 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34127 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727173AbgCBNBN (ORCPT
+        Mon, 2 Mar 2020 08:03:18 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52273 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgCBNDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:01:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583154072;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vFEYElovxs1he3jW2L/2OIMoWJCYaK4R5aZbj7powQE=;
-        b=DOBQYN/nO1B99/m2vL4RH2ddwwn+T3Q5sZPL4wjzlUzY73bkg2G9lZSOSKfUmO9WLqJvtw
-        m4PY+B2iMIGi9k2SoaW8TnISiwrcF3nisZMQIW1gUm+sPCEy7snQoHH4VJNtvMiSKwVAI8
-        lviySL18v8A5avqAmXu16ExE3+lUdxQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-mGqsF8LtPxKFCUSTL0Dxww-1; Mon, 02 Mar 2020 08:01:11 -0500
-X-MC-Unique: mGqsF8LtPxKFCUSTL0Dxww-1
-Received: by mail-wr1-f69.google.com with SMTP id y28so5727039wrd.23
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 05:01:11 -0800 (PST)
+        Mon, 2 Mar 2020 08:03:18 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so11100496wmc.2;
+        Mon, 02 Mar 2020 05:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f5W1+VDAgXwgm27HM/dSDLhd13oiMZYWRhU39zs/56E=;
+        b=VL/p5u5MxrqPbpsnUeJsGg2+zaymsNPsSrtX5LtlbBRHPR76xpwAIdpoQHUrT6O4V1
+         pX1Rx+/fXWiSwINUtEK0K/8KGG2HELuv/iC7xs3o+eTJFwTP/4LWzlV6RsIea8jnx7At
+         1pSkBdZN9ts1P1uRZfp6QGYYpPM9Duws82fEKXb2768hofcvnzC4HKu54ZPghM1mEUsS
+         l1082Gy8362KF11dmaJXhzbvtYPLadAcMDEfAePw4SjI/TjhEINjpF3gS5GIBzhSNCV+
+         gZS6LnQ/Lmowm4Tr5hRtPbgompWe8tdEEmI+rfhByH2LGl2hnYhZxb/Tav/6Ik6onMXm
+         yy9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vFEYElovxs1he3jW2L/2OIMoWJCYaK4R5aZbj7powQE=;
-        b=KuQEYxakWtH/LCOxlGY6UZtxcvQyDr5+lsnoOFm+meXPVu60/LAdkFX/obamCRda4B
-         2D43oC/eg90bYl2tmE7esgEUMd8Qv/aFQJlsmX/YdOGTTKrUrz5UK0fE27Lng1uX0RXY
-         Gkruj+pgCYHlU/QVZVwmm66TRN9daqp0L3/qpYTaasLD94v41evo0GVPhNTEAcb5pufE
-         JQoW3mMo1whO631nRaxTKk8kEcFixTiqlrpYlGpEer4VGh7+uLSRwidD2LDRAn5zy9AM
-         MkdHO/Z3dJ5DWv1cJsDydF52j8QNpXWr6AGLedn8AaZclkLnKCZzBCm+hcvjltu5AzI+
-         M5og==
-X-Gm-Message-State: APjAAAUo7j4/rEDn820dunztCBeQoRDRNQ1SMKXdrSi+uOlG6irw9Bly
-        UtNnipWp5G4uyrqm1nXJvZClbqkl7LUMUWieiP0YQkZ9NBzB8ywSpltsK5mZm0R5SGouVQeVDmH
-        JTwBEDgfWntuVHW7OpeL6behT
-X-Received: by 2002:a05:600c:251:: with SMTP id 17mr19492297wmj.59.1583154068053;
-        Mon, 02 Mar 2020 05:01:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqytInT/vs8uW+zSLol0sFtoMeXPxy5TDYEfalNY4crz/GnJg2mECfgk9LJfq+x+gQ9Zc8kXIg==
-X-Received: by 2002:a05:600c:251:: with SMTP id 17mr19492281wmj.59.1583154067821;
-        Mon, 02 Mar 2020 05:01:07 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i204sm16306020wma.44.2020.03.02.05.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 05:01:07 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3] KVM: X86: Just one leader to trigger kvmclock sync request
-In-Reply-To: <1582859921-11932-1-git-send-email-wanpengli@tencent.com>
-References: <1582859921-11932-1-git-send-email-wanpengli@tencent.com>
-Date:   Mon, 02 Mar 2020 14:01:06 +0100
-Message-ID: <87lfoihpwt.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f5W1+VDAgXwgm27HM/dSDLhd13oiMZYWRhU39zs/56E=;
+        b=b9W/LU6i+69t2wQ+3+S5fBw0TUCUfLo3rukCua0AxwyStI2WvVUUa4r8unNaoMqEsd
+         ZYlfccs1a9U1MpsM9vyDz7LgjRhQja3bzOL6Tin5e8TeYjvEKpaDvJaip8/kNocxCcgu
+         JFpxCdp2X8VWjoQJWmhxHRxJm+6R5Xsv9yvFdJmy2VkXdU/FlENeFbRq6g2wWO6EKWoq
+         c/00WqMgSnr2F5ALI8MvMz/j5sO9M08ut7yZNZ/Quef1VEZEt+h8gndRGX++9IPszi+z
+         10ltwG+/4wgFX127vr2S3/3jzarpxxe8027Kb0zd/ji6YM8D9OGNoFSRpaifCnSnTjXT
+         +LXw==
+X-Gm-Message-State: APjAAAVKh67ZHt5HdIZ3XkdHokXjer8mtSzVfGMGyo/LkFcJ+Yw60Aef
+        0F3l2ZZkWjnbrTWkgicEv736pL42qSDzBtoj4Z4=
+X-Google-Smtp-Source: APXvYqz6WKuyVy/9PnCleaCMggOFDoRnbRnI+UO7wa56fEel46cxxunC5R0QhS7cAoxr0JV2ipGv7rbIhc+DRETlFzU=
+X-Received: by 2002:a05:600c:2c13:: with SMTP id q19mr20166181wmg.144.1583154195913;
+ Mon, 02 Mar 2020 05:03:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200228213838.7124-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200228213838.7124-1-christophe.jaillet@wanadoo.fr>
+From:   Jonas Gorski <jonas.gorski@gmail.com>
+Date:   Mon, 2 Mar 2020 14:03:04 +0100
+Message-ID: <CAOiHx=me0H6xjz__bJthvF0=MGJfTcRyxd8mM1SD0fwjXpVERw@mail.gmail.com>
+Subject: Re: [PATCH] spi: bcm63xx-hsspi: Really keep pll clk enabled
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-spi@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+On Fri, 28 Feb 2020 at 22:38, Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> The purpose of commit 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+> was to keep the pll clk enabled through the lifetime of the device.
+>
+> In order to do that, some 'clk_prepare_enable()'/'clk_disable_unprepare()'
+> calls have been added in the error handling path of the probe function, in
+> the remove function and in the suspend and resume functions.
+>
+> However, a 'clk_disable_unprepare()' call has been unfortunately left in
+> the probe function. So the commit seems to be more or less a no-op.
+>
+> Axe it now, so that the pll clk is left enabled through the lifetime of
+> the device, as described in the commit.
 
-> From: Wanpeng Li <wanpengli@tencent.com>
+Good catch!
+
+Acked-by: Jonas Gorski <jonas.gorski@gmail.com>
+
 >
-> In the progress of vCPUs creation, it queues a kvmclock sync worker to the global
-> workqueue before each vCPU creation completes. The workqueue subsystem guarantees 
-> not to queue the already queued work, however, we can make the logic more clear by 
-> make just one leader to trigger this kvmclock sync request and save on cacheline 
-> boucing due to test_and_set_bit.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Fixes: 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
-> v2 -> v3:
->  * update patch description
-> v1 -> v2:
->  * check vcpu->vcpu_idx
->
->  arch/x86/kvm/x86.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fb5d64e..79bc995 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9390,8 +9390,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
->  	if (!kvmclock_periodic_sync)
->  		return;
->  
-> -	schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> -					KVMCLOCK_SYNC_PERIOD);
-> +	if (vcpu->vcpu_idx == 0)
-> +		schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> +						KVMCLOCK_SYNC_PERIOD);
+> To be honest, I don't see why we need to keep pll clk, or hsspi clk
+> enabled during the lifetime of the driver. My understanding of the code is
+> that it is only used to get the 'speed_hz' value in the probe function.
+> This value is never refreshed afterwards.
+> I don't see the point in enabling/disabling the clks. I think that they
+> both could be disabled in the probe function, without the need to keep
+> track in the bcm63xx_hsspi structure, neither during pm cycles or the
+> remove fucntion.
 
-I would've merged this new check with !kvmclock_periodic_sync above
-making it more obvious when the work is scheduled
+The hsspi clock is actually gated, so it needs to stay on during use.
+The pll clock is only used to convey the rate, but is not gate-able.
+These used to be the same (that's why it checks for the rate of the
+hsspi clock first), but were split to make it easier to move to common
+clock framework (since we can just use the generic gated and
+fixed-rate clock implementations).
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5de200663f51..93550976f991 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9389,11 +9389,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- 
-        mutex_unlock(&vcpu->mutex);
- 
--       if (!kvmclock_periodic_sync)
--               return;
--
--       schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
--                                       KVMCLOCK_SYNC_PERIOD);
-+       if (vcpu->vcpu_idx == 0 && kvmclock_periodic_sync)
-+               schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-+                                     KVMCLOCK_SYNC_PERIOD);
- }
+Incidentally these are AFAIK also two inputs, so it even happens to
+match the hardware more closely.
 
->  }
->  
->  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+Since the pll clock isn't gated, we don't need to keep it enabled - we
+don't even need to enable it in theory, but IIRC the common clock
+system will complain if you try to get the rate of a non-enabled
+clock. And if we do enable it, then we can also just keep it enabled
+over the lifetime of the device.
 
-With or without the change mentioned above,
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+Regards
+Jonas
