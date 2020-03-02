@@ -2,74 +2,114 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE09C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40942146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD49B2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 16:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583165103;
+	bh=eNPfezLiilggJAa++pp3/3UvAayzi+eMFGLtn6cjd5k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=rFKKgWWwkDFuEtZIhibE4Uqt4MXI0PyCHqEkkah8uxywxy+KwdZY3PwE7ia6rNWCK
+	 S/v3lbNlRzWH4hgg+Y9xSCj5xe7SAq0AweUjLQzx4acidAb1CynsGVVxEEY1ie6lyz
+	 q4NstuBOGGu0SSSYfsmd9U/Qqqylt0gU5jDrilZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgCBQER (ORCPT
+        id S1727368AbgCBQFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 11:04:17 -0500
-Received: from 8bytes.org ([81.169.241.247]:49578 "EHLO theia.8bytes.org"
+        Mon, 2 Mar 2020 11:05:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:34626 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgCBQER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 11:04:17 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6CE8E5BC; Mon,  2 Mar 2020 17:04:16 +0100 (CET)
-Date:   Mon, 2 Mar 2020 17:04:13 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH RESEND] iommu: dmar: Fix RCU list debugging warnings
-Message-ID: <20200302160412.GA7829@8bytes.org>
-References: <20200223165538.29870-1-frextrite@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223165538.29870-1-frextrite@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727242AbgCBQFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 11:05:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B095C2F;
+        Mon,  2 Mar 2020 08:05:01 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 303643F534;
+        Mon,  2 Mar 2020 08:05:01 -0800 (PST)
+Date:   Mon, 02 Mar 2020 16:04:59 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Applied "regulator: pwm: Don't warn on probe deferral" to the regulator tree
+In-Reply-To:  <20200302141428.14119-1-jonathanh@nvidia.com>
+Message-Id:  <applied-20200302141428.14119-1-jonathanh@nvidia.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:25:39PM +0530, Amol Grover wrote:
-> dmar_drhd_units is traversed using list_for_each_entry_rcu()
-> outside of an RCU read side critical section but under the
-> protection of dmar_global_lock. Hence add corresponding lockdep
-> expression to silence the following false-positive warnings:
-> 
-> [    1.603975] =============================
-> [    1.603976] WARNING: suspicious RCU usage
-> [    1.603977] 5.5.4-stable #17 Not tainted
-> [    1.603978] -----------------------------
-> [    1.603980] drivers/iommu/intel-iommu.c:4769 RCU-list traversed in non-reader section!!
-> 
-> [    1.603869] =============================
-> [    1.603870] WARNING: suspicious RCU usage
-> [    1.603872] 5.5.4-stable #17 Not tainted
-> [    1.603874] -----------------------------
-> [    1.603875] drivers/iommu/dmar.c:293 RCU-list traversed in non-reader section!!
-> 
-> Tested-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  include/linux/dmar.h | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+The patch
 
-Applied, thanks.
+   regulator: pwm: Don't warn on probe deferral
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 0cd71b9a43ad80f4d9a8bfde6ec6db8daf447029 Mon Sep 17 00:00:00 2001
+From: Jon Hunter <jonathanh@nvidia.com>
+Date: Mon, 2 Mar 2020 14:14:28 +0000
+Subject: [PATCH] regulator: pwm: Don't warn on probe deferral
+
+Deferred probe is an expected return value for devm_pwm_get(). Given
+that the driver deals with it properly, rather than warn on probe
+deferral, only output a message on probe deferral if debug level
+prints are enabled.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200302141428.14119-1-jonathanh@nvidia.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/pwm-regulator.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index e74e11101fc1..638329bd0745 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -354,7 +354,11 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 	drvdata->pwm = devm_pwm_get(&pdev->dev, NULL);
+ 	if (IS_ERR(drvdata->pwm)) {
+ 		ret = PTR_ERR(drvdata->pwm);
+-		dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
++		if (ret == -EPROBE_DEFER)
++			dev_dbg(&pdev->dev,
++				"Failed to get PWM, deferring probe\n");
++		else
++			dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.20.1
+
