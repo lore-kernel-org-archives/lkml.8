@@ -2,187 +2,85 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90353C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E58C2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fO7oLiXz"
+	by mail.kernel.org (Postfix) with ESMTP id 42C892187F
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCBMfE (ORCPT
+        id S1727923AbgCBMfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:35:04 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41555 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbgCBMfD (ORCPT
+        Mon, 2 Mar 2020 07:35:14 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55830 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgCBMfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:35:03 -0500
-Received: by mail-vk1-f196.google.com with SMTP id y201so2879072vky.8
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:35:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uzcQiw5bmowt4+ulow/RplAnqB+Uaeou/IGgfRNu6BY=;
-        b=fO7oLiXzPRKQPba+voegh2apwnuQlM/BjsEMB5z3mgFhslsVplpSFNRCJQ1xwtsZ6G
-         Mk1tqFJHS7WArliEtpqf4A+y5AZy7OnwGrJ8V3Tt85OXKyAAQ/G+JZf/5LycM89GzxtF
-         yO7+dWorbsSIin6ccAB79DTVSRBfWH7jPqt1k6E6+d/dSpvshtFxpj9g0bZweNa8BLC8
-         9RZs1j0xaR/CYCPUFJ0gKkoRhchY0l1Irfm7I5NLaprd0LOUZFuuBGLMYf/TEvX9V4df
-         OLgfu/DVEJZ8VhNnBsMrTQK7xBwt6clX/spAK0iRpcuChoUpJ0YgCbODYY5M11C+wMpF
-         SrUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uzcQiw5bmowt4+ulow/RplAnqB+Uaeou/IGgfRNu6BY=;
-        b=dMwSTsGyTY6nf5l5WpX+TcrM/vDPWaTK9Bm7j00syrmiVmsOt4TtKU1QfFx2hT/Wgx
-         s4xBsld+9jsqLoZcIyDs+6xkeW6W1rJHOONn3qaVGkqzb19GgopNU7PpVst6SYkS+adm
-         OZvM/dS3u8XHf0zHck1DX3j5XwYkqy0hGc+Ajh3pdzat0sW4vg2egwaJT4R2PGtAXiJB
-         sChis2x1djnr6BR/+TCghj7TJkkm/Z0Ek6W47CZaL/+ah1PDCKEH3okcECb6wdKLQJXs
-         whrZzTO+KqXXSAnwi16WQYzpIZc+FdfGFDMMRFh3ZVDT6BdsK4v0nLr62ycc/FoSKZFV
-         Kq7w==
-X-Gm-Message-State: ANhLgQ3s6/WO89KjFvoja1uoI1ufkyS+XIzSzCkoZ4yirnDQla6mVJVA
-        DV8cisLxOyxoxN1ldh7Mr3fDRl2+hgOmcQJ5N4pQEA==
-X-Google-Smtp-Source: ADFU+vv1Ix4lqUJj1Zwh8N0IaleUdxli6lUO6WccegGqHmVmzk7zMOAn34MAm7qmk0j/zN7sxXbwHPZwYq8L0HLp4CE=
-X-Received: by 2002:a1f:9d8a:: with SMTP id g132mr8967505vke.39.1583152500830;
- Mon, 02 Mar 2020 04:35:00 -0800 (PST)
+        Mon, 2 Mar 2020 07:35:13 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j8kHv-0003wC-Bf; Mon, 02 Mar 2020 12:35:11 +0000
+Date:   Mon, 2 Mar 2020 13:35:10 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
+Message-ID: <20200302123510.bm3a2zssohwvkaa4@wittgenstein>
+References: <96563.1582901612@warthog.procyon.org.uk>
+ <20200228152427.rv3crd7akwdhta2r@wittgenstein>
+ <87h7z7ngd4.fsf@oldenburg2.str.redhat.com>
+ <20200302115239.pcxvej3szmricxzu@wittgenstein>
+ <8736arnel9.fsf@oldenburg2.str.redhat.com>
+ <20200302121959.it3iophjavbhtoyp@wittgenstein>
 MIME-Version: 1.0
-References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
- <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com> <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 2 Mar 2020 13:34:49 +0100
-Message-ID: <CACT4Y+aBvofv8AQqiWr7M77FODSUqruMMoVcHHA5ROfv5VN7tw@mail.gmail.com>
-Subject: Re: WARNING: bad unlock balance in ovl_llseek
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200302121959.it3iophjavbhtoyp@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 1:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
-> > > On Sun, Mar 1, 2020 at 9:13 PM syzbot
-> > > <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    f8788d86 Linux 5.6-rc3
-> > > > git tree:       upstream
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
-> > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
-> > > >
+On Mon, Mar 02, 2020 at 01:20:00PM +0100, Christian Brauner wrote:
+> On Mon, Mar 02, 2020 at 01:09:06PM +0100, Florian Weimer wrote:
+> > * Christian Brauner:
+> > 
+> > >> But that's inconsistent with the rest of the system.  And for example,
+> > >> if you make /etc/resolv.conf a symbolic link, a program which uses a new
+> > >> I/O library (with the new interfaces) will not be able to read it.
 > > >
-> > > Dmitry,
-> > >
-> > > There is something strange about the C repro.
-> > > It passes an invalid address for the first arg of mount syscall:
-> > >
-> > >     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
-> > >             0x20000100ul);
-> > >
-> > > With this address mount syscall returns -EFAULT on my system.
-> > > I fixed this manually, but repro did not trigger the reported bug on my system.
-> >
-> > Hi Amir,
-> >
-> > This is not strange in the context of fuzzer, it's goal is to pass
-> > random data. Generally if it says 0x400000ul, that's what it is, don't
-> > fix it, or you are running a different program that may not reproduce
-> > the bug. If syzbot attaches a reproducer, the bug was triggered by
-> > precisely this program.
-> >
->
-> What's strange it that a bug in overlay code cannot be triggered if overlay
-> isn't mounted and as it is the repro couldn't mount overlayfs at all, at
-> lease with my kernel config.
+> > > Fair, but I expect that e.g. a C library would simply implement openat()
+> > > on top of openat2() if the latter is available and thus could simply
+> > > pass RESOLVE_SYMLINKS so any new I/O library not making use of the
+> > > syscall directly would simply get the old behavior. For anyone using the
+> > > syscall directly they need to know about its exact semantics anyway. But
+> > > again, maybe just having it opt-in is fine.
+> > 
+> > I'm more worried about fancy new libraries which go directly to the new
+> > system calls, but set the wrong defaults for a general-purpose open
+> > operation.
+> > 
+> > Can we pass RESOLVE_SYMLINKS with O_NOFLLOW, so that we can easily
+> > implement open/openat for architectures that provide only the openat2
+> > system call?
+> 
+> You can currently do RESOLVE_NO_SYMLINKS | O_NOFOLLOW. So I'd expect
+> RESOLVE_SYMLINKS | O_NOFOLLOW would work as well. But from what it looks
+> like having no symlink resolution be opt-in seems more likely.
 
-Can it depend on kernel config? The bug was triggered by the program
-provided somehow.
-
-Separate question: why is it failing? Isn't src unused for overlayfs?
-Where/how does vfs code look at src?
-
-> The bounds check that causes mount failure is in vfs code, not in
-> overlayfs code,
-> so not sure what exactly went on there.
->
->
-> > The reason why it passes non-pointers here is we think the src
-> > argument of overlay mount is unused:
-> > https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/sys/linux/filesystem.txt#L12
-> > If it's not true, it needs to be fixed (or almost all overlay mounts
-> > fail with EFAULT during fuzzing).
-> >
-> >
-> > > > The bug was bisected to:
-> > > >
-> > > > commit b1f9d3858f724ed45b279b689fb5b400d91352e3
-> > > > Author: Amir Goldstein <amir73il@gmail.com>
-> > > > Date:   Sat Dec 21 09:42:29 2019 +0000
-> > > >
-> > > >     ovl: use ovl_inode_lock in ovl_llseek()
-> > > >
-> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
-> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
-> > > > Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
-> > > >
-> > > > =====================================
-> > > > WARNING: bad unlock balance detected!
-> > > > 5.6.0-rc3-syzkaller #0 Not tainted
-> > > > -------------------------------------
-> > > > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
-> > > > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
-> > > > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
-> > > > but there are no more locks to release!
-> > > >
-> > >
-> > > This is strange. I don't see how that can happen nor how my change would
-> > > have caused this regression. If anything, the lock chance may have brought
-> > > a bug in stack file ops to light, but don't see the bug.
-> > >
-> > > The repro is multi-threaded but when I ran the repro, a single thread did:
-> > > - open lower file (pre copy up)
-> > > - lchown file (copy up)
-> > > - llseek the open file (so llseek is on a temporary ovl_open_realfile())
-> > >
-> > > Perhaps when bug was triggered ops above were executed by different
-> > > threads?
-> >
-> > Perfectly possible.
-> >
-> > > Dmitry, I may have asked this before - how hard would it be to attach an
-> > > strace of the repro to a bug report?
-> >
-> > This is tracked in https://github.com/google/syzkaller/issues/197 but
-> > no progress so far.
-> > What exactly were the main pain points in this case? But note that
-> > strace is not atomic with actual execution, so it may lead you down
-> > even worse rabbit hole...
->
-> Sure, but it can add more insight for analysis.
->
-> Thanks,
-> Amir.
+One difference to openat() is that openat2() doesn't silently ignore
+unknown flags. But I'm not sure that would matter for iplementing
+openat() via openat2() since there are no flags that openat() knows about
+that openat2() doesn't know about afaict. So the only risks would be
+programs that accidently have a bit set that isn't used yet. But that
+seems unlikely. And I'm not aware of any flag that was deprecated that
+some programs could still pass (a problem we had with CLONE_DETACHED for
+example).
