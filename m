@@ -6,80 +6,100 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1013C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 03:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A20C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831EE2468D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 03:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF72B24672
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCBD6r (ORCPT
+        id S1726876AbgCBEJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 22:58:47 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11125 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726758AbgCBD6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 22:58:47 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 138C5119A387DF3CC13B;
-        Mon,  2 Mar 2020 11:58:45 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.98) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
- 11:58:36 +0800
-Subject: Re: [PATCH] ubifs: Don't discard nodes in recovery when ecc err
- detected
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     Richard Weinberger <richard@nod.at>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "zhangyi (F)" <yi.zhang@huawei.com>,
-        <linux-mtd@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1582293853-136727-1-git-send-email-chengzhihao1@huawei.com>
- <CAFLxGvyJdWcXQt3H2aknTuGhCJpV5YvAbW_wuHfs3m+KcNSjtw@mail.gmail.com>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <58b11ca2-6b91-52b3-bc75-d44abb202cfb@huawei.com>
-Date:   Mon, 2 Mar 2020 11:58:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Sun, 1 Mar 2020 23:09:11 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17224 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726758AbgCBEJL (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 1 Mar 2020 23:09:11 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0223p2KT101014
+        for <Linux-kernel@vger.kernel.org>; Sun, 1 Mar 2020 23:09:09 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfn15g6mt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <Linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 23:09:09 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <Linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Mon, 2 Mar 2020 04:09:08 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 2 Mar 2020 04:09:02 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022492oN46530942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 04:09:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04CDFAE051;
+        Mon,  2 Mar 2020 04:09:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49217AE04D;
+        Mon,  2 Mar 2020 04:09:00 +0000 (GMT)
+Received: from [9.124.31.175] (unknown [9.124.31.175])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 04:09:00 +0000 (GMT)
+Subject: Re: [PATCH v5 0/3] perf report: Support annotation of code without
+ symbols
+To:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200227043939.4403-1-yao.jin@linux.intel.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Mon, 2 Mar 2020 09:38:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvyJdWcXQt3H2aknTuGhCJpV5YvAbW_wuHfs3m+KcNSjtw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.98]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200227043939.4403-1-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030204-4275-0000-0000-000003A7394B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030204-4276-0000-0000-000038BC3CDF
+Message-Id: <ff574b62-d8b4-79df-2752-e63eb70ad5d0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-01_09:2020-02-28,2020-03-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ mlxlogscore=826 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003020028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/3/2 4:46, Richard Weinberger 写道:
-> Zhihao Cheng,
->
-> On Fri, Feb 21, 2020 at 2:57 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->> The following process will lead TNC to find no corresponding inode node
->> (Reproduce method see Link):
-> Please help me to understand what exactly is going on.
->
->>    1. Garbage collection.
->>       1) move valid inode nodes from leb A to leb B
->>          (The leb number of B has been written as GC type bud node in log)
->>       2) unmap leb A, and corresponding peb is erased
->>          (GCed inode nodes exist only on leb B)
-> At this point all valid nodes are written to LEB B, right?
-Yes.
->
->>    2. Poweroff. A node near the end of the LEB is corrupted before power
->>       on, which is uncorrectable error of ECC.
-> If writing nodes to B has finished, these pages should be stable.
-> How can a power-cut affect the pages where these valid nodes sit?
-I mean, the uncorrectable ECC error is caused by hardware which may lead 
-to corrupted nodes detected in UBIFS. I found uncorretable ECC errors on 
-my NAND, in the environment of high temperature and humidity.
-
-At present, UBIFS ignores all EBADMSG errors, so the corrupted node is 
-only considered in being caused by unfinished writing. I think UBIFS 
-should consider the corrupted area caused by ECC errors in process 
-ubifs_recover_leb(). no_more_nodes() will skip a read-write unit. Maybe 
-the corrupted area is skipped.
 
 
+On 2/27/20 10:09 AM, Jin Yao wrote:
+> For perf report on stripped binaries it is currently impossible to do
+> annotation. The annotation state is all tied to symbols, but there are
+> either no symbols, or symbols are not covering all the code.
+> 
+> We should support the annotation functionality even without symbols.
+> 
+> The first patch uses al_addr to print because it's easy to dump
+> the instructions from this address in binary for branch mode.
+> 
+> The second patch supports the annotation on stripped binary.
+> 
+> The third patch supports the hotkey 'a' on address for annotation.
+
+For the series:
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+
+Ravi
 
