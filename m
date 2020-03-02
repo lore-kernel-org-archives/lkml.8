@@ -2,63 +2,58 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DCCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8C1C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AECF246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC7C246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583134713;
-	bh=T8vFYILzC45eCW4Wh3WxrKNUOWDY4EPays1rr51QIiU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hYyXOr33lHQ41agQHktDLvYyNXafgJC5RaiYbMFqTq19YQ3ky2IyktwgWPEVwndmQ
-	 kZj7yTcFBpWtK7ZaoBVeP+nopNQCai4NdiF/rggQDgNapkwRUlRZYklnRGkZA/pajn
-	 dwiJM0GBQYUjV8Emw3UcDK/oJ1oRoXrKlhyxyATc=
+	s=default; t=1583134716;
+	bh=a/vrBYd7w6ekMDJXY8HBC89VID4NrdXsxymJhV+Pacc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=atYpwbcEOAIhLj27TVac9Ny6fxkN9Z/S2AwlOQSUrCz4rZVXQ8zokBAbzKMFMWXrE
+	 KZUHcmLnJGlcxlztI78jDwZ6ueDovhhq0fpVGZN1kJuwSZa+oKD5nCbuhXSc1BzYS0
+	 3X1z8gL7jqxfp5ErX87+kOsBpLOH0aSmhV9gPS/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCBHiV (ORCPT
+        id S1727107AbgCBHiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:38:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44750 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 02:38:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbgCBHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:38:16 -0500
+        id S1725446AbgCBHiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:38:15 -0500
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75907246C3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7074E246C0;
         Mon,  2 Mar 2020 07:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583134694;
-        bh=T8vFYILzC45eCW4Wh3WxrKNUOWDY4EPays1rr51QIiU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wzERUhC5bF+eOidCDFaJu9O4eO82gm15t2C5lmq0HYjReq3+oK2NBuEGyERqazTar
-         +CorwDJFnpmzkcHGkjXl42afKcuAwl48VntNy7JTAB7XnzL8p85eCpZWmaHxw8Xf3T
-         hYlyhvPZnC4zd4uIEAgzMO78fnMi0DLB+1CtA7aA=
+        bh=a/vrBYd7w6ekMDJXY8HBC89VID4NrdXsxymJhV+Pacc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FO3S9MtwtprGxwtfYF0T9XHSfvQ2CEBWw2I7SAW5rW7sfRwzNuZ9bkRrUIQb/s+at
+         UfOpybeCtJhC2VwH11w3x+eDt6iGOGyPV5khAJFvf2DHV+ndt3L48/OD80k34gspl2
+         2j7z7l+i6hzLEYqLfAibCJcKzwHp1DNNTNJ6i/hs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1j8feV-0003VO-OT; Mon, 02 Mar 2020 08:38:11 +0100
+        id 1j8feV-0003VR-Pg; Mon, 02 Mar 2020 08:38:11 +0100
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Andy Whitcroft <apw@canonical.com>, devicetree@vger.kernel.org,
-        Harry Wei <harryxiyou@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Joe Perches <joe@perches.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 00/12] Convert some DT documentation files to ReST
-Date:   Mon,  2 Mar 2020 08:37:55 +0100
-Message-Id: <cover.1583134242.git.mchehab+samsung@kernel.org>
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 01/12] docs: dt: add an index.rst file for devicetree
+Date:   Mon,  2 Mar 2020 08:37:56 +0100
+Message-Id: <535a508f48d223b4e9632117e96db18265ab6c7b.1583134242.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583134242.git.mchehab+samsung@kernel.org>
+References: <cover.1583134242.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,73 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While most of the devicetree stuff has its own format (with is now being
-converted to YAML format), some documents there are actually
-describing the DT concepts and how to contribute to it.
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-IMHO, those documents would fit perfectly as part of the documentation
-body, as part of the firmare documents set.
+There are some device tree documentation under
+Documentation/devicetree. Add a top index file for it and
+add the already-existing ReST file on it.
 
-This patch series manually converts some DT documents that, on my
-opinion, would belong to it.
-
-If you want to see how this would show at the documentation body,
-a sneak peak of this series (together with the other pending
-doc patches from me) is available at:
-
-	https://www.infradead.org/~mchehab/kernel_docs/devicetree/index.html
-
-Mauro Carvalho Chehab (12):
-  docs: dt: add an index.rst file for devicetree
-  docs: dt: convert usage-model.txt to ReST
-  docs: dt: usage_model.rst: fix link for DT usage
-  docs: dt: convert booting-without-of.txt to ReST format
-  docs: dt: convert changesets to ReST
-  docs: dt: convert dynamic-resolution-notes.txt to ReST
-  docs: dt: convert of_unittest.txt to ReST
-  docs: dt: convert overlay-notes.txt to ReST format
-  docs: dt: minor adjustments at writing-schema.rst
-  docs: dt: convert ABI.txt to ReST format
-  docs: dt: convert submitting-patches.txt to ReST format
-  docs: dt: convert writing-bindings.txt to ReST
-
- Documentation/arm/booting.rst                 |   2 +-
- Documentation/arm/microchip.rst               |   2 +-
- .../devicetree/bindings/{ABI.txt => ABI.rst}  |   5 +-
- .../devicetree/bindings/arm/amlogic.yaml      |   2 +-
- .../devicetree/bindings/arm/syna.txt          |   2 +-
- Documentation/devicetree/bindings/index.rst   |  12 +
- ...ing-patches.txt => submitting-patches.rst} |  12 +-
- ...ting-bindings.txt => writing-bindings.rst} |   9 +-
- ...-without-of.txt => booting-without-of.rst} | 299 ++++++++++--------
- .../{changesets.txt => changesets.rst}        |  24 +-
- ...notes.txt => dynamic-resolution-notes.rst} |   5 +-
- Documentation/devicetree/index.rst            |  18 ++
- .../{of_unittest.txt => of_unittest.rst}      | 186 +++++------
- .../{overlay-notes.txt => overlay-notes.rst}  | 143 +++++----
- .../{usage-model.txt => usage-model.rst}      |  35 +-
- Documentation/devicetree/writing-schema.rst   |   9 +-
- Documentation/index.rst                       |   3 +
- Documentation/process/submitting-patches.rst  |   2 +-
- .../it_IT/process/submitting-patches.rst      |   2 +-
- Documentation/translations/zh_CN/arm/Booting  |   2 +-
- MAINTAINERS                                   |   4 +-
- include/linux/mfd/core.h                      |   2 +-
- scripts/checkpatch.pl                         |   2 +-
- 23 files changed, 446 insertions(+), 336 deletions(-)
- rename Documentation/devicetree/bindings/{ABI.txt => ABI.rst} (94%)
- create mode 100644 Documentation/devicetree/bindings/index.rst
- rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
- rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (89%)
- rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
- rename Documentation/devicetree/{changesets.txt => changesets.rst} (59%)
- rename Documentation/devicetree/{dynamic-resolution-notes.txt => dynamic-resolution-notes.rst} (90%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/devicetree/index.rst | 10 ++++++++++
+ Documentation/index.rst            |  3 +++
+ 2 files changed, 13 insertions(+)
  create mode 100644 Documentation/devicetree/index.rst
- rename Documentation/devicetree/{of_unittest.txt => of_unittest.rst} (54%)
- rename Documentation/devicetree/{overlay-notes.txt => overlay-notes.rst} (56%)
- rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
 
+diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
+new file mode 100644
+index 000000000000..a11efe26f205
+--- /dev/null
++++ b/Documentation/devicetree/index.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=============================
++Open Firmware and Device Tree
++=============================
++
++.. toctree::
++   :maxdepth: 1
++
++   writing-schema
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index e99d0bd2589d..b63d117aea15 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -1,3 +1,5 @@
++.. SPDX-License-Identifier: GPL-2.0
++
+ 
+ .. The Linux Kernel documentation master file, created by
+    sphinx-quickstart on Fri Feb 12 13:51:46 2016.
+@@ -46,6 +48,7 @@ platform firmwares.
+    :maxdepth: 2
+ 
+    firmware-guide/index
++   devicetree/index
+ 
+ Application-developer documentation
+ -----------------------------------
 -- 
 2.21.1
-
 
