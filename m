@@ -2,123 +2,97 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178AFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957D6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80CA21739
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD9621D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583180854;
+	bh=ddMkrKx0duULhf5jTfhun0z8mBAD/hy0znVqYbUIYPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LO7oJvsfXlrZ3j/jSszyJcXDJnoj7dazS0AncP0z5VxkqpcZrK+z4R/987NLyw0LO
+	 zFmowzBPqRrpRVOuEfkFNrBeMiIBo4sI472O0hX75JtTyf6P8amxLwNbIlNuD9PW8u
+	 HP3bc2omSCq/XZUKZ7DoeIRSAk1GC/sbUBXUNAZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCBU1U (ORCPT
+        id S1726890AbgCBU1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:27:20 -0500
-Received: from thoth.sbs.de ([192.35.17.2]:37739 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgCBU1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:27:20 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 022KQsmq031508
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 21:26:54 +0100
-Received: from [139.25.68.37] ([139.25.68.37])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 022KQrZk021128;
-        Mon, 2 Mar 2020 21:26:53 +0100
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
- is out-of-range
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
-Date:   Mon, 2 Mar 2020 21:26:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 15:27:33 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44279 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgCBU1d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:27:33 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so551684oia.11;
+        Mon, 02 Mar 2020 12:27:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i7DD9w14+LwnZLIWH8LhqR7TklrWwNpUJ5QRm1PyIXo=;
+        b=nGKJIYOyHnbkT7n/+dIZ0phnHEWMx2rkuTuiKB3RFEag/1CVYs+eK2btfJFCg6ArUg
+         2qiacb9tGwFdQVKwb17mbozZvYD6e6r/ld1IzU5ZJgW8ifYAxEkWWp3pk6F9g2455aMP
+         0A3wbAb2UanYZaBmYishCE3X0Hnf+dGEZx1AKIARLtoE2w5N+cJ3sc2Q56F3Mf57/CrQ
+         k1smgMOlkIixTrfYjU86q+zSCWnp9aHgskpH5c/Vy01hj42pmoZX9lQ45AYK8IjXS/XB
+         axBAKHLgSOb9E18gwJZJ4Ze3H93p9lxJ6G/Zn0R22vIrsFPcwiIcKsZdTxJnoQ1TiahP
+         LHZQ==
+X-Gm-Message-State: ANhLgQ1JU9M06c8sPinCCRdAAsWXifuk2/6BLXFu+tHVpopeEy+ERTg1
+        8XDNJ2jM3wOPDjhn8yqjQA==
+X-Google-Smtp-Source: ADFU+vsqCz13bJotnNjjms8BCtRlG9YYlJNjx0G1FNsLpe6L4nnArjwUDESqMiSb/ZvXyQ4bpPV1Rw==
+X-Received: by 2002:a54:4816:: with SMTP id j22mr125301oij.179.1583180851977;
+        Mon, 02 Mar 2020 12:27:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e21sm6201143otr.57.2020.03.02.12.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 12:27:31 -0800 (PST)
+Received: (nullmailer pid 6436 invoked by uid 1000);
+        Mon, 02 Mar 2020 20:27:30 -0000
+Date:   Mon, 2 Mar 2020 14:27:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
+        mark.rutland@arm.com, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
+        Wendy Liang <jliang@xilinx.com>
+Subject: Re: [PATCH 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+Message-ID: <20200302202730.GA4561@bogus>
+References: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
+ <1582566751-13118-5-git-send-email-ben.levinsky@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302195736.24777-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582566751-13118-5-git-send-email-ben.levinsky@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.03.20 20:57, Sean Christopherson wrote:
-> Rework kvm_cpuid() to query entry->function when adjusting the output
-> values so that the original function (in the aptly named "function") is
-> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
-> trace the max function for a range instead of the requested function if
-> the requested function is out-of-range and an entry for the max function
-> exists.
+On Mon, Feb 24, 2020 at 09:52:30AM -0800, Ben Levinsky wrote:
+> From: Jason Wu <j.wu@xilinx.com>
 > 
-> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Add binding for ZynqMP R5 OpenAMP.
+> 
+> Represent the RPU domain resources in one device node. Each RPU
+> processor is a subnode of the top RPU domain node.
+> 
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
+> Signed-off-by: Wendy Liang <jliang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->   arch/x86/kvm/cpuid.c | 15 +++++++--------
->   1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..6be012937eba 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
->   	return max && function <= max->eax;
->   }
->   
-> +/* Returns true if the requested leaf/function exists in guest CPUID. */
->   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->   	       u32 *ecx, u32 *edx, bool check_limit)
->   {
-> -	u32 function = *eax, index = *ecx;
-> +	const u32 function = *eax, index = *ecx;
->   	struct kvm_cpuid_entry2 *entry;
-> -	struct kvm_cpuid_entry2 *max;
->   	bool found;
->   
->   	entry = kvm_find_cpuid_entry(vcpu, function, index);
-> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->   	 */
->   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
->   	    !cpuid_function_in_range(vcpu, function)) {
-> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
-> -		if (max) {
-> -			function = max->eax;
-> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
-> -		}
-> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
-> +		if (entry)
-> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
->   	}
->   	if (entry) {
->   		*eax = entry->eax;
->   		*ebx = entry->ebx;
->   		*ecx = entry->ecx;
->   		*edx = entry->edx;
-> -		if (function == 7 && index == 0) {
-> +
-> +		if (entry->function == 7 && index == 0) {
->   			u64 data;
->   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
->   			    (data & TSX_CTRL_CPUID_CLEAR))
-> 
+>  .../remoteproc/xilinx,zynqmp-r5-remoteproc.txt     | 135 +++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.txt
 
-What about the !entry case below this? It was impacted by the function 
-capping so far, not it's no longer.
+DT bindings have moved to DT schema format. See 
+Documentation/devicetree/writing-schema.rst.
 
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Rob
