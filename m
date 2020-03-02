@@ -2,143 +2,62 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F97C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D10C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F2A217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583168554;
-	bh=/65ypuagroe4Dhr6JRR0SJiFFyQRvZCGs96m6duAq9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LGCc6INahDdFvKNls1T8SlbylPqHI8KLWzGUGc9Dw1fNOm4G13hevOnAprNSPffE5
-	 ecv6akgkEjlPqhAJUKgtxulPgDmFtfygas/VjmSEW10d7JmeIljWttLNf5wMdvvZf0
-	 Px87IOvusaronJZASibtt5r6OQWHD3AK4GFqg0ms=
+	by mail.kernel.org (Postfix) with ESMTP id D5239217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 17:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgCBRCd (ORCPT
+        id S1727305AbgCBREg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 12:02:33 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35185 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgCBRCd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 12:02:33 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v10so3157624otp.2;
-        Mon, 02 Mar 2020 09:02:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3E3fWxDEv9ZHfmOkcec5gIIJeOvKCzK/ypdiNkYfC8Q=;
-        b=PU5YSgJM0v8gIGcwJCuVXvlgu5Cm9dRRs4HeH+ZE1UYmKTrqSHRrSeIklZmnd41AF8
-         TiM+ovRk8Esx/fBCyLAR6jMKwit0RuIXMzXXNfNE+ZF5RmWwxHLLH1bor53s4fn+IMbF
-         9B/CfH1QAeIEhW+oAg96abRDPoiPlPYVXSt0COj3g2zrWOdlY9pBYbW+lLHl/yti71h5
-         Vpjr4HD9YzUGHZUwvoSUeTjk51WC4jHfpWa3LQ51Ypr7JvmrDtSDYYVTiTZuNcp2qdwz
-         FIRA6C4Uvesg70p2NBCTIZCLujXKyaclBHDL9CFoyOwKJzMTq1NAk5QHWi+Tdc6NInl5
-         MPtA==
-X-Gm-Message-State: ANhLgQ2AagbWnLnObH29eBzcxI/w2JG5nx/sU13i0gXrTcNmcR2HJFkA
-        Ee/ALzUBKxbKduUDYlRaQAeFis6BDAb/c3woLS0=
-X-Google-Smtp-Source: ADFU+vtrrwRitcEkkYBbTuh1knba7jp5gALhcQEhCs5xZDWVZPrBv0NBfHT14a2k5mSe4rTQlRheR8mZvBJynFnoa78=
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr125593otn.262.1583168552404;
- Mon, 02 Mar 2020 09:02:32 -0800 (PST)
+        Mon, 2 Mar 2020 12:04:36 -0500
+Received: from mga17.intel.com ([192.55.52.151]:7633 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgCBREg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 12:04:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 09:04:35 -0800
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="233232650"
+Received: from unknown (HELO localhost) ([10.252.41.44])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 09:04:33 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     =?utf-8?Q?Sini=C5=A1a?= Bandin <sinisa@4net.rs>,
+        "Souza\, Jose" <jose.souza@intel.com>
+Cc:     airlied@gmail.com, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Intel-gfx] Linux 5.6-rc2
+In-Reply-To: <a1c918b663805e8213a1229edb87883c@4net.rs>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com> <99fb887f-4a1b-6c15-64a6-9d089773cdd4@4net.rs> <CAPM=9ty3NuSHBd+StNGxVCE9jkmppQ_VTr+jMRgB07qW3dRwrA@mail.gmail.com> <f9081410ef1135003720fa29d27aa10b9d12d509.camel@intel.com> <a1c918b663805e8213a1229edb87883c@4net.rs>
+Date:   Mon, 02 Mar 2020 19:04:31 +0200
+Message-ID: <87sgiqpu1s.fsf@intel.com>
 MIME-Version: 1.0
-References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
- <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
- <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org> <CAJZ5v0jTSKd_23fJhM+XUmFX_yTjcD+c_s1Jvi3HA1EmXPkzZw@mail.gmail.com>
- <CAEXW_YRL0kum5yVm+9V8i_PK2FcHfPeUOxJKZ+T8P3zqhATxJg@mail.gmail.com> <CAD=jOEZ3vdNC4qTMxptaXLjs7i8TCTYjeiv9vXhcapLSkrr9RQ@mail.gmail.com>
-In-Reply-To: <CAD=jOEZ3vdNC4qTMxptaXLjs7i8TCTYjeiv9vXhcapLSkrr9RQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Mar 2020 18:02:21 +0100
-Message-ID: <CAJZ5v0hee4FxeVub_ZkAYn9z8q1_ZLA_AcmTtS-w39VzSe0UxA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list checking
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amol Grover <frextrite@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 1:34 PM Madhuparna Bhowmik
-<madhuparnabhowmik10@gmail.com> wrote:
+On Mon, 02 Mar 2020, Siniša Bandin <sinisa@4net.rs> wrote:
+> Sorry to bother, but still a "no go" in rc4 (at the same time, 5.5.7 
+> works OK).
 >
->
->
-> On Mon, 2 Mar, 2020, 3:48 AM Joel Fernandes, <joel@joelfernandes.org> wrote:
->>
->> On Sun, Mar 1, 2020 at 4:23 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->> >
->> > On Sun, Mar 1, 2020 at 9:53 PM <joel@joelfernandes.org> wrote:
->> > >
->> > >
->> > >
->> > > On March 1, 2020 3:12:53 PM EST, "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->> > > >On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
->> > > >>
->> > > >> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->> > > >>
->> > > >> This patch passes the cond argument to list_for_each_entry_rcu()
->> > > >> to fix the following false-positive lockdep warnings:
->> > > >>
->> > > >> [  330.302784] =============================
->> > > >> [  330.302789] WARNING: suspicious RCU usage
->> > > >> [  330.302796] 5.6.0-rc1+ #5 Not tainted
->> > > >> [  330.302801] -----------------------------
->> > > >> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in
->> > > >non-reader section!!
->> > > >>
->> > > >> [  330.303303] =============================
->> > > >> [  330.303307] WARNING: suspicious RCU usage
->> > > >> [  330.303311] 5.6.0-rc1+ #5 Not tainted
->> > > >> [  330.303315] -----------------------------
->> > > >> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in
->> > > >non-reader section!!
->> > > >>
->> > > >> [  331.934969] =============================
->> > > >> [  331.934971] WARNING: suspicious RCU usage
->> > > >> [  331.934973] 5.6.0-rc1+ #5 Not tainted
->> > > >> [  331.934975] -----------------------------
->> > > >> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in
->> > > >non-reader section!!
->> > > >>
->> > > >> [  332.467772] WARNING: suspicious RCU usage
->> > > >> [  332.467775] 5.6.0-rc1+ #5 Not tainted
->> > > >> [  332.467775] -----------------------------
->> > > >> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in
->> > > >non-reader section!!
->> > > >
->> > > >I don't see these warnings in the kernels run locally here.
->> > > >
->> > > >What do you do to get them?
->> > > >
->> > > >Joel, any comments here?
->> > >
->> > > You have to enable lockdep in your config. Does your setup have that?
->> >
->> > CONFIG_LOCK_DEBUGGING_SUPPORT=y
->> > CONFIG_PROVE_LOCKING=y
->> > CONFIG_DEBUG_SPINLOCK=y
->> > CONFIG_DEBUG_LOCK_ALLOC=y
->> > CONFIG_LOCKDEP=y
->>
->>
-> I had CONFIG_PROVE_RCU_LIST = y and I think these warnings were triggered when I had closed my laptop (like just close without shutting down).
+> Is there anything else I could do to help fix this?
 
-OK, so let's define a macro for that in this file to avoid code duplication.
+Please wait for the patch to be actually merged to Linus' tree. I assume
+it'll make it to v5.6-rc5.
 
-And analogously in the second patch.
+Thanks,
+Jani.
 
-Thanks!
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
