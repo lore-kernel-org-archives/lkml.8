@@ -2,201 +2,92 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84DC3F2D1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E18C3F2D2
 	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B14246A1
+	by mail.kernel.org (Postfix) with ESMTP id 9061124695
 	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GprpfjrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgCBFuf (ORCPT
+        id S1726263AbgCBFrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:50:35 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37551 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgCBFue (ORCPT
+        Mon, 2 Mar 2020 00:47:49 -0500
+Received: from m17618.mail.qiye.163.com ([59.111.176.18]:1126 "EHLO
+        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBFrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:50:34 -0500
-Received: by mail-pj1-f65.google.com with SMTP id o2so2029690pjp.2
-        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:50:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fz5Kp2VdKawxBoU+hLFXNYu1dVA8dYreDgpbY7UrLKU=;
-        b=GprpfjrSdJhCqLS8OT2NzuXi3BUcWXA15xKQGZWWf3YBBrmEtOfkB4VEjsKmem7ym3
-         LLvS0HCmO+ZEdOzOFWgZiVBeBx4fRFeO/d6+MyybU/aWj7k6UoeG+/2w1nbl+6W/f/hY
-         TomsHDeKCmY79m/MlbtQJy0LRRWOj+LHkkmRKkcemXRhES/3Bf/Dwmll/mu0WoxcbxCa
-         gaCZNaxYJcToEnXFIXhe35fZ46yTfJMWcWIG6qEu4Zl1H1IeC7JPNgAV6myBvICL/3Sv
-         jsMprZqkePz0L0voDSWOS9M7YIn9Tt4nourI+tjistiQuxTr+nMw7Id1fnpXoZlroaKW
-         8vKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fz5Kp2VdKawxBoU+hLFXNYu1dVA8dYreDgpbY7UrLKU=;
-        b=K9jr2sW6OHzc25iBg0CPxdaleW+neydgLW7gPoK0lyZ1mJ1dzV6GwtBh3GhihiVrSr
-         8cGx5aKkD2QAS5YejeP2xGoKywMBDlzJZgwxz3QRuLLmvh8SMhD/caBkxqy3DDcsauYN
-         PGqah0J9IvxHguZrGfmRZxtumHCNmY+JHsApvP09Otl+C7UXmyLj3EPILYoxB+6iXr7B
-         b4+L1iXeuHv3HYJX+2mCW9clh0nb8Si6WKvig8ZrWE9Xztt59+SUzSgmQTK0Sp+bTqa5
-         BKRU3rP2E6PWGosldflfvetMYoLpLIINRS0ih+Y2HvkY+I0Md8UwU4SSvPx6PgLji4sv
-         nKsQ==
-X-Gm-Message-State: APjAAAWhVUv+hvx5nI1cvYG21zLbnD/ExkwmNTplCy0/T/oaMLNyNgOt
-        jkWQ1DkCHvNu4228VYNjaUeo
-X-Google-Smtp-Source: APXvYqwf0p2Ihc98F61cK6cnafM3qoNT3H/Dan2meJyAD3Tp1BSClvBwEBDewnQQ/ew1M66WYi9faQ==
-X-Received: by 2002:a17:902:b28a:: with SMTP id u10mr16846102plr.1.1583128233500;
-        Sun, 01 Mar 2020 21:50:33 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:683:b69c:15d:29bf:12ee:d853])
-        by smtp.gmail.com with ESMTPSA id w81sm5179222pff.22.2020.03.01.21.50.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 01 Mar 2020 21:50:32 -0800 (PST)
-Date:   Mon, 2 Mar 2020 11:20:25 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: qrtr: Respond to HELLO message
-Message-ID: <20200302055025.GA23607@Mani-XPS-13-9360>
-References: <20200302032527.552916-1-bjorn.andersson@linaro.org>
- <20200302032527.552916-2-bjorn.andersson@linaro.org>
+        Mon, 2 Mar 2020 00:47:49 -0500
+X-Greylist: delayed 553 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 00:47:46 EST
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id DA66B4E14F3;
+        Mon,  2 Mar 2020 13:38:26 +0800 (CST)
+From:   WANG Wenhu <wenhu.wang@vivo.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        wangwenhu <wenhu.wang@vivo.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org, wenhu.pku@gmail.com
+Subject: [PATCH] powerpc/sysdev: fix compile errors
+Date:   Sun,  1 Mar 2020 21:37:59 -0800
+Message-Id: <20200302053801.26027-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302032527.552916-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOS0tCQkJCSUxOSUtMTllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PE06ODo4Ejg1IUIOVgk9HB1P
+        CDBPCRZVSlVKTkNISklMTktCTk5KVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUhKSks3Bg++
+X-HM-Tid: 0a7099c0b1c19376kuwsda66b4e14f3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Include linux/io.h into fsl_85xx_cache_sram.c to fix the
+implicit-declaration compile errors when building Cache-Sram.
 
-Thanks for the fix. I have tested this and it works perfectly!
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                          ^~~~~~~~~~~~~~~~
+                          bitmap_complement
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                        ^
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
+  iounmap(cache_sram->base_virt);
+  ^~~~~~~
+  roundup
+cc1: all warnings being treated as errors
 
-On Sun, Mar 01, 2020 at 07:25:26PM -0800, Bjorn Andersson wrote:
-> Lost in the translation from the user space implementation was the
-> detail that HELLO mesages must be exchanged between each node pair.  As
-> such the incoming HELLO must be replied to.
-> 
+Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+---
+ arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Err. I thought the say_hello() part in ctrl_cmd_hello() was redundant, so
-removed it :P
+diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+index f6c665dac725..be3aef4229d7 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
++++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+@@ -17,6 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <asm/pgtable.h>
+ #include <asm/fsl_85xx_cache_sram.h>
++#include <linux/io.h>
+ 
+ #include "fsl_85xx_cache_ctlr.h"
+ 
+-- 
+2.17.1
 
-Sorry for that.
-
-> Similar to the previous implementation no effort is made to prevent two
-> Linux boxes from continuously sending HELLO messages back and forth,
-> this is left to a follow up patch.
-> 
-> say_hello() is moved, to facilitate the new call site.
-> 
-> Fixes: 0c2204a4ad71 ("net: qrtr: Migrate nameservice to kernel from userspace")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  net/qrtr/ns.c | 54 ++++++++++++++++++++++++++++-----------------------
->  1 file changed, 30 insertions(+), 24 deletions(-)
-> 
-> diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
-> index 7bfde01f4e8a..e3f11052b5f6 100644
-> --- a/net/qrtr/ns.c
-> +++ b/net/qrtr/ns.c
-> @@ -286,9 +286,38 @@ static int server_del(struct qrtr_node *node, unsigned int port)
->  	return 0;
->  }
->  
-> +static int say_hello(struct sockaddr_qrtr *dest)
-> +{
-> +	struct qrtr_ctrl_pkt pkt;
-> +	struct msghdr msg = { };
-> +	struct kvec iv;
-> +	int ret;
-> +
-> +	iv.iov_base = &pkt;
-> +	iv.iov_len = sizeof(pkt);
-> +
-> +	memset(&pkt, 0, sizeof(pkt));
-> +	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
-> +
-> +	msg.msg_name = (struct sockaddr *)dest;
-> +	msg.msg_namelen = sizeof(*dest);
-> +
-> +	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
-> +	if (ret < 0)
-> +		pr_err("failed to send hello msg\n");
-> +
-> +	return ret;
-> +}
-> +
->  /* Announce the list of servers registered on the local node */
->  static int ctrl_cmd_hello(struct sockaddr_qrtr *sq)
->  {
-> +	int ret;
-> +
-> +	ret = say_hello(sq);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	return announce_servers(sq);
->  }
->  
-> @@ -566,29 +595,6 @@ static void ctrl_cmd_del_lookup(struct sockaddr_qrtr *from,
->  	}
->  }
->  
-> -static int say_hello(void)
-> -{
-> -	struct qrtr_ctrl_pkt pkt;
-> -	struct msghdr msg = { };
-> -	struct kvec iv;
-> -	int ret;
-> -
-> -	iv.iov_base = &pkt;
-> -	iv.iov_len = sizeof(pkt);
-> -
-> -	memset(&pkt, 0, sizeof(pkt));
-> -	pkt.cmd = cpu_to_le32(QRTR_TYPE_HELLO);
-> -
-> -	msg.msg_name = (struct sockaddr *)&qrtr_ns.bcast_sq;
-> -	msg.msg_namelen = sizeof(qrtr_ns.bcast_sq);
-> -
-> -	ret = kernel_sendmsg(qrtr_ns.sock, &msg, &iv, 1, sizeof(pkt));
-> -	if (ret < 0)
-> -		pr_err("failed to send hello msg\n");
-> -
-> -	return ret;
-> -}
-> -
->  static void qrtr_ns_worker(struct work_struct *work)
->  {
->  	const struct qrtr_ctrl_pkt *pkt;
-> @@ -725,7 +731,7 @@ void qrtr_ns_init(struct work_struct *work)
->  	if (!qrtr_ns.workqueue)
->  		goto err_sock;
->  
-> -	ret = say_hello();
-> +	ret = say_hello(&qrtr_ns.bcast_sq);
-
-Why do you want to pass a global variable here? Why can't it be used directly
-in say_hello() as done before?
-
-Other than that,
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
->  	if (ret < 0)
->  		goto err_wq;
->  
-> -- 
-> 2.24.0
-> 
