@@ -2,109 +2,138 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516B6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41658C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2853C20863
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583145526;
-	bh=0mvRf+SAaOE7Usyf6yLvIyPFGpMahiDu5R9HVRI5Mcg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CiculkEZSAKgvl3QBwjlh0pyk26JMaHORRVElsvgbOIJBamLouawQL9Yhvd+FREIK
-	 ok96g+862niIizqaBBEKHVA/yqf055QvONQ/CEzwHQhpoM6qGm8Ulovo5r+XCRhrQL
-	 X97bNgI1vyggjtIMoi1a407DcrqEUBAOlRFEHc24=
+	by mail.kernel.org (Postfix) with ESMTP id 1F9E420863
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgCBKip convert rfc822-to-8bit (ORCPT
+        id S1727683AbgCBKiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 05:38:45 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45611 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbgCBKio (ORCPT
+        Mon, 2 Mar 2020 05:38:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41555 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgCBKiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 05:38:44 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f21so629100otp.12;
-        Mon, 02 Mar 2020 02:38:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MwWsoH3lbguISoV3Xmb+APpQTE7w8muFrbuI4gr/DUc=;
-        b=MNRvfqPYfSDoi1ID6LgQ+c6vyDPkEN/TJuw6KfXrPs3mhLVoUzMsqMHKRNny9VxCXw
-         eBY+PfOwIpiQ0hy7NvuMlmDtMZv7f+Y51JAJfEPaFfHzGaavhxSA4B4jPfY0Y6ZoWyRC
-         ekKj5ZNiHsaY+0vHyn9ZPOIB/phtHj8Il83/5PQMLfOOa9lTPXVktQeX0Sw9koIvY7FX
-         UO49livVATS0eHT1ysX7YQmRpIf07k4ILGh4TUueWrUcB7TpMCZsVzrfERboSXjf/IYn
-         MDiRrVpvFLHbj8F0OnyyiqswoPZONzmmifXfU9Jqbi1yeVMnePEevGK2ajbkzyOXnXmr
-         F/9Q==
-X-Gm-Message-State: APjAAAVsz4U3CDzQgz/6ow5x2I4MztOBiIgQRTNhBYEry6oAX00U8oyJ
-        JPCphGTKyv4apdoL0JQs78BJrqVgjHk2zAY5wXhX2j3i
-X-Google-Smtp-Source: APXvYqwuqeK4Mzm3RU2tsEbKB/ADLbtbRGkvKRUCWJZj2FRf77xO4xC3hxyCGIR8gyg4OX3X8h7AqaxfpZbfqbHhNew=
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr12866890otn.262.1583145524239;
- Mon, 02 Mar 2020 02:38:44 -0800 (PST)
+        Mon, 2 Mar 2020 05:38:50 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1j8iTF-0007Y6-Vv; Mon, 02 Mar 2020 11:38:46 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+        <20200128161948.8524-2-john.ogness@linutronix.de>
+        <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
+Date:   Mon, 02 Mar 2020 11:38:42 +0100
+Message-ID: <87r1ybujm5.fsf@linutronix.de>
 MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
- <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
-In-Reply-To: <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 2 Mar 2020 11:38:32 +0100
-Message-ID: <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+On 2020-02-21, Petr Mladek <pmladek@suse.com> wrote:
+>> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+>> new file mode 100644
+>> index 000000000000..796257f226ee
+>> --- /dev/null
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> +static struct prb_data_block *to_block(struct prb_data_ring *data_ring,
+>> +				       unsigned long begin_lpos)
+>> +{
+>> +	char *data = &data_ring->data[DATA_INDEX(data_ring, begin_lpos)];
+>> +
+>> +	return (struct prb_data_block *)data;
 >
-> Daniel Drake <drake@endlessm.com> 於 2020年2月28日 週五 下午5:43寫道：
-> >
-> > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > The purpose of this series of update of the ACPI EC driver is to make its
-> > > initialization more straightforward.
-> > >
-> > > They fix a couple of issues, clean up some things, remove redundant code etc.
-> > >
-> > > Please refer to the changelogs of individual patches for details.
-> > >
-> > > For easier access, the series is available in the git branch at
-> > >
-> > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> > >  acpi-ec-work
-> > >
-> > > on top of 5.6-rc3.
-> >
-> > Jian-Hong, can you please test this on Asus UX434DA?
-> > Check if the screen brightness hotkeys are still working after these changes.
+> Nit: Please, use "blk" instead of "data". I was slightly confused
+> because "data" is also one member of struct prb_data_block.
+
+OK.
+
+>> +/* The possible responses of a descriptor state-query. */
+>> +enum desc_state {
+>> +	desc_miss,	/* ID mismatch */
+>> +	desc_reserved,	/* reserved, but still in use by writer */
+>> +	desc_committed, /* committed, writer is done */
+>> +	desc_reusable,	/* free, not used by any writer */
 >
-> Hi Rafael,
+> s/not used/not yet used/
+
+OK.
+
+>> +EXPORT_SYMBOL(prb_reserve);
 >
-> Thanks for your patches, but we found an issue:
-> The laptops like ASUS UX434DA's screen brightness hotkeys work before
-> this patch series.  However, the hotkeys are failed with the patch
-> "ACPI: EC: Unify handling of event handler installation failures".
+> Please, do not export symbols if there are no plans to actually
+> use them from modules. It will be easier to rework the code
+> in the future. Nobody would need to worry about external
+> users.
+>
+> Please, do so everywhere in the patchset.
 
-So I have modified the series to avoid the change that can possibly break this.
+You are correct.
 
-Can you please pull the new series from
+The reason I exported them is that I could run my test module. But since
+the test module will not be part of the kernel source, I'll just hack
+the exports in when doing my testing.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-ec-work
+>> +static char *get_data(struct prb_data_ring *data_ring,
+>> +		      struct prb_data_blk_lpos *blk_lpos,
+>> +		      unsigned long *data_size)
+>> +{
+>> +	struct prb_data_block *db;
+>> +
+>> +	/* Data-less data block description. */
+>> +	if (blk_lpos->begin == INVALID_LPOS &&
+>> +	    blk_lpos->next == INVALID_LPOS) {
+>> +		return NULL;
+>
+> Nit: There is no need for "else" after return. checkpatch.pl usually
+> complains about it ;-)
 
-(same branch) and retest?
+OK.
 
-I'll post the updated patches later this week, but it would be good to
-try them on now if possible.
+>> +/*
+>> + * Read the record @id and verify that it is committed and has the sequence
+>> + * number @seq. On success, 0 is returned.
+>> + *
+>> + * Error return values:
+>> + * -EINVAL: A committed record @seq does not exist.
+>> + * -ENOENT: The record @seq exists, but its data is not available. This is a
+>> + *          valid record, so readers should continue with the next seq.
+>> + */
+>> +static int desc_read_committed(struct prb_desc_ring *desc_ring,
+>> +			       unsigned long id, u64 seq,
+>> +			       struct prb_desc *desc)
+>> +{
+>
+> I was few times confused whether this function reads the descriptor
+> a safe way or not.
+>
+> Please, rename it to make it clear that does only a check.
+> For example, check_state_commited().
 
-Thanks!
+This function _does_ read. It is a helper function of prb_read() to
+_read_ the descriptor. It is an extended version of desc_read() that
+also performs various checks that the descriptor is committed.
+
+I will update the function description to be more similar to desc_read()
+so that it is obvious that it is "getting a copy of a specified
+descriptor".
+
+John Ogness
