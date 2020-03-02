@@ -2,132 +2,210 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF177C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1AAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EE62173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qz6i/Gf6"
+	by mail.kernel.org (Postfix) with ESMTP id 202352173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgCBMZ1 (ORCPT
+        id S1727834AbgCBM20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:25:27 -0500
-Received: from gateway36.websitewelcome.com ([50.116.124.69]:11884 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727644AbgCBMZ1 (ORCPT
+        Mon, 2 Mar 2020 07:28:26 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbgCBM20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:25:27 -0500
-X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 07:25:26 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 162F340DABC77
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 05:40:32 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8k8UjTDYQvBMd8k8UjO7b3; Mon, 02 Mar 2020 06:25:26 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tmrBVwLF1GrBgphU2OaUU3NzXEY7Y/RAayCavGXGVGQ=; b=qz6i/Gf6gzF9Rkyk5oV4G6UY5L
-        9sZXGU2DwebYfe2FbT2Cj+HtAoGeyltfzNE1fC6vNSX4bAVUVMdBCnnBzfIqRkbgYpyA1/YfZgXvB
-        G4Ogb1LHC/+TknvTiat+IjgId8UVeV1Y3ebxibbHV4z9ExXNr7AAzc58ZmiDKCN5saaJshi11/LHe
-        r6cStESS3nNpT1nYm8AMUCTCwpPKjDn+PxbfRLdTnmjqVFs25/sSjDJkXjzeMhDzxoyS24EUYGpAQ
-        EroyvBqaXgRXacXBSdrD5bW4KN3a+jwEVyoxwoD5SPovTNts5+k8dPrnnwhOSuddRuFc+NR+H0ZV8
-        I8+7RZ+w==;
-Received: from [201.162.161.240] (port=42570 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8k8S-004BHO-Md; Mon, 02 Mar 2020 06:25:24 -0600
-Date:   Mon, 2 Mar 2020 06:28:26 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] tehuti: Replace zero-length array with flexible-array
- member
-Message-ID: <20200302122826.GA2300@embeddedor>
+        Mon, 2 Mar 2020 07:28:26 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x97so9474162ota.6;
+        Mon, 02 Mar 2020 04:28:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=wZYZAbcqMvd207t9hfFOk6y3G0CkgQqD0dKaK71lZb4=;
+        b=b8tJf91m5c3kzr113GHXr/pAavv5rJ5P40NxWsZnX/o0QmxGZqOzl9I7tbZj+7oJw4
+         wGdoAOORM3cRDswZw1+u5JGK3B6PgZLHWw3MAXqYVfrt5N+ge47B6wbTAj26yREcB1aA
+         ZY9ol0cmH29JWpvKk95ZAnEg1PRj8s+a8VTDSLhL1hRGiyzyOLaUV/KzhR3dHj6lNNM7
+         S4Vs6cg7E4evriSyUgVQSIcZG3uuBAl7wg6xN2jICGKF/iPF1+mGABJSfctaAI36XMLe
+         Exhfb4qImwgNaUNV9ukXo3vYma02JhDULxsRjjRMqsb/G4YxEfjO2EsWb+RdzkhxGdcf
+         nrbw==
+X-Gm-Message-State: APjAAAXrj65GOHJWbTRZgBabLF3EcLHz+i7EBi+f0Dy/E5bIwLePf0Kt
+        JN368l897hYx56lmCZjD7XiFa6DFVOLPXr3X3Ec=
+X-Google-Smtp-Source: APXvYqzN+m0jue0ZTokoqurX7tBCYT/bfoG/F9HvM0fLl2C7tpJvdjqoMETuKvoCS8cUYtBFAfQ6dPbGSXXYJ4em2mQ=
+X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr12476739ota.107.1583152104944;
+ Mon, 02 Mar 2020 04:28:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.161.240
-X-Source-L: No
-X-Exim-ID: 1j8k8S-004BHO-Md
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.161.240]:42570
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 33
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <cover.1578924232.git.alexander.riesen@cetitec.com> <20200113141556.GI3606@pflmari>
+In-Reply-To: <20200113141556.GI3606@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 2 Mar 2020 13:28:13 +0100
+Message-ID: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi Alex,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Thanks for your patch!
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
+<alexander.riesen@cetitec.com> wrote:
+> Not sure if all variants of the Salvator board have the HDMI decoder
+> chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
+> Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
+> are placed in the board file.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> I do assume though that all Salvator variants have the CLK_C clock line
+> hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
+> clocks provided by the R-Car sound system.
 
-This issue was found with the help of Coccinelle.
+Yes, both Salvator-X and Salvator-XS have it wired that way.  But please
+see below.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> The I2C wiring is also likely to persist across the variants (similar
+> to ak4613, connected to the same interface), so that is in the common
+> file.
+>
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/tehuti/tehuti.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Below are my comments w.r.t. the board-specific wiring.
+I'll defer to the multimedia people for commenting on the audio parts.
 
-diff --git a/drivers/net/ethernet/tehuti/tehuti.h b/drivers/net/ethernet/tehuti/tehuti.h
-index 5fc03c8eba0c..909e7296cecf 100644
---- a/drivers/net/ethernet/tehuti/tehuti.h
-+++ b/drivers/net/ethernet/tehuti/tehuti.h
-@@ -330,7 +330,7 @@ struct txd_desc {
- 	u16 length;
- 	u32 va_lo;
- 	u32 va_hi;
--	struct pbl pbl[0];	/* Fragments */
-+	struct pbl pbl[];	/* Fragments */
- } __packed;
- 
- /* Register region size */
+BTW, what is the status of the other patches in this series?
+
+> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> @@ -322,6 +322,10 @@
+>         clock-frequency = <22579200>;
+>  };
+>
+> +&audio_clk_c {
+> +       clock-frequency = <12288000>;
+> +};
+
+Does the ADV7482 always generate a 12.288 MHz clock signal?
+Or is this programmable?
+
+> +
+>  &avb {
+>         pinctrl-0 = <&avb_pins>;
+>         pinctrl-names = "default";
+> @@ -471,12 +475,14 @@
+>
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> +               #sound-dai-cells = <0>;
+>
+>                 interrupt-parent = <&gpio6>;
+>                 interrupt-names = "intrq1", "intrq2";
+>                 interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
+>                              <31 IRQ_TYPE_LEVEL_LOW>;
+> -
+> +               clocks = <&rcar_sound 3>, <&audio_clk_c>;
+> +               clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
+
+The above declares the Audio CLK C to be a clock input of the ADV7482, while
+it is an output.
+Furthermore, the DT bindings do not document that clocks can be specified.
+
+>                 port@7 {
+>                         reg = <7>;
+>
+> @@ -512,6 +518,14 @@
+>                                 remote-endpoint = <&csi20_in>;
+>                         };
+>                 };
+> +
+> +               port@c {
+> +                       reg = <12>;
+> +
+> +                       adv7482_i2s: endpoint {
+> +                               /* remote-endpoint defined in the board file */
+> +                       };
+> +               };
+>         };
+>
+>         csa_vdd: adc@7c {
+> @@ -686,7 +700,8 @@
+>         };
+>
+>         sound_pins: sound {
+> -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+> +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
+> +                        "ssi4_data";
+
+Missing "ss4_ctrl", for the SCK4 and WS4 pins.
+
+>                 function = "ssi";
+>         };
+>
+> @@ -735,8 +750,8 @@
+>         pinctrl-0 = <&sound_pins &sound_clk_pins>;
+>         pinctrl-names = "default";
+>
+> -       /* Single DAI */
+> -       #sound-dai-cells = <0>;
+> +       /* multi DAI */
+> +       #sound-dai-cells = <1>;
+>
+>         /* audio_clkout0/1/2/3 */
+>         #clock-cells = <1>;
+> @@ -760,8 +775,18 @@
+>                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+>                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+>                  <&audio_clk_a>, <&cs2000>,
+> -                <&audio_clk_c>,
+
+Why remove it? This is the list of clock inputs, not outputs.
+
+>                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+> +       clock-names = "ssi-all",
+> +                     "ssi.9", "ssi.8", "ssi.7", "ssi.6",
+> +                     "ssi.5", "ssi.4", "ssi.3", "ssi.2",
+> +                     "ssi.1", "ssi.0",
+> +                     "src.9", "src.8", "src.7", "src.6",
+> +                     "src.5", "src.4", "src.3", "src.2",
+> +                     "src.1", "src.0",
+> +                     "mix.1", "mix.0",
+> +                     "ctu.1", "ctu.0",
+> +                     "dvc.0", "dvc.1",
+> +                     "clk_a", "clk_b", "clk_i";
+>
+>         ports {
+>                 #address-cells = <1>;
+> --
+> 2.24.1.508.g91d2dafee0
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
