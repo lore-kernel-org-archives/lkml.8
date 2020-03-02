@@ -2,102 +2,159 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D189AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A38C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29BB246B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 09:59:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mxrD3pbc"
+	by mail.kernel.org (Postfix) with ESMTP id 9777220842
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 10:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgCBJ72 (ORCPT
+        id S1727511AbgCBKBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 04:59:28 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51506 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgCBJ72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 04:59:28 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 71BF454A;
-        Mon,  2 Mar 2020 10:59:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583143166;
-        bh=5i4HpQvtX4R1slyHT+952QHgBdgl3htQsX3B0F6Xj3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mxrD3pbc3SRTjb14W8QJAbbVj9qN5FxqkZyS8CiumvpluJv2iFvSkaxTRyZ5vW9ZZ
-         8TQMjaLKgs1gdZJ3P99IYfZSnkXezeOC4NjklKpumGr8Kl82afPcRBDFwa82isRnNh
-         C4DcfimCx1B2bep+2jvjye2CSNiqYN5FGn+aeraU=
-Date:   Mon, 2 Mar 2020 11:59:02 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 06/11] drm/meson: venc: make drm_display_mode const
-Message-ID: <20200302095902.GA16626@pendragon.ideasonboard.com>
-References: <20200206191834.6125-1-narmstrong@baylibre.com>
- <20200206191834.6125-7-narmstrong@baylibre.com>
+        Mon, 2 Mar 2020 05:01:49 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:38100 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgCBKBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 05:01:48 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 25B9D20025;
+        Mon,  2 Mar 2020 11:01:46 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 3E52720020;
+        Mon,  2 Mar 2020 11:01:45 +0100 (CET)
+Subject: Re: [RFC PATCH v4 2/2] clk: Use devm_add in managed functions
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <68219a85-295d-7b7c-9658-c3045bbcbaeb@free.fr>
+ <e88ca46a-799d-9c86-f2d2-6284eb3c3419@free.fr>
+ <CAMuHMdUZfR6pYG-hourZCKT-jhh1t+x-ySF4JnEPJjscGAQT+A@mail.gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <7622db71-b1f4-62b4-86ee-78e00d5bd52c@free.fr>
+Date:   Mon, 2 Mar 2020 11:01:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdUZfR6pYG-hourZCKT-jhh1t+x-ySF4JnEPJjscGAQT+A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206191834.6125-7-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar  2 11:01:46 2020 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On 27/02/2020 14:36, Geert Uytterhoeven wrote:
 
-Thank you for the patch.
-
-On Thu, Feb 06, 2020 at 08:18:29PM +0100, Neil Armstrong wrote:
-> Before switching to bridge funcs, make sure drm_display_mode is passed
-> as const to the venc functions.
+> Hi Marc,
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/gpu/drm/meson/meson_venc.c | 2 +-
->  drivers/gpu/drm/meson/meson_venc.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> Thanks for your patch!
 > 
-> diff --git a/drivers/gpu/drm/meson/meson_venc.c b/drivers/gpu/drm/meson/meson_venc.c
-> index 4efd7864d5bf..a9ab78970bfe 100644
-> --- a/drivers/gpu/drm/meson/meson_venc.c
-> +++ b/drivers/gpu/drm/meson/meson_venc.c
-> @@ -946,7 +946,7 @@ bool meson_venc_hdmi_venc_repeat(int vic)
->  EXPORT_SYMBOL_GPL(meson_venc_hdmi_venc_repeat);
->  
->  void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
-> -			      struct drm_display_mode *mode)
-> +			      const struct drm_display_mode *mode)
->  {
->  	union meson_hdmi_venc_mode *vmode = NULL;
->  	union meson_hdmi_venc_mode vmode_dmt;
-> diff --git a/drivers/gpu/drm/meson/meson_venc.h b/drivers/gpu/drm/meson/meson_venc.h
-> index 576768bdd08d..1abdcbdf51c0 100644
-> --- a/drivers/gpu/drm/meson/meson_venc.h
-> +++ b/drivers/gpu/drm/meson/meson_venc.h
-> @@ -60,7 +60,7 @@ extern struct meson_cvbs_enci_mode meson_cvbs_enci_ntsc;
->  void meson_venci_cvbs_mode_set(struct meson_drm *priv,
->  			       struct meson_cvbs_enci_mode *mode);
->  void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
-> -			      struct drm_display_mode *mode);
-> +			      const struct drm_display_mode *mode);
->  unsigned int meson_venci_get_field(struct meson_drm *priv);
->  
->  void meson_venc_enable_vsync(struct meson_drm *priv);
+> On Wed, Feb 26, 2020 at 4:55 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>> Using the helper produces simpler code, and smaller object size.
+>> E.g. with gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu:
+>>
+>>     text           data     bss     dec     hex filename
+>> -   1708             80       0    1788     6fc drivers/clk/clk-devres.o
+>> +   1524             80       0    1604     644 drivers/clk/clk-devres.o
+> 
+> And the size reduction could have been even more ;-)
 
--- 
-Regards,
+I'll see what I can do! ;-)
 
-Laurent Pinchart
+I have another patch with even smaller object code, but it requires
+C11 to be well-defined (memcmp the whole struct, which requires zeros
+in the padding holes).
+
+
+>> --- a/drivers/clk/clk-devres.c
+>> +++ b/drivers/clk/clk-devres.c
+> 
+>> @@ -55,25 +51,17 @@ static void devm_clk_bulk_release(struct device *dev, void *res)
+>>  static int __devm_clk_bulk_get(struct device *dev, int num_clks,
+>>                                struct clk_bulk_data *clks, bool optional)
+>>  {
+>> -       struct clk_bulk_devres *devres;
+>>         int ret;
+>>
+>> -       devres = devres_alloc(devm_clk_bulk_release,
+>> -                             sizeof(*devres), GFP_KERNEL);
+>> -       if (!devres)
+>> -               return -ENOMEM;
+>> -
+>>         if (optional)
+>>                 ret = clk_bulk_get_optional(dev, num_clks, clks);
+>>         else
+>>                 ret = clk_bulk_get(dev, num_clks, clks);
+>> -       if (!ret) {
+>> -               devres->clks = clks;
+>> -               devres->num_clks = num_clks;
+>> -               devres_add(dev, devres);
+>> -       } else {
+>> -               devres_free(devres);
+>> -       }
+>> +
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = devm_vadd(dev, my_clk_bulk_put, clk_bulk_args, num_clks, clks);
+>>
+>>         return ret;
+> 
+> return devm_vadd(...);
+
+If you think that makes it look better, I'll make the change!
+
+
+>> @@ -128,30 +109,22 @@ static int devm_clk_match(struct device *dev, void *res, void *data)
+>>
+>>  void devm_clk_put(struct device *dev, struct clk *clk)
+>>  {
+>> -       int ret;
+>> -
+>> -       ret = devres_release(dev, devm_clk_release, devm_clk_match, clk);
+>> -
+>> -       WARN_ON(ret);
+>> +       WARN_ON(devres_release(dev, my_clk_put, devm_clk_match, clk));
+> 
+> Getting rid of "ret" is an unrelated change, which actually increases
+> kernel size, as the WARN_ON() parameter is stringified for the warning
+> message.
+
+Weird... Are you sure about that? I built the preprocessed file,
+and it didn't appear to be so.
+
+#ifndef WARN_ON
+#define WARN_ON(condition) ({						\
+	int __ret_warn_on = !!(condition);				\
+	if (unlikely(__ret_warn_on))					\
+		__WARN();						\
+	unlikely(__ret_warn_on);					\
+})
+#endif
+
+Maybe you were thinking of i915's WARN_ON?
+
+#define WARN_ON(x) WARN((x), "%s", "WARN_ON(" __stringify(x) ")")
+
+Regards.
