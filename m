@@ -2,306 +2,266 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A682BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8797C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF4C2468A
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF477246B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 05:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h0HomULy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgCBFez (ORCPT
+        id S1726436AbgCBFip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 00:34:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7138 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgCBFez (ORCPT
+        Mon, 2 Mar 2020 00:38:45 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33379 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgCBFio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 00:34:55 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0225YsFp012268
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 00:34:54 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfm50usx9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 00:34:54 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Mon, 2 Mar 2020 05:34:39 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 05:34:31 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0225YUBS55115938
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 05:34:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 628A111C052;
-        Mon,  2 Mar 2020 05:34:30 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BAB9411C05B;
-        Mon,  2 Mar 2020 05:34:29 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 05:34:29 +0000 (GMT)
-Received: from [9.102.43.192] (unknown [9.102.43.192])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 7CC49A00BE;
-        Mon,  2 Mar 2020 16:34:21 +1100 (AEDT)
-Subject: Re: [PATCH v3 16/27] powerpc/powernv/pmem: Register a character
- device for userspace to interact with
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-17-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 2 Mar 2020 16:34:23 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 2 Mar 2020 00:38:44 -0500
+Received: by mail-lf1-f67.google.com with SMTP id c20so2268302lfb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 01 Mar 2020 21:38:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iZUnuuXdWPxrQ1tBgFnAWbeFdl2tJ8zJVR+csyAcTkc=;
+        b=h0HomULyqXLAry2FGBbSKvHCqPuAlBMAGpfp3/GDitViNi2ZCgSBbVa0pJt8y/4FJ6
+         EiUE1Dm0rt7pw9tbDwsBsSQQU910ot7g74EA2Flb2JnOzoL4vNqauXrk7zosoFs0X+WC
+         emcTeJPLZ75VoTupe1/YuiVfTImemud2gH7jHa4gbrui7JN4OVDxaiZsq3OIlJgp9VC/
+         HfhsdfdTYfGpLKWRYKL13SmroBPJR+n3PLr13ZnnNbmz4IrFHoC5IMMOMMF+F/Iljy86
+         wBzEtfIkOiSh2urz7F4zfCWjy2asMFUTO+7cOD64VTMbwYTyefHA6oMkLU6gkQCtJWRf
+         SDRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iZUnuuXdWPxrQ1tBgFnAWbeFdl2tJ8zJVR+csyAcTkc=;
+        b=Qo/3lHXkLDwFaQ9KnQGMnIzo+EtCKbJfg21pIbAGeGjjw4DgspGnxCSeTNC08FEz+D
+         qIPjzXeoZgBebKVoIW1j8VopYTzMa4OdOorLnmF3u7RVVuy7L3m6jGDu+Gb43zFImBX4
+         MRYRlxDQOHk4X+qqvA5RNS9+t1x/2+t8fiJM0sfKEexvlmiKy96Hactl5yuC8vOXBvu4
+         BgdUmCxdjKEKWeqHaNxVSzuDrkOB2igQVKr1RQTyTiPBqvSgII6EpZgV/sl7wzQwbbQW
+         6u2/AryNUq1B6yVYjiZaW4anuNFzotvgjpUg76xAlmBHIlVTtXO9iLVm9VKLR4x4x4yP
+         98OA==
+X-Gm-Message-State: ANhLgQ1HPRX1jfzJbm2o5KPb3rPuo38t9OpDI56gzX3Oglv0i43RrMq7
+        a+AmauWrqpvhzbKkzDR0hslxjUtJltDlc82fpor9zA==
+X-Google-Smtp-Source: ADFU+vtWrdzPcKi7rIYmOyOSoN1tlM1f5VFEKYJZtGe6xn7jtbEv6mzHysZZwYvh20ZJyYF+zBBgzPWWFCw0zcQ0N44=
+X-Received: by 2002:a05:6512:3ab:: with SMTP id v11mr9552213lfp.82.1583127521865;
+ Sun, 01 Mar 2020 21:38:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-17-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030205-0012-0000-0000-0000038C0E32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030205-0013-0000-0000-000021C8BFB4
-Message-Id: <1e980dc7-109a-d96f-1329-1c38918e2bba@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_01:2020-02-28,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=2
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020041
+References: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1583089390-36084-1-git-send-email-pbonzini@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 2 Mar 2020 11:08:30 +0530
+Message-ID: <CA+G9fYtYqEbH9AUtVr744BKxLq0s1YuD=_kT9Ej=85dteHME4Q@mail.gmail.com>
+Subject: Re: [GIT PULL] Second batch of KVM changes for Linux 5.6-rc4 (or rc5)
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm list <kvm@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Anders Roxell <anders.roxell@linaro.org>, oupton@google.com,
+        jmattson@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch introduces a character device (/dev/ocxl-scmX) which further
-> patches will use to interact with userspace.
+On Mon, 2 Mar 2020 at 00:33, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> Linus,
+>
+> The following changes since commit a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
+>
+>   KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
+>
+> are available in the git repository at:
+>
+>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+>
+> for you to fetch changes up to 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c:
+>
+>   KVM: VMX: check descriptor table exits on instruction emulation (2020-03-01 19:26:31 +0100)
+>
+> ----------------------------------------------------------------
+> More bugfixes, including a few remaining "make W=1" issues such
+> as too large frame sizes on some configurations.  On the
+> ARM side, the compiler was messing up shadow stacks between
+> EL1 and EL2 code, which is easily fixed with __always_inline.
+>
+> ----------------------------------------------------------------
+> Christian Borntraeger (1):
+>       KVM: let declaration of kvm_get_running_vcpus match implementation
+>
+> Erwan Velu (1):
+>       kvm: x86: Limit the number of "kvm: disabled by bios" messages
+>
+> James Morse (3):
+>       KVM: arm64: Ask the compiler to __always_inline functions used at HYP
+>       KVM: arm64: Define our own swab32() to avoid a uapi static inline
+>       arm64: Ask the compiler to __always_inline functions used by KVM at HYP
+>
+> Jeremy Cline (1):
+>       KVM: arm/arm64: Fix up includes for trace.h
+>
+> Mark Rutland (1):
+>       kvm: arm/arm64: Fold VHE entry/exit work into kvm_vcpu_run_vhe()
+>
+> Oliver Upton (1):
+>       KVM: VMX: check descriptor table exits on instruction emulation
+>
+> Paolo Bonzini (4):
+>       KVM: SVM: allocate AVIC data structures based on kvm_amd module parameter
+>       KVM: allow disabling -Werror
+>       KVM: x86: avoid useless copy of cpufreq policy
+>       Merge tag 'kvmarm-fixes-5.6-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
+>
+> Valdis Kletnieks (1):
+>       KVM: x86: allow compiling as non-module with W=1
+>
+> Wanpeng Li (2):
+>       KVM: Introduce pv check helpers
+>       KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
 
-As with the comments on other patches in this series, this commit 
-message is lacking in explanation. What's the purpose of this device?
+Kernel panic noticed on latest Linux mainline kernel.
+qemu_x86_64 boot failed due to kernel panic.
+Please investigate this problem.
 
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 116 +++++++++++++++++-
->   .../platforms/powernv/pmem/ocxl_internal.h    |   2 +
->   2 files changed, 116 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index b8bd7e703b19..63109a870d2c 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -10,6 +10,7 @@
->   #include <misc/ocxl.h>
->   #include <linux/delay.h>
->   #include <linux/ndctl.h>
-> +#include <linux/fs.h>
->   #include <linux/mm_types.h>
->   #include <linux/memory_hotplug.h>
->   #include "ocxl_internal.h"
-> @@ -339,6 +340,9 @@ static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
->   
->   	free_minor(ocxlpmem);
->   
-> +	if (ocxlpmem->cdev.owner)
-> +		cdev_del(&ocxlpmem->cdev);
-> +
->   	if (ocxlpmem->metadata_addr)
->   		devm_memunmap(&ocxlpmem->dev, ocxlpmem->metadata_addr);
->   
-> @@ -396,6 +400,70 @@ static int ocxlpmem_register(struct ocxlpmem *ocxlpmem)
->   	return device_register(&ocxlpmem->dev);
->   }
->   
-> +static void ocxlpmem_put(struct ocxlpmem *ocxlpmem)
-> +{
-> +	put_device(&ocxlpmem->dev);
-> +}
-> +
-> +static struct ocxlpmem *ocxlpmem_get(struct ocxlpmem *ocxlpmem)
-> +{
-> +	return (get_device(&ocxlpmem->dev) == NULL) ? NULL : ocxlpmem;
-> +}
-> +
-> +static struct ocxlpmem *find_and_get_ocxlpmem(dev_t devno)
-> +{
-> +	struct ocxlpmem *ocxlpmem;
-> +	int minor = MINOR(devno);
-> +	/*
-> +	 * We don't declare an RCU critical section here, as our AFU
-> +	 * is protected by a re0ference counter on the device. By the time the
-> +	 * minor number of a device is removed from the idr, the ref count of
-> +	 * the device is already at 0, so no user API will access that AFU and
-> +	 * this function can't return it.
-> +	 */
-> +	ocxlpmem = idr_find(&minors_idr, minor);
-> +	if (ocxlpmem)
-> +		ocxlpmem_get(ocxlpmem);
-> +	return ocxlpmem;
-> +}
-> +
-> +static int file_open(struct inode *inode, struct file *file)
-> +{
-> +	struct ocxlpmem *ocxlpmem;
-> +
-> +	ocxlpmem = find_and_get_ocxlpmem(inode->i_rdev);
-> +	if (!ocxlpmem)
-> +		return -ENODEV;
-> +
-> +	file->private_data = ocxlpmem;
-> +	return 0;
-> +}
-> +
-> +static int file_release(struct inode *inode, struct file *file)
-> +{
-> +	struct ocxlpmem *ocxlpmem = file->private_data;
-> +
-> +	ocxlpmem_put(ocxlpmem);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= file_open,
-> +	.release	= file_release,
-> +};
-> +
-> +/**
-> + * create_cdev() - Create the chardev in /dev for the device
-> + * @ocxlpmem: the SCM metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int create_cdev(struct ocxlpmem *ocxlpmem)
-> +{
-> +	cdev_init(&ocxlpmem->cdev, &fops);
-> +	return cdev_add(&ocxlpmem->cdev, ocxlpmem->dev.devt, 1);
-> +}
-> +
->   /**
->    * ocxlpmem_remove() - Free an OpenCAPI persistent memory device
->    * @pdev: the PCI device information struct
-> @@ -572,6 +640,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   		goto err;
->   	}
->   
-> +	if (create_cdev(ocxlpmem)) {
-> +		dev_err(&pdev->dev, "Could not create character device\n");
-> +		goto err;
-> +	}
-> +
->   	elapsed = 0;
->   	timeout = ocxlpmem->readiness_timeout + ocxlpmem->memory_available_timeout;
->   	while (!is_usable(ocxlpmem, false)) {
-> @@ -613,20 +686,59 @@ static struct pci_driver pci_driver = {
->   	.shutdown = ocxlpmem_remove,
->   };
->   
-> +static int file_init(void)
-> +{
-> +	int rc;
-> +
-> +	mutex_init(&minors_idr_lock);
-> +	idr_init(&minors_idr);
-> +
-> +	rc = alloc_chrdev_region(&ocxlpmem_dev, 0, NUM_MINORS, "ocxl-pmem");
+Meanwhile we will also investigate by using git bisect to identify bad patch.
 
-If the driver is going to be called "ocxlpmem" can we standardise on 
-that without the extra hyphen?
+/usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic \
+ -net nic,model=virtio,macaddr=DE:AD:BE:EF:66:05 -net tap \
+-m 1024 -monitor none -kernel
+bzImage--5.5+git0+98d54f81e3-r0-intel-corei7-64-20200301225337-2502.bin
+\
+--append "root=/dev/sda  rootwait console=ttyS0,115200" \
+ -hda rpb-console-image-lkft-intel-corei7-64-20200301225337-2502.rootfs.ext4 \
+ -m 4096 -smp 4 -nographic \
+ -drive format=qcow2,file=lava-guest.qcow2,media=disk,if=virtio,id=lavatest
 
-> +	if (rc) {
-> +		idr_destroy(&minors_idr);
-> +		pr_err("Unable to allocate OpenCAPI persistent memory major number: %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	ocxlpmem_class = class_create(THIS_MODULE, "ocxl-pmem");
-> +	if (IS_ERR(ocxlpmem_class)) {
-> +		idr_destroy(&minors_idr);
-> +		pr_err("Unable to create ocxl-pmem class\n");
-> +		unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-> +		return PTR_ERR(ocxlpmem_class);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void file_exit(void)
-> +{
-> +	class_destroy(ocxlpmem_class);
-> +	unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-> +	idr_destroy(&minors_idr);
-> +}
-> +
->   static int __init ocxlpmem_init(void)
->   {
-> -	int rc = 0;
-> +	int rc;
->   
-> -	rc = pci_register_driver(&pci_driver);
-> +	rc = file_init();
->   	if (rc)
->   		return rc;
->   
-> +	rc = pci_register_driver(&pci_driver);
-> +	if (rc) {
-> +		file_exit();
-> +		return rc;
-> +	}
-> +
->   	return 0;
->   }
->   
->   static void ocxlpmem_exit(void)
->   {
->   	pci_unregister_driver(&pci_driver);
-> +	file_exit();
->   }
->   
->   module_init(ocxlpmem_init);
+[    0.000000] Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
+7.3.0 (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
+<trim>
+[    0.762542] kvm: no hardware support
+[    0.763123] BUG: kernel NULL pointer dereference, address: 000000000000028c
+[    0.763425] #PF: supervisor read access in kernel mode
+[    0.763425] #PF: error_code(0x0000) - not-present page
+[    0.763425] PGD 0 P4D 0
+[    0.763425] Oops: 0000 [#1] SMP NOPTI
+[    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
+[    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
+[    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
+0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
+41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
+c1 43
+[    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
+[    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
+[    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
+[    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
+[    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
+[    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
+knlGS:0000000000000000
+[    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
+[    0.763425] Call Trace:
+[    0.763425]  cpufreq_cpu_put+0x15/0x20
+[    0.763425]  kvm_arch_init+0x1f6/0x2b0
+[    0.763425]  kvm_init+0x31/0x290
+[    0.763425]  ? svm_check_processor_compat+0xd/0xd
+[    0.763425]  ? svm_check_processor_compat+0xd/0xd
+[    0.763425]  svm_init+0x21/0x23
+[    0.763425]  do_one_initcall+0x61/0x2f0
+[    0.763425]  ? rdinit_setup+0x30/0x30
+[    0.763425]  ? rcu_read_lock_sched_held+0x4f/0x80
+[    0.763425]  kernel_init_freeable+0x219/0x279
+[    0.763425]  ? rest_init+0x250/0x250
+[    0.763425]  kernel_init+0xe/0x110
+[    0.763425]  ret_from_fork+0x27/0x50
+[    0.763425] Modules linked in:
+[    0.763425] CR2: 000000000000028c
+[    0.763425] ---[ end trace 239abf40c55c409b ]---
+[    0.763425] RIP: 0010:kobject_put+0x12/0x1c0
+[    0.763425] Code: 4a 01 89 d0 f0 0f b1 0f 75 ef 89 d1 eb d9 66 2e
+0f 1f 84 00 00 00 00 00 48 85 ff 0f 84 bd 00 00 00 55 48 89 e5 41 55
+41 54 53 <f6> 47 3c 01 48 89 fb 74 22 48 8d 7b 38 b8 ff ff ff ff f0 0f
+c1 43
+[    0.763425] RSP: 0018:ffffbd2800013de8 EFLAGS: 00010206
+[    0.763425] RAX: 0000000000000000 RBX: ffffffff996e9660 RCX: 0000000000000000
+[    0.763425] RDX: 0000000000000046 RSI: 0000000000000006 RDI: 0000000000000250
+[    0.763425] RBP: ffffbd2800013e00 R08: 0000000000000000 R09: 0000000000000000
+[    0.763425] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[    0.763425] R13: 0000000000003ad0 R14: 0000000000000000 R15: ffffffff99a896be
+[    0.763425] FS:  0000000000000000(0000) GS:ffff92ec7bc00000(0000)
+knlGS:0000000000000000
+[    0.763425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.763425] CR2: 000000000000028c CR3: 0000000049c10000 CR4: 00000000003406f0
+[    0.763425] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:38
+[    0.763425] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
+1, name: swapper/0
+[    0.763425] INFO: lockdep is turned off.
+[    0.763425] irq event stamp: 696816
+[    0.763425] hardirqs last  enabled at (696815):
+[<ffffffff98c929d1>] _raw_read_unlock_irqrestore+0x31/0x50
+[    0.763425] hardirqs last disabled at (696816):
+[<ffffffff97e01f3b>] trace_hardirqs_off_thunk+0x1a/0x1c
+[    0.763425] softirqs last  enabled at (696776):
+[<ffffffff99000338>] __do_softirq+0x338/0x43a
+[    0.763425] softirqs last disabled at (696769):
+[<ffffffff97f045e8>] irq_exit+0xb8/0xc0
+[    0.763425] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G      D
+  5.6.0-rc4 #1
+[    0.763425] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.763425] Call Trace:
+[    0.763425]  dump_stack+0x7a/0xa5
+[    0.763425]  ___might_sleep+0x163/0x250
+[    0.763425]  __might_sleep+0x4a/0x80
+[    0.763425]  exit_signals+0x33/0x2d0
+[    0.763425]  do_exit+0xb6/0xcf0
+[    0.763425]  ? kernel_init_freeable+0x219/0x279
+[    0.763425]  ? rest_init+0x250/0x250
+[    0.763425]  rewind_stack_do_exit+0x17/0x20
+[    0.763425] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+
+
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git describe: v5.6-rc4
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/2502/config
+
+git log --online
+98d54f81e36b (HEAD -> master, tag: v5.6-rc4, origin/master,
+origin/HEAD) Linux 5.6-rc4
+e70869821a46 Merge tag 'ext4_for_linus_stable' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4
+f853ed90e2e4 Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+86f7e90ce840 KVM: VMX: check descriptor table exits on instruction emulation
+fb279f4e2386 Merge branch 'i2c/for-current-fixed' of
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
+37b0b6b8b99c ext4: potential crash on allocation error in
+ext4_alloc_flex_bg_array()
+38b17afb0ebb macintosh: therm_windtunnel: fix regression when
+instantiating devices
+6c5d91124929 jbd2: fix data races at struct journal_head
+7557c1b3f715 Merge tag 'scsi-fixes' of
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1261774#L461
+https://lkft.validation.linaro.org/scheduler/job/1261816#L477
+
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+Linaro LKFT
+https://lkft.linaro.org
