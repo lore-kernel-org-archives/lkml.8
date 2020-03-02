@@ -2,108 +2,128 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79863C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB39C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5806F21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C79C22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 20:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCBUtN (ORCPT
+        id S1727030AbgCBUtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 15:49:13 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:54078 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCBUtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 15:49:13 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 408528051F;
-        Mon,  2 Mar 2020 21:49:08 +0100 (CET)
-Date:   Mon, 2 Mar 2020 21:49:06 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, smasetty@codeaurora.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: msm: Convert GMU bindings
- to YAML
-Message-ID: <20200302204906.GA32123@ravnborg.org>
-References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
- <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
+        Mon, 2 Mar 2020 15:49:41 -0500
+Received: from mga07.intel.com ([134.134.136.100]:13572 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgCBUtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 15:49:41 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 12:49:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
+   d="scan'208";a="440279368"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 12:49:40 -0800
+Date:   Mon, 2 Mar 2020 12:49:40 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when
+ function is out-of-range
+Message-ID: <20200302204940.GG6244@linux.intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
-        a=7gkXJVJtAAAA:8 a=QUSSlG8YkhR_fViXtTAA:9 a=3EO_jEHvlgRDqEOL:21
-        a=b2m7j8IoA-gO4Aiz:21 a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan.
-
-On Mon, Mar 02, 2020 at 11:23:43AM -0700, Jordan Crouse wrote:
-> Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-> text bindings.
+On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
+> On 02.03.20 20:57, Sean Christopherson wrote:
+> >Rework kvm_cpuid() to query entry->function when adjusting the output
+> >values so that the original function (in the aptly named "function") is
+> >preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+> >trace the max function for a range instead of the requested function if
+> >the requested function is out-of-range and an entry for the max function
+> >exists.
+> >
+> >Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+> >Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >Cc: Jim Mattson <jmattson@google.com>
+> >Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >  arch/x86/kvm/cpuid.c | 15 +++++++--------
+> >  1 file changed, 7 insertions(+), 8 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> >index b1c469446b07..6be012937eba 100644
+> >--- a/arch/x86/kvm/cpuid.c
+> >+++ b/arch/x86/kvm/cpuid.c
+> >@@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+> >  	return max && function <= max->eax;
+> >  }
+> >+/* Returns true if the requested leaf/function exists in guest CPUID. */
+> >  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >  	       u32 *ecx, u32 *edx, bool check_limit)
+> >  {
+> >-	u32 function = *eax, index = *ecx;
+> >+	const u32 function = *eax, index = *ecx;
+> >  	struct kvm_cpuid_entry2 *entry;
+> >-	struct kvm_cpuid_entry2 *max;
+> >  	bool found;
+> >  	entry = kvm_find_cpuid_entry(vcpu, function, index);
+> >@@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >  	 */
+> >  	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+> >  	    !cpuid_function_in_range(vcpu, function)) {
+> >-		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+> >-		if (max) {
+> >-			function = max->eax;
+> >-			entry = kvm_find_cpuid_entry(vcpu, function, index);
+> >-		}
+> >+		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+> >+		if (entry)
+> >+			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+> >  	}
+> >  	if (entry) {
+> >  		*eax = entry->eax;
+> >  		*ebx = entry->ebx;
+> >  		*ecx = entry->ecx;
+> >  		*edx = entry->edx;
+> >-		if (function == 7 && index == 0) {
+> >+
+> >+		if (entry->function == 7 && index == 0) {
+> >  			u64 data;
+> >  		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> >  			    (data & TSX_CTRL_CPUID_CLEAR))
+> >
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->  .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
-> -
-> -Required properties:
-> -- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
-> -    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
-> -  Note that you need to list the less specific "qcom,adreno-gmu"
-> -  for generic matches and the more specific identifier to identify
-> -  the specific device.
-> -- reg: Physical base address and length of the GMU registers.
-> -- reg-names: Matching names for the register regions
-> -  * "gmu"
-> -  * "gmu_pdc"
-> -  * "gmu_pdc_seg"
-> -- interrupts: The interrupt signals from the GMU.
-> -- interrupt-names: Matching names for the interrupts
-> -  * "hfi"
-> -  * "gmu"
-> -- clocks: phandles to the device clocks
-> -- clock-names: Matching names for the clocks
-> -   * "gmu"
-> -   * "cxo"
-> -   * "axi"
-> -   * "mnoc"
-The new binding - and arch/arm64/boot/dts/qcom/sdm845.dtsi agrees that
-"mnoc" is wrong.
+> What about the !entry case below this? It was impacted by the function
+> capping so far, not it's no longer.
 
-> -- power-domains: should be:
-> -	<&clock_gpucc GPU_CX_GDSC>
-> -	<&clock_gpucc GPU_GX_GDSC>
-> -- power-domain-names: Matching names for the power domains
-> -- iommus: phandle to the adreno iommu
-> -- operating-points-v2: phandle to the OPP operating points
-> -
-> -Optional properties:
-> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
-This property is not included in the new binding.
+Hmm, the only way the output would be different is in a really contrived
+scenario where userspace doesn't provide an entry for the max basic leaf.
 
-Everything else looked fine to me.
-With sram added - or expalined in commit why it is dropped:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-	Sam
+The !entry path can only be reached with "orig_function != function" if
+orig_function is out of range and there is no entry for the max basic leaf.
+The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
+and to take effect with !entry would require there to be a CPUID.max.1 but
+not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
+userspace input and IMO can be ignored.
