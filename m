@@ -2,185 +2,105 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41F1C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B48620870
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B7321739
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgCBNr7 (ORCPT
+        id S1727093AbgCBNsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:47:59 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40452 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgCBNr7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:47:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id j80so8308811oih.7;
-        Mon, 02 Mar 2020 05:47:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=hDB6s0mVsZWzKBwRcoxWaZ6NA1lo5wdAr0u5W26z+JE=;
-        b=l7lEazKyQVeciw9mD3hG4uS9EcNZal43Dm/bjnNbtFxOho88NmwV/MA/pT0i4jm10G
-         C62bU3uM3yssel+KV6MuuQ0s04TOtlZei43OW4IVHcCQck18guI6n3dqJjVWc4mZLFOH
-         +3gftezsVSWTJAavu70R3FlMq57a+FfGhLBTDpaIXYuXdKZqFRx4JAFHkFvVBA+4kmM+
-         b/wGKwygSzFIjH2cWvm9ZC12TJkvBLPKFedq+hQi1W/B3LGfHNl3sWxl9jZhokqzDDSO
-         RHMArxl4MNlrOSfuTvBKCbHbQwGC2AfIj9GMBkV0G/W5u9FZgKYmErWePrwV1kTfDYFN
-         noiA==
-X-Gm-Message-State: APjAAAW9w8SbAk/qn3mHjjY16D/GgUgCWD5sUGVLvzlQGd2BYIM/dUyG
-        ohbm7X6ZSkj5vb9Je+Fdkq8RiUsHCF/edyOna/sX1A==
-X-Google-Smtp-Source: APXvYqzWVp9IhNwDI2+UTTrugW/SFZ+bbTayj2vr/BAzNkK7k45D30xX4RP/S0TypGTtAOrugGLKPdfWiiTIxXsXYzM=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr11048818oia.148.1583156877859;
- Mon, 02 Mar 2020 05:47:57 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari>
-In-Reply-To: <20200302134011.GA3717@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 2 Mar 2020 14:47:46 +0100
-Message-ID: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mon, 2 Mar 2020 08:48:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:32932 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbgCBNsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 08:48:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90C8E2F;
+        Mon,  2 Mar 2020 05:48:23 -0800 (PST)
+Received: from [10.163.1.119] (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83AAE3F534;
+        Mon,  2 Mar 2020 05:48:16 -0800 (PST)
+Subject: Re: Linux-next-20200302: arm64 build failed
+To:     Will Deacon <will@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        catalin.marinas@arm.com
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        rppt@linux.ibm.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d2d8d359-3e48-b5b7-2944-be3d54ba1d32@arm.com>
+Date:   Mon, 2 Mar 2020 19:18:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200302104726.GA7995@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
 
-On Mon, Mar 2, 2020 at 2:40 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> Geert Uytterhoeven, Mon, Mar 02, 2020 13:28:13 +0100:
-> > On Mon, Jan 13, 2020 at 3:24 PM Alex Riesen
-> > <alexander.riesen@cetitec.com> wrote:
-> > > Not sure if all variants of the Salvator board have the HDMI decoder
-> > > chip (the ADV7482) connected to the SSI4 on R-Car SoC, as it is on
-> > > Salvator-X ES1, so the the ADV7482 endpoint and connection definitions
-> > > are placed in the board file.
-> >
-> > Both Salvator-X and Salvator-XS have SSI4 wired to the ADV7482.
-> >
-> > > I do assume though that all Salvator variants have the CLK_C clock line
-> > > hard-wired to the ADV7482 HDMI decoder, and remove it from the list of
-> > > clocks provided by the R-Car sound system.
-> >
-> > Yes, both Salvator-X and Salvator-XS have it wired that way.
->
-> Ok, seems like I can move that part into the common file as well.
-> Integrations of ADV7482 and R-Car which use salvator-common.dts can still
-> redefine the endpoint settings in their board files, right?
 
-Indeed.
+On 03/02/2020 04:17 PM, Will Deacon wrote:
+> [+Anshuman and Catalin]
+> 
+> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+>> Linux-Next 20200302 arm64 build failed due to below errors,
+>> Suspecting patch causing this build break.
+>>
+>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+>>
+>> Error log,
+>> -------------
+>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+>> include/linux/compiler.h:284:1: error: incompatible type for argument
+>> 1 of 'p4d_page_paddr'
+>>  ({         \
+>>  ^
+>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+>> '__phys_to_virt'
+>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+>>                                              ^
+>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>                                           ^~~~
+>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
+>>                       ^~~~~~~~~~~
+>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+>> + pud_index(addr) * sizeof(pud_t))
+>>                                                     ^~~~~~~~~
+>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+>> 'pud_offset_phys'
+>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>                                                ^~~~~~~~~~~~~~~
+>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+>>    pudp = pud_offset(pgdp, addr);
+>>           ^~~~~~~~~~
+> 
+> Looks like we need an implementation of unmap_hotplug_p4d_range() to
+> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+> patches in the arm64 tree so we'll either need a common branch or the
+> hotplug patches will need to be dropped for the moment.
 
-> > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > @@ -322,6 +322,10 @@
-> > >         clock-frequency = <22579200>;
-> > >  };
-> > >
-> > > +&audio_clk_c {
-> > > +       clock-frequency = <12288000>;
-> > > +};
-> >
-> > Does the ADV7482 always generate a 12.288 MHz clock signal?
-> > Or is this programmable?
->
-> Oops. It looks like it is and the value is derived from the sampling rate
-> (48kHz) and the master clock multiplier. Both hard-coded in the board file.
+If we decide to get a common branch, will try to get this sorted with
+an unmap_hotplug_p4d_range() implementation as you have suggested.
 
-Where are these hardcoded in the board file?
-Even if they are, technically this is a clock output of the ADC7482.
-
-> > > video-receiver@70 {
-> > >     compatible = "adi,adv7482";
-> > > ...
-> > > +   clocks = <&rcar_sound 3>, <&audio_clk_c>;
-> > > +   clock-names = "clk-hdmi-video", "clk-hdmi-i2s-mclk";
-> >
-> > The above declares the Audio CLK C to be a clock input of the ADV7482, while
-> > it is an output.
->
-> I would gladly give it right direction if I *really* understood what I was
-> doing...
-
-:-)
-
-> > Furthermore, the DT bindings do not document that clocks can be specified.
->
-> Should the DT bindings document that the clock cannot be specified than?
-
-It currently does say so, as it doesn't list "clocks" in its properties section.
-
-> > > @@ -686,7 +700,8 @@
-> > >         };
-> > >
-> > >         sound_pins: sound {
-> > > -               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
-> > > +               groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
-> > > +                        "ssi4_data";
-> >
-> > Missing "ss4_ctrl", for the SCK4 and WS4 pins.
->
-> I'll add them.
-> As the device seems to function even without thoes, does this mean the pins in
-> the group are used "on demand" by whatever needs them?
-
-Probably the SCK4/WS4 functions are the reset-state defaults.
-
-> > > @@ -760,8 +775,18 @@
-> > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-> > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-> > >                  <&audio_clk_a>, <&cs2000>,
-> > > -                <&audio_clk_c>,
-> >
-> > Why remove it? This is the list of clock inputs, not outputs.
->
-> ...probably because I was thinking the specification was exactly the other way
-> around.
->
-> Does a "clocks = ..." statement always mean input clocks?
-
-Yes it does.
-If a device has clock outputs and is thus a clock provider, it should
-have a #clock-cells property, and this should be documented in the bindings.
-
-A clock consumer will refer to clocks of a provider using the "clocks"
-property, specifying a clock specifier (phandle and zero or more indices)
-for each clock referenced.
-
-> I shall correct that and re-test (might take a while, I don't have the
-> hardware anymore).
-
-Oops.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Will
+> 
