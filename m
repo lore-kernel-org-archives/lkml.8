@@ -2,144 +2,119 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B237EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC29EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828AC24699
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EA724699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d794cEm4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaRCakMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgCBHSg (ORCPT
+        id S1726880AbgCBHTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:18:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45404 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgCBHSf (ORCPT
+        Mon, 2 Mar 2020 02:19:06 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42265 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCBHTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:18:35 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so5111780pfg.12;
-        Sun, 01 Mar 2020 23:18:35 -0800 (PST)
+        Mon, 2 Mar 2020 02:19:06 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l12so9313472oil.9;
+        Sun, 01 Mar 2020 23:19:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SGYHPYDByh3jgM9qVULEcWknYrO2Uv9Ry5lUP1fq0cU=;
-        b=d794cEm4/jGpeACslEH4kzP+y3+j3IKtTRsaga+yf8sTnlUAOHBn9tuqwJ0yTx7dYD
-         Vs5dCBO3yx1zEVc5/S/paU18egxiByiViTHUPoYsgMntp9MzgkDYYhpeke8BwVAUzn0S
-         mYwv/3Umhk0keqQOdcZNCw6dr2xV4gj3fcytzBnAgN5xdfZFUMSrWJlD0cqJn5JKqk0c
-         wiZrpC9JrH8n83UN/39qy5xXjxooSWLv7ccsoyFQZoS5ajgtks7vD7Rnt9M4ZoJ02q3T
-         Uha1nYWlfu+/3rQzkUrK4LjW5Yi2jWtSMYEmF0Pc3CdiE1SVp2qGy75z2ub0IwNdf7WM
-         hJ7A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pCiMbDoks/6zcnPq60yjRnfndV8SA+UORO6ejiuKYFI=;
+        b=VaRCakMktqQndfftu+QA+aIpP/MvxHJ6G2GE8VvnTKUPLc65ynuUU8nWteTQ+5/s42
+         1C5ttGFj3/ss/c7V71bjRIjCXkn8ipP9IN1CnjsoqqWGVwBn9m3/Nk2klbMkLIyaXYGK
+         EHWDcr752bxjinWLky93t4VamSEuhQ9XgZrLtWcxq4MHzCfNpCoCoM0P9XBaPd9cVmoW
+         Qi0uwSYrf9SqL3oKvVNoVewmKNnqMSw8Dd4riPfQifi9HRc1yRvaxheEkPmGeXtez/q0
+         sax9BArSKYz+V72D5Wiq4r7f49nrplpCqWXp+NMnevvAXbKGbISc8BEP1xF0mdt4nwr0
+         FPvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SGYHPYDByh3jgM9qVULEcWknYrO2Uv9Ry5lUP1fq0cU=;
-        b=mssg4U1Yxc+oVIpkVigBfNHDcps/e0VIAECCo1Pe2m1ZEoUfkfrjChvklC9HwNVQjO
-         hrVvcrI+TItLBLw3yhcXzZXFjhv2Q25mpagOQbEkblQv+UftYUkIUwucpOvhIPqEYJCG
-         ZjLfGgCmJ7HgZBqIsT9GSyCJJc2+CRez3tMQBlaB4CRV4sSI+0Vsst9EAFfS1qAE4RPW
-         Ytb9EXDyPK13iPdi9l/1X8MwEwPgk39KHTJ7A55Xle4pHgQ8xssz02RfzCzQ3G8eOG+8
-         VLJS2oNq0wX282XmQZmFyBnPicmbZcQLKZN/x60lERz1BxIURaQd1MPtWA2p9UE2RikU
-         tQCg==
-X-Gm-Message-State: APjAAAVK3aN/9s7gEj51oJmjKSb9SUvKrklhnmcEkiUuNSdyiUnKn+mO
-        3h6iLISPKOUsx6rgBRAbXFNP221pNS9t7w==
-X-Google-Smtp-Source: APXvYqxUxPCh2zTtls/G8B2nA/ioRKUNFEaXw0JBRt/6l+WtrYbNC0mZhQKV8wWHP7GixIC12DR/8g==
-X-Received: by 2002:a63:2c50:: with SMTP id s77mr17537810pgs.182.1583133514798;
-        Sun, 01 Mar 2020 23:18:34 -0800 (PST)
-Received: from kernel.DHCP ([120.244.140.54])
-        by smtp.googlemail.com with ESMTPSA id z127sm19257989pgb.64.2020.03.01.23.18.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 01 Mar 2020 23:18:33 -0800 (PST)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH] KVM: X86: Fix dereference null cpufreq policy
-Date:   Mon,  2 Mar 2020 15:15:36 +0800
-Message-Id: <1583133336-7832-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pCiMbDoks/6zcnPq60yjRnfndV8SA+UORO6ejiuKYFI=;
+        b=lLeOIwAG/xMhS5EWVgzCfTB/11L2USTcj3lFccYNFymRGuwNRd3722A+QeLzJbD5zS
+         frmd4u8B6yXYwkqrrNfMyWqL6jnGFF7Z1rdK33SWQehf8drIJVocxVfTpBeMtznMqYVE
+         La53hiZbttC8DxoViRSkiePH1gXOZiKpWv0ebgYjbVg9ZjMj5t4IveUqY3f1vyvukGJr
+         +oCN4sQM7nsOr7s4UEHI6IfBBAvptw2yvv8hZTE3SdZE3JRv0BOcxFxL5O8B4mr2T9Ig
+         XY/JsI3wR3i/ZYzOeqatsx7ZFODxT9HfHpFAZljxEPdSgWBzY2uLllA8rzJFrPJExm8P
+         u+zw==
+X-Gm-Message-State: ANhLgQ32L0PMGNvUfoLbtzSHkmxoMalSR+XEpLDcX4oYboZbzesoXWw+
+        FB3Pu6IWB1deQUd15K0Vw2/PiXz6Dy60+bfqchE=
+X-Google-Smtp-Source: ADFU+vuZhLGAOSIskS5UQ891cH1JVpFKxVkNbjzn8QCXQg0pyhZs0OILiw9px+nc7e25l94DOkVkyLsatuAx6Y13TFI=
+X-Received: by 2002:aca:524a:: with SMTP id g71mr2564396oib.7.1583133544993;
+ Sun, 01 Mar 2020 23:19:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAOMZO5AP65Upj8v=KaPLzS10DNdwrz20gJGbwbcJfCDqZBx71Q@mail.gmail.com>
+In-Reply-To: <CAOMZO5AP65Upj8v=KaPLzS10DNdwrz20gJGbwbcJfCDqZBx71Q@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 2 Mar 2020 07:18:38 +0000
+Message-ID: <CA+V-a8s_d3Atp9J5KM=x4z2z_iAY8+9vcSHFUTyQ3XZ9HCCS3g@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Fabio,
 
-Naresh Kamboju reported:
+Thank you for the review.
 
-   Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
-  (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
-   kvm: no hardware support
-   BUG: kernel NULL pointer dereference, address: 000000000000028c
-   #PF: supervisor read access in kernel mode
-   #PF: error_code(0x0000) - not-present page
-   PGD 0 P4D 0
-   Oops: 0000 [#1] SMP NOPTI
-   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
-   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-  04/01/2014
-   RIP: 0010:kobject_put+0x12/0x1c0
-   Call Trace:
-    cpufreq_cpu_put+0x15/0x20
-    kvm_arch_init+0x1f6/0x2b0
-    kvm_init+0x31/0x290
-    ? svm_check_processor_compat+0xd/0xd
-    ? svm_check_processor_compat+0xd/0xd
-    svm_init+0x21/0x23
-    do_one_initcall+0x61/0x2f0
-    ? rdinit_setup+0x30/0x30
-    ? rcu_read_lock_sched_held+0x4f/0x80
-    kernel_init_freeable+0x219/0x279
-    ? rest_init+0x250/0x250
-    kernel_init+0xe/0x110
-    ret_from_fork+0x27/0x50
-   Modules linked in:
-   CR2: 000000000000028c
-   ---[ end trace 239abf40c55c409b ]---
-   RIP: 0010:kobject_put+0x12/0x1c0
+On Fri, Feb 28, 2020 at 5:31 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Lad,
+>
+> On Fri, Feb 28, 2020 at 1:41 PM Lad Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> >
+> > OV5645 can operate in virtual channel 0-3 in CSI2 interfaces, this patch
+> > adds support for module parameter virtual_channel to select the required
+> > channel. By default OV5645 operates in virtual channel 0.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/i2c/ov5645.c | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> > index a6c17d15d754..0a0671164623 100644
+> > --- a/drivers/media/i2c/ov5645.c
+> > +++ b/drivers/media/i2c/ov5645.c
+> > @@ -54,6 +54,7 @@
+> >  #define OV5645_TIMING_TC_REG21         0x3821
+> >  #define                OV5645_SENSOR_MIRROR            BIT(1)
+> >  #define OV5645_MIPI_CTRL00             0x4800
+> > +#define OV5645_REG_DEBUG_MODE          0x4814
+> >  #define OV5645_PRE_ISP_TEST_SETTING_1  0x503d
+> >  #define                OV5645_TEST_PATTERN_MASK        0x3
+> >  #define                OV5645_SET_TEST_PATTERN(x)      ((x) & OV5645_TEST_PATTERN_MASK)
+> > @@ -61,6 +62,11 @@
+> >  #define OV5645_SDE_SAT_U               0x5583
+> >  #define OV5645_SDE_SAT_V               0x5584
+> >
+> > +static u8 virtual_channel;
+> > +module_param(virtual_channel, byte, 0644);
+> > +MODULE_PARM_DESC(virtual_channel,
+> > +                "MIPI CSI-2 virtual channel (0..3), default 0");
+>
+> Should this be a device tree property instead?
+I did give a thought about it, but making this as DT property would
+make it more stiff.
 
-cpufreq policy which is get by cpufreq_cpu_get() can be NULL if it is failure,
-this patch takes care of it.
-
-Fixes: aaec7c03de (KVM: x86: avoid useless copy of cpufreq policy)
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/x86.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5de2006..3156e25 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7195,10 +7195,12 @@ static void kvm_timer_init(void)
- 
- 		cpu = get_cpu();
- 		policy = cpufreq_cpu_get(cpu);
--		if (policy && policy->cpuinfo.max_freq)
--			max_tsc_khz = policy->cpuinfo.max_freq;
-+		if (policy) {
-+			if (policy->cpuinfo.max_freq)
-+				max_tsc_khz = policy->cpuinfo.max_freq;
-+			cpufreq_cpu_put(policy);
-+		}
- 		put_cpu();
--		cpufreq_cpu_put(policy);
- #endif
- 		cpufreq_register_notifier(&kvmclock_cpufreq_notifier_block,
- 					  CPUFREQ_TRANSITION_NOTIFIER);
--- 
-2.7.4
-
+Cheers,
+--Prabhakar
