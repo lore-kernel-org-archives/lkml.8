@@ -2,95 +2,125 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3261BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB193C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E042166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhgdW1px"
+	by mail.kernel.org (Postfix) with ESMTP id 896932166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 11:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgCBLaO (ORCPT
+        id S1727715AbgCBLaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 06:30:14 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:35449 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgCBLaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 06:30:13 -0500
-Received: by mail-wr1-f74.google.com with SMTP id w18so5695617wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 03:30:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=q1I2RKn1Spku5PepO4sKWFq3j0yL+8kFK015J9Szlg0=;
-        b=hhgdW1pxLD06YKoTAOyhOOfXmdrhQnocpCiNC+sZVWf00u78Xx5+jw9fXqhlHPJxTn
-         E9gFz33mmj1u5d6T5L1Sp2+9DpLDtMQikp8DHBLfUrCqdleO9BCK7MFWRA4DLEmPaoor
-         H/dRouNteRsBjBlFqXUtaC9NSGBtor2Qvv30TJGlsY6jBvWIrRtsErxRZ+hPIr56a9QT
-         qzKKaZW21q1Jouw40dFeCb4N9tHpvl7KVnz78uu9/eb5WmOLnIYdRkmtN5RYB6pamNxW
-         xK9qmo2rmGBoNZll9bJakQX+q6jt360fWardBNyQT4Z4SGUDb388Kt2s7CgE5lGnDFwc
-         xb4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=q1I2RKn1Spku5PepO4sKWFq3j0yL+8kFK015J9Szlg0=;
-        b=WY092JK21FHs7Ho3hG5wp+sejiKM/xob6+kPDmCxftNVUI9Sz1DJFQZfYvsP/IYzp4
-         ZbfmW/fsZdEG3jx/4p2CF3jv+INJWNns/A9xrfat7UqFaywiAUTTCkP5CZxDKVG9LlKv
-         GdsnHQ6JyZZUur7LOCLGFdlFRxe+4Lm+AIJx52g504EPqhHQDoJ5g+3vtSUru3DZFjCW
-         QYnFtfTxdR3Z/maNly6w4QSUfEzKD7ZvT/5Qpl+7EVou/mJs60jF85LYouauz2YPlzEb
-         txclDi9YEyn7HqPEZ3t8xDyikATQUn3HNgBqIJxdYbunk+pIyGmFMvjZGMlOdoe8m56z
-         BSUw==
-X-Gm-Message-State: APjAAAVkyT0XGpUIptHSA+qQsEs5Tg+hAQDnXF0PnJcTttn0QwLf5XF6
-        9kjKNcGg9bsJK5gb7AZ4taykOzw4dg==
-X-Google-Smtp-Source: APXvYqzpDynIsY8fG28WGbWTomC5tcCOPYkZH/xJbbk/HHjiU7jyCTRfq/ZhpTijXyjDMUmAWsPVpE8eWQ==
-X-Received: by 2002:adf:fa50:: with SMTP id y16mr19928038wrr.79.1583148610099;
- Mon, 02 Mar 2020 03:30:10 -0800 (PST)
-Date:   Mon,  2 Mar 2020 12:29:39 +0100
-Message-Id: <20200302112939.8068-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] threads: Update PID limit comment according to futex UAPI change
-From:   Jann Horn <jannh@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 2 Mar 2020 06:30:21 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45960 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbgCBLaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 06:30:20 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3BAB9B76CBB4BD4B565E;
+        Mon,  2 Mar 2020 19:30:15 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
+ 19:30:05 +0800
+From:   Ye Bin <yebin10@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yebin10@huawei.com>
+Subject: [v2] vt: fix use after free in function "vc_do_resize"
+Date:   Mon, 2 Mar 2020 19:28:56 +0800
+Message-ID: <20200302112856.1101-1-yebin10@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The futex UAPI changed back in commit 76b81e2b0e22 ("[PATCH] lightweight
-robust futexes updates 2"), which landed in v2.6.17: FUTEX_TID_MASK is now
-0x3fffffff instead of 0x1fffffff. Update the corresponding comment in
-include/linux/threads.h.
+Fix CVE-2020-8647(https://nvd.nist.gov/vuln/detail/CVE-2020-8647), detail description
+about this CVE is in bugzilla "https://bugzilla.kernel.org/show_bug.cgi?id=206359".
 
-Signed-off-by: Jann Horn <jannh@google.com>
+error information:
+BUG: KASan: use after free in vc_do_resize+0x49e/0xb30 at addr ffff88000016b9c0
+Read of size 2 by task syz-executor.3/24164
+page:ffffea0000005ac0 count:0 mapcount:0 mapping:          (null) index:0x0
+page flags: 0xfffff00000000()
+page dumped because: kasan: bad access detected
+CPU: 0 PID: 24164 Comm: syz-executor.3 Not tainted 3.10.0-862.14.2.1.x86_64+ #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+Call Trace:
+ [<ffffffffb059f309>] dump_stack+0x1e/0x20
+ [<ffffffffaf8af957>] kasan_report+0x577/0x950
+ [<ffffffffaf8ae652>] __asan_load2+0x62/0x80
+ [<ffffffffafe3728e>] vc_do_resize+0x49e/0xb30
+ [<ffffffffafe3795c>] vc_resize+0x3c/0x60
+ [<ffffffffafe1d80d>] vt_ioctl+0x16ed/0x2670
+ [<ffffffffafe0089a>] tty_ioctl+0x46a/0x1a10
+ [<ffffffffaf92db3d>] do_vfs_ioctl+0x5bd/0xc40
+ [<ffffffffaf92e2f2>] SyS_ioctl+0x132/0x170
+ [<ffffffffb05c9b1b>] system_call_fastpath+0x22/0x27
+
+In function vc_do_resize:
+......
+if (vc->vc_y > new_rows) {
+	.......
+	old_origin += first_copied_row * old_row_size;
+} else
+	first_copied_row = 0;
+end = old_origin + old_row_size * min(old_rows, new_rows);
+......
+while (old_origin < end) {
+	scr_memcpyw((unsigned short *) new_origin,
+		    (unsigned short *) old_origin, rlth);
+	if (rrem)
+		scr_memsetw((void *)(new_origin + rlth),
+			    vc->vc_video_erase_char, rrem);
+	old_origin += old_row_size;
+	new_origin += new_row_size;
+}
+......
+
+We can see that before calculate variable "end" may update variable "old_origin"
+with "old_origin += first_copied_row * old_row_size", variable "end" is equal to
+"old_origin + (first_copied_row + min(old_rows, new_rows))* old_row_size", it's
+possible that "first_copied_row + min(old_rows, new_rows)" large than "old_rows".
+So when call scr_memcpyw function cpoy data from origin buffer to new buffer in
+"while" loop, which "old_origin" may large than real old buffer end. Now, we
+calculate origin buffer end before update "old_origin" to avoid illegal memory
+access.
+
+Reported-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- include/linux/threads.h | 2 +-
+ drivers/tty/vt/vt.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/threads.h b/include/linux/threads.h
-index 3086dba525e20..18d5a74bcc3dd 100644
---- a/include/linux/threads.h
-+++ b/include/linux/threads.h
-@@ -29,7 +29,7 @@
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 8fa059ec6cc8..1d7217bef678 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1231,6 +1231,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+ 	old_origin = vc->vc_origin;
+ 	new_origin = (long) newscreen;
+ 	new_scr_end = new_origin + new_screen_size;
++	end = old_origin + old_row_size * min(old_rows, new_rows);
  
- /*
-  * A maximum of 4 million PIDs should be enough for a while.
-- * [NOTE: PID/TIDs are limited to 2^29 ~= 500+ million, see futex.h.]
-+ * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
-  */
- #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
- 	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+ 	if (vc->vc_y > new_rows) {
+ 		if (old_rows - vc->vc_y < new_rows) {
+@@ -1249,7 +1250,6 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+ 		old_origin += first_copied_row * old_row_size;
+ 	} else
+ 		first_copied_row = 0;
+-	end = old_origin + old_row_size * min(old_rows, new_rows);
+ 
+ 	vc_uniscr_copy_area(new_uniscr, new_cols, new_rows,
+ 			    get_vc_uniscr(vc), rlth/2, first_copied_row,
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.17.2
 
