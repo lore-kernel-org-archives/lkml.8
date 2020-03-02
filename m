@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CF6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228EEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3284624673
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC81322B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="tzFnqR6y"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="pA8QzWmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgCBSI2 (ORCPT
+        id S1727618AbgCBSIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:08:28 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59720 "EHLO
+        Mon, 2 Mar 2020 13:08:30 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:59750 "EHLO
         esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbgCBSI0 (ORCPT
+        with ESMTP id S1727590AbgCBSI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:08:26 -0500
+        Mon, 2 Mar 2020 13:08:27 -0500
 Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
   Tudor.Ambarus@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
@@ -41,30 +41,30 @@ Received-SPF: None (esa6.microchip.iphmx.com: no sender
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
 Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: FeesXFe03mlIMxX9h9R26WuNWfh6bPFMpibVw4ZzPgl5EpGgNfRkBznVMui9fTykx6Z5j4ZjYE
- qw6V/R5FebuwqfH9UmHV3SbC1AUqHK49F4Pr6geVyQsrvuig38izjkE1BaNRnr2VNLeaqdVrg3
- rI1mbdl9TgqHVYiz7IYUuMVTvGzYrLdqcH3zhbLC/3WRXTBRvhP6YJS57ui/uTnjEHi5MiS8f4
- AcHTUZWb5/dQZzBCDj+SKgQ3lxz6ZOfvD885Ns3fK5B8A4NFR6sE7A9se9dF4jZ21JtuItEc83
- /IU=
+IronPort-SDR: ydkqTzXy0vbMtm8KMVuB96dT/fn2oyoEMA0rvpcnOW1kHagL7+65iehfzFDUN77xa/vOTiqhrZ
+ /c8myP9s1/F16KurdsU9QdTCFrTEDuSFL1xxQ6rb/n35ELXN9yw5uGZU+CUrExRK9HE573+ggm
+ UcB+YFqUyFHqxXECuG7SgHNPDXk2wfEjs68fFr5HOfh+r/uL1NGloUZ1uiZpYb1R7cO/q3qf0J
+ LdMtoANHhG/iBZdx9DX/tzvhixfa8e8WjiJhDSmZfwB8ul5wT9OCgeBlg1ptIpanBkGQwAhrQc
+ vXE=
 X-IronPort-AV: E=Sophos;i="5.70,507,1574146800"; 
-   d="scan'208";a="4204978"
+   d="scan'208";a="4205008"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 11:07:59 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Mar 2020 11:08:02 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 2 Mar 2020 11:08:11 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 2 Mar 2020 11:07:58 -0700
+ 15.1.1713.5; Mon, 2 Mar 2020 11:07:56 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 2 Mar 2020 11:07:55 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JGzPAkIBoWp8FmdKQpRyene0nNbZsfAmImkzUINX9iHOv2bvOXhgvWZCiLGnifbj8lIYch6AjpfxpL5GkMAYk7fOgJydC7egafTZovMElFd4vxSECRfb+lpxZLfkL9Ne7mM9utApL3XaMIg3nSh37LsgmduWQHbJGslZaUNdvNES3eD1No36qEiT26qoIYx78lmWJE02hQXNXYih0i5DShFtS5ulTDuaaA95Xq/CdAcExeILm+Rn6urg/jnYXBddkucl4Q6qkd/Z9Rq+qZpeyrY1MpnVfs0aNquEz3l3sOykvS+EQjkuMkvKTRcmKIcpNNOE74+cifZmGLTTA0Am7Q==
+ b=C2qv2jjZKoROfzyo35rGjQDs4egjHT5O2NVIjyY9h0wNjZt0ZlmZxvHs/up05HrwyutENPk+FB7o5AN+gBPvfnRGURvzbKRi5rrZXPmrK2w0nJ5Jy2PPmFI0NUSYJ1TVJfE+5Edn2xQc7xX4g47Il160OlbxlJnZyfZVo2YQ/sdybH4zPZ74niwZ1SFyG9mTrlAHLygoczRMlV3PO3myZqIeO2UOfkPCj/kijJVHpewJ5kza2jqM7Q8jOuFgl13e72jsFkJs2nnvjHEecdApjGdawYhxxXiFscyWoVmLNsf/qMs63Vk5yh8mcORbwkOPI9KygWZFH4Iu9lQqF/aE8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=28efHpy5+qnjNQZZXz8oaJ/XvGQVPhWHcj0wIyNGM74=;
- b=oDsutyyUf3VcgQPTW2bx26upAppyllIUXndmwMUoriibPSfzUo3HBH0yoIKmM3xq1Pu/8xqWWWzniTcpG7+8n1PxPQO/S1B7UvSjonV03Fj457VcDP1qXK+hyKve/ms3fQs7QcpN8AHgtxTKzigKl9lDTfjqsmUkty/4OEpOoN2g/tFnYf4IMDVSddPJlykHXnNELaxamc6XzqW6d6RhgspNMpvlUKDiPPCmm4Rn+km4uyTK8MJFRUqZtHc7UQf3tbL34s7a6+utUFIBSXlsnPTzV/xgsVHWf33y+OnG6D4paqH96AabrDQM9aQkuXwNb7I4jFHQ2IH4XgA4aHXkJQ==
+ bh=DyL46znEwB0pSUFlCem0wP7Ouwgre+peQRwCwj64oTc=;
+ b=a0fTxQCWxFWGbDSkCSVHCtQeipitQUCvJ+v3I1fPn/2GLvgDMdCw2cCyuct+oOLn7yowPJY79VRJuP+vAaCZB84KwUCFEC0UexwYT4GOiTzxYBdWJi6lQ8DNFQRSvMc4G7rQAi7R/Cdikr/qzDWucrpHl2ZRkBLlDI8hru/olj5W43JFnGJatuIAR4EmGlgLzEM7laF/2gz+Vnckq3RAmUH9zvXkGMv/PtFbh3KzMHaiwD5Ex3dXnz9J6CUzkl2HJ+s8Ogj4KBqwYbX5qleaAk+eFUp4sLViVLXd0No1OsI85rX8vi+vpWA55aHWUu5uOuibj/SU7EQs88+1IXwqaw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -72,17 +72,17 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=28efHpy5+qnjNQZZXz8oaJ/XvGQVPhWHcj0wIyNGM74=;
- b=tzFnqR6yG2HIwwKT2SLEYSIqMGc645dE2/awdeK7eCMZx5rRqoNmvBCCUgLAAyyHTh/thDe/0X/8dnuSmSOLHA2BozRFs8+59u348k/rgLpmzOzi4bo/qzPiYkKqomEr00c8r3ZG4YPierBqc5z5n0UVgskoIZ0IoP0Fmge79Kk=
+ bh=DyL46znEwB0pSUFlCem0wP7Ouwgre+peQRwCwj64oTc=;
+ b=pA8QzWmuX/m+B1uiYNmSTS6lHijVnBR6bBih5c8+dmegxECNrMoJPaX2lOuPDrBHXjPhtzjvAtCRYEZA488abiPMbjtSKxdTBm1UNEgESDU3FLMfkEfPh9ETn1dF3i5UC+z5lCMNEMqtvzuHTc5HeB8EclaxHbs1tGXsTbem/3w=
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
  by MN2PR11MB4142.namprd11.prod.outlook.com (2603:10b6:208:135::29) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Mon, 2 Mar
- 2020 18:07:52 +0000
+ 2020 18:07:49 +0000
 Received: from MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
  ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2772.019; Mon, 2 Mar 2020
- 18:07:52 +0000
+ 18:07:49 +0000
 From:   <Tudor.Ambarus@microchip.com>
 To:     <bbrezillon@kernel.org>, <vigneshr@ti.com>,
         <linux-mtd@lists.infradead.org>
@@ -103,11 +103,11 @@ CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <joel@jms.id.au>,
         <linux-aspeed@lists.ozlabs.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 11/23] mtd: spi-nor: Move GigaDevice bits out of core.c
-Thread-Topic: [PATCH 11/23] mtd: spi-nor: Move GigaDevice bits out of core.c
-Thread-Index: AQHV8L189u/J/tcBg0STzFC5Ld2G3Q==
-Date:   Mon, 2 Mar 2020 18:07:51 +0000
-Message-ID: <20200302180730.1886678-12-tudor.ambarus@microchip.com>
+Subject: [PATCH 07/23] mtd: spi-nor: Move Eon bits out of core.c
+Thread-Topic: [PATCH 07/23] mtd: spi-nor: Move Eon bits out of core.c
+Thread-Index: AQHV8L17Dh4AT5j9xkG018/Co+tCLg==
+Date:   Mon, 2 Mar 2020 18:07:48 +0000
+Message-ID: <20200302180730.1886678-8-tudor.ambarus@microchip.com>
 References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
 In-Reply-To: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
 Accept-Language: en-US
@@ -116,29 +116,29 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator: 
 x-originating-ip: [94.177.32.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: adada42a-1df0-46aa-35d3-08d7bed49ffc
+x-ms-office365-filtering-correlation-id: 8add0dc4-176a-4766-5f2d-08d7bed49e1d
 x-ms-traffictypediagnostic: MN2PR11MB4142:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4142F15CA713DF4D4905269BF0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <MN2PR11MB4142F1B1B81BB6155C90390AF0E70@MN2PR11MB4142.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 033054F29A
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(36756003)(26005)(66446008)(107886003)(6486002)(186003)(2616005)(4326008)(478600001)(6512007)(91956017)(64756008)(66946007)(2906002)(71200400001)(76116006)(8936002)(316002)(86362001)(54906003)(6506007)(66556008)(5660300002)(66476007)(7406005)(1076003)(7416002)(81156014)(81166006)(110136005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9mNqv0DoRbHoGmkHUT8mB85ve4ZUHd5ZphO8V+L6SbdXk834DBXqy6swG92J4dzp7WomHAvidu1pRL7V9aKTcjp/xrzQtlJ8Z0zQTLx2jJdMIUv/tLPSw1+Ml55NpT+ov9Pi8eibMciKZIWgzdsTFLazijUh10SbUza88MqlJ4V8UZAvBp5Pm4mYSOqMKdZfvqEFML3hiJi0F92SXDhC7C9pVZJb36TOpZkY/wYILOI43QCDOc4/8yK6qzaZhw2DzgfTbyZ45iXJAqeACUa4wgJFUKbnS4UQNlpE63D8a63Far/vZjvkkH3NMtID9DgrDo39E3USn6NSCQ5ZfQlz+oRC0VzjmpxgW8Q2Ud2oPL3vaUj97ZM1ADP/LtEKt1Ig6fFLfntY/mttmbJfoT0aTJRnHsOZJdYrBXzZaU9NYSxWZ1dbJMkc9chJ5pRYAPm6
-x-ms-exchange-antispam-messagedata: qn5hAdcl/YkklziJep35TRkjrEeBr6vV/Po227zOM8GAlQH8RBz7JEiXH8PxV1qq2SBhDQMnkXizpf661HghjHvYx4YsjHwFRnM0juXFKwu/PwNvgOmQXThPGvNDk4ejPeox0uvr85xZKlkBSY6/Og==
+x-microsoft-antispam-message-info: 8KiaTgpQ86gZJeMYOxXYtP9YVbtTM7J+pZzSNc4vJB5D8siNpMHH5aDrPE2m90sZT/pQHwdxhBz3R8xG7mcEHN+BespwJMvuEelY5dZbi9HMh7hKsoCkHHkj0AgRNSm/hQ3rMPuWxn6LlE0KbFn3ylInNSk6u8kJ07/Fgaw78F2zf3jAI6WvtrhBgYQ1R7+ZxXbymI4zrGbf3yb/CBPEFAqiksWpzILS/xQYHGzDLZbsWc8quHn0s8spGoAL83zj0mhSOs4FF/dqjnOfNi0LojXNdIJjBJolvCOnmNOjCKoctaz3LVWms6/h+BLlsxZCUuhj8b7rEMZHjfh/sAGPABmFy0VMNh4kvMm4h9NwGblglXtm6FY4v8U7eMWpqqQmuO5lBFhN0J1kwO9kjHmGV9OTkMWbvbMIbV2k5MzwSqBTepxu9sKfJqV7McoqFQfo
+x-ms-exchange-antispam-messagedata: 6ul6w3GuhMDDi4UgnjgIkMI3psnHgMZHysUIqHapNgAvdz+vZYNNHe2ve16oT1L/GWhfUgkDcHlQ3dV1of+0uM+4uRiEjDSlemCzk/k/4iwJdZ2gAuUHzJkIa1D+VROgWe2SSXLPFVe9ino+G7mK+A==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: adada42a-1df0-46aa-35d3-08d7bed49ffc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:07:51.0652
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8add0dc4-176a-4766-5f2d-08d7bed49e1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2020 18:07:48.8905
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dkXvj74YaakFf4N1shlujN8nMeIFQwbSzQVnhrl+peUo6BmadEDQaXb3z6lLOceZAZ6UBulfbLn1fX+c5otSyro9npv6tHSVBoyQxQUTkcg=
+X-MS-Exchange-CrossTenant-userprincipalname: FpV5Ff93DyrEVLBhWCfx2aGSE4BnbAOdHy1CXox2JLMFMmn79tUNkX1sHLtCVtv40lISPbwFCgz0ujThUkhq9UuZXf6hJzniAV2BYEmjuyc=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -147,134 +147,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Boris Brezillon <bbrezillon@kernel.org>
 
-Create a SPI NOR manufacturer driver for GigaDevice chips, and move the
-GigaDevice definitions outside of core.c.
+Create a SPI NOR manufacturer driver for Eon chips, and move the
+Eon definitions outside of core.c.
 
 Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/mtd/spi-nor/Makefile     |  1 +
- drivers/mtd/spi-nor/core.c       | 60 +-------------------------------
- drivers/mtd/spi-nor/core.h       |  1 +
- drivers/mtd/spi-nor/gigadevice.c | 59 +++++++++++++++++++++++++++++++
- 4 files changed, 62 insertions(+), 59 deletions(-)
- create mode 100644 drivers/mtd/spi-nor/gigadevice.c
+ drivers/mtd/spi-nor/Makefile |  1 +
+ drivers/mtd/spi-nor/core.c   | 18 +-----------------
+ drivers/mtd/spi-nor/core.h   |  1 +
+ drivers/mtd/spi-nor/eon.c    | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 37 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/mtd/spi-nor/eon.c
 
 diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index ca6222d98b0f..38f704be4b03 100644
+index 0a243592e416..e1bc8ccfe14d 100644
 --- a/drivers/mtd/spi-nor/Makefile
 +++ b/drivers/mtd/spi-nor/Makefile
-@@ -6,4 +6,5 @@ spi-nor-objs			+=3D eon.o
- spi-nor-objs			+=3D esmt.o
- spi-nor-objs			+=3D everspin.o
- spi-nor-objs			+=3D fujitsu.o
-+spi-nor-objs			+=3D gigadevice.o
+@@ -2,4 +2,5 @@
+=20
+ spi-nor-objs			:=3D core.o sfdp.o
+ spi-nor-objs			+=3D atmel.o
++spi-nor-objs			+=3D eon.o
  obj-$(CONFIG_MTD_SPI_NOR)	+=3D spi-nor.o
 diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 3f3955bbbb70..8520423b1104 100644
+index 45d370229e0a..67a3493939f6 100644
 --- a/drivers/mtd/spi-nor/core.c
 +++ b/drivers/mtd/spi-nor/core.c
-@@ -2052,21 +2052,6 @@ static struct spi_nor_fixups mx25l25635_fixups =3D {
- 	.post_bfpt =3D mx25l25635_post_bfpt_fixups,
- };
-=20
--static void gd25q256_default_init(struct spi_nor *nor)
--{
--	/*
--	 * Some manufacturer like GigaDevice may use different
--	 * bit to set QE on different memories, so the MFR can't
--	 * indicate the quad_enable method for this case, we need
--	 * to set it in the default_init fixup hook.
--	 */
--	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
--}
--
--static struct spi_nor_fixups gd25q256_fixups =3D {
--	.default_init =3D gd25q256_default_init,
--};
--
- /* NOTE: double check command sets and memory organization when you add
-  * more nor chips.  This current list focusses on newer chips, which
-  * have been converging on command sets which including JEDEC ID.
-@@ -2079,50 +2064,6 @@ static struct spi_nor_fixups gd25q256_fixups =3D {
+@@ -2079,23 +2079,6 @@ static struct spi_nor_fixups gd25q256_fixups =3D {
   * old entries may be missing 4K flag.
   */
  static const struct flash_info spi_nor_ids[] =3D {
--	/* GigaDevice */
--	{
--		"gd25q16", INFO(0xc84015, 0, 64 * 1024,  32,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25q32", INFO(0xc84016, 0, 64 * 1024,  64,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25lq32", INFO(0xc86016, 0, 64 * 1024, 64,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25q64", INFO(0xc84017, 0, 64 * 1024, 128,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25lq64c", INFO(0xc86017, 0, 64 * 1024, 128,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25lq128d", INFO(0xc86018, 0, 64 * 1024, 256,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25q128", INFO(0xc84018, 0, 64 * 1024, 256,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
--	},
--	{
--		"gd25q256", INFO(0xc84019, 0, 64 * 1024, 512,
--			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB |
--			SPI_NOR_TB_SR_BIT6)
--			.fixups =3D &gd25q256_fixups,
--	},
+-	/* EON -- en25xxx */
+-	{ "en25f32",    INFO(0x1c3116, 0, 64 * 1024,   64, SECT_4K) },
+-	{ "en25p32",    INFO(0x1c2016, 0, 64 * 1024,   64, 0) },
+-	{ "en25q32b",   INFO(0x1c3016, 0, 64 * 1024,   64, 0) },
+-	{ "en25p64",    INFO(0x1c2017, 0, 64 * 1024,  128, 0) },
+-	{ "en25q64",    INFO(0x1c3017, 0, 64 * 1024,  128, SECT_4K) },
+-	{ "en25q80a",   INFO(0x1c3014, 0, 64 * 1024,   16,
+-			SECT_4K | SPI_NOR_DUAL_READ) },
+-	{ "en25qh16",   INFO(0x1c7015, 0, 64 * 1024,   32,
+-			SECT_4K | SPI_NOR_DUAL_READ) },
+-	{ "en25qh32",   INFO(0x1c7016, 0, 64 * 1024,   64, 0) },
+-	{ "en25qh64",   INFO(0x1c7017, 0, 64 * 1024,  128,
+-			SECT_4K | SPI_NOR_DUAL_READ) },
+-	{ "en25qh128",  INFO(0x1c7018, 0, 64 * 1024,  256, 0) },
+-	{ "en25qh256",  INFO(0x1c7019, 0, 64 * 1024,  512, 0) },
+-	{ "en25s64",	INFO(0x1c3817, 0, 64 * 1024,  128, SECT_4K) },
 -
- 	/* Intel/Numonyx -- xxxs33b */
- 	{ "160s33b",  INFO(0x898911, 0, 64 * 1024,  32, 0) },
- 	{ "320s33b",  INFO(0x898912, 0, 64 * 1024,  64, 0) },
-@@ -2428,6 +2369,7 @@ static const struct spi_nor_manufacturer *manufacture=
-rs[] =3D {
- 	&spi_nor_esmt,
- 	&spi_nor_everspin,
- 	&spi_nor_fujitsu,
-+	&spi_nor_gigadevice,
+ 	/* ESMT */
+ 	{ "f25l32pa", INFO(0x8c2016, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK=
+) },
+ 	{ "f25l32qa", INFO(0x8c4116, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK=
+) },
+@@ -2455,6 +2438,7 @@ static const struct flash_info spi_nor_ids[] =3D {
+=20
+ static const struct spi_nor_manufacturer *manufacturers[] =3D {
+ 	&spi_nor_atmel,
++	&spi_nor_eon,
  };
 =20
  static const struct flash_info *
 diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index 1b9f7402e5ff..c44802a05532 100644
+index 505e580add68..1ac226c456e1 100644
 --- a/drivers/mtd/spi-nor/core.h
 +++ b/drivers/mtd/spi-nor/core.h
-@@ -172,6 +172,7 @@ extern const struct spi_nor_manufacturer spi_nor_eon;
- extern const struct spi_nor_manufacturer spi_nor_esmt;
- extern const struct spi_nor_manufacturer spi_nor_everspin;
- extern const struct spi_nor_manufacturer spi_nor_fujitsu;
-+extern const struct spi_nor_manufacturer spi_nor_gigadevice;
+@@ -168,6 +168,7 @@ struct spi_nor_manufacturer {
+=20
+ /* Manufacturer drivers. */
+ extern const struct spi_nor_manufacturer spi_nor_atmel;
++extern const struct spi_nor_manufacturer spi_nor_eon;
 =20
  int spi_nor_write_enable(struct spi_nor *nor);
  int spi_nor_write_disable(struct spi_nor *nor);
-diff --git a/drivers/mtd/spi-nor/gigadevice.c b/drivers/mtd/spi-nor/gigadev=
-ice.c
+diff --git a/drivers/mtd/spi-nor/eon.c b/drivers/mtd/spi-nor/eon.c
 new file mode 100644
-index 000000000000..7930e4490dab
+index 000000000000..ddb8e3650835
 --- /dev/null
-+++ b/drivers/mtd/spi-nor/gigadevice.c
-@@ -0,0 +1,59 @@
++++ b/drivers/mtd/spi-nor/eon.c
+@@ -0,0 +1,34 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2005, Intec Automation Inc.
@@ -285,54 +236,29 @@ index 000000000000..7930e4490dab
 +
 +#include "core.h"
 +
-+static void gd25q256_default_init(struct spi_nor *nor)
-+{
-+	/*
-+	 * Some manufacturer like GigaDevice may use different
-+	 * bit to set QE on different memories, so the MFR can't
-+	 * indicate the quad_enable method for this case, we need
-+	 * to set it in the default_init fixup hook.
-+	 */
-+	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
-+}
-+
-+static struct spi_nor_fixups gd25q256_fixups =3D {
-+	.default_init =3D gd25q256_default_init,
++static const struct flash_info eon_parts[] =3D {
++	/* EON -- en25xxx */
++	{ "en25f32",    INFO(0x1c3116, 0, 64 * 1024,   64, SECT_4K) },
++	{ "en25p32",    INFO(0x1c2016, 0, 64 * 1024,   64, 0) },
++	{ "en25q32b",   INFO(0x1c3016, 0, 64 * 1024,   64, 0) },
++	{ "en25p64",    INFO(0x1c2017, 0, 64 * 1024,  128, 0) },
++	{ "en25q64",    INFO(0x1c3017, 0, 64 * 1024,  128, SECT_4K) },
++	{ "en25q80a",   INFO(0x1c3014, 0, 64 * 1024,   16,
++			     SECT_4K | SPI_NOR_DUAL_READ) },
++	{ "en25qh16",   INFO(0x1c7015, 0, 64 * 1024,   32,
++			     SECT_4K | SPI_NOR_DUAL_READ) },
++	{ "en25qh32",   INFO(0x1c7016, 0, 64 * 1024,   64, 0) },
++	{ "en25qh64",   INFO(0x1c7017, 0, 64 * 1024,  128,
++			     SECT_4K | SPI_NOR_DUAL_READ) },
++	{ "en25qh128",  INFO(0x1c7018, 0, 64 * 1024,  256, 0) },
++	{ "en25qh256",  INFO(0x1c7019, 0, 64 * 1024,  512, 0) },
++	{ "en25s64",	INFO(0x1c3817, 0, 64 * 1024,  128, SECT_4K) },
 +};
 +
-+static const struct flash_info gigadevice_parts[] =3D {
-+	{ "gd25q16", INFO(0xc84015, 0, 64 * 1024,  32,
-+			  SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			  SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25q32", INFO(0xc84016, 0, 64 * 1024,  64,
-+			  SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			  SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25lq32", INFO(0xc86016, 0, 64 * 1024, 64,
-+			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			   SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25q64", INFO(0xc84017, 0, 64 * 1024, 128,
-+			  SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			  SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25lq64c", INFO(0xc86017, 0, 64 * 1024, 128,
-+			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25lq128d", INFO(0xc86018, 0, 64 * 1024, 256,
-+			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			     SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25q128", INFO(0xc84018, 0, 64 * 1024, 256,
-+			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			   SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-+	{ "gd25q256", INFO(0xc84019, 0, 64 * 1024, 512,
-+			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-+			   SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK |
-+			   SPI_NOR_HAS_TB | SPI_NOR_TB_SR_BIT6)
-+		.fixups =3D &gd25q256_fixups },
-+};
-+
-+const struct spi_nor_manufacturer spi_nor_gigadevice =3D {
-+	.name =3D "gigadevice",
-+	.parts =3D gigadevice_parts,
-+	.nparts =3D ARRAY_SIZE(gigadevice_parts),
++const struct spi_nor_manufacturer spi_nor_eon =3D {
++	.name =3D "eon",
++	.parts =3D eon_parts,
++	.nparts =3D ARRAY_SIZE(eon_parts),
 +};
 --=20
 2.23.0
