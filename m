@@ -2,119 +2,183 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E04C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4104C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF532173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83BE2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=typeblog-net.20150623.gappssmtp.com header.i=@typeblog-net.20150623.gappssmtp.com header.b="AxpP11wT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSDFqCyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgCBMK3 (ORCPT
+        id S1727815AbgCBMKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:10:29 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43152 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727749AbgCBMK2 (ORCPT
+        Mon, 2 Mar 2020 07:10:50 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37520 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCBMKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:10:28 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e3so11449181lja.10
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 04:10:25 -0800 (PST)
+        Mon, 2 Mar 2020 07:10:50 -0500
+Received: by mail-io1-f65.google.com with SMTP id c17so11234297ioc.4;
+        Mon, 02 Mar 2020 04:10:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=typeblog-net.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lf5revSpm3qfJv2nXZJRbS1f7fWl78G2borqCkC/EVs=;
-        b=AxpP11wTXpvVI79tk/T3EKzaj9yqhaWb1BUaqiCFFAo1t1sWGWC0fA+987M/VI6zSB
-         qjuNesM2TgfdnBRH9Y9Vq+q9vp42qWrfRKPLkpfqnPiFqJniV0WFMwEtNJqQzzk5tTsY
-         oUzAqfahRkpDxW+YTMgvsufiyvVBIxVeVw/DQ0rTw++oBvx5OLbPtqxPpjgJHddUwzF9
-         hV2G0nnLUBXpU+JuEA//RTFVsOfSeg+2BVuJTTjVpW257+nGRtpIgX7qIqKZsoMcRwkS
-         gxcmSKqCoKC09KcZAUgRdcCHitAXU4657+it0pmURd3HEg90RT8n2iHxqHI4SoABNOn/
-         QENw==
+        bh=Fg8CGDKXOGLLoGGvqfqqeD6aZ8g66qpYFJ5EHOq2wds=;
+        b=mSDFqCyLC3wcWDEKiseaJAhKDh2u34xcICvotR7FzhuoS1ze+CzsROn4+3lZSFhFHS
+         HftMcgbnmMNk5GFnAc+Ie1+TRl1XQQGEfhkWs+0v/xk8ASW4xW6A3dAD2KsD95ozpmE0
+         CgaLNdxk22QIkDTxo4llrYgZvez195e2FYmw+VRL/4Nm30Fc7YGZArH01NmTXSbiR97y
+         j3UDmePdiZtahPGw9+q+a8gKzPDKV90iXuvU1Zk3U2UmuBs27LxodGxicrNj4qWnoWpn
+         9HAGEH8lZ7d4Trg49o0Z8rG288Uk2vZ3Yij/ug5V0a8SjZ/swCmu/RxwqXrdM0MmXQ7x
+         LTxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lf5revSpm3qfJv2nXZJRbS1f7fWl78G2borqCkC/EVs=;
-        b=Yhi2J+FPNt5N6WXPCDK1EAYHxlMSv7DQ65oyL9lNhHD/XihD5oEqczEsZ+aAgYqZ/K
-         aYDtwRzvho5bSGNBRf3FuLGLAELGBRN1YFx0EVXw+l5wzsZFkm/qLRKjuR3qfxf7qwIN
-         TTHwERlIp/SIOImaF5jtrTA6oSB/2k9GXZgyqgxPi81fxvzzKm3x6CZceWdzhFWjJCbq
-         nQQyarnZMkD1mM+g55ip2bu2/NzO1WWtr7A5pNgcJ1Xgo5QbNIPyMQq+nI24nXumLy4K
-         3cwdSPKntfPdums8BYtXKOeNztorVApGWMcxGS+obPTjNeJPLoUUTg6EdenToHf1vyVG
-         N1cQ==
-X-Gm-Message-State: ANhLgQ3gUrIysyMYENKiiaDZIUZVq6fBAmRrxCdqLoyJLDf3oBKgpfpY
-        xoTb7NtIWT6LHZJfDI7wKx/lOookPD6WvOfDV50quQ==
-X-Google-Smtp-Source: ADFU+vsXy4SeIjKrwpbs1vqbQniY8JnehYm6c42utMHH2tPR0dqlr+JpbkMZNot8feBlGkvR3fDWhwBRjY8nV0xQgtA=
-X-Received: by 2002:a2e:884c:: with SMTP id z12mr11440314ljj.55.1583151024920;
- Mon, 02 Mar 2020 04:10:24 -0800 (PST)
+        bh=Fg8CGDKXOGLLoGGvqfqqeD6aZ8g66qpYFJ5EHOq2wds=;
+        b=PcYOuT8xtzEbJi8+kLjy/qa47wpMIi8OQ2ryPdfCS0iQ1PWk3TI6DE12SoYTIE8s6j
+         pAHtrs5CnEYfznIHg9KOgpmI54g87WXMkJfUpBewjqBLAdkDK7raiPRdBWFBJyc78m+f
+         9aB2DxNU5RgyDxP8TPPSc1R1Y4lAcLXF59SKjv/gUaCbCq3JwyjNthPhac7pJkOHwm0f
+         uVRJECZetR2qWQuj4iF0GmoRMforcYpFMeG1DEsyJFxgazt0c6LXwVIHVIO5nLiMRqOW
+         19joi7xSsVJjv9dMv5Os4MZf+p56Pgz7BRVHb4hflxxq8OgU40I8BC1Sq/b5eV57SxMc
+         rKHw==
+X-Gm-Message-State: APjAAAW7QDD+77YBKZVnmwZXOywlkGCW0fkOuo01cVWABik8wMLgJFaj
+        l7k93oTWJBvaoqDV95OcCgHRe3xNdbb5LRhVtzk=
+X-Google-Smtp-Source: APXvYqzc/LalXVaqrNCguatgtteYnTuRPcyk16CTg+vbh+b8kuMvYbIWjiAJvkfjN25Y2D81QpITqnoLJUov6KSXC9E=
+X-Received: by 2002:a5e:8507:: with SMTP id i7mr6642777ioj.9.1583151048170;
+ Mon, 02 Mar 2020 04:10:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20190831030916.13172-1-peter@typeblog.net> <20190902124352.12291-1-peter@typeblog.net>
- <20190902124352.12291-2-peter@typeblog.net> <daeec373292e14c6aea179ddf690a5dace6c83f7.camel@hadess.net>
-In-Reply-To: <daeec373292e14c6aea179ddf690a5dace6c83f7.camel@hadess.net>
-From:   Peter Cai <peter@typeblog.net>
-Date:   Mon, 2 Mar 2020 20:10:13 +0800
-Message-ID: <CA+Zf_0fBX3YBVsiJbAGdtFp-428uwsRS3oncZCytSvxw8rXO4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] touchscreen: goodix: define GPIO mapping for GPD
- P2 Max
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
+ <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+YBOm-VeHXuRnk4mLgwsEMx2MYrOnQ-FJpBjg5dDU_YzQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 2 Mar 2020 14:10:36 +0200
+Message-ID: <CAOQ4uxh=3XWOfKAJMeJBrsfouLEDo3oqTNoYBMZ2f46mVRigvA@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in ovl_llseek
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 7:57 PM Bastien Nocera <hadess@hadess.net> wrote:
+On Mon, Mar 2, 2020 at 1:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> On Mon, 2019-09-02 at 20:43 +0800, Peter Cai wrote:
-> > The firmware of GPD P2 Max could not handle panel resets although
-> > code
-> > is present in DSDT. The kernel needs to take on this job instead, but
-> > the DSDT does not provide _DSD, rendering kernel helpless when trying
-> > to
-> > find the respective GPIO pins.
+> On Mon, Mar 2, 2020 at 12:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
 > >
-> > Fortunately, this time GPD has proper DMI vendor / product strings
-> > that
-> > we could match against. We simply apply an acpi_gpio_mapping table
-> > when
-> > GPD P2 Max is matched.
+> > On Sun, Mar 1, 2020 at 9:13 PM syzbot
+> > <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    f8788d86 Linux 5.6-rc3
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13c5f8f9e00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
+> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131d9a81e00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14117a81e00000
+> > >
 > >
-> > Additionally, the DSDT definition of the irq pin specifies a wrong
-> > polarity. The new quirk introduced in the previous patch
-> > (ACPI_GPIO_QUIRK_OVERRIDE_POLARITY) is applied to correct this.
+> > Dmitry,
+> >
+> > There is something strange about the C repro.
+> > It passes an invalid address for the first arg of mount syscall:
+> >
+> >     syscall(__NR_mount, 0x400000ul, 0x20000000ul, 0x20000080ul, 0ul,
+> >             0x20000100ul);
+> >
+> > With this address mount syscall returns -EFAULT on my system.
+> > I fixed this manually, but repro did not trigger the reported bug on my system.
 >
-> Hans has posted a patchset which reworks GPIO access for ACPI devices.
+> Hi Amir,
 >
-> Could you please check whether you could rebase your patch on top of
-> that?
->
-> I also think the comment in "Input: goodix - Add support for getting
-> IRQ + reset GPIOs on Cherry Trail devices" might also be of use:
->
-> +       case irq_pin_access_acpi_gpio:
-> +               /*
-> +                * The IRQ pin triggers on a falling edge, so its gets
-> marked
-> +                * as active-low, use output_raw to avoid the value
-> inversion.
-> +                */
->
-> Cheers
+> This is not strange in the context of fuzzer, it's goal is to pass
+> random data. Generally if it says 0x400000ul, that's what it is, don't
+> fix it, or you are running a different program that may not reproduce
+> the bug. If syzbot attaches a reproducer, the bug was triggered by
+> precisely this program.
 >
 
-Sorry I forgot to notify you earlier, but it turned out that the
-manufacturer of the device has already applied a fix in their ACPI
-table after this patch was submitted and discussed. This patch is no
-longer needed.
+What's strange it that a bug in overlay code cannot be triggered if overlay
+isn't mounted and as it is the repro couldn't mount overlayfs at all, at
+lease with my kernel config.
+The bounds check that causes mount failure is in vfs code, not in
+overlayfs code,
+so not sure what exactly went on there.
+
+
+> The reason why it passes non-pointers here is we think the src
+> argument of overlay mount is unused:
+> https://github.com/google/syzkaller/blob/4a4e0509de520c7139ca2b5606712cbadc550db2/sys/linux/filesystem.txt#L12
+> If it's not true, it needs to be fixed (or almost all overlay mounts
+> fail with EFAULT during fuzzing).
+>
+>
+> > > The bug was bisected to:
+> > >
+> > > commit b1f9d3858f724ed45b279b689fb5b400d91352e3
+> > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > Date:   Sat Dec 21 09:42:29 2019 +0000
+> > >
+> > >     ovl: use ovl_inode_lock in ovl_llseek()
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ff3bede00000
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15ff3bede00000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11ff3bede00000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
+> > > Fixes: b1f9d3858f72 ("ovl: use ovl_inode_lock in ovl_llseek()")
+> > >
+> > > =====================================
+> > > WARNING: bad unlock balance detected!
+> > > 5.6.0-rc3-syzkaller #0 Not tainted
+> > > -------------------------------------
+> > > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
+> > > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
+> > > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
+> > > but there are no more locks to release!
+> > >
+> >
+> > This is strange. I don't see how that can happen nor how my change would
+> > have caused this regression. If anything, the lock chance may have brought
+> > a bug in stack file ops to light, but don't see the bug.
+> >
+> > The repro is multi-threaded but when I ran the repro, a single thread did:
+> > - open lower file (pre copy up)
+> > - lchown file (copy up)
+> > - llseek the open file (so llseek is on a temporary ovl_open_realfile())
+> >
+> > Perhaps when bug was triggered ops above were executed by different
+> > threads?
+>
+> Perfectly possible.
+>
+> > Dmitry, I may have asked this before - how hard would it be to attach an
+> > strace of the repro to a bug report?
+>
+> This is tracked in https://github.com/google/syzkaller/issues/197 but
+> no progress so far.
+> What exactly were the main pain points in this case? But note that
+> strace is not atomic with actual execution, so it may lead you down
+> even worse rabbit hole...
+
+Sure, but it can add more insight for analysis.
+
+Thanks,
+Amir.
