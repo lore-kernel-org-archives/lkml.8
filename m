@@ -2,113 +2,127 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462F7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05510C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B045246A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8FC246A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehow4vu9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AuDffj4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgCBHpF (ORCPT
+        id S1726968AbgCBHqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:45:05 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36876 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCBHpE (ORCPT
+        Mon, 2 Mar 2020 02:46:22 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35202 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCBHqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:45:04 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q23so10606286ljm.4;
-        Sun, 01 Mar 2020 23:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
-        b=ehow4vu90D6zdQlrC08Ydu2TzhYin/mPzAtpOekZKKBQivIp/5rDao00o8W5rhMlsa
-         Ks3yCbjNRGWfcF1z/5zmrLlNu2vOuCUt/VFLyp3QJoL0N2iGdS286lWWVF1hBR06BwUL
-         54gWuli+mlpv+LZ40r8IAXyLvkpH5gm/qnOsyjnDM0bCTWzpQu3gAhy5fg6hAw7Caf2F
-         ZdFWhwj4JnUgEe5v4nqBSHSJgippG+hC4mXPeyVOIPbM5Nw4ZbEEPB2YRl6kA9I/Gmv9
-         OZ2alNqk/ivcTUy9UrTZZsQGgqvht/4qPLyK1KR4M5BJtDuCWuAR9RNcnf45xIbcgwxw
-         +RiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5p7zJr0xKI0vCUUOTcHCNVe4S/T3X0b9SlsPBN2yTzQ=;
-        b=B43Sd3LoY+kFOHL5jhKBs3B0Nb1bHtFbbzBKnD1fOejZZGGV88KffBb1m5iEY29ex9
-         abyfZgqH5RxCvjScgxqSNTeGZEi2nhKQsgpuQ9PPlUYPeTn9bERau5XhONYTHwyFLCIQ
-         +2nrN8kCjLTrTZ6otF+w1E8o0ZKxk2cDyebBRsuj26wDcTkGr6QqtIXBQuKoarVcmeZj
-         ufWOI6pNkhfCE2AeVWBmkDvSkrJxL/GiDia6lIMBgH15IDqsKGP87t1NlDjc9dRau3NP
-         dvVCusKw/v3w3vkl7C3lYd9+jGcL8A89U7RUzwZe/biaDowVEeuwVcDTW4z8rUpqoevp
-         czTA==
-X-Gm-Message-State: ANhLgQ1fkn/g4aLsWZ9fZrv39OHOb8ZUdK+ASCuTnHIUmth35N2QeymH
-        k7nhyd1P4F3NXgy/9wYHEUg=
-X-Google-Smtp-Source: ADFU+vtCf2T5IdyiTy3s+QtGxhzlCMHPIlG48KMdBxo7gv9WDaTEyFyWSelWEQK+deNOUUF+2srYvg==
-X-Received: by 2002:a2e:5357:: with SMTP id t23mr10436559ljd.227.1583135102251;
-        Sun, 01 Mar 2020 23:45:02 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d9sm9862806lfm.16.2020.03.01.23.44.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 01 Mar 2020 23:45:01 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson-g12b: fix N2/VIM3 audio card model names
-Date:   Mon,  2 Mar 2020 11:44:11 +0400
-Message-Id: <1583135051-95529-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 2 Mar 2020 02:46:22 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0227hKVq187428;
+        Mon, 2 Mar 2020 07:45:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2mPZCjCiEQN8LuFrAx6hDaMcPmsg2dvMTzR2q4y1+UU=;
+ b=AuDffj4x3FTTxai7qPvmM030rRwjEIy4kQdU76CHjdbNLFglvw+3GZ9/L34qBWawVUOu
+ c2gxYcEvXORG6OvuMIXEPF2xg9qdlMPRMdaEb3iRkYfRVV6cmfsGC83zCHzDiy7o82PI
+ 5CBFu84rWALNAV2XAsuZ7FrCOhL5IC2QMveQ+aYwd0JWipIOhe0zUsp9e6gYCa5P6G6f
+ PxLpDMuuOIVTaRDaAUoiLROfadK/oYmc+FFbSR+xCh90kwxqYmIR8rfcLLnP1b/zi2EO
+ IrjAopXqvos01L4H4H6b3cInc0HrmQCMyJwHLkpZWE3RKeuBpos5a/yySS156aVDlqXK wQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yghn2sv5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 07:45:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0227iTPd086420;
+        Mon, 2 Mar 2020 07:45:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2yg1p12v6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 02 Mar 2020 07:45:58 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0227jsep001123;
+        Mon, 2 Mar 2020 07:45:54 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 01 Mar 2020 23:45:52 -0800
+Date:   Mon, 2 Mar 2020 10:45:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, simon@nikanor.nu, chandra627@gmail.com,
+        fabian.krueger@fau.de, gneukum1@gmail.com,
+        michael.scheiderer@fau.de
+Subject: Re: [PATCH] staging: kpc2000: kpc2000_spi: Use new structure for SPI
+ transfer delays
+Message-ID: <20200302074542.GB4140@kadam>
+References: <20200227144643.23195-1-sergiu.cuciurean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227144643.23195-1-sergiu.cuciurean@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9547 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003020059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is largely cosmetic, but Odroid N2 and Khadas VIM3 are G12B devices so
-correct the card model names to reflect this.
+On Thu, Feb 27, 2020 at 04:46:43PM +0200, Sergiu Cuciurean wrote:
+> In a recent change to the SPI subsystem [1], a new `delay` struct was added
 
-Fixes: aa7d5873bf6e ("arm64: dts: meson-g12b-odroid-n2: add sound card")
-Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
+Don't do [1] footnote, just say "SPI subsystem in commit bebcfd272df6
+("spi: introduce `delay` field for `spi_transfer` + spi_transfer_delay_exec()")
+You can use footnotes for URLs if you want (not required).
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 2 +-
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> to replace the `delay_usecs`. This change replaces the current
+> `delay_usecs` with `delay` for this driver.
+> 
+> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+> that both `delay_usecs` & `delay` are used (in this order to preserve
+> backwards compatibility).
+> 
+> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
+> `spi_transfer` + spi_transfer_delay_exec()")
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> ---
+>  drivers/staging/kpc2000/kpc2000_spi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+> index 1c360daa703d..cc9b147fd437 100644
+> --- a/drivers/staging/kpc2000/kpc2000_spi.c
+> +++ b/drivers/staging/kpc2000/kpc2000_spi.c
+> @@ -386,8 +386,9 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+>  			}
+>  		}
+>  
+> -		if (transfer->delay_usecs)
+> -			udelay(transfer->delay_usecs);
+> +		if (transfer->delay.value &&
+> +		    (transfer->delay.unit == SPI_DELAY_UNIT_USECS))
+> +			udelay(transfer->delay.value);
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 5548634..b1fab57 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -48,7 +48,7 @@
- 
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
--		model = "G12A-KHADAS-VIM3";
-+		model = "G12B-KHADAS-VIM3";
- 		audio-aux-devs = <&tdmout_b>;
- 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
- 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 0e54c1d..8830d38 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -208,7 +208,7 @@
- 
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
--		model = "G12A-ODROIDN2";
-+		model = "G12B-ODROID-N2";
- 		audio-aux-devs = <&tdmout_b>;
- 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
- 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
--- 
-2.7.4
+What if the units are in USEC now?  We should probably not just ignore
+it right?
+
+regards,
+dan carpenter
 
