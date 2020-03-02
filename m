@@ -2,128 +2,144 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B81C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B237EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F88924697
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828AC24699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 07:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d794cEm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCBHM4 (ORCPT
+        id S1726654AbgCBHSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 02:12:56 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11129 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726204AbgCBHM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 02:12:56 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C6DC3895D5107159B6EA;
-        Mon,  2 Mar 2020 15:12:47 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Mar 2020
- 15:12:40 +0800
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-To:     Scott Wood <oss@buserror.net>, Daniel Axtens <dja@axtens.net>,
-        <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <me@tobin.cc>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
- <87tv3drf79.fsf@dja-thinkpad.axtens.net>
- <8171d326-5138-4f5c-cff6-ad3ee606f0c2@huawei.com>
- <e8cd8f287934954cfa07dcf76ac73492e2d49a5b.camel@buserror.net>
- <dd8db870-b607-3f74-d3bc-a8d9f33f9852@huawei.com>
- <4c0e7fec63dbc7b91fa6c24692c73c256c131f51.camel@buserror.net>
- <188971ed-f1c4-39b3-c07e-89cc593d88d7@huawei.com>
- <530c49dfd97c811dc53ffc78c594d7133f7eb1e9.camel@buserror.net>
- <35e6c660-3896-bdb8-45f3-c1504aa2171f@huawei.com>
- <31b5966ba579ef246176a7d8ad18c2c02788dd27.camel@buserror.net>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <17658c2b-9eb8-cee9-e9a2-93d316a401b1@huawei.com>
-Date:   Mon, 2 Mar 2020 15:12:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <31b5966ba579ef246176a7d8ad18c2c02788dd27.camel@buserror.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+        Mon, 2 Mar 2020 02:18:36 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45404 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgCBHSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 02:18:35 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so5111780pfg.12;
+        Sun, 01 Mar 2020 23:18:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SGYHPYDByh3jgM9qVULEcWknYrO2Uv9Ry5lUP1fq0cU=;
+        b=d794cEm4/jGpeACslEH4kzP+y3+j3IKtTRsaga+yf8sTnlUAOHBn9tuqwJ0yTx7dYD
+         Vs5dCBO3yx1zEVc5/S/paU18egxiByiViTHUPoYsgMntp9MzgkDYYhpeke8BwVAUzn0S
+         mYwv/3Umhk0keqQOdcZNCw6dr2xV4gj3fcytzBnAgN5xdfZFUMSrWJlD0cqJn5JKqk0c
+         wiZrpC9JrH8n83UN/39qy5xXjxooSWLv7ccsoyFQZoS5ajgtks7vD7Rnt9M4ZoJ02q3T
+         Uha1nYWlfu+/3rQzkUrK4LjW5Yi2jWtSMYEmF0Pc3CdiE1SVp2qGy75z2ub0IwNdf7WM
+         hJ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SGYHPYDByh3jgM9qVULEcWknYrO2Uv9Ry5lUP1fq0cU=;
+        b=mssg4U1Yxc+oVIpkVigBfNHDcps/e0VIAECCo1Pe2m1ZEoUfkfrjChvklC9HwNVQjO
+         hrVvcrI+TItLBLw3yhcXzZXFjhv2Q25mpagOQbEkblQv+UftYUkIUwucpOvhIPqEYJCG
+         ZjLfGgCmJ7HgZBqIsT9GSyCJJc2+CRez3tMQBlaB4CRV4sSI+0Vsst9EAFfS1qAE4RPW
+         Ytb9EXDyPK13iPdi9l/1X8MwEwPgk39KHTJ7A55Xle4pHgQ8xssz02RfzCzQ3G8eOG+8
+         VLJS2oNq0wX282XmQZmFyBnPicmbZcQLKZN/x60lERz1BxIURaQd1MPtWA2p9UE2RikU
+         tQCg==
+X-Gm-Message-State: APjAAAVK3aN/9s7gEj51oJmjKSb9SUvKrklhnmcEkiUuNSdyiUnKn+mO
+        3h6iLISPKOUsx6rgBRAbXFNP221pNS9t7w==
+X-Google-Smtp-Source: APXvYqxUxPCh2zTtls/G8B2nA/ioRKUNFEaXw0JBRt/6l+WtrYbNC0mZhQKV8wWHP7GixIC12DR/8g==
+X-Received: by 2002:a63:2c50:: with SMTP id s77mr17537810pgs.182.1583133514798;
+        Sun, 01 Mar 2020 23:18:34 -0800 (PST)
+Received: from kernel.DHCP ([120.244.140.54])
+        by smtp.googlemail.com with ESMTPSA id z127sm19257989pgb.64.2020.03.01.23.18.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 01 Mar 2020 23:18:33 -0800 (PST)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH] KVM: X86: Fix dereference null cpufreq policy
+Date:   Mon,  2 Mar 2020 15:15:36 +0800
+Message-Id: <1583133336-7832-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
 
+Naresh Kamboju reported:
 
-在 2020/3/2 11:24, Scott Wood 写道:
-> On Mon, 2020-03-02 at 10:17 +0800, Jason Yan wrote:
->>
->> 在 2020/3/1 6:54, Scott Wood 写道:
->>> On Sat, 2020-02-29 at 15:27 +0800, Jason Yan wrote:
->>>>
->>>> Turnning to %p may not be a good idea in this situation. So
->>>> for the REG logs printed when dumping stack, we can disable it when
->>>> KASLR is open. For the REG logs in other places like show_regs(), only
->>>> privileged can trigger it, and they are not combind with a symbol, so
->>>> I think it's ok to keep them.
->>>>
->>>> diff --git a/arch/powerpc/kernel/process.c
->>>> b/arch/powerpc/kernel/process.c
->>>> index fad50db9dcf2..659c51f0739a 100644
->>>> --- a/arch/powerpc/kernel/process.c
->>>> +++ b/arch/powerpc/kernel/process.c
->>>> @@ -2068,7 +2068,10 @@ void show_stack(struct task_struct *tsk, unsigned
->>>> long *stack)
->>>>                    newsp = stack[0];
->>>>                    ip = stack[STACK_FRAME_LR_SAVE];
->>>>                    if (!firstframe || ip != lr) {
->>>> -                       printk("["REG"] ["REG"] %pS", sp, ip, (void
->>>> *)ip);
->>>> +                       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
->>>> +                               printk("%pS", (void *)ip);
->>>> +                       else
->>>> +                               printk("["REG"] ["REG"] %pS", sp, ip,
->>>> (void *)ip);
->>>
->>> This doesn't deal with "nokaslr" on the kernel command line.  It also
->>> doesn't
->>> seem like something that every callsite should have to opencode, versus
->>> having
->>> an appropriate format specifier behaves as I described above (and I still
->>> don't see why that format specifier should not be "%p").
->>>
->>
->> Actually I still do not understand why we should print the raw value
->> here. When KALLSYMS is enabled we have symbol name  and  offset like
->> put_cred_rcu+0x108/0x110, and when KALLSYMS is disabled we have the raw
->> address.
-> 
-> I'm more concerned about the stack address for wading through a raw stack dump
-> (to find function call arguments, etc).  The return address does help confirm
-> that I'm on the right stack frame though, and also makes looking up a line
-> number slightly easier than having to look up a symbol address and then add
-> the offset (at least for non-module addresses).
-> 
-> As a random aside, the mismatch between Linux printing a hex offset and GDB
-> using decimal in disassembly is annoying...
-> 
+   Linux version 5.6.0-rc4 (oe-user@oe-host) (gcc version
+  (GCC)) #1 SMP Sun Mar 1 22:59:08 UTC 2020
+   kvm: no hardware support
+   BUG: kernel NULL pointer dereference, address: 000000000000028c
+   #PF: supervisor read access in kernel mode
+   #PF: error_code(0x0000) - not-present page
+   PGD 0 P4D 0
+   Oops: 0000 [#1] SMP NOPTI
+   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4 #1
+   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+  04/01/2014
+   RIP: 0010:kobject_put+0x12/0x1c0
+   Call Trace:
+    cpufreq_cpu_put+0x15/0x20
+    kvm_arch_init+0x1f6/0x2b0
+    kvm_init+0x31/0x290
+    ? svm_check_processor_compat+0xd/0xd
+    ? svm_check_processor_compat+0xd/0xd
+    svm_init+0x21/0x23
+    do_one_initcall+0x61/0x2f0
+    ? rdinit_setup+0x30/0x30
+    ? rcu_read_lock_sched_held+0x4f/0x80
+    kernel_init_freeable+0x219/0x279
+    ? rest_init+0x250/0x250
+    kernel_init+0xe/0x110
+    ret_from_fork+0x27/0x50
+   Modules linked in:
+   CR2: 000000000000028c
+   ---[ end trace 239abf40c55c409b ]---
+   RIP: 0010:kobject_put+0x12/0x1c0
 
-OK, I will send a RFC patch to add a new format specifier such as "%pk" 
-or change the exsiting "%pK" to print raw value of addresses when KASLR 
-is disabled and print hash value of addresses when KASLR is enabled. 
-Let's see what the printk guys would say :)
+cpufreq policy which is get by cpufreq_cpu_get() can be NULL if it is failure,
+this patch takes care of it.
 
+Fixes: aaec7c03de (KVM: x86: avoid useless copy of cpufreq policy)
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/x86.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> -Scott
-> 
-> 
-> 
-> .
-> 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de2006..3156e25 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7195,10 +7195,12 @@ static void kvm_timer_init(void)
+ 
+ 		cpu = get_cpu();
+ 		policy = cpufreq_cpu_get(cpu);
+-		if (policy && policy->cpuinfo.max_freq)
+-			max_tsc_khz = policy->cpuinfo.max_freq;
++		if (policy) {
++			if (policy->cpuinfo.max_freq)
++				max_tsc_khz = policy->cpuinfo.max_freq;
++			cpufreq_cpu_put(policy);
++		}
+ 		put_cpu();
+-		cpufreq_cpu_put(policy);
+ #endif
+ 		cpufreq_register_notifier(&kvmclock_cpufreq_notifier_block,
+ 					  CPUFREQ_TRANSITION_NOTIFIER);
+-- 
+2.7.4
 
