@@ -2,206 +2,178 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA239C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36381C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD132465E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DE122B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 21:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tl1O4K9Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+vVLXOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgCBVkU (ORCPT
+        id S1726951AbgCBVko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 16:40:20 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:40292 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgCBVkT (ORCPT
+        Mon, 2 Mar 2020 16:40:44 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35057 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgCBVko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 16:40:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583185211; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BGwq+fhag28ClFaNMhFdV25yYzPJLioisKoVSy4cwhc=;
-        b=tl1O4K9YHPqpP/GsqLu9svrpCSz0veCI95ciwXCA+E+ILkxuYAI4uKIGaE5Q8BK4tlumUF
-        k1Ks6FAwqPsfzLDBMPufgMm1FyQt4fffJkX/AFULozEojZNKdLTNbmuCHmbmfMPiUcpK3i
-        ksKEkoxDwsYYX54TlSfRvTjNdgEigJM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me,
-        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc to YAML
-Date:   Mon,  2 Mar 2020 18:39:53 -0300
-Message-Id: <20200302213953.28834-3-paul@crapouillou.net>
-In-Reply-To: <20200302213953.28834-1-paul@crapouillou.net>
-References: <20200302213953.28834-1-paul@crapouillou.net>
+        Mon, 2 Mar 2020 16:40:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m3so706250wmi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 13:40:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=EvaxHgYpXoDlneHBTnvp220zewZT/Dua7ByW1c58oMM=;
+        b=S+vVLXOOCuXYWey7XAChOvwKwuJRQMnKENNTKM40Mj1Tg6UfXe34t/e6IvB+L+uSF7
+         hTbyMvoov+1/O7AbN/vQKFMr1CqYqPYl3ex8zyQcLUz/gKD3pW905tV3Hf80KoC1y+Ew
+         Wu6EbNmVvODGw+UUUlgSyiD9wA3KCEHzBXGu3k3+0S5u2AYzYwr0L8b9IiC/CZYe5lHZ
+         DHId1NAtWgYwNQj/Z3TLCObVUo4gb4RExIT15PxXr4eVa/5G14SHAl/y4q5qF1ZjwP4j
+         jGZoq2AtA+MFrCDdgQJWhvSNXOFl8OqATHEwoMdOqf2ZiDmT7ViMuIMIskuOtVtnTLS2
+         525Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=EvaxHgYpXoDlneHBTnvp220zewZT/Dua7ByW1c58oMM=;
+        b=rVNXpsDj95mXemfEXinyn1ZfInu2R58Ypo8SzvZYrU1Gm+ZlT3CA/SdoFagdkiM+sj
+         ZzgFU02NSuZT6covESXOq0XcjXcMrKxa72YymUbrwV+T22YmSaVkYmIyPsB7xKb8LmnC
+         Clg2uI8UpOEiOwjYCun/ARopXrjEtujGRoOyYrTiVVVNaqXDWZPq6z4GGoAJUai74dPa
+         mbrscLSD02vtPHYIpmi9+8i4mysPN8eWRrh7usLp/oG/xYbrBn3UCRR328voeZ16Bqv8
+         nwLo8bC1aZ30Iw1zrQ+TnX7/Ke7q4zzB2NDg4AgT0r70Xd1wRWdCUoVdCa6vx+h53So7
+         hp9A==
+X-Gm-Message-State: ANhLgQ0BPqk1XTElaDOIIyuJIwi8CS9IXQ7/fkwdGyNoIKt698jck373
+        uelIFalNNwZOXplfl+21Xgw=
+X-Google-Smtp-Source: ADFU+vtx+RNSkvUMoP7PTL0HRKKdFg14C8X9vKbHZNAxbT4QVdLB2v53LcbjfMxoYpRLPuT273yH4g==
+X-Received: by 2002:a1c:155:: with SMTP id 82mr352841wmb.99.1583185242656;
+        Mon, 02 Mar 2020 13:40:42 -0800 (PST)
+Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
+        by smtp.gmail.com with ESMTPSA id s12sm349963wmj.39.2020.03.02.13.40.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 13:40:41 -0800 (PST)
+Date:   Mon, 2 Mar 2020 18:40:29 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: dcn20: remove an unused function
+Message-ID: <20200302214029.zxakr6il6f52yixb@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-changes in the driver:
-- More compatible strings are specified, with fallbacks if needed,
-- The vendor-specific properties are now properly prefixed with the
-  'ingenic,' prefix.
+The dpp2_get_optimal_number_of_taps function is never used. Removing just for
+code cleaning up.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 ---
- .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 --------
- .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 87 +++++++++++++++++++
- 2 files changed, 87 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_dpp.c  | 78 -------------------
+ 1 file changed, 78 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-deleted file mode 100644
-index 41c7ae18fd7b..000000000000
---- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--JZ4740 and similar SoCs real-time clock driver
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dpp.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dpp.c
+index 13e057d7ee93..42bba7c9548b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dpp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dpp.c
+@@ -369,84 +369,6 @@ void dpp2_set_cursor_attributes(
+ 	}
+ }
+ 
+-#define IDENTITY_RATIO(ratio) (dc_fixpt_u3d19(ratio) == (1 << 19))
 -
--Required properties:
+-bool dpp2_get_optimal_number_of_taps(
+-		struct dpp *dpp,
+-		struct scaler_data *scl_data,
+-		const struct scaling_taps *in_taps)
+-{
+-	/* Some ASICs does not support  FP16 scaling, so we reject modes require this*/
+-	if (scl_data->viewport.width  != scl_data->h_active &&
+-		scl_data->viewport.height != scl_data->v_active &&
+-		dpp->caps->dscl_data_proc_format == DSCL_DATA_PRCESSING_FIXED_FORMAT &&
+-		scl_data->format == PIXEL_FORMAT_FP16)
+-		return false;
 -
--- compatible: One of:
--  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
--  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
--- reg: Address range of rtc register set
--- interrupts: IRQ number for the alarm interrupt
--- clocks: phandle to the "rtc" clock
--- clock-names: must be "rtc"
+-	if (scl_data->viewport.width > scl_data->h_active &&
+-		dpp->ctx->dc->debug.max_downscale_src_width != 0 &&
+-		scl_data->viewport.width > dpp->ctx->dc->debug.max_downscale_src_width)
+-		return false;
 -
--Optional properties:
--- system-power-controller: To use this component as the
--  system power controller
--- reset-pin-assert-time-ms: Reset pin low-level assertion
--  time after wakeup (default 60ms; range 0-125ms if RTC clock
--  at 32 kHz)
--- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
--  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
+-	/* TODO: add lb check */
 -
--Example:
+-	/* No support for programming ratio of 8, drop to 7.99999.. */
+-	if (scl_data->ratios.horz.value == (8ll << 32))
+-		scl_data->ratios.horz.value--;
+-	if (scl_data->ratios.vert.value == (8ll << 32))
+-		scl_data->ratios.vert.value--;
+-	if (scl_data->ratios.horz_c.value == (8ll << 32))
+-		scl_data->ratios.horz_c.value--;
+-	if (scl_data->ratios.vert_c.value == (8ll << 32))
+-		scl_data->ratios.vert_c.value--;
 -
--rtc@10003000 {
--	compatible = "ingenic,jz4740-rtc";
--	reg = <0x10003000 0x40>;
+-	/* Set default taps if none are provided */
+-	if (in_taps->h_taps == 0) {
+-		if (dc_fixpt_ceil(scl_data->ratios.horz) > 4)
+-			scl_data->taps.h_taps = 8;
+-		else
+-			scl_data->taps.h_taps = 4;
+-	} else
+-		scl_data->taps.h_taps = in_taps->h_taps;
+-	if (in_taps->v_taps == 0) {
+-		if (dc_fixpt_ceil(scl_data->ratios.vert) > 4)
+-			scl_data->taps.v_taps = 8;
+-		else
+-			scl_data->taps.v_taps = 4;
+-	} else
+-		scl_data->taps.v_taps = in_taps->v_taps;
+-	if (in_taps->v_taps_c == 0) {
+-		if (dc_fixpt_ceil(scl_data->ratios.vert_c) > 4)
+-			scl_data->taps.v_taps_c = 4;
+-		else
+-			scl_data->taps.v_taps_c = 2;
+-	} else
+-		scl_data->taps.v_taps_c = in_taps->v_taps_c;
+-	if (in_taps->h_taps_c == 0) {
+-		if (dc_fixpt_ceil(scl_data->ratios.horz_c) > 4)
+-			scl_data->taps.h_taps_c = 4;
+-		else
+-			scl_data->taps.h_taps_c = 2;
+-	} else if ((in_taps->h_taps_c % 2) != 0 && in_taps->h_taps_c != 1)
+-		/* Only 1 and even h_taps_c are supported by hw */
+-		scl_data->taps.h_taps_c = in_taps->h_taps_c - 1;
+-	else
+-		scl_data->taps.h_taps_c = in_taps->h_taps_c;
 -
--	interrupt-parent = <&intc>;
--	interrupts = <32>;
+-	if (!dpp->ctx->dc->debug.always_scale) {
+-		if (IDENTITY_RATIO(scl_data->ratios.horz))
+-			scl_data->taps.h_taps = 1;
+-		if (IDENTITY_RATIO(scl_data->ratios.vert))
+-			scl_data->taps.v_taps = 1;
+-		if (IDENTITY_RATIO(scl_data->ratios.horz_c))
+-			scl_data->taps.h_taps_c = 1;
+-		if (IDENTITY_RATIO(scl_data->ratios.vert_c))
+-			scl_data->taps.v_taps_c = 1;
+-	}
 -
--	clocks = <&rtc_clock>;
--	clock-names = "rtc";
+-	return true;
+-}
 -
--	system-power-controller;
--	reset-pin-assert-time-ms = <60>;
--	min-wakeup-pin-assert-time-ms = <100>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-new file mode 100644
-index 000000000000..c18ed8ac263f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic SoCs Real-Time Clock DT bindings
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+allOf:
-+  - $ref: rtc.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-rtc
-+        - ingenic,jz4760-rtc
-+      - items:
-+        - const: ingenic,jz4725b-rtc
-+        - const: ingenic,jz4740-rtc
-+      - items:
-+        - enum:
-+          - ingenic,jz4770-rtc
-+          - ingenic,jz4780-rtc
-+        - const: ingenic,jz4760-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: rtc
-+
-+  system-power-controller:
-+    description: |
-+      Indicates that the RTC is responsible for powering OFF
-+      the system.
-+    type: boolean
-+
-+  ingenic,reset-pin-assert-time-ms:
-+    description: |
-+      Reset pin low-level assertion time after wakeup
-+      (assuming RTC clock at 32 kHz)
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 125
-+      - default: 60
-+
-+  ingenic,min-wakeup-pin-assert-time-ms:
-+    description: |
-+      Minimum wakeup pin assertion time
-+      (assuming RTC clock at 32 kHz)
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 2000
-+      - default: 100
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    rtc_dev: rtc@10003000 {
-+      compatible = "ingenic,jz4740-rtc";
-+      reg = <0x10003000 0x40>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <15>;
-+
-+      clocks = <&cgu JZ4740_CLK_RTC>;
-+      clock-names = "rtc";
-+    };
+ void oppn20_dummy_program_regamma_pwl(
+ 		struct dpp *dpp,
+ 		const struct pwl_params *params,
 -- 
 2.25.1
 
