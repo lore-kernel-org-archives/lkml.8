@@ -2,235 +2,124 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FC2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742E8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE402468D
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdNxjeTi"
+	by mail.kernel.org (Postfix) with ESMTP id 4942624699
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 04:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCBElu (ORCPT
+        id S1726953AbgCBEsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 1 Mar 2020 23:41:50 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34859 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgCBElu (ORCPT
+        Sun, 1 Mar 2020 23:48:10 -0500
+Received: from m177126.mail.qiye.163.com ([123.58.177.126]:21681 "EHLO
+        m177126.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCBEsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 1 Mar 2020 23:41:50 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z9so6867419lfa.2;
-        Sun, 01 Mar 2020 20:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=X78AH+SC4vyZaSDTb7riG4sKOhmRpMdZuSdK+sywT7U=;
-        b=WdNxjeTigTp4M4VR52JFLZfqwLLgCAvENEx1BlGgwW9qU7GkMlofvN3+HsWNPO1zDx
-         GAQqFraKnW6CpbErSXtytjG4mMD0VgGU1JF8dQrgGcAXnbKc/Ay0M/sG9RTY2fmDrYgs
-         P4nMrY+X0Oh1zr1kUnJXDVjo2nhohL9Qmjl8zemKPXAyhtdi8qeybBThKBrAeNozJVcW
-         vPG6cdgUwIYh5Ve62Wrrmj48lI9YHTLbyRTw9eRBjP7yvInGLyPZWBNVs/Xum0R38BPF
-         qIPOxXWj4vbESDQ3/B9jzbHrV3cMC4UyiuREO97AjLfSnx+T2C5V7NrzSpJl8U4vGqdY
-         I3Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=X78AH+SC4vyZaSDTb7riG4sKOhmRpMdZuSdK+sywT7U=;
-        b=Gv3ehxx7NYSU2yes0NxxG9gFWgqQ2o/ZtTaMydsatu4cTyu2FOqAvc/9na+dvQcFAT
-         nwzekdML16dOQyoeF1erVPEQwWEQn57F7zllqZSN+MFKnpFVrgSbV4pIzhFg88Uss9py
-         JWOLuxZGfMNPD0n9HdBE9KYof0BucosJoHa5J4Nlu+IHaDVrGabFa+49Cba97AwpFq3f
-         r17DGqjWoWxbrCKowupzuC/ZvmF5tTkamY1zAruLzb7/AasBmUGEOgD1hYfNgWtWfRK2
-         yVI3wBNEBL0339GLyYfbGQ5PwGxYNsVEzLV7NJffhj3vpkG1yufonP1rqkznyXayECzF
-         q8RA==
-X-Gm-Message-State: ANhLgQ1vCnMPkRoFm4kikikQV+6597Gy6sa774enop7vawUS8f32Im5J
-        txMNEf6xWiT586X8gzJZKDQ=
-X-Google-Smtp-Source: ADFU+vtpnNn26LCVVOuUQm0JCmHwmmHvmgnGkGOXVHKsQpgeNjvA1HNjrHeX0oGwsKIp+Xfs5oapzQ==
-X-Received: by 2002:a05:6512:3191:: with SMTP id i17mr7702102lfe.33.1583124107879;
-        Sun, 01 Mar 2020 20:41:47 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id g78sm9723126lfd.21.2020.03.01.20.41.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 01 Mar 2020 20:41:47 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Igor Vavro <afl2001@gmail.com>
-Subject: [PATCH] pinctrl: meson: add tsin pinctrl for meson gxbb/gxl/gxm
-Date:   Mon,  2 Mar 2020 08:40:56 +0400
-Message-Id: <1583124056-94785-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 1 Mar 2020 23:48:09 -0500
+X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Mar 2020 23:47:59 EST
+Received: from vivo.com (wm-5 [127.0.0.1])
+        by m177126.mail.qiye.163.com (Hmail) with ESMTP id F046A1829B0;
+        Mon,  2 Mar 2020 12:42:39 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AKMA9QAgCCx9CEivazbGIap-.3.1583124159966.Hmail.wenhu.wang@vivo.com>
+To:     Scott Wood <oss@buserror.net>
+Cc:     wangwenhu <wenhu.pku@gmail.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, Rai Harninder <harninder.rai@nxp.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gcG93ZXJwYy9LY29uZmlnOiBNYWtlIEZTTF84NVhYX0NBQ0hFX1NSQU0gY29uZmlndXJhYmxl?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.227
+In-Reply-To: <a8134f2ece5059bbf078e8369a485857ff4d6590.camel@buserror.net>
+MIME-Version: 1.0
+Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 2 Mar 2020 12:42:39 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Mon, 2 Mar 2020 12:42:39 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVMTk5LS0tKSk9PT0tCSVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNT0NISk1ITU9CN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6MDY6Qio6HDg4A0I4PhINGgEZPDIaC1ZVSFVKTkNISklPSk1JSkhLVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQUxOTkI3Bg++
+X-HM-Tid: 0a70998d9df86458kursf046a1829b0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Vavro <afl2001@gmail.com>
-
-Add the tsin pinctrl definitions needed for integrated DVB hardware
-support on Meson GXBB/GXL/GXM boards.
-
-Signed-off-by: Igor Vavro <afl2001@gmail.com>
-[updated commit message]
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 43 +++++++++++++++++++++++++++---
- drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 27 +++++++++++++++++++
- 2 files changed, 66 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 926b999..25325235 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -231,10 +231,24 @@ static const unsigned int hdmi_hpd_pins[]	= { GPIOH_0 };
- static const unsigned int hdmi_sda_pins[]	= { GPIOH_1 };
- static const unsigned int hdmi_scl_pins[]	= { GPIOH_2 };
- 
-+static const unsigned int tsin_a_d_valid_pins[] = { GPIOY_0 };
-+static const unsigned int tsin_a_sop_pins[]	= { GPIOY_1 };
-+static const unsigned int tsin_a_clk_pins[]	= { GPIOY_2 };
-+static const unsigned int tsin_a_d0_pins[]	= { GPIOY_3 };
-+static const unsigned int tsin_a_dp_pins[]	= {
-+	GPIOY_4, GPIOY_5, GPIOY_6, GPIOY_7, GPIOY_8, GPIOY_9, GPIOY_10
-+};
-+
-+static const unsigned int tsin_a_fail_pins[]	= { GPIOY_11 };
- static const unsigned int i2s_out_ch23_y_pins[]	= { GPIOY_8 };
- static const unsigned int i2s_out_ch45_y_pins[]	= { GPIOY_9 };
- static const unsigned int i2s_out_ch67_y_pins[]	= { GPIOY_10 };
- 
-+static const unsigned int tsin_b_d_valid_pins[] = { GPIOX_6 };
-+static const unsigned int tsin_b_sop_pins[]	= { GPIOX_7 };
-+static const unsigned int tsin_b_clk_pins[]	= { GPIOX_8 };
-+static const unsigned int tsin_b_d0_pins[]	= { GPIOX_9 };
-+
- static const unsigned int spdif_out_y_pins[]	= { GPIOY_12 };
- 
- static const unsigned int gen_clk_out_pins[]	= { GPIOY_15 };
-@@ -437,12 +451,22 @@ static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GROUP(pwm_a_x,		3,	17),
- 	GROUP(pwm_e,		2,	30),
- 	GROUP(pwm_f_x,		3,	18),
-+	GROUP(tsin_b_d_valid,	3,	9),
-+	GROUP(tsin_b_sop,	3,	8),
-+	GROUP(tsin_b_clk,	3,	10),
-+	GROUP(tsin_b_d0,	3,	7),
- 
- 	/* Bank Y */
--	GROUP(uart_cts_c,	1,	17),
--	GROUP(uart_rts_c,	1,	16),
--	GROUP(uart_tx_c,	1,	19),
--	GROUP(uart_rx_c,	1,	18),
-+	GROUP(tsin_a_fail,	3,	3),
-+	GROUP(tsin_a_d_valid,	3,	2),
-+	GROUP(tsin_a_sop,	3,	1),
-+	GROUP(tsin_a_clk,	3,	0),
-+	GROUP(tsin_a_d0,	3,	4),
-+	GROUP(tsin_a_dp,	3,	5),
-+	GROUP(uart_cts_c,	1,	19),
-+	GROUP(uart_rts_c,	1,	18),
-+	GROUP(uart_tx_c,	1,	17),
-+	GROUP(uart_rx_c,	1,	16),
- 	GROUP(pwm_a_y,		1,	21),
- 	GROUP(pwm_f_y,		1,	20),
- 	GROUP(i2s_out_ch23_y,	1,	5),
-@@ -601,6 +625,15 @@ static const char * const gpio_periphs_groups[] = {
- 	"GPIOX_20", "GPIOX_21", "GPIOX_22",
- };
- 
-+static const char * const tsin_a_groups[] = {
-+	"tsin_a_clk", "tsin_a_sop", "tsin_a_d_valid", "tsin_a_d0",
-+	"tsin_a_dp", "tsin_a_fail",
-+};
-+
-+static const char * const tsin_b_groups[] = {
-+	"tsin_b_clk", "tsin_b_sop", "tsin_b_d_valid", "tsin_b_d0",
-+};
-+
- static const char * const emmc_groups[] = {
- 	"emmc_nand_d07", "emmc_clk", "emmc_cmd", "emmc_ds",
- };
-@@ -792,6 +825,8 @@ static struct meson_pmx_func meson_gxbb_periphs_functions[] = {
- 	FUNCTION(i2s_out),
- 	FUNCTION(spdif_out),
- 	FUNCTION(gen_clk_out),
-+	FUNCTION(tsin_a),
-+	FUNCTION(tsin_b),
- };
- 
- static struct meson_pmx_func meson_gxbb_aobus_functions[] = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 1b6e864..45d5831 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -241,6 +241,17 @@ static const unsigned int tsin_a_dp_pins[] = {
- 	GPIODV_1, GPIODV_2, GPIODV_3, GPIODV_4, GPIODV_5, GPIODV_6, GPIODV_7,
- };
- 
-+static const unsigned int tsin_b_clk_pins[]	= { GPIOH_6 };
-+static const unsigned int tsin_b_d0_pins[]	= { GPIOH_7 };
-+static const unsigned int tsin_b_sop_pins[]	= { GPIOH_8 };
-+static const unsigned int tsin_b_d_valid_pins[] = { GPIOH_9 };
-+
-+static const unsigned int tsin_b_fail_z4_pins[] = { GPIOZ_4 };
-+static const unsigned int tsin_b_clk_z3_pins[]	= { GPIOZ_3 };
-+static const unsigned int tsin_b_d0_z2_pins[]	= { GPIOZ_2 };
-+static const unsigned int tsin_b_sop_z1_pins[]	= { GPIOZ_1 };
-+static const unsigned int tsin_b_d_valid_z0_pins[] = { GPIOZ_0 };
-+
- static const struct pinctrl_pin_desc meson_gxl_aobus_pins[] = {
- 	MESON_PIN(GPIOAO_0),
- 	MESON_PIN(GPIOAO_1),
-@@ -438,6 +449,11 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GROUP(eth_txd1,		4,	12),
- 	GROUP(eth_txd2,		4,	11),
- 	GROUP(eth_txd3,		4,	10),
-+	GROUP(tsin_b_fail_z4,	3,	15),
-+	GROUP(tsin_b_clk_z3,	3,	16),
-+	GROUP(tsin_b_d0_z2,	3,	17),
-+	GROUP(tsin_b_sop_z1,	3,	18),
-+	GROUP(tsin_b_d_valid_z0, 3,	19),
- 	GROUP(pwm_c,		3,	20),
- 	GROUP(i2s_out_ch23_z,	3,	26),
- 	GROUP(i2s_out_ch45_z,	3,	25),
-@@ -454,6 +470,10 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GROUP(i2s_out_lr_clk,	6,	24),
- 	GROUP(i2s_out_ch01,	6,	23),
- 	GROUP(spdif_out_h,	6,	28),
-+	GROUP(tsin_b_d0,	6,	17),
-+	GROUP(tsin_b_sop,	6,	18),
-+	GROUP(tsin_b_d_valid,	6,	19),
-+	GROUP(tsin_b_clk,	6,	20),
- 
- 	/* Bank DV */
- 	GROUP(uart_tx_b,	2,	16),
-@@ -689,6 +709,12 @@ static const char * const tsin_a_groups[] = {
- 	"tsin_a_dp", "tsin_a_fail",
- };
- 
-+static const char * const tsin_b_groups[] = {
-+	"tsin_b_clk", "tsin_b_sop", "tsin_b_d_valid", "tsin_b_d0",
-+	"tsin_b_clk_z3", "tsin_b_sop_z1", "tsin_b_d_valid_z0", "tsin_b_d0_z2",
-+	"tsin_b_fail_z4",
-+};
-+
- static const char * const gpio_aobus_groups[] = {
- 	"GPIOAO_0", "GPIOAO_1", "GPIOAO_2", "GPIOAO_3", "GPIOAO_4",
- 	"GPIOAO_5", "GPIOAO_6", "GPIOAO_7", "GPIOAO_8", "GPIOAO_9",
-@@ -764,6 +790,7 @@ static struct meson_pmx_func meson_gxl_periphs_functions[] = {
- 	FUNCTION(spdif_out),
- 	FUNCTION(eth_led),
- 	FUNCTION(tsin_a),
-+	FUNCTION(tsin_b),
- };
- 
- static struct meson_pmx_func meson_gxl_aobus_functions[] = {
--- 
-2.7.4
-
+5Y+R5Lu25Lq677yaU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4K5Y+R6YCB5pel5pyf77ya
+MjAyMC0wMy0wMSAwNzoxMjo1OArmlLbku7bkurrvvJoi546L5paH6JmOIiA8d2VuaHUud2FuZ0B2
+aXZvLmNvbT4K5oqE6YCB5Lq677yad2FuZ3dlbmh1IDx3ZW5odS5wa3VAZ21haWwuY29tPixLdW1h
+ciBHYWxhIDxnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnPixCZW5qYW1pbiBIZXJyZW5zY2htaWR0
+IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFja2VycmFzIDxwYXVsdXNAc2FtYmEu
+b3JnPixNaWNoYWVsIEVsbGVybWFuIDxtcGVAZWxsZXJtYW4uaWQuYXU+LGxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsdHJpdmlhbEBrZXJu
+ZWwub3JnLFJhaSBIYXJuaW5kZXIgPGhhcm5pbmRlci5yYWlAbnhwLmNvbT4K5Li76aKY77yaUmU6
+IFJlOiBbUEFUQ0hdIHBvd2VycGMvS2NvbmZpZzogTWFrZSBGU0xfODVYWF9DQUNIRV9TUkFNIGNv
+bmZpZ3VyYWJsZT5PbiBUdWUsIDIwMjAtMDEtMjEgYXQgMTQ6MzggKzA4MDAsIOeOi+aWh+iZjiB3
+cm90ZToKPj4g5Y+R5Lu25Lq677yaU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4KPj4g5Y+R
+6YCB5pel5pyf77yaMjAyMC0wMS0yMSAxMzo0OTo1OQo+PiDmlLbku7bkurrvvJoi546L5paH6JmO
+IiA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4g5oqE6YCB5Lq677yad2FuZ3dlbmh1IDx3ZW5odS5w
+a3VAZ21haWwuY29tPixLdW1hciBHYWxhIDxnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnPixCCj4+
+IGVuamFtaW4gSGVycmVuc2NobWlkdCA8YmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnPixQYXVsIE1h
+Y2tlcnJhcyA8Cj4+IHBhdWx1c0BzYW1iYS5vcmc+LE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxl
+cm1hbi5pZC5hdT4sCj4+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnLGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmcsCj4+IHRyaXZpYWxAa2VybmVsLm9yZyxSYWkgSGFybmluZGVyIDxo
+YXJuaW5kZXIucmFpQG54cC5jb20+Cj4+IOS4u+mimO+8mlJlOiBbUEFUQ0hdIHBvd2VycGMvS2Nv
+bmZpZzogTWFrZSBGU0xfODVYWF9DQUNIRV9TUkFNIGNvbmZpZ3VyYWJsZT5Pbgo+PiBUdWUsIDIw
+MjAtMDEtMjEgYXQgMTM6MjAgKzA4MDAsIOeOi+aWh+iZjiB3cm90ZToKPj4gPiA+IEZyb206IFNj
+b3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+Cj4+ID4gPiBEYXRlOiAyMDIwLTAxLTIxIDExOjI1
+OjI1Cj4+ID4gPiBUbzogIHdhbmd3ZW5odSA8d2VuaHUucGt1QGdtYWlsLmNvbT4sS3VtYXIgR2Fs
+YSA8Cj4+ID4gPiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnPiwKPj4gPiA+IEJlbmphbWluIEhl
+cnJlbnNjaG1pZHQgPGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZz4sUGF1bCBNYWNrZXJyYXMgPAo+
+PiA+ID4gcGF1bHVzQHNhbWJhLm9yZz4sTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlk
+LmF1PiwKPj4gPiA+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnLGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmcKPj4gPiA+IENjOiAgdHJpdmlhbEBrZXJuZWwub3JnLHdlbmh1LndhbmdA
+dml2by5jb20sUmFpIEhhcm5pbmRlciA8Cj4+ID4gPiBoYXJuaW5kZXIucmFpQG54cC5jb20+Cj4+
+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBjL0tjb25maWc6IE1ha2UgRlNMXzg1WFhf
+Q0FDSEVfU1JBTQo+PiA+ID4gY29uZmlndXJhYmxlPk9uIE1vbiwgMjAyMC0wMS0yMCBhdCAwNjo0
+MyAtMDgwMCwgd2FuZ3dlbmh1IHdyb3RlOgo+PiA+ID4gPiA+IEZyb206IHdhbmd3ZW5odSA8d2Vu
+aHUud2FuZ0B2aXZvLmNvbT4KPj4gPiA+ID4gPiAKPj4gPiA+ID4gPiBXaGVuIGdlbmVyYXRpbmcg
+LmNvbmZpZyBmaWxlIHdpdGggbWVudWNvbmZpZyBvbiBGcmVlc2NhbGUgQk9PS0UKPj4gPiA+ID4g
+PiBTT0MsIEZTTF84NVhYX0NBQ0hFX1NSQU0gaXMgbm90IGNvbmZpZ3VyYWJsZSBmb3IgdGhlIGxh
+Y2sgb2YKPj4gPiA+ID4gPiBkZXNjcmlwdGlvbiBpbiB0aGUgS2NvbmZpZyBmaWVsZCwgd2hpY2gg
+bWFrZXMgaXQgaW1wb3NzaWJsZQo+PiA+ID4gPiA+IHRvIHN1cHBvcnQgTDJDYWNoZS1TcmFtIGRy
+aXZlci4gQWRkIGEgZGVzY3JpcHRpb24gdG8gbWFrZSBpdAo+PiA+ID4gPiA+IGNvbmZpZ3VyYWJs
+ZS4KPj4gPiA+ID4gPiAKPj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiB3YW5nd2VuaHUgPHdlbmh1
+LndhbmdAdml2by5jb20+Cj4+ID4gPiA+IAo+PiA+ID4gPiBUaGUgaW50ZW50IHdhcyB0aGF0IGRy
+aXZlcnMgdXNpbmcgdGhlIFNSQU0gQVBJIHdvdWxkIHNlbGVjdCB0aGUKPj4gPiA+ID4gc3ltYm9s
+LiAgV2hhdAo+PiA+ID4gPiBpcyB0aGUgdXNlIGNhc2UgZm9yIHNlbGVjdGluZyBpdCBtYW51YWxs
+eT8KPj4gPiA+ID4gCj4+ID4gPiAKPj4gPiA+IFdpdGggYSByZXBvc2l0b3J5IG9mIG11bHRpcGxl
+IHByb2R1Y3RzKG1lYW5pbmcgZGlmZmVyZW50IGRlZmNvbmZpZ3MpIGFuZAo+PiA+ID4gbXVsdGlw
+bGUKPj4gPiA+IGRldmVsb3BlcnMsIHRoZSBLY29uZmlncyBvZiB0aGUgS2VybmVsIFNvdXJjZSBU
+cmVlIGNoYW5nZSBmcmVxdWVudGx5LiBTbwo+PiA+ID4gdGhlCj4+ID4gPiAibWFrZSBtZW51Y29u
+ZmlnIgo+PiA+ID4gcHJvY2VzcyBpcyBuZWVkZWQgZm9yIGRlZmNvbmZpZ3MnIHJlLWdlbmVyYXRp
+bmcgb3IgdXBkYXRpbmcgZm9yIHRoZQo+PiA+ID4gY29tcGxleGl0eSBvZiBkZXBlbmRlbmNpZXMK
+Pj4gPiA+IGJldHdlZW4gZGlmZmVyZW50IGZlYXR1cmVzIGRlZmluZWQgaW4gdGhlIEtjb25maWdz
+Lgo+PiA+IAo+PiA+IFRoYXQgZG9lc24ndCBhbnN3ZXIgbXkgcXVlc3Rpb24gb2YgaG93IHRoZSBT
+UkFNIGNvZGUgd291bGQgYmUgdXNlZnVsIG90aGVyCj4+ID4gdGhhbiB0byBzb21lIG90aGVyIGRy
+aXZlciB0aGF0IHVzZXMgdGhlIEFQSSAod2hpY2ggd291bGQgdXNlCj4+ID4gInNlbGVjdCIpLiAg
+VGhlcmUKPj4gPiBpcyBubyB1c2Vyc3BhY2UgQVBJLiAgWW91IGNvdWxkIHVzZSB0aGUga2VybmVs
+IGNvbW1hbmQgbGluZSB0byBjb25maWd1cmUKPj4gPiB0aGUKPj4gPiBTUkFNIGJ1dCB5b3UgbmVl
+ZCB0byBnZXQgdGhlIGFkZHJlc3Mgb2YgaXQgZm9yIGl0IHRvIGJlIHVzZWZ1bC4KPj4gPiAKPj4g
+Cj4+IExpa2UgeW91J3ZlIGFza2VkIGJlbG93LCB2aWEgL2Rldi9tZW0gb3IgZGlyZWN0IGNhbGxp
+bmcgd2l0aGluIHRoZSBLZXJuZWwuCj4+IEFuZCB0aGV5IGFyZSBub3Qgc3VibWl0dGVkIHllcywg
+dW5kZXIgZGV2ZWxvcG1lbnQuCj4KPklmIHRoZXkgYXJlIGNhbGxpbmcgd2l0aGluIHRoZSBrZXJu
+ZWwsIHRoZW4gd2hhdGV2ZXIgZHJpdmVyIHRoYXQgaXMgc2hvdWxkCj5zZWxlY3QgRlNMXzg1WFhf
+Q0FDSEVfU1JBTS4gIERpcmVjdGx5IGFjY2Vzc2luZyAvZGV2L21lbSB3aXRob3V0IGFueSB3YXkg
+Zm9yCj50aGUga2VybmVsIHRvIGFkdmVydGlzZSB3aGVyZSBpdCBpcyBvciB3aGljaCBwYXJ0cyBv
+ZiBTUkFNIGFyZSBhdmFpbGFibGUgZm9yCj51c2Ugc291bmRzIGxpa2UgYSBiYWQgaWRlYS4KCj4K
+WWVzLCBkZWZpbml0ZWx5LiBTbyBsaWtlIHdlIGVuYWJsZSB0aGUgbW91bGRlIHdoaWNoIHNob3Vs
+ZCBzZWxldCAKRlNMXzg1WFhfQ0FDSEVfU1JBTSB0byBidWlsZCB2bWxpbnV4LCBGU0xfODVYWF9D
+QUNIRV9TUkFNIApjb3VsZCBub3QgYmUgc2VsZXRlZCBiZWNhdXNlIG9mIHRoZSBLY29uZmlnIGRl
+ZmluaXRpb24gcHJvYmxlbSAKd2hpY2ggSSBhbSB0cnlpbmcgdG8gZml4IG5vdy4gIFNvIHdvdWxk
+IHlvdSBwbGVhc2UgbWVyZ2UgdGhlIHBhdGNoIApmb3IgdGhlIGNvbnZlbmllbmNlIG9mIGxhdGVy
+IHdvcmtzIGRlcGVuZGluZyBvbiB0aGUgZHJpdmVyLgoKV2VuaHUKCj4tU2NvdHQKPgo+Cg0KDQo=
