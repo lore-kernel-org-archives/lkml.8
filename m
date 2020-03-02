@@ -2,132 +2,172 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD91C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7176BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ED72173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD042465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 18:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583172156;
+	bh=FtRqmbetKtzAhjYcG5f4Oa0sNs/qid5+5M0b5btzGXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WU8rjckj40QgbHsDlOMNkd15UXwdIciCQwNijl4SHGTsbLX++A3rtAHnE6JNFUjcs
+	 kK4n/HngioDrxgAUiwE/eF0OmLwrtVeiI7E/Ku2yuJcolXe2FnnHsswgqJIDcKMamT
+	 wflfEpOKNTY/VdeZzy4KHygIIifd4huylnqSbxFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgCBSAR (ORCPT
+        id S1727329AbgCBSCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 13:00:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:35876 "EHLO foss.arm.com"
+        Mon, 2 Mar 2020 13:02:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgCBSAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 13:00:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4343D2F;
-        Mon,  2 Mar 2020 10:00:16 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 768873F6C4;
-        Mon,  2 Mar 2020 10:00:12 -0800 (PST)
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     mark.rutland@arm.com, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tj@kernel.org, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200217204803.GA13479@Red>
- <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
- <20200220090350.GA19858@Red>
- <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
- <20200228123311.GE3275@willie-the-truck>
- <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
- <20200301175351.GA11684@Red>
- <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e7c92da2-42c0-a97d-7427-6fdc769b41b9@arm.com>
-Date:   Mon, 2 Mar 2020 18:00:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726451AbgCBSCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:02:34 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E05EF21D56;
+        Mon,  2 Mar 2020 18:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583172153;
+        bh=FtRqmbetKtzAhjYcG5f4Oa0sNs/qid5+5M0b5btzGXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aFeNoIFDszMPgvo966bttNOOPowGZjl/VVfDXEcrJi0so2an1200uOYyaWsv48ldC
+         dzPZ0wic/6rn1UtkodXalYFqQcXtOx/eM//smEXWhvfrZCvfBZqmJf7T17G3ncpaFi
+         2KQ09Y5RU+F9ezU8baBANM6Rgk203ig1r50yyNkc=
+Date:   Mon, 2 Mar 2020 10:02:31 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, cang@codeaurora.org, satyat@google.com,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, kuohong.wang@mediatek.com,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com, light.hsieh@mediatek.com
+Subject: Re: [RFC PATCH v1] scsi: ufs-mediatek: add inline encryption support
+Message-ID: <20200302180231.GB98133@gmail.com>
+References: <20200302091138.10341-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302091138.10341-1-stanley.chu@mediatek.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 5:25 pm, Daniel Jordan wrote:
-> On Sun, Mar 01, 2020 at 06:53:51PM +0100, Corentin Labbe wrote:
->> I tried to bisect this problem, but the result is:
-> ...
->> # first bad commit: [81ff5d2cba4f86cd850b9ee4a530cd221ee45aa3] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
->>
->> The only interesting thing I see in this MR is: "Add fuzz testing to testmgr"
->>
->> But this wont help.
+On Mon, Mar 02, 2020 at 05:11:38PM +0800, Stanley Chu wrote:
+> Add inline encryption support to ufs-mediatek.
 > 
-> Hm, that merge commit has only a couple lines of powerpc build change, so maybe
-> there's something nondeterministic going on.
-
-Something smelled familiar about this discussion, and sure enough that 
-merge contains c4741b230597 ("crypto: run initcalls for generic 
-implementations earlier"), which has raised its head before[1].
-
-> Does this fix it?  I can't verify but figure it's worth trying the simplest
-> explanation first, which is that the work isn't initialized by the time it's
-> queued.
-
-The relative initcall levels would appear to explain the symptom - I 
-guess the question is whether this represents a bug in a particular 
-test/algorithm (as with the unaligned accesses) or a fundamental problem 
-in the infrastructure now being able to poke the module loader too early.
-
-Robin.
-
-[1] 
-https://lore.kernel.org/linux-arm-kernel/20190530170737.GB70051@gmail.com/
-
-> thanks,
-> daniel
+> The standards-compliant parts, such as querying the crypto capabilities
+> and enabling crypto for individual UFS requests, are already handled by
+> ufshcd-crypto.c, which itself is wired into the blk-crypto framework.
 > 
-> ---8<---
+> However MediaTek UFS host requires a vendor-specific hce_enable operation
+> to allow crypto-related registers being accessed normally in kernel.
+> After this step, MediaTek UFS host can work as standard-compliant host
+> for inline-encryption related functions.
 > 
-> Subject: [PATCH] module: statically initialize init section freeing data
-> 
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> ---
->   kernel/module.c | 13 +++----------
->   1 file changed, 3 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 33569a01d6e1..db0cda206167 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -88,8 +88,9 @@ EXPORT_SYMBOL_GPL(module_mutex);
->   static LIST_HEAD(modules);
->   
->   /* Work queue for freeing init sections in success case */
-> -static struct work_struct init_free_wq;
-> -static struct llist_head init_free_list;
-> +static void do_free_init(struct work_struct *w);
-> +static DECLARE_WORK(init_free_wq, do_free_init);
-> +static LLIST_HEAD(init_free_list);
->   
->   #ifdef CONFIG_MODULES_TREE_LOOKUP
->   
-> @@ -3501,14 +3502,6 @@ static void do_free_init(struct work_struct *w)
->   	}
->   }
->   
-> -static int __init modules_wq_init(void)
-> -{
-> -	INIT_WORK(&init_free_wq, do_free_init);
-> -	init_llist_head(&init_free_list);
-> -	return 0;
-> -}
-> -module_init(modules_wq_init);
-> -
->   /*
->    * This is where the real work happens.
->    *
-> 
+> This patch is rebased to the latest wip-inline-encryption branch in
+> Eric Biggers's git:
+> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/
+
+Please don't use a random work-in-progress branch from my git repository (which
+hasn't been updated to the v7 patchset yet and will be rebased); use instead:
+
+	Repo: https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
+	Tag: inline-encryption-v7
+
+Also, this patch doesn't apply to either branch anyway:
+
+Applying: scsi: ufs-mediatek: add inline encryption support
+Using index info to reconstruct a base tree...
+error: patch failed: drivers/scsi/ufs/ufs-mediatek.c:15
+error: drivers/scsi/ufs/ufs-mediatek.c: patch does not apply
+error: patch failed: drivers/scsi/ufs/ufs-mediatek.h:58
+error: drivers/scsi/ufs/ufs-mediatek.h: patch does not apply
+error: Did you hand edit your patch?
+
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 53eae5fe2ade..12d01fd3d5e1 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/soc/mediatek/mtk_sip_svc.h>
+>  
+>  #include "ufshcd.h"
+> +#include "ufshcd-crypto.h"
+>  #include "ufshcd-pltfrm.h"
+>  #include "ufs_quirks.h"
+>  #include "unipro.h"
+> @@ -24,6 +25,9 @@
+>  	arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
+>  		      cmd, val, 0, 0, 0, 0, 0, &(res))
+>  
+> +#define ufs_mtk_crypto_ctrl(res, enable) \
+> +	ufs_mtk_smc(UFS_MTK_SIP_CRYPTO_CTRL, enable, res)
+> +
+>  #define ufs_mtk_ref_clk_notify(on, res) \
+>  	ufs_mtk_smc(UFS_MTK_SIP_REF_CLK_NOTIFICATION, on, res)
+>  
+> @@ -66,7 +70,27 @@ static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
+>  	}
+>  }
+>  
+> -static int ufs_mtk_bind_mphy(struct ufs_hba *hba)
+> +static void ufs_mtk_crypto_enable(struct ufs_hba *hba)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	ufs_mtk_crypto_ctrl(res, 1);
+> +	if (res.a0) {
+> +		dev_info(hba->dev, "%s: crypto enable failed, err: %lu\n",
+> +			 __func__, res.a0);
+> +	}
+> +}
+> +
+> +static int ufs_mtk_hce_enable_notify(struct ufs_hba *hba,
+> +				     enum ufs_notify_change_status status)
+> +{
+> +	if (status == PRE_CHANGE && ufshcd_hba_is_crypto_supported(hba))
+> +		ufs_mtk_crypto_enable(hba);
+> +
+> +	return 0;
+> +}
+> +
+> +int ufs_mtk_bind_mphy(struct ufs_hba *hba)
+>  {
+>  	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+>  	struct device *dev = hba->dev;
+> @@ -494,6 +518,7 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
+>  	.name                = "mediatek.ufshci",
+>  	.init                = ufs_mtk_init,
+>  	.setup_clocks        = ufs_mtk_setup_clocks,
+> +	.hce_enable_notify   = ufs_mtk_hce_enable_notify,
+>  	.link_startup_notify = ufs_mtk_link_startup_notify,
+>  	.pwr_change_notify   = ufs_mtk_pwr_change_notify,
+>  	.apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.h b/drivers/scsi/ufs/ufs-mediatek.h
+> index fccdd979d6fb..5ebaa59898bf 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.h
+> +++ b/drivers/scsi/ufs/ufs-mediatek.h
+> @@ -58,6 +58,7 @@
+>   */
+>  #define MTK_SIP_UFS_CONTROL               MTK_SIP_SMC_CMD(0x276)
+>  #define UFS_MTK_SIP_DEVICE_RESET          BIT(1)
+> +#define UFS_MTK_SIP_CRYPTO_CTRL           BIT(2)
+>  #define UFS_MTK_SIP_REF_CLK_NOTIFICATION  BIT(3)
+
+But if this is all that's needed to get inline crypto working with Mediatek UFS,
+that's great news.
+
+Thanks!
+
+- Eric
