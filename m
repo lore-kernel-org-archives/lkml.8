@@ -2,289 +2,272 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8088BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16284C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FAD21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91D420656
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 13:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="V+LYYpn+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YjulWmPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCBNvR (ORCPT
+        id S1727226AbgCBNve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 08:51:17 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50556 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726969AbgCBNvQ (ORCPT
+        Mon, 2 Mar 2020 08:51:34 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53080 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726988AbgCBNve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 08:51:16 -0500
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 977102E15DF;
-        Mon,  2 Mar 2020 16:51:13 +0300 (MSK)
-Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id JSAbmXMoJM-pDDe8Yw0;
-        Mon, 02 Mar 2020 16:51:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1583157073; bh=wktUfavwfLnvfoMtc7ILBXstgqnlxp/m6Im5xGOv+VM=;
-        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
-        b=V+LYYpn+jJgw2yMh2gLWtctTnF0zFdYROQ4Cy64V+vCb3uQ2Tqu5ZlqITCHZW7daV
-         ZebzAJTirz0pt75/023MjBEu5Iv0M+DJQOCne4OcwvCy6Xj6ahixduqNBhXcnke4kF
-         IaHPaP1I5xQd/Pgt/n4Sk5BLY4qD87fw1QG4wwVI=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:7cd4:25a8:c7e3:39e2])
-        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 67CYjl57Ra-pD3qM2Jp;
-        Mon, 02 Mar 2020 16:51:13 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 2/3] block/diskstats: accumulate all per-cpu counters in
- one pass
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-References: <158314549775.1788.6529015932237292177.stgit@buzz>
- <158314549980.1788.322398190605021664.stgit@buzz>
-Message-ID: <6fd92550-9252-a3ca-90b7-f55d6e39b63c@yandex-team.ru>
-Date:   Mon, 2 Mar 2020 16:51:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 2 Mar 2020 08:51:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583157092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2Il+nsakWqayV1I872rbc5vd5eg8q9WbG05kQyarYxI=;
+        b=YjulWmPJV3Mo2bT9DzZ6MY+XquVN/5ZBW1suOcYiP8smUU0Ckz00lQcrRxtyWrLOexYKuL
+        ewdO8YOqLjT3hT5o9xFelfoR5Bfd3/xj+6/RoALpRsD0VN7jDtUT8NFkwX1MfWCrU2fA3H
+        sYgCu6EIlcmO9yQQgERSJMcpxedHb+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-Tq1oOPDSPsOY485gFSbarg-1; Mon, 02 Mar 2020 08:51:28 -0500
+X-MC-Unique: Tq1oOPDSPsOY485gFSbarg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A417759320;
+        Mon,  2 Mar 2020 13:51:26 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-116-114.ams2.redhat.com [10.36.116.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6667839D;
+        Mon,  2 Mar 2020 13:51:02 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v1 03/11] virtio-mem: Paravirtualized memory hotunplug part 1
+Date:   Mon,  2 Mar 2020 14:49:33 +0100
+Message-Id: <20200302134941.315212-4-david@redhat.com>
+In-Reply-To: <20200302134941.315212-1-david@redhat.com>
+References: <20200302134941.315212-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <158314549980.1788.322398190605021664.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Unplugging subblocks of memory blocks that are offline is easy. All we
+have to do is watch out for concurrent onlining activity.
 
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/virtio/virtio_mem.c | 116 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 114 insertions(+), 2 deletions(-)
 
-On 02/03/2020 13.38, Konstantin Khlebnikov wrote:
-> Reading /proc/diskstats iterates over all cpus for summing each field.
-> It's faster to sum all fields in one pass.
-> 
-> Hammering /proc/diskstats with fio shows 2x performance improvement:
-> 
-> fio --name=test --numjobs=$JOBS --filename=/proc/diskstats \
->      --size=1k --bs=1k --fallocate=none --create_on_open=1 \
->      --time_based=1 --runtime=10 --invalidate=0 --group_report
-> 
-> 	  JOBS=1	JOBS=10
-> Before:	  7k iops	64k iops
-> After:	 18k iops      120k iops
-> 
-> Also this way code is more compact:
-> 
-> add/remove: 1/0 grow/shrink: 0/2 up/down: 194/-1540 (-1346)
-> Function                                     old     new   delta
-> part_stat_read_all                             -     194    +194
-> diskstats_show                              1344     631    -713
-> part_stat_show                              1219     392    -827
-> Total: Before=14966947, After=14965601, chg -0.01%
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->   block/genhd.c             |   62 +++++++++++++++++++++++++++++++++------------
->   block/partition-generic.c |   35 ++++++++++++++-----------
->   include/linux/genhd.h     |   10 +++++--
->   3 files changed, 72 insertions(+), 35 deletions(-)
-> 
-> diff --git a/block/genhd.c b/block/genhd.c
-> index ff6268970ddc..fcc597c243f7 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -46,6 +46,29 @@ static void disk_add_events(struct gendisk *disk);
->   static void disk_del_events(struct gendisk *disk);
->   static void disk_release_events(struct gendisk *disk);
->   
-> +#ifdef CONFIG_SMP
-> +void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
-> +{
-> +	int cpu;
-> +
-> +	memset(stat, 0, sizeof(struct disk_stats));
-> +	for_each_possible_cpu(cpu) {
-> +		struct disk_stats *ptr = per_cpu_ptr(part->dkstats, cpu);
-> +		int group;
-> +
-> +		for (group = 0; group < NR_STAT_GROUPS; group++) {
-> +			stat->nsecs[group] += ptr->nsecs[group];
-> +			stat->sectors[group] += ptr->sectors[group];
-> +			stat->ios[group] += ptr->ios[group];
-> +			stat->merges[group] += ptr->merges[group];
-> +		}
-> +
-> +		stat->io_ticks += ptr->io_ticks;
-> +		stat->time_in_queue += ptr->time_in_queue;
-> +	}
-> +}
-> +#endif /* CONFIG_SMP */
-> +
->   void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
->   {
->   	if (queue_is_mq(q))
-> @@ -1369,6 +1392,7 @@ static int diskstats_show(struct seq_file *seqf, void *v)
->   	struct hd_struct *hd;
->   	char buf[BDEVNAME_SIZE];
->   	unsigned int inflight;
-> +	struct disk_stats stat;
->   
->   	/*
->   	if (&disk_to_dev(gp)->kobj.entry == block_class.devices.next)
-> @@ -1380,7 +1404,9 @@ static int diskstats_show(struct seq_file *seqf, void *v)
->   
->   	disk_part_iter_init(&piter, gp, DISK_PITER_INCL_EMPTY_PART0);
->   	while ((hd = disk_part_iter_next(&piter))) {
-> +		part_stat_read_all(hd, &stat);
->   		inflight = part_in_flight(gp->queue, hd);
-> +
->   		seq_printf(seqf, "%4d %7d %s "
->   			   "%lu %lu %lu %u "
->   			   "%lu %lu %lu %u "
-> @@ -1390,23 +1416,27 @@ static int diskstats_show(struct seq_file *seqf, void *v)
->   			   "\n",
->   			   MAJOR(part_devt(hd)), MINOR(part_devt(hd)),
->   			   disk_name(gp, hd->partno, buf),
-> -			   part_stat_read(hd, ios[STAT_READ]),
-> -			   part_stat_read(hd, merges[STAT_READ]),
-> -			   part_stat_read(hd, sectors[STAT_READ]),
-> -			   (unsigned int)part_stat_read_msecs(hd, STAT_READ),
-> -			   part_stat_read(hd, ios[STAT_WRITE]),
-> -			   part_stat_read(hd, merges[STAT_WRITE]),
-> -			   part_stat_read(hd, sectors[STAT_WRITE]),
-> -			   (unsigned int)part_stat_read_msecs(hd, STAT_WRITE),
-> +			   stat.ios[STAT_READ],
-> +			   stat.merges[STAT_READ],
-> +			   stat.sectors[STAT_READ],
-> +			   (unsigned int)div_u64(stat.nsecs[STAT_READ],
-> +							NSEC_PER_MSEC),
-> +			   stat.ios[STAT_WRITE],
-> +			   stat.merges[STAT_WRITE],
-> +			   stat.sectors[STAT_WRITE],
-> +			   (unsigned int)div_u64(stat.nsecs[STAT_WRITE],
-> +							NSEC_PER_MSEC),
->   			   inflight,
-> -			   jiffies_to_msecs(part_stat_read(hd, io_ticks)),
-> -			   jiffies_to_msecs(part_stat_read(hd, time_in_queue)),
-> -			   part_stat_read(hd, ios[STAT_DISCARD]),
-> -			   part_stat_read(hd, merges[STAT_DISCARD]),
-> -			   part_stat_read(hd, sectors[STAT_DISCARD]),
-> -			   (unsigned int)part_stat_read_msecs(hd, STAT_DISCARD),
-> -			   part_stat_read(hd, ios[STAT_FLUSH]),
-> -			   (unsigned int)part_stat_read_msecs(hd, STAT_FLUSH)
-> +			   jiffies_to_msecs(stat.io_ticks),
-> +			   jiffies_to_msecs(stat.time_in_queue),
-> +			   stat.ios[STAT_DISCARD],
-> +			   stat.merges[STAT_DISCARD],
-> +			   stat.sectors[STAT_DISCARD],
-> +			   (unsigned int)div_u64(stat.nsecs[STAT_DISCARD],
-> +						 NSEC_PER_MSEC),
-> +			   stat.ios[STAT_FLUSH],
-> +			   (unsigned int)div_u64(stat.nsecs[STAT_FLUSH],
-> +						 NSEC_PER_MSEC)
->   			);
->   	}
->   	disk_part_iter_exit(&piter);
-> diff --git a/block/partition-generic.c b/block/partition-generic.c
-> index 564fae77711d..6d3fcb5187cb 100644
-> --- a/block/partition-generic.c
-> +++ b/block/partition-generic.c
-> @@ -120,9 +120,12 @@ ssize_t part_stat_show(struct device *dev,
->   {
->   	struct hd_struct *p = dev_to_part(dev);
->   	struct request_queue *q = part_to_disk(p)->queue;
-> +	struct disk_stats stat;
->   	unsigned int inflight;
->   
-> +	part_stat_read_all(p, &stat);
->   	inflight = part_in_flight(q, p);
-> +
->   	return sprintf(buf,
->   		"%8lu %8lu %8llu %8u "
->   		"%8lu %8lu %8llu %8u "
-> @@ -130,23 +133,23 @@ ssize_t part_stat_show(struct device *dev,
->   		"%8lu %8lu %8llu %8u "
->   		"%8lu %8u"
->   		"\n",
-> -		part_stat_read(p, ios[STAT_READ]),
-> -		part_stat_read(p, merges[STAT_READ]),
-> -		(unsigned long long)part_stat_read(p, sectors[STAT_READ]),
-> -		(unsigned int)part_stat_read_msecs(p, STAT_READ),
-> -		part_stat_read(p, ios[STAT_WRITE]),
-> -		part_stat_read(p, merges[STAT_WRITE]),
-> -		(unsigned long long)part_stat_read(p, sectors[STAT_WRITE]),
-> -		(unsigned int)part_stat_read_msecs(p, STAT_WRITE),
-> +		stat.ios[STAT_READ],
-> +		stat.merges[STAT_READ],
-> +		(unsigned long long)stat.sectors[STAT_READ],
-> +		(unsigned int)div_u64(stat.nsecs[STAT_READ], NSEC_PER_MSEC),
-> +		stat.ios[STAT_WRITE],
-> +		stat.merges[STAT_WRITE],
-> +		(unsigned long long)stat.sectors[STAT_WRITE],
-> +		(unsigned int)div_u64(stat.nsecs[STAT_WRITE], NSEC_PER_MSEC),
->   		inflight,
-> -		jiffies_to_msecs(part_stat_read(p, io_ticks)),
-> -		jiffies_to_msecs(part_stat_read(p, time_in_queue)),
-> -		part_stat_read(p, ios[STAT_DISCARD]),
-> -		part_stat_read(p, merges[STAT_DISCARD]),
-> -		(unsigned long long)part_stat_read(p, sectors[STAT_DISCARD]),
-> -		(unsigned int)part_stat_read_msecs(p, STAT_DISCARD),
-> -		part_stat_read(p, ios[STAT_FLUSH]),
-> -		(unsigned int)part_stat_read_msecs(p, STAT_FLUSH));
-> +		jiffies_to_msecs(stat.io_ticks),
-> +		jiffies_to_msecs(stat.time_in_queue),
-> +		stat.ios[STAT_DISCARD],
-> +		stat.merges[STAT_DISCARD],
-> +		(unsigned long long)stat.sectors[STAT_DISCARD],
-> +		(unsigned int)div_u64(stat.nsecs[STAT_DISCARD], NSEC_PER_MSEC),
-> +		stat.ios[STAT_FLUSH],
-> +		(unsigned int)div_u64(stat.nsecs[STAT_FLUSH], NSEC_PER_MSEC));
->   }
->   
->   ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
-> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-> index d5ff7023daa8..f1fca2c57092 100644
-> --- a/include/linux/genhd.h
-> +++ b/include/linux/genhd.h
-> @@ -339,6 +339,8 @@ static inline void part_stat_set_all(struct hd_struct *part, int value)
->   				sizeof(struct disk_stats));
->   }
->   
-> +void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat);
-> +
->   static inline int init_part_stats(struct hd_struct *part)
->   {
->   	part->dkstats = alloc_percpu(struct disk_stats);
-> @@ -365,6 +367,11 @@ static inline void part_stat_set_all(struct hd_struct *part, int value)
->   	memset(&part->dkstats, value, sizeof(struct disk_stats));
->   }
->   
-> +void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index d8da656c9145..c1fc7f9c4acf 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -120,7 +120,7 @@ struct virtio_mem {
+ 	 *
+ 	 * When this lock is held the pointers can't change, ONLINE and
+ 	 * OFFLINE blocks can't change the state and no subblocks will get
+-	 * plugged.
++	 * plugged/unplugged.
+ 	 */
+ 	struct mutex hotplug_mutex;
+ 	bool hotplug_active;
+@@ -277,6 +277,12 @@ static int virtio_mem_mb_state_prepare_next_mb(struc=
+t virtio_mem *vm)
+ 	     _mb_id++) \
+ 		if (virtio_mem_mb_get_state(_vm, _mb_id) =3D=3D _state)
+=20
++#define virtio_mem_for_each_mb_state_rev(_vm, _mb_id, _state) \
++	for (_mb_id =3D _vm->next_mb_id - 1; \
++	     _mb_id >=3D _vm->first_mb_id && _vm->nb_mb_state[_state]; \
++	     _mb_id--) \
++		if (virtio_mem_mb_get_state(_vm, _mb_id) =3D=3D _state)
++
+ /*
+  * Mark all selected subblocks plugged.
+  *
+@@ -322,6 +328,19 @@ static bool virtio_mem_mb_test_sb_plugged(struct vir=
+tio_mem *vm,
+ 	       bit + count;
+ }
+=20
++/*
++ * Test if all selected subblocks are unplugged.
++ */
++static bool virtio_mem_mb_test_sb_unplugged(struct virtio_mem *vm,
++					    unsigned long mb_id, int sb_id,
++					    int count)
++{
++	const int bit =3D (mb_id - vm->first_mb_id) * vm->nb_sb_per_mb + sb_id;
++
++	/* TODO: Helper similar to bitmap_set() */
++	return find_next_bit(vm->sb_bitmap, bit + count, bit) >=3D bit + count;
++}
++
+ /*
+  * Find the first plugged subblock. Returns vm->nb_sb_per_mb in case the=
+re is
+  * none.
+@@ -511,6 +530,9 @@ static void virtio_mem_notify_offline(struct virtio_m=
+em *vm,
+ 		BUG();
+ 		break;
+ 	}
++
++	/* trigger the workqueue, maybe we can now unplug memory. */
++	virtio_mem_retry(vm);
+ }
+=20
+ static void virtio_mem_notify_online(struct virtio_mem *vm, unsigned lon=
+g mb_id,
+@@ -1120,6 +1142,94 @@ static int virtio_mem_plug_request(struct virtio_m=
+em *vm, uint64_t diff)
+ 	return rc;
+ }
+=20
++/*
++ * Unplug the desired number of plugged subblocks of an offline memory b=
+lock.
++ * Will fail if any subblock cannot get unplugged (instead of skipping i=
+t).
++ *
++ * Will modify the state of the memory block. Might temporarily drop the
++ * hotplug_mutex.
++ *
++ * Note: Can fail after some subblocks were successfully unplugged.
++ */
++static int virtio_mem_mb_unplug_any_sb_offline(struct virtio_mem *vm,
++					       unsigned long mb_id,
++					       uint64_t *nb_sb)
++{
++	int rc;
++
++	rc =3D virtio_mem_mb_unplug_any_sb(vm, mb_id, nb_sb);
++
++	/* some subblocks might have been unplugged even on failure */
++	if (!virtio_mem_mb_test_sb_plugged(vm, mb_id, 0, vm->nb_sb_per_mb))
++		virtio_mem_mb_set_state(vm, mb_id,
++					VIRTIO_MEM_MB_STATE_OFFLINE_PARTIAL);
++	if (rc)
++		return rc;
++
++	if (virtio_mem_mb_test_sb_unplugged(vm, mb_id, 0, vm->nb_sb_per_mb)) {
++		/*
++		 * Remove the block from Linux - this should never fail.
++		 * Hinder the block from getting onlined by marking it
++		 * unplugged. Temporarily drop the mutex, so
++		 * any pending GOING_ONLINE requests can be serviced/rejected.
++		 */
++		virtio_mem_mb_set_state(vm, mb_id,
++					VIRTIO_MEM_MB_STATE_UNUSED);
++
++		mutex_unlock(&vm->hotplug_mutex);
++		rc =3D virtio_mem_mb_remove(vm, mb_id);
++		BUG_ON(rc);
++		mutex_lock(&vm->hotplug_mutex);
++	}
++	return 0;
++}
++
++/*
++ * Try to unplug the requested amount of memory.
++ */
++static int virtio_mem_unplug_request(struct virtio_mem *vm, uint64_t dif=
+f)
++{
++	uint64_t nb_sb =3D diff / vm->subblock_size;
++	unsigned long mb_id;
++	int rc;
++
++	if (!nb_sb)
++		return 0;
++
++	/*
++	 * We'll drop the mutex a couple of times when it is safe to do so.
++	 * This might result in some blocks switching the state (online/offline=
+)
++	 * and we could miss them in this run - we will retry again later.
++	 */
++	mutex_lock(&vm->hotplug_mutex);
++
++	/* Try to unplug subblocks of partially plugged offline blocks. */
++	virtio_mem_for_each_mb_state_rev(vm, mb_id,
++					 VIRTIO_MEM_MB_STATE_OFFLINE_PARTIAL) {
++		rc =3D virtio_mem_mb_unplug_any_sb_offline(vm, mb_id,
++							 &nb_sb);
++		if (rc || !nb_sb)
++			goto out_unlock;
++		cond_resched();
++	}
++
++	/* Try to unplug subblocks of plugged offline blocks. */
++	virtio_mem_for_each_mb_state_rev(vm, mb_id,
++					 VIRTIO_MEM_MB_STATE_OFFLINE) {
++		rc =3D virtio_mem_mb_unplug_any_sb_offline(vm, mb_id,
++							 &nb_sb);
++		if (rc || !nb_sb)
++			goto out_unlock;
++		cond_resched();
++	}
++
++	mutex_unlock(&vm->hotplug_mutex);
++	return 0;
++out_unlock:
++	mutex_unlock(&vm->hotplug_mutex);
++	return rc;
++}
++
+ /*
+  * Try to unplug all blocks that couldn't be unplugged before, for examp=
+le,
+  * because the hypervisor was busy.
+@@ -1202,8 +1312,10 @@ static void virtio_mem_run_wq(struct work_struct *=
+work)
+ 		if (vm->requested_size > vm->plugged_size) {
+ 			diff =3D vm->requested_size - vm->plugged_size;
+ 			rc =3D virtio_mem_plug_request(vm, diff);
++		} else {
++			diff =3D vm->plugged_size - vm->requested_size;
++			rc =3D virtio_mem_unplug_request(vm, diff);
+ 		}
+-		/* TODO: try to unplug memory */
+ 	}
+=20
+ 	switch (rc) {
+--=20
+2.24.1
 
-^-- forgot "static inline" here
-
-> +{
-> +	memcpy(stat, &part->dkstats, sizeof(struct disk_stats));
-> +}
-> +
->   static inline int init_part_stats(struct hd_struct *part)
->   {
->   	return 1;
-> @@ -376,9 +383,6 @@ static inline void free_part_stats(struct hd_struct *part)
->   
->   #endif /* CONFIG_SMP */
->   
-> -#define part_stat_read_msecs(part, which)				\
-> -	div_u64(part_stat_read(part, nsecs[which]), NSEC_PER_MSEC)
-> -
->   #define part_stat_read_accum(part, field)				\
->   	(part_stat_read(part, field[STAT_READ]) +			\
->   	 part_stat_read(part, field[STAT_WRITE]) +			\
-> 
