@@ -2,133 +2,137 @@ Return-Path: <SRS0=29cB=4T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB0AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A83C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3460D214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oQ5hR5XC"
+	by mail.kernel.org (Postfix) with ESMTP id BE14B214DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Mar 2020 12:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgCBMDJ (ORCPT
+        id S1727907AbgCBMDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 07:03:09 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.73]:26216 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727822AbgCBMDI (ORCPT
+        Mon, 2 Mar 2020 07:03:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52558 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727492AbgCBMDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 07:03:08 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 35D7047A3
-        for <linux-kernel@vger.kernel.org>; Mon,  2 Mar 2020 06:03:08 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 8jmujM0qd8vkB8jmujGGz9; Mon, 02 Mar 2020 06:03:08 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=R89dgEYKQnx5o1J3Vnuz1dXFwA4KgrUXTckEdxlKpP4=; b=oQ5hR5XCnjLsav/jq8TM5BwWdy
-        kt8OFIsKWOYCqnOFOO5/ZdhuxgaHmEhamjUNQUP0ucg5d/BaiXmHHWR16iEnOUkUQeg1E6BIww8Jn
-        8AaeNQOS/6ieSW8TMWhtZNAjzqyGC4gIOouGC50aCEXdhVT+akgvJNaXqilKy6tdW+akeHN7Itr8c
-        QLZ1f99zg4sz3j1df8KgBpVam/xEEF1OjLEqj2CvwWc7OfMTr+A0Zg4om4Ezt8omFHGwovKq7RoVD
-        b33iop/NzfIi5HveYiag1eofdspDfwi8I2Mzs+09QyXmOERYMEYjgBbnffveb7RPcx7kDCpZ8PdIp
-        vpaJBarw==;
-Received: from [201.162.161.208] (port=42252 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j8jms-003tp3-Cn; Mon, 02 Mar 2020 06:03:06 -0600
-Date:   Mon, 2 Mar 2020 06:06:07 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: ip6_fib: Replace zero-length array with
- flexible-array member
-Message-ID: <20200302120607.GA15995@embeddedor>
+        Mon, 2 Mar 2020 07:03:15 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022BxiAc028824;
+        Mon, 2 Mar 2020 07:03:09 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmwv5654-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 07:03:09 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 022C14Vg016200;
+        Mon, 2 Mar 2020 12:03:07 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02wdc.us.ibm.com with ESMTP id 2yffk69qgd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Mar 2020 12:03:07 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022C36mI49021324
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Mar 2020 12:03:06 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9259BBE059;
+        Mon,  2 Mar 2020 12:03:06 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF9BCBE056;
+        Mon,  2 Mar 2020 12:03:01 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.102.1.4])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Mar 2020 12:02:58 +0000 (GMT)
+X-Mailer: emacs 27.0.90 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3 2/5] libnvdimm/pfn: Prevent raw mode fallback if
+ pfn-infoblock valid
+In-Reply-To: <158291747661.1609624.13504407869218712107.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158291746615.1609624.7591692546429050845.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158291747661.1609624.13504407869218712107.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 02 Mar 2020 17:32:50 +0530
+Message-ID: <87imjnrml1.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.161.208
-X-Source-L: No
-X-Exim-ID: 1j8jms-003tp3-Cn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.161.208]:42252
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-02_03:2020-03-02,2020-03-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
+ clxscore=1015 suspectscore=2 malwarescore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003020091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Dan Williams <dan.j.williams@intel.com> writes:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> The EOPNOTSUPP return code from the pmem driver indicates that the
+> namespace has a configuration that may be valid, but the current kernel
+> does not support it. Expand this to all of the nd_pfn_validate() error
+> conditions after the infoblock has been verified as self consistent.
+>
+> This prevents exposing the namespace to I/O when the infoblock needs to
+> be corrected, or the system needs to be put into a different
+> configuration (like changing the page size on PowerPC).
+>
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- include/net/ip6_fib.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-index fd60a8ac02ee..6ec26e4d7f11 100644
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -198,7 +198,7 @@ struct fib6_info {
- 
- 	struct rcu_head			rcu;
- 	struct nexthop			*nh;
--	struct fib6_nh			fib6_nh[0];
-+	struct fib6_nh			fib6_nh[];
- };
- 
- struct rt6_info {
--- 
-2.25.0
-
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Cc: Jeff Moyer <jmoyer@redhat.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/nvdimm/pfn_devs.c |    8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+> index a5c25cb87116..79fe02d6f657 100644
+> --- a/drivers/nvdimm/pfn_devs.c
+> +++ b/drivers/nvdimm/pfn_devs.c
+> @@ -561,14 +561,14 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+>  			dev_dbg(&nd_pfn->dev, "align: %lx:%lx mode: %d:%d\n",
+>  					nd_pfn->align, align, nd_pfn->mode,
+>  					mode);
+> -			return -EINVAL;
+> +			return -EOPNOTSUPP;
+>  		}
+>  	}
+>  
+>  	if (align > nvdimm_namespace_capacity(ndns)) {
+>  		dev_err(&nd_pfn->dev, "alignment: %lx exceeds capacity %llx\n",
+>  				align, nvdimm_namespace_capacity(ndns));
+> -		return -EINVAL;
+> +		return -EOPNOTSUPP;
+>  	}
+>  
+>  	/*
+> @@ -581,7 +581,7 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+>  	if (offset >= resource_size(&nsio->res)) {
+>  		dev_err(&nd_pfn->dev, "pfn array size exceeds capacity of %s\n",
+>  				dev_name(&ndns->dev));
+> -		return -EBUSY;
+> +		return -EOPNOTSUPP;
+>  	}
+>  
+>  	if ((align && !IS_ALIGNED(nsio->res.start + offset + start_pad, align))
+> @@ -589,7 +589,7 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+>  		dev_err(&nd_pfn->dev,
+>  				"bad offset: %#llx dax disabled align: %#lx\n",
+>  				offset, align);
+> -		return -ENXIO;
+> +		return -EOPNOTSUPP;
+>  	}
+>  
+>  	return 0;
+> _______________________________________________
+> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
