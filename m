@@ -2,105 +2,139 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4ECC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D10C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CEA20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lbgtt2i/"
+	by mail.kernel.org (Postfix) with ESMTP id CDE85208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbgCCTpU (ORCPT
+        id S1731168AbgCCTrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:45:20 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34273 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgCCTpU (ORCPT
+        Tue, 3 Mar 2020 14:47:08 -0500
+Received: from www62.your-server.de ([213.133.104.62]:52452 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbgCCTrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:45:20 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y21so2015364pfp.1;
-        Tue, 03 Mar 2020 11:45:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=4X++qMe4so4vJxEDTf+MGfWcvBuscrLBXjxPTNju6ck=;
-        b=Lbgtt2i/PhS+8hLjNvMVh1HpywfjiOTPV0Z0xmBmhU+5JHPGxCv8xjadR5nBgBq5jm
-         RFmCOmLOFV75ETGNaLlDxt25hCwbzgnHKEjcM0/L1bAQpK6jLNH8FszA+sHIO0xuT9XD
-         fr6a6zwXSonpvIUmXZC/S5Zmxz9EQZn7l6CUdwYCldLTr8kBMtTwb0M+EhyiWpdt5orx
-         wL/irCcPGMDKy8uvTT5t9PAriaY0+Aa1bBrl72Lmwjxggmw21kzK11FBFHXUsBvPU3o/
-         MX9j/Rj3P6o1/BoEgBQKl/r7gYTfg0U800hVSQBe2slCq8PlB0O+2z8qef10pmd3umZy
-         7U4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=4X++qMe4so4vJxEDTf+MGfWcvBuscrLBXjxPTNju6ck=;
-        b=SJQ39m77iUKtRd/T/TT5IFNY1PHyl2n4zqu4Iv12e7o0JOrdX+pf/yhstFq8n/t/6+
-         4L3VvDrR8QAEVMIjrae1nIYe4Asa7K8ibpJLTvj1hRG/Xd1uyH6T8MjRB9e5QCDaMd+f
-         tU0bPCxfv2jHiOE+/7/mfzJwIdQFUxyfenMFzC0KUupoA9sra9gI9/DyRd5dWX0ytJRq
-         9WtAj1T3Eutjig2MN7o2U5CDEKMrupkf75ZRO0WnuVZiKeY5g+aXoSnUjS0GbC3WiZCY
-         dbraR2MnhrUu4SFXPYxsuBQxUAyBpQsh/m0LmsXH1VLv7zFYLjRaDgifn9nJC2ykXjp4
-         MrTA==
-X-Gm-Message-State: ANhLgQ3gr0oJR8vinItw+Gp4r6t2HyG10ISQKosd5ajP4R7ar/0l4Lvj
-        /YtFazPf7ansgF/IvJcDSht3CfST
-X-Google-Smtp-Source: ADFU+vsqCtRnPJbDe5j0cZu6Bj4qwSR25RjpNBeBU3fe+jGQ0D52cUo10BDmfyWPKvIsY152JRC3Lw==
-X-Received: by 2002:a63:7e1c:: with SMTP id z28mr5591268pgc.105.1583264718907;
-        Tue, 03 Mar 2020 11:45:18 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id x19sm1267433pfc.144.2020.03.03.11.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 11:45:18 -0800 (PST)
-Date:   Tue, 03 Mar 2020 11:45:10 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Tue, 3 Mar 2020 14:47:08 -0500
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9DVI-0008SY-5W; Tue, 03 Mar 2020 20:46:56 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9DVH-000JrL-Pf; Tue, 03 Mar 2020 20:46:55 +0100
+Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb
+ linearization
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Luigi Rizzo <lrizzo@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        David Miller <davem@davemloft.net>, hawk@kernel.org,
+        "Jubran, Samih" <sameehj@amazon.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, ast@kernel.org,
         bpf@vger.kernel.org
-Message-ID: <5e5eb3c64247c_60e72b06ba14c5bc2e@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200228115344.17742-10-lmb@cloudflare.com>
-References: <20200228115344.17742-1-lmb@cloudflare.com>
- <20200228115344.17742-10-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next v2 9/9] bpf, doc: update maintainers for L7 BPF
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20200228105435.75298-1-lrizzo@google.com>
+ <20200228110043.2771fddb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
+Date:   Tue, 3 Mar 2020 20:46:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25740/Tue Mar  3 13:12:16 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Add Jakub and myself as maintainers for sockmap related code.
+On 2/29/20 12:53 AM, Willem de Bruijn wrote:
+> On Fri, Feb 28, 2020 at 2:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>> On Fri, 28 Feb 2020 02:54:35 -0800 Luigi Rizzo wrote:
+>>> Add a netdevice flag to control skb linearization in generic xdp mode.
+>>>
+>>> The attribute can be modified through
+>>>        /sys/class/net/<DEVICE>/xdpgeneric_linearize
+>>> The default is 1 (on)
+>>>
+>>> Motivation: xdp expects linear skbs with some minimum headroom, and
+>>> generic xdp calls skb_linearize() if needed. The linearization is
+>>> expensive, and may be unnecessary e.g. when the xdp program does
+>>> not need access to the whole payload.
+>>> This sysfs entry allows users to opt out of linearization on a
+>>> per-device basis (linearization is still performed on cloned skbs).
+>>>
+>>> On a kernel instrumented to grab timestamps around the linearization
+>>> code in netif_receive_generic_xdp, and heavy netperf traffic with 1500b
+>>> mtu, I see the following times (nanoseconds/pkt)
+>>>
+>>> The receiver generally sees larger packets so the difference is more
+>>> significant.
+>>>
+>>> ns/pkt                   RECEIVER                 SENDER
+>>>
+>>>                      p50     p90     p99       p50   p90    p99
+>>>
+>>> LINEARIZATION:    600ns  1090ns  4900ns     149ns 249ns  460ns
+>>> NO LINEARIZATION:  40ns    59ns    90ns      40ns  50ns  100ns
+>>>
+>>> v1 --> v2 : added Documentation
+>>> v2 --> v3 : adjusted for skb_cloned
+>>> v3 --> v4 : renamed to xdpgeneric_linearize, documentation
+>>>
+>>> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+>>
+>> Just load your program in cls_bpf. No extensions or knobs needed.
+>>
+>> Making xdpgeneric-only extensions without touching native XDP makes
+>> no sense to me. Is this part of some greater vision?
 > 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
+> Yes, native xdp has the same issue when handling packets that exceed a
+> page (4K+ MTU) or otherwise consist of multiple segments. The issue is
+> just more acute in generic xdp. But agreed that both need to be solved
+> together.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 495ba52038ad..8517965adde8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9351,6 +9351,8 @@ F:	include/net/l3mdev.h
->  L7 BPF FRAMEWORK
->  M:	John Fastabend <john.fastabend@gmail.com>
->  M:	Daniel Borkmann <daniel@iogearbox.net>
-> +M:	Jakub Sitnicki <jakub@cloudflare.com>
-> +M:	Lorenz Bauer <lmb@cloudflare.com>
->  L:	netdev@vger.kernel.org
->  L:	bpf@vger.kernel.org
->  S:	Maintained
-> -- 
-> 2.20.1
-> 
+> Many programs need only access to the header. There currently is not a
+> way to express this, or for xdp to convey that the buffer covers only
+> part of the packet.
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+Right, my only question I had earlier was that when users ship their
+application with /sys/class/net/<DEVICE>/xdpgeneric_linearize turned off,
+how would they know how much of the data is actually pulled in? Afaik,
+some drivers might only have a linear section that covers the eth header
+and that is it. What should the BPF prog do in such case? Drop the skb
+since it does not have the rest of the data to e.g. make a XDP_PASS
+decision or fallback to tc/BPF altogether? I hinted earlier, one way to
+make this more graceful is to add a skb pointer inside e.g. struct
+xdp_rxq_info and then enable an bpf_skb_pull_data()-like helper e.g. as:
+
+BPF_CALL_2(bpf_xdp_pull_data, struct xdp_buff *, xdp, u32, len)
+{
+         struct sk_buff *skb = xdp->rxq->skb;
+
+         return skb ? bpf_try_make_writable(skb, len ? :
+                                            skb_headlen(skb)) : -ENOTSUPP;
+}
+
+Thus, when the data/data_end test fails in generic XDP, the user can
+call e.g. bpf_xdp_pull_data(xdp, 64) to make sure we pull in as much as
+is needed w/o full linearization and once done the data/data_end can be
+repeated to proceed. Native XDP will leave xdp->rxq->skb as NULL, but
+later we could perhaps reuse the same bpf_xdp_pull_data() helper for
+native with skb-less backing. Thoughts?
+
+Thanks,
+Daniel
