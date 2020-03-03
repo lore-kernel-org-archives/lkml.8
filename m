@@ -2,104 +2,83 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADCCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ED9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5B120863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684D2214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgCCKHL (ORCPT
+        id S1728121AbgCCKIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:07:11 -0500
-Received: from mga03.intel.com ([134.134.136.65]:55125 "EHLO mga03.intel.com"
+        Tue, 3 Mar 2020 05:08:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:44994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgCCKHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:07:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:07:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="233707070"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2020 02:07:07 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j94SE-006W95-2d; Tue, 03 Mar 2020 12:07:10 +0200
-Date:   Tue, 3 Mar 2020 12:07:10 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [PATCH v4 3/3] phy: intel: Add driver support for ComboPhy
-Message-ID: <20200303100710.GK1224808@smile.fi.intel.com>
-References: <cover.1583127977.git.eswara.kota@linux.intel.com>
- <4e55050985ef0ab567415625f5d14ab1c9b33994.1583127977.git.eswara.kota@linux.intel.com>
- <20200302111901.GT1224808@smile.fi.intel.com>
- <b0f7742d-7d61-9743-4047-c5352dd7495d@linux.intel.com>
+        id S1726661AbgCCKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:08:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65490FEC;
+        Tue,  3 Mar 2020 02:08:08 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FF783F6C4;
+        Tue,  3 Mar 2020 02:08:07 -0800 (PST)
+Date:   Tue, 3 Mar 2020 10:08:01 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
+Cc:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
+Message-ID: <20200303100801.GA56564@bogus>
+References: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
+ <20200228104034.GB26973@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED341F2AE2@DGGEMM506-MBS.china.huawei.com>
+ <20200302111038.GA16218@e107533-lin.cambridge.arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED342092EE@dggemm526-mbx.china.huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b0f7742d-7d61-9743-4047-c5352dd7495d@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED342092EE@dggemm526-mbx.china.huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:41:17PM +0800, Dilip Kota wrote:
-> On 3/2/2020 7:19 PM, Andy Shevchenko wrote:
-> > On Mon, Mar 02, 2020 at 04:43:25PM +0800, Dilip Kota wrote:
-> > > ComboPhy subsystem provides PHYs for various
-> > > controllers like PCIe, SATA and EMAC.
-> > Thanks for an update, my (few minor) comments below.
+On Tue, Mar 03, 2020 at 02:58:41AM +0000, Zengtao (B) wrote:
+[...]
 
-...
+>
+> Do you think I need to update the commit message and resend the patch?
 
-> > > +enum intel_phy_mode {
-> > > +	PHY_PCIE_MODE = 0,
-> > > +	PHY_XPCS_MODE,
-> > > +	PHY_SATA_MODE
-> >  From here it's not visible that above is the only possible values.
-> > Maybe in the future you will have another mode.
-> > So, I suggest to leave comma here...
-> There won't be no further modes,...
+Yes
 
-Again, this is not obvious from the naming scheme in use.
-And how do you know the future?
+> And I don't mind if you can help modify the commit message since both
+> are fine for me, and it's a very trivial change.
+>
 
-> i can still add the comma at all the places pointed.
+Sure, something like below:
 
-Just use a common sense.
+"Currently there are only 10 bytes to store the cpu-topology 'name'
+information. Only 10 bytes copied into cluster/thread/core names. 
 
-> > > +};
-> > > +enum intel_combo_mode {
-> > > +	PCIE0_PCIE1_MODE = 0,
-> > > +	PCIE_DL_MODE,
-> > > +	RXAUI_MODE,
-> > > +	XPCS0_XPCS1_MODE,
-> > > +	SATA0_SATA1_MODE
-> > ...and here...
-> > 
-> > > +};
-> > > +
-> > > +enum aggregated_mode {
-> > > +	PHY_SL_MODE,
-> > > +	PHY_DL_MODE
-> > ...and here.
-> > 
-> > > +};
+If the cluster ID exceeds 2-digit number, it will result in the data
+corruption, and ending up in a dead loop in the parsing routines. The
+same applies to the thread names with more that 3-digit number.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This issue was found using the boundary tests under virtualised
+environment like QEMU.
 
+Let us increase the buffer to fix such potential issues."
 
+With the above commit log, you can add my:
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+
+--
+Regards,
+Sudeep
