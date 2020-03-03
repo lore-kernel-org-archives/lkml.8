@@ -2,147 +2,176 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B11AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EE9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120A20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C285A20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BrG61wk4"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bivt2IP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgCCOhz (ORCPT
+        id S1729277AbgCCOkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:37:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39769 "EHLO
+        Tue, 3 Mar 2020 09:40:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36073 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729068AbgCCOhh (ORCPT
+        with ESMTP id S1727369AbgCCOkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:37:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so4634547wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:37:36 -0800 (PST)
+        Tue, 3 Mar 2020 09:40:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j16so4669991wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:39:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jIQVieVu7UoENPR4ohx8RO9hyM5Q2LpZgT/s7fhmTzY=;
-        b=BrG61wk4/LRRSyrFsuQZ2h3PGNH57U6RMOxCT1ivsgHVIHQWGtD0qd1sEtOgJhNktE
-         sDrudfZiczmO6+LIcx+LQH2iEUadTyz2FeG9Nf/wQTYdSXPJxe9+mcTGRsMflfCrdeqa
-         Rh7ApqPerAUd6vv2l3k6MztLeJUPUzypS1AgKRhCsI9fgNHk2CAp3bLkNqZCiB59MX4a
-         u2xK8TLmk7fyjxzmlYDP+DRfAGgLK0oWk08VPezSPFgELqoXCZzMPq72rtPj3Cr+h8ax
-         by0vnBk18YXfajEalDXapkkB18X4tMLwUc1AGl+bBK4B1EssmkUGShkLckdFDEKjUps0
-         vB7Q==
+        h=subject:to:references:from:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zk5za+61RSxflkNdYa9I8GQAUcmgHjNBAyo6vqaH8B8=;
+        b=bivt2IP6TN5/8UtW4BAX7a6vrwLGm5DwRyjkTcZtpwNjOSV78Nd4DhDrTa7mn75Mbx
+         r/+NkdRKxeUUAkAtj+J8PgW8BgwGq5yzJ3ug/NghJjrGAj0skoc21kBQZGoXLltgeiR3
+         R59V/43H2FQGlrk227vuYLT0R8ey3MxVln1HVze4zisQKQ1ir+tyI2I8vkY6i2stEY2X
+         f+bkESExadLVniTmO5CUyKHcx85xY5aeHtsQsnlHMiUQmzn7VM+vi7xdeOhK1Bnyx+OR
+         wkIjr58ZAZwrU34ePKC8LAKjjH2gDmrofRvfACu+t5vuK95az3Ve/I/1XiPgNf2CimHu
+         pzZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jIQVieVu7UoENPR4ohx8RO9hyM5Q2LpZgT/s7fhmTzY=;
-        b=N4KyfTZUF09c2FTbyJTG9T257Lg2J8ivrzdvVIY1GZ2CS/SHKhxS438bR6wIXEHzK0
-         SYDsa8/kFRm0NyeFQ0hCUB+XY0nm7XyTNJpWF8Vq4rEK3L2e6wARuOy7rhyPNT19D6xo
-         UMU/rz7deuw+XezzlZrX6gCy65ZjXRw6HjpFQ+Dkw4W6Ygq/tr9+u+4QE3W0giD7tEip
-         5auIYND5g/7wCw6p3VWYZ3Md3RR1QocCf9BblkYHeuH90E5KP6gZSiweBZ4w7aTYYT9H
-         EUVsZDf47r59qJyG9vmU/Qfo3lwhhjbn4QfhPc4Fdi6QtHuIl0GwEXcCcYYAbly34POz
-         NBMQ==
-X-Gm-Message-State: ANhLgQ32m7G27kTwulYDz09sTN/1h4vNh2F0vqK1T8YUTuPl9iaoBP2x
-        NbMZaPKhy/Ewi3K6H3yUTncAlBPlInHSug==
-X-Google-Smtp-Source: ADFU+vuETlevAscf8ZZ+3OxRv6dak3GsmklnTJPNS+JenCaV53y+eTysJj5mSNtHwty6WvRYuJFZHQ==
-X-Received: by 2002:adf:df82:: with SMTP id z2mr5571677wrl.46.1583246255956;
-        Tue, 03 Mar 2020 06:37:35 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l4sm4652779wmf.38.2020.03.03.06.37.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:37:35 -0800 (PST)
+        h=x-gm-message-state:subject:to:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zk5za+61RSxflkNdYa9I8GQAUcmgHjNBAyo6vqaH8B8=;
+        b=XMCYgg58lp0XoN5czV4v+bTiLEGPNuvZX4nD0TLR+JqP3/p89hwUYWVBAd3eWl+X4y
+         Iwvu2aZU+k/xT3TPstr3KLz/pVbwbEx33q9XLY3aA1MbZ2x+d5tjPnQ6fnys0m+UWdjo
+         VKj/PX7dLRPIj/RCuw5V0FaRjDZSlxXTFEwu/CmsPyv05smM17szK4inH3fiphXfzdWq
+         tD0GqCwGoyVArsOHxDkjN0RLt83WWv5EH4Vkpwkl34DxkcgLQ6ynce62b84ad/9VRQCc
+         /R5nRvEzmAiVqWQa+ey7M8VzcUQethHIdevxV9sznKmx3/0wiuA8W2HYgccrk2Ep4lbN
+         Yk0A==
+X-Gm-Message-State: ANhLgQ0bZJwyHbxXJqbPBS1U3FBghXzI9k7rlmWuHSNBOCvPcrc3frXx
+        5GokhuZiYqCrK1WcZEXqLOMELBZ50bkwpg==
+X-Google-Smtp-Source: ADFU+vuryMlPi3WM/bqWph2/BYtP0gM1GlUsfdmEg1UPt9Wd+CCZ8Zn0dMF1hDDYb/sHE5NmscyJ9A==
+X-Received: by 2002:adf:e8c7:: with SMTP id k7mr5560505wrn.140.1583246398142;
+        Tue, 03 Mar 2020 06:39:58 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id j66sm4443642wmb.21.2020.03.03.06.39.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 06:39:56 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3: move model to
+ g12b-khadas-vim3 dtsi
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1582868824-73870-1-git-send-email-christianshewitt@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v6 2/5] media: meson: vdec: add helpers for lossless framebuffer compression buffers
-Date:   Tue,  3 Mar 2020 15:37:29 +0100
-Message-Id: <20200303143732.762-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200303143732.762-1-narmstrong@baylibre.com>
-References: <20200303143732.762-1-narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <1ac1ed5b-c034-e816-9211-83e07fe6f6e9@baylibre.com>
+Date:   Tue, 3 Mar 2020 15:39:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582868824-73870-1-git-send-email-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Jourdan <mjourdan@baylibre.com>
+On 28/02/2020 06:47, Christian Hewitt wrote:
+> The common meson-khadas-vim3.dtsi is now shared with VIM3L so move the
+> VIM3 model namne to meson-g12b-khadas-vim3.dtsi.
+---------------/\ name
+> 
+> meson-sm1-khadas-vim3l.dts contains the VIM3L model name.
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 2 ++
+>  arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi      | 2 --
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> index 5548634..2b2d72c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> @@ -8,6 +8,8 @@
+>  #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+>  
+>  / {
+> +	model = "Khadas VIM3";
+> +
+>  	vddcpu_a: regulator-vddcpu-a {
+>  		/*
+>  		 * MP8756GD Regulator.
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> index 90815fa..0ef60c7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> @@ -9,8 +9,6 @@
+>  #include <dt-bindings/gpio/meson-g12a-gpio.h>
+>  
+>  / {
+> -	model = "Khadas VIM3";
+> -
+>  	aliases {
+>  		serial0 = &uart_AO;
+>  		ethernet0 = &ethmac;
+> 
 
-Add helpers to support the lossless framebuffer compression format that
-will be used in HEVC & VP9 decoders when decoding 10bit content for
-downsampling to 8bit NV12 and later proper compressed buffer support.
-
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
----
- .../staging/media/meson/vdec/vdec_helpers.c   | 27 +++++++++++++++++++
- .../staging/media/meson/vdec/vdec_helpers.h   |  4 +++
- 2 files changed, 31 insertions(+)
-
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-index 3f7929c54dc6..caec0fb60338 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-@@ -50,6 +50,33 @@ void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val)
- }
- EXPORT_SYMBOL_GPL(amvdec_write_parser);
- 
-+/* 4 KiB per 64x32 block */
-+u32 amvdec_am21c_body_size(u32 width, u32 height)
-+{
-+	u32 width_64 = ALIGN(width, 64) / 64;
-+	u32 height_32 = ALIGN(height, 32) / 32;
-+
-+	return SZ_4K * width_64 * height_32;
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_body_size);
-+
-+/* 32 bytes per 128x64 block */
-+u32 amvdec_am21c_head_size(u32 width, u32 height)
-+{
-+	u32 width_128 = ALIGN(width, 128) / 128;
-+	u32 height_64 = ALIGN(height, 64) / 64;
-+
-+	return 32 * width_128 * height_64;
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_head_size);
-+
-+u32 amvdec_am21c_size(u32 width, u32 height)
-+{
-+	return ALIGN(amvdec_am21c_body_size(width, height) +
-+		     amvdec_am21c_head_size(width, height), SZ_64K);
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_size);
-+
- static int canvas_alloc(struct amvdec_session *sess, u8 *canvas_id)
- {
- 	int ret;
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.h b/drivers/staging/media/meson/vdec/vdec_helpers.h
-index 165e6293ffba..cfaed52ab526 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.h
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.h
-@@ -27,6 +27,10 @@ void amvdec_clear_dos_bits(struct amvdec_core *core, u32 reg, u32 val);
- u32 amvdec_read_parser(struct amvdec_core *core, u32 reg);
- void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val);
- 
-+u32 amvdec_am21c_body_size(u32 width, u32 height);
-+u32 amvdec_am21c_head_size(u32 width, u32 height);
-+u32 amvdec_am21c_size(u32 width, u32 height);
-+
- /**
-  * amvdec_dst_buf_done_idx() - Signal that a buffer is done decoding
-  *
--- 
-2.22.0
-
+With typo fixes:
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
