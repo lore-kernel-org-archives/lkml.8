@@ -2,69 +2,86 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EAAC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE47C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328E120866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B0920866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583250420;
+	bh=fAQdGJUTHfenkFjY5EY4IkekGQXc8jAE7JffWrzy3Bw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UTkL3Cds1OSHHaaEQDjzEemJaqU+fD1MNTWgTMCy2BuS5cF+GSoTfdKKJtmrDNkmQ
+	 cfDwRrA8sBam3ZNeHqA0asdwee1AqNydS30i7AexA2+GAclI9q6PQ+2xoKWx3XWn0a
+	 TRA2hztq1LipLtzHqKZGPJzmNfwM0Kh+2ZSm0ZDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgCCPoz (ORCPT
+        id S1729507AbgCCPq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:44:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:1498 "EHLO mga11.intel.com"
+        Tue, 3 Mar 2020 10:46:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbgCCPoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:44:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:44:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="228953508"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 07:44:53 -0800
-Date:   Tue, 3 Mar 2020 07:44:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for
- EPT in VMX code
-Message-ID: <20200303154453.GF1439@linux.intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-37-sean.j.christopherson@intel.com>
- <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
- <20200303153550.GC1439@linux.intel.com>
- <c789abc9-9687-82ae-d133-bd3a6d838ca5@redhat.com>
+        id S1726079AbgCCPq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:46:59 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865AB20863;
+        Tue,  3 Mar 2020 15:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583250419;
+        bh=fAQdGJUTHfenkFjY5EY4IkekGQXc8jAE7JffWrzy3Bw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UTSJj1dBJ3EXiiMRXOwXIMu/JnjlAGKG874nqk/ykA8f77OSM478hjpP0sbUT9QpU
+         kUqOPgyThTJEyJlpnRmqfNMpsk849tkcvUrDl/2R6vmK7peaA0oqoqmvOTz4lFTN8i
+         dUGuF46DJXNrKTkEJgCsK9QBRn5bhVnzMktttEr0=
+Date:   Tue, 3 Mar 2020 16:46:56 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tommi Rantala <tommi.t.rantala@nokia.com>
+Cc:     stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4.14] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
+Message-ID: <20200303154656.GD372992@kroah.com>
+References: <20200228084216.15816-1-tommi.t.rantala@nokia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c789abc9-9687-82ae-d133-bd3a6d838ca5@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200228084216.15816-1-tommi.t.rantala@nokia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:40:32PM +0100, Paolo Bonzini wrote:
-> On 03/03/20 16:35, Sean Christopherson wrote:
-> > Oof, that took me a long time to process.  You're saying that KVM can
-> > allow the guest to use GBPAGES when shadow paging is enabled because KVM
-> > can effectively emulate GBPAGES.  And IIUC, you're also saying that
-> > cpuid.GBPAGES should never be influenced by EPT restrictions.
-> > 
-> > That all makes sense.
+On Fri, Feb 28, 2020 at 10:42:16AM +0200, Tommi Rantala wrote:
+> From: Jason Wang <jasowang@redhat.com>
 > 
-> Yes, exactly.
+> [ Upstream commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 ]
+> 
+> When link is down, writes to the device might fail with
+> -EIO. Userspace needs an indication when the status is resolved.  As a
+> fix, tun_net_open() attempts to wake up writers - but that is only
+> effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
+> not the case of vhost_net which only poll for EPOLLOUT after it meets
+> errors during sendmsg().
+> 
+> This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
+> socket is not writable or device is down to guarantee EPOLLOUT will be
+> raised in either tun_chr_poll() or tun_sock_write_space() after device
+> is up.
+> 
+> Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> ---
+>  drivers/net/tun.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 
-I'll tack that on to the front of the series.  Should it be tagged Fixes?
-Feels like a fix, but is also more than a bit scary.
+Thanks for the backport, now queued up to 4.9.y and 4.14.y.
+
+greg k-h
