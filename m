@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C19CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89A6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279F220842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D4920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbgCCUyy (ORCPT
+        id S1732167AbgCCUy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:54:54 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45477 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731387AbgCCUyu (ORCPT
+        Tue, 3 Mar 2020 15:54:58 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:47020 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732066AbgCCUyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:54:50 -0500
-Received: by mail-qv1-f65.google.com with SMTP id r8so2336654qvs.12;
-        Tue, 03 Mar 2020 12:54:50 -0800 (PST)
+        Tue, 3 Mar 2020 15:54:49 -0500
+Received: by mail-qv1-f67.google.com with SMTP id m2so2340705qvu.13;
+        Tue, 03 Mar 2020 12:54:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LpQl3QOx5Q+iwwtomiSeHz+aE8G4tQSvo7FgTI9tPuc=;
-        b=PSqdvhd2W9ItnvxRDhJ7TffR6b8U5YbwMkn+rJNsf8NU4SnVlI7b+KD5hP8EbADXuy
-         rrGLg2bM1vUkll2IIUDRT5+ZkiXOt9nNBtLP90Y3++sJj0t7qTi5G2UHBR3MBgKnH/8S
-         tPQ0FLGFcaK0Oa9hVquZwuYpvpugUO5zHvZOqwBsc+phzSRthRwyrqhfJ95GXPCoY0Ag
-         u1nvy7hscs18G8OMTzXYBWnGybSu5C2t2J5Mj3BVZuoOGNK4jrzTAJpLnzMw1oX68CH0
-         ZXDk8xlWL3mUjCEazRLF88ByEJ8YueK9SBOH3E9jmUSP+7XPBjjhsg9kw2eAhIc7Xki+
-         K0JA==
-X-Gm-Message-State: ANhLgQ0u7ed+cMU3Se7L4UNTudW8qUYo/Wi0Pl9zjZxZezRBBqGjKP+p
-        3jmIRKnGKrjKFABDKNEOFl0=
-X-Google-Smtp-Source: ADFU+vsZniQDhGjqLlXxME0EXoL4+0fXjheAns0z7Q7Ng0aBa8/DycAE2U+TOxoyv1vKlgUcFXZ4GA==
-X-Received: by 2002:a05:6214:381:: with SMTP id l1mr5780954qvy.178.1583268889854;
-        Tue, 03 Mar 2020 12:54:49 -0800 (PST)
+        bh=mDzum8J3wSJ7k00hejDFeBxBo5iSbhH+2swXE9XJREE=;
+        b=Jei2ajlTa/rLVuF1/k5p6sLYmCJdJxhQBAdAc5MsFXCMk53/iT7vZgh5vCHHnPS5/F
+         XYa5bLjJkYCIyWIjh9xv5yDw/lfOBWfcadWj0XRqlVJALuCJbJONUKEatiTpUKz78FQ5
+         xQgO7xBXpDNktqyRPcJQZcjzFC8etk3gFtw+PETF08GhyVG8Ceds+PjCBrThSCQOZeuC
+         RSpOKGEORgFu83ahZM6flNSWfalMBHSJwfwKV1FvxzlUDqYb48dY1FIyaRedcDvjXhDJ
+         sKlZa4nF6r+sOqDuxA3wiHoUyapcAoMC9cRQwARoSneSUP1cF6xJkl+dxAwFKtJfGTG8
+         gNWQ==
+X-Gm-Message-State: ANhLgQ1xKJ6VzpL9+S11//kAKvJ/mDL53g35qr4f4+7tcbDfP/6MLUPK
+        1F4OapuzCMnDOwZCRcUXF6c=
+X-Google-Smtp-Source: ADFU+vv8Agm7Y8s9TquC/U39fkMPcMBgoegSt0tiE9ZctfeiDz4DwCkrwG9CdkB3TMxXwWF5EXP6lA==
+X-Received: by 2002:a05:6214:209:: with SMTP id i9mr5644157qvt.54.1583268888083;
+        Tue, 03 Mar 2020 12:54:48 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v12sm11473041qti.84.2020.03.03.12.54.48
+        by smtp.gmail.com with ESMTPSA id v12sm11473041qti.84.2020.03.03.12.54.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 12:54:49 -0800 (PST)
+        Tue, 03 Mar 2020 12:54:47 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] x86/mm/pat: Make num_pages consistent in populate_{pte,pud,pgd}
-Date:   Tue,  3 Mar 2020 15:54:45 -0500
-Message-Id: <20200303205445.3965393-5-nivedita@alum.mit.edu>
+Subject: [PATCH 2/4] x86/mm/pat: Ensure that populate_pud only handles one PUD
+Date:   Tue,  3 Mar 2020 15:54:43 -0500
+Message-Id: <20200303205445.3965393-3-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200303205445.3965393-1-nivedita@alum.mit.edu>
 References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
@@ -64,93 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The number of pages is currently all of int, unsigned int, long and
-unsigned long in different places.
-
-Change it to be consistently unsigned long.
-
-Remove the unnecessary min(num_pages, cur_pages), since pre_end has
-already been min'd with start + num_pages << PAGE_SHIFT. This gets rid
-of two conversions to int/unsigned int.
+Add a check in populate_pgd to make sure that populate_pud is called on
+a range that actually fits inside a PUD.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/x86/include/asm/pgtable_types.h |  2 +-
- arch/x86/mm/pat/set_memory.c         | 13 ++++++-------
- 2 files changed, 7 insertions(+), 8 deletions(-)
+ arch/x86/mm/pat/set_memory.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 0239998d8cdc..894569255a95 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -574,7 +574,7 @@ extern pmd_t *lookup_pmd_address(unsigned long address);
- extern phys_addr_t slow_virt_to_phys(void *__address);
- extern int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn,
- 					  unsigned long address,
--					  unsigned numpages,
-+					  unsigned long numpages,
- 					  unsigned long page_flags);
- extern int __init kernel_unmap_pages_in_pgd(pgd_t *pgd, unsigned long address,
- 					    unsigned long numpages);
 diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 2f98423ef69a..51b64937cc16 100644
+index d0b7b06253a5..a1003bc9fdf6 100644
 --- a/arch/x86/mm/pat/set_memory.c
 +++ b/arch/x86/mm/pat/set_memory.c
-@@ -1230,7 +1230,7 @@ static int alloc_pmd_page(pud_t *pud)
+@@ -1420,6 +1420,7 @@ static int populate_pgd(struct cpa_data *cpa, unsigned long addr)
+ 	p4d_t *p4d;
+ 	pgd_t *pgd_entry;
+ 	long ret;
++	unsigned long end, end_p4d;
  
- static void populate_pte(struct cpa_data *cpa,
- 			 unsigned long start, unsigned long end,
--			 unsigned num_pages, pmd_t *pmd, pgprot_t pgprot)
-+			 unsigned long num_pages, pmd_t *pmd, pgprot_t pgprot)
- {
- 	pte_t *pte;
+ 	pgd_entry = cpa->pgd + pgd_index(addr);
  
-@@ -1249,9 +1249,9 @@ static void populate_pte(struct cpa_data *cpa,
+@@ -1443,6 +1444,15 @@ static int populate_pgd(struct cpa_data *cpa, unsigned long addr)
+ 		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
+ 	}
  
- static int populate_pmd(struct cpa_data *cpa,
- 			unsigned long start, unsigned long end,
--			unsigned num_pages, pud_t *pud, pgprot_t pgprot)
-+			unsigned long num_pages, pud_t *pud, pgprot_t pgprot)
- {
--	long cur_pages = 0;
-+	unsigned long cur_pages = 0;
- 	pmd_t *pmd;
- 	pgprot_t pmd_pgprot;
- 
-@@ -1264,7 +1264,6 @@ static int populate_pmd(struct cpa_data *cpa,
- 
- 		pre_end   = min_t(unsigned long, pre_end, next_page);
- 		cur_pages = (pre_end - start) >> PAGE_SHIFT;
--		cur_pages = min_t(unsigned int, num_pages, cur_pages);
- 
- 		/*
- 		 * Need a PTE page?
-@@ -1326,7 +1325,7 @@ static int populate_pud(struct cpa_data *cpa, unsigned long start, p4d_t *p4d,
- {
- 	pud_t *pud;
- 	unsigned long end;
--	long cur_pages = 0;
-+	unsigned long cur_pages = 0;
- 	pgprot_t pud_pgprot;
- 	int ret;
- 
-@@ -1342,7 +1341,6 @@ static int populate_pud(struct cpa_data *cpa, unsigned long start, p4d_t *p4d,
- 
- 		pre_end   = min_t(unsigned long, end, next_page);
- 		cur_pages = (pre_end - start) >> PAGE_SHIFT;
--		cur_pages = min_t(int, (int)cpa->numpages, cur_pages);
- 
- 		pud = pud_offset(p4d, start);
- 
-@@ -2231,7 +2229,8 @@ bool kernel_page_present(struct page *page)
- #endif /* CONFIG_HIBERNATION */
- 
- int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
--				   unsigned numpages, unsigned long page_flags)
-+				   unsigned long numpages,
-+				   unsigned long page_flags)
- {
- 	int retval = -EINVAL;
++	/*
++	 * Ensure that the range fits inside one p4d entry. If a larger range
++	 * was requested, __change_page_attr_set_clr will loop to finish it.
++	 */
++	end = addr + (cpa->numpages << PAGE_SHIFT);
++	end_p4d = (addr + P4D_SIZE) & P4D_MASK;
++	if (end_p4d < end)
++		cpa->numpages = (end_p4d - addr) >> PAGE_SHIFT;
++
+ 	pgprot_val(pgprot) &= ~pgprot_val(cpa->mask_clr);
+ 	pgprot_val(pgprot) |=  pgprot_val(cpa->mask_set);
  
 -- 
 2.24.1
