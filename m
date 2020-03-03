@@ -3,52 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6C8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04682C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D498721739
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C465921739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204568;
-	bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+	s=default; t=1583204573;
+	bh=TRhJge8rXSTVwiWtVyAVL2+zDSITLcul7kvtQLFQMYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GEp7+5xHl03hdgppetaapj9g0c+1hhjrRiS6Zc97IrJX1OsSwQSHru7te0dGdqSXl
-	 WYSSkb6QfhrwboGqsSZ5DPrx2oTILERozHOIc2WXJFlR/zyN6vRJHLeYeDOZWwHgXQ
-	 gjDzgaKIjymqBJAd+zK92KJ9CsHD8r3+X6ml8x60=
+	b=XB6SHlEYQCFnJNVovqtwNDmjlXpAMab7j+vfL+YKZPGSghiFx3HAlRUblMoFszYWw
+	 OJz/0po5MsL2BL+MzpueV5YPthqkbxFdRhIawgar6exz3rL2SHgsREtbg6jAFEpGz9
+	 yQjj3s4zmHs6MVSnjlDa0hS8plCs45ZwRG4xYFkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgCCDCq (ORCPT
+        id S1727580AbgCCCqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbgCCCqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 21:46:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727517AbgCCCqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A9B24686;
-        Tue,  3 Mar 2020 02:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F2524673;
+        Tue,  3 Mar 2020 02:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203599;
-        bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+        s=default; t=1583203594;
+        bh=TRhJge8rXSTVwiWtVyAVL2+zDSITLcul7kvtQLFQMYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aoziOiLsVuuEyOm9d0lJjMs4NAhAGI7o/TNkjS/YdwLjuLmpHHOhwm+o3IoNL1J0V
-         Cbs7YjtIyTKxK9oz7Zy9SAFWtVJ7UWpXrdpAn3h7jI+BvzlUi43KiPfvk8V+2w+nZn
-         /nYlucGIARHm6tyz2KMKRzi5u3PXvxQ70oJ6DfBw=
+        b=RwkQXvPNca91SWgnweGE8Om4bw6JPObRMPyoLF4WhJycbIoySCUPTiVZHeuA46dar
+         SvkNFJlT8bP5wii9ts/6uTgc/jrntxozg8f0Pdn2N7NYSwlYSWV+PmwsSk1MVMKfhn
+         mJApa0utnqGcbbPxwsLOZEP4idLzAs298laXvqlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hangbin Liu <liuhangbin@gmail.com>,
-        Petr Machata <pmachata@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 19/66] selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac testing
-Date:   Mon,  2 Mar 2020 21:45:28 -0500
-Message-Id: <20200303024615.8889-19-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 15/66] drm/modes: Allow DRM_MODE_ROTATE_0 when applying video mode parameters
+Date:   Mon,  2 Mar 2020 21:45:24 -0500
+Message-Id: <20200303024615.8889-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -61,116 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit e8023b030ce1748930e2dc76353a262fe47d4745 ]
+[ Upstream commit 5c320b6ce7510653bce68cecf80cf5b2d67e907f ]
 
-For tc ip_proto filter, when we extract the flow via __skb_flow_dissect()
-without flag FLOW_DISSECTOR_F_STOP_AT_ENCAP, we will continue extract to
-the inner proto.
+At the moment, only DRM_MODE_ROTATE_180 is allowed when we try to apply
+the rotation from the video mode parameters. It is also useful to allow
+DRM_MODE_ROTATE_0 in case there is only a reflect option in the video mode
+parameter (e.g. video=540x960,reflect_x).
 
-So for GRE + ICMP messages, we should not track GRE proto, but inner ICMP
-proto.
+DRM_MODE_ROTATE_0 means "no rotation" and should therefore not require
+any special handling, so we can just add it to the if condition.
 
-For test mirror_gre.sh, it may make user confused if we capture ICMP
-message on $h3(since the flow is GRE message). So I move the capture
-dev to h3-gt{4,6}, and only capture ICMP message.
-
-Before the fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-After fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [ OK ]
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [ OK ]
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [ OK ]
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [ OK ]
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-Fixes: ba8d39871a10 ("selftests: forwarding: Add test for mirror to gretap")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Petr Machata <pmachata@gmail.com>
-Tested-by: Petr Machata <pmachata@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200117153429.54700-3-stephan@gerhold.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/net/forwarding/mirror_gre.sh    | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/drm_client_modeset.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/mirror_gre.sh b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-index e6fd7a18c655f..0266443601bc0 100755
---- a/tools/testing/selftests/net/forwarding/mirror_gre.sh
-+++ b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-@@ -63,22 +63,23 @@ test_span_gre_mac()
- {
- 	local tundev=$1; shift
- 	local direction=$1; shift
--	local prot=$1; shift
- 	local what=$1; shift
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 6d4a29e99ae26..3035584f6dc72 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -951,7 +951,8 @@ bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation)
+ 	 * depending on the hardware this may require the framebuffer
+ 	 * to be in a specific tiling format.
+ 	 */
+-	if ((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180 ||
++	if (((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_0 &&
++	     (*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180) ||
+ 	    !plane->rotation_property)
+ 		return false;
  
--	local swp3mac=$(mac_get $swp3)
--	local h3mac=$(mac_get $h3)
-+	case "$direction" in
-+	ingress) local src_mac=$(mac_get $h1); local dst_mac=$(mac_get $h2)
-+		;;
-+	egress) local src_mac=$(mac_get $h2); local dst_mac=$(mac_get $h1)
-+		;;
-+	esac
- 
- 	RET=0
- 
- 	mirror_install $swp1 $direction $tundev "matchall $tcflags"
--	tc filter add dev $h3 ingress pref 77 prot $prot \
--		flower ip_proto 0x2f src_mac $swp3mac dst_mac $h3mac \
--		action pass
-+	icmp_capture_install h3-${tundev} "src_mac $src_mac dst_mac $dst_mac"
- 
--	mirror_test v$h1 192.0.2.1 192.0.2.2 $h3 77 10
-+	mirror_test v$h1 192.0.2.1 192.0.2.2 h3-${tundev} 100 10
- 
--	tc filter del dev $h3 ingress pref 77
-+	icmp_capture_uninstall h3-${tundev}
- 	mirror_uninstall $swp1 $direction
- 
- 	log_test "$direction $what: envelope MAC ($tcflags)"
-@@ -120,14 +121,14 @@ test_ip6gretap()
- 
- test_gretap_mac()
- {
--	test_span_gre_mac gt4 ingress ip "mirror to gretap"
--	test_span_gre_mac gt4 egress ip "mirror to gretap"
-+	test_span_gre_mac gt4 ingress "mirror to gretap"
-+	test_span_gre_mac gt4 egress "mirror to gretap"
- }
- 
- test_ip6gretap_mac()
- {
--	test_span_gre_mac gt6 ingress ipv6 "mirror to ip6gretap"
--	test_span_gre_mac gt6 egress ipv6 "mirror to ip6gretap"
-+	test_span_gre_mac gt6 ingress "mirror to ip6gretap"
-+	test_span_gre_mac gt6 egress "mirror to ip6gretap"
- }
- 
- test_all()
 -- 
 2.20.1
 
