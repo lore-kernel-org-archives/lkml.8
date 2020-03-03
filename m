@@ -4,92 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68996C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3444AC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3922120873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0052B20873
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWZJA+zj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6sbGcJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCCFCi (ORCPT
+        id S1726191AbgCCFDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:02:38 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33452 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgCCFCi (ORCPT
+        Tue, 3 Mar 2020 00:03:24 -0500
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:39629 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgCCFDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:02:38 -0500
-Received: by mail-qk1-f195.google.com with SMTP id p62so2235741qkb.0;
-        Mon, 02 Mar 2020 21:02:37 -0800 (PST)
+        Tue, 3 Mar 2020 00:03:24 -0500
+Received: by mail-pl1-f178.google.com with SMTP id g6so760649plp.6;
+        Mon, 02 Mar 2020 21:03:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X9bTTlF35r5TSl8dSQRie4Vik/3Afhj4BHnWJcWZbf4=;
-        b=PWZJA+zjpoYUP2LOlITnrD310E8NitwFdIGN1cCPCUAS+yE6avNdew3/gl1tzkhpdQ
-         9XxooyQ0U1ZPqqCAQTvCdHBLrbuDlv3/DO95ZvJ4lzJ4vk8bQbEtmP2JxucK7uKCfyYk
-         Ze+a4kSgBtvu1Zt19GhmJxUlS+bi1jTRYcemRR0/mgUXm/56V8Zghuj6XQYwYGdT82Xt
-         wiH5XIYwDu0pO7PLx9w7JSfLz/a+p7MzPVM+uOFU9VGUARZgTfYppBVY8+NtCGTk34Z/
-         5UFiz2QADhT1HQ3L/zm6kHfpVO5UJHbT+KMhpXdx+miJVCJv3wqXXw5rA0+yQorYX33T
-         FDoA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=eLgz00wfdz9N0jvVCBeUH0wvQLTL+dDy54Z23PzWjAU=;
+        b=J6sbGcJlfAGXRutK7hZv/Mk/v2DyZ6unEYLjumIlqSIkE2h27P6IfV0sRkiczbl/tJ
+         X5f7xvOlJ56tt3yZktu/vcsGbLIGMFm/NfN479MW9MtWTHcMTNO8GM7vt6oIW1o/Lgow
+         TkVo8iYEVq36ADO3nihuNYhMZbDbCed8NvrbUK4yG10g5xg+C3GiX8zv+0SnYzBUn803
+         yiY7mbjoVSvg7ds8YzudFE+ilA7nBlVHgbycUxIRWUxH3zSX86Tui9Uve4ONDtljhQk/
+         OWXIoxjcLi3F1a0Oc19uHoAh4mWeodHPj7Tpcn/5FZjX3vgeFzW2VcFdQCQEYGtSSats
+         kPyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X9bTTlF35r5TSl8dSQRie4Vik/3Afhj4BHnWJcWZbf4=;
-        b=icnWMr+TTY1/k3BRkjBGe4KLMUKICfsfdxJghG+0V2HXRmqALLI/+SzYOuGYy6sL9d
-         1i/md+VKCy/rWgqdvlwSUC2XEIe0W9+0eDLv65ueV+71znXcdgoZCa5SV3RClmkEX1WR
-         TD2D08KdYo/COjrwbv7X/Cuyxf1Pt2D9bfjXtD7QT400J+TB2WoqGYesgITZ6bLsOe+p
-         sNzy/qOeSPE9NSjf5495IsL5uBTiGX4ytmGgk3aHViGZTeFL381l0zcXSlOajxuzfCoJ
-         Vp++nbSFnZ8Dk6+OF8vZWQ/ZCZYvdMG9V8uRlH2W4cIf+xASOrs21ZdhNmZvU+ViMrIb
-         LtBQ==
-X-Gm-Message-State: ANhLgQ2vrIJgrWsr97U4UrX00z8wsCL1v9d9H2Z0xCvRw+MIlTOmGB+q
-        JAsF68FIyfw5PpZpUVModdlBebYb/SDSIodqwQY=
-X-Google-Smtp-Source: ADFU+vtmfsvJPV4oJnePyQzSlf/c1avXq5UwA1q9S5iiVzQ6AEoQD4B52gFb86s8xLQaEyUmnnVn66jiAsS3sjqE6VE=
-X-Received: by 2002:ae9:e104:: with SMTP id g4mr2412992qkm.133.1583211757281;
- Mon, 02 Mar 2020 21:02:37 -0800 (PST)
-MIME-Version: 1.0
-References: <eeb12d7843fb06f80e19f98eb25711231c3b610f.1583205650.git.baolin.wang7@gmail.com>
- <3271ce73-7165-c545-43e7-93d85a7c3680@infradead.org>
-In-Reply-To: <3271ce73-7165-c545-43e7-93d85a7c3680@infradead.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 3 Mar 2020 13:02:25 +0800
-Message-ID: <CADBw62p3pKjLQivxZs9HtTnvey=qsU=piG-OkX8Vzfm5FiMWqA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sprd: Fix the kconfig warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=eLgz00wfdz9N0jvVCBeUH0wvQLTL+dDy54Z23PzWjAU=;
+        b=TU9yBadgaAGfB6DcEYNE3u4fyM+3oVW9dlzWfxWAQqGEk/tSYBVRxfdUtSKWV/mVyQ
+         A6JY1dibHty0APCQP5iJIAUfjpWaGAbzWYk06o4eUqm8oIZjw8KnKtu9woS2SPWRgjE4
+         YuOFi4kIzt9sdbmTnuOu/QbbsVKW7Grqaz+MURWYN/Ibh/BLDS1ZyIpznz4J/LPnN7hN
+         tchQ6afMuTdGZhjwiLt2C+3yH5s4xClPP1Ccb+hBTRNRwCKFlHxqc3btUSUkFMxTBOjd
+         AXyejNbhV/fZenjiCTQ12anBblBrYTGB+Aqoe38C0RiB52nWSsLvOPJ1rLnvQRsD3KGS
+         kuNA==
+X-Gm-Message-State: ANhLgQ2cm9H6da2v/cNeDR1aYdOkiBDwTmkmptIh1nZXTnoP8pbQ4dEY
+        u4beqA7/XczlLGIrSRTGNlho4GvNUQ+QzQ==
+X-Google-Smtp-Source: ADFU+vs6JQW1Tol+V82s/wT5nWDEySTRxteYJJRYxDhajzZzXu1gPbrUcHkR7StH22DlyZnrd8IxdQ==
+X-Received: by 2002:a17:90a:20b:: with SMTP id c11mr2127397pjc.53.1583211801855;
+        Mon, 02 Mar 2020 21:03:21 -0800 (PST)
+Received: from localhost.localdomain ([2405:205:c8aa:e481:f8d3:6de2:77f9:5602])
+        by smtp.gmail.com with ESMTPSA id b2sm780446pjc.40.2020.03.02.21.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 21:03:21 -0800 (PST)
+From:   Pragat Pandya <pragat.pandya@gmail.com>
+To:     corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, Pragat Pandya <pragat.pandya@gmail.com>
+Subject: [PATCH v3 0/2] Documentation: Rename two txt files to rst
+Date:   Tue,  3 Mar 2020 10:32:59 +0530
+Message-Id: <20200303050301.5412-1-pragat.pandya@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200302114300.34875f69@lwn.net>
+References: <20200302114300.34875f69@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 12:45 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 3/2/20 7:32 PM, Baolin Wang wrote:
-> > On X86 plaform, if the CONFIG_OF is not selected, and set the
-> > CONFIG_SPRD_SC9860 as 'm', that will cause below waring:
-> >
-> > WARNING: unmet direct dependencies detected for PINCTRL_SPRD
-> >   Depends on [n]: PINCTRL [=y] && OF [=n] && (ARCH_SPRD || COMPILE_TEST [=y])
-> >   Selected by [m]:
-> >   - PINCTRL_SPRD_SC9860 [=m] && PINCTRL [=y]
-> >
-> > Thus move the configuration dependency under CONFIG_PINCTRL_SPRD_SC9860
-> > to fix the warning.
-> >
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
->
-> Works for me.  Thanks.
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+This patchset renames following two txt files to rst files and moves
+them to driver-api manual from top level.
+ -io-mapping.txt (Documentation/) -> io-mapping.rst(Documentation/driver-api/)
+ -io_ordering.txt(Documentation/) -> io_ordering.rst(Documentation/driver-api/)
 
-Thanks for your reporting and testing.
+v2:
+ -Provide more descriptive subject lines.
+ -Move newly generated(rather renamed) rst files to driver-api manual
+  from top level documentation.
+v3:
+ -In v2, the old files were left in place creating new rst files.
+ -Rename the target files rather than simply creating new files.
+
+
+Pragat Pandya (2):
+  Documentation: Add io-mapping.rst to driver-api manual
+  Documentation: Add io_ordering.rst to driver-api manual
+
+ Documentation/driver-api/index.rst                            | 2 ++
+ Documentation/{io-mapping.txt => driver-api/io-mapping.rst}   | 0
+ Documentation/{io_ordering.txt => driver-api/io_ordering.rst} | 0
+ 3 files changed, 2 insertions(+)
+ rename Documentation/{io-mapping.txt => driver-api/io-mapping.rst} (100%)
+ rename Documentation/{io_ordering.txt => driver-api/io_ordering.rst} (100%)
+
+-- 
+2.17.1
+
