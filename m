@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB82C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C431C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F0F20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE572146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257567;
-	bh=udgEv1Fif3gvgXkHWGgmEjq1T17SCOrEkis2l10MF7Q=;
+	s=default; t=1583257569;
+	bh=YJBfCqSByjSFxgGWmbPxYXFHCKKUp9aukC1dgwZBS04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxseeLMZOCYeoEqCPAaEZ0yAKl1Y2xeOBi/5zyCVFnLA9igd5gJ2ZcZm5KqJuN9pE
-	 Y4pLjkLne//Yf8UmKtnJkpL6wk0UG6TBQ1GR9q3b0a3w6/ramLFRqrypzmCS2vGrxn
-	 3hUsYrr1wFRTxAj6tzQcjDpeF3Q62STk0x0GxnDY=
+	b=wPcRAKHtyvcMwD5VyTQq50jyacpezVV+AYzBiDZHjHmMOtpyj3Cy8I3jXjh45avPO
+	 UC4mSSzIIVu88XD889rKZ+GGzrpG4P7mzR4eyOFaYbinnLSiUHvvmZ1z1dyhiM8CMt
+	 DXyFvFhEMELZWs+KgKPLNb+sOjvA8iEKNDIjFqis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbgCCRqG (ORCPT
+        id S1731068AbgCCRqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbgCCRqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:03 -0500
+        id S1731056AbgCCRqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D9320870;
-        Tue,  3 Mar 2020 17:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A404E20870;
+        Tue,  3 Mar 2020 17:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257562;
-        bh=udgEv1Fif3gvgXkHWGgmEjq1T17SCOrEkis2l10MF7Q=;
+        s=default; t=1583257565;
+        bh=YJBfCqSByjSFxgGWmbPxYXFHCKKUp9aukC1dgwZBS04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dh47tWMWTuBKcSr7JpUg8J9MIznwN3Akcv/MuJJhgtJROjswJ3DYGlNIocgtGSO3/
-         qdWvdT9c/A75WtmMIt6m+orNu6Mdu0tvzpOOW/7XMhkMc2Ia6mJPm1svQeBIHaAhU1
-         c2TGns1r7BE+MF3wnib8QZkvtnOISJGH8fFPaxRw=
+        b=elMrqc83Uqq62VcF4h9I0QpRGwsmw/q2Cz1TvLPGeUjuDjfAaHT6ead59hfeRkB7T
+         jHM1QRnZnZpSbTLN36syzRie9wMzFsX8eiwKIjA9R3ZxOZDYkn9tFjbLFLLSjcTItM
+         vj0H4bJYT3g73OZqLUIjYI6p+NxD1tPekqFf/zX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rohit Maheshwari <rohitm@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 008/176] net/tls: Fix to avoid gettig invalid tls record
-Date:   Tue,  3 Mar 2020 18:41:12 +0100
-Message-Id: <20200303174305.526890311@linuxfoundation.org>
+Subject: [PATCH 5.5 009/176] nfc: pn544: Fix occasional HW initialization failure
+Date:   Tue,  3 Mar 2020 18:41:13 +0100
+Message-Id: <20200303174305.644646973@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,69 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rohit Maheshwari <rohitm@chelsio.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 06f5201c6392f998a49ca9c9173e2930c8eb51d8 ]
+[ Upstream commit c3331d2fe3fd4d5e321f2467d01f72de7edfb5d0 ]
 
-Current code doesn't check if tcp sequence number is starting from (/after)
-1st record's start sequnce number. It only checks if seq number is before
-1st record's end sequnce number. This problem will always be a possibility
-in re-transmit case. If a record which belongs to a requested seq number is
-already deleted, tls_get_record will start looking into list and as per the
-check it will look if seq number is before the end seq of 1st record, which
-will always be true and will return 1st record always, it should in fact
-return NULL.
-As part of the fix, start looking each record only if the sequence number
-lies in the list else return NULL.
-There is one more check added, driver look for the start marker record to
-handle tcp packets which are before the tls offload start sequence number,
-hence return 1st record if the record is tls start marker and seq number is
-before the 1st record's starting sequence number.
+The PN544 driver checks the "enable" polarity during of driver's probe and
+it's doing that by turning ON and OFF NFC with different polarities until
+enabling succeeds. It takes some time for the hardware to power-down, and
+thus, to deassert the IRQ that is raised by turning ON the hardware.
+Since the delay after last power-down of the polarity-checking process is
+missed in the code, the interrupt may trigger immediately after installing
+the IRQ handler (right after the checking is done), which results in IRQ
+handler trying to touch the disabled HW and ends with marking NFC as
+'DEAD' during of the driver's probe:
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Rohit Maheshwari <rohitm@chelsio.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+  pn544_hci_i2c 1-002a: NFC: nfc_en polarity : active high
+  pn544_hci_i2c 1-002a: NFC: invalid len byte
+  shdlc: llc_shdlc_recv_frame: NULL Frame -> link is dead
+
+This patch fixes the occasional NFC initialization failure on Nexus 7
+device.
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device.c |   20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/nfc/pn544/i2c.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -592,7 +592,7 @@ struct tls_record_info *tls_get_record(s
- 				       u32 seq, u64 *p_record_sn)
- {
- 	u64 record_sn = context->hint_record_sn;
--	struct tls_record_info *info;
-+	struct tls_record_info *info, *last;
+--- a/drivers/nfc/pn544/i2c.c
++++ b/drivers/nfc/pn544/i2c.c
+@@ -225,6 +225,7 @@ static void pn544_hci_i2c_platform_init(
  
- 	info = context->retransmit_hint;
- 	if (!info ||
-@@ -604,6 +604,24 @@ struct tls_record_info *tls_get_record(s
- 						struct tls_record_info, list);
- 		if (!info)
- 			return NULL;
-+		/* send the start_marker record if seq number is before the
-+		 * tls offload start marker sequence number. This record is
-+		 * required to handle TCP packets which are before TLS offload
-+		 * started.
-+		 *  And if it's not start marker, look if this seq number
-+		 * belongs to the list.
-+		 */
-+		if (likely(!tls_record_is_start_marker(info))) {
-+			/* we have the first record, get the last record to see
-+			 * if this seq number belongs to the list.
-+			 */
-+			last = list_last_entry(&context->records_list,
-+					       struct tls_record_info, list);
-+
-+			if (!between(seq, tls_record_start_seq(info),
-+				     last->end_seq))
-+				return NULL;
-+		}
- 		record_sn = context->unacked_record_sn;
- 	}
+ out:
+ 	gpiod_set_value_cansleep(phy->gpiod_en, !phy->en_polarity);
++	usleep_range(10000, 15000);
+ }
  
+ static void pn544_hci_i2c_enable_mode(struct pn544_i2c_phy *phy, int run_mode)
 
 
