@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15357C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B49C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC782146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0153E214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257693;
-	bh=t+S2XrhfT3pYPEY8Yhnl8TEwlDJoicoGndjBbpEjWXU=;
+	s=default; t=1583257709;
+	bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLy8ZDJ2tUzK9W8tRR+TkpBWOHELr63nHwoH+78Mh2JAJj0sMT9EX26TU2o46K8yh
-	 sPK89RU02muALQWMZ4oNYUOhUm9xNoeDF4LqLFG8lCk5lfAkOIZZ9xckpnbGSH0OTy
-	 sYy3gCJZBOuKBxmeJugqabUZBKde7MCcatocJqfY=
+	b=I5fN1zBGz17qGGY1Dbwlrt8TJ8fFQMJeOlYjW43UdoDlMI4FiRgK8eM4NxcJZG8uj
+	 T9iWo6IDg9rvVuXQj894sQogiin82HFiG0S5WVFmBqz7wIJOgLQWql2aH4bf1DqdQZ
+	 InjyeGTIa9tosXqAUALOUozUHu/+KoqwrPCS2d7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgCCRsM (ORCPT
+        id S1731656AbgCCRs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbgCCRsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:08 -0500
+        id S1730480AbgCCRsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94064208C3;
-        Tue,  3 Mar 2020 17:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23C2D20CC7;
+        Tue,  3 Mar 2020 17:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257688;
-        bh=t+S2XrhfT3pYPEY8Yhnl8TEwlDJoicoGndjBbpEjWXU=;
+        s=default; t=1583257700;
+        bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZ5ZIZoIMcYjeGdS6dKi0OvghRIzcp1IcX9pFMVgapWAigboOfbx92230ZzFw8qOY
-         w5sR+9M3kPhetQDHV6qNT24SZdogqapWYIIwdn9t4o0xfd9RcmRBL5SeqVxbto5UOB
-         eZmDQl+dA+Xyy2byLqaaNtw3tCtotp0HUMhXY4oE=
+        b=ICo6JoUBb5EyRM72kL+541cwCPinzK7VfzrJi1Ch4QHhrcF+VYqzdTRG6OdTeJbmS
+         YhDHQVADBgXsVcZ3CBjlYO6DuCQXWMw0hQeFXEyWnTZ57ghOABm1fFWRE2Yy3vXKBf
+         N4tJm63veI+cygQi0WUtMMoqBLMnlCbML0DZDtU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 5.5 091/176] HID: core: fix off-by-one memset in hid_report_raw_event()
-Date:   Tue,  3 Mar 2020 18:42:35 +0100
-Message-Id: <20200303174315.347608869@linuxfoundation.org>
+        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
+Subject: [PATCH 5.5 095/176] macintosh: therm_windtunnel: fix regression when instantiating devices
+Date:   Tue,  3 Mar 2020 18:42:39 +0100
+Message-Id: <20200303174315.807135274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,46 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f upstream.
+commit 38b17afb0ebb9ecd41418d3c08bcf9198af4349d upstream.
 
-In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
-but the report-number byte is not correctly handled. This results in a
-off-by-one in the following memset, causing a kernel Oops and ensuing
-system crash.
+Removing attach_adapter from this driver caused a regression for at
+least some machines. Those machines had the sensors described in their
+DT, too, so they didn't need manual creation of the sensor devices. The
+old code worked, though, because manual creation came first. Creation of
+DT devices then failed later and caused error logs, but the sensors
+worked nonetheless because of the manually created devices.
 
-Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
-hid_field_extract") I no longer hit the kernel Oops as we instead fail
-"controlled" at probe if there is a report too long in the HID
-report-descriptor. hid_report_raw_event() is an exported symbol, so
-presumabely we cannot always rely on this being the case.
+When removing attach_adaper, manual creation now comes later and loses
+the race. The sensor devices were already registered via DT, yet with
+another binding, so the driver could not be bound to it.
 
-Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
-                     function.")
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+This fix refactors the code to remove the race and only manually creates
+devices if there are no DT nodes present. Also, the DT binding is updated
+to match both, the DT and manually created devices. Because we don't
+know which device creation will be used at runtime, the code to start
+the kthread is moved to do_probe() which will be called by both methods.
+
+Fixes: 3e7bed52719d ("macintosh: therm_windtunnel: drop using attach_adapter")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201723
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Tested-by: Erhard Furtner <erhard_f@mailbox.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org # v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/macintosh/therm_windtunnel.c |   52 ++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1741,7 +1741,9 @@ int hid_report_raw_event(struct hid_devi
+--- a/drivers/macintosh/therm_windtunnel.c
++++ b/drivers/macintosh/therm_windtunnel.c
+@@ -300,9 +300,11 @@ static int control_loop(void *dummy)
+ /*	i2c probing and setup						*/
+ /************************************************************************/
  
- 	rsize = ((report->size - 1) >> 3) + 1;
+-static int
+-do_attach( struct i2c_adapter *adapter )
++static void do_attach(struct i2c_adapter *adapter)
+ {
++	struct i2c_board_info info = { };
++	struct device_node *np;
++
+ 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
+ 	static const unsigned short scan_ds1775[] = {
+ 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
+@@ -313,25 +315,24 @@ do_attach( struct i2c_adapter *adapter )
+ 		I2C_CLIENT_END
+ 	};
  
--	if (rsize > HID_MAX_BUFFER_SIZE)
-+	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
-+		rsize = HID_MAX_BUFFER_SIZE - 1;
-+	else if (rsize > HID_MAX_BUFFER_SIZE)
- 		rsize = HID_MAX_BUFFER_SIZE;
+-	if( strncmp(adapter->name, "uni-n", 5) )
+-		return 0;
+-
+-	if( !x.running ) {
+-		struct i2c_board_info info;
++	if (x.running || strncmp(adapter->name, "uni-n", 5))
++		return;
  
- 	if (csize < rsize) {
+-		memset(&info, 0, sizeof(struct i2c_board_info));
+-		strlcpy(info.type, "therm_ds1775", I2C_NAME_SIZE);
++	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
++	if (np) {
++		of_node_put(np);
++	} else {
++		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
+ 		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
++	}
+ 
+-		strlcpy(info.type, "therm_adm1030", I2C_NAME_SIZE);
++	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
++	if (np) {
++		of_node_put(np);
++	} else {
++		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
+ 		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
+-
+-		if( x.thermostat && x.fan ) {
+-			x.running = 1;
+-			x.poll_task = kthread_run(control_loop, NULL, "g4fand");
+-		}
+ 	}
+-	return 0;
+ }
+ 
+ static int
+@@ -404,8 +405,8 @@ out:
+ enum chip { ds1775, adm1030 };
+ 
+ static const struct i2c_device_id therm_windtunnel_id[] = {
+-	{ "therm_ds1775", ds1775 },
+-	{ "therm_adm1030", adm1030 },
++	{ "MAC,ds1775", ds1775 },
++	{ "MAC,adm1030", adm1030 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
+@@ -414,6 +415,7 @@ static int
+ do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+ 	struct i2c_adapter *adapter = cl->adapter;
++	int ret = 0;
+ 
+ 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
+ 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
+@@ -421,11 +423,19 @@ do_probe(struct i2c_client *cl, const st
+ 
+ 	switch (id->driver_data) {
+ 	case adm1030:
+-		return attach_fan( cl );
++		ret = attach_fan(cl);
++		break;
+ 	case ds1775:
+-		return attach_thermostat(cl);
++		ret = attach_thermostat(cl);
++		break;
+ 	}
+-	return 0;
++
++	if (!x.running && x.thermostat && x.fan) {
++		x.running = 1;
++		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
++	}
++
++	return ret;
+ }
+ 
+ static struct i2c_driver g4fan_driver = {
 
 
