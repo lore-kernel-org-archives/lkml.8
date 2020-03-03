@@ -2,51 +2,51 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A963C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0917C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F5720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724F920870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258511;
-	bh=iC3KiavSmh80Y2SIDeaFyRbSocJf6RlacDi9Ii3VjW0=;
+	s=default; t=1583258513;
+	bh=5PflVNOkjPhX3qBeN55v0PuwSLeglHMNIfkR30eBlKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/pg38MvobmE7983NZCPmlUwD3zzL/G82S1UmElQDkyHmkOse/sO+BG0rnKqtGJZM
-	 UXyD3rsGW5+KUfz0xln4gGftNph8Kbc9gsRclcEwcAEM/tJlMP4uC02t/ghMzPk4Gk
-	 QkPomGIY0gXcPromksRnwL2Wz/WTrc18vSGNBYs4=
+	b=n82Ry6641wzKX4mhGnLFvPj5Rw4vV+cpMqSv+xcKg8aoPkl9g/KVcidZ647mq0pdk
+	 Oh69ZGZKZo4HyNdPSmqI4j0dUQDaVdXXyHt8zC0eNXBi9ogmQ1sWmjIAP2OPplmm2J
+	 LoDKtqQfm7X8kXWtMS9RjbbfhHC6a1I3e0OIFm5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388071AbgCCSBu (ORCPT
+        id S2388082AbgCCSBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388048AbgCCSBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:45 -0500
+        id S2388061AbgCCSBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27DE220656;
-        Tue,  3 Mar 2020 18:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F562072D;
+        Tue,  3 Mar 2020 18:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258504;
-        bh=iC3KiavSmh80Y2SIDeaFyRbSocJf6RlacDi9Ii3VjW0=;
+        s=default; t=1583258507;
+        bh=5PflVNOkjPhX3qBeN55v0PuwSLeglHMNIfkR30eBlKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsevW7h4SaacUGRa6W3SkxfHvxy2WiT5wvTb27iC0F3ToY/eAvSUp2qbXtvR2mYf9
-         fX+I01QaXMiSV672zTbHwXIiaJzVSuLgXyhqeh32JoYhU8t0aN0/cUqUDLatsCbmkJ
-         bfdMsqo67X2ZfQatNoAw8sY+Pi6NkfH04jo9lO6c=
+        b=aR6DjVXjjhHvdrLHa+vD/lcBglNpIpNZxCo+8klm6hQ4G/GyXBFThu2DwKBOTjnzE
+         2IwynqJ8e2XZJ4NxpCgSzy6Weh28mt2H7WIoXb9o8kZwyjif9DnGcDmVvwPJmu/Q7g
+         wt7eIzS1rb5a2aUUzC9Ke0DT//P4+4oZ1k+EpjMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/87] bcache: ignore pending signals when creating gc and allocator thread
-Date:   Tue,  3 Mar 2020 18:43:16 +0100
-Message-Id: <20200303174352.755051667@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 68/87] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+Date:   Tue,  3 Mar 2020 18:43:59 +0100
+Message-Id: <20200303174356.410882389@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -59,102 +59,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
+commit 70e5b8f445fd27fde0c5583460e82539a7242424 upstream.
 
-When run a cache set, all the bcache btree node of this cache set will
-be checked by bch_btree_check(). If the bcache btree is very large,
-iterating all the btree nodes will occupy too much system memory and
-the bcache registering process might be selected and killed by system
-OOM killer. kthread_run() will fail if current process has pending
-signal, therefore the kthread creating in run_cache_set() for gc and
-allocator kernel threads are very probably failed for a very large
-bcache btree.
+Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
+mmwifiex_process_tdls_action_frame()"),
+mwifiex_process_tdls_action_frame() already had too many magic numbers.
+But this commit just added a ton more, in the name of checking for
+buffer overflows. That seems like a really bad idea.
 
-Indeed such OOM is safe and the registering process will exit after
-the registration done. Therefore this patch flushes pending signals
-during the cache set start up, specificly in bch_cache_allocator_start()
-and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
-large cahced data set.
+Let's make these magic numbers a little less magic, by
+(a) factoring out 'pos[1]' as 'ie_len'
+(b) using 'sizeof' on the appropriate source or destination fields where
+    possible, instead of bare numbers
+(c) dropping redundant checks, per below.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Regarding redundant checks: the beginning of the loop has this:
+
+                if (pos + 2 + pos[1] > end)
+                        break;
+
+but then individual 'case's include stuff like this:
+
+ 			if (pos > end - 3)
+ 				return;
+ 			if (pos[1] != 1)
+				return;
+
+Note that the second 'return' (validating the length, pos[1]) combined
+with the above condition (ensuring 'pos + 2 + length' doesn't exceed
+'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
+end - pos[1] - 2') redundant. Rather than unwind the magic numbers
+there, just drop those conditions.
+
+Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
- drivers/md/bcache/btree.c | 13 +++++++++++++
- 2 files changed, 29 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/tdls.c |   75 ++++++++++------------------
+ 1 file changed, 28 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 46794cac167e7..2074860cbb16c 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -67,6 +67,7 @@
- #include <linux/blkdev.h>
- #include <linux/kthread.h>
- #include <linux/random.h>
-+#include <linux/sched/signal.h>
- #include <trace/events/bcache.h>
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -897,7 +897,7 @@ void mwifiex_process_tdls_action_frame(s
+ 	u8 *peer, *pos, *end;
+ 	u8 i, action, basic;
+ 	u16 cap = 0;
+-	int ie_len = 0;
++	int ies_len = 0;
  
- #define MAX_OPEN_BUCKETS 128
-@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
+ 	if (len < (sizeof(struct ethhdr) + 3))
+ 		return;
+@@ -919,7 +919,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		pos = buf + sizeof(struct ethhdr) + 4;
+ 		/* payload 1+ category 1 + action 1 + dialog 1 */
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
+ 		pos += 2;
+ 		break;
  
- int bch_cache_allocator_start(struct cache *ca)
- {
--	struct task_struct *k = kthread_run(bch_allocator_thread,
--					    ca, "bcache_allocator");
-+	struct task_struct *k;
+@@ -929,7 +929,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
+ 		pos = buf + sizeof(struct ethhdr) + 6;
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -937,7 +937,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
+ 			return;
+ 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
+ 		break;
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
+@@ -950,33 +950,33 @@ void mwifiex_process_tdls_action_frame(s
+ 
+ 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
+ 
+-	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
+-		if (pos + 2 + pos[1] > end)
++	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
++		u8 ie_len = pos[1];
 +
-+	/*
-+	 * In case previous btree check operation occupies too many
-+	 * system memory for bcache btree node cache, and the
-+	 * registering process is selected by OOM killer. Here just
-+	 * ignore the SIGKILL sent by OOM killer if there is, to
-+	 * avoid kthread_run() being failed by pending signals. The
-+	 * bcache registering process will exit after the registration
-+	 * done.
-+	 */
-+	if (signal_pending(current))
-+		flush_signals(current);
-+
-+	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
- 	if (IS_ERR(k))
- 		return PTR_ERR(k);
++		if (pos + 2 + ie_len > end)
+ 			break;
  
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index bb40bd66a10e4..83d6739fd067b 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -34,6 +34,7 @@
- #include <linux/random.h>
- #include <linux/rcupdate.h>
- #include <linux/sched/clock.h>
-+#include <linux/sched/signal.h>
- #include <linux/rculist.h>
- #include <linux/delay.h>
- #include <trace/events/bcache.h>
-@@ -1898,6 +1899,18 @@ static int bch_gc_thread(void *arg)
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+-			sta_ptr->tdls_cap.rates_len = pos[1];
+-			for (i = 0; i < pos[1]; i++)
++			sta_ptr->tdls_cap.rates_len = ie_len;
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
  
- int bch_gc_thread_start(struct cache_set *c)
- {
-+	/*
-+	 * In case previous btree check operation occupies too many
-+	 * system memory for bcache btree node cache, and the
-+	 * registering process is selected by OOM killer. Here just
-+	 * ignore the SIGKILL sent by OOM killer if there is, to
-+	 * avoid kthread_run() being failed by pending signals. The
-+	 * bcache registering process will exit after the registration
-+	 * done.
-+	 */
-+	if (signal_pending(current))
-+		flush_signals(current);
-+
- 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
- 	return PTR_ERR_OR_ZERO(c->gc_thread);
- }
--- 
-2.20.1
-
+ 		case WLAN_EID_EXT_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
+-			if (pos[1] > 32 - basic)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
+ 				return;
+-			for (i = 0; i < pos[1]; i++)
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+-			sta_ptr->tdls_cap.rates_len += pos[1];
++			sta_ptr->tdls_cap.rates_len += ie_len;
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++			if (ie_len != sizeof(struct ieee80211_ht_cap))
+ 				return;
+ 			/* copy the ie's value into ht_capb*/
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+@@ -984,59 +984,45 @@ void mwifiex_process_tdls_action_frame(s
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			if (pos > end -
+-			    sizeof(struct ieee80211_ht_operation) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++			if (ie_len != sizeof(struct ieee80211_ht_operation))
+ 				return;
+ 			/* copy the ie's value into ht_oper*/
+ 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] > 8)
++			if (ie_len > 8)
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], 8));
++			       min_t(u8, ie_len, 8));
+ 			break;
+ 		case WLAN_EID_RSN:
+-			if (pos > end - sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] > IEEE_MAX_IE_SIZE -
++			if (ie_len > IEEE_MAX_IE_SIZE -
+ 			    sizeof(struct ieee_types_header))
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
++			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_operation) - 2)
+-					return;
+-				if (pos[1] !=
++				if (ie_len !=
+ 				    sizeof(struct ieee80211_vht_operation))
+ 					return;
+ 				/* copy the ie's value into vhtoper*/
+@@ -1046,10 +1032,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_cap) - 2)
+-					return;
+-				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++				if (ie_len != sizeof(struct ieee80211_vht_cap))
+ 					return;
+ 				/* copy the ie's value into vhtcap*/
+ 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+@@ -1059,9 +1042,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_AID:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end - 4)
+-					return;
+-				if (pos[1] != 2)
++				if (ie_len != sizeof(u16))
+ 					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
 
 
