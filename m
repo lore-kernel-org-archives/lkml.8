@@ -2,114 +2,98 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5ABC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1C7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2554A20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BDwb6Aqr"
+	by mail.kernel.org (Postfix) with ESMTP id A35C420866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgCCLeC (ORCPT
+        id S1728579AbgCCLhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:34:02 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42329 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgCCLeB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:34:01 -0500
-Received: by mail-il1-f195.google.com with SMTP id x2so2425916ila.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 03:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6byiiSiBg+O9qfUoKK2ksV0ZQAH63X1Hb8rEqsCdvnA=;
-        b=BDwb6Aqrx0xtaZxAiJzRl8XeyjQnOY6DfKQWnfKlSJyw80tDndkNTO1YIRtxXiY32u
-         jX+rF79QYJ93n6uKhvAsKktrD0A98qVn8g0o2FP4zpYgjGgDbSp4ye0NeZ/S6xaEu/9P
-         jinoTbqOhlXGvA2nE26OcaLpGlhLDzhcnIkuA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6byiiSiBg+O9qfUoKK2ksV0ZQAH63X1Hb8rEqsCdvnA=;
-        b=NPaYDyUkb97MDw407I/fZnR4jm0ltI1dkU9fZ7EOoWC0L7Qh4QIWhXD9BDEFK0tiPA
-         OKQ5Oxn3odOzzqnJ/uflIe+0gY/OLFbi7ppT3eAfqTaTWRfnPGBt9G+btdBAcUsbI7dR
-         z405AwxYKk385vx0D0K+6w/ZjSPSEIsOfLSsFYhjnHxhKt+nSWE3xMv3qT9wddzf9oGF
-         XkJx6TlzGlebT8+HPYd1Zh1dIa7R6as8vyRyomMjtGbuRB1uLSHsLzy/x1pr6jrCuQk8
-         moDt0ycuQTpc6xWa1Hc5nbwHiom/Q3ZqHBbvMREDIHhNSqQA+n0t3SPhFy4o0X2EHOpS
-         Kq+w==
-X-Gm-Message-State: ANhLgQ2EqjkwnVhiQ4DZZFHJo0XG2mYA7143vQkjV4NbjtUoh/erMLk7
-        KJht4Qv0cHKLQuUVLvhCI324lGt+qiLlD+CsjBuqtw==
-X-Google-Smtp-Source: ADFU+vtdZi1ZHmFd0i6HeNGyBbTzdkdeTY8UruU2lDGdtfEbDHYjU8QcXctIQ1YFTTxOKq3DU5hMTC1oZ34IhqBV7I8=
-X-Received: by 2002:a92:89cb:: with SMTP id w72mr4195534ilk.252.1583235239625;
- Tue, 03 Mar 2020 03:33:59 -0800 (PST)
+        Tue, 3 Mar 2020 06:37:03 -0500
+Received: from mga11.intel.com ([192.55.52.93]:48947 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727824AbgCCLhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 06:37:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 03:37:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="258350423"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2020 03:36:58 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        "Alexander Duyck" <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+        <20200228034248.GE29971@bombadil.infradead.org>
+        <87a7538977.fsf@yhuang-dev.intel.com>
+        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+        <871rqf850z.fsf@yhuang-dev.intel.com>
+        <20200228095048.GK3771@dhcp22.suse.cz>
+        <87d09u7sm2.fsf@yhuang-dev.intel.com>
+        <20200302142549.GO4380@dhcp22.suse.cz>
+        <874kv66x8r.fsf@yhuang-dev.intel.com>
+        <20200303081929.GY4380@dhcp22.suse.cz>
+Date:   Tue, 03 Mar 2020 19:36:57 +0800
+In-Reply-To: <20200303081929.GY4380@dhcp22.suse.cz> (Michal Hocko's message of
+        "Tue, 3 Mar 2020 09:19:29 +0100")
+Message-ID: <87k1414qli.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303100045.zqntjjjv6npvs5zl@wittgenstein> <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
- <20200303102541.diud7za3vvjvqco4@wittgenstein>
-In-Reply-To: <20200303102541.diud7za3vvjvqco4@wittgenstein>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 12:33:48 +0100
-Message-ID: <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 11:25 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
+Michal Hocko <mhocko@kernel.org> writes:
+
+> On Tue 03-03-20 09:30:28, Huang, Ying wrote:
+> [...]
+>> Yes.  mmap() can control whether to populate the underlying physical
+>> pages.
 >
-> On Tue, Mar 03, 2020 at 11:13:50AM +0100, Miklos Szeredi wrote:
-> > On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-
-> > > More magic links to beam you around sounds like a bad idea. We had a
-> > > bunch of CVEs around them in containers and they were one of the major
-> > > reasons behind us pushing for openat2(). That's why it has a
-> > > RESOLVE_NO_MAGICLINKS flag.
-> >
-> > No, that link wouldn't beam you around at all, it would end up in an
-> > internally mounted instance of a mountfs, a safe place where no
+> right because many usecases benefit from it. They simply know that the
+> mapping will be used completely and it is worth saving overhead for #PF.
+> See. there is a clear justification for that policy.
 >
-> Even if it is a magic link to a safe place it's a magic link. They
-> aren't a great solution to this problem. fsinfo() is cleaner and
-> simpler as it creates a context for a supervised mount which gives the a
-> managing application fine-grained control and makes it easily
-> extendable.
+>> But for migrating MADV_FREE pages, there's no control, all pages
+>> will be populated again always by default.  Maybe we should avoid to do
+>> that in some situations too.
+>
+> Now let's have a look here. It is the userspace that decided to mark
+> MADV_FREE pages. It is under its full control which pages are to be
+> freed lazily. If the userspace wants to move those pages then it is
+> likely aware they have been MADV_FREE, right? If the userspace wanted to
+> save migration overhead then it could either chose to not migrate those
+> pages or simply unmap them right away. So in the end we are talking
+> about saving munmap/MAMDV_DONTNEED or potentially more move_pages calls
+> to skip over MADV_FREE holes. Which is all nice but is there any
+> userspace that really does care? Because this is a fundamental question
+> here and it doesn't make much sense to discuss this left to right unless
+> this is clear.
 
-Yeah, it's a nice and clean interface in the ioctl(2) sense. Sure,
-fsinfo() is way better than ioctl(), but it at the core it's still the
-same syscall multiplexer, do everything hack.
+Although I don't agree with you, I don't want to continue.  Because I
+feel that the discussion may be too general to go anywhere.  I admit
+that I go to the general side firstly, sorry about that.
 
-> Also, we're apparently at the point where it seems were suggesting
-> another (pseudo)filesystem to get information about filesystems.
-
-Implementation detail.  Why would you care?
-
-Thanks,
-Miklos
+Best Regards,
+Huang, Ying
