@@ -2,227 +2,111 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F86EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8B8C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434BF20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC99D20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eRS9e4E0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bp/x1W24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgCCKLN (ORCPT
+        id S1728402AbgCCKL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:11:13 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55006 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728078AbgCCKLM (ORCPT
+        Tue, 3 Mar 2020 05:11:56 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35278 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgCCKLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:11:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583230271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0lKGMZz2mVXzfjH8foE9O3JFOJlrljIc2oxkVwn7z1E=;
-        b=eRS9e4E0vFXoWHEL7Lf37P4+9E09SG+E0UN53Hi6+guk3p1l11qDtH44PTjB2UIHl7q2Ef
-        t7czCS3LBQJ2k5m1mSqNXiKP69Mkr86m5n8LUnLsAAPZ3xqQD/VYvahloNFBgkyhlpdDQh
-        /LpQv3TP15UwEM6ClRs4BfA7XERf71U=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-Gifoue1zNUSfh9u3WtwOWw-1; Tue, 03 Mar 2020 05:11:06 -0500
-X-MC-Unique: Gifoue1zNUSfh9u3WtwOWw-1
-Received: by mail-wr1-f70.google.com with SMTP id p11so999956wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:11:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0lKGMZz2mVXzfjH8foE9O3JFOJlrljIc2oxkVwn7z1E=;
-        b=rFl+sKeRaotSTT88rMSi9bQJUvEzDwZ0Ys9OTDnTJsZBGX6yodI6hkH/pnDMrxhN0D
-         jejGOCnybVyIyGDwB8R3Djju7I7XaAT637mat0hNMzNCDHFlRxv/hZpoDpBjDHE3ky0h
-         qxGHDT0hyzTwlGgXWaCSNKkZ+lNKhOfhZbL9SQXIm+HQbwu+ezX58Vamuf01KYUum+qY
-         sHkdbv4KQm8bmp5gskTeTvgG8g18lv9waBrQ1ckuEt6MdeosjMmvme7Og72y2sWz8S14
-         Ys9cZf72YJrjSx1BXZj6segKpdcQ8OLh1iPqPOdLSoxW/6ziyunEtNG25y1mOhmG9STa
-         zaPw==
-X-Gm-Message-State: ANhLgQ2uPMjASCqXFcCPULx8Nyc7EudjI5f5bGmNSDeJm8383/rIKthF
-        LpU575GevKC0PKUbbohZeo1uRvtDlFiD6yFuZa3CmSSzbSCT6MpD9OihGVuMN3s+3KgUDUFS9SR
-        fXl2DBfyLnf3y9lPbTRqWLZLr
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr3568990wmk.172.1583230264531;
-        Tue, 03 Mar 2020 02:11:04 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vupO8zpDPGI2M251ftAIAreBbyyhVWtPWzvaf5Z4LtEpAgdcTDnuje0fNmPeffLysPi04uEaw==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr3568951wmk.172.1583230264185;
-        Tue, 03 Mar 2020 02:11:04 -0800 (PST)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:482c:9537:40:83ba])
-        by smtp.gmail.com with ESMTPSA id w206sm3315371wmg.11.2020.03.03.02.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 02:11:03 -0800 (PST)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH v6] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
-Date:   Tue,  3 Mar 2020 11:10:52 +0100
-Message-Id: <20200303101052.133631-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 3 Mar 2020 05:11:55 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023ABhL8160075;
+        Tue, 3 Mar 2020 10:11:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=I7lQUOIBl7w23iq71Y854jGz1gvnq8xxPdpo02mIV4o=;
+ b=Bp/x1W24h0306Cs9S9LPLIq2/CBQzgNWI9QFVJE5R0l4ygrnp4hmuUCHonvnYka3sqp4
+ PNh0V2si6IehwWcBqRl0T9CbDlYmWYmFwoaYJmR/1q7py7/HkqS5BDPG7Or23+UpEztD
+ eu16owp7izA39Yk+E7TEj4lJoJBV8HVYiHMc52FlmtLKgWX+MS5XmqrSia6z/z4bHz46
+ 3jfQlNcNUTYSheevZjV+QnDKQbbwNl/zLNXi0EHYMUS08XtOd9zicF62HprlyDlieaXz
+ 4mn4cNcUXX5BSL9oerSL7nFUp6S6sAD7/1y0uGfuY4F9LWl+gcJ6VrECEYLEJxmJOV2t 1g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yghn31vs1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 10:11:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023A2SCW151356;
+        Tue, 3 Mar 2020 10:11:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yg1p41dp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 10:11:49 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023ABmIt016225;
+        Tue, 3 Mar 2020 10:11:48 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 02:11:47 -0800
+Date:   Tue, 3 Mar 2020 13:11:40 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     David Herrmann <dh.herrmann@googlemail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] HID: clean up wiimote_cmd_map_mp() return type
+Message-ID: <20200303101140.gmx5u4limxsfvard@kili.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=859 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030076
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=912 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-states.
+No one checks the error code, but the static checkers complain:
 
-v2: convert to pci_dev quirk
-    put a proper technical explanation of the issue as a in-code comment
-v3: disable it only for certain combinations of intel and nvidia hardware
-v4: simplify quirk by setting flag on the GPU itself
-v5: restructure quirk to make it easier to add new IDs
-    fix whitespace issues
-    fix potential NULL pointer access
-    update the quirk documentation
-v6: move quirk into nouveau
+    drivers/hid/hid-wiimote-core.c:506 wiimote_cmd_map_mp()
+    warn: signedness bug returning '(-512)'
 
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
+We're returning negative error codes or zero on success so the type
+should be int.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 56 +++++++++++++++++++++++++++
- drivers/pci/pci.c                     |  8 ++++
- include/linux/pci.h                   |  1 +
- 3 files changed, 65 insertions(+)
+ drivers/hid/hid-wiimote-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 2cd83849600f..51d3a7ba7731 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,59 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
+diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
+index 92874dbe4d4a..eaa2fa565047 100644
+--- a/drivers/hid/hid-wiimote-core.c
++++ b/drivers/hid/hid-wiimote-core.c
+@@ -484,7 +484,7 @@ static int wiimote_cmd_init_mp(struct wiimote_data *wdata)
  }
  
-+/*
-+ * On some Intel PCIe bridge controllers doing a
-+ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-+ * Skipping the intermediate D3hot step seems to make it work again. Thise is
-+ * probably caused by not meeting the expectation the involved AML code has
-+ * when the GPU is put into D3hot state before invoking it.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AML code execution to power on the GPU hits an infinite loop (as the
-+ *    code waits on device memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-+ * documented PCI config space register 0x248 of the Intel PCIe bridge
-+ * controller (0x1901) in order to change the state of the PCIe link between
-+ * the PCIe port and the GPU. There are alternative code paths using other
-+ * registers, which seem to work fine (executed pre Windows 8):
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. Its unclear wheather
-+ * this issue only occurs in combination with listed Intel PCIe bridge
-+ * controllers and the mentioned GPUs or other devices as well.
-+ *
-+ * documentation on the PCIe bridge controller can be found in the
-+ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-+ * Section "12 PCI Express* Controller (x16) Registers"
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *dev)
-+{
-+	struct pci_dev *bridge = pci_upstream_bridge(dev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		dev->parent_d3cold = 1;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
+ /* requires the cmd-mutex to be held */
+-static bool wiimote_cmd_map_mp(struct wiimote_data *wdata, __u8 exttype)
++static int wiimote_cmd_map_mp(struct wiimote_data *wdata, __u8 exttype)
  {
-@@ -699,6 +752,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
+ 	__u8 wmem;
  
-+	quirk_broken_nv_runpm(pdev);
- 	return 0;
- 
- fail_drm_dev_init:
-@@ -737,6 +791,8 @@ nouveau_drm_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	/* revert our workaround */
-+	pdev->parent_d3cold = false;
- 	nouveau_drm_device_remove(dev);
- }
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 951099279192..6ece05723fa2 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -860,6 +860,14 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	   || (state == PCI_D2 && !dev->d2_support))
- 		return -EIO;
- 
-+	/*
-+	 * Power management can be disabled for certain devices as they don't
-+	 * come back up later on runtime_resume. We rely on platform means to
-+	 * cut power consumption instead (e.g. ACPI).
-+	 */
-+	if (state != PCI_D0 && dev->parent_d3cold)
-+		return 0;
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (pmcsr == (u16) ~0) {
- 		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 930fab293073..3e5938b91966 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -340,6 +340,7 @@ struct pci_dev {
- 	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
- 	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
- 	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
-+	unsigned int	parent_d3cold:1;	/* power manage the parent instead */
- 	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
- 						   decoding during BAR sizing */
- 	unsigned int	wakeup_prepared:1;
 -- 
-2.24.1
+2.11.0
 
