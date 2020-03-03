@@ -2,105 +2,112 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9565C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C50BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F58220728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gDBM/cKD"
+	by mail.kernel.org (Postfix) with ESMTP id 786E8206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583258114;
+	bh=KiKF8TsnroZnGB6+WEfKkZ89hpEo9HMRTUDu1XfFWu0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iOG76RfZJ/1Lzn9O3aYmyjnvjpe4CVzau5DDz7UyvHDixrl/XLg+lf6MT/19UchTR
+	 bJDyGbS75P2zsCK6HfXL3At6Td42SAbOUqsJTyFl24njw+oUrxyaJf91KTpJo27S6m
+	 yxGlovxdVY3rRX08/qNA/bYz1EEKCU0IzXtJHDHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbgCCRzL (ORCPT
+        id S1732675AbgCCRzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:11 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39906 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732645AbgCCRzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:07 -0500
-Received: by mail-il1-f194.google.com with SMTP id w69so3550949ilk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:55:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ayIxKKAwCnNFCQ+lZzklsRs5rXYB11mGFHyYGI5wUqQ=;
-        b=gDBM/cKDaAMh9NyfxfoObozsG9BZGD80+G1UGm/xV8TRxMqdcxd3lkS7Tjc2EZIK5k
-         O23wx5QTaZLVh2TUQMR/TRMtGrzlj3bIrack/HPTGO10ixgYa7tKMJ096FUlVlKSpVlk
-         4T4h8gnuTVFX1A/hBPx1SunMMPdgrCbXi4uVHq95icV0U4T5UQyhYuUIg4plkkEWhLtK
-         iY/tQv5MsboKHbHaXcPeN6P1iYXGkLhHrJcXbFJGYOaBrXt/zh7Z9xLjhLQSofkYiJbd
-         L7hD+kdiIc4k3EkxMC+O1Z2XYNe5g1WwxJxZxyKY6/WHpQcxhJwpXpYZ9S8bMjc/4KH3
-         aUmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ayIxKKAwCnNFCQ+lZzklsRs5rXYB11mGFHyYGI5wUqQ=;
-        b=VsXf3hSeLNPd0Jr7nkPEBN11iMpwXKRmdnCLD6K9XO5iQ0mlLkYqMnaeXBW68gIjjy
-         A4Z8rLYTyqpi6V250M2u0TZI0oD3qVpKskADsgppU+i+dBQxeahjsZ0rrGn9aPjLCtgD
-         VZ9qXbb73PKZr93mtjzisnmsLEm6YRSDzC2KpbLqfd7dW+A+pa/OX+kPr7M7qbD7eJBd
-         aGpkkth/NxlX+yhEdxqHRO+cWBKX18NYIwI4wIDn4WsDNautfxXPuV6y+9TG0h4p6r8z
-         4iRzVJ3pJauukjX9NKQ8AzqmaFFp784lQ2IbivOjyzc2O7BAqFOefulgvVEH8EWHdeql
-         vDcg==
-X-Gm-Message-State: ANhLgQ0Geu+08JTZmS8fASmEVYVM97jXEoHYXZyCf+2bLTQ8gllHxBvS
-        web7fp/EkNX9Jlv1DY1M/9RuLw==
-X-Google-Smtp-Source: ADFU+vswN1+JEsE23FDapwuSVGGnBVQIgUF2nTXa5raP7vGWLMOlfTYLzjaimZzTkgwmW/1PXcHyyw==
-X-Received: by 2002:a92:8f46:: with SMTP id j67mr5772317ild.125.1583258106150;
-        Tue, 03 Mar 2020 09:55:06 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h14sm1061362iow.23.2020.03.03.09.55.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 09:55:05 -0800 (PST)
-Subject: Re: [PATCH 5.4 062/152] bcache: ignore pending signals when creating
- gc and allocator thread
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Sasha Levin <sashal@kernel.org>
+        Tue, 3 Mar 2020 12:55:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732653AbgCCRzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:08 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12456206D5;
+        Tue,  3 Mar 2020 17:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583258108;
+        bh=KiKF8TsnroZnGB6+WEfKkZ89hpEo9HMRTUDu1XfFWu0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dXG/oD2pZ58MOkHxr08B5d4eJJWeSf4rRNi3zCJl2fj9VompEPCVcZSGuZ6N5ASOV
+         nsrBzQ89PAhfu2RsMKkX3sJ2ADvsi6l7LrAyuVDCA/+ZXMYUazRPWGNIScntc99RJA
+         TVja5UklUDoQwb59Mvlhnwnxtzl2o5A9wADtTUsc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 074/152] ACPI: watchdog: Fix gas->access_width usage
+Date:   Tue,  3 Mar 2020 18:42:52 +0100
+Message-Id: <20200303174310.892274458@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
- <20200303174309.501274295@linuxfoundation.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <db776832-64ff-6757-de09-ced1ea8b368f@kernel.dk>
-Date:   Tue, 3 Mar 2020 10:55:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200303174309.501274295@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:42 AM, Greg Kroah-Hartman wrote:
-> From: Coly Li <colyli@suse.de>
-> 
-> [ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
-> 
-> When run a cache set, all the bcache btree node of this cache set will
-> be checked by bch_btree_check(). If the bcache btree is very large,
-> iterating all the btree nodes will occupy too much system memory and
-> the bcache registering process might be selected and killed by system
-> OOM killer. kthread_run() will fail if current process has pending
-> signal, therefore the kthread creating in run_cache_set() for gc and
-> allocator kernel threads are very probably failed for a very large
-> bcache btree.
-> 
-> Indeed such OOM is safe and the registering process will exit after
-> the registration done. Therefore this patch flushes pending signals
-> during the cache set start up, specificly in bch_cache_allocator_start()
-> and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
-> large cahced data set.
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Please drop this one, it's being reverted in mainline.
+commit 2ba33a4e9e22ac4dda928d3e9b5978a3a2ded4e0 upstream.
 
--- 
-Jens Axboe
+ACPI Generic Address Structure (GAS) access_width field is not in bytes
+as the driver seems to expect in few places so fix this by using the
+newly introduced macro ACPI_ACCESS_BYTE_WIDTH().
+
+Fixes: b1abf6fc4982 ("ACPI / watchdog: Fix off-by-one error at resource assignment")
+Fixes: 058dfc767008 ("ACPI / watchdog: Add support for WDAT hardware watchdog")
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Cc: 4.16+ <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/acpi/acpi_watchdog.c |    3 +--
+ drivers/watchdog/wdat_wdt.c  |    2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/acpi/acpi_watchdog.c
++++ b/drivers/acpi/acpi_watchdog.c
+@@ -126,12 +126,11 @@ void __init acpi_watchdog_init(void)
+ 		gas = &entries[i].register_region;
+ 
+ 		res.start = gas->address;
++		res.end = res.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
+ 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
+ 			res.flags = IORESOURCE_MEM;
+-			res.end = res.start + ALIGN(gas->access_width, 4) - 1;
+ 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+ 			res.flags = IORESOURCE_IO;
+-			res.end = res.start + gas->access_width - 1;
+ 		} else {
+ 			pr_warn("Unsupported address space: %u\n",
+ 				gas->space_id);
+--- a/drivers/watchdog/wdat_wdt.c
++++ b/drivers/watchdog/wdat_wdt.c
+@@ -389,7 +389,7 @@ static int wdat_wdt_probe(struct platfor
+ 
+ 		memset(&r, 0, sizeof(r));
+ 		r.start = gas->address;
+-		r.end = r.start + gas->access_width - 1;
++		r.end = r.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
+ 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
+ 			r.flags = IORESOURCE_MEM;
+ 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+
 
