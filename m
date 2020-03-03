@@ -2,105 +2,115 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E677C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF09C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F61206D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zaZ8UEh5"
+	by mail.kernel.org (Postfix) with ESMTP id 249BC206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgCCS5P (ORCPT
+        id S1730626AbgCCS7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:57:15 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34482 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730344AbgCCS5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:57:14 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023Is7td050119;
-        Tue, 3 Mar 2020 18:57:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=3sx1vwQWdvQ5Z2ZWTgaCbJGjCVKxUP31T5G8RYrSA9g=;
- b=zaZ8UEh5QMzNbdzHE6voY1AIV/S2dUkTMkHhtDcPX1Qrlza/3uIFLPIZIgQBuafC5O5Q
- V8zUGRUjb0mABFgZNtk2YjjYf1uYU3yFqOsnfY8aWV++UxS2HsVpXxYezjG1bEgC7IoZ
- BEp6TsrxrgmgL88szeAZmvztKnlj4VqzZf373eE9o2g6LSJkoIBYKwSL5Yw0753MrIrs
- cKb4ffWwMby8vkCzRHOM0C0MLZT+50sYBAymZ0wPK38jd3dnoxNmkKPMpm4V6qvqJQRg
- D4z/5Sf7emOWDgFmc8wr9dMSBZUafyiduKlATGRiWyPpbu6wosuN9CwlL0e4UTc439Aw sQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yffwqs991-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 18:57:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023IqTvw072605;
-        Tue, 3 Mar 2020 18:57:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2yg1p555qm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 18:57:08 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023Iv6it011726;
-        Tue, 3 Mar 2020 18:57:07 GMT
-Received: from localhost.localdomain (/10.211.9.80)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 10:57:06 -0800
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     julien@xen.org, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joe.jin@oracle.com
-Subject: [PATCH v2 2/2] xenbus: req->err should be updated before req->state
-Date:   Tue,  3 Mar 2020 10:47:52 -0800
-Message-Id: <20200303184752.20821-2-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303184752.20821-1-dongli.zhang@oracle.com>
-References: <20200303184752.20821-1-dongli.zhang@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=980 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030124
+        Tue, 3 Mar 2020 13:59:13 -0500
+Received: from mga09.intel.com ([134.134.136.24]:53031 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728467AbgCCS7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:59:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 10:59:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="233734546"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 03 Mar 2020 10:59:11 -0800
+Date:   Tue, 3 Mar 2020 10:59:11 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] x86/split_lock: Add and export
+ split_lock_detect_enabled() and split_lock_detect_fatal()
+Message-ID: <20200303185911.GR1439@linux.intel.com>
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-5-xiaoyao.li@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206070412.17400-5-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+On Thu, Feb 06, 2020 at 03:04:08PM +0800, Xiaoyao Li wrote:
+> These two functions will be used by KVM to check whether host's
+> sld_state.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  arch/x86/include/asm/cpu.h  |  4 ++++
+>  arch/x86/kernel/cpu/intel.c | 12 ++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index 2b20829db450..f5172dbd3f01 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -46,6 +46,8 @@ unsigned int x86_stepping(unsigned int sig);
+>  extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+>  extern void switch_to_sld(unsigned long tifn);
+>  extern bool handle_user_split_lock(unsigned long ip);
+> +extern bool split_lock_detect_enabled(void);
+> +extern bool split_lock_detect_fatal(void);
+>  #else
+>  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+>  static inline void switch_to_sld(unsigned long tifn) {}
+> @@ -53,5 +55,7 @@ static inline bool handle_user_split_lock(unsigned long ip)
+>  {
+>  	return false;
+>  }
+> +static inline bool split_lock_detect_enabled(void) { return false; }
+> +static inline bool split_lock_detect_fatal(void) { return false; }
+>  #endif
+>  #endif /* _ASM_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index ff27d026cb4a..b67b46ea66df 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -1131,3 +1131,15 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+>  	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
+>  		split_lock_setup();
+>  }
+> +
+> +bool split_lock_detect_enabled(void)
+> +{
+> +	return sld_state != sld_off;
+> +}
+> +EXPORT_SYMBOL_GPL(split_lock_detect_enabled);
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
+Hmm, ideally this would be static inline.  Patch 8 (to expose SLD to the
+guest) queries this in vmx_vcpu_run(), I'd prefer to avoid the extra
+CALL+RET in that path.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+> +bool split_lock_detect_fatal(void)
+> +{
+> +	return sld_state == sld_fatal;
+> +}
+> +EXPORT_SYMBOL_GPL(split_lock_detect_fatal);
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a..eb5151fc8efa 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
- 	}
--- 
-2.17.1
+split_lock_detect_fatal() isn't used in this series, it shouldn't be added.
 
+> -- 
+> 2.23.0
+> 
