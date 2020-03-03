@@ -2,317 +2,140 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD28C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFAAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4624120848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DAD2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VwJiMCnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgCCRT1 (ORCPT
+        id S1729893AbgCCRVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:19:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:50112 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgCCRT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:19:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED91F2F;
-        Tue,  3 Mar 2020 09:19:25 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470403F534;
-        Tue,  3 Mar 2020 09:19:24 -0800 (PST)
-Date:   Tue, 3 Mar 2020 17:19:21 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com
-Cc:     Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] phy: amlogic: Add Amlogic AXG MIPI/PCIE analog
- PHY Driver
-Message-ID: <20200303171921.GB9641@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-6-repk@triplefau.lt>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123232943.10229-6-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 3 Mar 2020 12:21:00 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44911 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbgCCRVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:21:00 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j23so3379999qtr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:21:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9+7wdl96+pcZ7KOZjzEhoq8+QQtDm+nRL0/PPEraqiQ=;
+        b=VwJiMCnWis/rcKy+sK37kLKIyxblOfMElqg6DvJH9xeK/nZUNJu5E2EhW7KF1ErhGa
+         JLNIlWs+bjd8XmyKfINU0iDzY2PDLC1M2Em69BpDIQiuJi8+2sqDOTv6duqzYhRToaZV
+         CbARpxT3JgbZHmrkGvfXTVZJWz7TfPy9jPF3IzxsdOvofOBa0NQxnzhtw7WesPsqHORl
+         DRsURMwm2c2BDLPJBdQiVW0W10J3+N/Zeh9iE41UZkVCQ+KJpOlX3ZpthLI7I4Tm/gY2
+         mJufyKsfnGIB7Ld/QtJ6uXwOPGYABB8sptg6B9AwBudDFOsUd71GbJJV1gVI3qz7d0qO
+         UwEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9+7wdl96+pcZ7KOZjzEhoq8+QQtDm+nRL0/PPEraqiQ=;
+        b=FnJPA0M9JiJwG3XsMDbxlPX9a2PWbDwgVoWc8vHN4U3/UcjwHKTlL2y1TwsnoR1HK+
+         viD//XTSJvGJtoh02fpnXly4lt7yQzlSreB/HjNRzfG2seO0+seaIn9wKQeQcBjuogxI
+         hnsNVA+bK+26+MWfF1PjO3ZfxfAYFplE6dKqOvkAdU/Obvb+d5mk40Egf7D32BpMVYov
+         aey5NNySBX18IGW6bPAKgjwtl9PUaLJxll6uyhPmlSbXTo51kvWsQzJEfLD1bKbRUg2m
+         imE5rZDHY93uSEYi+JN7gQdNt+WDbZAMCblc/8qn7XwfSsPoY3bIMW7fDPR/KteRflkg
+         IgYA==
+X-Gm-Message-State: ANhLgQ2JZYr0fsoRmV3zfQVtiQB72ArcuSwxGJmO+WxKX041k4lYn7Zp
+        daX910od4c/f5Ct8mtDvMpqlHsL6J+s=
+X-Google-Smtp-Source: ADFU+vsTKG3GlktHiGKjRL2YfaeKO87PdA2sn2nEz1WXCWIrHFmrD29IIuKNXuxLCpUtTqYeN1L8LA==
+X-Received: by 2002:ac8:3893:: with SMTP id f19mr5376802qtc.46.1583256059513;
+        Tue, 03 Mar 2020 09:20:59 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o127sm12532383qke.92.2020.03.03.09.20.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 09:20:58 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     oleg@redhat.com, catalin.marinas@arm.com, elver@google.com,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] signal: annotate data races in sys_rt_sigaction
+Date:   Tue,  3 Mar 2020 12:20:49 -0500
+Message-Id: <1583256049-15497-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 12:29:41AM +0100, Remi Pommarel wrote:
-> This adds support for the MIPI analog PHY which is also used for PCIE
-> found in the Amlogic AXG SoC Family.
-> 
-> MIPI or PCIE selection is done by the #phy-cells, making the mode
-> static and exclusive.
-> 
-> For now only PCIE fonctionality is supported.
-> 
-> This PHY will be used to replace the mipi_enable clock gating logic
-> which was mistakenly added in the clock subsystem. This also activate
-> a non documented band gap bit in those registers that allows reliable
-> PCIE clock signal generation on AXG platforms.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/phy/amlogic/Kconfig                   |  11 +
->  drivers/phy/amlogic/Makefile                  |  11 +-
->  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 ++++++++++++++++++
->  3 files changed, 205 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+Kmemleak could scan task stacks while plain writes happens to those
+stack variables which could results in data races. For example, in
+sys_rt_sigaction and do_sigaction(), it could have plain writes in
+a 32-byte size. Since the kmemleak does not care about the actual values
+of a non-pointer and all do_sigaction() call sites only copy to stack
+variables, annotate them as intentional data races using the
+data_race() macro. The data races were reported by KCSAN,
 
-Kishon, Neil,
+ BUG: KCSAN: data-race in _copy_from_user / scan_block
 
-can you please review/ack this patch and patch 6 ?
+ read to 0xffffb3074e61fe58 of 8 bytes by task 356 on cpu 19:
+  scan_block+0x6e/0x1a0
+  scan_block at mm/kmemleak.c:1251
+  kmemleak_scan+0xbea/0xd20
+  kmemleak_scan at mm/kmemleak.c:1482
+  kmemleak_scan_thread+0xcc/0xfa
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x3a/0x50
 
-I would like to queue the series shortly, thanks.
+ write to 0xffffb3074e61fe58 of 32 bytes by task 30208 on cpu 2:
+  _copy_from_user+0xb2/0xe0
+  copy_user_generic at arch/x86/include/asm/uaccess_64.h:37
+  (inlined by) raw_copy_from_user at arch/x86/include/asm/uaccess_64.h:71
+  (inlined by) _copy_from_user at lib/usercopy.c:15
+  __x64_sys_rt_sigaction+0x83/0x140
+  __do_sys_rt_sigaction at kernel/signal.c:4245
+  (inlined by) __se_sys_rt_sigaction at kernel/signal.c:4233
+  (inlined by) __x64_sys_rt_sigaction at kernel/signal.c:4233
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Lorenzo
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/signal.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index af774ac2b934..8c9cf2403591 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
->  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
->  	  in Meson G12A SoCs.
->  	  If unsure, say N.
-> +
-> +config PHY_MESON_AXG_MIPI_PCIE_ANALOG
-> +	tristate "Meson AXG MIPI + PCIE analog PHY driver"
-> +	default ARCH_MESON
-> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Meson MIPI + PCIE analog PHY
-> +	  found in Meson AXG SoCs.
-> +	  If unsure, say N.
-> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> index 11d1c42ac2be..0aecf92d796a 100644
-> --- a/drivers/phy/amlogic/Makefile
-> +++ b/drivers/phy/amlogic/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
-> -obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-> -obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
-> -obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-> -obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-> +obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
-> +obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
-> +obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
-> +obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
-> +obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> new file mode 100644
-> index 000000000000..1431cbf885e1
-> --- /dev/null
-> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Amlogic AXG MIPI + PCIE analog PHY driver
-> + *
-> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
-> + */
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/platform_device.h>
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +#define HHI_MIPI_CNTL0 0x00
-> +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-> +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-> +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-> +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-> +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
-> +
-> +#define HHI_MIPI_CNTL1 0x01
-> +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-> +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-> +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-> +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-> +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-> +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
-> +
-> +#define HHI_MIPI_CNTL2 0x02
-> +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-> +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-> +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-> +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-> +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-> +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-> +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-> +
-> +struct phy_axg_mipi_pcie_analog_priv {
-> +	struct phy *phy;
-> +	unsigned int mode;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static const struct regmap_config phy_axg_mipi_pcie_analog_regmap_conf = {
-> +	.reg_bits = 8,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = HHI_MIPI_CNTL2,
-> +};
-> +
-> +static int phy_axg_mipi_pcie_analog_power_on(struct phy *phy)
-> +{
-> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
-> +
-> +	/* MIPI not supported yet */
-> +	if (priv->mode != PHY_TYPE_PCIE)
-> +		return -EINVAL;
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_analog_power_off(struct phy *phy)
-> +{
-> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
-> +
-> +	/* MIPI not supported yet */
-> +	if (priv->mode != PHY_TYPE_PCIE)
-> +		return -EINVAL;
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_BANDGAP, 0);
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_ENABLE, 0);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_analog_init(struct phy *phy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_analog_exit(struct phy *phy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops phy_axg_mipi_pcie_analog_ops = {
-> +	.init = phy_axg_mipi_pcie_analog_init,
-> +	.exit = phy_axg_mipi_pcie_analog_exit,
-> +	.power_on = phy_axg_mipi_pcie_analog_power_on,
-> +	.power_off = phy_axg_mipi_pcie_analog_power_off,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct phy *phy_axg_mipi_pcie_analog_xlate(struct device *dev,
-> +						  struct of_phandle_args *args)
-> +{
-> +	struct phy_axg_mipi_pcie_analog_priv *priv = dev_get_drvdata(dev);
-> +	unsigned int mode;
-> +
-> +	if (args->args_count != 1) {
-> +		dev_err(dev, "invalid number of arguments\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	mode = args->args[0];
-> +
-> +	/* MIPI mode is not supported yet */
-> +	if (mode != PHY_TYPE_PCIE) {
-> +		dev_err(dev, "invalid phy mode select argument\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	priv->mode = mode;
-> +	return priv->phy;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_analog_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy_axg_mipi_pcie_analog_priv *priv;
-> +	struct device_node *np = dev->of_node;
-> +	struct regmap *map;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base)) {
-> +		dev_err(dev, "failed to get regmap base\n");
-> +		return PTR_ERR(base);
-> +	}
-> +
-> +	map = devm_regmap_init_mmio(dev, base,
-> +				    &phy_axg_mipi_pcie_analog_regmap_conf);
-> +	if (IS_ERR(map)) {
-> +		dev_err(dev, "failed to get HHI regmap\n");
-> +		return PTR_ERR(map);
-> +	}
-> +	priv->regmap = map;
-> +
-> +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_analog_ops);
-> +	if (IS_ERR(priv->phy)) {
-> +		ret = PTR_ERR(priv->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to create PHY\n");
-> +		return ret;
-> +	}
-> +
-> +	phy_set_drvdata(priv->phy, priv);
-> +	dev_set_drvdata(dev, priv);
-> +
-> +	phy = devm_of_phy_provider_register(dev,
-> +					    phy_axg_mipi_pcie_analog_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(phy);
-> +}
-> +
-> +static const struct of_device_id phy_axg_mipi_pcie_analog_of_match[] = {
-> +	{
-> +		.compatible = "amlogic,axg-mipi-pcie-analog-phy",
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, phy_axg_mipi_pcie_analog_of_match);
-> +
-> +static struct platform_driver phy_axg_mipi_pcie_analog_driver = {
-> +	.probe = phy_axg_mipi_pcie_analog_probe,
-> +	.driver = {
-> +		.name = "phy-axg-mipi-pcie-analog",
-> +		.of_match_table = phy_axg_mipi_pcie_analog_of_match,
-> +	},
-> +};
-> +module_platform_driver(phy_axg_mipi_pcie_analog_driver);
-> +
-> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> +MODULE_DESCRIPTION("Amlogic AXG MIPI + PCIE analog PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.24.1
-> 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 5b2396350dd1..bf39078c8be1 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3964,14 +3964,15 @@ int do_sigaction(int sig, struct k_sigaction *act, struct k_sigaction *oact)
+ 
+ 	spin_lock_irq(&p->sighand->siglock);
+ 	if (oact)
+-		*oact = *k;
++		/* Kmemleak could scan the task stack. */
++		data_race(*oact = *k);
+ 
+ 	sigaction_compat_abi(act, oact);
+ 
+ 	if (act) {
+ 		sigdelsetmask(&act->sa.sa_mask,
+ 			      sigmask(SIGKILL) | sigmask(SIGSTOP));
+-		*k = *act;
++		data_race(*k = *act);
+ 		/*
+ 		 * POSIX 3.3.1.3:
+ 		 *  "Setting a signal action to SIG_IGN for a signal that is
+@@ -4242,7 +4243,9 @@ int __compat_save_altstack(compat_stack_t __user *uss, unsigned long sp)
+ 	if (sigsetsize != sizeof(sigset_t))
+ 		return -EINVAL;
+ 
+-	if (act && copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa)))
++	if (act &&
++	    /* Kmemleak could scan the task stack. */
++	    data_race(copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa))))
+ 		return -EFAULT;
+ 
+ 	ret = do_sigaction(sig, act ? &new_sa : NULL, oact ? &old_sa : NULL);
+-- 
+1.8.3.1
+
