@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C8EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B2D2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8690F2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204244;
-	bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
+	s=default; t=1583204248;
+	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8E+Ip0QX25csSGBZvXzTuuuDN5SS181LOoEaEaqrvAUHwN4CYya4stR2Z2xRYqJ/
-	 xq753yMadngDhJRzPCbVoItTnwPCxhtrQg/8VTEQjMR5pKx3oN/SWJfvvVaGTM1VzQ
-	 GdJdrLA1c+v9oOiWQKsutV+Lw166wIqm5WM51CcQ=
+	b=zMVi6khGRKjVdb/uib1wBu+HfBahpb/jSDAgL29M5PGmBUtTLX+kMWEBCQrhWsybG
+	 pXsfmMZVn2WlXrP+1nM7O9TImEn6qpAqpaOydH35HhpIHR9NoiewIORK6VaU4xNZzl
+	 iB7vkHz5/DKePhFVN8WwtemXqY4YF1NaqA19sp6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgCCC5W (ORCPT
+        id S1728752AbgCCC51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbgCCCsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:22 -0500
+        id S1728388AbgCCCsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E6982468D;
-        Tue,  3 Mar 2020 02:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA08246A1;
+        Tue,  3 Mar 2020 02:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203702;
-        bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
+        s=default; t=1583203701;
+        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAkANi7PpJ+kQHrBxf+GyJ380o5esAFzFr8Aj2uTwO04HBMBZ0sbveDveHDCYRvNk
-         7vJ5sfsZ0Now44HIRXX22MyI9dbxQT6IJrXNCKJCmcWp1OURpfv4PrbrhiZXWMFJow
-         k+mwEHQti7eP17VEUEYL/DYFXKkT0jviblA3BM7Q=
+        b=U922rcbUW4cf566g89zPi3prQi7gyPRp10jWTUhAw/9kY2Uc2H7PnT+xDhs+JL89s
+         /G+pPx5eAjVeLTcALuBZ1zmpThetYl36DpFhSFq0LWQ+WLyg/+JeSM2qfaPDFzlNc2
+         IHRO6FwDsBF8lM/sQZsy14h3SaVL36S/NsRgQ204=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 34/58] s390: make 'install' not depend on vmlinux
-Date:   Mon,  2 Mar 2020 21:47:16 -0500
-Message-Id: <20200303024740.9511-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 33/58] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Mon,  2 Mar 2020 21:47:15 -0500
+Message-Id: <20200303024740.9511-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -59,50 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
+[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
 
-For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-install" not depend on vmlinux"), the install targets should never
-trigger the rebuild of the kernel.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-The variable, CONFIGURE, is not set by anyone. Remove it as well.
-
-Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile      | 2 +-
- arch/s390/boot/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/cio/blacklist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 9ce1baeac2b25..2faaf456956a6 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -146,7 +146,7 @@ all: bzImage
- #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
- KBUILD_IMAGE	:= $(boot)/bzImage
+diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+index 2a3f874a21d54..9cebff8e8d740 100644
+--- a/drivers/s390/cio/blacklist.c
++++ b/drivers/s390/cio/blacklist.c
+@@ -303,8 +303,10 @@ static void *
+ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ {
+ 	struct ccwdev_iter *iter;
++	loff_t p = *offset;
  
--install: vmlinux
-+install:
- 	$(Q)$(MAKE) $(build)=$(boot) $@
- 
- bzImage: vmlinux
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index e2c47d3a1c891..0ff9261c915e3 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
- $(obj)/startup.a: $(OBJECTS) FORCE
- 	$(call if_changed,ar)
- 
--install: $(CONFIGURE) $(obj)/bzImage
-+install:
- 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
- 	      System.map "$(INSTALL_PATH)"
+-	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
++	(*offset)++;
++	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+ 		return NULL;
+ 	iter = it;
+ 	if (iter->devno == __MAX_SUBCHANNEL) {
+@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ 			return NULL;
+ 	} else
+ 		iter->devno++;
+-	(*offset)++;
+ 	return iter;
+ }
  
 -- 
 2.20.1
