@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADF9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3589824673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78306246BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203698;
-	bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
+	s=default; t=1583203700;
+	bh=Ho1cPRcKntrvSArDkTbaHQDH8u9RrePjTmWNe/XsDv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xF+SQ65KLS9XXqklr3jsP8egFVgdX8YdNz4KogSsRJ4fX6SUXb6dxlWkEdgf2WmHZ
-	 DyTLMncoCkEu9FnKI3CVJs7lecSdY7TGicu4mHSl1sMUbMKcW1IVWMltw6wx1sEF9S
-	 4phW1weoBMu8mAWU6Y+r0/DI2tYfeivj7Ca2L/80=
+	b=iVpASYeo59psyAwRCR9hqMoRUlgdiqmX4fpPM2wpFAGpeNdngqJ62o5dgwget/Ufm
+	 7+Ks2po7Y9MguwfRG6uYhexHF/w2i/brnM70MnlavB9BEbfty28Mnn0uFUXoJFbO4U
+	 HVdEu80jA6zAkxMf16tqlSFoR7XqgC3Bs1AjtAas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgCCCsR (ORCPT
+        id S1727750AbgCCCsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbgCCCsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:07 -0500
+        id S1728320AbgCCCsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6979E24680;
-        Tue,  3 Mar 2020 02:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2363524684;
+        Tue,  3 Mar 2020 02:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203686;
-        bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
+        s=default; t=1583203689;
+        bh=Ho1cPRcKntrvSArDkTbaHQDH8u9RrePjTmWNe/XsDv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQFZ9GPWz5GO8mewMjtMtCDfHAQB50BKVClH3eLvWJFEZkGDaea2tVUlH18ahGzKr
-         73sTOeRqLlomADg2nF2f+gX3KhNO71TSPrWeOlf7kIoFhgFe3dNA56ModNDIs2IGuh
-         qRCCIrGPmILc0594aKB4c9If1DgEbeHf7eCJVApM=
+        b=ve+RIeFhbI4X0ST2nrcqYzNmFa0LXf72rlqkBwi6qLlPBrg8aHDUet71Babfs/Mex
+         +PD/UOSbeD+4sL6ppNb0UaGWokCr6Ntcg/nGboZaxDS6xEzSuD13LEBatleMF00siJ
+         k6Ia64zppnCx1waDopExP6X0tBNyWBV8drwtQnPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
+Cc:     Dmitry Bogdanov <dbogdanov@marvell.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/58] net: atlantic: check rpc result and wait for rpc address
-Date:   Mon,  2 Mar 2020 21:47:03 -0500
-Message-Id: <20200303024740.9511-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 24/58] net: atlantic: fix out of range usage of active_vlans array
+Date:   Mon,  2 Mar 2020 21:47:06 -0500
+Message-Id: <20200303024740.9511-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,94 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <irusskikh@marvell.com>
+From: Dmitry Bogdanov <dbogdanov@marvell.com>
 
-[ Upstream commit e7b5f97e6574dc4918e375d5f8d24ec31653cd6d ]
+[ Upstream commit 5a292c89a84d49b598f8978f154bdda48b1072c0 ]
 
-Artificial HW reliability tests revealed a possible hangup in
-the driver. Normally, when device disappears from bus, all
-register reads returns 0xFFFFFFFF.
+fix static checker warning:
+ drivers/net/ethernet/aquantia/atlantic/aq_filters.c:166 aq_check_approve_fvlan()
+ error: passing untrusted data to 'test_bit()'
 
-At remote procedure invocation towards FW there is a logic
-where result is compared with -1 in a loop.
-That caused an infinite loop if hardware due to some issues
-disappears from bus.
-
-Add extra result checks to prevent this.
-
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 7975d2aff5af: ("net: aquantia: add support of rx-vlan-filter offload")
 Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../aquantia/atlantic/hw_atl/hw_atl_utils.c   | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_filters.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-index 52646855495ed..873f9865f0d15 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-@@ -22,6 +22,7 @@
- #define HW_ATL_MIF_ADDR         0x0208U
- #define HW_ATL_MIF_VAL          0x020CU
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
+index aee827f07c160..01af0f028693d 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
+@@ -158,7 +158,7 @@ aq_check_approve_fvlan(struct aq_nic_s *aq_nic,
+ 	}
  
-+#define HW_ATL_MPI_RPC_ADDR     0x0334U
- #define HW_ATL_RPC_CONTROL_ADR  0x0338U
- #define HW_ATL_RPC_STATE_ADR    0x033CU
- 
-@@ -48,15 +49,14 @@
- #define FORCE_FLASHLESS 0
- 
- static int hw_atl_utils_ver_match(u32 ver_expected, u32 ver_actual);
--
- static int hw_atl_utils_mpi_set_state(struct aq_hw_s *self,
- 				      enum hal_atl_utils_fw_state_e state);
--
- static u32 hw_atl_utils_get_mpi_mbox_tid(struct aq_hw_s *self);
- static u32 hw_atl_utils_mpi_get_state(struct aq_hw_s *self);
- static u32 hw_atl_utils_mif_cmd_get(struct aq_hw_s *self);
- static u32 hw_atl_utils_mif_addr_get(struct aq_hw_s *self);
- static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self);
-+static u32 aq_fw1x_rpc_get(struct aq_hw_s *self);
- 
- int hw_atl_utils_initfw(struct aq_hw_s *self, const struct aq_fw_ops **fw_ops)
- {
-@@ -413,6 +413,10 @@ static int hw_atl_utils_init_ucp(struct aq_hw_s *self,
- 					self, self->mbox_addr,
- 					self->mbox_addr != 0U,
- 					1000U, 10000U);
-+	err = readx_poll_timeout_atomic(aq_fw1x_rpc_get, self,
-+					self->rpc_addr,
-+					self->rpc_addr != 0U,
-+					1000U, 100000U);
- 
- 	return err;
- }
-@@ -469,6 +473,12 @@ int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
- 						self, fw.val,
- 						sw.tid == fw.tid,
- 						1000U, 100000U);
-+		if (err < 0)
-+			goto err_exit;
-+
-+		err = aq_hw_err_from_flags(self);
-+		if (err < 0)
-+			goto err_exit;
- 
- 		if (fw.len == 0xFFFFU) {
- 			err = hw_atl_utils_fw_rpc_call(self, sw.len);
-@@ -950,6 +960,11 @@ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self)
- 	return aq_hw_read_reg(self, HW_ATL_RPC_STATE_ADR);
- }
- 
-+static u32 aq_fw1x_rpc_get(struct aq_hw_s *self)
-+{
-+	return aq_hw_read_reg(self, HW_ATL_MPI_RPC_ADDR);
-+}
-+
- const struct aq_fw_ops aq_fw_1x_ops = {
- 	.init = hw_atl_utils_mpi_create,
- 	.deinit = hw_atl_fw1x_deinit,
+ 	if ((aq_nic->ndev->features & NETIF_F_HW_VLAN_CTAG_FILTER) &&
+-	    (!test_bit(be16_to_cpu(fsp->h_ext.vlan_tci),
++	    (!test_bit(be16_to_cpu(fsp->h_ext.vlan_tci) & VLAN_VID_MASK,
+ 		       aq_nic->active_vlans))) {
+ 		netdev_err(aq_nic->ndev,
+ 			   "ethtool: unknown vlan-id specified");
 -- 
 2.20.1
 
