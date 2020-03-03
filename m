@@ -2,217 +2,89 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDE9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61205C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F780214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2C721556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583227120;
+	bh=Qo3nRK4HWumf4jtOtTGc8uhpaSbpnraV+o/q7veIVAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fyALrrSbI9BUR+wxXwVGVlHe2Qx71RClOvph9dymfJV3gkmaPjqzL4p1IM4wmxuZk
+	 +WrVTeiJ2EkskH6RSOVOQXSjAylkwUVmfEKnjAIrMzXpaLm8q/jamaj4iwDHVLsYTh
+	 qqylICVHiJiQWfsClXn1s1Twr66klq2c8ur5zS0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgCCJRE (ORCPT
+        id S1728066AbgCCJSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:17:04 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55025 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728100AbgCCJRE (ORCPT
+        Tue, 3 Mar 2020 04:18:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41074 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgCCJSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:17:04 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Mar 2020 14:46:58 +0530
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 03 Mar 2020 14:46:49 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id E38173683; Tue,  3 Mar 2020 14:46:48 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sanm@codeaurora.org,
-        sivaa@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180: Changed all sensor values Thermal-zones node
-Date:   Tue,  3 Mar 2020 14:46:36 +0530
-Message-Id: <1583226996-24747-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583226996-24747-1-git-send-email-rkambl@codeaurora.org>
-References: <1583226996-24747-1-git-send-email-rkambl@codeaurora.org>
+        Tue, 3 Mar 2020 04:18:38 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v4so3345753wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:18:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pXW4XibhqAWbXclYMHPjPrIsQTzUNXr/pk+A3VeMp8Q=;
+        b=eLx1Veu4TkTqn3FZK+z7f5yUsK+KpqWmcfmONDrJj8SeU2/np9HBU7p1rnHKCBxZi1
+         7URsTPDw96yburlPWCAGn9c0AUlJ1QwoVeE/0udwwgpL9eAuWhHFhGiCX/NwTCL9blGO
+         /cv7r/xwQlnBZZ5J6H8zmAWb2Afl8+dm/9v/GxCyHTbeDKTsVARvxOjDa2eEfY3fBHIK
+         ffXFMpy/LBmEFjv4w8wV50yjxPCRYOqlEb8q+dYJvGh4QEagHszqQfrGJY1AotaK8Anb
+         cYf3xWJTkfy1JGhr6976RMAhtcjBYEufej5/fp+u4YzGim71k8WbyaM+8KbE1fV4kxPe
+         M84g==
+X-Gm-Message-State: ANhLgQ26Nc1KyZ2464CnxrPStaHWNlCXx40urU/GESS1OEwCBpW4MkoB
+        pnAtZOCkRDw17e6WtX4/uh8=
+X-Google-Smtp-Source: ADFU+vuBgMiydd/l2UUSufgoAbaYi+wHaw+zSqFwkxZNbX4n0pu0OFPRgcX7TTqLwk7xAerOFo/hKQ==
+X-Received: by 2002:adf:d086:: with SMTP id y6mr4333948wrh.387.1583227117589;
+        Tue, 03 Mar 2020 01:18:37 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z5sm2847585wml.48.2020.03.03.01.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 01:18:36 -0800 (PST)
+Date:   Tue, 3 Mar 2020 10:18:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Ralph Campbell <rcampbell@nvidia.com>, pv-drivers@vmware.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-graphics-maintainer@vmware.com,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v4 0/9] Huge page-table entries for TTM
+Message-ID: <20200303091836.GC4380@dhcp22.suse.cz>
+References: <20200220122719.4302-1-thomas_os@shipmail.org>
+ <cc469a2a-e31c-4645-503a-f225fb101899@shipmail.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc469a2a-e31c-4645-503a-f225fb101899@shipmail.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable kernel critical shutdown feature all sensors threshold values
-should be 110C to perform shutdown in orderly manner and changed trip
-point from hot to critical.
+On Fri 28-02-20 14:08:04, Thomas Hellström (VMware) wrote:
+> Andrew, Michal
+> 
+> I'm wondering what's the best way here to get the patches touching mm
+> reviewed and accepted?
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d068584..55fd156 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1952,9 +1952,9 @@
- 
- 			trips {
- 				aoss0_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2007,9 +2007,9 @@
- 
- 			trips {
- 				gpuss0_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2022,9 +2022,9 @@
- 
- 			trips {
- 				gpuss1_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2037,9 +2037,9 @@
- 
- 			trips {
- 				aoss1_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2052,9 +2052,9 @@
- 
- 			trips {
- 				cwlan_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2067,9 +2067,9 @@
- 
- 			trips {
- 				audio_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2082,9 +2082,9 @@
- 
- 			trips {
- 				ddr_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2097,9 +2097,9 @@
- 
- 			trips {
- 				q6_hvx_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2112,9 +2112,9 @@
- 
- 			trips {
- 				camera_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2127,9 +2127,9 @@
- 
- 			trips {
- 				mdm_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2142,9 +2142,9 @@
- 
- 			trips {
- 				mdm_dsp_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2157,9 +2157,9 @@
- 
- 			trips {
- 				npu_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
-@@ -2172,9 +2172,9 @@
- 
- 			trips {
- 				video_alert0: trip-point0 {
--					temperature = <90000>;
-+					temperature = <110000>;
- 					hysteresis = <2000>;
--					type = "hot";
-+					type = "critical";
- 				};
- 			};
- 		};
+I am sorry, but I am busy with other stuff and unlikely to find time to
+review this series.
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Michal Hocko
+SUSE Labs
