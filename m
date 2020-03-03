@@ -2,141 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7010DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC2624673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319122465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR50jNav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgCCC1x (ORCPT
+        id S1727018AbgCCCgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:27:53 -0500
-Received: from mga11.intel.com ([192.55.52.93]:12164 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgCCC1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:27:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:27:52 -0800
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="233433400"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.67]) ([10.255.30.67])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 Mar 2020 18:27:50 -0800
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
- is out-of-range
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
- <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
- <20200302204940.GG6244@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
-Date:   Tue, 3 Mar 2020 10:27:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200302204940.GG6244@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 2 Mar 2020 21:36:55 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36829 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgCCCgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:36:54 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i13so681154pfe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 18:36:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RMQ9gygXU0j/rnN/vo74F76HOdw/OIND39QkStwRaA8=;
+        b=fR50jNav/kAWk1v0287lRUj1jc1aa0QdrgtIPfyt87jXJNcjxBEmxtKKul9aVO4P0V
+         dXa6SP3xeCChmFyptwM8yhWl8o1PBgXnKPBfEAVfcEqyhltOL+ulZsZyWFx/TxV1i/aZ
+         o0q46MY/Gh0w60pQcPMcRlCufqOdjz8Og5ph1CA7OXkU2AogDgyzaK+MUJNmaoDLzwFx
+         lyxsWeNg2+LNOadMoz3gOHwTeW60AxgPHw0iLnyz8IXusJcSRIuQCpSp2ABTDNqOtJSe
+         qZ2oQVr1bZaG0b500IxSkfLF7nl0QLpONckq/yM19biE5CMwlPqJgWYsXyuaPYuLbss2
+         L2FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RMQ9gygXU0j/rnN/vo74F76HOdw/OIND39QkStwRaA8=;
+        b=BAqCaYpKZJUApQCUNiOc4WPbj6FVl5PsYzHNHlx6x3DmMrlBbsMq9MSxX6J6PpKDTT
+         R4x4PeJMIa6c48L6EIUNs0xL9NPVSLgOSITe76rQpP3oTAN/OZLPnzYiZHlDZu1qyEi6
+         kaPaDniN+k1PYes3wLegVEN24/7yH1qX2cx0SG34XuqXAsR+uBovYa7UMz3gbPysBGu3
+         6UiCQlgkng635s9Erb+8HABG7gwOQWtg7ff11dEyXwkJzSJPQcEFb+LuHvwq7XogZXqq
+         BnZKzatwXwlcvNJZ6BjbfPik4VItGF+I8J27mJF77iKO/YUQVWi5JVHp7k+bOyOxM9UW
+         zR7w==
+X-Gm-Message-State: ANhLgQ2+TIjwAPU/DHPXb95YEdr123DMjwbLj1tU3QALP8y6K1P+5n3O
+        3JExl0jXXeHspKuXnnNuNLvlXvt1N68=
+X-Google-Smtp-Source: ADFU+vt0FkANtpknOcwjsq6RStbK5ZqMwLKwMhbFQQ2R+JU6veW/0N4bsHoa5vdOKnbdv6RUc9/u4Q==
+X-Received: by 2002:a63:f74a:: with SMTP id f10mr1900596pgk.360.1583203013723;
+        Mon, 02 Mar 2020 18:36:53 -0800 (PST)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id q66sm23317925pfq.27.2020.03.02.18.36.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Mar 2020 18:36:53 -0800 (PST)
+From:   Junyong Sun <sunjy516@gmail.com>
+X-Google-Original-From: Junyong Sun <sunjunyong@xiaomi.com>
+To:     mcgrof@kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, sunjunyong@xiaomi.com
+Subject: [PATCH v2] firmware: fix a double abort case with fw_load_sysfs_fallback
+Date:   Tue,  3 Mar 2020 10:36:08 +0800
+Message-Id: <1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/2020 4:49 AM, Sean Christopherson wrote:
-> On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
->> On 02.03.20 20:57, Sean Christopherson wrote:
->>> Rework kvm_cpuid() to query entry->function when adjusting the output
->>> values so that the original function (in the aptly named "function") is
->>> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
->>> trace the max function for a range instead of the requested function if
->>> the requested function is out-of-range and an entry for the max function
->>> exists.
->>>
->>> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
->>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
->>> Cc: Jim Mattson <jmattson@google.com>
->>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> ---
->>>   arch/x86/kvm/cpuid.c | 15 +++++++--------
->>>   1 file changed, 7 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>> index b1c469446b07..6be012937eba 100644
->>> --- a/arch/x86/kvm/cpuid.c
->>> +++ b/arch/x86/kvm/cpuid.c
->>> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
->>>   	return max && function <= max->eax;
->>>   }
->>> +/* Returns true if the requested leaf/function exists in guest CPUID. */
->>>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->>>   	       u32 *ecx, u32 *edx, bool check_limit)
->>>   {
->>> -	u32 function = *eax, index = *ecx;
->>> +	const u32 function = *eax, index = *ecx;
->>>   	struct kvm_cpuid_entry2 *entry;
->>> -	struct kvm_cpuid_entry2 *max;
->>>   	bool found;
->>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
->>> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->>>   	 */
->>>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
->>>   	    !cpuid_function_in_range(vcpu, function)) {
->>> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
->>> -		if (max) {
->>> -			function = max->eax;
->>> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
->>> -		}
->>> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
->>> +		if (entry)
->>> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
->>>   	}
->>>   	if (entry) {
->>>   		*eax = entry->eax;
->>>   		*ebx = entry->ebx;
->>>   		*ecx = entry->ecx;
->>>   		*edx = entry->edx;
->>> -		if (function == 7 && index == 0) {
->>> +
->>> +		if (entry->function == 7 && index == 0) {
->>>   			u64 data;
->>>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
->>>   			    (data & TSX_CTRL_CPUID_CLEAR))
->>>
->>
->> What about the !entry case below this? It was impacted by the function
->> capping so far, not it's no longer.
-> 
-> Hmm, the only way the output would be different is in a really contrived
-> scenario where userspace doesn't provide an entry for the max basic leaf.
-> 
-> The !entry path can only be reached with "orig_function != function" if
-> orig_function is out of range and there is no entry for the max basic leaf.
+fw_sysfs_wait_timeout may return err with -ENOENT
+at fw_load_sysfs_fallback and firmware is already
+in abort status, no need to abort again, so skip it.
 
-> The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
-> and to take effect with !entry would require there to be a CPUID.max.1 but
-> not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
-> userspace input and IMO can be ignored.
-> 
+This issue is caused by concurrent situation like below:
+when thread 1# wait firmware loading, thread 2# may write
+-1 to abort loading and wakeup thread 1# before it timeout.
+so wait_for_completion_killable_timeout of thread 1# would
+return remaining time which is != 0 with fw_st->status
+FW_STATUS_ABORTED.And the results would be converted into
+err -ENOENT in __fw_state_wait_common and transfered to
+fw_load_sysfs_fallback in thread 1#.
+The -ENOENT means firmware status is already at ABORTED,
+so fw_load_sysfs_fallback no need to get mutex to abort again.
+-----------------------------
+thread 1#,wait for loading
+fw_load_sysfs_fallback
+ ->fw_sysfs_wait_timeout
+    ->__fw_state_wait_common
+       ->wait_for_completion_killable_timeout
 
-Sorry I cannot catch you. Why it's a violation of Intel's SDM?
+in __fw_state_wait_common,
+...
+93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
+94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
+95       return -ENOENT;
+96    if (!ret)
+97	 return -ETIMEDOUT;
+98
+99    return ret < 0 ? ret : 0;
+-----------------------------
+thread 2#, write -1 to abort loading
+firmware_loading_store
+ ->fw_load_abort
+   ->__fw_load_abort
+     ->fw_state_aborted
+       ->__fw_state_set
+         ->complete_all
 
-Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
-it should return cpuid(0x1f, 0x5).
+in __fw_state_set,
+...
+111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
+112       complete_all(&fw_st->completion);
+-------------------------------------------
+BTW,the double abort issue would not cause kernel panic or create an issue,
+but slow down it sometimes.The change is just a minor optimization.
 
-But based on this patch, it returns all zeros.
+Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+---
+changes in v2:
+ - modify the commit log of patch
+---
+ drivers/base/firmware_loader/fallback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 8704e1b..1e9c96e 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+ 	}
+ 
+ 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
+-	if (retval < 0) {
++	if (retval < 0 && retval != -ENOENT) {
+ 		mutex_lock(&fw_lock);
+ 		fw_load_abort(fw_sysfs);
+ 		mutex_unlock(&fw_lock);
+-- 
+2.7.4
 
