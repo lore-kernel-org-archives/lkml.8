@@ -2,170 +2,161 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E287C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF48C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2735B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="O3uRmfbH"
+	by mail.kernel.org (Postfix) with ESMTP id BF7452073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583262661;
+	bh=4NVTBacBsWlMTFEhPSv4sPsd4s0glorw7tyt6PZlIyU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G2LJ2ha1iwNrTEVu+PI017BFaF9iZHQItc8303BNIiXakq/4DspYYI0uYw4WYZ0dD
+	 FnMLywuNpnnJ4XS/6vZ6q4ejIVjfNOHab+vNK03ON6ubtn3me91uo4b+1nKG68xqm9
+	 ZtaqffdJruidY971vlpY72kHC43ttEsxGNL4zaWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgCCTKd (ORCPT
+        id S1730673AbgCCTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:10:33 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34396 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgCCTKd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:10:33 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dm3so5853358edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:10:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jv7Ih1NyrqeNZpG1dR8gyRFpz0epRhdNQwzv72VuIfM=;
-        b=O3uRmfbHh64VdAmQ/qm/TdRLtr3VzWsMlk35GCQ0l1JuNPFgo5hbwSh/l/b/kJ6zIp
-         p2ekHiW/aBjc+H3XbL9cCmchVqOF4PcbUr8Uj7XwIEM2jM7I61+HidBb2dndcg3ycAzt
-         RbnojAZvLK7rxv3G7Q+5s9dNqt7AkMefzVZqzibZzjsw/ARxzZYcS0wya2W5FVtJFnkk
-         Ncojxn4je1V6yqKoYsuPmEpl+tJBm4VFaaxcy+zTxZzmXbkQk5qd2lMu9E9J8E1tzDg1
-         GEFBgYYSdvqAN+keSv5aTnTIC947P46GTp407QMVAxFgTn1zqXyEc98AeBmhfjcNZT3b
-         XN+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jv7Ih1NyrqeNZpG1dR8gyRFpz0epRhdNQwzv72VuIfM=;
-        b=Mvt2jYe/zj1DclgtWQs2l+WavmkMq63kBYCKGtwoPpyjqzRCxpkNgzXj+KWIQ4rAgm
-         oftd/TkVRF2S31QP0jg9Ff73t7G7N6pnOyj/Vtf4juVLMKd/Akb+2pyNI0jmmRXltBC4
-         6a1KkYRMv+j0tXA3pSgyA2KemOVEKC9yGhhKcj7xrKdK8Ferbc/+49wl0xWaMAK5bs7b
-         zKklB9l/pfxyrH8/dvTY5SPbg0YbK4NfqCU6CIauy0Avmiso0/kKW+Usy3Fo+e3F6nj6
-         YHdu9DK1DFxix4/LgJz8tBTAulfR0UfKW+f5yY8G9jKzcjFLJshlNlClPUJOVnQnU43i
-         ca8A==
-X-Gm-Message-State: ANhLgQ0E0KMAOOYQxMPYm/xShvDrPZy5/7fPMruLyfc+4FNA2qtlyO69
-        F1oseFMoaf9ON8riuCpBxF2CarooPxTspqjAJ/e/KQ==
-X-Google-Smtp-Source: ADFU+vsmTm+PWU2FuG/IFYesXpVvcuHpos6kjEbqVQD1KKJIdmpF681WL/kjVdopso7dwT46jc/Gw12waDjkW4uto7E=
-X-Received: by 2002:a50:f38e:: with SMTP id g14mr5691650edm.168.1583262630144;
- Tue, 03 Mar 2020 11:10:30 -0800 (PST)
+        Tue, 3 Mar 2020 14:11:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726899AbgCCTLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:11:00 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B9F320CC7
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 19:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583262659;
+        bh=4NVTBacBsWlMTFEhPSv4sPsd4s0glorw7tyt6PZlIyU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nzZjsN7os5wMg6j+xQykpxFbL6DqCQ0AU7uFBA4+ZBZNqdvUKdBzmozDpk1/9W6Xb
+         5SyLhr8eQKWqQzLt/X3aWhZ0KPsQAsCgtwosBStNAPLjX29LPC2YGcvcM92b7t/hVC
+         r8voHZh5jZ7jGt1CeZkgWnJNp4YkwkMQvFRsb170=
+Received: by mail-wr1-f45.google.com with SMTP id j16so5868166wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:10:59 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3Dz87gbaeaYLsSa0s4zBMR14tMv0BM0fRulk0v6nOmZnpSSzQO
+        PRWplGt4WImPUb64GY/jtbbCZ1bGqbmxn9lhC8rvtA==
+X-Google-Smtp-Source: ADFU+vv4R2JsjxvCStaF4Sz+G3lQ9x00p2GuUKC7ZVY8WVBxrEiYeOMh9IFZznAIi/ABBEp6fO6zzCWed8525DJ7MnA=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr6731528wrn.262.1583262657609;
+ Tue, 03 Mar 2020 11:10:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20200225235856.975366-1-jason@jlekstrand.net> <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
- <20200226100523.GQ2363188@phenom.ffwll.local> <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
- <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com> <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
-In-Reply-To: <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
-From:   Jason Ekstrand <jason@jlekstrand.net>
-Date:   Tue, 3 Mar 2020 13:10:18 -0600
-Message-ID: <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
-Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-        Dave Airlie <airlied@redhat.com>,
-        Jesse Hall <jessehall@google.com>,
-        James Jones <jajones@nvidia.com>,
-        Daniel Stone <daniels@collabora.com>,
-        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200301230537.2247550-2-nivedita@alum.mit.edu>
+In-Reply-To: <20200301230537.2247550-2-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 3 Mar 2020 20:10:46 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu87ssM3g+Hc9cPJPy5oFkgFCtueovwxmLK-gTKzUbSLNQ@mail.gmail.com>
+Message-ID: <CAKv+Gu87ssM3g+Hc9cPJPy5oFkgFCtueovwxmLK-gTKzUbSLNQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] x86/boot/compressed/32: Save the output address
+ instead of recalculating it
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 2:28 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
+On Mon, 2 Mar 2020 at 00:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> Am 26.02.20 um 17:46 schrieb Bas Nieuwenhuizen:
-> > On Wed, Feb 26, 2020 at 4:29 PM Jason Ekstrand <jason@jlekstrand.net> w=
-rote:
-> >> On Wed, Feb 26, 2020 at 4:05 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >>> On Wed, Feb 26, 2020 at 10:16:05AM +0100, Christian K=C3=B6nig wrote:
-> >>> [SNIP]
-> >>>> Just imagine that you access some DMA-buf with a shader and that ope=
-ration
-> >>>> is presented as a fence on the DMA-bufs reservation object. And now =
-you can
-> >>>> go ahead and replace that fence and free up the memory.
-> >>>>
-> >>>> Tricking the Linux kernel into allocating page tables in that freed =
-memory
-> >>>> is trivial and that's basically it you can overwrite page tables wit=
-h your
-> >>>> shader and gain access to all of system memory :)
-> >>>>
-> >>>> What we could do is to always make sure that the added fences will c=
-omplete
-> >>>> later than the already existing ones, but that is also rather tricky=
- to get
-> >>>> right. I wouldn't do that if we don't have a rather big use case for=
- this.
-> >> Right.  I thought about that but I'm still learning how dma_resv
-> >> works.  It'd be easy enough to make a fence array that contains both
-> >> the old fence and the new fence and replace the old fence with that.
-> >> What I don't know is the proper way to replace the exclusive fence
-> >> safely.  Some sort of atomic_cpxchg loop, perhaps?  I presume there's
-> >> some way of doing it properly because DRM drivers are doing it all the
-> >> time.
+> In preparation for being able to decompress starting at a different
+> address than startup_32, save the calculated output address instead of
+> recalculating it later.
 >
-> First of all you need to grab the lock of the dma_resv object or you
-> can't replace the exclusive nor the shared ones.
+
+Could you expand this a bit? Are you talking about *running* the
+decompressor code at another offset? Or about the space it uses. I
+think I know but I'd like to be sure :-)
+
+
+> We now keep track of three addresses:
+>         %edx: startup_32 as we were loaded by bootloader
+>         %ebx: new location of compressed kernel
+>         %ebp: start of decompression buffer
 >
-> This way you don't need to do a atomic_cmpxchg or anything else and
-> still guarantee correct ordering.
-
-Fixed in v3.
-
-> > I think for an exclusive fence you may need to create a fence array
-> > that includes the existing exclusive and shared fences in the dma_resv
-> > combined with the added fence.
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/compressed/head_32.S | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
 >
-> Yes, that at least gives us the correct synchronization.
-
-Fixed in v2
-
-> > However, I'm not sure what the best way is to do garbage collection on
-> > that so that we don't get an impossibly list of fence arrays.
+> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+> index 46bbe7ab4adf..894182500606 100644
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@ -75,11 +75,11 @@ SYM_FUNC_START(startup_32)
+>   */
+>         leal    (BP_scratch+4)(%esi), %esp
+>         call    1f
+> -1:     popl    %ebp
+> -       subl    $1b, %ebp
+> +1:     popl    %edx
+> +       subl    $1b, %edx
 >
-> Exactly yes. That's also the reason why the dma_fence_chain container I
-> came up with for the sync timeline stuff has such a rather sophisticated
-> garbage collection.
+>         /* Load new GDT */
+> -       leal    gdt(%ebp), %eax
+> +       leal    gdt(%edx), %eax
+>         movl    %eax, 2(%eax)
+>         lgdt    (%eax)
 >
-> When some of the included fences signal you need to free up the
-> array/chain and make sure that the memory for the container can be reused=
-.
-
-Currently (as of v2), I'm using dma_fence_array and being careful to
-not bother constructing one if there's only one fence in play.  Is
-this insufficient?  If so, maybe we should consider improving
-dma_fence_array.
-
-> >   (Note
-> > the dma_resv has a lock that needs to be taken before adding an
-> > exclusive fence, might be useful). Some code that does a thing like
-> > this is __dma_resv_make_exclusive in
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+> @@ -92,13 +92,14 @@ SYM_FUNC_START(startup_32)
+>         movl    %eax, %ss
 >
-> Wanted to move that into dma_resv.c for quite a while since there are
-> quite a few other cases where we need this.
-
-I've roughly done that.  The primary difference is that my version
-takes an optional additional fence to add to the array.  This makes it
-a bit more complicated but I think I got it mostly right.
-
-I've also written userspace code which exercises this and it seems to
-work.  Hopefully, that will give a better idea of what I'm trying to
-accomplish.
-
-https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/4037
-
---Jason
+>  /*
+> - * %ebp contains the address we are loaded at by the boot loader and %ebx
+> + * %edx contains the address we are loaded at by the boot loader and %ebx
+>   * contains the address where we should move the kernel image temporarily
+> - * for safe in-place decompression.
+> + * for safe in-place decompression. %ebp contains the address that the kernel
+> + * will be decompressed to.
+>   */
+>
+>  #ifdef CONFIG_RELOCATABLE
+> -       movl    %ebp, %ebx
+> +       movl    %edx, %ebx
+>         movl    BP_kernel_alignment(%esi), %eax
+>         decl    %eax
+>         addl    %eax, %ebx
+> @@ -110,10 +111,10 @@ SYM_FUNC_START(startup_32)
+>         movl    $LOAD_PHYSICAL_ADDR, %ebx
+>  1:
+>
+> +       movl    %ebx, %ebp      // Save the output address for later
+>         /* Target address to relocate to for decompression */
+> -       movl    BP_init_size(%esi), %eax
+> -       subl    $_end, %eax
+> -       addl    %eax, %ebx
+> +       addl    BP_init_size(%esi), %ebx
+> +       subl    $_end, %ebx
+>
+>         /* Set up the stack */
+>         leal    boot_stack_end(%ebx), %esp
+> @@ -127,7 +128,7 @@ SYM_FUNC_START(startup_32)
+>   * where decompression in place becomes safe.
+>   */
+>         pushl   %esi
+> -       leal    (_bss-4)(%ebp), %esi
+> +       leal    (_bss-4)(%edx), %esi
+>         leal    (_bss-4)(%ebx), %edi
+>         movl    $(_bss - startup_32), %ecx
+>         shrl    $2, %ecx
+> @@ -196,9 +197,7 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+>                                 /* push arguments for extract_kernel: */
+>         pushl   $z_output_len   /* decompressed length, end of relocs */
+>
+> -       leal    _end(%ebx), %eax
+> -       subl    BP_init_size(%esi), %eax
+> -       pushl   %eax            /* output address */
+> +       pushl   %ebp            /* output address */
+>
+>         pushl   $z_input_len    /* input_len */
+>         leal    input_data(%ebx), %eax
+> --
+> 2.24.1
+>
