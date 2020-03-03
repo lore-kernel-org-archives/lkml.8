@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B26DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2562220CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEEF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258251;
-	bh=bAUUKb7tQmovY2KCpkljFtcy/HITx7HxuDONJh7/nAw=;
+	s=default; t=1583258255;
+	bh=p7OhjitPqPkZxr0MXCzNjNv1tyl0e5vLJ5xugonGZCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgiYQ6o6B5wHCPUyCRKEinIS049keJbxuXEYF7veKYqCwsCammfO0QJ4l45zY3Gi5
-	 OD0cacik1/wG9Qzoa0eGaTsJWogKADS6VYgnh63HgIFfHnEhNqPm1/ms7VkmY8gPmC
-	 GhXfENvMB+71I/o6lyUWpTdm1AyVZpGQpT1GFrQ8=
+	b=twlKkgfWwFd7wFdYqYcmGF1a9T30EBR5IeYGZn0fd9Sd/A9qeqqhC1/LVFtpLVkJt
+	 N2OmGIppJUsiKvF10fXZmlQnwpMbB4X0X60evpD77DBuG+zd7PW5DpC0IUjMCmIkLF
+	 N5PB/j/6KXZ+Szh7isJ73p+q3OfhqUPy/AZXK5QE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbgCCR5a (ORCPT
+        id S1733101AbgCCR5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:57:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733075AbgCCR52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:28 -0500
+        id S1732772AbgCCR5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 882DB20656;
-        Tue,  3 Mar 2020 17:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EAC206D5;
+        Tue,  3 Mar 2020 17:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258248;
-        bh=bAUUKb7tQmovY2KCpkljFtcy/HITx7HxuDONJh7/nAw=;
+        s=default; t=1583258251;
+        bh=p7OhjitPqPkZxr0MXCzNjNv1tyl0e5vLJ5xugonGZCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yC8s1D3SdTITmEWqvqtoTONuXyxUAHLxPlWgol8p9DdfFLmmsy3hlJ7xeHXJZ3T7q
-         rzrSJkZI42yUHWPaskvK37XbcuxkyUCOYMB7EAxVUyO63f0SJUuaZkABGSUNLLcSY+
-         jaCBPzwFngUCo93RlDqmPx8saHxqEbMWmWOc8xbs=
+        b=QOF+FserQLXMOM76j9UQg9IA/GkP3BOu0ibnRAmMJK6PXOnjKJaeBF9t2/Z4DzeB8
+         R1mTPosg3Q9ncujm5pb+8pNl6fTrV/kNyY+HasnrT729H0wu0O38Ra6byU735nmqwr
+         7vftFvXjLEMpu5L/k8EbWfCzEIovRozrlfgGD3tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Konsta Karsisto <konsta.karsisto@gmail.com>
-Subject: [PATCH 5.4 127/152] ima: ima/lsm policy rule loading logic bug fixes
-Date:   Tue,  3 Mar 2020 18:43:45 +0100
-Message-Id: <20200303174317.233730377@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 092/152] HID: alps: Fix an error handling path in alps_input_configured()
+Date:   Tue,  3 Mar 2020 18:43:10 +0100
+Message-Id: <20200303174313.039780753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,140 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janne Karhunen <janne.karhunen@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 483ec26eed42bf050931d9a5c5f9f0b5f2ad5f3b upstream.
+commit 8d2e77b39b8fecb794e19cd006a12f90b14dd077 upstream.
 
-Keep the ima policy rules around from the beginning even if they appear
-invalid at the time of loading, as they may become active after an lsm
-policy load.  However, loading a custom IMA policy with unknown LSM
-labels is only safe after we have transitioned from the "built-in"
-policy rules to a custom IMA policy.
+They are issues:
+   - if 'input_allocate_device()' fails and return NULL, there is no need
+     to free anything and 'input_free_device()' call is a no-op. It can
+     be axed.
+   - 'ret' is known to be 0 at this point, so we must set it to a
+     meaningful value before returning
 
-Patch also fixes the rule re-use during the lsm policy reload and makes
-some prints a bit more human readable.
-
-Changelog:
-v4:
-- Do not allow the initial policy load refer to non-existing lsm rules.
-v3:
-- Fix too wide policy rule matching for non-initialized LSMs
-v2:
-- Fix log prints
-
-Fixes: b16942455193 ("ima: use the lsm policy update notifier")
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Reported-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Janne Karhunen <janne.karhunen@gmail.com>
-Signed-off-by: Konsta Karsisto <konsta.karsisto@gmail.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Fixes: 2562756dde55 ("HID: add Alps I2C HID Touchpad-Stick support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_policy.c |   44 +++++++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ drivers/hid/hid-alps.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -263,7 +263,7 @@ static void ima_lsm_free_rule(struct ima
- static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- {
- 	struct ima_rule_entry *nentry;
--	int i, result;
-+	int i;
- 
- 	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
- 	if (!nentry)
-@@ -277,7 +277,7 @@ static struct ima_rule_entry *ima_lsm_co
- 	memset(nentry->lsm, 0, FIELD_SIZEOF(struct ima_rule_entry, lsm));
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--		if (!entry->lsm[i].rule)
-+		if (!entry->lsm[i].args_p)
- 			continue;
- 
- 		nentry->lsm[i].type = entry->lsm[i].type;
-@@ -286,13 +286,13 @@ static struct ima_rule_entry *ima_lsm_co
- 		if (!nentry->lsm[i].args_p)
- 			goto out_err;
- 
--		result = security_filter_rule_init(nentry->lsm[i].type,
--						   Audit_equal,
--						   nentry->lsm[i].args_p,
--						   &nentry->lsm[i].rule);
--		if (result == -EINVAL)
--			pr_warn("ima: rule for LSM \'%d\' is undefined\n",
--				entry->lsm[i].type);
-+		security_filter_rule_init(nentry->lsm[i].type,
-+					  Audit_equal,
-+					  nentry->lsm[i].args_p,
-+					  &nentry->lsm[i].rule);
-+		if (!nentry->lsm[i].rule)
-+			pr_warn("rule for LSM \'%s\' is undefined\n",
-+				(char *)entry->lsm[i].args_p);
- 	}
- 	return nentry;
- 
-@@ -329,7 +329,7 @@ static void ima_lsm_update_rules(void)
- 	list_for_each_entry_safe(entry, e, &ima_policy_rules, list) {
- 		needs_update = 0;
- 		for (i = 0; i < MAX_LSM_RULES; i++) {
--			if (entry->lsm[i].rule) {
-+			if (entry->lsm[i].args_p) {
- 				needs_update = 1;
- 				break;
- 			}
-@@ -339,8 +339,7 @@ static void ima_lsm_update_rules(void)
- 
- 		result = ima_lsm_update_rule(entry);
- 		if (result) {
--			pr_err("ima: lsm rule update error %d\n",
--				result);
-+			pr_err("lsm rule update error %d\n", result);
- 			return;
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -730,7 +730,7 @@ static int alps_input_configured(struct
+ 	if (data->has_sp) {
+ 		input2 = input_allocate_device();
+ 		if (!input2) {
+-			input_free_device(input2);
++			ret = -ENOMEM;
+ 			goto exit;
  		}
- 	}
-@@ -357,7 +356,7 @@ int ima_lsm_policy_change(struct notifie
- }
  
- /**
-- * ima_match_rules - determine whether an inode matches the measure rule.
-+ * ima_match_rules - determine whether an inode matches the policy rule.
-  * @rule: a pointer to a rule
-  * @inode: a pointer to an inode
-  * @cred: a pointer to a credentials structure for user validation
-@@ -415,9 +414,12 @@ static bool ima_match_rules(struct ima_r
- 		int rc = 0;
- 		u32 osid;
- 
--		if (!rule->lsm[i].rule)
--			continue;
--
-+		if (!rule->lsm[i].rule) {
-+			if (!rule->lsm[i].args_p)
-+				continue;
-+			else
-+				return false;
-+		}
- 		switch (i) {
- 		case LSM_OBJ_USER:
- 		case LSM_OBJ_ROLE:
-@@ -822,8 +824,14 @@ static int ima_lsm_rule_init(struct ima_
- 					   entry->lsm[lsm_rule].args_p,
- 					   &entry->lsm[lsm_rule].rule);
- 	if (!entry->lsm[lsm_rule].rule) {
--		kfree(entry->lsm[lsm_rule].args_p);
--		return -EINVAL;
-+		pr_warn("rule for LSM \'%s\' is undefined\n",
-+			(char *)entry->lsm[lsm_rule].args_p);
-+
-+		if (ima_rules == &ima_default_rules) {
-+			kfree(entry->lsm[lsm_rule].args_p);
-+			result = -EINVAL;
-+		} else
-+			result = 0;
- 	}
- 
- 	return result;
 
 
