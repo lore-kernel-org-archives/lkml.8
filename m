@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D384FC3F2D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF008C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F6B20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B72420656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259111;
-	bh=rqivXkV16iF43yCkpdhW87I7b55J5RVrhFZwHWy1Fyo=;
+	s=default; t=1583259119;
+	bh=hi2YvfoQlcBQq7bi3vtsjrIKcqdT+5CigMVX5uC+INs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNHcrynvIHOHQULkJN5hkgLdLTTfZRYXj34SJvpW7gdKpFW1iJFHYAYtEmXSEnu95
-	 JOBzhs/XFm7eQbM/WjWRkqO5FkUap4lYz+0UVh4ytYZFVMA7VsPHc5upjCD9ve3DWm
-	 nVMrESbtc8Bu2AiEhYHBGwWWLvcSkcFuI8kBcBkI=
+	b=XG0EFGgKA/pk4YKbIPPOTHiHqJXQeiiW0S34dqM+qmsCVGW2SstyQmkiaFHTZIq+R
+	 Lo9y1CcmVJdA+DwBiHNGKpbl0d0GYqbsNkZCaFpsnzFjT6m/HiOJRg5Z5G8z++smnA
+	 w6dpt4TZTchzu2Uad8m4g2t+Ag/SWo0C3nkG+9VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388404AbgCCSLu (ORCPT
+        id S2388409AbgCCSL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:11:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbgCCRt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:27 -0500
+        id S1731743AbgCCRtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B2E320870;
-        Tue,  3 Mar 2020 17:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E339F214D8;
+        Tue,  3 Mar 2020 17:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257765;
-        bh=rqivXkV16iF43yCkpdhW87I7b55J5RVrhFZwHWy1Fyo=;
+        s=default; t=1583257752;
+        bh=hi2YvfoQlcBQq7bi3vtsjrIKcqdT+5CigMVX5uC+INs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vr7FAr7yjp7v6uyVqsq7oLWiSvf4eqxa9UDjn/ie2UPt2u7unuvQNsWbl9ISU0lqB
-         rUx+zvcemIipQcP5IMk5ESsqEu9aKKUScV5iRln1CqGPErFIixAHQqzfbgTcQFsF3B
-         A4I5tRyrVpYuXWHBYyNkuFz+0bI4fGwV+OTrF3HI=
+        b=VOcCkMrwjIbtVI1Nao8NzIE5pSensCeBqo9AYZqwm+Xts+OQ/i7o95J8jq0BLhY3l
+         Zz0gCVw5NpOPSPZuwAi3UC8mloL+uR/InO5Z2JAuI/vZlSQyu5+mt2jDtZZTBn45f4
+         ur/N1X0jz/f0k9iw+v+6u3lIFPtoz4rdUDHHlvm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.5 120/176] kbuild: fix DT binding schema rule to detect command line changes
-Date:   Tue,  3 Mar 2020 18:43:04 +0100
-Message-Id: <20200303174318.683392252@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 116/176] drm/i915: Avoid recursing onto active vma from the shrinker
+Date:   Tue,  3 Mar 2020 18:43:00 +0100
+Message-Id: <20200303174318.245919059@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,46 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 7a04960560640ac5b0b89461f7757322b57d0c7a upstream.
+commit 238734262142075056653b4de091458e0ca858f2 upstream.
 
-This if_change_rule is not working properly; it cannot detect any
-command line change.
+We mark the vma as active while binding it in order to protect outselves
+from being shrunk under mempressure. This only works if we are strict in
+not attempting to shrink active objects.
 
-The reason is because cmd-check in scripts/Kbuild.include compares
-$(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
+<6> [472.618968] Workqueue: events_unbound fence_work [i915]
+<4> [472.618970] Call Trace:
+<4> [472.618974]  ? __schedule+0x2e5/0x810
+<4> [472.618978]  schedule+0x37/0xe0
+<4> [472.618982]  schedule_preempt_disabled+0xf/0x20
+<4> [472.618984]  __mutex_lock+0x281/0x9c0
+<4> [472.618987]  ? mark_held_locks+0x49/0x70
+<4> [472.618989]  ? _raw_spin_unlock_irqrestore+0x47/0x60
+<4> [472.619038]  ? i915_vma_unbind+0xae/0x110 [i915]
+<4> [472.619084]  ? i915_vma_unbind+0xae/0x110 [i915]
+<4> [472.619122]  i915_vma_unbind+0xae/0x110 [i915]
+<4> [472.619165]  i915_gem_object_unbind+0x1dc/0x400 [i915]
+<4> [472.619208]  i915_gem_shrink+0x328/0x660 [i915]
+<4> [472.619250]  ? i915_gem_shrink_all+0x38/0x60 [i915]
+<4> [472.619282]  i915_gem_shrink_all+0x38/0x60 [i915]
+<4> [472.619325]  vm_alloc_page.constprop.25+0x1aa/0x240 [i915]
+<4> [472.619330]  ? rcu_read_lock_sched_held+0x4d/0x80
+<4> [472.619363]  ? __alloc_pd+0xb/0x30 [i915]
+<4> [472.619366]  ? module_assert_mutex_or_preempt+0xf/0x30
+<4> [472.619368]  ? __module_address+0x23/0xe0
+<4> [472.619371]  ? is_module_address+0x26/0x40
+<4> [472.619374]  ? static_obj+0x34/0x50
+<4> [472.619376]  ? lockdep_init_map+0x4d/0x1e0
+<4> [472.619407]  setup_page_dma+0xd/0x90 [i915]
+<4> [472.619437]  alloc_pd+0x29/0x50 [i915]
+<4> [472.619470]  __gen8_ppgtt_alloc+0x443/0x6b0 [i915]
+<4> [472.619503]  gen8_ppgtt_alloc+0xd7/0x300 [i915]
+<4> [472.619535]  ppgtt_bind_vma+0x2a/0xe0 [i915]
+<4> [472.619577]  __vma_bind+0x26/0x40 [i915]
+<4> [472.619611]  fence_work+0x1c/0x90 [i915]
+<4> [472.619617]  process_one_work+0x26a/0x620
 
-For if_change_rule to work properly, the stem part of cmd_* and rule_*
-must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
-be named rule_dtc.
-
-Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: 2850748ef876 ("drm/i915: Pull i915_vma_pin under the vm->mutex")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200221221818.2861432-1-chris@chris-wilson.co.uk
+(cherry picked from commit 6f24e41022f28061368776ea1514db0a6e67a9b1)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/Makefile.lib |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_shrinker.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -291,13 +291,13 @@ DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
+@@ -257,8 +257,7 @@ unsigned long i915_gem_shrink_all(struct
+ 	with_intel_runtime_pm(&i915->runtime_pm, wakeref) {
+ 		freed = i915_gem_shrink(i915, -1UL, NULL,
+ 					I915_SHRINK_BOUND |
+-					I915_SHRINK_UNBOUND |
+-					I915_SHRINK_ACTIVE);
++					I915_SHRINK_UNBOUND);
+ 	}
  
--define rule_dtc_dt_yaml
-+define rule_dtc
- 	$(call cmd_and_fixdep,dtc,yaml)
- 	$(call cmd,dtb_check)
- endef
- 
- $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
--	$(call if_changed_rule,dtc_dt_yaml)
-+	$(call if_changed_rule,dtc)
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
+ 	return freed;
+@@ -337,7 +336,6 @@ i915_gem_shrinker_oom(struct notifier_bl
+ 	freed_pages = 0;
+ 	with_intel_runtime_pm(&i915->runtime_pm, wakeref)
+ 		freed_pages += i915_gem_shrink(i915, -1UL, NULL,
+-					       I915_SHRINK_ACTIVE |
+ 					       I915_SHRINK_BOUND |
+ 					       I915_SHRINK_UNBOUND |
+ 					       I915_SHRINK_WRITEBACK);
 
 
