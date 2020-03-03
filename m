@@ -7,49 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F00C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DDA2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E188D2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204303;
-	bh=EhwLsa/pL+ESdkYGrVc5xS//CRvMztHyMMUQm036fLU=;
+	s=default; t=1583204309;
+	bh=8NYG1n3xKdhO8T2dlTDUokQeG2/YXy4P9DT44E3uIK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQGf+gFzJO5NwusY0RcLIYr+qSM5Tg/HFJUKh6TkGh26La9CFB3q9ENMYy/B4D6ss
-	 Ujwu4pVGBvNCeyq7zpqDteHZEtJtrFKsKbClmU51AM8SRBgsF21QNIqBuj1NmWRLCU
-	 OY/TJjcV3bHuqPzeo9YkMh9sj3hudZed9K/glCSY=
+	b=QpQAftQiz6wv8onOf0Tw+u3AYgGC2Vu0M5+b00Ch7mhZHzWmKCYpXHkXhhabI/6pv
+	 tCDC97J9ytaatdKRX7s0WaO5etBVUIkogWq8dsEUCj3B80qLwCcJNqO2plyE7wvPKr
+	 C5JqS6kTr+lbvb4RKdzaqyxbr5SvuTVdT8l5ChJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgCCC6W (ORCPT
+        id S1728287AbgCCCsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:58:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgCCCsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:08 -0500
+        id S1728212AbgCCCrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 914FE24681;
-        Tue,  3 Mar 2020 02:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BF024677;
+        Tue,  3 Mar 2020 02:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203687;
-        bh=EhwLsa/pL+ESdkYGrVc5xS//CRvMztHyMMUQm036fLU=;
+        s=default; t=1583203675;
+        bh=8NYG1n3xKdhO8T2dlTDUokQeG2/YXy4P9DT44E3uIK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VjfoHwJegJX4SyU1Z6ySuSf8m4hCjITOoJVjqcNTpDpba28WlNWYDCGdbPJrm4QtB
-         3Upd9CnErkw0XdG9WdnuWt28q9Vo9pZNrd1q5O5sMYa6pC4WN7Wje2wIzm3dRtOJXf
-         UTDeYQ/H4IMXUV8hSBmQKYDvYiEVuCaYZNQXsl4g=
+        b=geM+gZ+zgDXE5F3er+60XLFUVLtjlKHVOBs0vWt5gbgufJH1L6GQTB9rEnKX3+3Y4
+         RKIZBZfXrIw1GwVjr9rcnsSqlf6DrzK85FYaK0L2S48grSw6y7jfzJsKaoIwu/h6el
+         FCpF7x0kFfqrXtDLrX2ukbGyJ9UcqKyZ5dPLe0dg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Belous <pbelous@marvell.com>,
-        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/58] net: atlantic: fix use after free kasan warn
-Date:   Mon,  2 Mar 2020 21:47:04 -0500
-Message-Id: <20200303024740.9511-22-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 12/58] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
+Date:   Mon,  2 Mar 2020 21:46:54 -0500
+Message-Id: <20200303024740.9511-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -62,66 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit a4980919ad6a7be548d499bc5338015e1a9191c6 ]
+[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
 
-skb->len is used to calculate statistics after xmit invocation.
+I was hitting kCFI crashes when building with clang, and after
+some digging finally narrowed it down to the
+dsi_mgr_connector_mode_valid() function being implemented as
+returning an int, instead of an enum drm_mode_status.
 
-Under a stress load it may happen that skb will be xmited,
-rx interrupt will come and skb will be freed, all before xmit function
-is even returned.
+This patch fixes it, and appeases the opaque word of the kCFI
+gods (seriously, clang inlining everything makes the kCFI
+backtraces only really rough estimates of where things went
+wrong).
 
-Eventually, skb->len will access unallocated area.
+Thanks as always to Sami for his help narrowing this down.
 
-Moving stats calculation into tx_clean routine.
-
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Alistair Delva <adelva@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: freedreno@lists.freedesktop.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c  | 4 ----
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c | 7 +++++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 137c1de4c6ec0..87deba884b886 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -598,10 +598,6 @@ int aq_nic_xmit(struct aq_nic_s *self, struct sk_buff *skb)
- 	if (likely(frags)) {
- 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
- 						       ring, frags);
--		if (err >= 0) {
--			++ring->stats.tx.packets;
--			ring->stats.tx.bytes += skb->len;
--		}
- 	} else {
- 		err = NETDEV_TX_BUSY;
- 	}
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-index 76bdbe1596d62..03821b46a8cb4 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -243,9 +243,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *self)
- 			}
- 		}
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 271aa7bbca925..355a60b4a536f 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -336,7 +336,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
+ 	return num;
+ }
  
--		if (unlikely(buff->is_eop))
--			dev_kfree_skb_any(buff->skb);
-+		if (unlikely(buff->is_eop)) {
-+			++self->stats.rx.packets;
-+			self->stats.tx.bytes += buff->skb->len;
- 
-+			dev_kfree_skb_any(buff->skb);
-+		}
- 		buff->pa = 0U;
- 		buff->eop_index = 0xffffU;
- 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
+-static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
++static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+ 				struct drm_display_mode *mode)
+ {
+ 	int id = dsi_mgr_connector_get_id(connector);
 -- 
 2.20.1
 
