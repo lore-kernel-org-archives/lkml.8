@@ -2,96 +2,109 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF29EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E751208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A4720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imDFsfyX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UTGtCeaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbgCCVZV (ORCPT
+        id S1732641AbgCCVbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:25:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42782 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732154AbgCCVZU (ORCPT
+        Tue, 3 Mar 2020 16:31:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:52354 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732505AbgCCVbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:25:20 -0500
-Received: by mail-lf1-f66.google.com with SMTP id t21so2996808lfe.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:25:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=y/mHnKHxMngQ3UbmJHGG+3zqknoqqhwXbg+9IAp9krw=;
-        b=imDFsfyXnC+Tum42eQ9p8jRhYNO36ZmhVxbMzID0Mc6EH3eq+RfKjxORb32uTysKND
-         TCLajF/0XG6yiCK5uOaDZHoig3LLFimmpPUjiW8S4hOty1j2+rCpNPjsk6z/R9s9kF9W
-         +/KiTCAl+7UWmnJRMolDLoaRNRSH8tGGs/MSPvw0p+73G0cNOI2U9vhZneqO+RA0JP5B
-         WyyCdHH9/0IQLk8DcvSvtrQGEBB59touKRmL0aef4OfgJFg378mZmNREqjcLpFzsuyiX
-         e7YpU+FYX9KbRndcg1SGb1Ej1HhPJfg9fcR+ku0sfbP/TL9jRVluGSCfSjeWKFxcYEbZ
-         lyGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y/mHnKHxMngQ3UbmJHGG+3zqknoqqhwXbg+9IAp9krw=;
-        b=rnCK1wiqcL1a9MIusSQtMs/A3Emcc6aGfDHFwgJ8WHDvbzWEcqZt9DBlr3Co3KWLzp
-         FfskT9io5pqyPW68nAvN+wRgl1saacXiWfUGJmmGpIzsPX/DkWZ6agKs78vLzbSFOH4v
-         YRmbZ3F/tav9KKwCKIhiGdP/8XXZrkq/lAHYoodNuWQBYGPb5oK+6pbVCqCZU9HOBzOg
-         zqqYL93O0Pea2KLgwVzaD1GgF9vkamh3EfZB9R3MHWHlr0Xls6RZx5cJOPztTNtqzRIT
-         6esp5+6icW1pWEqWFXBmyKn/Q4auojzX7MipeVkTxcXwXx5NBq12SG/xqW8ei6i1+ccN
-         ZJwA==
-X-Gm-Message-State: ANhLgQ0EQ2I0CgMBaDpDh4HjpxUGkoTduJRO4guBdD7PX4cg35iIhJ7P
-        zC1AsAZfaEqabGGUJg67R60=
-X-Google-Smtp-Source: ADFU+vvJcZ0nOuIIo7rfQ+8aoq0mPntge5gXUsZf3YOBmSycbcDu7/gs2ARiFrH6jgFdk3ED3/AcDw==
-X-Received: by 2002:a19:8982:: with SMTP id l124mr3955286lfd.151.1583270718382;
-        Tue, 03 Mar 2020 13:25:18 -0800 (PST)
-Received: from localhost.localdomain (188.146.98.66.nat.umts.dynamic.t-mobile.pl. [188.146.98.66])
-        by smtp.gmail.com with ESMTPSA id l16sm11200531lja.59.2020.03.03.13.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 13:25:17 -0800 (PST)
-From:   mateusznosek0@gmail.com
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, mike.kravetz@oracle.com,
-        akpm@linux-foundation.org
-Subject: [PATCH] mm/hugetlb.c: Clean code by removing unnecessary initialization
-Date:   Tue,  3 Mar 2020 22:23:54 +0100
-Message-Id: <20200303212354.25226-1-mateusznosek0@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Mar 2020 16:31:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LS4SG092617;
+        Tue, 3 Mar 2020 21:30:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=yp0/8z5zvQXZIVH4pA65SFCLeNa4/KuEvMX5IX0JbsQ=;
+ b=UTGtCeaVWNJitx5qI5IaBY1vXZpQKmAFz1r1sU7m9wjoRGJv3tEdSU2PXc+y78ZxTIxq
+ LiM4K0JoULxAL2y3ordRvn4E/mlTFW92NafQSciRwCWh09R2t6jg9zoxiyIpPwmH62p1
+ tnns2MVYkro7J/HMsKxiXj1DmR7MTagygsIRUO7dWfXjpdRC5zqlJT9XNQwqxhKyyxMu
+ BYfid/DIT3L2ryAVg4nyv2QSawiBpYyHn1XF8hFUbwCHO0SgOYCPfd8klK+KQzsQlVEy
+ 6ptkLsfsgsZXUFx8LWKaDLzRLPbqZC+3vLndepnLYl2vpdtDp0tCZSAjjtTYsvERT2hI GQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwqt3eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 21:30:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LSchb010272;
+        Tue, 3 Mar 2020 21:30:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yg1p5g557-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 21:30:55 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023LUsaQ020178;
+        Tue, 3 Mar 2020 21:30:54 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 13:30:53 -0800
+Date:   Tue, 3 Mar 2020 16:31:11 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Will Deacon <will@kernel.org>, tj@kernel.org,
+        jiangshanlai@gmail.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
+Message-ID: <20200303213111.op2vtxfmwtn7i6db@ca-dmjordan1.us.oracle.com>
+References: <20200217204803.GA13479@Red>
+ <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
+ <20200220090350.GA19858@Red>
+ <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
+ <20200228123311.GE3275@willie-the-truck>
+ <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
+ <20200301175351.GA11684@Red>
+ <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
+ <20200303074819.GB9935@Red>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303074819.GB9935@Red>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=772 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=821 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mateusz Nosek <mateusznosek0@gmail.com>
+On Tue, Mar 03, 2020 at 08:48:19AM +0100, Corentin Labbe wrote:
+> The patch fix the issue. Thanks!
 
-Previously variable 'check_addr' was initialized,
-but was not read later before reassigning.
-So the initialization can be removed.
+Thanks for trying it!
 
-Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
----
- mm/hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> So you could add:
+> Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Tested-on: sun50i-h6-pine-h64
+> Tested-on: imx8mn-ddr4-evk
+> Tested-on: sun50i-a64-bananapi-m64
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index e4116385a4e1..7fb31750e670 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5021,7 +5021,7 @@ static bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end)
- {
--	unsigned long check_addr = *start;
-+	unsigned long check_addr;
- 
- 	if (!(vma->vm_flags & VM_MAYSHARE))
- 		return;
--- 
-2.17.1
+I definitely will if the patch turns out to be the right fix.
 
+thanks,
+Daniel
