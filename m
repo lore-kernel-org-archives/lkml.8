@@ -2,129 +2,112 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFE1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C362724673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583198931;
-	bh=QWDE+nzYRxLAQJZxFllK2UFEo1q2CQ4KZMXrIGbE3Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2ee0JkU8XdqDKbNmGBnkz6T+4Pk/2l4ktsI9lhLAP8FxNA5OJ/C0BBg/mULP6Yb6z
-	 kkqqjN9r+GoEf0MSd2hC3CM9PV6AXYBTDuU5zvCBX0Jb9EeZ+o5L5nOqds0zpIBxnN
-	 s3KmhDntCvaqio1QhQslkRv4uTKQCLJrlHCUeJoM=
+	by mail.kernel.org (Postfix) with ESMTP id 342C724673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a0C+82I5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgCCB2u (ORCPT
+        id S1727085AbgCCB3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:28:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46776 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgCCB2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:28:50 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g96so1349051otb.13;
-        Mon, 02 Mar 2020 17:28:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eet9lZNdchN33q+dEpaXmuVlgsvcHvBcNPBCflfSjxo=;
-        b=f8mwstks/wkvSrxETMQDFJhZ+G7HdALKjPZlig4vEiHnVktAJiSdsd3OJbT+3SRleb
-         eGSuHz/hPQ2CLOlae37xYRo1PFAHUegsjyRHFb2XhaI518ynOi5mNc8YwTrZEubjQanS
-         OJ2YcaOCREdRz9v5Pj7gD+TogSMo6KCQK2yK7fzdtrSuaEVQr82piWHOlvMfRCc7wej8
-         DGDotukOv2BfJiCHT7rqmwJjwFonx57xGXWA3lrXOaRiwLuTi1tbicXhi1/4sgH8Qqla
-         2nV4l4wZvou82kppJMWEq6W9Ny67I5TK5fGTdFEU0j/62wCR76A1/1swV/Mx3Wx/WUg8
-         Vvgg==
-X-Gm-Message-State: ANhLgQ0nFU6MCjvGYQJs9Hedg1/QhbtYDTSX1jUC6cWpOvXTiRjxErRv
-        dx1dxmnGicDmqycrU4IOiQ==
-X-Google-Smtp-Source: ADFU+vvoin64lIvmLgeV8610QkmyYB0ZPZYEy2jhHQOrLVViftZhZeuOjY2eOqe7Pu/6/ZOSTijj1w==
-X-Received: by 2002:a05:6830:145:: with SMTP id j5mr1531326otp.242.1583198929345;
-        Mon, 02 Mar 2020 17:28:49 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k16sm712675otp.52.2020.03.02.17.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 17:28:48 -0800 (PST)
-Received: (nullmailer pid 8615 invoked by uid 1000);
-        Tue, 03 Mar 2020 01:28:47 -0000
-Date:   Mon, 2 Mar 2020 19:28:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, daniel.lezcano@linaro.org,
-        bjorn.andersson@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
- tsens to binding
-Message-ID: <20200303012847.GA8556@bogus>
-References: <cover.1582871139.git.amit.kucheria@linaro.org>
- <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
+        Mon, 2 Mar 2020 20:29:18 -0500
+Received: from ozlabs.org ([203.11.71.1]:54153 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbgCCB3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:29:18 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WfYl1pJrz9sRf;
+        Tue,  3 Mar 2020 12:29:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583198955;
+        bh=9JgwDHLebH7yM40ELOfocC40qLVAwpcXJe/0yOA1g88=;
+        h=Date:From:To:Cc:Subject:From;
+        b=a0C+82I54n/QClXx9rJSYbqBaN2rESCM8Xf98eHGox4eNhyd3FYuy0udTiL2JCqIt
+         I+ynQ99jXZNcld6w3lGDOfhH0XvL53uDA639VunJX/8+4Q4A+3z3nmZ6kSXRLFohgk
+         VnPiGdLOj66ZoaS95IsFiZPwb1nXPv6H+SoKhHiLmVXRAbFOqYrY5NTgSqjBZcZ6pb
+         /Kj5nf6FoR1vbDSCqpIyGNw8rwsZhC7rZIOpqnw0vNNJSENdLZ0XQVgD9k4Jyq/r41
+         IGrm9hbzo/BaWx3P+xkEGu5yqeBrpo/RS74kkKx2R6ySk9OJssV3J1kjOoZEKZ1Jgn
+         2uotJ7RMbj79w==
+Date:   Tue, 3 Mar 2020 12:29:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Akshu Agrawal <akshu.agrawal@amd.com>
+Subject: linux-next: build warning after merge of the sound-asoc tree
+Message-ID: <20200303122909.0d760f83@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/k8LROJLLNdbDSbqbVb3+ij6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 12:02:40 +0530, Amit Kucheria wrote:
-> The qcom-tsens binding requires a SoC-specific and a TSENS
-> family-specific binding to be specified in the compatible string.
-> 
-> Since qcom,sc7180-tsens is not listed in the YAML binding, we see the
-> following warnings in 'make dtbs_check'. Fix them.
-> 
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
-> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
-> causes of the failure):
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
-> 
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible: ['qcom,sc7180-tsens',
-> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
-> causes of the failure):
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v0_1' was expected
-> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v1' was expected
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+--Sig_/k8LROJLLNdbDSbqbVb3+ij6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hi all,
+
+After merging the sound-asoc tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+In file included from include/linux/device.h:15,
+                 from include/sound/core.h:10,
+                 from sound/soc/amd/acp3x-rt5682-max9836.c:7:
+sound/soc/amd/acp3x-rt5682-max9836.c: In function 'acp3x_probe':
+sound/soc/amd/acp3x-rt5682-max9836.c:341:23: warning: format '%d' expects a=
+rgument of type 'int', but argument 3 has type 'long int' [-Wformat=3D]
+  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_fmt'
+   19 | #define dev_fmt(fmt) fmt
+      |                      ^~~
+sound/soc/amd/acp3x-rt5682-max9836.c:341:3: note: in expansion of macro 'de=
+v_err'
+  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
+      |   ^~~~~~~
+sound/soc/amd/acp3x-rt5682-max9836.c:341:46: note: format string is defined=
+ here
+  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
+      |                                             ~^
+      |                                              |
+      |                                              int
+      |                                             %ld
+
+Introduced by commit
+
+  72c3b2b09fcd ("ASoc: amd: Add DMIC switch capability to machine driver")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/k8LROJLLNdbDSbqbVb3+ij6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5dsuUACgkQAVBC80lX
+0GyXTwf/Viokg1Oor3erp/lUXDSs9qHoliYCz0MYQFs/YxrQ55wseIqA15yPKOJU
+Ks7A2hptHkfyljjP8fNsZY841javuNi8/k+gxqmiN4E1YhzAvzSUw51ptSk1b+qO
+aZY6Hf/yd3oDpS2WKh2jOqrRcFR3e9c2EGoioElMeP0yn2oxr3ZuYLOEgH3diHNc
+GGWxE9ytM0MqZeMyrppNzR9wyBylLr3X2MOYqo5M7JAAQApud8kDfD9BNmk5zgfQ
+J8B40jPk826UZ8Rvx3AI/GoYdRBpAehlvL7Km51y4/1GQNRrk68y4zlg+SeDOZ2l
+eifKqPPYPIGUSxUX/nO0eai0STg+Gg==
+=OzbO
+-----END PGP SIGNATURE-----
+
+--Sig_/k8LROJLLNdbDSbqbVb3+ij6--
