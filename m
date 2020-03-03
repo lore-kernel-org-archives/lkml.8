@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FFBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0085D20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9F220870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258613;
-	bh=z8llpFI1TTIUbxH5xEANZp3ZNVwFmd5EhqYsxvB0SqM=;
+	s=default; t=1583258615;
+	bh=4HlcNQ/u8dWefz42EWicmru3mNA3W0RTIiIe9h0A0Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOGQWf6AkGYMChXWLlt7EfR8dPnv927Y3XjuZhSY/OB5bfo4hoATTerxU7et/nwrb
-	 74A0YNwILr6Ey8YBnuYd33//zLeDCy1naH9w8XN6gPo970sMNEdudPDlFDt0IX4cWR
-	 mrlINkxLmNIC9bGeAv4l+jlVnUC9UF5cDvYaSPyY=
+	b=C4i20pUS/d20Wg73yuWWtPCA6Vjckqky7NSA3igIoJcQ8peVUUko7hS3tfej50PsD
+	 7YB6J2GuLrsHexPRr8OT3LTQ1Gl9lwpN+g89wijp0ci2vlUsriqkrMT7iNE7yuJNkL
+	 v/c8fr4jlM22aPAW74s0Hon0F508FmgfkPh9557w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387980AbgCCSB2 (ORCPT
+        id S2387947AbgCCSBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45508 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387969AbgCCSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:25 -0500
+        id S2387935AbgCCSBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FE8F214D8;
-        Tue,  3 Mar 2020 18:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BABF20866;
+        Tue,  3 Mar 2020 18:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258484;
-        bh=z8llpFI1TTIUbxH5xEANZp3ZNVwFmd5EhqYsxvB0SqM=;
+        s=default; t=1583258475;
+        bh=4HlcNQ/u8dWefz42EWicmru3mNA3W0RTIiIe9h0A0Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNydjSSy+xC/cs7c0djJgDiFFzhcKBjGVcMgq1wIXASwu1ysi+puB36dzQBVTzCGV
-         xAg8+3jZfkcqegc/8LZuzXdkwnr6A2TelILiucRHtKi/77p02bFfkNTgkKsUWinDsx
-         C9cEnSADOI/ScUIAhNjRpy5yauLOtimtrt7XWJik=
+        b=nPlhYatJ6Twl+9446//8K8RP+euM2SE7v+FpfkYjaAJx7xJp7VisaRRJjbata6yZd
+         PXD1SW5uREDMwum1rrWKVq0yPcmjCMbtekg/T0DjSFs4oU+x6D0TnyNikTq+WG98Gn
+         iolVcMZxTicyfEq4OyMHPq9H2tVFs80KKFm4788s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Erhard F." <erhard_f@mailbox.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 29/87] net: fib_rules: Correctly set table field when table number exceeds 8 bits
-Date:   Tue,  3 Mar 2020 18:43:20 +0100
-Message-Id: <20200303174353.373399455@linuxfoundation.org>
+Subject: [PATCH 4.19 62/87] net: netlink: cap max groups which will be considered in netlink_bind()
+Date:   Tue,  3 Mar 2020 18:43:53 +0100
+Message-Id: <20200303174355.918762979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -59,31 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jethro Beekman <jethro@fortanix.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 540e585a79e9d643ede077b73bcc7aa2d7b4d919 ]
+commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
 
-In 709772e6e06564ed94ba740de70185ac3d792773, RT_TABLE_COMPAT was added to
-allow legacy software to deal with routing table numbers >= 256, but the
-same change to FIB rule queries was overlooked.
+Since nl_groups is a u32 we can't bind more groups via ->bind
+(netlink_bind) call, but netlink has supported more groups via
+setsockopt() for a long time and thus nlk->ngroups could be over 32.
+Recently I added support for per-vlan notifications and increased the
+groups to 33 for NETLINK_ROUTE which exposed an old bug in the
+netlink_bind() code causing out-of-bounds access on archs where unsigned
+long is 32 bits via test_bit() on a local variable. Fix this by capping the
+maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
+capping them at 32 which is the minimum of allocated groups and the
+maximum groups which can be bound via netlink_bind().
 
-Signed-off-by: Jethro Beekman <jethro@fortanix.com>
+CC: Christophe Leroy <christophe.leroy@c-s.fr>
+CC: Richard Guy Briggs <rgb@redhat.com>
+Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -968,7 +968,7 @@ static int fib_nl_fill_rule(struct sk_bu
+---
+ net/netlink/af_netlink.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1029,7 +1029,8 @@ static int netlink_bind(struct socket *s
+ 	if (nlk->netlink_bind && groups) {
+ 		int group;
  
- 	frh = nlmsg_data(nlh);
- 	frh->family = ops->family;
--	frh->table = rule->table;
-+	frh->table = rule->table < 256 ? rule->table : RT_TABLE_COMPAT;
- 	if (nla_put_u32(skb, FRA_TABLE, rule->table))
- 		goto nla_put_failure;
- 	if (nla_put_u32(skb, FRA_SUPPRESS_PREFIXLEN, rule->suppress_prefixlen))
+-		for (group = 0; group < nlk->ngroups; group++) {
++		/* nl_groups is a u32, so cap the maximum groups we can bind */
++		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
+ 			if (!test_bit(group, &groups))
+ 				continue;
+ 			err = nlk->netlink_bind(net, group + 1);
+@@ -1048,7 +1049,7 @@ static int netlink_bind(struct socket *s
+ 			netlink_insert(sk, nladdr->nl_pid) :
+ 			netlink_autobind(sock);
+ 		if (err) {
+-			netlink_undo_bind(nlk->ngroups, groups, sk);
++			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
+ 			goto unlock;
+ 		}
+ 	}
 
 
