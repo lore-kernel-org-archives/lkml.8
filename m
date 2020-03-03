@@ -2,119 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B1AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5DCC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6838E20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WKRGqnxH"
+	by mail.kernel.org (Postfix) with ESMTP id 0C01820838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgCCPfg (ORCPT
+        id S1729985AbgCCPfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:35:36 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43392 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbgCCPfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:35:36 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023FZNri088793;
-        Tue, 3 Mar 2020 09:35:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583249723;
-        bh=We9hKUOb5/GmeQY53Xtn0VT7EhC2TrryfAgJsKh1aYc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WKRGqnxHkAr8CnJvXox0Sb4qtkXxzfGnF+W16wliI8Sf6j0VfYxBXUIZ94TZ9wuSe
-         5P5+wlsPGYplDtANMyXJI1MKZusiefLeCG8FbLUxApE2RWBFjZalf4J8/2/OMuCuEV
-         W/vk+K2MKv4uSkUF6KUxJhqr3k7ELgRAP0DyEU5c=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023FZNKn047025
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 09:35:23 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 09:35:22 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 09:35:22 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023FZIKM112679;
-        Tue, 3 Mar 2020 09:35:19 -0600
-Subject: Re: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <20200224191230.30972-1-tony@atomide.com>
- <20200224191230.30972-4-tony@atomide.com>
- <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
- <20200303151349.GQ37466@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <8cadd536-668a-4309-1878-7db2362717d2@ti.com>
-Date:   Tue, 3 Mar 2020 17:35:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 10:35:52 -0500
+Received: from mga14.intel.com ([192.55.52.115]:42732 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729588AbgCCPfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:35:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:35:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="386820172"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 03 Mar 2020 07:35:50 -0800
+Date:   Tue, 3 Mar 2020 07:35:50 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for
+ EPT in VMX code
+Message-ID: <20200303153550.GC1439@linux.intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+ <20200302235709.27467-37-sean.j.christopherson@intel.com>
+ <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200303151349.GQ37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/2020 17:13, Tony Lindgren wrote:
-> Hi,
+On Tue, Mar 03, 2020 at 03:59:14PM +0100, Paolo Bonzini wrote:
+> On 03/03/20 00:56, Sean Christopherson wrote:
+> > Move the clearing of the GBPAGE CPUID bit into VMX to eliminate an
+> > instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+> > pattern in the common CPUID handling code, and to pave the way toward
+> > eliminating ->get_lpage_level().
+> > 
+> > No functional change intended.
 > 
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200303 06:03]:
->> On 24/02/2020 21:12, Tony Lindgren wrote:
->>> +	/* Remap the whole module range to be able to reset dispc outputs */
->>> +	devm_iounmap(ddata->dev, ddata->module_va);
->>> +	ddata->module_va = devm_ioremap(ddata->dev,
->>> +					ddata->module_pa,
->>> +					ddata->module_size);
->>
->> Why is this needed? The range is not mapped when sysc_pre_reset_quirk_dss()
->> is called? This will unmap and remap twice, as this function is called
->> twice. And then left mapped.
+> And no functional change is done indeed but there is a preexisting bug 
+> that should be fixed.
 > 
-> That's because by default we only ioremap the module revision, sysconfig
-> and sysstatus register are and provide the rest as a range for the child
-> nodes.
-> 
-> In the dss quirk case we need to tinker with registers also in the dispc
-> range, and at the parent dss probe time dispc has not probed yet.
-> 
-> We may be able to eventually move the reset quirk to dispc, but then
-> it won't happen in the current setup until after dss top level driver
-> has loaded.
-> 
-> We leave the module range ioremapped as we still need to access
-> sysconfig related registers for PM runtime.
+> cpu_has_vmx_ept_1g_page() has no relationship to whether 1GB pages should be
+> marked as supported in CPUID.  This has no ill effect because we're only
+> clearing the bit, but it results in 1GB pages not being available when
+> EPT is disabled (even though they are actually supported thanks to
+> shadowing).
 
-Ok, makes sense. I guess a minor improvement would be to unmap & remap once in 
-sysc_pre_reset_quirk_dss before calling sysc_quirk_dispc.
+Oof, that took me a long time to process.  You're saying that KVM can
+allow the guest to use GBPAGES when shadow paging is enabled because KVM
+can effectively emulate GBPAGES.  And IIUC, you're also saying that
+cpuid.GBPAGES should never be influenced by EPT restrictions.
 
-  Tomi
+That all makes sense.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> The right fix should be this:
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 84b9a488a443..8bbba8eb4ce5 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -416,8 +416,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  	int r, i, max_idx;
+>  	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+>  #ifdef CONFIG_X86_64
+> -	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+> -				? F(GBPAGES) : 0;
+> +	unsigned f_gbpages = F(GBPAGES);
+>  	unsigned f_lm = F(LM);
+>  #else
+>  	unsigned f_gbpages = 0;
+> @@ -691,6 +690,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  	case 0x80000001:
+>  		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
+> +		if (!tdp_enabled)
+> +			cpuid_entry_set(entry, X86_FEATURE_GBPAGES);
+>  		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
+>  		break;
+> 
+> Paolo
+> 
