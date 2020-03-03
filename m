@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8836AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6268C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636D020870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7435D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258069;
-	bh=2k1Uh2+g4UIU3FTUqMeqDDj6AHc8elwxBX5WMs5PIzY=;
+	s=default; t=1583258071;
+	bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I2sH633uJSbr4KDmMQ8u5T8XhfUEN7b/6qVe2ciIxmEK+/AfySA9Ob1mR88P8xoxi
-	 PEjQTpshBKKH2jLo5pemTGXmzYX2Lzq95L5bF6yo3v5tgBRL/ru6rmPn/E4QXdsKJ1
-	 PxJe8HqMhvM4trMAMnHgqLIWot9HuWg/okcJOcG4=
+	b=kwZu0OPatmw4R7HXJRh83ekuBCOuRBbsiMJtKQI1lC/DBD1iJnc1yFFuWK/d7XdcB
+	 sBEPPuzsft5Tx+Q+mS2yDkucUcmX1T/YxplkRZq1UoXqPIOqEk0p/Ra8WgzU/CcdWy
+	 CoZJVs0I8SnNp68apq66ClmkStGOW69liA1uiXbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgCCRy1 (ORCPT
+        id S1732528AbgCCRya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35520 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732314AbgCCRyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:25 -0500
+        id S1732517AbgCCRy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF19206D5;
-        Tue,  3 Mar 2020 17:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEB2A206D5;
+        Tue,  3 Mar 2020 17:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258064;
-        bh=2k1Uh2+g4UIU3FTUqMeqDDj6AHc8elwxBX5WMs5PIzY=;
+        s=default; t=1583258067;
+        bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1E0sPnY2VXvnV78tbciVvjkXWYDgiQWT/+efjT0UmUm77n4ESAuiV4+cd1nm43FK
-         207bOXacfQRoodMvsNxBmOIHxvZwmQaBPTX5idFTKSdgyKGHwL3bjuSzCTonNeGcEN
-         7g/50gBAv+8fnQOehDG3GNow/PVuDX1ffBoD8RwY=
+        b=ETowBBpXfqZTp520LC0K5bQ/pcFkYgbY7DCFR6hrk9ixTSc513L7Vn7tdv4NczfN5
+         HugqUTJ8PTr/mD8RIYP8tExGa7XjQ8NC0pXTiY+8annGDwona/MAepuPo6knl/xmMI
+         hAPC/U2jBk4XUZcYbyv12DsPYKDxwxygaIIXgoVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/152] net: ena: fix uses of round_jiffies()
-Date:   Tue,  3 Mar 2020 18:42:28 +0100
-Message-Id: <20200303174308.103154883@linuxfoundation.org>
+Subject: [PATCH 5.4 059/152] net: ena: ena-com.c: prevent NULL pointer dereference
+Date:   Tue,  3 Mar 2020 18:42:37 +0100
+Message-Id: <20200303174309.150387083@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,71 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 2a6e5fa2f4c25b66c763428a3e65363214946931 ]
+[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
 
->From the documentation of round_jiffies():
-"Rounds a time delta  in the future (in jiffies) up or down to
-(approximately) full seconds. This is useful for timers for which
-the exact time they fire does not matter too much, as long as
-they fire approximately every X seconds.
-By rounding these timers to whole seconds, all such timers will fire
-at the same time, rather than at various times spread out. The goal
-of this is to have the CPU wake up less, which saves power."
+comp_ctx can be NULL in a very rare case when an admin command is executed
+during the execution of ena_remove().
 
-There are 2 parts to this patch:
-================================
-Part 1:
--------
-In our case we need timer_service to be called approximately every
-X=1 seconds, and the exact time does not matter, so using round_jiffies()
-is the right way to go.
+The bug scenario is as follows:
 
-Therefore we add round_jiffies() to the mod_timer() in ena_timer_service().
+* ena_destroy_device() sets the comp_ctx to be NULL
+* An admin command is executed before executing unregister_netdev(),
+  this can still happen because our device can still receive callbacks
+  from the netdev infrastructure such as ethtool commands.
+* When attempting to access the comp_ctx, the bug occurs since it's set
+  to NULL
 
-Part 2:
--------
-round_jiffies() is used in check_for_missing_keep_alive() when
-getting the jiffies of the expiration of the keep_alive timeout. Here it
-is actually a mistake to use round_jiffies() because we want the exact
-time when keep_alive should expire and not an approximate rounded time,
-which can cause early, false positive, timeouts.
+Fix:
+Added a check that comp_ctx is not NULL
 
-Therefore we remove round_jiffies() in the calculation of
-keep_alive_expired() in check_for_missing_keep_alive().
-
-Fixes: 82ef30f13be0 ("net: ena: add hardware hints capability to the driver")
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index b4a145220abae..f0cddf250cfd5 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3035,8 +3035,8 @@ static void check_for_missing_keep_alive(struct ena_adapter *adapter)
- 	if (adapter->keep_alive_timeout == ENA_HW_HINTS_NO_TIMEOUT)
- 		return;
- 
--	keep_alive_expired = round_jiffies(adapter->last_keep_alive_jiffies +
--					   adapter->keep_alive_timeout);
-+	keep_alive_expired = adapter->last_keep_alive_jiffies +
-+			     adapter->keep_alive_timeout;
- 	if (unlikely(time_is_before_jiffies(keep_alive_expired))) {
- 		netif_err(adapter, drv, adapter->netdev,
- 			  "Keep alive watchdog timeout.\n");
-@@ -3138,7 +3138,7 @@ static void ena_timer_service(struct timer_list *t)
- 	}
- 
- 	/* Reset the timer */
--	mod_timer(&adapter->timer_service, jiffies + HZ);
-+	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
- }
- 
- static int ena_calc_io_queue_num(struct pci_dev *pdev,
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 74743fd8a1e0a..304531332e70a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -200,6 +200,11 @@ static void comp_ctxt_release(struct ena_com_admin_queue *queue,
+ static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
+ 					  u16 command_id, bool capture)
+ {
++	if (unlikely(!queue->comp_ctx)) {
++		pr_err("Completion context is NULL\n");
++		return NULL;
++	}
++
+ 	if (unlikely(command_id >= queue->q_depth)) {
+ 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
+ 		       command_id, queue->q_depth);
 -- 
 2.20.1
 
