@@ -2,52 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577EAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D63C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212AA2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CD32073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258850;
-	bh=fLUXpRZ6kvhbDnqKO57WORhRZO9tCoIFRvf9WuY/EKk=;
+	s=default; t=1583258854;
+	bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLmIrR8j/0EAXx82mD0hOja6ikFVklQxrec1tNTPa32XRLlOPBLtQw5UqcyI5xKzT
-	 vJ9V82prlqX4txqelmpAGf2gQs/RlY9h+lm0IFi1tHMqrkRgrBsGqYRvwKsMk5N+IR
-	 fpOxHTL1TydMf9t4kKSpxWTIFnlMEAYwb6sN+Om4=
+	b=RzIYMcXdwVEI/fif56Zkik3Wl6JYMxl5SrncvMQUIXuWp6+mxNbdzczUuHINb/CEN
+	 2zM3iO9naMQDJClgNBxDF/ZejSpRZoc+lMRwneompl6k5qVbh0nc1gAYTlr6RHe1Wt
+	 We1mwVm8ZXqW45y/WfXwRKIddWCumJ85w2Q6rGAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbgCCSH3 (ORCPT
+        id S1732585AbgCCRyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:07:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732625AbgCCRzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:01 -0500
+        id S1732208AbgCCRym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09EB5214D8;
-        Tue,  3 Mar 2020 17:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C372467F;
+        Tue,  3 Mar 2020 17:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258100;
-        bh=fLUXpRZ6kvhbDnqKO57WORhRZO9tCoIFRvf9WuY/EKk=;
+        s=default; t=1583258082;
+        bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T3xE32fr2mvQcOf/DcazRpAjZuObFcPvh+xFq/1u884//9/q+RoEC7QPA5QTaAYKU
-         JeplpsUofXfKZNVnua+8/rK/7XToRh9hpaoNzZMHA/3F8xGmWm7Hc/wma1I45HS688
-         iSo6kliWuZJoYRxpsbENwT8xhEfi8Z2j2W/F7SPc=
+        b=0aCOdhXnLDPwLFc1UvBB7QbpEphmvnHDBSz+i5/ypzfWydbfciGVNPGjqzkUWqyYl
+         EXzXYcTOrgBWgYhGW0j3wlpFVLQ/YGq3yGN7ZWONn1/RNKV1Vqx9FyN6DajTH/josA
+         GyW3kYCPZR+pq7ilDxCMBYKxuuOE6D1bP2meM5/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.4 071/152] audit: fix error handling in audit_data_to_entry()
-Date:   Tue,  3 Mar 2020 18:42:49 +0100
-Message-Id: <20200303174310.527979259@linuxfoundation.org>
+        stable@vger.kernel.org, Yufeng Mo <moyufeng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 065/152] net: hns3: add management table after IMP reset
+Date:   Tue,  3 Mar 2020 18:42:43 +0100
+Message-Id: <20200303174309.837237957@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,203 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-commit 2ad3e17ebf94b7b7f3f64c050ff168f9915345eb upstream.
+[ Upstream commit d0db7ed397517c8b2be24a0d1abfa15df776908e ]
 
-Commit 219ca39427bf ("audit: use union for audit_field values since
-they are mutually exclusive") combined a number of separate fields in
-the audit_field struct into a single union.  Generally this worked
-just fine because they are generally mutually exclusive.
-Unfortunately in audit_data_to_entry() the overlap can be a problem
-when a specific error case is triggered that causes the error path
-code to attempt to cleanup an audit_field struct and the cleanup
-involves attempting to free a stored LSM string (the lsm_str field).
-Currently the code always has a non-NULL value in the
-audit_field.lsm_str field as the top of the for-loop transfers a
-value into audit_field.val (both .lsm_str and .val are part of the
-same union); if audit_data_to_entry() fails and the audit_field
-struct is specified to contain a LSM string, but the
-audit_field.lsm_str has not yet been properly set, the error handling
-code will attempt to free the bogus audit_field.lsm_str value that
-was set with audit_field.val at the top of the for-loop.
+In the current process, the management table is missing after the
+IMP reset. This patch adds the management table to the reset process.
 
-This patch corrects this by ensuring that the audit_field.val is only
-set when needed (it is cleared when the audit_field struct is
-allocated with kcalloc()).  It also corrects a few other issues to
-ensure that in case of error the proper error code is returned.
-
-Cc: stable@vger.kernel.org
-Fixes: 219ca39427bf ("audit: use union for audit_field values since they are mutually exclusive")
-Reported-by: syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f5aac71c0327 ("net: hns3: add manager table initialization for hardware")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditfilter.c |   71 ++++++++++++++++++++++++++++-----------------------
- 1 file changed, 39 insertions(+), 32 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -456,6 +456,7 @@ static struct audit_entry *audit_data_to
- 	bufp = data->buf;
- 	for (i = 0; i < data->field_count; i++) {
- 		struct audit_field *f = &entry->rule.fields[i];
-+		u32 f_val;
- 
- 		err = -EINVAL;
- 
-@@ -464,12 +465,12 @@ static struct audit_entry *audit_data_to
- 			goto exit_free;
- 
- 		f->type = data->fields[i];
--		f->val = data->values[i];
-+		f_val = data->values[i];
- 
- 		/* Support legacy tests for a valid loginuid */
--		if ((f->type == AUDIT_LOGINUID) && (f->val == AUDIT_UID_UNSET)) {
-+		if ((f->type == AUDIT_LOGINUID) && (f_val == AUDIT_UID_UNSET)) {
- 			f->type = AUDIT_LOGINUID_SET;
--			f->val = 0;
-+			f_val = 0;
- 			entry->rule.pflags |= AUDIT_LOGINUID_LEGACY;
- 		}
- 
-@@ -485,7 +486,7 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_SUID:
- 		case AUDIT_FSUID:
- 		case AUDIT_OBJ_UID:
--			f->uid = make_kuid(current_user_ns(), f->val);
-+			f->uid = make_kuid(current_user_ns(), f_val);
- 			if (!uid_valid(f->uid))
- 				goto exit_free;
- 			break;
-@@ -494,11 +495,12 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_SGID:
- 		case AUDIT_FSGID:
- 		case AUDIT_OBJ_GID:
--			f->gid = make_kgid(current_user_ns(), f->val);
-+			f->gid = make_kgid(current_user_ns(), f_val);
- 			if (!gid_valid(f->gid))
- 				goto exit_free;
- 			break;
- 		case AUDIT_ARCH:
-+			f->val = f_val;
- 			entry->rule.arch_f = f;
- 			break;
- 		case AUDIT_SUBJ_USER:
-@@ -511,11 +513,13 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_OBJ_TYPE:
- 		case AUDIT_OBJ_LEV_LOW:
- 		case AUDIT_OBJ_LEV_HIGH:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
-+			}
-+			entry->rule.buflen += f_val;
-+			f->lsm_str = str;
- 			err = security_audit_rule_init(f->type, f->op, str,
- 						       (void **)&f->lsm_rule);
- 			/* Keep currently invalid fields around in case they
-@@ -524,68 +528,71 @@ static struct audit_entry *audit_data_to
- 				pr_warn("audit rule for LSM \'%s\' is invalid\n",
- 					str);
- 				err = 0;
--			}
--			if (err) {
--				kfree(str);
-+			} else if (err)
- 				goto exit_free;
--			} else
--				f->lsm_str = str;
- 			break;
- 		case AUDIT_WATCH:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
--			err = audit_to_watch(&entry->rule, str, f->val, f->op);
-+			}
-+			err = audit_to_watch(&entry->rule, str, f_val, f->op);
- 			if (err) {
- 				kfree(str);
- 				goto exit_free;
- 			}
-+			entry->rule.buflen += f_val;
- 			break;
- 		case AUDIT_DIR:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
-+			}
- 			err = audit_make_tree(&entry->rule, str, f->op);
- 			kfree(str);
- 			if (err)
- 				goto exit_free;
-+			entry->rule.buflen += f_val;
- 			break;
- 		case AUDIT_INODE:
-+			f->val = f_val;
- 			err = audit_to_inode(&entry->rule, f);
- 			if (err)
- 				goto exit_free;
- 			break;
- 		case AUDIT_FILTERKEY:
--			if (entry->rule.filterkey || f->val > AUDIT_MAX_KEY_LEN)
-+			if (entry->rule.filterkey || f_val > AUDIT_MAX_KEY_LEN)
- 				goto exit_free;
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
-+			}
-+			entry->rule.buflen += f_val;
- 			entry->rule.filterkey = str;
- 			break;
- 		case AUDIT_EXE:
--			if (entry->rule.exe || f->val > PATH_MAX)
-+			if (entry->rule.exe || f_val > PATH_MAX)
- 				goto exit_free;
--			str = audit_unpack_string(&bufp, &remain, f->val);
-+			str = audit_unpack_string(&bufp, &remain, f_val);
- 			if (IS_ERR(str)) {
- 				err = PTR_ERR(str);
- 				goto exit_free;
- 			}
--			entry->rule.buflen += f->val;
--
--			audit_mark = audit_alloc_mark(&entry->rule, str, f->val);
-+			audit_mark = audit_alloc_mark(&entry->rule, str, f_val);
- 			if (IS_ERR(audit_mark)) {
- 				kfree(str);
- 				err = PTR_ERR(audit_mark);
- 				goto exit_free;
- 			}
-+			entry->rule.buflen += f_val;
- 			entry->rule.exe = audit_mark;
- 			break;
-+		default:
-+			f->val = f_val;
-+			break;
- 		}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 162881005a6df..0c3c63aed2c06 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -9437,6 +9437,13 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		return ret;
  	}
  
++	ret = init_mgr_tbl(hdev);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to reinit manager table, ret = %d\n", ret);
++		return ret;
++	}
++
+ 	ret = hclge_init_fd_config(hdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fd table init fail, ret=%d\n", ret);
+-- 
+2.20.1
+
 
 
