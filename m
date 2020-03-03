@@ -2,142 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CA0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7D5C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AC520857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BB920857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0GntM6E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jx1mKKrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgCCNAg (ORCPT
+        id S1728931AbgCCNBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:00:36 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34828 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727767AbgCCNAg (ORCPT
+        Tue, 3 Mar 2020 08:01:02 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44590 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgCCNBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:00:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583240435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bQH3gFaN0+ndXt7bwldiJXwZh7UdzaebXE8uKCbRSZ4=;
-        b=D0GntM6E2M5M/qEUYJeVxyQRk6WBtVx5Ry9FbrW/RbnXD/sAz8rVRVzhCsu7b7MD+X+Hef
-        Js9haa/qKdFKruTVmKfhKJqfD1pFJWCkGEHdFzzSoZxN4pNjdak2uBk4igK9V6XJ2hz2MD
-        9UNG1f+u43eSvolSJybKK9D8pqhQvRg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-gBMWLwVAOniOuvpMzbp2MA-1; Tue, 03 Mar 2020 08:00:31 -0500
-X-MC-Unique: gBMWLwVAOniOuvpMzbp2MA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E37800D5B;
-        Tue,  3 Mar 2020 13:00:28 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-227.str.redhat.com [10.33.192.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C17B60C80;
-        Tue,  3 Mar 2020 13:00:13 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@collabora.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
-        z.figura12@gmail.com, steven@valvesoftware.com,
-        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
-        adhemerval.zanella@linaro.org, libc-alpha@sourceware.org
-Subject: Re: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement mechanism to wait on any of several futexes]
-References: <20200213214525.183689-1-andrealmeid@collabora.com>
-        <20200213214525.183689-2-andrealmeid@collabora.com>
-        <20200228190717.GM18400@hirez.programming.kicks-ass.net>
-        <20200228194958.GO14946@hirez.programming.kicks-ass.net>
-        <87tv3aflqm.fsf@nanos.tec.linutronix.de>
-        <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
-        <87o8thg031.fsf@nanos.tec.linutronix.de>
-        <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
-        <20200303120050.GC2596@hirez.programming.kicks-ass.net>
-Date:   Tue, 03 Mar 2020 14:00:12 +0100
-In-Reply-To: <20200303120050.GC2596@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Tue, 3 Mar 2020 13:00:50 +0100")
-Message-ID: <87pndth9ur.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 3 Mar 2020 08:01:02 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a10so3361116ljp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:01:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NKj+1Rf5TnGZp4SiLcelNGaJtNpD2JrLWM1tk/In9ck=;
+        b=jx1mKKrApcRXamn0UdmROfGB/dWjaSxTUv6iyGimgChB2LNGywfc217cKIVp8ywKB0
+         5AFhGnzfgGLxwjwKwQ5z2C+zKUW7FUnqWZ7M9GUvS2VLhIBz95aJVpVDlX4gr5rt6Jl2
+         uhCZdMUDn5WD6z+3sbZ39l67QTde69vqXP09FAuXwfCWfPzVtplTJjgCUH5BLVXmE3Qe
+         es3YU6cEE1TTCOgADetZuNWd7uC0DwwbRLe1A6RZTX25hMYSpWDKZcDtPqPvDYSKJhNi
+         mhomdgxZ541z06qXd4tS9oeGlCUjzy2f9jyanXnJ+Qfuwm5McojSZczPgwijviXEPVgX
+         8uoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NKj+1Rf5TnGZp4SiLcelNGaJtNpD2JrLWM1tk/In9ck=;
+        b=ogYBq7PD5+KKW2cDBusXUTCb2uCpz5wK2ZkDvfjEbNdgBd/Q5/RONMHpg1emeTgFoI
+         aX+BMmSscMhZWoKaUVfR7c7v0BD0scXqBRS7Wq0Jlimp9oMA+KHJwG6msC0Z2crrud+d
+         nSiLmCDZpI/p+trpSmjVOgsaXSNqFckTYz5vyvAlqLC4mRLT11dmb8hDzrvxZN2Xddn9
+         /z6NbwuPtjnbDsv5AcWcu6BjcdYWks7Nyla7YOu2WTPa1DHUySTDywBscAmIxfCbPfh+
+         dw7Q+s4mfVuYq+vgT0vKLZWWyfJcrzzUpDVCi0tD2HZ73no4b8Af7otZsLPcrmetv+dV
+         k3Hw==
+X-Gm-Message-State: ANhLgQ3ste7OQDHTt5ucxQImQ8uSp9v2yWW0AG9OlkzL8b84Uw77EoVX
+        sKOXnzc3Z+cvBQi0YrBFHMY3DlF+yDWbGmD+h2Ciww==
+X-Google-Smtp-Source: ADFU+vt6Xgq2BT1BgAbHQx9inuBc+XGlWT4URTEZQQUd8DrO3mUIikmr/9q5Su6eUhpueU4LIGXp9eMIsusx2RPh1T0=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr2343804ljo.125.1583240459705;
+ Tue, 03 Mar 2020 05:00:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <87eevf4hnq.fsf@nanos.tec.linutronix.de> <20200224224059.GC1508@skl-build> <87mu95ne3q.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87mu95ne3q.fsf@nanos.tec.linutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 3 Mar 2020 14:00:48 +0100
+Message-ID: <CACRpkdadbWvsnyrH_+sRha2C0fJU0EFEO9UyO7wHybZT-R1jzA@mail.gmail.com>
+Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
+ Driver with PHC interface changes to support additional H/W Features
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     "Christopher S. Hall" <christopher.s.hall@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        jacob.e.keller@intel.com,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Zijlstra:
+On Thu, Feb 27, 2020 at 12:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> "Christopher S. Hall" <christopher.s.hall@intel.com> writes:
 
-> So how about we introduce new syscalls:
+> > Apart from clock import/export applications, timestamping single I/O
+> > events are potentially valuable for industrial control applications
+> > (e.g. motor position sensing vs. time). As time sync precision
+> > requirements for these applications are tightened, standard GPIO
+> > timing precision will not be good enough.
+
+If you are using (from userspace) the GPIO character device
+and open the events using e.g. tools/gpio/gpio-event-mon.c
+you get GPIO events to userspace.
+
+This uses a threaded interrupt with an top half (fastpath)
+that timestamps it as the IRQ comes in using
+ktime_get_ns(). It's as good as we can get it with just
+software and IRQs (I think).
+
+This uses a KFIFO to userspace, same approach as the IIO
+subsystem.
+
+> Anyway, the device we are talking about is a GPIO device with inputs and
+> outputs plus bells and whistles attached to it.
 >
->   sys_futex_wait(void *uaddr, unsigned long val, unsigned long flags, ktime_t *timo);
->
->   struct futex_wait {
-> 	void *uaddr;
-> 	unsigned long val;
-> 	unsigned long flags;
->   };
->   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> 		  unsigned long flags, ktime_t *timo);
->
->   sys_futex_wake(void *uaddr, unsigned int nr, unsigned long flags);
->
->   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
-> 			unsigned int nr_requeue, unsigned long cmpval, unsigned long flags);
->
-> Where flags:
->
->   - has 2 bits for size: 8,16,32,64
->   - has 2 more bits for size (requeue) ??
->   - has ... bits for clocks
->   - has private/shared
->   - has numa
+> On the input side this provides a timestamp taken by the hardware when
+> the input level changes, i.e. hardware based time stamping instead of
+> software based interrupt arrival timestamping. Looks like an obvious
+> extension to the GPIO subsystem.
 
-What's the actual type of *uaddr?  Does it vary by size (which I assume
-is in bits?)?  Are there alignment constraints?
+That looks like something I/we would want to support all the way
+to userspace so people can do their funny industrial stuff in some
+standard manner.
 
-These system calls seemed to be type-polymorphic still, which is
-problematic for defining a really nice C interface.  I would really like
-to have a strongly typed interface for this, with a nice struct futex
-wrapper type (even if it means that we need four of them).
+IIO has a config file in sysfs that lets them select the source of the
+timestamp like so (drivers/iio/industrialio-core.c):
 
-Will all architectures support all sizes?  If not, how do we probe which
-size/flags combinations are supported?
+s64 iio_get_time_ns(const struct iio_dev *indio_dev)
+{
+        struct timespec64 tp;
 
-> For NUMA I propose that when NUMA_FLAG is set, uaddr-4 will be 'int
-> node_id', with the following semantics:
->
->  - on WAIT, node_id is read and when 0 <= node_id <= nr_nodes, is
->    directly used to index into per-node hash-tables. When -1, it is
->    replaced by the current node_id and an smp_mb() is issued before we
->    load and compare the @uaddr.
->
->  - on WAKE/REQUEUE, it is an immediate index.
+        switch (iio_device_get_clock(indio_dev)) {
+        case CLOCK_REALTIME:
+                return ktime_get_real_ns();
+        case CLOCK_MONOTONIC:
+                return ktime_get_ns();
+        case CLOCK_MONOTONIC_RAW:
+                return ktime_get_raw_ns();
+        case CLOCK_REALTIME_COARSE:
+                return ktime_to_ns(ktime_get_coarse_real());
+        case CLOCK_MONOTONIC_COARSE:
+                ktime_get_coarse_ts64(&tp);
+                return timespec64_to_ns(&tp);
+        case CLOCK_BOOTTIME:
+                return ktime_get_boottime_ns();
+        case CLOCK_TAI:
+                return ktime_get_clocktai_ns();
+        default:
+                BUG();
+        }
+}
 
-Does this mean the first waiter determines the NUMA index, and all
-future waiters use the same chain even if they are on different nodes?
+After discussion with Arnd we concluded the only timestamp that
+makes sense is ktime_get_ns(). So in GPIO we just use that, all the
+userspace I can think of certainly prefers monotonic time.
+(If tglx does not agree with that I stand corrected to whatever
+he says, I suppose.)
 
-I think documenting this as a node index would be a mistake.  It could
-be an arbitrary hint for locating the corresponding kernel data
-structures.
+Anyway in GPIO we could also make it configurable for users who
+know what they are doing.
 
-> Any invalid value with result in EINVAL.
+HW timestamps would be something more elaborate and
+nice CLOCK_HW_SPECIFIC or so. Some of the IIO sensors also
+have that, we just don't expose it as of now.
 
-Using uaddr-4 is slightly tricky with a 64-bit futex value, due to the
-need to maintain alignment and avoid padding.
-
-Thanks,
-Florian
-
+Yours,
+Linus Walleij
