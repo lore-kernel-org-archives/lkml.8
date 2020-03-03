@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2769CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D6EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A1624673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8865D217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204225;
-	bh=EcXmh/sViq3cjX+kT2vA7ywCjsgkFY/MvcXJvo0fHBQ=;
+	s=default; t=1583204233;
+	bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8JjxTfm1lkWOR3+259ga7IA4PIGdYOy+1pKSCDM7lxBZ5ttz2gCjKhWoLlYrzD9l
-	 fJog9zmk8aEfc5EL1rKpfdNr4YImdooNPwwgIpLwNbtN1OdrSTCiz3RMGs4PLh62Cc
-	 mB4hRmfQIce7N/SJIAITJhmxTc8cDIWjsQ8tO3bo=
+	b=0OP+Kv5/QwdDV0bYnk1LYJwZbiZIH1I0JCX3bnh5ZPzqb9ZTZeG0tlvsySpAgIF9m
+	 HAUYOwzAitd3F6rX1L+w3YQGk9mKcJrdyQm2mcuaA3VV8dDnchvag1HX20Hm5Q+O25
+	 IVwbRi1CaL4ETpgtjT20P9qr/aabmt/3M8mP+KI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgCCC5D (ORCPT
+        id S1728616AbgCCC5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbgCCCs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:29 -0500
+        id S1728426AbgCCCs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E91C24697;
-        Tue,  3 Mar 2020 02:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CC4624680;
+        Tue,  3 Mar 2020 02:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203709;
-        bh=EcXmh/sViq3cjX+kT2vA7ywCjsgkFY/MvcXJvo0fHBQ=;
+        s=default; t=1583203708;
+        bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDMmJwWEceWeru+Zs8KI0eQvBx7BVTCIrT5UCNNB/H/aPXMtIpETfzKcibAG1cK4U
-         podRZ7iknZvtWWzswK+WNBmqgsgdMlpLheK8+tc30vIFgetCmvLDCudIqETxbpXYes
-         x/FQ125lE5i/hBDLIRtgK05b4vJpTBb76y6BeYw4=
+        b=BlBeneV3vp6Xjgc+i1hsUdP+h1505g1QE2Ek2sInORlFdpuEb7+aBOt2XPh4bYsAl
+         G6pYz9lEQvQSYKh4ZNhbFkEJhw1rBskifToC73x6qHvR+4ZNEKHAp4yLOMRK3liY8S
+         i2M94Oo8pKfDOqJjfrQvxq1AMqeuok04RusO7YlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shyjumon N <shyjumon.n@intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 40/58] nvme/pci: Add sleep quirk for Samsung and Toshiba drives
-Date:   Mon,  2 Mar 2020 21:47:22 -0500
-Message-Id: <20200303024740.9511-40-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 39/58] iommu/amd: Disable IOMMU on Stoney Ridge systems
+Date:   Mon,  2 Mar 2020 21:47:21 -0500
+Message-Id: <20200303024740.9511-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,49 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shyjumon N <shyjumon.n@intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 1fae37accfc5872af3905d4ba71dc6ab15829be7 ]
+[ Upstream commit 3dfee47b215e49788cfc80e474820ea2e948c031 ]
 
-The Samsung SSD SM981/PM981 and Toshiba SSD KBG40ZNT256G on the Lenovo
-C640 platform experience runtime resume issues when the SSDs are kept in
-sleep/suspend mode for long time.
+Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
 
-This patch applies the 'Simple Suspend' quirk to these configurations.
-With this patch, the issue had not been observed in a 1+ day test.
+Use identity-mapping and PCI ATS doesn't help this issue.
 
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Shyjumon N <shyjumon.n@intel.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
+the same here to avoid screen flickering on 4K monitor.
+
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f34a56d588d31..944f89fc15946 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2740,6 +2740,18 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
- 		    (dmi_match(DMI_BOARD_NAME, "PRIME B350M-A") ||
- 		     dmi_match(DMI_BOARD_NAME, "PRIME Z370-A")))
- 			return NVME_QUIRK_NO_APST;
-+	} else if ((pdev->vendor == 0x144d && (pdev->device == 0xa801 ||
-+		    pdev->device == 0xa808 || pdev->device == 0xa809)) ||
-+		   (pdev->vendor == 0x1e0f && pdev->device == 0x0001)) {
-+		/*
-+		 * Forcing to use host managed nvme power settings for
-+		 * lowest idle power with quick resume latency on
-+		 * Samsung and Toshiba SSDs based on suspend behavior
-+		 * on Coffee Lake board for LENOVO C640
-+		 */
-+		if ((dmi_match(DMI_BOARD_VENDOR, "LENOVO")) &&
-+		     dmi_match(DMI_BOARD_NAME, "LNVNB161216"))
-+			return NVME_QUIRK_SIMPLE_SUSPEND;
- 	}
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index d7cbca8bf2cd4..b5ae9f7c0510b 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2533,6 +2533,7 @@ static int __init early_amd_iommu_init(void)
+ 	struct acpi_table_header *ivrs_base;
+ 	acpi_status status;
+ 	int i, remap_cache_sz, ret = 0;
++	u32 pci_id;
  
- 	return 0;
+ 	if (!amd_iommu_detected)
+ 		return -ENODEV;
+@@ -2620,6 +2621,16 @@ static int __init early_amd_iommu_init(void)
+ 	if (ret)
+ 		goto out;
+ 
++	/* Disable IOMMU if there's Stoney Ridge graphics */
++	for (i = 0; i < 32; i++) {
++		pci_id = read_pci_config(0, i, 0, 0);
++		if ((pci_id & 0xffff) == 0x1002 && (pci_id >> 16) == 0x98e4) {
++			pr_info("Disable IOMMU on Stoney Ridge\n");
++			amd_iommu_disabled = true;
++			break;
++		}
++	}
++
+ 	/* Disable any previously enabled IOMMUs */
+ 	if (!is_kdump_kernel() || amd_iommu_disabled)
+ 		disable_iommus();
+@@ -2728,7 +2739,7 @@ static int __init state_next(void)
+ 		ret = early_amd_iommu_init();
+ 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
+ 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
+-			pr_info("AMD IOMMU disabled on kernel command-line\n");
++			pr_info("AMD IOMMU disabled\n");
+ 			init_state = IOMMU_CMDLINE_DISABLED;
+ 			ret = -EINVAL;
+ 		}
 -- 
 2.20.1
 
