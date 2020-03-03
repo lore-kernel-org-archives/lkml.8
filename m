@@ -2,54 +2,52 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF09AC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B641C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B562073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD2A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258922;
-	bh=yHzv1T7w5XflZfTdu0V4RPQ231BUuBe0kt/RYKK4i94=;
+	s=default; t=1583258929;
+	bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjVMTwKWrSkWdGVolbVtXkGhxYf7aYad6pf49NfvcF7PUozziU4QrBmDEZRXaj8Pf
-	 6w6ueKETiOCZCbNMC4R43xcXZgqVe2KpJYRAi2Rpo+zpCJKdixtACsDY+Jz5PeKrZX
-	 3YOB/8XK876G4UmzFuiF2jeL6+mOxJ7TNcsJ9vSY=
+	b=JHQb/X3gWGxwCSpvtWpQ2hsOeRB7JMlw6K9GlBlYd8ok6TkJwlB7vPH/rCNwlB8K2
+	 4QR3+y1OPF+/Hq2wPKWCYlMo69IFkwdaReLd0cTUZEWqE/NzmcWpGq+op2TYKzF5Yj
+	 mus44UF0IHqAfTeb7KM6+u9raQsMZdEThoWxxw5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbgCCSIl (ORCPT
+        id S1732308AbgCCSIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:08:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731773AbgCCRxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:23 -0500
+        id S1732299AbgCCRxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E80D520CC7;
-        Tue,  3 Mar 2020 17:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63552072D;
+        Tue,  3 Mar 2020 17:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258002;
-        bh=yHzv1T7w5XflZfTdu0V4RPQ231BUuBe0kt/RYKK4i94=;
+        s=default; t=1583257988;
+        bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fwhBTcg03lGtVAGYH3t41KQj796fEvo23pKDAiixtOb6QU4OH4WyM9Do/9KRzCBGG
-         PPPIw6R0OD6xhg3VXxpkgBkLhyhoxYvgRV76+afgGtJ4Ve7HtvH844+snvr0SXembQ
-         VlC1CBJS1eQ6FYgqzntNlP0iczIDcmVZIExew5q8=
+        b=O7a7JfqYohuBDjojdgabstxIda2iGSdKazfFUedjhC9n1Ep30HJtlBjTf0b8PZ8zm
+         2f+RJ8cIoWNCeV4Wmy5d95Sol4TrtJuyjG3U3s5vf0e1Y/OFpF6b4IzpuE6YMIOCKm
+         blxiqQAaT1k+KT7/Z4iGENFdzM/sZhIhj/S6dQsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/152] NFSv4: Fix races between open and dentry revalidation
-Date:   Tue,  3 Mar 2020 18:42:11 +0100
-Message-Id: <20200303174306.211969204@linuxfoundation.org>
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 011/152] qede: Fix race between rdma destroy workqueue and link change event
+Date:   Tue,  3 Mar 2020 18:41:49 +0100
+Message-Id: <20200303174303.796942527@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,81 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit cf5b4059ba7197d6cef9c0e024979d178ed8c8ec ]
+[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
 
-We want to make sure that we revalidate the dentry if and only if
-we've done an OPEN by filename.
-In order to avoid races with remote changes to the directory on the
-server, we want to save the verifier before calling OPEN. The exception
-is if the server returned a delegation with our OPEN, as we then
-know that the filename can't have changed on the server.
+If an event is added while the rdma workqueue is being destroyed
+it could lead to several races, list corruption, null pointer
+dereference during queue_work or init_queue.
+This fixes the race between the two flows which can occur during
+shutdown.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@gmail.com>
-Tested-by: Benjamin Coddington <bcodding@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A kref object and a completion object are added to the rdma_dev
+structure, these are initialized before the workqueue is created.
+The refcnt is used to indicate work is being added to the
+workqueue and ensures the cleanup flow won't start while we're in
+the middle of adding the event.
+Once the work is added, the refcnt is decreased and the cleanup flow
+is safe to run.
+
+Fixes: cee9fbd8e2e ("qede: Add qedr framework")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/nfs4file.c |  1 -
- fs/nfs/nfs4proc.c | 18 ++++++++++++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qede/qede.h      |    2 +
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c |   29 ++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 339663d04bf83..54f1c1f626fc5 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -86,7 +86,6 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (inode != d_inode(dentry))
- 		goto out_drop;
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -163,6 +163,8 @@ struct qede_rdma_dev {
+ 	struct list_head entry;
+ 	struct list_head rdma_event_list;
+ 	struct workqueue_struct *rdma_wq;
++	struct kref refcnt;
++	struct completion event_comp;
+ 	bool exp_recovery;
+ };
  
--	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
- 	nfs_file_set_open_context(filp, ctx);
- 	nfs_fscache_open_file(inode, filp);
- 	err = 0;
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index f808fb34b1101..6b29703d2fe1e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2962,10 +2962,13 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 	struct dentry *dentry;
- 	struct nfs4_state *state;
- 	fmode_t acc_mode = _nfs4_ctx_to_accessmode(ctx);
-+	struct inode *dir = d_inode(opendata->dir);
-+	unsigned long dir_verifier;
- 	unsigned int seq;
- 	int ret;
- 
- 	seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
-+	dir_verifier = nfs_save_change_attribute(dir);
- 
- 	ret = _nfs4_proc_open(opendata, ctx);
- 	if (ret != 0)
-@@ -2993,8 +2996,19 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 			dput(ctx->dentry);
- 			ctx->dentry = dentry = alias;
- 		}
--		nfs_set_verifier(dentry,
--				nfs_save_change_attribute(d_inode(opendata->dir)));
-+	}
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qe
+ static int qede_rdma_create_wq(struct qede_dev *edev)
+ {
+ 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
++	kref_init(&edev->rdma_info.refcnt);
++	init_completion(&edev->rdma_info.event_comp);
 +
-+	switch(opendata->o_arg.claim) {
-+	default:
-+		break;
-+	case NFS4_OPEN_CLAIM_NULL:
-+	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
-+	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
-+		if (!opendata->rpc_done)
-+			break;
-+		if (opendata->o_res.delegation_type != 0)
-+			dir_verifier = nfs_save_change_attribute(dir);
-+		nfs_set_verifier(dentry, dir_verifier);
+ 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
+ 	if (!edev->rdma_info.rdma_wq) {
+ 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
+@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(stru
  	}
+ }
  
- 	/* Parse layoutget results before we check for access */
--- 
-2.20.1
-
++static void qede_rdma_complete_event(struct kref *ref)
++{
++	struct qede_rdma_dev *rdma_dev =
++		container_of(ref, struct qede_rdma_dev, refcnt);
++
++	/* no more events will be added after this */
++	complete(&rdma_dev->event_comp);
++}
++
+ static void qede_rdma_destroy_wq(struct qede_dev *edev)
+ {
++	/* Avoid race with add_event flow, make sure it finishes before
++	 * we start accessing the list and cleaning up the work
++	 */
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
++	wait_for_completion(&edev->rdma_info.event_comp);
++
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
+ }
+@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct q
+ 	if (!edev->rdma_info.qedr_dev)
+ 		return;
+ 
++	/* We don't want the cleanup flow to start while we're allocating and
++	 * scheduling the work
++	 */
++	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
++		return; /* already being destroyed */
++
+ 	event_node = qede_rdma_get_free_event_node(edev);
+ 	if (!event_node)
+-		return;
++		goto out;
+ 
+ 	event_node->event = event;
+ 	event_node->ptr = edev;
+ 
+ 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
+ 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
++
++out:
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
+ }
+ 
+ void qede_rdma_dev_event_open(struct qede_dev *edev)
 
 
