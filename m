@@ -2,55 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11359C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33154C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBC02187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAC420842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257554;
-	bh=MRhUrpxEbVHfhz+X54x8Q4f8X0N2Aq39aVimgP6a/BM=;
+	s=default; t=1583257559;
+	bh=lCoIUC5b0pL0VYMsb5nDT4bqv8J5/fmGWMwPjnMO0QM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4FLQ2eYYr/Q9vOFBSkg4R7HhgupwMv9zoo09rA/l+BpPnzye7phUnLkJGN789i6e
-	 sMnMVaR0C8Ay7X92G7sikUE3hZWGxeGOiyFFCJfFFmA+d0CIqUXpDwnHcGQbyhaQz5
-	 n6eZXg24/1+yKHk+1bkTAGWDow0kaMoGe0MAgbqs=
+	b=CQQCk7eEMg5/nkmsKWCaFFRfGgOtMUuxQVBkPB2k6qYY+H7n/klf50I2uOPnr+14j
+	 E/EXA7wfytjUROBrqqDE/8RUSmvVtxgx9zBhuVeSqec33BoDZ46kxPr6xb3hHzC3KZ
+	 wEz3soiRV1WKULDyNl977OtewdcOfeYnxEQAoO3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgCCRpx (ORCPT
+        id S1731035AbgCCRp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731001AbgCCRpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:51 -0500
+        id S1731001AbgCCRpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5A620CC7;
-        Tue,  3 Mar 2020 17:45:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785C0215A4;
+        Tue,  3 Mar 2020 17:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257549;
-        bh=MRhUrpxEbVHfhz+X54x8Q4f8X0N2Aq39aVimgP6a/BM=;
+        s=default; t=1583257554;
+        bh=lCoIUC5b0pL0VYMsb5nDT4bqv8J5/fmGWMwPjnMO0QM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDVIXp2DNPRxXwRHTxNUUv/b4afy38q8m5E2i8jHL2qVHaUyl+SSvioiD222KgwuF
-         /kq51tRVDDzyMSrNND31eqWbljJdIy2myoglRtBaEmNgcQYThWDmagx7u3Yyl5N109
-         y9YDtF3zy87QuQ0L0/147V/Bbyq821xfjpss3cM4=
+        b=2TBXylbxcLf9w9JLR8auSgJkJ3RiwreMWboY/mzV+CXqIJoErR3kMrib5hgP5lOXU
+         xLFL+33kK3NWgGr6JlntIW36NM5HZFd5lfLwPpYTQsbWWxbKI0eiNPIkfSYfFcV9jX
+         xkKHF52jTwrBveNSo6qfxairNt0A/QE4pWT9wQsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 036/176] qmi_wwan: unconditionally reject 2 ep interfaces
-Date:   Tue,  3 Mar 2020 18:41:40 +0100
-Message-Id: <20200303174308.686777966@linuxfoundation.org>
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 005/176] net: mscc: fix in frame extraction
+Date:   Tue,  3 Mar 2020 18:41:09 +0100
+Message-Id: <20200303174305.189935639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -63,132 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-[ Upstream commit 00516d13d4cfa56ce39da144db2dbf08b09b9357 ]
+[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
 
-We have been using the fact that the QMI and DIAG functions
-usually are the only ones with class/subclass/protocol being
-ff/ff/ff on Quectel modems. This has allowed us to match the
-QMI function without knowing the exact interface number,
-which can vary depending on firmware configuration.
+Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
+by reading chuncks of 4 bytes from a register.
 
-The ability to silently reject the DIAG function, which is
-usually handled by the option driver, is important for this
-method to work.  This is done based on the knowledge that it
-has exactly 2 bulk endpoints.  QMI function control interfaces
-will have either 3 or 1 endpoint. This rule is universal so
-the quirk condition can be removed.
+In case the IFH and frames were read corretly it would try to read the next
+frame. In case there are no more frames in the queue, it checks if there
+were any previous errors and in that case clear the queue. But this check
+will always succeed also when there are no errors. Because when extracting
+the IFH the error is checked against 4(number of bytes read) and then the
+error is set only if the extraction of the frame failed. So in a happy case
+where there are no errors the err variable is still 4. So it could be
+a case where after the check that there are no more frames in the queue, a
+frame will arrive in the queue but because the error is not reseted, it
+would try to flush the queue. So the frame will be lost.
 
-The fixed layouts known from the Gobi1k and Gobi2k modems
-have been gradually replaced by more dynamic layouts, and
-many vendors now use configurable layouts without changing
-device IDs.  Renaming the class/subclass/protocol matching
-macro makes it more obvious that this is now not Quectel
-specific anymore.
+The fix consist in resetting the error after reading the IFH.
 
-Cc: Kristian Evensen <kristian.evensen@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c | 42 ++++++++++++++------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/mscc/ocelot_board.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 839cef720cf64..3b7a3b8a5e067 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -61,7 +61,6 @@ enum qmi_wwan_flags {
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -114,6 +114,14 @@ static irqreturn_t ocelot_xtr_irq_handle
+ 		if (err != 4)
+ 			break;
  
- enum qmi_wwan_quirks {
- 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
--	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
- };
++		/* At this point the IFH was read correctly, so it is safe to
++		 * presume that there is no error. The err needs to be reset
++		 * otherwise a frame could come in CPU queue between the while
++		 * condition and the check for error later on. And in that case
++		 * the new frame is just removed and not processed.
++		 */
++		err = 0;
++
+ 		ocelot_parse_ifh(ifh, &info);
  
- struct qmimux_hdr {
-@@ -916,16 +915,6 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- 	.data           = QMI_WWAN_QUIRK_DTR,
- };
- 
--static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
--	.description	= "WWAN/QMI device",
--	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
--	.bind		= qmi_wwan_bind,
--	.unbind		= qmi_wwan_unbind,
--	.manage_power	= qmi_wwan_manage_power,
--	.rx_fixup       = qmi_wwan_rx_fixup,
--	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
--};
--
- #define HUAWEI_VENDOR_ID	0x12D1
- 
- /* map QMI/wwan function by a fixed interface number */
-@@ -946,14 +935,18 @@ static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
- #define QMI_GOBI_DEVICE(vend, prod) \
- 	QMI_FIXED_INTF(vend, prod, 0)
- 
--/* Quectel does not use fixed interface numbers on at least some of their
-- * devices. We need to check the number of endpoints to ensure that we bind to
-- * the correct interface.
-+/* Many devices have QMI and DIAG functions which are distinguishable
-+ * from other vendor specific functions by class, subclass and
-+ * protocol all being 0xff. The DIAG function has exactly 2 endpoints
-+ * and is silently rejected when probed.
-+ *
-+ * This makes it possible to match dynamically numbered QMI functions
-+ * as seen on e.g. many Quectel modems.
-  */
--#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
-+#define QMI_MATCH_FF_FF_FF(vend, prod) \
- 	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
- 				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
--	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
-+	.driver_info = (unsigned long)&qmi_wwan_info_quirk_dtr
- 
- static const struct usb_device_id products[] = {
- 	/* 1. CDC ECM like devices match on the control interface */
-@@ -1059,10 +1052,10 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
- 		.driver_info = (unsigned long)&qmi_wwan_info,
- 	},
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
- 
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
-@@ -1455,7 +1448,6 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- {
- 	struct usb_device_id *id = (struct usb_device_id *)prod;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
--	const struct driver_info *info;
- 
- 	/* Workaround to enable dynamic IDs.  This disables usbnet
- 	 * blacklisting functionality.  Which, if required, can be
-@@ -1491,12 +1483,8 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * different. Ignore the current interface if the number of endpoints
- 	 * equals the number for the diag interface (two).
- 	 */
--	info = (void *)id->driver_info;
--
--	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
--		if (desc->bNumEndpoints == 2)
--			return -ENODEV;
--	}
-+	if (desc->bNumEndpoints == 2)
-+		return -ENODEV;
- 
- 	return usbnet_probe(intf, id);
- }
--- 
-2.20.1
-
+ 		ocelot_port = ocelot->ports[info.port];
 
 
