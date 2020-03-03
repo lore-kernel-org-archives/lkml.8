@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A642C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9F220870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE8A20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258615;
-	bh=4HlcNQ/u8dWefz42EWicmru3mNA3W0RTIiIe9h0A0Kk=;
+	s=default; t=1583258619;
+	bh=MC5FXkUrXqYCGbHfBmE2VvoUd6IX0tYSr75c/vkeMqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4i20pUS/d20Wg73yuWWtPCA6Vjckqky7NSA3igIoJcQ8peVUUko7hS3tfej50PsD
-	 7YB6J2GuLrsHexPRr8OT3LTQ1Gl9lwpN+g89wijp0ci2vlUsriqkrMT7iNE7yuJNkL
-	 v/c8fr4jlM22aPAW74s0Hon0F508FmgfkPh9557w=
+	b=wS3NHfehof7j2fwkGzowLPA+620WsiI5HbKFjEGH66ysMxwKNNZ0oLkZJppV7txaZ
+	 bI8ioP4cAoKc973NYJf8HXSxVM7pha7S7Fwi5TU2iSRjatV/k9DmPlaToOUQfNOsBu
+	 AixhHVB84/cziVgVaWoc9Hc9jJ79OAhhy2nWMT0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbgCCSBT (ORCPT
+        id S2387781AbgCCSDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:03:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387935AbgCCSBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:16 -0500
+        id S2387656AbgCCSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BABF20866;
-        Tue,  3 Mar 2020 18:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA0B20CC7;
+        Tue,  3 Mar 2020 18:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258475;
-        bh=4HlcNQ/u8dWefz42EWicmru3mNA3W0RTIiIe9h0A0Kk=;
+        s=default; t=1583258486;
+        bh=MC5FXkUrXqYCGbHfBmE2VvoUd6IX0tYSr75c/vkeMqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPlhYatJ6Twl+9446//8K8RP+euM2SE7v+FpfkYjaAJx7xJp7VisaRRJjbata6yZd
-         PXD1SW5uREDMwum1rrWKVq0yPcmjCMbtekg/T0DjSFs4oU+x6D0TnyNikTq+WG98Gn
-         iolVcMZxTicyfEq4OyMHPq9H2tVFs80KKFm4788s=
+        b=Mqrj+ZzpV3Lt2MFHn3dB9jznHYqylEYJ4hoctQPJ77SXf4T4g6SJBMjjzThlVJwmz
+         ItyCj0DFnvSV31hbvVqEn8fXNmJMBMejo4qD7vRVTewYxlezGNAQHCtTzGN8E2afyn
+         lpi/IVuc8bXN3Cd2oRCMnNJX0eo0iJGnpEyMJ1HM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Erhard F." <erhard_f@mailbox.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 62/87] net: netlink: cap max groups which will be considered in netlink_bind()
-Date:   Tue,  3 Mar 2020 18:43:53 +0100
-Message-Id: <20200303174355.918762979@linuxfoundation.org>
+Subject: [PATCH 4.19 65/87] net/smc: no peer ID in CLC decline for SMCD
+Date:   Tue,  3 Mar 2020 18:43:56 +0100
+Message-Id: <20200303174356.167499727@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -62,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
+commit 369537c97024dca99303a8d4d6ab38b4f54d3909 upstream.
 
-Since nl_groups is a u32 we can't bind more groups via ->bind
-(netlink_bind) call, but netlink has supported more groups via
-setsockopt() for a long time and thus nlk->ngroups could be over 32.
-Recently I added support for per-vlan notifications and increased the
-groups to 33 for NETLINK_ROUTE which exposed an old bug in the
-netlink_bind() code causing out-of-bounds access on archs where unsigned
-long is 32 bits via test_bit() on a local variable. Fix this by capping the
-maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
-capping them at 32 which is the minimum of allocated groups and the
-maximum groups which can be bound via netlink_bind().
+Just SMCR requires a CLC Peer ID, but not SMCD. The field should be
+zero for SMCD.
 
-CC: Christophe Leroy <christophe.leroy@c-s.fr>
-CC: Richard Guy Briggs <rgb@redhat.com>
-Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: c758dfddc1b5 ("net/smc: add SMC-D support in CLC messages")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netlink/af_netlink.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/smc/smc_clc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -1029,7 +1029,8 @@ static int netlink_bind(struct socket *s
- 	if (nlk->netlink_bind && groups) {
- 		int group;
+--- a/net/smc/smc_clc.c
++++ b/net/smc/smc_clc.c
+@@ -364,7 +364,9 @@ int smc_clc_send_decline(struct smc_sock
+ 	dclc.hdr.length = htons(sizeof(struct smc_clc_msg_decline));
+ 	dclc.hdr.version = SMC_CLC_V1;
+ 	dclc.hdr.flag = (peer_diag_info == SMC_CLC_DECL_SYNCERR) ? 1 : 0;
+-	memcpy(dclc.id_for_peer, local_systemid, sizeof(local_systemid));
++	if (smc->conn.lgr && !smc->conn.lgr->is_smcd)
++		memcpy(dclc.id_for_peer, local_systemid,
++		       sizeof(local_systemid));
+ 	dclc.peer_diagnosis = htonl(peer_diag_info);
+ 	memcpy(dclc.trl.eyecatcher, SMC_EYECATCHER, sizeof(SMC_EYECATCHER));
  
--		for (group = 0; group < nlk->ngroups; group++) {
-+		/* nl_groups is a u32, so cap the maximum groups we can bind */
-+		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
- 			if (!test_bit(group, &groups))
- 				continue;
- 			err = nlk->netlink_bind(net, group + 1);
-@@ -1048,7 +1049,7 @@ static int netlink_bind(struct socket *s
- 			netlink_insert(sk, nladdr->nl_pid) :
- 			netlink_autobind(sock);
- 		if (err) {
--			netlink_undo_bind(nlk->ngroups, groups, sk);
-+			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
- 			goto unlock;
- 		}
- 	}
 
 
