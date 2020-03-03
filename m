@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556A8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E09BC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A91206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199FC2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258563;
-	bh=UOJy3pLs5Fs1mlGGncBPdJXTbv+3LRVXAKJbhH46Fm0=;
+	s=default; t=1583258571;
+	bh=csGExRBkwGzlCGWjK4cPPFMFAbs96bjnmP6x1pCqZ8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmJTXx3TmN0aFQaJBGP5K4sfcKZWveW67rOl15Nj767pDzkrW6EK4kuLzc7tB4mJQ
-	 PGpQ68O31IRvoSQ44xeI5AHP0eNWZhhr1PA4hpidJ+m7yj7sBDj398x/TzaK0tZwN3
-	 aPTa5Cpokaz6qJICf4MMjBt0LrfXXdTp9hK46B+U=
+	b=flp3ml8CJ4gHnoLZQWTz9fTniWv5nVusSqNMZA4cYL4GzstLBpQ2/9SVqIy3/+D6e
+	 SbS7aPUdN7Aw7+OXh0p7jaUra0zBGVLITqrogxDrzVQ7aXSsR7G9IgSE0skfLwq2sD
+	 O9U511zXAdT1EiiP6Ri6iYbCGAzn+OnTDQU7SS2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbgCCSCl (ORCPT
+        id S2388239AbgCCSCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbgCCSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:38 -0500
+        id S2388227AbgCCSCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A0D20836;
-        Tue,  3 Mar 2020 18:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0E02072D;
+        Tue,  3 Mar 2020 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258557;
-        bh=UOJy3pLs5Fs1mlGGncBPdJXTbv+3LRVXAKJbhH46Fm0=;
+        s=default; t=1583258550;
+        bh=csGExRBkwGzlCGWjK4cPPFMFAbs96bjnmP6x1pCqZ8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKN+Pq5mxPNK65EI0L0OLGOiPo9qYlR4909ffLUGv3cQ1BbORAnghyqrbH11Ty1jm
-         iyh8hwdUfCFmbdN6AEMZIy2JBFm9lXt0I3hM207IiYa5IlGL7UdzG0ZXtIhCPjkPom
-         +SRfeIpOfyGzKMbqpdUypzZkbsXXa8xwQ8NWZS2I=
+        b=XAbmRgh8kkXq6H7vq7rYhZ6ZFC1ETFYmbDI4r2u93oZSAOqUbEsPMSCDEb4IAwVT/
+         LZUIu0Wu98tN/lQXhsAHOZbTbCsyJm+gGS8HvQwFGTO62MP4EnBtDiloei7gDU1iF5
+         R/GNG1y8gEkzYYpgGrtHqU4bZ9UPD4f/3Aiteqjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH 4.19 67/87] namei: only return -ECHILD from follow_dotdot_rcu()
-Date:   Tue,  3 Mar 2020 18:43:58 +0100
-Message-Id: <20200303174356.329220763@linuxfoundation.org>
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Anton Blanchard <anton@samba.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Richter <tmricht@linux.vnet.ibm.com>,
+        yuzhoujian@didichuxing.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>
+Subject: [PATCH 4.19 74/87] perf stat: Use perf_evsel__is_clocki() for clock events
+Date:   Tue,  3 Mar 2020 18:44:05 +0100
+Message-Id: <20200303174356.909524760@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -61,41 +68,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksa Sarai <cyphar@cyphar.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-commit 2b98149c2377bff12be5dd3ce02ae0506e2dd613 upstream.
+commit eb08d006054e7e374592068919e32579988602d4 upstream.
 
-It's over-zealous to return hard errors under RCU-walk here, given that
-a REF-walk will be triggered for all other cases handling ".." under
-RCU.
+We already have function to check if a given event is either
+SW_CPU_CLOCK or SW_TASK_CLOCK. Utilize it.
 
-The original purpose of this check was to ensure that if a rename occurs
-such that a directory is moved outside of the bind-mount which the
-resolution started in, it would be detected and blocked to avoid being
-able to mess with paths outside of the bind-mount. However, triggering a
-new REF-walk is just as effective a solution.
-
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Fixes: 397d425dc26d ("vfs: Test for and handle paths that are unreachable from their mnt_root")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Anton Blanchard <anton@samba.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: yuzhoujian@didichuxing.com
+Link: http://lkml.kernel.org/r/20181115095533.16930-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Tommi Rantala <tommi.t.rantala@nokia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/namei.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1368,7 +1368,7 @@ static int follow_dotdot_rcu(struct name
- 			nd->path.dentry = parent;
- 			nd->seq = seq;
- 			if (unlikely(!path_connected(&nd->path)))
--				return -ENOENT;
-+				return -ECHILD;
- 			break;
- 		} else {
- 			struct mount *mnt = real_mount(nd->path.mnt);
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -212,8 +212,7 @@ void perf_stat__update_shadow_stats(stru
+ 
+ 	count *= counter->scale;
+ 
+-	if (perf_evsel__match(counter, SOFTWARE, SW_TASK_CLOCK) ||
+-	    perf_evsel__match(counter, SOFTWARE, SW_CPU_CLOCK))
++	if (perf_evsel__is_clock(counter))
+ 		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+ 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
 
 
