@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D3FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED464C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5572072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1072072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259173;
-	bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+	s=default; t=1583259175;
+	bh=wJ2KCp01KlNHuZcLWsvwY7KPtFEgX8jQ/ItsVEsLmVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4yu9snEYXzpxHI6VKiHw/J7m8h9ctCi8+HsciiLT+ciPee/ykow56GqS8nbrqATc
-	 kn0DD94KKni2J6D0Im0BNjM/fn3bj1Y85mVCen0y1v6sp+D7mCEUJA5e8PObe29ZxK
-	 HMCdvc1HqrsY62wGjWSB8elHvxnIq2kdr/4S1Akc=
+	b=fvWSJn2SXLcWdlwLlD4ogCsKpuGx3dzER6Xq+q+OnvUjwsnsis5HzGtR4RVusP4cp
+	 MOrS5lPblQBNUcq28jUXbfDldssa6GyHJQyPLsV1aSU3nvaQD7L59MR8ptYltoEIDv
+	 dzOdMVjswM9zXSQJejtkpwDpDZ5R0oPJKGkwFN9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbgCCRrd (ORCPT
+        id S1731370AbgCCRrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731351AbgCCRr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:29 -0500
+        id S1731315AbgCCRrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B3A208C3;
-        Tue,  3 Mar 2020 17:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEBE820870;
+        Tue,  3 Mar 2020 17:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257648;
-        bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+        s=default; t=1583257636;
+        bh=wJ2KCp01KlNHuZcLWsvwY7KPtFEgX8jQ/ItsVEsLmVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TpKIjLNGmBHfa6LcDfinnag6Jo4P7P/TnlsJkEzUwmP+xTccwnbs4U5DFM0XD4/T
-         uZWMn+VpOT7HlW8nODikc0Q9HvXH1zUARqNq/49ApO3r+ElFh6QSKCDwKWD/C/s3SI
-         Gdx7Z2OfZCYmVqybKvGexLG6b3Yaq87iHoeyhlH4=
+        b=FTT/y2UQdiGwC9YOCeu2Ug4AmQIL4B8yzFUaT20N7fFSZFHKe+9zuE7v9giUNqMOD
+         xZ8faux3uXQjx4/XlI2neIxCvjQRBPDx88CyYEWmsuVumeg754v4di/JWnrf8UgZ7M
+         Y44Wsu9+V5j2NnEngx2YJbE4HeKZjZfIFUGTCMak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Ben Shelton <benjamin.h.shelton@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 043/176] ceph: do not execute direct write in parallel if O_APPEND is specified
-Date:   Tue,  3 Mar 2020 18:41:47 +0100
-Message-Id: <20200303174309.514277525@linuxfoundation.org>
+Subject: [PATCH 5.5 069/176] ice: Use correct netif error function
+Date:   Tue,  3 Mar 2020 18:42:13 +0100
+Message-Id: <20200303174312.632986231@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,92 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Ben Shelton <benjamin.h.shelton@intel.com>
 
-[ Upstream commit 8e4473bb50a1796c9c32b244e5dbc5ee24ead937 ]
+[ Upstream commit 1d8bd9927234081db15a1d42a7f99505244e3703 ]
 
-In O_APPEND & O_DIRECT mode, the data from different writers will
-be possibly overlapping each other since they take the shared lock.
+Use the correct netif_msg_[tx,rx]_error() function to determine whether to
+print the MDD event type.
 
-For example, both Writer1 and Writer2 are in O_APPEND and O_DIRECT
-mode:
-
-          Writer1                         Writer2
-
-     shared_lock()                   shared_lock()
-     getattr(CAP_SIZE)               getattr(CAP_SIZE)
-     iocb->ki_pos = EOF              iocb->ki_pos = EOF
-     write(data1)
-                                     write(data2)
-     shared_unlock()                 shared_unlock()
-
-The data2 will overlap the data1 from the same file offset, the
-old EOF.
-
-Switch to exclusive lock instead when O_APPEND is specified.
-
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ben Shelton <benjamin.h.shelton@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 11929d2bb594c..cd09e63d682b7 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1418,6 +1418,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct ceph_cap_flush *prealloc_cf;
- 	ssize_t count, written = 0;
- 	int err, want, got;
-+	bool direct_lock = false;
- 	loff_t pos;
- 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index c9b35b202639d..7f71f06fa819c 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -1235,7 +1235,7 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		u16 queue = ((reg & GL_MDET_TX_TCLAN_QNUM_M) >>
+ 				GL_MDET_TX_TCLAN_QNUM_S);
  
-@@ -1428,8 +1429,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (!prealloc_cf)
- 		return -ENOMEM;
- 
-+	if ((iocb->ki_flags & (IOCB_DIRECT | IOCB_APPEND)) == IOCB_DIRECT)
-+		direct_lock = true;
-+
- retry_snap:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_start_io_direct(inode);
- 	else
- 		ceph_start_io_write(inode);
-@@ -1519,14 +1523,15 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 		/* we might need to revert back to that point */
- 		data = *from;
--		if (iocb->ki_flags & IOCB_DIRECT) {
-+		if (iocb->ki_flags & IOCB_DIRECT)
- 			written = ceph_direct_read_write(iocb, &data, snapc,
- 							 &prealloc_cf);
--			ceph_end_io_direct(inode);
--		} else {
-+		else
- 			written = ceph_sync_write(iocb, &data, pos, snapc);
-+		if (direct_lock)
-+			ceph_end_io_direct(inode);
-+		else
- 			ceph_end_io_write(inode);
--		}
- 		if (written > 0)
- 			iov_iter_advance(from, written);
- 		ceph_put_snap_context(snapc);
-@@ -1577,7 +1582,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	goto out_unlocked;
- out:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_end_io_direct(inode);
- 	else
- 		ceph_end_io_write(inode);
+-		if (netif_msg_rx_err(pf))
++		if (netif_msg_tx_err(pf))
+ 			dev_info(dev, "Malicious Driver Detection event %d on TX queue %d PF# %d VF# %d\n",
+ 				 event, queue, pf_num, vf_num);
+ 		wr32(hw, GL_MDET_TX_TCLAN, 0xffffffff);
 -- 
 2.20.1
 
