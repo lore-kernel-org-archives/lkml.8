@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5B6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5584CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37244214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26040214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258786;
-	bh=BjvBwR9wfIQkcbw6f/vc4ogNDAmbRZYRGuqdD7B4jQ8=;
+	s=default; t=1583258790;
+	bh=wezH3LP0LPiLkBoge+fgK2CiR4BSELS3gw6fPaPAwYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sc+8DtMrDrJjue3hqMHhF4gr3J9mSkfGFCChs4QAkNJ54bqVltHodFZFeA56t7cH7
-	 UzB3GF9YayVisJJiJMHVO3wML8LzwlpORO5zQ4N+RjO2u7+p552Vk7f/wVsNzdo7py
-	 bqVjvuyFZmNw1CWDDTjWB464UbikWMmr4HWQj1D0=
+	b=C5vNxbTFudmJXzvhtM4gq3qXJUmV6W9t2EjvY9bbKhHblFjyuFnm8T06T6gy6cE55
+	 0UKJjUggyTbC8k5hyJsW/CkKG26OzWx9bw3N+M7NHd1aW6ePVea05LqiDdUnkPiMij
+	 5q2upvpLa3XgOtfVoRtYO/YVT403gdjF8LMlhZs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbgCCSGY (ORCPT
+        id S2388076AbgCCSG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:06:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:06:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732660AbgCCR47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:59 -0500
+        id S1732929AbgCCR4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2449F20656;
-        Tue,  3 Mar 2020 17:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC4DC20728;
+        Tue,  3 Mar 2020 17:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258217;
-        bh=BjvBwR9wfIQkcbw6f/vc4ogNDAmbRZYRGuqdD7B4jQ8=;
+        s=default; t=1583258197;
+        bh=wezH3LP0LPiLkBoge+fgK2CiR4BSELS3gw6fPaPAwYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pG97AJxZLDpxRrQpbjb27IseD00tLyLUkQ4Shxw6Ziu3O+xJI5tTVXsuR4PVmUqno
-         WevRxOXlAOEqS8nQ73xzUsAjTQltISCtpkP/pZtIUnYs00+DXbxDJEthyMNQzqhoLi
-         L9cmztVHV4zwYdpVOPqla0NsDarVHBneMZMyevDM=
+        b=Q4KK8Ba9yH1I74KlytiOUsFdRF61UujhwL60VNwDEtM8VzLALPBI5QHclVBByCFOE
+         TJGky5p4WS/3VG0mi1ryeWjqWj2CqI1bFfYLT+kxgbkFCtTv2oA3hXbDYwdWSMz1cr
+         v4Ukqyuq7IRLSjEZ5d1XwQPnpmTzA3DixRFF+kcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 116/152] kbuild: make single target builds even faster
-Date:   Tue,  3 Mar 2020 18:43:34 +0100
-Message-Id: <20200303174315.952250016@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Belous <pbelous@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 108/152] net: atlantic: fix potential error handling
+Date:   Tue,  3 Mar 2020 18:43:26 +0100
+Message-Id: <20200303174314.953350288@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,138 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Pavel Belous <pbelous@marvell.com>
 
-commit b1fbfcb4a20949df08dd995927cdc5ad220c128d upstream.
+commit 380ec5b9af7f0d57dbf6ac067fd9f33cff2fef71 upstream.
 
-Commit 2dffd23f81a3 ("kbuild: make single target builds much faster")
-made the situation much better.
+Code inspection found that in case of mapping error we do return current
+'ret' value. But beside error, it is used to count number of descriptors
+allocated for the packet. In that case map_skb function could return '1'.
 
-To improve it even more, apply the similar idea to the top Makefile.
-Trim unrelated directories from build-dirs.
+Changing it to return zero (number of mapped descriptors for skb)
 
-The single build code must be moved above the 'descend' target.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Tested-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Signed-off-by: Pavel Belous <pbelous@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |   90 ++++++++++++++++++++++++++++++++-------------------------------
- 1 file changed, 47 insertions(+), 43 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -1635,6 +1635,50 @@ help:
- PHONY += prepare
- endif # KBUILD_EXTMOD
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -467,8 +467,10 @@ static unsigned int aq_nic_map_skb(struc
+ 				     dx_buff->len,
+ 				     DMA_TO_DEVICE);
  
-+# Single targets
-+# ---------------------------------------------------------------------------
-+# To build individual files in subdirectories, you can do like this:
-+#
-+#   make foo/bar/baz.s
-+#
-+# The supported suffixes for single-target are listed in 'single-targets'
-+#
-+# To build only under specific subdirectories, you can do like this:
-+#
-+#   make foo/bar/baz/
-+
-+ifdef single-build
-+
-+# .ko is special because modpost is needed
-+single-ko := $(sort $(filter %.ko, $(MAKECMDGOALS)))
-+single-no-ko := $(sort $(patsubst %.ko,%.mod, $(MAKECMDGOALS)))
-+
-+$(single-ko): single_modpost
-+	@:
-+$(single-no-ko): descend
-+	@:
-+
-+ifeq ($(KBUILD_EXTMOD),)
-+# For the single build of in-tree modules, use a temporary file to avoid
-+# the situation of modules_install installing an invalid modules.order.
-+MODORDER := .modules.tmp
-+endif
-+
-+PHONY += single_modpost
-+single_modpost: $(single-no-ko)
-+	$(Q){ $(foreach m, $(single-ko), echo $(extmod-prefix)$m;) } > $(MODORDER)
-+	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
-+
-+KBUILD_MODULES := 1
-+
-+export KBUILD_SINGLE_TARGETS := $(addprefix $(extmod-prefix), $(single-no-ko))
-+
-+# trim unrelated directories
-+build-dirs := $(foreach d, $(build-dirs), \
-+			$(if $(filter $(d)/%, $(KBUILD_SINGLE_TARGETS)), $(d)))
-+
-+endif
-+
- # Handle descending into subdirectories listed in $(build-dirs)
- # Preset locale variables to speed up the build process. Limit locale
- # tweaks to this spot to avoid wrong language settings when running
-@@ -1643,7 +1687,9 @@ endif # KBUILD_EXTMOD
- PHONY += descend $(build-dirs)
- descend: $(build-dirs)
- $(build-dirs): prepare
--	$(Q)$(MAKE) $(build)=$@ single-build=$(single-build) need-builtin=1 need-modorder=1
-+	$(Q)$(MAKE) $(build)=$@ \
-+	single-build=$(if $(filter-out $@/, $(single-no-ko)),1) \
-+	need-builtin=1 need-modorder=1
+-	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
++	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
++		ret = 0;
+ 		goto exit;
++	}
  
- clean-dirs := $(addprefix _clean_, $(clean-dirs))
- PHONY += $(clean-dirs) clean
-@@ -1747,48 +1793,6 @@ tools/%: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
- 	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
- 
--# Single targets
--# ---------------------------------------------------------------------------
--# To build individual files in subdirectories, you can do like this:
--#
--#   make foo/bar/baz.s
--#
--# The supported suffixes for single-target are listed in 'single-targets'
--#
--# To build only under specific subdirectories, you can do like this:
--#
--#   make foo/bar/baz/
--
--ifdef single-build
--
--# .ko is special because modpost is needed
--single-ko := $(sort $(filter %.ko, $(MAKECMDGOALS)))
--single-no-ko := $(sort $(patsubst %.ko,%.mod, $(MAKECMDGOALS)))
--
--$(single-ko): single_modpost
--	@:
--$(single-no-ko): descend
--	@:
--
--ifeq ($(KBUILD_EXTMOD),)
--# For the single build of in-tree modules, use a temporary file to avoid
--# the situation of modules_install installing an invalid modules.order.
--MODORDER := .modules.tmp
--endif
--
--PHONY += single_modpost
--single_modpost: $(single-no-ko)
--	$(Q){ $(foreach m, $(single-ko), echo $(extmod-prefix)$m;) } > $(MODORDER)
--	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
--
--KBUILD_MODULES := 1
--
--export KBUILD_SINGLE_TARGETS := $(addprefix $(extmod-prefix), $(single-no-ko))
--
--single-build = $(if $(filter-out $@/, $(single-no-ko)),1)
--
--endif
--
- # FIXME Should go into a make.lib or something
- # ===========================================================================
- 
+ 	first = dx_buff;
+ 	dx_buff->len_pkt = skb->len;
 
 
