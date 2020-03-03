@@ -2,56 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14519C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40EAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A252146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC43E20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257729;
-	bh=fiow1jOLrBPF2kIgyQleElQONaYdG2nWNG10FhoHcNw=;
+	s=default; t=1583257733;
+	bh=suz0D/D2dzRGQclTwBiN+1zSd0FQxwwst2MdgJCDEqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3C6mszBqBv/b20zk3y/+ersZ8lLxaXodwvkckTLMzOoB3MyF1k56cDbKAzUrmSPX
-	 +306MrROwCesVB/uZwhtY8aSLlzWG5XJBhr+jRKiGnO58uJ1tfFewWcT8u++Tsumso
-	 ly6SDipBDRxCriAjfQXNsuYEcGuGOVHxx3wSqbiE=
+	b=0XN48kj5cmioFltNKQHX7Jd7P1cec//Ngvy0mGI2YZPapIZxrhhmwy7fWEGOn4j3Z
+	 GbB2u4ZjyJY+Q1KN+6I9+WSPfwdkzz2iMS8E3emRNw1ojpMA/Bd9OLnJK3QHT8Pmwu
+	 y6w69qTNiUOVnhpLAZk1wYASvrL0DFPe2tKgwuL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbgCCRsr (ORCPT
+        id S1731693AbgCCRsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731624AbgCCRsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:45 -0500
+        id S1731677AbgCCRsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DE220CC7;
-        Tue,  3 Mar 2020 17:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D210D20CC7;
+        Tue,  3 Mar 2020 17:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257724;
-        bh=fiow1jOLrBPF2kIgyQleElQONaYdG2nWNG10FhoHcNw=;
+        s=default; t=1583257729;
+        bh=suz0D/D2dzRGQclTwBiN+1zSd0FQxwwst2MdgJCDEqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8XQjzVP8DXTMOz6J3UocclH4tDYZjwUbLJmXaxc3/Ym65PgXzardnaRlxtGgS1eG
-         qp0wFqUgkl2tuQ3ZiA0S+qnR68oMj6xqe4aR87HoYHuLmdPUQUHoIErzreeJ1We3g+
-         YTsa5FWuPQ+8Mw6NG1m81nW/Pa6Pdro74xBjveC4=
+        b=m6vgX3H7cDr39XItKhflLeof5Bw8ueWont1WZcHwIScv3MoXJ8G3fPhE0QV91QWng
+         KywaqOot+qpjYXu34t1eeBbAM9S60kRqZgW9V6zlU/tWpvAFHqc0QSTdo297ZvMDuL
+         MvXzCy5+oMilAPWlQrSRd6nNdZE8pKNNViTOkHlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nigel Kirkland <nigel.kirkland@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 079/176] nvme: prevent warning triggered by nvme_stop_keep_alive
-Date:   Tue,  3 Mar 2020 18:42:23 +0100
-Message-Id: <20200303174313.772741002@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 081/176] scsi: sd_sbc: Fix sd_zbc_report_zones()
+Date:   Tue,  3 Mar 2020 18:42:25 +0100
+Message-Id: <20200303174314.030529780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -64,119 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nigel Kirkland <nigel.kirkland@broadcom.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-[ Upstream commit 97b2512ad000a409b4073dd1a71e4157d76675cb ]
+commit 51fdaa0490241e8cd41b40cbf43a336d1a014460 upstream.
 
-Delayed keep alive work is queued on system workqueue and may be cancelled
-via nvme_stop_keep_alive from nvme_reset_wq, nvme_fc_wq or nvme_wq.
+The block layer generic blk_revalidate_disk_zones() checks the validity of
+zone descriptors reported by a disk using the blk_revalidate_zone_cb()
+callback function executed for each zone descriptor. If a ZBC disk reports
+invalid zone descriptors, blk_revalidate_disk_zones() returns an error and
+sd_zbc_read_zones() changes the disk capacity to 0, which in turn results
+in the gendisk structure capacity to be set to 0. This all works well for
+the first revalidate pass on a disk and the block layer detects the
+capactiy change.
 
-Check_flush_dependency detects mismatched attributes between the work-queue
-context used to cancel the keep alive work and system-wq. Specifically
-system-wq does not have the WQ_MEM_RECLAIM flag, whereas the contexts used
-to cancel keep alive work have WQ_MEM_RECLAIM flag.
+On the second revalidate pass, blk_revalidate_disk_zones() is called again
+and sd_zbc_report_zones() executed to check the zones a second time.
+However, for this second pass, the gendisk capacity is now 0, which results
+in sd_zbc_report_zones() to do nothing and to report success and no
+zones. blk_revalidate_disk_zones() in turn returns success and sets the
+disk queue chunk_sectors limit with zero as no zones were checked, causing
+a oops to trigger on the BUG_ON(!is_power_of_2(chunk_sectors)) in
+blk_queue_chunk_sectors().
 
-Example warning:
+Fix this by using the sdkp capacity field rather than the gendisk capacity
+for the report zones loop in sd_zbc_report_zones(). Also add a check to
+return immediately an error if the sdkp capacity is 0.  With this fix,
+invalid/buggy ZBC disk scan does not trigger a oops and are exposed with a
+0 capacity. This change also preserve the chance for the disk to be
+correctly revalidated on the second revalidate pass as the scsi disk
+structure capacity field is always set to the disk reported value when
+sd_zbc_report_zones() is called.
 
-  workqueue: WQ_MEM_RECLAIM nvme-reset-wq:nvme_fc_reset_ctrl_work [nvme_fc]
-	is flushing !WQ_MEM_RECLAIM events:nvme_keep_alive_work [nvme_core]
-
-To avoid the flags mismatch, delayed keep alive work is queued on nvme_wq.
-
-However this creates a secondary concern where work and a request to cancel
-that work may be in the same work queue - namely err_work in the rdma and
-tcp transports, which will want to flush/cancel the keep alive work which
-will now be on nvme_wq.
-
-After reviewing the transports, it looks like err_work can be moved to
-nvme_reset_wq. In fact that aligns them better with transition into
-RESETTING and performing related reset work in nvme_reset_wq.
-
-Change nvme-rdma and nvme-tcp to perform err_work in nvme_reset_wq.
-
-Signed-off-by: Nigel Kirkland <nigel.kirkland@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Link: https://lore.kernel.org/r/20200219063800.880834-1-damien.lemoal@wdc.com
+Fixes: d41003513e61 ("block: rework zone reporting")
+Cc: Cc: <stable@vger.kernel.org> # v5.5
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/core.c | 10 +++++-----
- drivers/nvme/host/rdma.c |  2 +-
- drivers/nvme/host/tcp.c  |  2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/sd_zbc.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 641c07347e8d8..ada59df642d29 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -66,8 +66,8 @@ MODULE_PARM_DESC(streams, "turn on support for Streams write directives");
-  * nvme_reset_wq - hosts nvme reset works
-  * nvme_delete_wq - hosts nvme delete works
-  *
-- * nvme_wq will host works such are scan, aen handling, fw activation,
-- * keep-alive error recovery, periodic reconnects etc. nvme_reset_wq
-+ * nvme_wq will host works such as scan, aen handling, fw activation,
-+ * keep-alive, periodic reconnects etc. nvme_reset_wq
-  * runs reset works which also flush works hosted on nvme_wq for
-  * serialization purposes. nvme_delete_wq host controller deletion
-  * works which flush reset works for serialization.
-@@ -976,7 +976,7 @@ static void nvme_keep_alive_end_io(struct request *rq, blk_status_t status)
- 		startka = true;
- 	spin_unlock_irqrestore(&ctrl->lock, flags);
- 	if (startka)
--		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
- }
+--- a/drivers/scsi/sd_zbc.c
++++ b/drivers/scsi/sd_zbc.c
+@@ -161,6 +161,7 @@ int sd_zbc_report_zones(struct gendisk *
+ 			unsigned int nr_zones, report_zones_cb cb, void *data)
+ {
+ 	struct scsi_disk *sdkp = scsi_disk(disk);
++	sector_t capacity = logical_to_sectors(sdkp->device, sdkp->capacity);
+ 	unsigned int nr, i;
+ 	unsigned char *buf;
+ 	size_t offset, buflen = 0;
+@@ -171,11 +172,15 @@ int sd_zbc_report_zones(struct gendisk *
+ 		/* Not a zoned device */
+ 		return -EOPNOTSUPP;
  
- static int nvme_keep_alive(struct nvme_ctrl *ctrl)
-@@ -1006,7 +1006,7 @@ static void nvme_keep_alive_work(struct work_struct *work)
- 		dev_dbg(ctrl->device,
- 			"reschedule traffic based keep-alive timer\n");
- 		ctrl->comp_seen = false;
--		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
- 		return;
- 	}
++	if (!capacity)
++		/* Device gone or invalid */
++		return -ENODEV;
++
+ 	buf = sd_zbc_alloc_report_buffer(sdkp, nr_zones, &buflen);
+ 	if (!buf)
+ 		return -ENOMEM;
  
-@@ -1023,7 +1023,7 @@ static void nvme_start_keep_alive(struct nvme_ctrl *ctrl)
- 	if (unlikely(ctrl->kato == 0))
- 		return;
- 
--	schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+	queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
- }
- 
- void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 2a47c6c5007e1..3e85c5cacefd2 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -1088,7 +1088,7 @@ static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
- 	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_RESETTING))
- 		return;
- 
--	queue_work(nvme_wq, &ctrl->err_work);
-+	queue_work(nvme_reset_wq, &ctrl->err_work);
- }
- 
- static void nvme_rdma_wr_error(struct ib_cq *cq, struct ib_wc *wc,
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index f8fa5c5b79f17..49d4373b84eb3 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -422,7 +422,7 @@ static void nvme_tcp_error_recovery(struct nvme_ctrl *ctrl)
- 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
- 		return;
- 
--	queue_work(nvme_wq, &to_tcp_ctrl(ctrl)->err_work);
-+	queue_work(nvme_reset_wq, &to_tcp_ctrl(ctrl)->err_work);
- }
- 
- static int nvme_tcp_process_nvme_cqe(struct nvme_tcp_queue *queue,
--- 
-2.20.1
-
+-	while (zone_idx < nr_zones && sector < get_capacity(disk)) {
++	while (zone_idx < nr_zones && sector < capacity) {
+ 		ret = sd_zbc_do_report_zones(sdkp, buf, buflen,
+ 				sectors_to_logical(sdkp->device, sector), true);
+ 		if (ret)
 
 
