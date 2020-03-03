@@ -2,117 +2,112 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE80C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D195C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB7921D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204341;
-	bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bVvOqYE+07xuF1oV/3SE7Y4TPywbmwb0PKpyTmjbdsLennXTtY2ltmA1CnlLOZBUO
-	 zU1X3YHLGRqd1YBFHp7vP9nNeTfgwsMykPdprJpljGbxI/LvJHNDyCtBqlonZghEgd
-	 nywL5zDe6gQgNJ3qwgcx9ITF8WFDSmG1t5AV5N6w=
+	by mail.kernel.org (Postfix) with ESMTP id F09FC217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgCCC67 (ORCPT
+        id S1727513AbgCCC7B convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:58:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbgCCCr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:59 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8BBE246D6;
-        Tue,  3 Mar 2020 02:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203678;
-        bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OT/96ng/nGYJPcu4xo0hlDfLhygu3zDj24+aqKX8RC8FW0UQAzJ5sgoF//XTmdeLU
-         3/c8XW9/FTdJKeRSMANGJQ4u/O51HAZWzM06ynuNhhTFqyR8Cf/lr78WnQgOQTmuRJ
-         RPUtVahyc0xeCE3DrYFWT8KCQNd8N/hZA6TLbJ+U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomas Henzl <thenzl@redhat.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/58] scsi: megaraid_sas: silence a warning
-Date:   Mon,  2 Mar 2020 21:46:57 -0500
-Message-Id: <20200303024740.9511-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
-References: <20200303024740.9511-1-sashal@kernel.org>
+        Mon, 2 Mar 2020 21:59:01 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2595 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727522AbgCCC6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:58:54 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id F17EE5C380FB2F4A8F10;
+        Tue,  3 Mar 2020 10:58:51 +0800 (CST)
+Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.227]) by
+ DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
+ Tue, 3 Mar 2020 10:58:42 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] cpu-topology: Fix the potential data corruption
+Thread-Topic: [PATCH] cpu-topology: Fix the potential data corruption
+Thread-Index: AQHV7hK2ERrnxNGKY0yF2wIuAuh2Hqgv5MEAgAGAuLCAAz7DgIABi9aQ
+Date:   Tue, 3 Mar 2020 02:58:41 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED342092EE@dggemm526-mbx.china.huawei.com>
+References: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
+ <20200228104034.GB26973@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED341F2AE2@DGGEMM506-MBS.china.huawei.com>
+ <20200302111038.GA16218@e107533-lin.cambridge.arm.com>
+In-Reply-To: <20200302111038.GA16218@e107533-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Henzl <thenzl@redhat.com>
+> -----Original Message-----
+> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> Sent: Monday, March 02, 2020 7:11 PM
+> To: Zengtao (B)
+> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> linux-kernel@vger.kernel.org; Sudeep Holla
+> Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
+> 
+> On Sat, Feb 29, 2020 at 01:41:47AM +0000, Zengtao (B) wrote:
+> > > -----Original Message-----
+> > > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> > > Sent: Friday, February 28, 2020 6:41 PM
+> > > To: Zengtao (B)
+> > > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> > > linux-kernel@vger.kernel.org; Sudeep Holla
+> > > Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
+> > >
+> > > On Fri, Feb 28, 2020 at 04:35:45PM +0800, Zeng Tao wrote:
+> > > > Currently there are only 10 bytes to store the cpu-topology info.
+> > > > That is:
+> > > > snprintf(buffer, 10, "cluster%d",i);
+> > > > snprintf(buffer, 10, "thread%d",i);
+> > > > snprintf(buffer, 10, "core%d",i);
+> > > >
+> > > > In the boundary test, if the cluster number exceeds 100, there will
+> be a
+> > >
+> > > I don't understand you mention of 100 in particular above. I can see
+> > > issue
+> > > if there are cluster with more than 2-digit id. Though highly unlikely
+> for
+> > > now, but I don't have objection to the patch.
+> > >
+> >
+> > The same meaning, more than 2-digit id equals to more than 100,
+> right?
+> 
+> Yes. May be it is obvious but I prefer to word the commit message
+> accordingly.
+> Mention of 100 specifically makes at-least me think something very
+> specific
+> to 100 and not applicable for any more than 2-digit number.
+> 
 
-[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
+Do you think I need to update the commit message and resend the patch?
+And I don't mind if you can help modify the commit message since both
+are fine for me, and it's a very trivial change. 
 
-Add a flag to DMA memory allocation to silence a warning.
-
-This driver allocates DMA memory for IO frames. This allocation may exceed
-MAX_ORDER pages for few megaraid_sas controllers (controllers with very
-high queue depth). Consequently, the driver has logic to keep reducing the
-controller queue depth until the DMA memory allocation succeeds.
-
-On impacted megaraid_sas controllers there would be multiple DMA allocation
-failures until driver settled on an allocation that fit. These failed DMA
-allocation requests caused stack traces in system logs. These were not
-harmful and this patch silences those warnings/stack traces.
-
-[mkp: clarified commit desc]
-
-Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
-Signed-off-by: Tomas Henzl <thenzl@redhat.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 46bc062d873ef..d868388018053 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -594,7 +594,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 
- 	fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				GFP_KERNEL, &fusion->io_request_frames_phys);
-+				GFP_KERNEL | __GFP_NOWARN,
-+				&fusion->io_request_frames_phys);
- 	if (!fusion->io_request_frames) {
- 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
- 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
-@@ -632,7 +633,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 
- 		fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				       GFP_KERNEL,
-+				       GFP_KERNEL | __GFP_NOWARN,
- 				       &fusion->io_request_frames_phys);
- 
- 		if (!fusion->io_request_frames) {
--- 
-2.20.1
-
+> > Here 100 is for from tester/user perspective.
+> > And we found this issue when test with QEMU.
+> 
+> OK.
+> 
+> --
+> Regards,
+> Sudeep
