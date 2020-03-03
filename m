@@ -2,110 +2,123 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3787EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884F4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DEF2051A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC+IQYQA"
+	by mail.kernel.org (Postfix) with ESMTP id 5F7992073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbgCCQVo (ORCPT
+        id S1730340AbgCCQZI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:21:44 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38561 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbgCCQVo (ORCPT
+        Tue, 3 Mar 2020 11:25:08 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:35831 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729784AbgCCQZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:21:44 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p7so1525426pli.5;
-        Tue, 03 Mar 2020 08:21:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YUcw1KG3qrvpleqzqQ7xyhNdpovGgPoy1w9JlReaGGk=;
-        b=BC+IQYQA/hBOYJ9q/YG9kdpBsF9+tMbOpFAGLQ2bWvsY4KF4P8Q+dmAdfU78cGhWRP
-         0Yxb8itlOvfnGtQaxf24HMBU0W14RPWxsokNwDs/dq76dyyJgqpvzw/D1xUxklvYK2we
-         UsS7KyvnvsXHaryzWGaxrGsMMrMsuArNfDU0h2E5R/sSvDtC3mvWmFUgPefDylr8UM2H
-         2cFqcrsibwblgR/8oYvQv+l7vIoaFxAfssROdh/0L9Icc0f6zwhhXRu0AkbmV5qw4RuL
-         6/M0mmbl7EATwVYKzZKzISeWeoPWdR7ObS2z2FHaZU8Issvet4l7kGGWOWQ6w2xKeV+i
-         GwwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YUcw1KG3qrvpleqzqQ7xyhNdpovGgPoy1w9JlReaGGk=;
-        b=tfIzW6LnKwTjOAixXxjIrJLerLv7si7NgB6v3p5CoOxh1/Yur5ff5ysvy7hKa9PGFy
-         5VJAo69JRopUW/ibKH6p++4I4djx3EfA1pcGQt+ocD57ucHoK14obbvwMhE2wocgNmuk
-         y2YbabGQYexUDDBEYnNlQJWzYRlXmtNSF19D35+4x5wTBCrYq95UDeoMHx5IOgfhiEAc
-         1qh3QeOCyHIh2v4eAeph2yBXctSnJdHlAtwVkD4piOQY9TWN6w72TcVNQbRar6x7KXMq
-         C//WqAALBDrPz4+EtYcb7Ts+g+sPzdbmuwbMjos4Ou58rQKrOcvWA/lK0DAlnVFxvkF8
-         Mt1A==
-X-Gm-Message-State: ANhLgQ1JCtDsLoPVTbG77CHz9yzLp0Buai5oiRWx/lga7IRes1DnqIkx
-        LZz95nO4RcdIy+7JEGUrWPg=
-X-Google-Smtp-Source: ADFU+vuQE+daBK6NDgfu/5VCFw3gGgq2P1GTkZidJo5iBwRZDSbepe/pFLzyshwwWENLrs60uTEfdw==
-X-Received: by 2002:a17:902:c086:: with SMTP id j6mr5071986pld.46.1583252503458;
-        Tue, 03 Mar 2020 08:21:43 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id i5sm6833123pfo.173.2020.03.03.08.21.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 08:21:42 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] fs/ceph/export: remove unused variable 'err'
-Date:   Wed,  4 Mar 2020 00:21:39 +0800
-Message-Id: <1583252499-16078-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 3 Mar 2020 11:25:08 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MN4qp-1iqo7g0idZ-00J1ho; Tue, 03 Mar 2020 17:25:05 +0100
+Received: by mail-qv1-f54.google.com with SMTP id ea1so1927384qvb.7;
+        Tue, 03 Mar 2020 08:25:04 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3KuPU8Er9uvB3wub4lkd8IWr7BjSqxr1+d/gGQ02vgU6cVpSlu
+        WGPCJ7NYP1gBOFXGXwDNrv85F7ioYYo4xENf/7M=
+X-Google-Smtp-Source: ADFU+vthSje+AVJvGg4Efjcw6MeRkM8IwE0D1YApiIxSNHgFg5iRxgjF2TFIOLQBm42Ch8/7AvxSa+snlv4AuynI9xQ=
+X-Received: by 2002:ad4:52eb:: with SMTP id p11mr4354485qvu.211.1583252703942;
+ Tue, 03 Mar 2020 08:25:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <6daf1bb266a24c239aed34d8661fc5eaMW2PR20MB210660F6B17CB90ACD0B6E7CA0E70@MW2PR20MB2106.namprd20.prod.outlook.com>
+ <797cec65-5504-ee85-3fe4-fe2b4c90991f@huawei.com> <20200303154522.GA24568@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200303154522.GA24568@yilunxu-OptiPlex-7050>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 3 Mar 2020 17:24:46 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a01vYfqvj4eRQQsqC9FrUTr=q6ZRF-EuYV0iGC7AV7UBQ@mail.gmail.com>
+Message-ID: <CAK8P3a01vYfqvj4eRQQsqC9FrUTr=q6ZRF-EuYV0iGC7AV7UBQ@mail.gmail.com>
+Subject: Re: LPC Bus Driver
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     John Garry <john.garry@huawei.com>, luis.f.tanica@seagate.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fpga@vger.kernel.org, gregkh <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:WzF0cxHYEmzuWbB33qG/Gx/UdGE3V9K7mi7lyjyTXYE2JKvrx1+
+ fFPIE1+cREp+p/U3kbDBhsMkiOThw03LRUkSFB8COvQYjC4IDu9GfSPhkvbihqHeomM3DST
+ FQRv+YkfzAtqZ8S+klj1AK2yfILGRanDT0vMvoe7abYqg+NcPxEtnGudQFxKHp2+adxGhyO
+ hAKXBJOo+kGQZX49CbEvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nrC/Zx7KTV4=:+EWYh408B4h3ELkAShbWlz
+ u4Ph+wKl02ZiSFlkSLWVYz+nbMpsUDDY6IQMApW3kitdMcgZKOcY3Rc/f8iBuv5W1UW0ldukj
+ NtnQRGfM6zl44InT0zbOnXxYYcT649gWHp1B1HdpJbPQsEDBRvb661Mt6ZvRaT+NXrynfCFiq
+ srIpZRuzQFyJzAJ27vO+HLFWJRn6ARnQjiR6hpwRsHs/exCLj1cMzXSyEK9L11syYASjaQ5Dr
+ G0B2As++8M4jonHFp0FpGI+ndPV3sS0PajE95s87nQrsu9s6lRgg9uukRg9dCXdhvP+4QUOtt
+ x/OwzXuBQzSwi2De4tpIjJhlXBDUXsJGT0QN9mMFdosqM4sIxoD9hRXSMOXVZShbeKHNlE1Ji
+ E8NIAII8n/BxWzfBvJ5hdPCRcgLM/zkYAWkZNO3k/QNVBCL6osFZoVf1gicC8Xkquca0w2ra3
+ P80Vt3+grgY73i1wtsfV7AJsQQd6BheVQHckz8lihfSSrwe9fqgY1jsDFPUjFd+jJ/sHhU2CC
+ NQt4Ext0nv4Dlf/sILLL3rjxS3UFF7ytwthfsz9lYGOi7dTbLlTe9GZan7Uk6ncEehKpKHcDW
+ uo0L74F0Jg31vDy1lO9a1JdCIklA6O/nFGbc5eWjbWn3N41I6fSHHkbaeO3Nt3qmkGTWoCb7D
+ 8+SS24AqClxD7Sw1svZpy93855x8XHt8Hio9PYP3/E0QH/DR1k/VD/9DZ2tSxrRFhi8chO4eV
+ x1kpBnbxDE/1iX5o7GdwLKmpClBvGH2VYgHmEtSEJrED0m8qgAsy5X89cpOmMgUUc8/7aLkhE
+ yY7AWEStdxQfm/LUOhKJ9x7LEKKGAJrQ3a5g0fUOdElXQuOCS8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix gcc '-Wunused-but-set-variable' warning:
-fs/ceph/export.c: In function ‘__get_parent’:
-fs/ceph/export.c:294:6: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
-  int err;
+On Tue, Mar 3, 2020 at 4:47 PM Xu Yilun <yilun.xu@intel.com> wrote:
+> On Tue, Mar 03, 2020 at 10:13:36AM +0000, John Garry wrote:
+> > + add fpga list and Greg+Arnd for misc drivers
+> > >We have this board with our own SoC, which is connected to an external CPLD (FPGA) via LPC (low pin count) bus.
+> > >I've been doing some research to see what the best way of designing the drivers for it would be, and came across the Hisilicon LPC driver stuff (which I believe you're the maintainer for).
+> > >
+> > >Just a little background. Let's say our host (ARM) has a custom LPC controller. The LPC controller let's us perform reads/writes of CPLD registers via LPC bus. This CPLD is the only slave device attached to that bus and we only use it for reading/writing certain
+> > >  registers (e.g., we use it to access some system information and for resetting the ARM during reboot).
+> > >
+> > >I was looking at the regmap framework and that seemed a good way to go.
+> >
+> > I thought that regmap only allows mapping in MMIO regions for multiplexing
+> > access from multiple drivers or accessing registers outside the device HW
+> > registers, but you seem to need to manually generate the LPC bus accesses to
+> > access registers on the slave device.
+>
+> I'm not familar with LPC controller, but seems it could not perform
+> read/write by one memory access or io access instruction
+>
+> I didn't find an existing bus_type for LPC bus, so I think regmap is a
+> good way. When you have implemented the regmap for LPC bus, you need to
+> access the CPLD registers by regmap_read/write, and just pass CPLD local
+> register addr as parameter.
 
-and needn't use the return value of ceph_mdsc_create_request.
+LPC uses the same software abstraction as the old ISA bus, providing
+port (inb/outb) and mmio (readl/writel) style register access as well as
+interrupts and a crude form of DMA access.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- fs/ceph/export.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Whether regmap or something else works depends on which of these
+communication options the CPLD uses.
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index b6bfa94..b7bb41c 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -291,7 +291,6 @@ static struct dentry *__get_parent(struct super_block *sb,
- 	struct ceph_mds_request *req;
- 	struct inode *inode;
- 	int mask;
--	int err;
- 
- 	req = ceph_mdsc_create_request(mdsc, CEPH_MDS_OP_LOOKUPPARENT,
- 				       USE_ANY_MDS);
-@@ -314,7 +313,7 @@ static struct dentry *__get_parent(struct super_block *sb,
- 	req->r_args.getattr.mask = cpu_to_le32(mask);
- 
- 	req->r_num_caps = 1;
--	err = ceph_mdsc_do_request(mdsc, NULL, req);
-+	ceph_mdsc_do_request(mdsc, NULL, req);
- 	inode = req->r_target_inode;
- 	if (inode)
- 		ihold(inode);
--- 
-1.8.3.1
+> > If this FPGA is the only device which will ever be on this LPC bus, then
+> > could you encode the LPC accesses directly in the FPGA driver?
 
+I think this is the most important question. If the same SoC is used
+in systems that connect something else on the same LPC bus, then
+making it look like a normal ISA/LPC bus to Linux is probably best,
+but if the CPLD and SoC are only ever used in this one combination,
+there is nothing wrong with pretending that the LPC MMIO interface
+on this chip part of the driver for the CPLD.
+
+> > As another alternative, it might be worth considering writing an I2C
+> > controller driver for your LPC host, i.e. model as an I2C bus, and have an
+> > I2C client driver for the LPC slave (FPGA). I think that there are examples
+> > of this in the kernel.
+>
+> How the host cpu is connected to LPC host?
+> Why an I2C controller driver for LPC host? The LPC bus is compatible to i2c bus?
+
+i2c is a simple bus that allows multiple devices to share a bus
+and perform read/write operations on numbered registers. If the device
+attached to the LPC bus fits into that, it might be even easier than
+regmap.
+
+       Arnd
