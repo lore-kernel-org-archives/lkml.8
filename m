@@ -2,94 +2,111 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942E6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E645C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664EB20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278D420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="clazJIw9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIG69EDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgCCHbv (ORCPT
+        id S1727602AbgCCHey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:31:51 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44960 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCCHbv (ORCPT
+        Tue, 3 Mar 2020 02:34:54 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46541 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCCHey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:31:51 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0237SxlU161498;
-        Tue, 3 Mar 2020 07:31:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=q2xPT9aYNv3n8ZfbCyQkPK3lG0v/KfOw17OG2y43ouA=;
- b=clazJIw9QKA1LS2JcBCSwDo6RCy38LJqZeSX71syR4OWyPTl1UZ6EDaDQGervp0qrr5o
- Ra33/G7tRI9txfWc81DgSBDgSZtoouNXsczcUPwlr5CQprs8cfk6KAsDmLHlGLBCgV5f
- sX8v2pRMzQ6rCR2mCb0c+DKaLtmtU6JAhsi5AoZya0t3ZNZZC8bwClD5iThdlHOOYRMV
- hBTfNT/d6BcRrBftN7l4R293M38VPCVVypwks9GZl0y9ht5V8Iyq5j2Rz3YmBxOt78E1
- OcsWLsLsDgw/uqf4MKa+ThStta9ofm0wLct7VKx6Wj2e5hW3sNs5U0UmbSOz1L95nExQ nQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yghn30x8v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 07:31:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0237QY5S048923;
-        Tue, 3 Mar 2020 07:31:46 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yg1ek1wt6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 07:31:46 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0237Vhlm017290;
-        Tue, 3 Mar 2020 07:31:45 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 02 Mar 2020 23:31:43 -0800
-Date:   Tue, 3 Mar 2020 10:31:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: staging: tegra-vde: Use
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200303073134.GF4118@kadam>
-References: <20200302172904.460-1-digetx@gmail.com>
+        Tue, 3 Mar 2020 02:34:54 -0500
+Received: by mail-io1-f68.google.com with SMTP id x21so2415620iox.13;
+        Mon, 02 Mar 2020 23:34:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I2FEL9sQcv0x9Gydvjc+t8/7BMJFW+pQaU8k7YuMPK8=;
+        b=SIG69EDlcXBIFV5DAJ0C6WbcspRCSYmaS06UybyO0sJ16FT1duUxJ3VtH7ZQhE3nML
+         uAbiOUINC9RlHLHkZR4UwwBMBNz2aNg2qvMZJCktwLqNMKhM48HpSfJXH0B9azGxFoKT
+         rna+GuDcBe/6gEBTa7+9lNoUDMVwE9hAWuR/IVfRhiDUVb+8SGyohAUsv4p0ztm3T0Lg
+         q+CfF4rsy0/yg5L7G5meqm2zTQyDIvXRvUQBCvMmCsk8Awbeaw8/EeaMpvFfvBpWREOf
+         vXGd7jcgwrwZq5RWNr9T8TDOFjlbv0GeEI4ldsVZEiIt83AgyQ898Du6UJ2TLTIvROUs
+         7WTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I2FEL9sQcv0x9Gydvjc+t8/7BMJFW+pQaU8k7YuMPK8=;
+        b=IhabJWb8MD8r9qVh5saFMbgIOVk4waAjUT+PJ8GOgsNYa1R5vRAweMqfFp6vjYQQc1
+         9SaiWpB3X+J69JSade6h6Md5JIxrTtl6SRPVP539V21ay+AV71zD43U2uxkxm2kM4fkO
+         iRgFbFkJj4foRswM9vot5PhZXZPjFAG+LSoKMyKB6+JZ5aWsrSZ5IcbZsd6V2uRotOYf
+         mZgmdE5kLNFcMj2yPKIPJ9IfEAvHK8IkYXureiE5UX3HWCr4BWIe7S9Q5rUA+oRMDlYA
+         rIP+Ja57OXPkGw3JZyh92UB4w5xHVdP8bTRs8brdNLep8AslWQNa+6d3Fy8XgzekF5mS
+         6YqA==
+X-Gm-Message-State: ANhLgQ1l3IaW3lPbQovEiuvQXgbUdfr9+BQCIAfxGLmPHcQYZa4eEJWh
+        NcopLz52ssR26SIjGVmpgf1ZEZn/GCMWhESMZlU=
+X-Google-Smtp-Source: ADFU+vtaVZqKosVXnyOcg99NaXgDrLDAi9nCuNxJrzactIEMZTykwelHmbd4d7KOQhmANK3ZBfdKC9vEkoExHZz8/f0=
+X-Received: by 2002:a6b:dc05:: with SMTP id s5mr3011160ioc.72.1583220893844;
+ Mon, 02 Mar 2020 23:34:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302172904.460-1-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030057
+References: <000000000000d3e319059fcfdc98@google.com> <CAOQ4uxh=tLw1p8vsbzTTqrTzLSqr33WtVHek+Jhbi5C2HKQLTA@mail.gmail.com>
+ <CAJfpeguB7v8OBAuJoiPKv6FbfXP6wV2H8a9ceUUuPk4Aca3NRA@mail.gmail.com> <CAOQ4uxhb422zv4wEXKnvMTZkbmPcp8ZL_EMjV=qnUsGj0m1WhA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhb422zv4wEXKnvMTZkbmPcp8ZL_EMjV=qnUsGj0m1WhA@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 3 Mar 2020 09:34:42 +0200
+Message-ID: <CAOQ4uxirc1WwQOzE4Qq=k2R0ntGNTGYsot1b63DPkwCbUYjyZA@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in ovl_llseek
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks!
+On Mon, Mar 2, 2020 at 2:19 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Mon, Mar 2, 2020 at 1:17 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > On Mon, Mar 2, 2020 at 12:10 PM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > > > =====================================
+> > > > WARNING: bad unlock balance detected!
+> > > > 5.6.0-rc3-syzkaller #0 Not tainted
+> > > > -------------------------------------
+> > > > syz-executor194/8947 is trying to release lock (&ovl_i_lock_key[depth]) at:
+> > > > [<ffffffff828b7835>] ovl_inode_unlock fs/overlayfs/overlayfs.h:328 [inline]
+> > > > [<ffffffff828b7835>] ovl_llseek+0x215/0x2c0 fs/overlayfs/file.c:193
+> > > > but there are no more locks to release!
+> > > >
+> > >
+> > > This is strange. I don't see how that can happen nor how my change would
+> > > have caused this regression. If anything, the lock chance may have brought
+> > > a bug in stack file ops to light, but don't see the bug.
+> >
+> > The bug is that ovl_inode_lock() is interruptible and that the caller
+> > doesn't check for error.
+> >
+> > I think the fix is to make this lock uninterruptible (probably rename
+> > the current helper to _interruptible and use the current name as the
+> > uninterruptible version).
+> >
+>
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Miklos,
 
-regards,
-dan carpenter
+Added the patch to ovl-fixes along with another ovl fix for fast track 5.6.
 
+#syz test: https://github.com/amir73il/linux.git ovl-fixes
+
+Thanks,
+Amir.
