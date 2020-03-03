@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67B1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C6C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AB320CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76188214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257791;
-	bh=r4NGeJpo9n1jEBQWdQe7fvt6gNYjq7LXsVhijfIB5e4=;
+	s=default; t=1583257794;
+	bh=RBjNpK8Qs+hQfI47cgTFrU6KM7ouFwPOh+BzvMklbxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g00Z4no2zZzVCxlmUP7kCgWS/sA/Bn9cyG1GYYpbeWwn3lr4lbKWzz8BiDomnAX6f
-	 uNk2FA3T9508VPwK9PeIJxd3mnL0ezWtjueUlTaYa5p4u/PU+3HYMtuvA5fjZSJY14
-	 ehJ+3f9+WUY9LuUp4ChC9lDIMYaiiX+TRBnzMx1Q=
+	b=Fr8/SbIhC7rZFm8CRTfRRQJmNEKPPNNJiwKRXhOP/EK399oU47TfG7MsoiIlWNYyM
+	 gugo2wbEBfO4TflffA9wbbxbB7A0JGD74CWVgjnUl7riejcqgHZ8sNjFddLzDU187u
+	 knLFwpg0WGC9kg86GYbkkoCiotCJbiIyglgzCp7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731826AbgCCRtu (ORCPT
+        id S1731113AbgCCRtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbgCCRtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:47 -0500
+        id S1731823AbgCCRtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31EF0214D8;
-        Tue,  3 Mar 2020 17:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C95220CC7;
+        Tue,  3 Mar 2020 17:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257786;
-        bh=r4NGeJpo9n1jEBQWdQe7fvt6gNYjq7LXsVhijfIB5e4=;
+        s=default; t=1583257789;
+        bh=RBjNpK8Qs+hQfI47cgTFrU6KM7ouFwPOh+BzvMklbxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0MsQQikn9CkfXtnq8poP5KofnWPx8Nc9rt9sRb/CVWQ4M2IDpGdM2mYJCUqh+iMX
-         pmxfU9/w4vC++xXOY5hLvOP9BWaHQ207vXOKK+z6oMJfGyfS8ckTzupaXAgk/PMEmQ
-         XgdTK1U93fhRj/OeExsbErVzz9OKa4HxrPdxUy2Y=
+        b=XWmurU9V/U8yW2pYQMs14B+IM+7lwwHQKZ1kQR3v+EUpQ6GTLPKxJxDwSwKxCwfi3
+         CleoQ4cN1Ln9KlmBjTjQn9yc3GMeMJM0elb7yIvMUv0s6jk2BF3c7BDy2FcL8j8TmL
+         MEOpJHw3DbTKYdp6UeEs71T3NT0uuvL6Ml5LCEuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikita Danilov <ndanilov@marvell.com>,
+        stable@vger.kernel.org,
+        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
         Igor Russkikh <irusskikh@marvell.com>,
+        Pavel Belous <pbelous@marvell.com>,
         Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 128/176] net: atlantic: better loopback mode handling
-Date:   Tue,  3 Mar 2020 18:43:12 +0100
-Message-Id: <20200303174319.545640380@linuxfoundation.org>
+Subject: [PATCH 5.5 129/176] net: atlantic: fix use after free kasan warn
+Date:   Tue,  3 Mar 2020 18:43:13 +0100
+Message-Id: <20200303174319.649509816@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,63 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Danilov <ndanilov@marvell.com>
+From: Pavel Belous <pbelous@marvell.com>
 
-commit b42726fcf76e9367e524392e0ead7e672cc0791c upstream.
+commit a4980919ad6a7be548d499bc5338015e1a9191c6 upstream.
 
-Add checks to not enable multiple loopback modes simultaneously,
-It was also discovered that for dma loopback to function correctly
-promisc mode should be enabled on device.
+skb->len is used to calculate statistics after xmit invocation.
 
-Fixes: ea4b4d7fc106 ("net: atlantic: loopback tests via private flags")
-Signed-off-by: Nikita Danilov <ndanilov@marvell.com>
+Under a stress load it may happen that skb will be xmited,
+rx interrupt will come and skb will be freed, all before xmit function
+is even returned.
+
+Eventually, skb->len will access unallocated area.
+
+Moving stats calculation into tx_clean routine.
+
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Pavel Belous <pbelous@marvell.com>
 Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c       |    5 +++++
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |   13 ++++++++-----
- 2 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c  |    4 ----
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    7 +++++--
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-@@ -722,6 +722,11 @@ static int aq_ethtool_set_priv_flags(str
- 	if (flags & ~AQ_PRIV_FLAGS_MASK)
- 		return -EOPNOTSUPP;
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -655,10 +655,6 @@ int aq_nic_xmit(struct aq_nic_s *self, s
+ 	if (likely(frags)) {
+ 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
+ 						       ring, frags);
+-		if (err >= 0) {
+-			++ring->stats.tx.packets;
+-			ring->stats.tx.bytes += skb->len;
+-		}
+ 	} else {
+ 		err = NETDEV_TX_BUSY;
+ 	}
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -272,9 +272,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *
+ 			}
+ 		}
  
-+	if (hweight32((flags | priv_flags) & AQ_HW_LOOPBACK_MASK) > 1) {
-+		netdev_info(ndev, "Can't enable more than one loopback simultaneously\n");
-+		return -EINVAL;
-+	}
-+
- 	cfg->priv_flags = flags;
+-		if (unlikely(buff->is_eop))
+-			dev_kfree_skb_any(buff->skb);
++		if (unlikely(buff->is_eop)) {
++			++self->stats.rx.packets;
++			self->stats.tx.bytes += buff->skb->len;
  
- 	if ((priv_flags ^ flags) & BIT(AQ_HW_LOOPBACK_DMA_NET)) {
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -885,13 +885,16 @@ static int hw_atl_b0_hw_packet_filter_se
- {
- 	struct aq_nic_cfg_s *cfg = self->aq_nic_cfg;
- 	unsigned int i = 0U;
-+	u32 vlan_promisc;
-+	u32 l2_promisc;
- 
--	hw_atl_rpfl2promiscuous_mode_en_set(self,
--					    IS_FILTER_ENABLED(IFF_PROMISC));
-+	l2_promisc = IS_FILTER_ENABLED(IFF_PROMISC) ||
-+		     !!(cfg->priv_flags & BIT(AQ_HW_LOOPBACK_DMA_NET));
-+	vlan_promisc = l2_promisc || cfg->is_vlan_force_promisc;
- 
--	hw_atl_rpf_vlan_prom_mode_en_set(self,
--				     IS_FILTER_ENABLED(IFF_PROMISC) ||
--				     cfg->is_vlan_force_promisc);
-+	hw_atl_rpfl2promiscuous_mode_en_set(self, l2_promisc);
-+
-+	hw_atl_rpf_vlan_prom_mode_en_set(self, vlan_promisc);
- 
- 	hw_atl_rpfl2multicast_flr_en_set(self,
- 					 IS_FILTER_ENABLED(IFF_ALLMULTI) &&
++			dev_kfree_skb_any(buff->skb);
++		}
+ 		buff->pa = 0U;
+ 		buff->eop_index = 0xffffU;
+ 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
 
 
