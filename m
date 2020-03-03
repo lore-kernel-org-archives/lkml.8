@@ -2,158 +2,96 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597FFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E313C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2725C22522
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC9B2064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iL3BjG2o"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qmu1JV0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCCFiM (ORCPT
+        id S1726956AbgCCFkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:38:12 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:25290 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725440AbgCCFiM (ORCPT
+        Tue, 3 Mar 2020 00:40:42 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34609 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725818AbgCCFkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:38:12 -0500
-X-UUID: 79395d35588c4f32a77a5ebe27a7c98e-20200303
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=m2CcW1V41TM32eWWCi7FfNQYoqIdQyWhSRyF/aJpfA4=;
-        b=iL3BjG2oQ8RUXRl87N0Vi5mLolv6LduKYM7IbOQySXyoQWyFcH6xTlgXinBf6VC3N9grg/JyI2iyH4Hqje0GzFxLo70whh1V3birAfHBKMxI0jCpIJignZBXaDhKndSSrAi2ZXh18y2frHWWN1TqOtO2377RF2GwMzQg0McODFw=;
-X-UUID: 79395d35588c4f32a77a5ebe27a7c98e-20200303
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 216576827; Tue, 03 Mar 2020 13:28:03 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 3 Mar
- 2020 13:28:21 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 3 Mar 2020 13:28:22 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v12 4/6] dt-bindings: display: mediatek: convert the document format from txt to yaml
-Date:   Tue, 3 Mar 2020 13:27:20 +0800
-Message-ID: <20200303052722.94795-5-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200303052722.94795-1-jitao.shi@mediatek.com>
-References: <20200303052722.94795-1-jitao.shi@mediatek.com>
+        Tue, 3 Mar 2020 00:40:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583214042; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=qr3JVYtKfOWIi/bSPDEd0ztBd3h/rs+zEN/13ZtS5I8=; b=Qmu1JV0LwxyGVJI8HoR7EiviexiL4ZItHmNeRWFPFYUkPOi1ur7XRky+3vYkXbwfBCnKF2kp
+ /A3s10QU+F9qA753FeysnZmQKAP4bXR2V+MoXp+IZC/LXiOtDw7R6YLZYob80cs2T+1h0OuK
+ pcbgAy2/VrcMWnxCPb/yUI2bSV8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5dedd2.7ff80c9b47a0-smtp-out-n03;
+ Tue, 03 Mar 2020 05:40:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 22058C4479C; Tue,  3 Mar 2020 05:40:33 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70B65C43383;
+        Tue,  3 Mar 2020 05:40:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70B65C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Leho Kraav <leho@kraav.com>
+Cc:     "Jan Alexander Steffens \(heftig\)" <jan.steffens@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
+References: <20191224051639.6904-1-jan.steffens@gmail.com>
+        <20200221121135.GA9056@papaya>
+Date:   Tue, 03 Mar 2020 07:40:26 +0200
+In-Reply-To: <20200221121135.GA9056@papaya> (Leho Kraav's message of "Fri, 21
+        Feb 2020 14:11:35 +0200")
+Message-ID: <871rqauhbp.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 4EE687C2724234A765D419272ADE765BFF1D0D518E863FE5D1C5D83969F78B132000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-Li4uL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dCAgICAgICAgIHwgNDUgLS0tLS0t
-LS0tDQogLi4uL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnlhbWwgICAgICAgIHwgOTIg
-KysrKysrKysrKysrKysrKysrKw0KIDIgZmlsZXMgY2hhbmdlZCwgOTIgaW5zZXJ0aW9ucygrKSwg
-NDUgZGVsZXRpb25zKC0pDQogZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
-aWF0ZWsvbWVkaWF0ZWssZHBpLnlhbWwNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxk
-cGkudHh0DQpkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDRlZWVhZDFkMzlkYi4uMDAw
-MDAwMDAwMDAwDQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQorKysgL2Rldi9udWxsDQpAQCAtMSw0NSArMCww
-IEBADQotTWVkaWF0ZWsgRFBJIERldmljZQ0KLT09PT09PT09PT09PT09PT09PT0NCi0NCi1UaGUg
-TWVkaWF0ZWsgRFBJIGZ1bmN0aW9uIGJsb2NrIGlzIGEgc2luayBvZiB0aGUgZGlzcGxheSBzdWJz
-eXN0ZW0gYW5kDQotcHJvdmlkZXMgOC1iaXQgUkdCL1lVVjQ0NCBvciA4LzEwLzEwLWJpdCBZVVY0
-MjIgcGl4ZWwgZGF0YSBvbiBhIHBhcmFsbGVsDQotb3V0cHV0IGJ1cy4NCi0NCi1SZXF1aXJlZCBw
-cm9wZXJ0aWVzOg0KLS0gY29tcGF0aWJsZTogIm1lZGlhdGVrLDxjaGlwPi1kcGkiDQotICB0aGUg
-c3VwcG9ydGVkIGNoaXBzIGFyZSBtdDI3MDEgLCBtdDgxNzMgYW5kIG10ODE4My4NCi0tIHJlZzog
-UGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdp
-c3RlcnMNCi0tIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGZ1bmN0
-aW9uIGJsb2NrLg0KLS0gY2xvY2tzOiBkZXZpY2UgY2xvY2tzDQotICBTZWUgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IgZGV0YWls
-cy4NCi0tIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gInBpeGVsIiwgImVuZ2luZSIsIGFuZCAi
-cGxsIg0KLS0gcG9ydDogT3V0cHV0IHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25z
-IGFzIGRlc2NyaWJlZCBpbg0KLSAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
-YXBoLnR4dC4gVGhpcyBwb3J0IHNob3VsZCBiZSBjb25uZWN0ZWQNCi0gIHRvIHRoZSBpbnB1dCBw
-b3J0IG9mIGFuIGF0dGFjaGVkIEhETUkgb3IgTFZEUyBlbmNvZGVyIGNoaXAuDQotDQotT3B0aW9u
-YWwgcHJvcGVydGllczoNCi0tIHBpbmN0cmwtbmFtZXM6IENvbnRhaW4gImdwaW9tb2RlIiBhbmQg
-ImRwaW1vZGUiLg0KLSAgcGluY3RybC1uYW1lcyBzZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1iaW5kaW5ncy50eHQNCi0tIHBjbGstc2FtcGxlOiBy
-ZWZlciBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJm
-YWNlcy50eHQuDQotDQotRXhhbXBsZToNCi0NCi1kcGkwOiBkcGlAMTQwMWQwMDAgew0KLQljb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kcGkiOw0KLQlyZWcgPSA8MCAweDE0MDFkMDAwIDAg
-MHgxMDAwPjsNCi0JaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE5NCBJUlFfVFlQRV9MRVZFTF9MT1c+
-Ow0KLQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9EUElfUElYRUw+LA0KLQkJIDwmbW1zeXMgQ0xL
-X01NX0RQSV9FTkdJTkU+LA0KLQkJIDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9UVkRQTEw+Ow0K
-LQljbG9jay1uYW1lcyA9ICJwaXhlbCIsICJlbmdpbmUiLCAicGxsIjsNCi0JcGluY3RybC1uYW1l
-cyA9ICJhY3RpdmUiLCAiaWRsZSI7DQotCXBpbmN0cmwtMCA9IDwmZHBpX3Bpbl9mdW5jPjsNCi0J
-cGluY3RybC0xID0gPCZkcGlfcGluX2lkbGU+Ow0KLQ0KLQlwb3J0IHsNCi0JCWRwaTBfb3V0OiBl
-bmRwb2ludCB7DQotCQkJcGNsay1zYW1wbGUgPSA8MD47DQotCQkJcmVtb3RlLWVuZHBvaW50ID0g
-PCZoZG1pMF9pbj47DQotCQl9Ow0KLQl9Ow0KLX07DQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnlhbWwg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRp
-YXRlayxkcGkueWFtbA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4u
-ZWIyYjBjYjVlYjVhDQotLS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkueWFtbA0KQEAgLTAsMCAr
-MSw5MiBAQA0KKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCislWUFNTCAxLjIN
-CistLS0NCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2Rpc3BsYXkvbWVkaWF0
-ZWssZHBpLnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1h
-cy9jb3JlLnlhbWwjDQorDQordGl0bGU6IG1lZGlhdGVrIERQSSBDb250cm9sbGVyIERldmljZSBU
-cmVlIEJpbmRpbmdzDQorDQorbWFpbnRhaW5lcnM6DQorICAtIENLIEh1IDxjay5odUBtZWRpYXRl
-ay5jb20+DQorICAtIEppdGFvIHNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCisNCitkZXNj
-cmlwdGlvbjogfA0KKyAgVGhlIE1lZGlhdGVrIERQSSBmdW5jdGlvbiBibG9jayBpcyBhIHNpbmsg
-b2YgdGhlIGRpc3BsYXkgc3Vic3lzdGVtIGFuZA0KKyAgcHJvdmlkZXMgOC1iaXQgUkdCL1lVVjQ0
-NCBvciA4LzEwLzEwLWJpdCBZVVY0MjIgcGl4ZWwgZGF0YSBvbiBhIHBhcmFsbGVsDQorICBvdXRw
-dXQgYnVzLg0KKw0KK3Byb3BlcnRpZXM6DQorICBjb21wYXRpYmxlOg0KKyAgICBlbnVtOg0KKyAg
-ICAgIC0gbWVkaWF0ZWssbXQyNzAxLWRwaQ0KKyAgICAgIC0gbWVkaWF0ZWssbXQ4MTczLWRwaQ0K
-KyAgICAgIC0gbWVkaWF0ZWssbXQ4MTgzLWRwaQ0KKw0KKyAgcmVnOg0KKyAgICBtYXhJdGVtczog
-MQ0KKw0KKyAgaW50ZXJydXB0czoNCisgICAgbWF4SXRlbXM6IDENCisNCisgIGNsb2NrczoNCisg
-ICAgaXRlbXM6DQorICAgICAgLSBkZXNjcmlwdGlvbjogUGl4ZWwgQ2xvY2sNCisgICAgICAtIGRl
-c2NyaXB0aW9uOiBFbmdpbmUgQ2xvY2sNCisgICAgICAtIGRlc2NyaXB0aW9uOiBEUEkgUExMDQor
-DQorICBjbG9jay1uYW1lczoNCisgICAgaXRlbXM6DQorICAgICAgLSBjb25zdDogcGl4ZWwNCisg
-ICAgICAtIGNvbnN0OiBlbmdpbmUNCisgICAgICAtIGNvbnN0OiBwbGwNCisNCisgIHBpbmN0cmwt
-bmFtZXM6DQorICAgIGl0ZW1zOg0KKyAgICAgIC0gY29uc3Q6IGRlZmF1bHQNCisgICAgICAtIGNv
-bnN0OiBzbGVlcA0KKw0KKyAgcG9ydDoNCisgICAgdHlwZTogb2JqZWN0DQorICAgIGRlc2NyaXB0
-aW9uOg0KKyAgICAgIE91dHB1dCBwb3J0IG5vZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9ucyBh
-cyBkZXNjcmliZWQgaW4NCisgICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-Z3JhcGgudHh0LiBUaGlzIHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZA0KKyAgICAgIHRvIHRoZSBp
-bnB1dCBwb3J0IG9mIGFuIGF0dGFjaGVkIEhETUkgb3IgTFZEUyBlbmNvZGVyIGNoaXAuDQorDQor
-ICAgIHByb3BlcnRpZXM6DQorICAgICAgcGNsay1zYW1wbGU6DQorICAgICAgZGVzY3JpcHRpb246
-IHJlZmVyIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRl
-cmZhY2VzLnR4dC4NCisNCityZXF1aXJlZDoNCisgIC0gY29tcGF0aWJsZQ0KKyAgLSByZWcNCisg
-IC0gaW50ZXJydXB0cw0KKyAgLSBjbG9ja3MNCisgIC0gY2xvY2stbmFtZXMNCisgIC0gcG9ydA0K
-Kw0KK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KKw0KK2V4YW1wbGVzOg0KKyAgLSB8DQor
-ICAgIGRwaTA6IGRwaUAxNDAxZDAwMCB7DQorICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10ODE3My1kcGkiOw0KKyAgICAgICAgcmVnID0gPDAgMHgxNDAxZDAwMCAwIDB4MTAwMD47DQor
-ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTk0IElSUV9UWVBFX0xFVkVMX0xPVz47DQor
-ICAgICAgICBjbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9EUElfUElYRUw+LA0KKyAgICAgICAgICAg
-ICA8Jm1tc3lzIENMS19NTV9EUElfRU5HSU5FPiwNCisgICAgICAgICAgICAgPCZhcG1peGVkc3lz
-IENMS19BUE1JWEVEX1RWRFBMTD47DQorICAgICAgICBjbG9jay1uYW1lcyA9ICJwaXhlbCIsICJl
-bmdpbmUiLCAicGxsIjsNCisgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzbGVl
-cCI7DQorICAgICAgICBwaW5jdHJsLTAgPSA8JmRwaV9waW5fZnVuYz47DQorICAgICAgICBwaW5j
-dHJsLTEgPSA8JmRwaV9waW5faWRsZT47DQorDQorICAgICAgICBwb3J0IHsNCisgICAgICAgICAg
-ICByZWcgPSA8MD47DQorICAgICAgICAgICAgZHBpMF9vdXQ6IGVuZHBvaW50IHsNCisgICAgICAg
-ICAgICAgICAgcGNsay1zYW1wbGUgPSA8MD47DQorICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRw
-b2ludCA9IDwmaGRtaTBfaW4+Ow0KKyAgICAgICAgICAgIH07DQorICAgICAgICB9Ow0KKyAgICB9
-Ow0KKw0KKy4uLg0KLS0gDQoyLjIxLjANCg==
+Leho Kraav <leho@kraav.com> writes:
 
+> On Tue, Dec 24, 2019 at 06:16:39AM +0100, Jan Alexander Steffens (heftig) wrote:
+>> Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
+>> trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
+>> in this process the lines which picked the right cfg for Killer Qu C0
+>> NICs after C0 detection were lost. These lines were added by commit
+>> b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
+>> C0").
+>> 
+>> I suspect this is more of the "merge damage" which commit 7cded5658329
+>> ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+>> 
+>> Restore the missing lines so the driver loads the right firmware for
+>> these NICs.
+>
+> This seems real, as upgrading 5.5.0 -> 5.5.5 just broke my iwlwifi on XPS 7390.
+> How come?
+
+Luca, should I apply this to wireless-drivers?
+
+https://patchwork.kernel.org/patch/11309095/
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
