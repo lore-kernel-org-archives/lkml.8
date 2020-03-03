@@ -2,133 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39581C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467E3C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0653E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:55:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHfeDd+4"
+	by mail.kernel.org (Postfix) with ESMTP id 226D220838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgCCKzU (ORCPT
+        id S1727774AbgCCK4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:55:20 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36875 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCKzT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:55:19 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 5so2569147oiy.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:55:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5jOtb1BhiQGowh0BlpaOUSt5dD3Y3nnseudePnuupsw=;
-        b=cHfeDd+442pgG4b/emVO6vf5Em46uyQ+GDRrlICxDJVRD47vglceX82KFDS0Vm8SD9
-         oRtBchajRwoRkQB/bedPnFlMocEdFuRUAu90+bbyeU2BB7f8g3tVAzvYqyCL5oFYKZMa
-         clf0GPpMGd1Jp2wMFfMqs8v7ZJSas7tD1FJRHLekgKI2Fvx/uo588hi7d2bkQ/2oQnfb
-         u9MQj+B+JAUB2+3Jnh5hNxq9VdaQOR2TLuBNomFqMdrbqwJqb/GSpfw1KnGd4Da64tT6
-         qQXAW3TQ8xChY33J+pD8+m0/A/FTAwV8F9twKvMkKpiPBeAWKhfEScUw9PPF6vvWW6il
-         0Csw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5jOtb1BhiQGowh0BlpaOUSt5dD3Y3nnseudePnuupsw=;
-        b=YGJfGgV3bn0IyPtQ4KxOyP2NB/ZS6DZuQoVX/aFxIbjk6vK5o8rsfeEVl2JAPX9ZOO
-         9xCNaSu1LtAteDKH2nkTPnRhp9u9cHa6sTXcvAwesoGONwSldNAjypuiStm5NO3kDuVq
-         VYT8br/xN73TW/KS/Rcgus5Lqxm48MXwB4vCuSCwywwbG4yLYGhife4FY+AaYmsYFYtT
-         dVJmWvUs1BskeX0LegJTHu0EVz3vh4xjkLUQG+oHQEXBSjQkTGOdtqhNQ7QMrzat4vtr
-         K3NJ5H1J+Tg2i0jeo75XXhZEMONyPUJ6WOJos8zFuU+DqviGv8hVtMqvUTS88XsPBb1P
-         XybQ==
-X-Gm-Message-State: ANhLgQ0x3jDv7R9tMH+pAfkdXgQyXDaKWBwSYqYGpidQXoyw32vOtTgj
-        CxlUPIoQfMxf8JyfdT5pncIeNa0F3IO2l+7a4vc8IQ==
-X-Google-Smtp-Source: ADFU+vt/0Pkh4xRMSjFYvG0yXIdUv50c98auM9c2ECjtGeoOY5Pb0fIzNq1xj7NtvCkYQoGZ0HC3bO8/F0nNkjluzTA=
-X-Received: by 2002:aca:d954:: with SMTP id q81mr2031587oig.157.1583232918470;
- Tue, 03 Mar 2020 02:55:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20200302195352.226103-1-jannh@google.com> <202003021434.713F5559@keescook>
-In-Reply-To: <202003021434.713F5559@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 3 Mar 2020 11:54:52 +0100
-Message-ID: <CAG48ez12FYHoHY8PB2r7H_JtJ8NatEuRB8Ej0y9pfpp9EnnnsA@mail.gmail.com>
-Subject: Re: [PATCH] lib/refcount: Document interaction with PID_MAX_LIMIT
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Tue, 3 Mar 2020 05:56:11 -0500
+Received: from mga14.intel.com ([192.55.52.115]:23857 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgCCK4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:56:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:56:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="412703479"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 03 Mar 2020 02:56:06 -0800
+Subject: Re: [OT] Pseudo module name in kallsyms (Re: [PATCH V3 03/13]
+ kprobes: Add symbols for kprobe insn pages)
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200228135125.567-1-adrian.hunter@intel.com>
+ <20200228135125.567-4-adrian.hunter@intel.com>
+ <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
+ <20200228172004.GI5451@krava>
+ <20200229134947.839096dbc8321cfdca980edb@kernel.org>
+ <20200229184913.4e13e516@oasis.local.home> <20200302144307.GD204976@krava>
+ <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <50754470-7675-c0b0-0931-9a6024e8eb90@intel.com>
+Date:   Tue, 3 Mar 2020 12:55:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 11:37 PM Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Mar 02, 2020 at 08:53:52PM +0100, Jann Horn wrote:
-> > Document the circumstances under which refcount_t's saturation mechanism
-> > works deterministically.
-> >
-> > Signed-off-by: Jann Horn <jannh@google.com>
->
-> Acked-by: Kees Cook <keescook@chromium.org>
->
-> With one note below...
->
-> > ---
-> >  include/linux/refcount.h | 19 ++++++++++++++-----
-> >  1 file changed, 14 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> > index 0ac50cf62d062..cf14db393d89d 100644
-> > --- a/include/linux/refcount.h
-> > +++ b/include/linux/refcount.h
-> > @@ -38,11 +38,20 @@
-> >   * atomic operations, then the count will continue to edge closer to 0. If it
-> >   * reaches a value of 1 before /any/ of the threads reset it to the saturated
-> >   * value, then a concurrent refcount_dec_and_test() may erroneously free the
-> > - * underlying object. Given the precise timing details involved with the
-> > - * round-robin scheduling of each thread manipulating the refcount and the need
-> > - * to hit the race multiple times in succession, there doesn't appear to be a
-> > - * practical avenue of attack even if using refcount_add() operations with
-> > - * larger increments.
-> > + * underlying object.
-> > + * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
-> > + * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
->
-> Maybe just to clarify and make readers not have to go search the source:
->
->         "... beyond FUTEX_TID_MASK, which is UAPI defined as 0x3fffffff)."
+On 3/03/20 12:47 pm, Masami Hiramatsu wrote:
+> Hi,
+> 
+> On Mon, 2 Mar 2020 15:43:07 +0100
+> Jiri Olsa <jolsa@redhat.com> wrote:
+> 
+>> On Sat, Feb 29, 2020 at 06:49:13PM -0500, Steven Rostedt wrote:
+>>> On Sat, 29 Feb 2020 13:49:47 +0900
+>>> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>>>
+>>>> On Fri, 28 Feb 2020 18:20:04 +0100
+>>>> Jiri Olsa <jolsa@redhat.com> wrote:
+>>>>
+>>>>>> BTW, it seems to pretend to be a module, but is there no concern of
+>>>>>> confusing users? Shouldn't it be [*kprobes] so that it is non-exist
+>>>>>> module name?  
+>>>>>
+>>>>> note we already have bpf symbols as [bpf] module  
+>>>>
+>>>> Yeah, and this series adds [kprobe(s)] and [ftrace] too.
+>>>> I simply concern that the those module names implicitly become
+>>>> special word (rule) and embedded in the code. If such module names
+>>>> are not exposed to users, it is OK (but I hope to have some comments).
+>>>> However, it is under /proc, which means users can notice it.
+>>>
+>>> I share Masami's concerns. It would be good to have something
+>>> differentiate local functions that are not modules. That's one way I
+>>> look to see if something is a module or built in, is to see if kallsyms
+>>> has it as a [].
+>>>
+>>> Perhaps prepend with: '&' ?
+> 
+> Yeah, '*' may not good from the filename point of view.
+> 
+>>
+>> that would break some of the perf code.. IMO Arnaldo's explanation
+>> makes sense and we could keep it as it is
+> 
+>  From the in-kernel API/coding point of view,
+> 
+> +static int get_ksymbol_kprobe(struct kallsym_iter *iter)
+> +{
+> +	strlcpy(iter->module_name, "kprobe", MODULE_NAME_LEN);
+> +	iter->exported = 0;
+> +	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
+> +				  &iter->value, &iter->type,
+> +				  iter->name) < 0 ? 0 : 1;
+>  }
+> 
+> This clearly shows that is a iter->module_name.
+> 
+> And also, if someone make a module names "kprobes.ko", it will also
+> have [kprobes] in kallsyms. That is also confusing.
 
-The value of that thing has changed three times in git history, and
-there is a comment in threads.h that refers to it as being 0x1fffffff;
-so I'm a bit hesitant to copy that around further.
+If special characters are a problem, modules also do not start with '-' or
+'_', so would "_kprobes" and "_ftrace" be acceptable to everyone?
 
-> and is it worth showing the math on this, just to have it clearly
-> stated?
 
-Hm, I suppose... I'll send a v2.
-
-> -Kees
->
-> > + * With the current PID limit, if no batched refcounting operations are used and
-> > + * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
-> > + * operations, this makes it impossible for a saturated refcount to leave the
-> > + * saturation range, even if it is possible for multiple uses of the same
-> > + * refcount to nest in the context of a single task.
-> > + * If hundreds of references are added/removed with a single refcounting
-> > + * operation, it may potentially be possible to leave the saturation range; but
-> > + * given the precise timing details involved with the round-robin scheduling of
-> > + * each thread manipulating the refcount and the need to hit the race multiple
-> > + * times in succession, there doesn't appear to be a practical avenue of attack
-> > + * even if using refcount_add() operations with larger increments.
