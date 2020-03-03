@@ -2,86 +2,93 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF9BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5681C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF6D2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF05A20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgCCLFX (ORCPT
+        id S1728748AbgCCLI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:05:23 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55684 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgCCLFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:05:23 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 091D52919DF
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] ASoC: amd: AMD RV RT5682 should depends on CROS_EC
-Date:   Tue,  3 Mar 2020 12:05:14 +0100
-Message-Id: <20200303110514.3267126-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 3 Mar 2020 06:08:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45256 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727880AbgCCLI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 06:08:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 94B6DB235;
+        Tue,  3 Mar 2020 11:08:27 +0000 (UTC)
+Message-ID: <312c3305eef7534d534729d598372dbf5f3985cf.camel@suse.de>
+Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 VL805 firmware load support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Oliver Neukum <oneukum@suse.com>, linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, wahrenst@gmx.net,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Date:   Tue, 03 Mar 2020 12:08:25 +0100
+In-Reply-To: <1583225019.12738.6.camel@suse.com>
+References: <20200302155528.19505-1-nsaenzjulienne@suse.de>
+         <1583225019.12738.6.camel@suse.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-sEW+kSSPV6dhPiAM6dbu"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If SND_SOC_AMD_RV_RT5682_MACH=y, below kconfig and build errors can be seen:
 
- WARNING: unmet direct dependencies detected for SND_SOC_CROS_EC_CODEC
- WARNING: unmet direct dependencies detected for I2C_CROS_EC_TUNNEL
+--=-sEW+kSSPV6dhPiAM6dbu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
- ld: drivers/i2c/busses/i2c-cros-ec-tunnel.o: in function `ec_i2c_xfer':
- i2c-cros-ec-tunnel.c:(.text+0x2fc): undefined reference to `cros_ec_cmd_xfer_status'
- ld: sound/soc/codecs/cros_ec_codec.o: in function `wov_host_event':
- cros_ec_codec.c:(.text+0x4fb): undefined reference to `cros_ec_get_host_event'
- ld: sound/soc/codecs/cros_ec_codec.o: in function `send_ec_host_command':
- cros_ec_codec.c:(.text+0x831): undefined reference to `cros_ec_cmd_xfer_status'
+Hi Oliver,
 
-This is because it will select SND_SOC_CROS_EC_CODEC and I2c_CROS_EC_TUNNEL but
-both depends on CROS_EC.
+On Tue, 2020-03-03 at 09:43 +0100, Oliver Neukum wrote:
+> Am Montag, den 02.03.2020, 16:55 +0100 schrieb Nicolas Saenz Julienne:
+> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
+e
+> > loaded directly from an EEPROM or, if not present, by the SoC's
+> > VideCore. This series adds support for the later.
+>=20
+> What happens if runtime PM strikes, in particular, how do
+> you deal with D4cold?
 
-Fixes: 6b8e4e7db3cd ("ASoC: amd: Add machine driver for Raven based platform")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+The RPi4 PCIe driver doesn't support runtime PM for now. Neither upstream n=
+or
+downstream. So I'd say it's not a problem. The same goes for suspend/resume=
+,
+which IIRC the Raspberry Pi foundation doesn't support.
 
- sound/soc/amd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
+Nicolas
 
-diff --git a/sound/soc/amd/Kconfig b/sound/soc/amd/Kconfig
-index b29ef1373946..bce4cee5cb54 100644
---- a/sound/soc/amd/Kconfig
-+++ b/sound/soc/amd/Kconfig
-@@ -33,6 +33,6 @@ config SND_SOC_AMD_RV_RT5682_MACH
- 	select SND_SOC_MAX98357A
- 	select SND_SOC_CROS_EC_CODEC
- 	select I2C_CROS_EC_TUNNEL
--	depends on SND_SOC_AMD_ACP3x && I2C
-+	depends on SND_SOC_AMD_ACP3x && I2C && CROS_EC
- 	help
- 	 This option enables machine driver for RT5682 and MAX9835.
--- 
-2.25.1
+
+--=-sEW+kSSPV6dhPiAM6dbu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5eOqkACgkQlfZmHno8
+x/730ggAtedF+4sYfc1p/xdd/IO7Clu3ry4x2yh+qY/per8vXN+9dzI79YgdwAtg
+SlRDlijesH4//PYu7gdwIqaF86WMYuPCRT8Q8mWlcL+Lrgz1GGkmFSuFDnGH0nep
+M0L9F0BXK+efUQhKuTtdtRP2UJXg00bKI4hVHLtEHNGrOZYJoVKmxjDlw2n20KSO
+zjq6rt6HvCCUH1saZC4r6++T3EhCG1QjUAoyycsAJKNH86xc+P5VV9+cQfH1zJpI
+Rim6oxWfTT69JUb9DY5NkA0xWWFpV/4YyTW9gQiXgQgIBrsCcYLlu+B/xhZwifKm
+ITeQhFnX2203t32AD+fEBIJUmxNaJg==
+=XmXV
+-----END PGP SIGNATURE-----
+
+--=-sEW+kSSPV6dhPiAM6dbu--
 
