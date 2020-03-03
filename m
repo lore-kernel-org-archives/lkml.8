@@ -2,78 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53C1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613BAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89BD20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471BF214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgCCKIt (ORCPT
+        id S1728345AbgCCKJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:08:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:45008 "EHLO foss.arm.com"
+        Tue, 3 Mar 2020 05:09:38 -0500
+Received: from mga05.intel.com ([192.55.52.43]:21993 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgCCKIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:08:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAE82FEC;
-        Tue,  3 Mar 2020 02:08:48 -0800 (PST)
-Received: from [10.1.195.59] (ifrit.cambridge.arm.com [10.1.195.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C21F3F6C4;
-        Tue,  3 Mar 2020 02:08:47 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: Fix kernel build warning in test_idle_cores()
- for !SMT NUMA
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Phil Auld <pauld@redhat.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>
-References: <20200227140222.GH3818@techsingularity.net>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <19447f16-d42d-2e89-c431-71c14d1151bd@arm.com>
-Date:   Tue, 3 Mar 2020 10:08:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727820AbgCCKJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:09:38 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:09:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="351792132"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2020 02:09:34 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j94Ua-006WAi-JV; Tue, 03 Mar 2020 12:09:36 +0200
+Date:   Tue, 3 Mar 2020 12:09:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, mturquette@baylibre.com,
+        sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        rtanwar <rahul.tanwar@intel.com>
+Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
+Message-ID: <20200303100936.GL1224808@smile.fi.intel.com>
+References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
+ <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
+ <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
+ <4fb7a643-cbe1-da82-2629-2dbd0c0d143b@linux.intel.com>
+ <20200227100239.GD1224808@smile.fi.intel.com>
+ <12c16eb0-04aa-79cf-fa76-3f45b8972319@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200227140222.GH3818@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12c16eb0-04aa-79cf-fa76-3f45b8972319@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 2:02 PM, Mel Gorman wrote:
-> Building against tip/sched/core as of as ff7db0bf24db ("sched/numa: Prefer
-> using an idle CPU as a migration target instead of comparing tasks") with
-> the arm64 defconfig (which doesn't have CONFIG_SCHED_SMT set) leads to:
+On Tue, Mar 03, 2020 at 11:37:23AM +0800, Tanwar, Rahul wrote:
+> On 27/2/2020 6:02 PM, Andy Shevchenko wrote:
+> > On Thu, Feb 27, 2020 at 03:19:26PM +0800, Tanwar, Rahul wrote:
+> >> On 19/2/2020 3:59 PM, Randy Dunlap wrote:
+> >>> On 2/18/20 11:40 PM, Rahul Tanwar wrote:
+> >>>
+> >>>> +config CLK_LGM_CGU
+> >>>> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
+> >>> This "depends on" looks problematic to me. I guess we shall see when
+> >>> all the build bots get to it.
+> >> At the moment, i am not able to figure out possible problems in this..
+> > COMPILE_TEST should be accompanied by non-generic dependency.
+> > There is none.
+> >
+> > So, I quite agree with Randy.
 > 
->   kernel/sched/fair.c:1525:20: warning: ‘test_idle_cores’ declared ‘static’ but never defined [-Wunused-function]
-                                          ^               ^          ^      ^
-For some reason the quotes got turned into � in your edit. Doesn't really
-matter TBH.
+> I see COMPILE_TEST is mostly ORed with ARCH_xx. How about below?
+> 
+> depends on OF && HAS_IOMEM && (CONFIG_X86 || COMPILE_TEST)
 
->    static inline bool test_idle_cores(int cpu, bool def);
-> 		      ^~~~~~~~~~~~~~~
-> 
-> Rather than define it in its own CONFIG_SCHED_SMT #define island, bunch it
-> up with test_idle_cores().
-> 
-> Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
-> [mgorman@techsingularity.net: Edit changelog, minor style change]
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+How about to leave logical parts separately?
+How is OF related to architecture?
 
-Could we get this in tip (and hopefully -next will follow shortly)? We're at
-like the third duplicate fix on the list already.
+On top of that, is this code only for x86 for sure?
+
+> >>>> +	select OF_EARLY_FLATTREE
+> >>> If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
+> >>> I expect that this should not be attempting to select OF_EARLY_FLATTREE.
+> >>>
+> >>> Have you tried such a config combination?
+> >> Agree, that would be a problem. I will change it to
+> >>
+> >> select OF_EARLY_FLATTREE if OF
+> > Nope, I think this is wrong work around.
+> > See above.
+> 
+> With above proposed change, i can simply switch to
+> select OF_EARLY_FLATTREE since all dependencies are already
+> in place..
+
+Right.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
