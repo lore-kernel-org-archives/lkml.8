@@ -2,90 +2,162 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963A2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB03C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7894720863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC29214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DGmhYfC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgCCKNk (ORCPT
+        id S1728466AbgCCKOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:13:40 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2501 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728102AbgCCKNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:13:40 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1BD9D9119670BA0EB938;
-        Tue,  3 Mar 2020 10:13:38 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 3 Mar 2020 10:13:37 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Mar 2020
- 10:13:37 +0000
-Subject: Re: LPC Bus Driver
-To:     Luis Tanica <luis.f.tanica@seagate.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-fpga@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <6daf1bb266a24c239aed34d8661fc5eaMW2PR20MB210660F6B17CB90ACD0B6E7CA0E70@MW2PR20MB2106.namprd20.prod.outlook.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <797cec65-5504-ee85-3fe4-fe2b4c90991f@huawei.com>
-Date:   Tue, 3 Mar 2020 10:13:36 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 3 Mar 2020 05:14:03 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44321 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgCCKOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:14:02 -0500
+Received: by mail-io1-f65.google.com with SMTP id u17so2883658iog.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:14:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b2RBPOL2BrDy7cKCO1Q5lEU/UoBlA1lcG/mr7sg6aho=;
+        b=DGmhYfC5yifUx3aXvV8ewsx6O+UEOBQA3YCM/g6FC5pPZCL9yDHh0H5nXhEGrlvABM
+         13rZWLc9/U//n7geEywqlCvA0G/75x1YfkBw95ZRiPc/tSiDPvb39cmStjXS8fjqkOqg
+         EVmoHGDfiX+gCofo6bAPD7JZ3U7pKiqMYrLMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b2RBPOL2BrDy7cKCO1Q5lEU/UoBlA1lcG/mr7sg6aho=;
+        b=P3vbEgxSsbaucu3i//qDf2PbA/zcRtqLcG+RCGzAb2fOcF9bZv+e8Jcca1EzxSAd5k
+         YyPDZsMD9bdohqSHDYvVkkini5Z6H9QGqT+SkjVTmOPbKpLF1G5kbLDt6wkCDgHULP6g
+         9UMjGPE1jVFjzMK3UTre1XQSnIHjKWIaPmtwYcyWO3qbqzmsLefdUODaWnxXjNEePcIo
+         VVmu83wvf03VxaZFK7meYT7p5l1XxfNxehY+Bnu9CDA4Ie5sd47Rgs30z4y46AEfyZR0
+         XCeOtULV7w8l83pyBz3bmfV4rlzIFaE0BQrjnIwVj1lO3Mojlf4pepNJis5WJ/b0372X
+         lKog==
+X-Gm-Message-State: ANhLgQ3biJgh+U/DZon+p88+x3FA43VOzx1ieNcxOcHa5loXZizYyRXF
+        GQZ9CFxR26wdXa4uYDDwQQ5l53negn1ZSvub7cl0gw==
+X-Google-Smtp-Source: ADFU+vtYbimVsSQ/gMcWk1r7TNYrGFmLUDHEqAGO+I0gRUGAdGR15kWk81wm/ejVzaxci+dihgL9H4IJMGx7CeV29mo=
+X-Received: by 2002:a6b:db08:: with SMTP id t8mr3190746ioc.285.1583230441732;
+ Tue, 03 Mar 2020 02:14:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6daf1bb266a24c239aed34d8661fc5eaMW2PR20MB210660F6B17CB90ACD0B6E7CA0E70@MW2PR20MB2106.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
+In-Reply-To: <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 3 Mar 2020 11:13:50 +0100
+Message-ID: <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ add fpga list and Greg+Arnd for misc drivers
+On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
+> > On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
+> > >
+> > > Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > >
+> > > > I'm doing a patch.   Let's see how it fares in the face of all these
+> > > > preconceptions.
+> > >
+> > > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
+> > > that scanning /proc/mounts when there are a lot of mounts in the system is
+> > > slow (not to mention the global lock that is held during the read).
+> > >
+> > > Now, going with sysfs files on top of procfs links might avoid the global
+> > > lock, and you can avoid rereading the options string if you export a change
+> > > notification, but you're going to end up injecting a whole lot of pathwalk
+> > > latency into the system.
+> >
+> > Completely irrelevant.  Cached lookup is so much optimized, that you
+> > won't be able to see any of it.
+> >
+> > No, I don't think this is going to be a performance issue at all, but
+> > if anything we could introduce a syscall
+> >
+> >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
+> > bufsize, int flags);
+> >
+> > that is basically the equivalent of open + read + close, or even a
+> > vectored variant that reads multiple files.  But that's off topic
+> > again, since I don't think there's going to be any performance issue
+> > even with plain I/O syscalls.
+> >
+> > >
+> > > On top of that, it isn't going to help with the case that I'm working towards
+> > > implementing where a container manager can monitor for mounts taking place
+> > > inside the container and supervise them.  What I'm proposing is that during
+> > > the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
+> > > referring to the context under construction to the manager, which would then
+> > > be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
+> > > permit it.  Something like:
+> > >
+> > >         fd = receive_context_to_supervise();
+> > >         struct fsinfo_params params = {
+> > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
+> > >                 .request        = FSINFO_ATTR_SB_OPTIONS,
+> > >         };
+> > >         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
+> > >         supervise_parameters(buffer);
+> > >         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
+> > >         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
+> > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
+> > >         struct fsinfo_params params = {
+> > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
+> > >                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
+> > >         };
+> > >         struct fsinfo_sb_notifications sbnotify;
+> > >         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
+> > >         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
+> > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
+> > >         close(fd);
+> > >
+> > > However, the supervised mount may be happening in a completely different set
+> > > of namespaces, in which case the supervisor presumably wouldn't be able to see
+> > > the links in procfs and the relevant portions of sysfs.
+> >
+> > It would be a "jump" link to the otherwise invisible directory.
+>
+> More magic links to beam you around sounds like a bad idea. We had a
+> bunch of CVEs around them in containers and they were one of the major
+> reasons behind us pushing for openat2(). That's why it has a
+> RESOLVE_NO_MAGICLINKS flag.
 
-Hi Luis,
+No, that link wouldn't beam you around at all, it would end up in an
+internally mounted instance of a mountfs, a safe place where no
+dangerous CVE's roam.
 
-> 
-> We have this board with our own SoC, which is connected to an external CPLD (FPGA) via LPC (low pin count) bus.
-> I've been doing some research to see what the best way of designing the drivers for it would be, and came across the Hisilicon LPC driver stuff (which I believe you're the maintainer for).
-> 
-> Just a little background. Let's say our host (ARM) has a custom LPC controller. The LPC controller let's us perform reads/writes of CPLD registers via LPC bus. This CPLD is the only slave device attached to that bus and we only use it for reading/writing certain
->   registers (e.g., we use it to access some system information and for resetting the ARM during reboot).
-> 
-> I was looking at the regmap framework and that seemed a good way to go. 
-
-I thought that regmap only allows mapping in MMIO regions for 
-multiplexing access from multiple drivers or accessing registers outside 
-the device HW registers, but you seem to need to manually generate the 
-LPC bus accesses to access registers on the slave device.
-
-If this FPGA is the only device which will ever be on this LPC bus, then 
-could you encode the LPC accesses directly in the FPGA driver?
-
- > But then I saw the logic_pio stuff as well and now I'm not sure what 
-the best approach would be anymore
-
-Logic PIO is for IO Port accesses. It could serve your purpose, but you 
-would need to use IO port accesses for your slave driver, like inb and outb.
-
-As another alternative, it might be worth considering writing an I2C 
-controller driver for your LPC host, i.e. model as an I2C bus, and have 
-an I2C client driver for the LPC slave (FPGA). I think that there are 
-examples of this in the kernel.
-
-All the best,
-john
+Thanks,
+Miklos
