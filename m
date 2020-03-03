@@ -2,139 +2,105 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78CCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD58C20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F9C20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/VOtcoK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSCmO0gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732197AbgCCVBB (ORCPT
+        id S1732214AbgCCVBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:01:01 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35043 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732028AbgCCVBB (ORCPT
+        Tue, 3 Mar 2020 16:01:18 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45168 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732028AbgCCVBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:01:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 7so2113524pgr.2;
-        Tue, 03 Mar 2020 13:01:00 -0800 (PST)
+        Tue, 3 Mar 2020 16:01:17 -0500
+Received: by mail-io1-f67.google.com with SMTP id w9so5199158iob.12;
+        Tue, 03 Mar 2020 13:01:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NfSv9EpZGNBP9wDtLcQWJrZ8ejizuXo4KFtHhhZ/iPw=;
-        b=c/VOtcoK+gmL5tFNBsZVmozwpWRCsZG+PQRjisOpfdKwln/bvzhZJNmuNPAk4Mbur0
-         MpwtXpjryJYg+ppd5IxNMrgmqT7ZmkdS3KjydtzvfdwNVKfWOo3bDY8BaUUzCKwUpZSd
-         VTJ6/zzAR9JCfKogLmUQjcn4KDX8CyKLU21ud58MCNPLRk2ODRglhg8gHGpt2E0yFhwD
-         EZTTt2ak/sqHjOcR5/GjFgsUOwCob4A+EIeRq1nAJFHt0pL6dui8fvu/CmI6GBrcNrOH
-         534SWclnav+vwHUli3xiTcH2rdzgTxiPXntAd6upBPa+cAhdN70bWTKI+0TMxS56a23h
-         SYDw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Inwyixh/Xliqd570k8wVQbSetvAGQIzEHwC5SASHA5I=;
+        b=dSCmO0gjO6N6Ep7LHrxh+zXrLbsdS2opusnGKvBzMO3qlt47Bu43mQqlgXpuEJXfX9
+         xO/AHiFd2YDEw/jDVx6M0htzF1p57qgWPHUH9WReVeEDYMqIIEb3y7d+fBBJcvN2qPXF
+         6/5bi4FiRucesnNOfYkHB0WnLhpRFL5apuuogE/0DixF+dYGyYpyVa7Ap8fB2eHPMRHG
+         8J01udvAw2EUpUHlNLMWlYSLs0/8JAnJ5ZgfaaswREzRjCjMMTbqwH2XL+hXmxnIx4Pl
+         PqwU/WmcVq09M+wzSpmrYRfZN8E7xH1UV3TnyUv4kp4TBTT6AOOlHrzdz/b6pJkeJRrf
+         FTMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NfSv9EpZGNBP9wDtLcQWJrZ8ejizuXo4KFtHhhZ/iPw=;
-        b=psQhPuQnQCLSaiccWUIAn9vOkerou/6qq2Opmi7GRYfds63HvZpB+0Ly0WKoDPY8eQ
-         d9yeu6BgcnXWTOagTSBn4FWUs71pkDhqTPtOoN0dfSZAepGyoGou6w7xY7RHA4AatdbH
-         9DNzE0G5hWH7mYdlie37+JL0rdzyILmlcSdtET/MylhbinMRZsmpepRhLveY5FWWsS/H
-         p7bl/ewE2uC2ncyrrTA1rVYOc1ZsKkgWjnuecVZO43YfKV+rhwmER8RCo0DenDwzKy0G
-         eeCyGLI8S/ImkPSy1AU/jKDmu6LoqIqLctKt10n+916SC3nh/ielvpZNWI7TfjpGXhpN
-         C1sg==
-X-Gm-Message-State: ANhLgQ0jtHRf1rXvJ8KgtPNUaIp88kX9gqW2kFmZESyb6VgGIzOKJhJo
-        jEv310Psu7r2jZD4p1LuncnUsjy3
-X-Google-Smtp-Source: ADFU+vtm9J6nNMBMZ05HH3hafz3KGjgFj58J6K6AHetERb5/O5WfwrevSOBQ3QIteRwNaZ2UEebbaA==
-X-Received: by 2002:a62:3808:: with SMTP id f8mr6038654pfa.30.1583269259688;
-        Tue, 03 Mar 2020 13:00:59 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c73sm107620pje.44.2020.03.03.13.00.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 13:00:59 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:00:58 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-Message-ID: <20200303210058.GB14692@roeck-us.net>
-References: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
- <20200227084642.7057-3-chris.packham@alliedtelesis.co.nz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Inwyixh/Xliqd570k8wVQbSetvAGQIzEHwC5SASHA5I=;
+        b=Yiyu/hYEizuHCTu3d5SA7GcAsI/mxDTEYEcRPde7Yr4xbeJ4nKxffCh3bcwpz+yXLp
+         4GKOkCsPn5FVkfg29YdzzlIowP+enil37rwKTyJOiUnebuuLz/RNZkZxY2ZhpMxx9Dbr
+         WmJKDtGrqv8lGEp2w5afc88C35I40JtIj9RAR2geYOMX3gxQT+ofc0mTYHCsOdRSztiO
+         2ck8yjdoRcCYYLnFSmQ+8l0yOSBeRaxRKJOdni0pRtV5fwdM490RHmpXfmfkuj6ysKu+
+         t2jMpdGHvct3bAW9Vi6z7Hp4VoORQ6bekAU3EJ1nIOea/1VQWFNOEgHxCP6msfuACPXH
+         q/4Q==
+X-Gm-Message-State: ANhLgQ1P0d71ruqhiA8wDrr1IoB/Ijk+K9MwgZKsuFey0vhib/OrS/7Z
+        KopyYy4PU5Fr6QSkJZdIhOpZZofr003zU2xRyao=
+X-Google-Smtp-Source: ADFU+vtbkYWtBm/HrVENxCPKK0eVn5EKnhXHq5pDUwR6Q53DQW/c7/4/OU0/6ovo/ftmDbmJ0Gn1Ux28zNMQ3zNobwY=
+X-Received: by 2002:a5d:9c93:: with SMTP id p19mr5792564iop.81.1583269275868;
+ Tue, 03 Mar 2020 13:01:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227084642.7057-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
+ <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com> <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+In-Reply-To: <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 3 Mar 2020 13:01:04 -0800
+Message-ID: <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Baoquan He <bhe@redhat.com>, Randy Wright <rwright@hpe.com>,
+        Dave Young <dyoung@redhat.com>,
+        Myron Stowe <myron.stowe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 09:46:39PM +1300, Chris Packham wrote:
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> 
-> Add documentation for the bypass-attenuator-in[0-4] property.
-> 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+I looked at this some more. Looks like we do not clear irqs when we do
+a kexec reboot. And, the bootup code maintains the same table for the
+kexec-ed kernel. I'm looking at the following code in
+intel_irq_remapping.c:
 
-Applied.
+        if (ir_pre_enabled(iommu)) {
+                if (!is_kdump_kernel()) {
+                        pr_warn("IRQ remapping was enabled on %s but
+we are not in kdump mode\n",
+                                iommu->name);
+                        clear_ir_pre_enabled(iommu);
+                        iommu_disable_irq_remapping(iommu);
+                } else if (iommu_load_old_irte(iommu))
+                        pr_err("Failed to copy IR table for %s from
+previous kernel\n",
+                               iommu->name);
+                else
+                        pr_info("Copied IR table for %s from previous kernel\n",
+                                iommu->name);
+        }
 
-Thanks,
-Guenter
+Would cleaning the interrupts(like in the non kdump path above) just
+before shutdown help here? This should clear the interrupts enabled
+for all the devices in the current kernel. So when kdump kernel
+starts, it starts clean. This should probably help block out the
+interrupts from a device that does not have a driver.
 
-> ---
-> 
-> Notes:
->     Changes in v5:
->     - add review from Rob
->     
->     Changes in v4:
->     - use $ref uint32 and enum
->     - add 'adi' vendor prefix
->     
->     Changes in v3:
->     - separated addition of new properties from conversion to yaml
-> 
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> index 2252499ea201..e40612ee075f 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -39,6 +39,17 @@ properties:
->    reg:
->      maxItems: 1
->  
-> +patternProperties:
-> +  "^adi,bypass-attenuator-in[0-4]$":
-> +    description: |
-> +      Configures bypassing the individual voltage input attenuator. If
-> +      set to 1 the attenuator is bypassed if set to 0 the attenuator is
-> +      not bypassed. If the property is absent then the attenuator
-> +      retains it's configuration from the bios/bootloader.
-> +    allOf:
-> +     - $ref: /schemas/types.yaml#/definitions/uint32
-> +     - enum: [0, 1]
-> +
->  required:
->    - compatible
->    - reg
-> @@ -52,6 +63,8 @@ examples:
->        hwmon@2e {
->          compatible = "adi,adt7476";
->          reg = <0x2e>;
-> +        adi,bypass-attenuator-in0 = <1>;
-> +        adi,bypass-attenuator-in1 = <0>;
->        };
->      };
->  
+-Deepa
