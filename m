@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D575AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A679EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B7720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E265208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257827;
-	bh=mUqj1wUk/cnaZs6KUcmNgyIVNiPw2nm7mH9rZ9Vfw/Q=;
+	s=default; t=1583257832;
+	bh=I0XUsqRf2jAq64kwDSfSJrrFK0p23XKnlBLODGyNgXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yhjl9c8bUQmb1f2FhS04sf9uGUl50LGU6jL+cwBMY6npYbFde65xJDkI1ODk58Xk9
-	 3atxb/2vy+Z6HH43mOLETOcTDAsSMazU4IDJuFId4aIOye8H5FFNG/kiTlwh88B7VZ
-	 T/Z7OkWMrnZus8U651BVMukLKysYwst59dFHZTjI=
+	b=FJP7MysJoSH5B15fapcTa9oov3R7MCneuRYb6RNOz0okHmWXsg/72rw2NaNwSgKln
+	 DuMlXe0rtsA8/cpCBEKUFrxsUj7cuw6einBBa2gv6oz09C0VLkEG+M2FkvIdzrxtxS
+	 NzQO82E4S129OzkX5Dazo1SWUJwXeEDkVLhUopD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbgCCRu0 (ORCPT
+        id S1731537AbgCCRua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58020 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731893AbgCCRuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:23 -0500
+        id S1731339AbgCCRu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE641208C3;
-        Tue,  3 Mar 2020 17:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D9C20870;
+        Tue,  3 Mar 2020 17:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257823;
-        bh=mUqj1wUk/cnaZs6KUcmNgyIVNiPw2nm7mH9rZ9Vfw/Q=;
+        s=default; t=1583257825;
+        bh=I0XUsqRf2jAq64kwDSfSJrrFK0p23XKnlBLODGyNgXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FlxDtlVFjVZ/4bzJUVOzeqs+2W1UVhocl32KPCSWDLIlTHnfiA2s7cGniby0SgYXc
-         p7hJDi9DQRcDDGYVNqcBovWDgKnPAgbyEYP/Zvz0M/8Ses6bfTFA4ppQL8/sC5r5JO
-         jIj7yeJ6FKlx8i59EjwTrwe02Ci4urtGePiRpIu4=
+        b=xrGACyr8di3WVjXIFWFGQwGOMP/F7qvWiucbbuVd4V5qwUp0vnzpHhpqfmiSEu7G2
+         /EhPVnsybMANWbMegVCWy05ng7r6IQqoU8dCkU7bdR2W8c2b3sII/r9N79HDAHAY6U
+         VcWFAeM9uJd0RuJBmFF/9dhKNNZhRLE3j8SMja0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng Jian <cj.chengjian@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 5.5 143/176] sched/fair: Optimize select_idle_cpu
-Date:   Tue,  3 Mar 2020 18:43:27 +0100
-Message-Id: <20200303174321.300181988@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.5 144/176] f2fs: fix to add swap extent correctly
+Date:   Tue,  3 Mar 2020 18:43:28 +0100
+Message-Id: <20200303174321.418900015@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,62 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cheng Jian <cj.chengjian@huawei.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 60588bfa223ff675b95f866249f90616613fbe31 upstream.
+commit 3e5e479a39ce9ed60cd63f7565cc1d9da77c2a4e upstream.
 
-select_idle_cpu() will scan the LLC domain for idle CPUs,
-it's always expensive. so the next commit :
+As Youling reported in mailing list:
 
-	1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+https://www.linuxquestions.org/questions/linux-newbie-8/the-file-system-f2fs-is-broken-4175666043/
 
-introduces a way to limit how many CPUs we scan.
+https://www.linux.org/threads/the-file-system-f2fs-is-broken.26490/
 
-But it consume some CPUs out of 'nr' that are not allowed
-for the task and thus waste our attempts. The function
-always return nr_cpumask_bits, and we can't find a CPU
-which our task is allowed to run.
+There is a test case can corrupt f2fs image:
+- dd if=/dev/zero of=/swapfile bs=1M count=4096
+- chmod 600 /swapfile
+- mkswap /swapfile
+- swapon --discard /swapfile
 
-Cpumask may be too big, similar to select_idle_core(), use
-per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
+The root cause is f2fs_swap_activate() intends to return zero value
+to setup_swap_extents() to enable SWP_FS mode (swap file goes through
+fs), in this flow, setup_swap_extents() setups swap extent with wrong
+block address range, result in discard_swap() erasing incorrect address.
 
-Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20191213024530.28052-1-cj.chengjian@huawei.com
+Because f2fs_swap_activate() has pinned swapfile, its data block
+address will not change, it's safe to let swap to handle IO through
+raw device, so we can get rid of SWAP_FS mode and initial swap extents
+inside f2fs_swap_activate(), by this way, later discard_swap() can trim
+in right address range.
+
+Fixes: 4969c06a0d83 ("f2fs: support swap file w/ DIO")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/f2fs/data.c |   32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5828,6 +5828,7 @@ static inline int select_idle_smt(struct
-  */
- static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3132,7 +3132,8 @@ int f2fs_migrate_page(struct address_spa
+ 
+ #ifdef CONFIG_SWAP
+ /* Copied from generic_swapfile_activate() to check any holes */
+-static int check_swap_activate(struct file *swap_file, unsigned int max)
++static int check_swap_activate(struct swap_info_struct *sis,
++				struct file *swap_file, sector_t *span)
  {
-+	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
- 	struct sched_domain *this_sd;
- 	u64 avg_cost, avg_idle;
- 	u64 time, cost;
-@@ -5859,11 +5860,11 @@ static int select_idle_cpu(struct task_s
+ 	struct address_space *mapping = swap_file->f_mapping;
+ 	struct inode *inode = mapping->host;
+@@ -3143,6 +3144,8 @@ static int check_swap_activate(struct fi
+ 	sector_t last_block;
+ 	sector_t lowest_block = -1;
+ 	sector_t highest_block = 0;
++	int nr_extents = 0;
++	int ret;
  
- 	time = cpu_clock(this);
+ 	blkbits = inode->i_blkbits;
+ 	blocks_per_page = PAGE_SIZE >> blkbits;
+@@ -3154,7 +3157,8 @@ static int check_swap_activate(struct fi
+ 	probe_block = 0;
+ 	page_no = 0;
+ 	last_block = i_size_read(inode) >> blkbits;
+-	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
++	while ((probe_block + blocks_per_page) <= last_block &&
++			page_no < sis->max) {
+ 		unsigned block_in_page;
+ 		sector_t first_block;
  
--	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-+	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-+
-+	for_each_cpu_wrap(cpu, cpus, target) {
- 		if (!--nr)
- 			return si_cpu;
--		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
--			continue;
- 		if (available_idle_cpu(cpu))
- 			break;
- 		if (si_cpu == -1 && sched_idle_cpu(cpu))
+@@ -3194,13 +3198,27 @@ static int check_swap_activate(struct fi
+ 				highest_block = first_block;
+ 		}
+ 
++		/*
++		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
++		 */
++		ret = add_swap_extent(sis, page_no, 1, first_block);
++		if (ret < 0)
++			goto out;
++		nr_extents += ret;
+ 		page_no++;
+ 		probe_block += blocks_per_page;
+ reprobe:
+ 		continue;
+ 	}
+-	return 0;
+-
++	ret = nr_extents;
++	*span = 1 + highest_block - lowest_block;
++	if (page_no == 0)
++		page_no = 1;	/* force Empty message */
++	sis->max = page_no;
++	sis->pages = page_no - 1;
++	sis->highest_bit = page_no - 1;
++out:
++	return ret;
+ bad_bmap:
+ 	pr_err("swapon: swapfile has holes\n");
+ 	return -EINVAL;
+@@ -3222,14 +3240,14 @@ static int f2fs_swap_activate(struct swa
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = check_swap_activate(file, sis->max);
+-	if (ret)
++	ret = check_swap_activate(sis, file, span);
++	if (ret < 0)
+ 		return ret;
+ 
+ 	set_inode_flag(inode, FI_PIN_FILE);
+ 	f2fs_precache_extents(inode);
+ 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+-	return 0;
++	return ret;
+ }
+ 
+ static void f2fs_swap_deactivate(struct file *file)
 
 
