@@ -2,181 +2,199 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C897C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDB9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AA120866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583275411;
-	bh=KFjLsAjNMx93cGKtEJs8LhZSNNLzN16FDXVUS6jWAAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N2i3ikHl+pgJhf4FawCCbrHg1dslcSDCrVxYgWggy5B3Zu6cphQ4r0kxzAmUPPU3G
-	 Ck6pCP72K5l8MmN6dm0IFagISWVYU+wyPeUexA1/nPeJ7iH12THA8gqaSg8nRtcAzV
-	 Ozj1KS8MGh5csW5O8EY/sZBx7pcjJmgFmHDMwRo4=
+	by mail.kernel.org (Postfix) with ESMTP id EA80C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o55c9uGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgCCWn3 (ORCPT
+        id S1728059AbgCCWon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:43:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgCCWn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:43:29 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F5FA2072A;
-        Tue,  3 Mar 2020 22:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583275409;
-        bh=KFjLsAjNMx93cGKtEJs8LhZSNNLzN16FDXVUS6jWAAE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZhVCtl27YLCVh26NOG29luP24Nwr1QwpbSdL/Au+gj/hlBRXXRszO62kMZZurPkJe
-         K1BrNOGlz20BT+GWY8ROBP0fNu/hrykd4dM4TF3Tcq6JEnIKx1efyaFDo2k3BYq+RR
-         tpliTFwHGaFHXqniA2LtPiF4MSV/eFCa2PLapnaI=
-Date:   Tue, 3 Mar 2020 14:43:27 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        mark.rutland@arm.com, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tj@kernel.org, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-Message-ID: <20200303224327.GA89804@sol.localdomain>
-References: <20200217204803.GA13479@Red>
- <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
- <20200220090350.GA19858@Red>
- <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
- <20200228123311.GE3275@willie-the-truck>
- <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
- <20200301175351.GA11684@Red>
- <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
- <e7c92da2-42c0-a97d-7427-6fdc769b41b9@arm.com>
- <20200303213017.tanczhqd3nhpeeak@ca-dmjordan1.us.oracle.com>
+        Tue, 3 Mar 2020 17:44:43 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35194 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCCWon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:44:43 -0500
+Received: by mail-qt1-f196.google.com with SMTP id v15so1402932qto.2;
+        Tue, 03 Mar 2020 14:44:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+7vELyfRZRbHG3aDEADGwy5iA7Rma4R/72cE2T/sDjY=;
+        b=o55c9uGqZ8X9KdJ6sWYnVIQAPXvMWRNksuInDSh3XkpInKt6lIpeilgVtP53303Gbg
+         GYnLHmf/O3RfuerS7/mLPZA5kpY43qNZ1nT1IkY8+IrMsGku5fKskk63DgPIJqiSQ00m
+         5dHfOoVi5QxeX2Cov5z7NxUIkvE7SZsUaAN6TR9+Ub2S9izk7D579CEzEsckpANZShdv
+         gXw8WT/dcnboeAV0fOUYa68n3cQ2akA537wJC6AbCq47ojSEBTHjDFGKKjyT3q5NjdAH
+         jBrswacxSgMoWa2zn63dlWtGiY0FmMBWsBlt74EP+diLqU+cjHikpCrVtlG9l2rilI8j
+         fwCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+7vELyfRZRbHG3aDEADGwy5iA7Rma4R/72cE2T/sDjY=;
+        b=RkECOmJadejJL2NpoISP+XsWtMok8+Li5AK4P1MksQBe7fzTQHF3d6xBsuxTcezA/K
+         a2X6XtiyogWJRNFymFgAzu+Gssso4sckoD8ViG9gLm03LTOH5yKqyrvoxnLqfXy5GAmz
+         r/qYY7nPgPaFNwi7Dg4WY+yl0ddqeiyCwozbwbANDAeYmPw/z5+XFqwNemr+RF05w4MB
+         RFZadTuoj4Cpp5JQSXjaDu337Bpznh6bHjBp+JJEVjYDWMgaPx5hQ/ouQS6Xjqx9OFJk
+         /RFzNngWOF3HBIsoNxtF7OoyWlglH24eLKFALNHrCqEd5wylUPmdQ0hCIj1ZLZ9DPlv6
+         wV8A==
+X-Gm-Message-State: ANhLgQ3zpI+z0xyrsBMn60vj5ynQE8L/r9lSUD49RxgpTwkRHEMQ82cM
+        SNphyp/2Nx3kbl7oiB9/TuDGDpMxwww4dRSi7eQ=
+X-Google-Smtp-Source: ADFU+vtwSXV5BLr/eV6O+BnrFc85DTqoJ6GiHaCnPdNwEzhIsxTFdfGqT2v00YELazzYuDyR1XzbjKrDozEWCdlaRig=
+X-Received: by 2002:ac8:530e:: with SMTP id t14mr6455605qtn.141.1583275481959;
+ Tue, 03 Mar 2020 14:44:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303213017.tanczhqd3nhpeeak@ca-dmjordan1.us.oracle.com>
+References: <20200303140950.6355-1-kpsingh@chromium.org> <20200303140950.6355-5-kpsingh@chromium.org>
+In-Reply-To: <20200303140950.6355-5-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Mar 2020 14:44:31 -0800
+Message-ID: <CAEf4BzaviDB+WGUsg1+aO5GAtkJuQ6aYSiB8VaKL0CoQRPs8Xw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:30:17PM -0500, Daniel Jordan wrote:
-> On Mon, Mar 02, 2020 at 06:00:10PM +0000, Robin Murphy wrote:
-> > On 02/03/2020 5:25 pm, Daniel Jordan wrote:
-> > Something smelled familiar about this discussion, and sure enough that merge
-> > contains c4741b230597 ("crypto: run initcalls for generic implementations
-> > earlier"), which has raised its head before[1].
-> 
-> Yep, that looks suspicious.
-> 
-> The bisect didn't point to that specific commit, even though my version of git
-> tries commits in the merge.  I'm probably missing something.
-> 
-> > > Does this fix it?  I can't verify but figure it's worth trying the simplest
-> > > explanation first, which is that the work isn't initialized by the time it's
-> > > queued.
-> > 
-> > The relative initcall levels would appear to explain the symptom - I guess
-> > the question is whether this represents a bug in a particular test/algorithm
-> > (as with the unaligned accesses) or a fundamental problem in the
-> > infrastructure now being able to poke the module loader too early.
-> 
-> I'm not familiar with the crypto code.  Could it be that the commit moved some
-> request_module() calls before modules_wq_init()?
-> 
-> And, is it "too early" or just "earlier"?  When is it too early for modprobe?
-> 
-> Barring other ideas, Corentin, would you be willing to boot with
-> 
->     trace_event=initcall:*,module:* trace_options=stacktrace
-> 
-> and
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 33569a01d6e1..393be6979a27 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3604,8 +3604,11 @@ static noinline int do_init_module(struct module *mod)
->  	 * be cleaned up needs to sync with the queued work - ie
->  	 * rcu_barrier()
->  	 */
-> -	if (llist_add(&freeinit->node, &init_free_list))
-> +	if (llist_add(&freeinit->node, &init_free_list)) {
-> +		pr_warn("%s: schedule_work for mod=%s\n", __func__, mod->name);
-> +		dump_stack();
->  		schedule_work(&init_free_wq);
-> +	}
->  
->  	mutex_unlock(&module_mutex);
->  	wake_up_all(&module_wq);
-> 
-> but not my earlier fix and share the dmesg and ftrace output to see if the
-> theory holds?
-> 
-> Also, could you attach your config?  Curious now what your crypto options look
-> like after fiddling with some of them today while trying and failing to see
-> this on x86.
-> 
+On Tue, Mar 3, 2020 at 6:12 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> - Functions that are whitlisted by for error injection i.e.
+>   within_error_injection_list.
+> - Security hooks, this is expected to be cleaned up after the KRSI
+>   patches introduce the LSM_HOOK macro:
+>
+>     https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
 
-Probably the request_module() is coming from the registration-time crypto
-self-tests allocating the generic implementation of algorithm when an
-architecture-specific implementation is registered.  This occurs when
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y on Linux v5.2 and later.
+Commit message can use a bit more work for sure. Why (and even what)
+of the changes is not really explained well.
 
-If this is causing problems we could do:
+>
+> - The attachment is currently limited to functions that return an int.
+>   This can be extended later other types (e.g. PTR).
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
+>  kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 51 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 30841fb8b3c0..50080add2ab9 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -3710,14 +3710,26 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+>                 nr_args--;
+>         }
+>
+> -       if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
+> -            prog->expected_attach_type == BPF_MODIFY_RETURN) &&
+> -           arg == nr_args) {
+> -               if (!t)
+> -                       /* Default prog with 5 args. 6th arg is retval. */
+> -                       return true;
+> -               /* function return type */
+> -               t = btf_type_by_id(btf, t->type);
+> +       if (arg == nr_args) {
+> +               if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
+> +                       if (!t)
+> +                               return true;
+> +                       t = btf_type_by_id(btf, t->type);
+> +               } else if (prog->expected_attach_type == BPF_MODIFY_RETURN) {
+> +                       /* For now the BPF_MODIFY_RETURN can only be attached to
+> +                        * functions that return an int.
+> +                        */
+> +                       if (!t)
+> +                               return false;
+> +
+> +                       t = btf_type_skip_modifiers(btf, t->type, NULL);
+> +                       if (!btf_type_is_int(t)) {
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index ccb3d60729fc..d89791700b88 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -1667,7 +1667,7 @@ static int test_hash_vs_generic_impl(const char *driver,
- 	if (strcmp(generic_driver, driver) == 0) /* Already the generic impl? */
- 		return 0;
- 
--	generic_tfm = crypto_alloc_shash(generic_driver, 0, 0);
-+	generic_tfm = crypto_alloc_shash(generic_driver, 0, CRYPTO_NOLOAD);
- 	if (IS_ERR(generic_tfm)) {
- 		err = PTR_ERR(generic_tfm);
- 		if (err == -ENOENT) {
-@@ -2389,7 +2389,7 @@ static int test_aead_vs_generic_impl(struct aead_extra_tests_ctx *ctx)
- 	if (strcmp(generic_driver, driver) == 0) /* Already the generic impl? */
- 		return 0;
- 
--	generic_tfm = crypto_alloc_aead(generic_driver, 0, 0);
-+	generic_tfm = crypto_alloc_aead(generic_driver, 0, CRYPTO_NOLOAD);
- 	if (IS_ERR(generic_tfm)) {
- 		err = PTR_ERR(generic_tfm);
- 		if (err == -ENOENT) {
-@@ -2993,7 +2993,7 @@ static int test_skcipher_vs_generic_impl(const char *driver,
- 	if (strcmp(generic_driver, driver) == 0) /* Already the generic impl? */
- 		return 0;
- 
--	generic_tfm = crypto_alloc_skcipher(generic_driver, 0, 0);
-+	generic_tfm = crypto_alloc_skcipher(generic_driver, 0, CRYPTO_NOLOAD);
- 	if (IS_ERR(generic_tfm)) {
- 		err = PTR_ERR(generic_tfm);
- 		if (err == -ENOENT) {
+Should the size of int be verified here? E.g., if some function
+returns u8, is that ok for BPF program to return, say, (1<<30) ?
 
-
-... but that's not ideal, since it would mean that if someone builds all crypto
-algorithms as modules, then the comparison tests could be unnecessarily skipped.
-
-But it is really always wrong to be calling request_module() from other
-module_init() functions?  The commit that added 'init_free_wq' was also
-introduced in v5.2; maybe that's the problem here?
-
-	commit 1a7b7d9220819afe79d1ec5d759fe4349bd2453e
-	Author: Rick Edgecombe <rick.p.edgecombe@intel.com>
-	Date:   Thu Apr 25 17:11:37 2019 -0700
-
-	    modules: Use vmalloc special flag
-
-- Eric
+> +                               bpf_log(log,
+> +                                       "ret type %s not allowed for fmod_ret\n",
+> +                                       btf_kind_str[BTF_INFO_KIND(t->info)]);
+> +                               return false;
+> +                       }
+> +               }
+>         } else if (arg >= nr_args) {
+>                 bpf_log(log, "func '%s' doesn't have %d-th argument\n",
+>                         tname, arg + 1);
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 2460c8e6b5be..ae32517d4ccd 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/sort.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/ctype.h>
+> +#include <linux/error-injection.h>
+>
+>  #include "disasm.h"
+>
+> @@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
+>
+>         return 0;
+>  }
+> +#define SECURITY_PREFIX "security_"
+> +
+> +static int check_attach_modify_return(struct bpf_verifier_env *env)
+> +{
+> +       struct bpf_prog *prog = env->prog;
+> +       unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
+> +
+> +       if (within_error_injection_list(addr))
+> +               return 0;
+> +
+> +       /* This is expected to be cleaned up in the future with the KRSI effort
+> +        * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
+> +        */
+> +       if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
+> +                    sizeof(SECURITY_PREFIX) - 1)) {
+> +
+> +               if (!capable(CAP_MAC_ADMIN))
+> +                       return -EPERM;
+> +
+> +               return 0;
+> +       }
+> +
+> +       verbose(env, "fmod_ret attach_btf_id %u (%s) is not modifiable\n",
+> +               prog->aux->attach_btf_id, prog->aux->attach_func_name);
+> +
+> +       return -EINVAL;
+> +}
+>
+>  static int check_attach_btf_id(struct bpf_verifier_env *env)
+>  {
+> @@ -10000,6 +10028,9 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+>                 }
+>                 tr->func.addr = (void *)addr;
+>                 prog->aux->trampoline = tr;
+> +
+> +               if (prog->expected_attach_type == BPF_MODIFY_RETURN)
+> +                       ret = check_attach_modify_return(env);
+>  out:
+>                 mutex_unlock(&tr->mutex);
+>                 if (ret)
+> --
+> 2.20.1
+>
