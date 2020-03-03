@@ -2,165 +2,97 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C41C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D50C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2CB2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AF4208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583262944;
-	bh=X9Yf9HU7bkYdwj/Oz/QtiPCpUgJ6zgCXdNdmoiqJdzA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lzqiU1b7Squxul0RYh1vHopQFcIjDHf3OHgKS08+PZRyURPRqA13PJamMluiEHGpN
-	 X4lZ/5JP4MsXy7aDXxXzQKoJuJcILqYlYegUoqGAT1xahqpnbDHriCUAMf9CjH4zC+
-	 Cfa57yWGAUkrFwzfo3AJt8lzURwu0rPpbN7S9KYk=
+	s=default; t=1583262994;
+	bh=rRMdJDhihpbw492Akq7IhrH8YLKWl8VjOzCCbOZqZac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cRSATai5f1egEXQmCuk2mFrw7LTQQM2Sr+TRO72F2NU54Ot9SuXvE45l8CuzOkexX
+	 RPflQt9dWwlDv/heHI0L7N0cWmKMEiVdNTjvo4zDGQ7Sg/RguwMLVYL1CufjOzcmMG
+	 WAwwvDob2NZwV54+mLIo+Ss0IS035XtvhDIx7aks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgCCTPn (ORCPT
+        id S1730704AbgCCTQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:15:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48012 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 14:16:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729575AbgCCTPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:15:43 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729687AbgCCTQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:16:32 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF99208C3
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 19:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 141212073B;
+        Tue,  3 Mar 2020 19:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583262942;
-        bh=X9Yf9HU7bkYdwj/Oz/QtiPCpUgJ6zgCXdNdmoiqJdzA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ROtWiJZAW/6zcuOTKjy2SASVcdmt8Eyi5gyFgjkybCGd6Ru26ZqGxI+qe0QdkMloO
-         PoNenKQYecdKBZ/kzE7UA/9fiyjRGx28Z/MEl8BaQNWDv8qbzIAw11N87JIaonhkr3
-         kwvUQepixpL1gYSb3dxKqSbGyf/Ho9ajmWEEVVPg=
-Received: by mail-wr1-f52.google.com with SMTP id v4so5848382wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:15:41 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2sXoVrXPH3PoyR9dM/XeuucrvqktyxxctECdn86WQEbub25rlV
-        QghVuA3V19VKJAPGTrmVGxQtbYprboU4sUrnxl0+sA==
-X-Google-Smtp-Source: ADFU+vviylojPwdySE5n+zIHUiFue0P60nexG3bVhMvRSXoSBvap6SIOGaoczvCpC1jKjSaBvxtjm3Bwhv0KjkAahjM=
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr6969832wrw.252.1583262940064;
- Tue, 03 Mar 2020 11:15:40 -0800 (PST)
+        s=default; t=1583262991;
+        bh=rRMdJDhihpbw492Akq7IhrH8YLKWl8VjOzCCbOZqZac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DsP98JqYh3FZtjF1CgaIUF1AvB9sYez3Kr5jeTN/D4eI6y+Y2osl0oCTFHFAcXdE3
+         E2uj9eZLuK/81D2DscuklPOQ5jC12DWI+V9I2qOViOeoGxqyFsUDmSREGzym4rN9s8
+         CieEbNz093Xkw5rG5vlq33olUAgybJvqxCT02uRI=
+Date:   Tue, 3 Mar 2020 19:16:25 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 00/14] iommu: Move iommu_fwspec out of 'struct device'
+Message-ID: <20200303191624.GC27329@willie-the-truck>
+References: <20200228150820.15340-1-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200301230537.2247550-6-nivedita@alum.mit.edu>
-In-Reply-To: <20200301230537.2247550-6-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 3 Mar 2020 20:15:29 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_g-Yf0--gC-zKbQbfR-8=+NMCo=kmLD-NwOxgST6e63g@mail.gmail.com>
-Message-ID: <CAKv+Gu_g-Yf0--gC-zKbQbfR-8=+NMCo=kmLD-NwOxgST6e63g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] efi/x86: Don't relocate the kernel unless necessary
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228150820.15340-1-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 00:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Add alignment slack to the PE image size, so that we can realign the
-> decompression buffer within the space allocated for the image.
->
-> Only relocate the kernel if it has been loaded at an unsuitable address:
-> * Below LOAD_PHYSICAL_ADDR, or
-> * Above 64T for 64-bit and 512MiB for 32-bit
->
-> For 32-bit, the upper limit is conservative, but the exact limit can be
-> difficult to calculate.
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  arch/x86/boot/tools/build.c             | 16 ++++++----------
->  drivers/firmware/efi/libstub/x86-stub.c | 22 +++++++++++++++++++---
->  2 files changed, 25 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-> index 3d03ad753ed5..db528961c283 100644
-> --- a/arch/x86/boot/tools/build.c
-> +++ b/arch/x86/boot/tools/build.c
-> @@ -238,21 +238,17 @@ static void update_pecoff_text(unsigned int text_start, unsigned int file_sz,
->
->         pe_header = get_unaligned_le32(&buf[0x3c]);
->
-> -#ifdef CONFIG_EFI_MIXED
->         /*
-> -        * In mixed mode, we will execute startup_32() at whichever offset in
-> -        * memory it happened to land when the PE/COFF loader loaded the image,
-> -        * which may be misaligned with respect to the kernel_alignment field
-> -        * in the setup header.
-> +        * The PE/COFF loader may load the image at an address which is
-> +        * misaligned with respect to the kernel_alignment field in the setup
-> +        * header.
->          *
-> -        * In order for startup_32 to safely execute in place at this offset,
-> -        * we need to ensure that the CONFIG_PHYSICAL_ALIGN aligned allocation
-> -        * it creates for the page tables does not extend beyond the declared
-> -        * size of the image in the PE/COFF header. So add the required slack.
-> +        * In order to avoid relocating the kernel to correct the misalignment,
-> +        * add slack to allow the buffer to be aligned within the declared size
-> +        * of the image.
->          */
->         bss_sz  += CONFIG_PHYSICAL_ALIGN;
->         init_sz += CONFIG_PHYSICAL_ALIGN;
-> -#endif
->
->         /*
->          * Size of code: Subtract the size of the first sector (512 bytes)
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 0c4a6352cfd3..957feeacdd8f 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -717,6 +717,7 @@ unsigned long efi_main(efi_handle_t handle,
->                              struct boot_params *boot_params)
->  {
->         unsigned long bzimage_addr = (unsigned long)startup_32;
-> +       unsigned long buffer_start, buffer_end;
->         struct setup_header *hdr = &boot_params->hdr;
->         efi_status_t status;
->         unsigned long cmdline_paddr;
-> @@ -728,10 +729,25 @@ unsigned long efi_main(efi_handle_t handle,
->                 efi_exit(handle, EFI_INVALID_PARAMETER);
->
->         /*
-> -        * If the kernel isn't already loaded at the preferred load
-> -        * address, relocate it.
-> +        * If the kernel isn't already loaded at a suitable address,
-> +        * relocate it.
-> +        * It must be loaded above LOAD_PHYSICAL_ADDR.
-> +        * The maximum address for 64-bit is 1 << 46 for 4-level paging.
-> +        * For 32-bit, the maximum address is complicated to figure out, for
-> +        * now use KERNEL_IMAGE_SIZE, which will be 512MiB, the same as what
-> +        * KASLR uses.
-> +        * Also relocate it if image_offset is zero, i.e. we weren't loaded by
-> +        * LoadImage, but we are not aligned correctly.
->          */
-> -       if (bzimage_addr - image_offset != hdr->pref_address) {
-> +       buffer_start = ALIGN(bzimage_addr - image_offset,
-> +                            hdr->kernel_alignment);
-> +       buffer_end = buffer_start + hdr->init_size;
-> +
-> +       if (buffer_start < LOAD_PHYSICAL_ADDR
-> +           || IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE
-> +           || IS_ENABLED(CONFIG_X86_64) && buffer_end > 1ull << 46
-> +           || image_offset == 0 && !IS_ALIGNED(bzimage_addr,
-> +                                               hdr->kernel_alignment)) {
+Hi Joerg,
 
-Could you please
-- put the || at the end
-- put () around the terms
-- add a #define for 1ull << 46
+On Fri, Feb 28, 2020 at 04:08:06PM +0100, Joerg Roedel wrote:
+> here is a patch-set to rename iommu_param to dev_iommu and
+> establish it as a struct for generic per-device iommu-data.
+> Also move the iommu_fwspec pointer from struct device into
+> dev_iommu to have less iommu-related pointers in struct
+> device.
+> 
+> The bigger part of this patch-set moves the iommu_priv
+> pointer from struct iommu_fwspec to dev_iommu, making is
+> usable for iommu-drivers which do not use fwspecs.
+> 
+> The changes for that were mostly straightforward, except for
+> the arm-smmu (_not_ arm-smmu-v3) and the qcom iommu driver.
+> Unfortunatly I don't have the hardware for those, so any
+> testing of these drivers is greatly appreciated.
 
+I haven't had a chance to review this properly yet, but I did take it
+for a spin on my Seattle board with MMU-400 (arm-smmu) and it seems to
+work the same as before, so:
 
->                 status = efi_relocate_kernel(&bzimage_addr,
->                                              hdr->init_size, hdr->init_size,
->                                              hdr->pref_address,
-> --
-> 2.24.1
->
+Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+
+I'll try to review the patches soon.
+
+Cheers,
+
+Will
