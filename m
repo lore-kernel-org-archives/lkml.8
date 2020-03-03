@@ -2,89 +2,126 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5BEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DA1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B223820838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79FF20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgCCOMN (ORCPT
+        id S1729070AbgCCONF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:12:13 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44617 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCCOMN (ORCPT
+        Tue, 3 Mar 2020 09:13:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52598 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725932AbgCCOND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:12:13 -0500
-Received: from [5.158.153.55] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j98HG-0007lB-6g; Tue, 03 Mar 2020 15:12:06 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D8A59104098; Tue,  3 Mar 2020 15:12:00 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>, Jann Horn <jannh@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] threads: Update PID limit comment according to futex UAPI change
-In-Reply-To: <20200303102540.GC2579@hirez.programming.kicks-ass.net>
-References: <20200302112939.8068-1-jannh@google.com> <20200303102540.GC2579@hirez.programming.kicks-ass.net>
-Date:   Tue, 03 Mar 2020 15:12:00 +0100
-Message-ID: <8736apede7.fsf@nanos.tec.linutronix.de>
+        Tue, 3 Mar 2020 09:13:03 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 023Du93Y137492
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 09:13:02 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmg19cnv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:13:01 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 3 Mar 2020 14:12:58 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Mar 2020 14:12:55 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 023ECrkS50069520
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Mar 2020 14:12:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D75FC4204B;
+        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C2484203F;
+        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.80])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
+Date:   Tue, 3 Mar 2020 15:12:52 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping
+ failures
+In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030314-0020-0000-0000-000003B0199C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030314-0021-0000-0000-000022084913
+Message-Id: <20200303151252.59d45e86.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_04:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Mon, Mar 02, 2020 at 12:29:39PM +0100, Jann Horn wrote:
->> The futex UAPI changed back in commit 76b81e2b0e22 ("[PATCH] lightweight
->> robust futexes updates 2"), which landed in v2.6.17: FUTEX_TID_MASK is now
->> 0x3fffffff instead of 0x1fffffff. Update the corresponding comment in
->> include/linux/threads.h.
->> 
->> Signed-off-by: Jann Horn <jannh@google.com>
->> ---
->>  include/linux/threads.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/include/linux/threads.h b/include/linux/threads.h
->> index 3086dba525e20..18d5a74bcc3dd 100644
->> --- a/include/linux/threads.h
->> +++ b/include/linux/threads.h
->> @@ -29,7 +29,7 @@
->>  
->>  /*
->>   * A maximum of 4 million PIDs should be enough for a while.
->> - * [NOTE: PID/TIDs are limited to 2^29 ~= 500+ million, see futex.h.]
->> + * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
->>   */
->>  #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
->>  	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
->
-> I just noticed another mention of this in Documentation/robust-futex-ABI.txt
-> There it states that bit-29 is reserved for future use.
->
-> Thomas, do we want to release that bit and update all this?
+On Thu, 13 Feb 2020 13:37:26 +0100
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-In fact we've released it long ago:
+> Two patches are handling new edge cases introduced by doing DMA mappings
+> (which can fail) in virtio core.
+> 
+> I stumbled upon this while stress testing I/O for Protected Virtual
+> Machines. I deliberately chose a tiny swiotlb size and have generated
+> load with fio. With more than one virtio-blk disk in use I experienced
+> hangs.
+> 
+> The goal of this series is to fix those hangs.
+> 
+> Halil Pasic (2):
+>   virtio-blk: fix hw_queue stopped on arbitrary error
+>   virtio-blk: improve virtqueue error to BLK_STS
+> 
+>  drivers/block/virtio_blk.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> 
+> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
 
-include/uapi/linux/futex.h:
+ping
 
-#define FUTEX_TID_MASK          0x3fffffff
+Hi Michael, hi Jason,
 
-Thanks,
+I got some favorable reviews for this, but AFAIK I got nothing form the
+maintainers yet.
 
-        tglx
+Is some of you going to pick these?
+
+Regards,
+Halil
+
