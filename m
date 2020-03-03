@@ -3,52 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C37C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6832465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3589824673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203693;
-	bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+	s=default; t=1583203698;
+	bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xl6csLDL0JP8A9DrPP66rsKV3Up4rhLBBHIL6PnIEmZXuRfdDvwMeu4p0IjzvL4fI
-	 /h9XHS16SGLFg0xUtv/GOwRKIL8wjxLo3hEjexBNrZFpYBOgioIYIuUi/YZ7jDNhCA
-	 x9b8XRU445FF3fU6efv4Vau79RCpHMYEjTTpJnpE=
+	b=xF+SQ65KLS9XXqklr3jsP8egFVgdX8YdNz4KogSsRJ4fX6SUXb6dxlWkEdgf2WmHZ
+	 DyTLMncoCkEu9FnKI3CVJs7lecSdY7TGicu4mHSl1sMUbMKcW1IVWMltw6wx1sEF9S
+	 4phW1weoBMu8mAWU6Y+r0/DI2tYfeivj7Ca2L/80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgCCCsM (ORCPT
+        id S1728370AbgCCCsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbgCCCsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:03 -0500
+        id S1728291AbgCCCsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C146D2468D;
-        Tue,  3 Mar 2020 02:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6979E24680;
+        Tue,  3 Mar 2020 02:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203682;
-        bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+        s=default; t=1583203686;
+        bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jaEWr7x0A0HnI5wK/71yHiRqp21fLXwPU1vpwj7OFADBv58g0dUdTo4BNT0bwYFK
-         E/IyVrA6mYpusf1n2EHnPvO9+3VVLdrUMHL5cJyVaFCrzSpUe2b0GwI/CSwbs0CuTE
-         Cwyws3WVrjAsQ4PGtxoUVs+2kGxaMg4zX3pexcO8=
+        b=aQFZ9GPWz5GO8mewMjtMtCDfHAQB50BKVClH3eLvWJFEZkGDaea2tVUlH18ahGzKr
+         73sTOeRqLlomADg2nF2f+gX3KhNO71TSPrWeOlf7kIoFhgFe3dNA56ModNDIs2IGuh
+         qRCCIrGPmILc0594aKB4c9If1DgEbeHf7eCJVApM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hangbin Liu <liuhangbin@gmail.com>,
-        Petr Machata <pmachata@gmail.com>,
+Cc:     Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/58] selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac testing
-Date:   Mon,  2 Mar 2020 21:47:00 -0500
-Message-Id: <20200303024740.9511-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 21/58] net: atlantic: check rpc result and wait for rpc address
+Date:   Mon,  2 Mar 2020 21:47:03 -0500
+Message-Id: <20200303024740.9511-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,116 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Igor Russkikh <irusskikh@marvell.com>
 
-[ Upstream commit e8023b030ce1748930e2dc76353a262fe47d4745 ]
+[ Upstream commit e7b5f97e6574dc4918e375d5f8d24ec31653cd6d ]
 
-For tc ip_proto filter, when we extract the flow via __skb_flow_dissect()
-without flag FLOW_DISSECTOR_F_STOP_AT_ENCAP, we will continue extract to
-the inner proto.
+Artificial HW reliability tests revealed a possible hangup in
+the driver. Normally, when device disappears from bus, all
+register reads returns 0xFFFFFFFF.
 
-So for GRE + ICMP messages, we should not track GRE proto, but inner ICMP
-proto.
+At remote procedure invocation towards FW there is a logic
+where result is compared with -1 in a loop.
+That caused an infinite loop if hardware due to some issues
+disappears from bus.
 
-For test mirror_gre.sh, it may make user confused if we capture ICMP
-message on $h3(since the flow is GRE message). So I move the capture
-dev to h3-gt{4,6}, and only capture ICMP message.
+Add extra result checks to prevent this.
 
-Before the fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-After fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [ OK ]
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [ OK ]
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [ OK ]
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [ OK ]
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-Fixes: ba8d39871a10 ("selftests: forwarding: Add test for mirror to gretap")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Petr Machata <pmachata@gmail.com>
-Tested-by: Petr Machata <pmachata@gmail.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/net/forwarding/mirror_gre.sh    | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ .../aquantia/atlantic/hw_atl/hw_atl_utils.c   | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/mirror_gre.sh b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-index e6fd7a18c655f..0266443601bc0 100755
---- a/tools/testing/selftests/net/forwarding/mirror_gre.sh
-+++ b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-@@ -63,22 +63,23 @@ test_span_gre_mac()
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
+index 52646855495ed..873f9865f0d15 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
+@@ -22,6 +22,7 @@
+ #define HW_ATL_MIF_ADDR         0x0208U
+ #define HW_ATL_MIF_VAL          0x020CU
+ 
++#define HW_ATL_MPI_RPC_ADDR     0x0334U
+ #define HW_ATL_RPC_CONTROL_ADR  0x0338U
+ #define HW_ATL_RPC_STATE_ADR    0x033CU
+ 
+@@ -48,15 +49,14 @@
+ #define FORCE_FLASHLESS 0
+ 
+ static int hw_atl_utils_ver_match(u32 ver_expected, u32 ver_actual);
+-
+ static int hw_atl_utils_mpi_set_state(struct aq_hw_s *self,
+ 				      enum hal_atl_utils_fw_state_e state);
+-
+ static u32 hw_atl_utils_get_mpi_mbox_tid(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mpi_get_state(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mif_cmd_get(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mif_addr_get(struct aq_hw_s *self);
+ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self);
++static u32 aq_fw1x_rpc_get(struct aq_hw_s *self);
+ 
+ int hw_atl_utils_initfw(struct aq_hw_s *self, const struct aq_fw_ops **fw_ops)
  {
- 	local tundev=$1; shift
- 	local direction=$1; shift
--	local prot=$1; shift
- 	local what=$1; shift
+@@ -413,6 +413,10 @@ static int hw_atl_utils_init_ucp(struct aq_hw_s *self,
+ 					self, self->mbox_addr,
+ 					self->mbox_addr != 0U,
+ 					1000U, 10000U);
++	err = readx_poll_timeout_atomic(aq_fw1x_rpc_get, self,
++					self->rpc_addr,
++					self->rpc_addr != 0U,
++					1000U, 100000U);
  
--	local swp3mac=$(mac_get $swp3)
--	local h3mac=$(mac_get $h3)
-+	case "$direction" in
-+	ingress) local src_mac=$(mac_get $h1); local dst_mac=$(mac_get $h2)
-+		;;
-+	egress) local src_mac=$(mac_get $h2); local dst_mac=$(mac_get $h1)
-+		;;
-+	esac
+ 	return err;
+ }
+@@ -469,6 +473,12 @@ int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
+ 						self, fw.val,
+ 						sw.tid == fw.tid,
+ 						1000U, 100000U);
++		if (err < 0)
++			goto err_exit;
++
++		err = aq_hw_err_from_flags(self);
++		if (err < 0)
++			goto err_exit;
  
- 	RET=0
- 
- 	mirror_install $swp1 $direction $tundev "matchall $tcflags"
--	tc filter add dev $h3 ingress pref 77 prot $prot \
--		flower ip_proto 0x2f src_mac $swp3mac dst_mac $h3mac \
--		action pass
-+	icmp_capture_install h3-${tundev} "src_mac $src_mac dst_mac $dst_mac"
- 
--	mirror_test v$h1 192.0.2.1 192.0.2.2 $h3 77 10
-+	mirror_test v$h1 192.0.2.1 192.0.2.2 h3-${tundev} 100 10
- 
--	tc filter del dev $h3 ingress pref 77
-+	icmp_capture_uninstall h3-${tundev}
- 	mirror_uninstall $swp1 $direction
- 
- 	log_test "$direction $what: envelope MAC ($tcflags)"
-@@ -120,14 +121,14 @@ test_ip6gretap()
- 
- test_gretap_mac()
- {
--	test_span_gre_mac gt4 ingress ip "mirror to gretap"
--	test_span_gre_mac gt4 egress ip "mirror to gretap"
-+	test_span_gre_mac gt4 ingress "mirror to gretap"
-+	test_span_gre_mac gt4 egress "mirror to gretap"
+ 		if (fw.len == 0xFFFFU) {
+ 			err = hw_atl_utils_fw_rpc_call(self, sw.len);
+@@ -950,6 +960,11 @@ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self)
+ 	return aq_hw_read_reg(self, HW_ATL_RPC_STATE_ADR);
  }
  
- test_ip6gretap_mac()
- {
--	test_span_gre_mac gt6 ingress ipv6 "mirror to ip6gretap"
--	test_span_gre_mac gt6 egress ipv6 "mirror to ip6gretap"
-+	test_span_gre_mac gt6 ingress "mirror to ip6gretap"
-+	test_span_gre_mac gt6 egress "mirror to ip6gretap"
- }
- 
- test_all()
++static u32 aq_fw1x_rpc_get(struct aq_hw_s *self)
++{
++	return aq_hw_read_reg(self, HW_ATL_MPI_RPC_ADDR);
++}
++
+ const struct aq_fw_ops aq_fw_1x_ops = {
+ 	.init = hw_atl_utils_mpi_create,
+ 	.deinit = hw_atl_fw1x_deinit,
 -- 
 2.20.1
 
