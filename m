@@ -2,124 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42778C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6361C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2B12083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78A12083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l5Mi9+vx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lY5saZ+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgCCKyq (ORCPT
+        id S1728943AbgCCKyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:54:46 -0500
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:47511 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728905AbgCCKyo (ORCPT
+        Tue, 3 Mar 2020 05:54:50 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1739 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgCCKyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:54:44 -0500
-Received: by mail-vk1-f201.google.com with SMTP id n9so703859vkc.14
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:54:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/fUO4e7b7II/MsvOBnOdt5EEHTfTyNf7SrxUHQx+fwc=;
-        b=l5Mi9+vx+ZJO9M1WC5+61AAmmM3bp8Hw0a0CsKTUOo4/BhrrHMMpdnTDGd35WOIoej
-         QpsWGl9aw9tJsYgQOw04/Z9bnNHkovUELDhttcfPFhGBvC6iBJalLhqVyJFkeKs45xWa
-         3T0T/pVrmZEqKz4kuSpy7pxarGbGaIT3TgD53WaL0tIn070kmeYO2yjtsb/BGtlydCKk
-         g6IC5WEYKKSYPk0BKt7qEn+lW4ID+9e35uIm8TelABBEzMveIDgaw+4LQaG41s0uFWQA
-         6YOxiMOEVtVjmJIKCq8O8T9Lb4Z+veIEj1KiEeuUno3g8jueaMa63c2hnLOtxTbZSGtu
-         548A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/fUO4e7b7II/MsvOBnOdt5EEHTfTyNf7SrxUHQx+fwc=;
-        b=jLIYfSsRxSZUteGxddaweP1BkXgkjmsiyTQNA5onJ2u7Yolf0qCL2bZlSMdVkfi8g0
-         HTY4vdukVCrQio1CSdZMD1lGMRE+pXXEhgIVc4HE5p7SaCfUS+ZgC+SH9LjPYgzZtaCL
-         LU3CO3Es2nUNi1MoyGFuvNXBAHMiGsjBOP9HJePNCGvajowgMyznfmCbFHDqyHQvofHe
-         acwK4DOBETtKukffArjlxJzjse9oQ6540nmIr8GwDDovrDpgMB9acMJZbS7TE5jiPgSd
-         Ln3UoUV2sbR3KImlgGrw1CAk6u4U0EAwrxs/27G5oZfsVMx9uKO+KZ+bY0xXUaKUowrr
-         Hx+g==
-X-Gm-Message-State: ANhLgQ2YtzOSV6EcWaMCkjDWo9OMMzwmCzHRhNuCa5PXUpp6G3mvDkpW
-        mf0mkADSBCeppyhsKlzHFT+tpUrfMw==
-X-Google-Smtp-Source: ADFU+vvIpWaP146aRYIyU9FS4IRKrhW9VgsfBVun9hsWpgp12WBLpb9FBbP5XWgwahVSg+rt0tJYayCPeQ==
-X-Received: by 2002:a1f:a286:: with SMTP id l128mr2460260vke.31.1583232882861;
- Tue, 03 Mar 2020 02:54:42 -0800 (PST)
-Date:   Tue,  3 Mar 2020 11:54:27 +0100
-Message-Id: <20200303105427.260620-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] lib/refcount: Document interaction with PID_MAX_LIMIT
-From:   Jann Horn <jannh@google.com>
-To:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 3 Mar 2020 05:54:49 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5e376b0000>; Tue, 03 Mar 2020 02:54:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 03 Mar 2020 02:54:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 02:54:48 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 10:54:48 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 3 Mar 2020 10:54:48 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e5e37740000>; Tue, 03 Mar 2020 02:54:48 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V4 4/5] arm64: tegra: Add support for PCIe endpoint mode in P2972-0000 platform
+Date:   Tue, 3 Mar 2020 16:24:17 +0530
+Message-ID: <20200303105418.2840-5-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200303105418.2840-1-vidyas@nvidia.com>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583232875; bh=XDqU4/3NkhzOg4VQyRoeDPrk+BoR8HLjcQcuG2F+Bmw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=lY5saZ+ceeSgf1Ns8Fy/inHT9AHdqSo+oMMKHg/mTZcF4OigepBHEyMCqWo8nlOHi
+         jypbAwUcIvffJgRWxAR5q7YbirP3aPb4XEiJnh+DWRdwlvJH9eEog7y4KjnU85Wv0+
+         6OeJCl3G3brTcIKycW4UU9CJ4Kyqa7rzyfTp8oMW7U8Y+6CRtZrWUdmtDAQrtPPjzD
+         HnxPHBQ4eODcaZkEAj2bI41m7NuEQs4ZyoPJphTBe3ydU9+Kftn/sgW7ZDfThTFreQ
+         pO4NPxKddVV44kpL0vFgv5LNm6VBSBmish+Em1b0WAbPlS17/JChS5VG+5p1z5Q7Vm
+         R1oJ4k3huOlpw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the circumstances under which refcount_t's saturation mechanism
-works deterministically.
+Add endpoint mode support for PCIe C5 controller in P2972-0000 platform
+with information about supplies, PHY, PERST GPIO and GPIO that controls
+PCIe reference clock coming from the host system.
 
-Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
+V4:
+* None
 
-Notes:
-    v2:
-     - write down the math (Kees)
+V3:
+* None
 
- include/linux/refcount.h | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+V2:
+* Addressed Thierry's review comments
+* Changed 'nvidia,pex-rst-gpio' to 'reset-gpios'
+* Added 'nvidia,refclk-select-gpios'
 
-diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-index 0ac50cf62d062..0e3ee25eb156a 100644
---- a/include/linux/refcount.h
-+++ b/include/linux/refcount.h
-@@ -38,11 +38,24 @@
-  * atomic operations, then the count will continue to edge closer to 0. If it
-  * reaches a value of 1 before /any/ of the threads reset it to the saturated
-  * value, then a concurrent refcount_dec_and_test() may erroneously free the
-- * underlying object. Given the precise timing details involved with the
-- * round-robin scheduling of each thread manipulating the refcount and the need
-- * to hit the race multiple times in succession, there doesn't appear to be a
-- * practical avenue of attack even if using refcount_add() operations with
-- * larger increments.
-+ * underlying object.
-+ * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
-+ * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
-+ * With the current PID limit, if no batched refcounting operations are used and
-+ * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
-+ * operations, this makes it impossible for a saturated refcount to leave the
-+ * saturation range, even if it is possible for multiple uses of the same
-+ * refcount to nest in the context of a single task:
-+ *
-+ *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
-+ *     0x40000000 / 0x400000 = 0x100 = 256
-+ *
-+ * If hundreds of references are added/removed with a single refcounting
-+ * operation, it may potentially be possible to leave the saturation range; but
-+ * given the precise timing details involved with the round-robin scheduling of
-+ * each thread manipulating the refcount and the need to hit the race multiple
-+ * times in succession, there doesn't appear to be a practical avenue of attack
-+ * even if using refcount_add() operations with larger increments.
-  *
-  * Memory ordering
-  * ===============
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts    | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+index f9f874d9d0ae..e15d1eac05f5 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+@@ -199,6 +199,24 @@
+ 			    "p2u-5", "p2u-6", "p2u-7";
+ 	};
+ 
++	pcie_ep@141a0000 {
++		status = "disabled";
++
++		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++
++		reset-gpios = <&gpio TEGRA194_MAIN_GPIO(GG, 1) GPIO_ACTIVE_LOW>;
++
++		nvidia,refclk-select-gpios = <&gpio_aon TEGRA194_AON_GPIO(AA, 5)
++					      GPIO_ACTIVE_HIGH>;
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
+ 	fan: fan {
+ 		compatible = "pwm-fan";
+ 		pwms = <&pwm4 0 45334>;
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.17.1
 
