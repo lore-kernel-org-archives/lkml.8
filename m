@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F33C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA7EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DE12465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E3D21739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204598;
-	bh=3Bx8udfb9FnxnWAt+F7PsFFjq1j/IIjT9fNxerbjN54=;
+	s=default; t=1583204612;
+	bh=3TigfwXrdUcwuJtxDdM91sunQiw06FIrpMZszuW3/3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjwIGMc8jfp6nvt9vBd1lXsfwkc3PovQ8MkFeXkA3l2KIRS46OksXb2Zj9cmDeBZb
-	 fHHAAQ1XiS1rm96i2bjZW7Qj/fiD7ilqrFKOTzzMEBULsk6Tj2h9+7BW4lb2Vg4NIh
-	 nWLJEFZ895ujyd0860T/7zpuCKR7YSZQ7sDVnxTk=
+	b=P/V8rosVt5XAw1fnl5Mo2oRP7dJLnrOOl6+wCrZgltgBbZSN9PoKmvRL2Aq8PWJm3
+	 MEpa1PWpqfmit2WnSSn89YfxJ6nnUTFohqnAXge3Rd6HPHk5kMM28KI1UsgU5wsZ7o
+	 40GIu/DxFySEyA8hK2mSpWbrCGVdVD9OdGjxeBmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgCCDDR (ORCPT
+        id S1727714AbgCCDDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:03:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727456AbgCCCq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:27 -0500
+        id S1727228AbgCCCqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3473E2467B;
-        Tue,  3 Mar 2020 02:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D3C424681;
+        Tue,  3 Mar 2020 02:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203586;
-        bh=3Bx8udfb9FnxnWAt+F7PsFFjq1j/IIjT9fNxerbjN54=;
+        s=default; t=1583203581;
+        bh=3TigfwXrdUcwuJtxDdM91sunQiw06FIrpMZszuW3/3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hUZIsnW/IJmcnPuF+Bn3dMiSE4cqtnwYegbuk+j4NeRTVxE/nlMbRqVwqyij66Rlk
-         bsH42Z+LoLFasd/44Igy4wpiwtBtO4/hmyrgsKzOOcrhpXG89X9EH/vTZs9NsNsxb3
-         /1AsPzhH/pm6VOGcLumiqUKnSV0nBDY+wi6VvioQ=
+        b=Z6oaT39MqzyUR6VPTFxGStwF3cqMdBRHE620C2HV8khFPWh9PSEfWNXlIEjCFID+K
+         fyk3hTQXMOgMjjkOFVslw9nRLHwzygwO7/IUeu8mAk0f5PWdjJ21uWCPItVNmZV95S
+         Wm8qdN3rK+aHBL0KsTpOykNH+lQtI5SOogVVRoXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 09/66] habanalabs: halt the engines before hard-reset
-Date:   Mon,  2 Mar 2020 21:45:18 -0500
-Message-Id: <20200303024615.8889-9-sashal@kernel.org>
+Cc:     Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 04/66] Kernel selftests: tpm2: check for tpm support
+Date:   Mon,  2 Mar 2020 21:45:13 -0500
+Message-Id: <20200303024615.8889-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -58,141 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
 
-[ Upstream commit 908087ffbe896c100ed73d5f0ce11a5b7264af4a ]
+[ Upstream commit b32694cd0724d4ceca2c62cc7c3d3a8d1ffa11fc ]
 
-The driver must halt the engines before doing hard-reset, otherwise the
-device can go into undefined state. There is a place where the driver
-didn't do that and this patch fixes it.
+tpm2 tests set fails if there is no /dev/tpm0 and /dev/tpmrm0
+supported. Check if these files exist before run and mark test as
+skipped in case of absence.
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/device.c    |  1 +
- drivers/misc/habanalabs/goya/goya.c | 42 +++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ tools/testing/selftests/tpm2/test_smoke.sh | 13 +++++++++++--
+ tools/testing/selftests/tpm2/test_space.sh |  9 ++++++++-
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index b155e95490761..166883b647252 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -1189,6 +1189,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	if (hdev->asic_funcs->get_hw_state(hdev) == HL_DEVICE_HW_STATE_DIRTY) {
- 		dev_info(hdev->dev,
- 			"H/W state is dirty, must reset before initializing\n");
-+		hdev->asic_funcs->halt_engines(hdev, true);
- 		hdev->asic_funcs->hw_fini(hdev, true);
- 	}
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 8155c2ea7ccbb..b630c7b5950a9 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,8 +1,17 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++self.flags = flags
  
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 7344e8a222ae5..f24fe909b88d8 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -895,6 +895,11 @@ void goya_init_dma_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_external_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
+-python -m unittest -v tpm2_tests.SmokeTest
+-python -m unittest -v tpm2_tests.AsyncTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
 +
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
 +
- 	WREG32(mmDMA_QM_0_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_1_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_2_GLBL_CFG0, 0);
-@@ -956,6 +961,11 @@ static int goya_stop_external_queues(struct hl_device *hdev)
- {
- 	int rc, retval = 0;
++if [ -f /dev/tpm0 ] ; then
++	python -m unittest -v tpm2_tests.SmokeTest
++	python -m unittest -v tpm2_tests.AsyncTest
++else
++	exit $ksft_skip
++fi
  
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmDMA_QM_0_GLBL_CFG1,
- 			mmDMA_QM_0_CP_STS,
-@@ -1744,9 +1754,18 @@ void goya_init_tpc_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto disable_tpc;
-+
- 	WREG32(mmMME_QM_GLBL_CFG0, 0);
- 	WREG32(mmMME_CMDQ_GLBL_CFG0, 0);
+ CLEAR_CMD=$(which tpm2_clear)
+ if [ -n $CLEAR_CMD ]; then
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index a6f5e346635e5..180b469c53b47 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,4 +1,11 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
  
-+disable_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
+-python -m unittest -v tpm2_tests.SpaceTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
 +
- 	WREG32(mmTPC0_QM_GLBL_CFG0, 0);
- 	WREG32(mmTPC0_CMDQ_GLBL_CFG0, 0);
- 
-@@ -1782,8 +1801,12 @@ static void goya_disable_internal_queues(struct hl_device *hdev)
-  */
- static int goya_stop_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
- 	int rc, retval = 0;
- 
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto stop_tpc;
-+
- 	/*
- 	 * Each queue (QMAN) is a separate H/W logic. That means that each
- 	 * QMAN can be stopped independently and failure to stop one does NOT
-@@ -1810,6 +1833,10 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 		retval = -EIO;
- 	}
- 
-+stop_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmTPC0_QM_GLBL_CFG1,
- 			mmTPC0_QM_CP_STS,
-@@ -1975,6 +2002,11 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 
- static void goya_dma_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG1, 1 << DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_1_GLBL_CFG1, 1 << DMA_QM_1_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_2_GLBL_CFG1, 1 << DMA_QM_2_GLBL_CFG1_DMA_STOP_SHIFT);
-@@ -1984,6 +2016,11 @@ static void goya_dma_stall(struct hl_device *hdev)
- 
- static void goya_tpc_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_CFG_TPC_STALL, 1 << TPC0_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC1_CFG_TPC_STALL, 1 << TPC1_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC2_CFG_TPC_STALL, 1 << TPC2_CFG_TPC_STALL_V_SHIFT);
-@@ -1996,6 +2033,11 @@ static void goya_tpc_stall(struct hl_device *hdev)
- 
- static void goya_mme_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		return;
-+
- 	WREG32(mmMME_STALL, 0xFFFFFFFF);
- }
- 
++if [ -f /dev/tpmrm0 ] ; then
++	python -m unittest -v tpm2_tests.SpaceTest
++else
++	exit $ksft_skip
++fi
 -- 
 2.20.1
 
