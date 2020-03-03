@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30DDC3F2D7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A41C3F2C6
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952D520CC7
+	by mail.kernel.org (Postfix) with ESMTP id 6AD922146E
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1583257990;
-	bh=7/tLskozrg4ixBT/OquLc2xq33BKnTZdZEOZh32dCUw=;
+	bh=6ZdR+j7W/1OYrpvBOqvO9W3YcYR2SMwtDCKXi/fmZFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRg+a7UAgV0eneBD5noEvfkGnckwWNqrxyDB9OzsVmhmrBG4KeHPZ52Y1fU7kcQqd
-	 hEZjgDtXHZBra49yY/jG7eGWIe5AmEmSSrlsi3mNovQ0KMxeym2aVmfiHCgAkDUdd/
-	 Lwbvn2MMVoIgMxbEpm8TLhxrz0ov8Vhr/3M3gNfE=
+	b=GhtPelHo3f1HTjtm/PjiDc0hVkN3BWJXz9T9jk6oB6zQi+azYqR4h1JEHfl1UBlBw
+	 YFAXJuPHNq7D4Kp4d2rYQbzV6NppCsVi9ADIC9qvaQ0KW5usUShm63v1xMfl+PSuKg
+	 yD/PfhFRUoHLvMb3uPAo5EjHIUmLIiQ3S+KjGOvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgCCRxI (ORCPT
+        id S1732290AbgCCRxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33488 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:53:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731343AbgCCRxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:03 -0500
+        id S1731028AbgCCRxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF0BF2072D;
-        Tue,  3 Mar 2020 17:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D8C20728;
+        Tue,  3 Mar 2020 17:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257983;
-        bh=7/tLskozrg4ixBT/OquLc2xq33BKnTZdZEOZh32dCUw=;
+        s=default; t=1583257980;
+        bh=6ZdR+j7W/1OYrpvBOqvO9W3YcYR2SMwtDCKXi/fmZFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuRUinfxXMHz0L8eeWtZJp7PR9ZLwHNnMigI32t7ZpCRPU1zemt46g2iV7YrEC0Yw
-         NcyM0mJmn20J84hl2ojNRDY/CGobGZfR2uaulsYdGiOdOFQPeAkFVfjm0iF/zn5mgn
-         9WcLLBn5LhOd5bfxUDJ6BVy1YJK1B1qnYV9guefQ=
+        b=ewzsqmxpz41i7adSUKPSE1S4wPfHhF/er0HnDIs5HZ9iquA3ofaGxL/V+oz8jNt6/
+         5EPkl4LuMKJwNP3+Y3yk1GjiRSo8UNx9AP6Zr47NHh7VKsFyBaLmjIKewiPRJHO5fe
+         j80ktS1xmdN6zQVm1JIUBVdVSt5Q+lRH76E31bK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Segall <bsegall@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/152] dax: pass NOWAIT flag to iomap_apply
-Date:   Tue,  3 Mar 2020 18:42:05 +0100
-Message-Id: <20200303174305.537006772@linuxfoundation.org>
+Subject: [PATCH 5.4 026/152] sched/fair: Prevent unlimited runtime on throttled group
+Date:   Tue,  3 Mar 2020 18:42:04 +0100
+Message-Id: <20200303174305.422479067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,41 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Moyer <jmoyer@redhat.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
+[ Upstream commit 2a4b03ffc69f2dedc6388e9a6438b5f4c133a40d ]
 
-fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
-dax".  The reason is that the initial pwrite to an empty file with the
-RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
-dax_iomap_rw doesn't pass that flag through to iomap_apply.
+When a running task is moved on a throttled task group and there is no
+other task enqueued on the CPU, the task can keep running using 100% CPU
+whatever the allocated bandwidth for the group and although its cfs rq is
+throttled. Furthermore, the group entity of the cfs_rq and its parents are
+not enqueued but only set as curr on their respective cfs_rqs.
 
-With this patch applied, generic/471 passes for me.
+We have the following sequence:
 
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+sched_move_task
+  -dequeue_task: dequeue task and group_entities.
+  -put_prev_task: put task and group entities.
+  -sched_change_group: move task to new group.
+  -enqueue_task: enqueue only task but not group entities because cfs_rq is
+    throttled.
+  -set_next_task : set task and group_entities as current sched_entity of
+    their cfs_rq.
+
+Another impact is that the root cfs_rq runnable_load_avg at root rq stays
+null because the group_entities are not enqueued. This situation will stay
+the same until an "external" event triggers a reschedule. Let trigger it
+immediately instead.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Ben Segall <bsegall@google.com>
+Link: https://lkml.kernel.org/r/1579011236-31256-1-git-send-email-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 2cc43cd914eb8..cc56313c6b3b9 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1207,6 +1207,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		lockdep_assert_held(&inode->i_rwsem);
- 	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8c89c893078af..e921126aec84b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7058,8 +7058,15 @@ void sched_move_task(struct task_struct *tsk)
  
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		flags |= IOMAP_NOWAIT;
-+
- 	while (iov_iter_count(iter)) {
- 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
- 				iter, dax_iomap_actor);
+ 	if (queued)
+ 		enqueue_task(rq, tsk, queue_flags);
+-	if (running)
++	if (running) {
+ 		set_next_task(rq, tsk);
++		/*
++		 * After changing group, the running task may have joined a
++		 * throttled one but it's still the running task. Trigger a
++		 * resched to make sure that task can still run.
++		 */
++		resched_curr(rq);
++	}
+ 
+ 	task_rq_unlock(rq, tsk, &rf);
+ }
 -- 
 2.20.1
 
