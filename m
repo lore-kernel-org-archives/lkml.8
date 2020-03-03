@@ -2,105 +2,115 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832A4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA121C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C0420838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4C320838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PM5kb0i+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkQFBtFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgCCPWz (ORCPT
+        id S1729877AbgCCPXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:22:55 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54387 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727070AbgCCPWy (ORCPT
+        Tue, 3 Mar 2020 10:23:21 -0500
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:41070 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgCCPXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:22:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583248973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D6hhj4RvcDIVxgBY1G9BhKvJtpYMpqc/o5vlGdiOVd4=;
-        b=PM5kb0i+o/R75r9r4ffO7ujjTLTd2921xZH0JECQwZQUpnK9xiluauiI1kEUldkM4WGxYy
-        7CLxrbS6mI1/Eg1QBUML+jqEPjvFEAEVHIyMoAt7yhpvc5WnQ1vMlHnXBWXGqeqQt/SPJU
-        JNU0D5qp3Q9Ltnm7HdVXrulPc2ScPII=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-peu4YBaMMpqZe0NAkPSoMA-1; Tue, 03 Mar 2020 10:22:51 -0500
-X-MC-Unique: peu4YBaMMpqZe0NAkPSoMA-1
-Received: by mail-wr1-f72.google.com with SMTP id m18so1339090wro.22
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:22:51 -0800 (PST)
+        Tue, 3 Mar 2020 10:23:21 -0500
+Received: by mail-pg1-f179.google.com with SMTP id b1so1676045pgm.8;
+        Tue, 03 Mar 2020 07:23:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4uMBpBOIqm/0ynEGtQaKGFxamPX39BjBfVI0h30VeRw=;
+        b=lkQFBtFY5SssVVeURD1b+Ig/VAaDBsj0Uon3Dc7y1oG1ZR44CH94pHe5BO2M905iPx
+         Yr5vf/kJ9rO+zv1cubjBfMmGjCzhvVyuDl3yBJLeXc0IEUHyHOY+XYCYolUX77AnT0Bz
+         QOTVu8meED63CJQsVjL4Lw2q7JRfLPlCn9NALSq7Tnxg1r7v2KSY6KXwdUaq3Von/e/w
+         zKukd0NWkRpWsCZt2+B0/zZYm//tAZX6kZRWK90xtGczsXK7vR9NAJHlRG12T4+le02B
+         u1DFFEvfrhng8x5L8D2sTHRKBbqDzkdY4NGd79kAgvs+7czuO/0VyW+HlHfCjYdEnYmP
+         7vwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D6hhj4RvcDIVxgBY1G9BhKvJtpYMpqc/o5vlGdiOVd4=;
-        b=ubaSxn59xtfS1lsHNfJcD9s8T49EjrxN+kBt549Pcg/SJpOFr4SQJyC0DmQU2qnEKD
-         8PTy+Kd96FaAOfRiowNj2nvrMDe75j+gQ5SzfPACO5G0IOD2GZIhyUnqNqa8Ed6hyFfk
-         iS6zPwpETILEnq4mkjubJIikoI7gcwus7nqSy5BftCJDnWgkKuCuU+Por3UMIjuVMFEt
-         a4ofmMZjROnV92Qo1uD5VJmQFvTxnyZB2XkxF953oZPjzPOxjVQZT/h61wBAd4HaAHQ5
-         XZjihWUO11QPnt6p5+SMfuLvYN2DWAtM5CoDzJFmFu3OdUjmeLMCpr5VCbAASx2T1W/w
-         x7vA==
-X-Gm-Message-State: ANhLgQ3vQvZhHP21sqjK4dBZ4IGf7sEU00NzqfvH3N2KmV7Hz7WZECjH
-        hW8glM6ra7fIpAhUvgJSdQY+y8u0AKWqCOIbtnLdEgz23BTm/ho0BivbMxU6KyI+P9+egQF4TxU
-        N3JWTzlomlRHms52X4G3oLjGQ
-X-Received: by 2002:a1c:9816:: with SMTP id a22mr5188131wme.16.1583248970836;
-        Tue, 03 Mar 2020 07:22:50 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuTNzqhBy0I3FEAXGnUvMoxzAdxqzcJ4L5n+wIvurTlnl7KUwZjhKeCzWa1Ppb76Rb7y4PDpg==
-X-Received: by 2002:a1c:9816:: with SMTP id a22mr5188100wme.16.1583248970533;
-        Tue, 03 Mar 2020 07:22:50 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id c14sm18893149wro.36.2020.03.03.07.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 07:22:49 -0800 (PST)
-Subject: Re: [PATCH v2 50/66] KVM: x86: Override host CPUID results with
- kvm_cpu_caps
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-51-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8ec995c8-5fc4-eb6c-716b-3f18a05c3f77@redhat.com>
-Date:   Tue, 3 Mar 2020 16:22:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4uMBpBOIqm/0ynEGtQaKGFxamPX39BjBfVI0h30VeRw=;
+        b=hA12Qm+DxxRTeVF8oIkS4/URwvfx1HU8Lcx6Nyg4bSqqP9HKw3LJ2TJub4MNWaKpgf
+         dMC/kq3EET3ING9hZ+Is5DOJIqG0fjc+bMXMzOVfB4KuylzVcTZfcFMKnyzx/JeHuf7Y
+         gnwyzOC/WFHmeGmcSnHn/i3QzJR6enblpFdmc5c10s9U9Iz6YHfj6SrLwrQenAi0+KPB
+         QnFpEJqCXrRGgAXUxWFcOV3GkPATGaqbqX7hB7Sc0Vn8RLsbEZ4+27KmdCgouWnDcQR4
+         RYa7bwQhUy4maU4D0zLMdWn0fF8mz33XkH2QxwdfgYb7sLYPvdZ+OWdEu3ELR4v6ql5Y
+         yiqg==
+X-Gm-Message-State: ANhLgQ0TnGrCw7zRPX5VCcy3p7YZmfZWDpvvIcpd8bQcPoGOlRx6HRO4
+        FR2evMah+0dcL9xSCRGfzI4=
+X-Google-Smtp-Source: ADFU+vuRN7jJ258kwfeGpP/dSM8ifMkULad01Zm3gSV1dVGJ1Jx7ViJeQWzznpvDUUpJFuukaYibnw==
+X-Received: by 2002:a63:3d48:: with SMTP id k69mr4368726pga.395.1583249000145;
+        Tue, 03 Mar 2020 07:23:20 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id h65sm2827515pfg.12.2020.03.03.07.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 07:23:19 -0800 (PST)
+Date:   Tue, 3 Mar 2020 07:23:17 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Christopher S. Hall" <christopher.s.hall@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        jacob.e.keller@intel.com, "David S. Miller" <davem@davemloft.net>,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
+ Driver with PHC interface changes to support additional H/W Features
+Message-ID: <20200303152317.GA7971@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <87eevf4hnq.fsf@nanos.tec.linutronix.de>
+ <20200224224059.GC1508@skl-build>
+ <87mu95ne3q.fsf@nanos.tec.linutronix.de>
+ <CACRpkdadbWvsnyrH_+sRha2C0fJU0EFEO9UyO7wHybZT-R1jzA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302235709.27467-51-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdadbWvsnyrH_+sRha2C0fJU0EFEO9UyO7wHybZT-R1jzA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 00:56, Sean Christopherson wrote:
-> Override CPUID entries with kvm_cpu_caps during KVM_GET_SUPPORTED_CPUID
-> instead of masking the host CPUID result, which is redundant now that
-> the host CPUID is incorporated into kvm_cpu_caps at runtime.
+On Tue, Mar 03, 2020 at 02:00:48PM +0100, Linus Walleij wrote:
 > 
-> No functional change intended.
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> That looks like something I/we would want to support all the way
+> to userspace so people can do their funny industrial stuff in some
+> standard manner.
 
-The UMIP adjustment is now redundant in vmx_set_supported_cpuid, it's
-done in the next patch but it makes more sense to remove it here (so the
-next patch only moves code from set_supported_cpuid to set_cpu_caps).
+...
 
-Paolo
+> HW timestamps would be something more elaborate and
+> nice CLOCK_HW_SPECIFIC or so. Some of the IIO sensors also
+> have that, we just don't expose it as of now.
+
+It is worth considering whether it makes sense to somehow unify gpio,
+iio, and the phc pin subsystems.  In my view, a big chunk of work
+would be to have something like the "clock tree" for gpios and clock
+lines.  This tree would describe the HW connectivity between (at
+least) MAC/PHY clocks and IOs, gpio controllers, audio/video codecs,
+and so on.
+
+Also, there is that comedi thing in staging.  If it has a chance ever
+to leave staging, then I think it would also benefit from integration
+into gpio/iio world.
+
+Thanks,
+Richard
+
 
