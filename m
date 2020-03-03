@@ -2,140 +2,138 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02239C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CAAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7DB214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583229536;
-	bh=4mY+eBzqEAqUVgHJBB+37VWPwTk5qHToh5K0kzSRiGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L6vG/JtJR64fOxVi5WJNfl4DpvezAINwEE3DpVANwNAZ6q1fiww/2LCjcBJsG5lzU
-	 CnP12tVGwbqz/TWnBGPNHawPtO8LhrbYUh51sFPtUpkiu7r4p4J1/lkb0hrzareONu
-	 kAL8uV+DTHuL2QKHxsEpcotZqDCqUAjyzEMuT4xk=
+	by mail.kernel.org (Postfix) with ESMTP id A016B20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QMoEOu2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgCCJ6z (ORCPT
+        id S1728410AbgCCJ7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:58:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbgCCJ6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:58:55 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C103020866;
-        Tue,  3 Mar 2020 09:58:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583229533;
-        bh=4mY+eBzqEAqUVgHJBB+37VWPwTk5qHToh5K0kzSRiGQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RvLaQssSdeUj4EIJz4bsPbTB5s6RWxPx2KmQIq3H4ZfSpkCu4UU8sXwU5FecLG1jM
-         LwRTmFo5dE5dQuvB90IyP711StWZRPZbaOQrDHv1KcqLYhQ8MVM7ycOqXZgJvmQ+2T
-         if72tEA5TIdvg5XYBmUAu5z0dyfPhVTEm/UajgPk=
-Date:   Tue, 3 Mar 2020 10:58:49 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kvm-ppc@vger.kernel.org
-Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of
- debugfs_create functions
-Message-ID: <20200303095849.GA1399072@kroah.com>
-References: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
- <20200209105901.1620958-2-gregkh@linuxfoundation.org>
- <87imjlswxc.fsf@mpe.ellerman.id.au>
- <20200303085039.GA1323622@kroah.com>
- <87d09tsrf0.fsf@mpe.ellerman.id.au>
+        Tue, 3 Mar 2020 04:59:06 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45764 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727818AbgCCJ7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:59:06 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0239wx30004669;
+        Tue, 3 Mar 2020 03:58:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583229539;
+        bh=HjAC8m8mX74yllGfOtb45JtP+3cyFygiTL2RJv5MW4Y=;
+        h=From:To:CC:Subject:Date;
+        b=QMoEOu2IzDhbbAKCm0zIKDGwcPfkGun13PpUJ0QLbITwyBQSPpn/aGRj7g+Wsd2Dx
+         00O18d6neLeC3/y74/QTUwe2BNaYDjaoWEEBlaT5L2SX1mWYbk4k0eRJ0KBDf2Iqjg
+         DPKq825ZT69sczuilbr6hitsRsWbSOKtW7SGqv1o=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0239wwDG104273
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 03:58:58 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 03:58:58 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 03:58:58 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0239wtHk052895;
+        Tue, 3 Mar 2020 03:58:56 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Tue, 3 Mar 2020 15:33:23 +0530
+Message-ID: <20200303100327.3603-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d09tsrf0.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 08:45:23PM +1100, Michael Ellerman wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
-> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> >> > When calling debugfs functions, there is no need to ever check the
-> >> > return value.  The function can work or not, but the code logic should
-> >> > never do something different based on this.
-> >> 
-> >> Except it does need to do something different, if the file was created
-> >> it needs to be removed in the remove path.
-> >> 
-> >> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
-> >> > index bfe4f106cffc..8e4791c6f2af 100644
-> >> > --- a/arch/powerpc/kvm/timing.c
-> >> > +++ b/arch/powerpc/kvm/timing.c
-> >> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
-> >> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
-> >> >  {
-> >> >  	static char dbg_fname[50];
-> >> > -	struct dentry *debugfs_file;
-> >> >  
-> >> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
-> >> >  		 current->pid, id);
-> >> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
-> >> > -					kvm_debugfs_dir, vcpu,
-> >> > -					&kvmppc_exit_timing_fops);
-> >> > -
-> >> > -	if (!debugfs_file) {
-> >> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
-> >> > -			__func__, dbg_fname);
-> >> > -		return;
-> >> > -	}
-> >> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
-> >> > +			    &kvmppc_exit_timing_fops);
-> >> > +
-> >> >  
-> >> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
-> >
-> > Ugh, you are right, how did I miss that?  How is 0-day missing this?
-> > It's been in my tree for a long time, odd.
-> 
-> This code isn't enabled by default, or in any defconfig. So it's only
-> allmodconfig that would trip it, I guess 0-day isn't doing powerpc
-> allmodconfig builds.
-> 
-> >> I squashed this in, which seems to work:
-> ...
-> >>  
-> >>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
-> >>  {
-> >> -       if (vcpu->arch.debugfs_exit_timing) {
-> >> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
-> >>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
-> >>                 vcpu->arch.debugfs_exit_timing = NULL;
-> >>         }
-> >
-> > No, this can just be:
-> > 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
-> >
-> > No need to check anything, just call it and the debugfs code can handle
-> > it just fine.
-> 
-> Oh duh, of course, I should have checked.
-> 
-> I'd still like to NULL out the debugfs_exit_timing member, so I'll do:
-> 
-> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
-> {
-> 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
-> 	vcpu->arch.debugfs_exit_timing = NULL;
-> }
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-Fair enough, but I doubt it ever matters :)
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-Thanks for the fixups, sorry for sending a broken patch, my fault.
+Changes from v3:
+*) Add "Reviewed-by: Rob Herring <robh@kernel.org>"
+*) Fix typo in SPDX header
 
-greg k-h
+Changes from v2:
+*) Created "pci-ep.yaml" for common endpoint controller bindings
+*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+   binding
+
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
+
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: Add PCI Endpoint Controller Schema
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 28 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 ++++++++
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 226 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+
+-- 
+2.17.1
+
