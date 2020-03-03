@@ -2,167 +2,227 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95F3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4DDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E41620728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k4b8wlNW"
+	by mail.kernel.org (Postfix) with ESMTP id 52ED820848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583274377;
+	bh=IQRk+eFyYJbHwb5eI2wYOOU5Ad0xyo8Ui/jniBEGSF8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MHPuAIFNrVgRkjqNBRdBdAfZsvZBF4WgtdbKDOEwrbuspm6suj01c4kYB/n0CaMiD
+	 kItO9AwsiaNEkZjm7Ee2n2QRGvNMiW9dTHyj58PioTO3VqFQHJcelyQN3nJ2UcOmym
+	 TjQAB2ngu1+h4BCTLdYCF9eyCyo0G5FuODZYNj5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgCCWZv (ORCPT
+        id S1727894AbgCCW0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:25:51 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40691 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCWZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:25:51 -0500
-Received: by mail-wr1-f68.google.com with SMTP id r17so6491140wrj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:25:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gvAxgZ/6W5bHeK8l8B5LmkTF734H/cPgrewZ41WzMkc=;
-        b=k4b8wlNWPojtXCMpFiS5KbV5zlyci+qf48lnJA1vBqcTxUWZCsgg00p4o+pICG5jpO
-         tyU/foUtvQ7+agLbpxyypl2czslVNrxX/3Z9JKGNJlRHP08hjLWhWQwTWwc0EO4+ti1k
-         I5lRxtvZuUHgTy8zqHmU63CoH8bm8+YITh5/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gvAxgZ/6W5bHeK8l8B5LmkTF734H/cPgrewZ41WzMkc=;
-        b=mxRpg1bMQmkN1PY0dd4VFo2MvlEAQFQaWsgtdlRVWtIHsPnl2R1jssL69lkxsBN7+u
-         DIa/hTxcDsLKXmTjbUZjesWJp3LWgZKyu09dxqRsP9dIEz3ZY9GTptxGAZkTIG9AUQeo
-         7mYVfINQKVOiOiqsnRqFQyv1hzx+FyWFiPX7qMPnoGMQsan3QokvFdvJqxDlRQTHVbcf
-         U5cbDt+iSHQsL1SbRZp1I5tW5MjkqhQhWgeLPnpL8eKmDly2dIu6RDli6hRCl/4A6YMW
-         R7+C1AnFi7ZpBxPMwwBSdG4fx3kl9ekEITaL/1euztZz7/KLC6MMWiJX3RWyNTwE1sCF
-         DpfA==
-X-Gm-Message-State: ANhLgQ0pUVSTyKz6I5jj/0o6FeY/TxHOS2iZLTasD9xknk/2XMiZGLlj
-        /cQIga7re6XAbyrlbnKa+cHayA==
-X-Google-Smtp-Source: ADFU+vv2TJ9FcPkQkdag3Z1Df0H/CDA2sb5SwJJWT2VDsOjP5odYh+TSewkESskLrzLfwwBE/5jpSQ==
-X-Received: by 2002:a5d:62c9:: with SMTP id o9mr83887wrv.2.1583274347840;
-        Tue, 03 Mar 2020 14:25:47 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id a7sm37190726wrm.29.2020.03.03.14.25.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 14:25:47 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 3 Mar 2020 23:25:45 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next 0/7] Introduce BPF_MODIFY_RET tracing progs.
-Message-ID: <20200303222545.GB3272@chromium.org>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
- <CAEf4BzZkkbf0a-pCcmxq6+=XdJH6H7pPwbzq=UiMKRpWnJceyA@mail.gmail.com>
+        Tue, 3 Mar 2020 17:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbgCCW0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:26:15 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A37E20870
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 22:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583274374;
+        bh=IQRk+eFyYJbHwb5eI2wYOOU5Ad0xyo8Ui/jniBEGSF8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H1iXvAO8KqFpuVbyeWy2cJXvNy03pBgZ3Z4aFPJy1/64efKNP8vtdwTu47HOQ8DEd
+         LjJrSdVI4VJg9GPFvawj+9RlHGZolWEDJx9ocnJE9WBk5JAQtxx+eBhE5A8GEWpPux
+         ZZF7PYIUeJL970gwHM6u2b3y2na2ZGVqVo+oeKvM=
+Received: by mail-wr1-f41.google.com with SMTP id z15so6524825wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:26:14 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0jEEnC7XrmqQ98U8L1CnVjChXX7/RPzjIfmHmKiU7kN3YZZJWi
+        Q28JIJFzDeRfICjnmSf0i07tsMOPdwsleEhV9DwpXw==
+X-Google-Smtp-Source: ADFU+vu1fLRYbCKGQ/5O+V3FsnX68e8PkwyG8jiBMrqAlOtj12J1JrgdIvP+mFodyfHh5And3nvSwNdP+60iKiui/Gs=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr193882wrn.262.1583274372835;
+ Tue, 03 Mar 2020 14:26:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZkkbf0a-pCcmxq6+=XdJH6H7pPwbzq=UiMKRpWnJceyA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200303221205.4048668-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200303221205.4048668-1-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 3 Mar 2020 23:26:01 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_S_BwKRXhRz2=AoNj2E8sxuXSfZwg2poLDq96FmaoVtA@mail.gmail.com>
+Message-ID: <CAKv+Gu_S_BwKRXhRz2=AoNj2E8sxuXSfZwg2poLDq96FmaoVtA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Minimize the need to move the kernel in the EFI stub
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mär 14:12, Andrii Nakryiko wrote:
-> On Tue, Mar 3, 2020 at 6:12 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > This was brought up in the KRSI v4 discussion and found to be useful
-> > both for security and tracing programs.
-> >
-> >   https://lore.kernel.org/bpf/20200225193108.GB22391@chromium.org/
-> >
-> > The modify_return programs are allowed for security hooks (with an
-> > extra CAP_MAC_ADMIN check) and functions whitelisted for error
-> > injection (ALLOW_ERROR_INJECTION).
-> >
-> > The "security_" check is expected to be cleaned up with the KRSI patch
-> > series.
-> >
-> > Here is an example of how a fmod_ret program behaves:
-> >
-> > int func_to_be_attached(int a, int b)
-> > {  <--- do_fentry
-> >
-> > do_fmod_ret:
-> >    <update ret by calling fmod_ret>
-> >    if (ret != 0)
-> >         goto do_fexit;
-> >
-> > original_function:
-> >
-> >     <side_effects_happen_here>
-> >
-> > }  <--- do_fexit
-> >
-> > ALLOW_ERROR_INJECTION(func_to_be_attached, ERRNO)
-> >
-> > The fmod_ret program attached to this function can be defined as:
-> >
-> > SEC("fmod_ret/func_to_be_attached")
-> > BPF_PROG(func_name, int a, int b, int ret)
-> 
-> nit: int BPF_PROG(...)
+On Tue, 3 Mar 2020 at 23:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> This series adds the ability to use the entire PE image space for
+> decompression, provides the preferred address to the PE loader via the
+> header, and finally restricts efi_relocate_kernel to cases where we
+> really need it rather than whenever we were loaded at something other
+> than preferred address.
+>
+> Based on tip:efi/core + the cleanup series [1]
+> [1] https://lore.kernel.org/linux-efi/20200301230436.2246909-1-nivedita@alum.mit.edu/
+>
+> Changes from v1
+> - clarify a few comments
+> - cleanups to code formatting
+>
+> Arvind Sankar (5):
+>   x86/boot/compressed/32: Save the output address instead of
+>     recalculating it
+>   efi/x86: Decompress at start of PE image load address
+>   efi/x86: Add kernel preferred address to PE header
+>   efi/x86: Remove extra headroom for setup block
+>   efi/x86: Don't relocate the kernel unless necessary
+>
 
-Noted. Thanks!
+Thanks. I have queued these up in efi/next, along with your mixed mode cleanups.
 
-- KP
 
-> 
-> 
-> > {
-> >         // This will skip the original function logic.
-> >         return -1;
-> > }
-> >
-> > KP Singh (7):
-> >   bpf: Refactor trampoline update code
-> >   bpf: JIT helpers for fmod_ret progs
-> >   bpf: Introduce BPF_MODIFY_RETURN
-> >   bpf: Attachment verification for BPF_MODIFY_RETURN
-> >   tools/libbpf: Add support for BPF_MODIFY_RETURN
-> >   bpf: Add test ops for BPF_PROG_TYPE_TRACING
-> >   bpf: Add selftests for BPF_MODIFY_RETURN
-> >
-> >  arch/x86/net/bpf_jit_comp.c                   | 261 +++++++++++++-----
-> >  include/linux/bpf.h                           |  24 +-
-> >  include/uapi/linux/bpf.h                      |   1 +
-> >  kernel/bpf/bpf_struct_ops.c                   |  13 +-
-> >  kernel/bpf/btf.c                              |  27 +-
-> >  kernel/bpf/syscall.c                          |   1 +
-> >  kernel/bpf/trampoline.c                       |  66 +++--
-> >  kernel/bpf/verifier.c                         |  32 +++
-> >  kernel/trace/bpf_trace.c                      |   1 +
-> >  net/bpf/test_run.c                            |  57 +++-
-> >  tools/include/uapi/linux/bpf.h                |   1 +
-> >  tools/lib/bpf/libbpf.c                        |   4 +
-> >  .../selftests/bpf/prog_tests/fentry_fexit.c   |  12 +-
-> >  .../selftests/bpf/prog_tests/fentry_test.c    |  14 +-
-> >  .../selftests/bpf/prog_tests/fexit_test.c     |  69 ++---
-> >  .../selftests/bpf/prog_tests/modify_return.c  |  65 +++++
-> >  .../selftests/bpf/progs/modify_return.c       |  49 ++++
-> >  17 files changed, 509 insertions(+), 188 deletions(-)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/modify_return.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/modify_return.c
-> >
-> > --
-> > 2.20.1
-> >
+>  arch/x86/boot/compressed/head_32.S      | 42 +++++++++++++++-------
+>  arch/x86/boot/compressed/head_64.S      | 42 ++++++++++++++++++++--
+>  arch/x86/boot/header.S                  |  6 ++--
+>  arch/x86/boot/tools/build.c             | 44 ++++++++++++++++-------
+>  drivers/firmware/efi/libstub/x86-stub.c | 48 ++++++++++++++++++++++---
+>  5 files changed, 147 insertions(+), 35 deletions(-)
+>
+> Range-diff against v1:
+> 1:  0cdb6bf27a24 ! 1:  2ecbf60b9ecd x86/boot/compressed/32: Save the output address instead of recalculating it
+>     @@ Metadata
+>       ## Commit message ##
+>          x86/boot/compressed/32: Save the output address instead of recalculating it
+>
+>     -    In preparation for being able to decompress starting at a different
+>     -    address than startup_32, save the calculated output address instead of
+>     -    recalculating it later.
+>     +    In preparation for being able to decompress into a buffer starting at a
+>     +    different address than startup_32, save the calculated output address
+>     +    instead of recalculating it later.
+>
+>          We now keep track of three addresses:
+>                  %edx: startup_32 as we were loaded by bootloader
+> 2:  d4df840752ac ! 2:  e2bdbe6cb692 efi/x86: Decompress at start of PE image load address
+>     @@ arch/x86/boot/compressed/head_64.S: SYM_FUNC_START(efi32_pe_entry)
+>         movl    -4(%ebp), %esi                  // loaded_image
+>         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
+>         movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
+>     ++  /*
+>     ++   * We need to set the image_offset variable here since startup_32 will
+>     ++   * use it before we get to the 64-bit efi_pe_entry in C code.
+>     ++   */
+>      +  subl    %esi, %ebx
+>      +  movl    %ebx, image_offset(%ebp)        // save image_offset
+>         jmp     efi32_pe_stub_entry
+>     @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t han
+>                         efi_printk("efi_relocate_kernel() failed!\n");
+>                         goto fail;
+>                 }
+>     ++          /*
+>     ++           * Now that we've copied the kernel elsewhere, we no longer
+>     ++           * have a setup block before startup_32, so reset image_offset
+>     ++           * to zero in case it was set earlier.
+>     ++           */
+>      +          image_offset = 0;
+>         }
+>
+> 3:  4bae68f25b90 ! 3:  ea840f78f138 efi/x86: Add kernel preferred address to PE header
+>     @@ arch/x86/boot/header.S: optional_header:
+>
+>       extra_header_fields:
+>      +  # PE specification requires ImageBase to be 64k-aligned
+>     -+  .set    ImageBase, (LOAD_PHYSICAL_ADDR+0xffff) & ~0xffff
+>     ++  .set    image_base, (LOAD_PHYSICAL_ADDR + 0xffff) & ~0xffff
+>       #ifdef CONFIG_X86_32
+>      -  .long   0                               # ImageBase
+>     -+  .long   ImageBase                       # ImageBase
+>     ++  .long   image_base                      # ImageBase
+>       #else
+>      -  .quad   0                               # ImageBase
+>     -+  .quad   ImageBase                       # ImageBase
+>     ++  .quad   image_base                      # ImageBase
+>       #endif
+>         .long   0x20                            # SectionAlignment
+>         .long   0x20                            # FileAlignment
+> 4:  2330a25c6b0f ! 4:  c25a9b507d6d efi/x86: Remove extra headroom for setup block
+>     @@ Commit message
+>          account for setup block") added headroom to the PE image to account for
+>          the setup block, which wasn't used for the decompression buffer.
+>
+>     -    Now that we decompress from the start of the image, this is no longer
+>     -    required.
+>     +    Now that the decompression buffer is located at the start of the image,
+>     +    and includes the setup block, this is no longer required.
+>
+>          Add a check to make sure that the head section of the compressed kernel
+>          won't overwrite itself while relocating. This is only for
+> 5:  2081f91cbe75 ! 5:  d3dc3af1c7b8 efi/x86: Don't relocate the kernel unless necessary
+>     @@ arch/x86/boot/tools/build.c: static void update_pecoff_text(unsigned int text_st
+>          * Size of code: Subtract the size of the first sector (512 bytes)
+>
+>       ## drivers/firmware/efi/libstub/x86-stub.c ##
+>     +@@
+>     +
+>     + #include "efistub.h"
+>     +
+>     ++/* Maximum physical address for 64-bit kernel with 4-level paging */
+>     ++#define MAXMEM_X86_64_4LEVEL (1ull << 46)
+>     ++
+>     + static efi_system_table_t *sys_table;
+>     + extern const bool efi_is64;
+>     + extern u32 image_offset;
+>      @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t handle,
+>                              struct boot_params *boot_params)
+>       {
+>     @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t han
+>      -   * address, relocate it.
+>      +   * If the kernel isn't already loaded at a suitable address,
+>      +   * relocate it.
+>     ++   *
+>      +   * It must be loaded above LOAD_PHYSICAL_ADDR.
+>     -+   * The maximum address for 64-bit is 1 << 46 for 4-level paging.
+>     ++   *
+>     ++   * The maximum address for 64-bit is 1 << 46 for 4-level paging. This
+>     ++   * is defined as the macro MAXMEM, but unfortunately that is not a
+>     ++   * compile-time constant if 5-level paging is configured, so we instead
+>     ++   * define our own macro for use here.
+>     ++   *
+>      +   * For 32-bit, the maximum address is complicated to figure out, for
+>      +   * now use KERNEL_IMAGE_SIZE, which will be 512MiB, the same as what
+>      +   * KASLR uses.
+>     ++   *
+>      +   * Also relocate it if image_offset is zero, i.e. we weren't loaded by
+>      +   * LoadImage, but we are not aligned correctly.
+>          */
+>      -  if (bzimage_addr - image_offset != hdr->pref_address) {
+>     ++
+>      +  buffer_start = ALIGN(bzimage_addr - image_offset,
+>      +                       hdr->kernel_alignment);
+>      +  buffer_end = buffer_start + hdr->init_size;
+>      +
+>     -+  if (buffer_start < LOAD_PHYSICAL_ADDR
+>     -+      || IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE
+>     -+      || IS_ENABLED(CONFIG_X86_64) && buffer_end > 1ull << 46
+>     -+      || image_offset == 0 && !IS_ALIGNED(bzimage_addr,
+>     -+                                          hdr->kernel_alignment)) {
+>     ++  if ((buffer_start < LOAD_PHYSICAL_ADDR)                              ||
+>     ++      (IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE)    ||
+>     ++      (IS_ENABLED(CONFIG_X86_64) && buffer_end > MAXMEM_X86_64_4LEVEL) ||
+>     ++      (image_offset == 0 && !IS_ALIGNED(bzimage_addr,
+>     ++                                        hdr->kernel_alignment))) {
+>                 status = efi_relocate_kernel(&bzimage_addr,
+>                                              hdr->init_size, hdr->init_size,
+>                                              hdr->pref_address,
+> --
+> 2.24.1
+>
