@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE88C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44792C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6440B20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1300D20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257624;
-	bh=GL+ErFHzO4uUVjyhpYexc0RZkb4zGsFm7jDq9h5knZk=;
+	s=default; t=1583257627;
+	bh=aYvB/CLqNzY0NxikruZq6X2FXZDOhA/dHZFO0339dAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUnyi/VTFFmv6iAPggwr7LETCaWAJxv+VzKbf0hDrF1Pgrm1w2IM+BCGlHaHHzN9k
-	 JhFHjy+SYUbOeiFaX8t4utR9qCSBXmD3v04PT1WnBrrNnIfUDBZByE5v5+7rfpFhtx
-	 ZkZ5B3yOwlm+Os+oL/fUFEYEWBeoS8P5BJftAW24=
+	b=e8SkouHFceBEgpRJtFK99UcBhI3gpI43ShI+zT8N1piHdauv1c4dAkSaDQhFDp0Kj
+	 JNay8egGKw5hYyoGP2R78EPMwsIbQrbBKDy5tcTv2OOgouJGGKBxsJ2XNHf4NMO0Nj
+	 sh5eJejYUvm/07pQSNJRLKGnbKXP52FCtKeCVNlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731273AbgCCRrD (ORCPT
+        id S1731284AbgCCRrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731265AbgCCRrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:00 -0500
+        id S1729206AbgCCRrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEDEE2166E;
-        Tue,  3 Mar 2020 17:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACAE20870;
+        Tue,  3 Mar 2020 17:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257620;
-        bh=GL+ErFHzO4uUVjyhpYexc0RZkb4zGsFm7jDq9h5knZk=;
+        s=default; t=1583257622;
+        bh=aYvB/CLqNzY0NxikruZq6X2FXZDOhA/dHZFO0339dAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ni+RyrOzH3+RpdHjEmroGzgYBCz0mCoz+O8XmxBpCpoUBu9SKq7+kMveKxscDhDYy
-         DtWpyxktAS91c8e3CApRJFzlPo5jnwwn0vfrv6iOwBLo/smFyZwEy5T5uPdlaGhb8/
-         R+AFRoEjhX2tv/L7grYFq40kh2CSpBp4jYjkHnQs=
+        b=WUdk7AP/0SysO5OLXcGJzc4Hz75As0gHRZWkTS8HjVtzg/pvl0q+5/fpWDrWyh8Gk
+         EGX918n4J23GV9RnyOU2Q0amih6zDmr/Vic2PCRcMMG17Wy08OiULaksGamc9YhYl6
+         W7acaxSQ6Ds8B8Vfp32hlUyIi2LPlfrwSb95XTmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
+        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 064/176] ice: Fix switch between FW and SW LLDP
-Date:   Tue,  3 Mar 2020 18:42:08 +0100
-Message-Id: <20200303174312.042559488@linuxfoundation.org>
+Subject: [PATCH 5.5 065/176] ice: Dont allow same value for Rx tail to be written twice
+Date:   Tue,  3 Mar 2020 18:42:09 +0100
+Message-Id: <20200303174312.166742616@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Ertman <david.m.ertman@intel.com>
+From: Brett Creeley <brett.creeley@intel.com>
 
-[ Upstream commit 53977ee47410885e7d4eee87d2c811a48a275150 ]
+[ Upstream commit 168983a8e19b89efd175661e53faa6246be363a0 ]
 
-When switching between FW and SW LLDP mode, the
-number of configured TLV apps in the driver's
-DCB configuration is getting out of synch with
-what lldpad thinks is configured.  This is causing
-a problem when shutting down lldpad.  The cleanup
-is trying to delete TLV apps that are not defined
-in the kernel.
+Currently we compare the value we are about to write to the Rx tail
+register with the previous value of next_to_use. The problem with this
+is we only write tail on 8 descriptor boundaries, but next_to_use is
+updated whenever we clean Rx descriptors. Fix this by comparing the
+value we are about to write to tail with the previously written tail
+value. This will prevent duplicate Rx tail bumps.
 
-Since the driver is keeping an accurate account
-of the apps defined, use the drivers number of
-apps to determine if there is an app to delete.
-If the number of apps is <= 1, then do not
-attempt to delete.
-
-Signed-off-by: Dave Ertman <david.m.ertman@intel.com>
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_dcb_nl.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_txrx_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-index d870c1aedc170..926c9772f0860 100644
---- a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-@@ -713,13 +713,13 @@ static int ice_dcbnl_delapp(struct net_device *netdev, struct dcb_app *app)
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
+index 35bbc4ff603cd..6da048a6ca7c1 100644
+--- a/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_txrx_lib.c
+@@ -10,7 +10,7 @@
+  */
+ void ice_release_rx_desc(struct ice_ring *rx_ring, u32 val)
+ {
+-	u16 prev_ntu = rx_ring->next_to_use;
++	u16 prev_ntu = rx_ring->next_to_use & ~0x7;
  
- 	mutex_lock(&pf->tc_mutex);
--	ret = dcb_ieee_delapp(netdev, app);
--	if (ret)
--		goto delapp_out;
--
- 	old_cfg = &pf->hw.port_info->local_dcbx_cfg;
+ 	rx_ring->next_to_use = val;
  
--	if (old_cfg->numapps == 1)
-+	if (old_cfg->numapps <= 1)
-+		goto delapp_out;
-+
-+	ret = dcb_ieee_delapp(netdev, app);
-+	if (ret)
- 		goto delapp_out;
- 
- 	new_cfg = &pf->hw.port_info->desired_dcbx_cfg;
 -- 
 2.20.1
 
