@@ -7,52 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B91C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5A1C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0702465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E3C2465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204588;
-	bh=FvBTo3UkqZq2iW0czPeO5xCooCJoFfWcEZh66gx8an4=;
+	s=default; t=1583204591;
+	bh=8NYG1n3xKdhO8T2dlTDUokQeG2/YXy4P9DT44E3uIK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsqounW4usxdB9vDSmtZWiFoZmhEQi9QJyJKoCa5INvcBO3H2KIb/oIJWAbxaEjWf
-	 ojCfn0fJJJ0EW9BHWPDmFENlE0BE33cr9r40GpncLe9Vq/9DgyflklAX/2T2HYRJTi
-	 +FEi3Cs6I9j2wtIooEoh6d70rTmvJyijjXkAe7Es=
+	b=ro66a/2pZle6Ffj+JdP1XWqobbNHmUWAJtc68KdbL0MFYPHbDUTkcJPHRl0bGDqAZ
+	 VuWe+1o6BM0hNj9622pfo29FC5zXrzeURm1pZ28JpMoQZGYgT5iEN/lf/Vy8TJijH6
+	 qDM0Yk1my+LVZmJfgRTLUHTLT8TPVVhoEEOpw02k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbgCCCqd (ORCPT
+        id S1727870AbgCCDDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40682 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:03:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbgCCCq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:26 -0500
+        id S1727500AbgCCCqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A83C2465E;
-        Tue,  3 Mar 2020 02:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 469A424680;
+        Tue,  3 Mar 2020 02:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203585;
-        bh=FvBTo3UkqZq2iW0czPeO5xCooCJoFfWcEZh66gx8an4=;
+        s=default; t=1583203591;
+        bh=8NYG1n3xKdhO8T2dlTDUokQeG2/YXy4P9DT44E3uIK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIkxkMdtmHkTFTqDrV8tfvAVT4ks6dwwvlzJaUvsTs+ILbb8eegCyRe/hhPwHPZAL
-         YQjdTGyxen24B7Ht0BmpWUJ0z88HmnTDuhWhMTCiCEppAIjsTnOvIJDa7/jjDW+PXX
-         t4S3+LP11QGAqVYM0CPugxwVXAaAZu0/btMhlapU=
+        b=oJM65QX7LBM9gJ28TgMnBSPXTeOUaXzyo61qPmQHwkPnyAvHOskwMHqD/9TyXSeT6
+         kT81Bz/JNes9N/RIt+p3EyHbj8FVTGtMwa3UyEyCKPEEGqxscS9YxMEbzl4b+xbUqu
+         88AIyVXrkZeH8d8B3whBXp017UetKhsPwnpf+88c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Organov <sorganov@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 08/66] usb: gadget: serial: fix Tx stall after buffer overflow
-Date:   Mon,  2 Mar 2020 21:45:17 -0500
-Message-Id: <20200303024615.8889-8-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 13/66] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
+Date:   Mon,  2 Mar 2020 21:45:22 -0500
+Message-Id: <20200303024615.8889-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,45 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
+[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
 
-Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
-it while either USB cable is not connected, or nobody listens on the
-other side of the cable. If driver circular buffer overflows before
-connection is established, no data will be written to the USB layer
-until/unless /dev/ttyGS0 is closed and re-opened again by the
-application (the latter besides having no means of being notified about
-the event of establishing of the connection.)
+I was hitting kCFI crashes when building with clang, and after
+some digging finally narrowed it down to the
+dsi_mgr_connector_mode_valid() function being implemented as
+returning an int, instead of an enum drm_mode_status.
 
-Fix: on open and/or connect, kick Tx to flush circular buffer data to
-USB layer.
+This patch fixes it, and appeases the opaque word of the kCFI
+gods (seriously, clang inlining everything makes the kCFI
+backtraces only really rough estimates of where things went
+wrong).
 
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Thanks as always to Sami for his help narrowing this down.
+
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Alistair Delva <adelva@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: freedreno@lists.freedesktop.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_serial.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index f986e5c559748..8167d379e115b 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -561,8 +561,10 @@ static int gs_start_io(struct gs_port *port)
- 	port->n_read = 0;
- 	started = gs_start_rx(port);
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 271aa7bbca925..355a60b4a536f 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -336,7 +336,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
+ 	return num;
+ }
  
--	/* unblock any pending writes into our circular buffer */
- 	if (started) {
-+		gs_start_tx(port);
-+		/* Unblock any pending writes into our circular buffer, in case
-+		 * we didn't in gs_start_tx() */
- 		tty_wakeup(port->port.tty);
- 	} else {
- 		gs_free_requests(ep, head, &port->read_allocated);
+-static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
++static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+ 				struct drm_display_mode *mode)
+ {
+ 	int id = dsi_mgr_connector_get_id(connector);
 -- 
 2.20.1
 
