@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B94C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169D024677
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CF824697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203666;
-	bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
+	s=default; t=1583203668;
+	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCSfalEzJj3rJ6ytJFQyrXHvNl3cYJOaZCLEPc0m1iPoe9WOBKuBsuWCKsYMqJo1U
-	 Ao+x5HgSJiA3b11ECaxcSpowJbOjmUuk4MAu1oVjIw2OfHQL+kg8B8JeOs0Js1Yt1H
-	 JhfX2OLDGsOP3rVhFDu3jXGEUOTVTpVTp+sBK6NA=
+	b=o+uug+lu7Wfog/0y3dR0F17bY3vGgy990vP7aOkFF7WTNqa8XADehArzRhoMU5X6f
+	 yC87W9DoVO8supVClao9HZ40LVT8SD1WujFjCUZRt2eP2cscncPwap/Rzd+b6M3Fml
+	 aJNAFisBtoPiEV+8xz5DUw7XyD8k1uI82ZoJ60ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgCCCro (ORCPT
+        id S1728169AbgCCCrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgCCCrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:37 -0500
+        id S1728149AbgCCCro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE77F24697;
-        Tue,  3 Mar 2020 02:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4412469C;
+        Tue,  3 Mar 2020 02:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203656;
-        bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
+        s=default; t=1583203664;
+        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IjtH5PL8mPZnm4EgwH1GU5HIuHafOHqhNE7KOhTS3bP7NIrydHRqGhuJ6XWIh40kk
-         70FZjxABSfGS1+eLOr3hh3kw9IMuOfl5S2KOI6chguwBeFL+pyWUmjBcTjh2+EHUWg
-         lQzBzoJDXZRozqFz6Shs7k9HPEGZ4B5e0KG5I+B4=
+        b=hmNhDbiR+eodjgBe9Yd7tlhhcXKff16UtuY9SadtOyNhFeJcAdd2JdEPxbVhfTFcT
+         JW3tgNxNWAUNQyX4izLwfxpkt2sgzVh/TQuhUOz0vpK2JtzTaaecQ+7eNWt2Gpn+dT
+         ywbhhWqAgyx3QSrWY4uicriQ99mYwMl0vZlLwEJ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hangbin Liu <liuhangbin@gmail.com>,
-        Petr Machata <petrm@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 66/66] selftests: forwarding: vxlan_bridge_1d: use more proper tos value
-Date:   Mon,  2 Mar 2020 21:46:15 -0500
-Message-Id: <20200303024615.8889-66-sashal@kernel.org>
+Cc:     Daniel Golle <daniel@makrotopia.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/58] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Mon,  2 Mar 2020 21:46:45 -0500
+Message-Id: <20200303024740.9511-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
-References: <20200303024615.8889-1-sashal@kernel.org>
+In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
+References: <20200303024740.9511-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,39 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit 9b64208f74fbd0e920475ecfe9326f8443fdc3a5 ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-0x11 and 0x12 set the ECN bits based on RFC2474, it would be better to avoid
-that. 0x14 and 0x18 would be better and works as well.
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Reported-by: Petr Machata <petrm@mellanox.com>
-Fixes: 4e867c9a50ff ("selftests: forwarding: vxlan_bridge_1d: fix tos value")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-index 353613fc19475..ce6bea9675c07 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-@@ -516,9 +516,9 @@ test_tos()
- 	RET=0
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 3bdd56a1021b2..ea12f10610b64 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 	tc filter add dev v1 egress pref 77 prot ip \
--		flower ip_tos 0x11 action pass
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
-+		flower ip_tos 0x14 action pass
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x14" v1 egress 77 10
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x18" v1 egress 77 0
- 	tc filter del dev v1 egress pref 77 prot ip
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 	log_test "VXLAN: envelope TOS inheritance"
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
