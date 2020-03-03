@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D6EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8865D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B2D2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204233;
-	bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+	s=default; t=1583204244;
+	bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OP+Kv5/QwdDV0bYnk1LYJwZbiZIH1I0JCX3bnh5ZPzqb9ZTZeG0tlvsySpAgIF9m
-	 HAUYOwzAitd3F6rX1L+w3YQGk9mKcJrdyQm2mcuaA3VV8dDnchvag1HX20Hm5Q+O25
-	 IVwbRi1CaL4ETpgtjT20P9qr/aabmt/3M8mP+KI8=
+	b=K8E+Ip0QX25csSGBZvXzTuuuDN5SS181LOoEaEaqrvAUHwN4CYya4stR2Z2xRYqJ/
+	 xq753yMadngDhJRzPCbVoItTnwPCxhtrQg/8VTEQjMR5pKx3oN/SWJfvvVaGTM1VzQ
+	 GdJdrLA1c+v9oOiWQKsutV+Lw166wIqm5WM51CcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgCCC5L (ORCPT
+        id S1728542AbgCCC5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44266 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgCCCs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:28 -0500
+        id S1728394AbgCCCsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC4624680;
-        Tue,  3 Mar 2020 02:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6982468D;
+        Tue,  3 Mar 2020 02:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203708;
-        bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+        s=default; t=1583203702;
+        bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlBeneV3vp6Xjgc+i1hsUdP+h1505g1QE2Ek2sInORlFdpuEb7+aBOt2XPh4bYsAl
-         G6pYz9lEQvQSYKh4ZNhbFkEJhw1rBskifToC73x6qHvR+4ZNEKHAp4yLOMRK3liY8S
-         i2M94Oo8pKfDOqJjfrQvxq1AMqeuok04RusO7YlM=
+        b=GAkANi7PpJ+kQHrBxf+GyJ380o5esAFzFr8Aj2uTwO04HBMBZ0sbveDveHDCYRvNk
+         7vJ5sfsZ0Now44HIRXX22MyI9dbxQT6IJrXNCKJCmcWp1OURpfv4PrbrhiZXWMFJow
+         k+mwEHQti7eP17VEUEYL/DYFXKkT0jviblA3BM7Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 39/58] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Date:   Mon,  2 Mar 2020 21:47:21 -0500
-Message-Id: <20200303024740.9511-39-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 34/58] s390: make 'install' not depend on vmlinux
+Date:   Mon,  2 Mar 2020 21:47:16 -0500
+Message-Id: <20200303024740.9511-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,65 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 3dfee47b215e49788cfc80e474820ea2e948c031 ]
+[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
 
-Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
+install" not depend on vmlinux"), the install targets should never
+trigger the rebuild of the kernel.
 
-Use identity-mapping and PCI ATS doesn't help this issue.
+The variable, CONFIGURE, is not set by anyone. Remove it as well.
 
-According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
-the same here to avoid screen flickering on 4K monitor.
-
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/s390/Makefile      | 2 +-
+ arch/s390/boot/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index d7cbca8bf2cd4..b5ae9f7c0510b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2533,6 +2533,7 @@ static int __init early_amd_iommu_init(void)
- 	struct acpi_table_header *ivrs_base;
- 	acpi_status status;
- 	int i, remap_cache_sz, ret = 0;
-+	u32 pci_id;
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index 9ce1baeac2b25..2faaf456956a6 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -146,7 +146,7 @@ all: bzImage
+ #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
+ KBUILD_IMAGE	:= $(boot)/bzImage
  
- 	if (!amd_iommu_detected)
- 		return -ENODEV;
-@@ -2620,6 +2621,16 @@ static int __init early_amd_iommu_init(void)
- 	if (ret)
- 		goto out;
+-install: vmlinux
++install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
  
-+	/* Disable IOMMU if there's Stoney Ridge graphics */
-+	for (i = 0; i < 32; i++) {
-+		pci_id = read_pci_config(0, i, 0, 0);
-+		if ((pci_id & 0xffff) == 0x1002 && (pci_id >> 16) == 0x98e4) {
-+			pr_info("Disable IOMMU on Stoney Ridge\n");
-+			amd_iommu_disabled = true;
-+			break;
-+		}
-+	}
-+
- 	/* Disable any previously enabled IOMMUs */
- 	if (!is_kdump_kernel() || amd_iommu_disabled)
- 		disable_iommus();
-@@ -2728,7 +2739,7 @@ static int __init state_next(void)
- 		ret = early_amd_iommu_init();
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
--			pr_info("AMD IOMMU disabled on kernel command-line\n");
-+			pr_info("AMD IOMMU disabled\n");
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
+ bzImage: vmlinux
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index e2c47d3a1c891..0ff9261c915e3 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
+ $(obj)/startup.a: $(OBJECTS) FORCE
+ 	$(call if_changed,ar)
+ 
+-install: $(CONFIGURE) $(obj)/bzImage
++install:
+ 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
+ 	      System.map "$(INSTALL_PATH)"
+ 
 -- 
 2.20.1
 
