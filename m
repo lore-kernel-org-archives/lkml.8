@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D23C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5154214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D4B20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258238;
-	bh=/Y61u/WDDMNO4YmtCJCU1qU7NppAVq+7vFBnmdojCLA=;
+	s=default; t=1583258241;
+	bh=/DugTHTy5lupFtZqPT3hn6MnL7lupNeCh9qJXvz5b/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pO43fCNoV7XRFkaG7DUmeCdixYOqrQcAI7n2N31/Ao9nNmBJBfpvMBLs42CrwnHdC
-	 qnTX22MKfYvTGujQeIcqnX26tyqPEHlCD0u3ZpmhVc/hTf/NoOqAwxwSlbjK7pEHkz
-	 GlfN5Qry7RI4wzEAMPJzovcIxSAUTWl+IiwTjhHs=
+	b=ifW5iol/8aupvwDvja3Qc3yl4E4nZKnVVvxnJeOy02EXesbjH2Hwe0lPUaYCLPFQR
+	 rmL+9nS4Db1djEJU/ctFBHZm5gCmoGHF3zgmQQQC4CbOiVZe7usdoCRBrxMrFcV3I0
+	 OLxsJ7Nybv7AsAupuP2zX4/V+YwFdP+VjNtWbvMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733035AbgCCR5P (ORCPT
+        id S1733054AbgCCR5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:57:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbgCCR5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:08 -0500
+        id S1733039AbgCCR5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9835820656;
-        Tue,  3 Mar 2020 17:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B64E214DB;
+        Tue,  3 Mar 2020 17:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258228;
-        bh=/Y61u/WDDMNO4YmtCJCU1qU7NppAVq+7vFBnmdojCLA=;
+        s=default; t=1583258235;
+        bh=/DugTHTy5lupFtZqPT3hn6MnL7lupNeCh9qJXvz5b/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/EIciRmcq2/FB90FlDdo6bBNaLTGc79VrdTJTKuTFs/BDAsRXER5gH0jk1uFwngm
-         FBqgQwudkx5Fy8NRutpK4LuBogju5RvvQ3+ULpcbULe8v2AtjWUKHSNcp+REhuS/qM
-         w9efu7yl8+68HbFE1ggaDeg5PiEVq+KxmZZiCpP8=
+        b=llnSUClE4L+Wopp33oIWSNmwP9wPOfUH+oVzGZGOibI4i5RKhqeWubiqTJLD/0X1Z
+         v9Jok4OyTzTmZTWIqB+plBwQypDCj5LeipOmebKsm4Uyx20qchh8nnBZRNQDIihuP/
+         dEUMSOaV9Exqp184C02CgXGsthiOZmw/OVb3I83I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 119/152] mwifiex: delete unused mwifiex_get_intf_num()
-Date:   Tue,  3 Mar 2020 18:43:37 +0100
-Message-Id: <20200303174316.299028384@linuxfoundation.org>
+        stable@vger.kernel.org, Cheng Jian <cj.chengjian@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH 5.4 122/152] sched/fair: Optimize select_idle_cpu
+Date:   Tue,  3 Mar 2020 18:43:40 +0100
+Message-Id: <20200303174316.654025806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,47 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Cheng Jian <cj.chengjian@huawei.com>
 
-commit 1c9f329b084b7b8ea6d60d91a202e884cdcf6aae upstream.
+commit 60588bfa223ff675b95f866249f90616613fbe31 upstream.
 
-Commit 7afb94da3cd8 ("mwifiex: update set_mac_address logic") fixed the
-only user of this function, partly because the author seems to have
-noticed that, as written, it's on the borderline between highly
-misleading and buggy.
+select_idle_cpu() will scan the LLC domain for idle CPUs,
+it's always expensive. so the next commit :
 
-Anyway, no sense in keeping dead code around: let's drop it.
+	1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
 
-Fixes: 7afb94da3cd8 ("mwifiex: update set_mac_address logic")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+introduces a way to limit how many CPUs we scan.
+
+But it consume some CPUs out of 'nr' that are not allowed
+for the task and thus waste our attempts. The function
+always return nr_cpumask_bits, and we can't find a CPU
+which our task is allowed to run.
+
+Cpumask may be too big, similar to select_idle_core(), use
+per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
+
+Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20191213024530.28052-1-cj.chengjian@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/main.h |   13 -------------
- 1 file changed, 13 deletions(-)
+ kernel/sched/fair.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -1295,19 +1295,6 @@ mwifiex_copy_rates(u8 *dest, u32 pos, u8
- 	return pos;
- }
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5933,6 +5933,7 @@ static inline int select_idle_smt(struct
+  */
+ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
+ {
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	struct sched_domain *this_sd;
+ 	u64 avg_cost, avg_idle;
+ 	u64 time, cost;
+@@ -5964,11 +5965,11 @@ static int select_idle_cpu(struct task_s
  
--/* This function return interface number with the same bss_type.
-- */
--static inline u8
--mwifiex_get_intf_num(struct mwifiex_adapter *adapter, u8 bss_type)
--{
--	u8 i, num = 0;
--
--	for (i = 0; i < adapter->priv_num; i++)
--		if (adapter->priv[i] && adapter->priv[i]->bss_type == bss_type)
--			num++;
--	return num;
--}
--
- /*
-  * This function returns the correct private structure pointer based
-  * upon the BSS type and BSS number.
+ 	time = cpu_clock(this);
+ 
+-	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
++	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++
++	for_each_cpu_wrap(cpu, cpus, target) {
+ 		if (!--nr)
+ 			return si_cpu;
+-		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+-			continue;
+ 		if (available_idle_cpu(cpu))
+ 			break;
+ 		if (si_cpu == -1 && sched_idle_cpu(cpu))
 
 
