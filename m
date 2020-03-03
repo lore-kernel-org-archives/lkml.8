@@ -2,83 +2,86 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE394C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F93C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781DA2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE8A20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ED8HguqO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hk6M5h8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgCCOJS (ORCPT
+        id S1729546AbgCCOJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:09:18 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:43560 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgCCOJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:09:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=l7N/qCyUEC0aOSPXLe8sV209wk3xmRtSBQDdAdmN0kw=; b=ED8HguqO13RKccacLhW+C+poh0
-        3ZxLItBVFyD0qLss4wB2a69xUk2jh+ywQTEcMV6vjLk+tOUCSjU1AmjKbNxl/5q0iexdh7bAtDCdf
-        nU720OZQOAIrUfoTSJCVi/jgIRZvKHUUfZEa5kwHvBJFr7A+sOUUoOXL732WMCLq7LVY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j98ET-0006Up-04; Tue, 03 Mar 2020 15:09:13 +0100
-Date:   Tue, 3 Mar 2020 15:09:12 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Christian Herber <christian.herber@nxp.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
-Message-ID: <20200303140912.GH31977@lunn.ch>
-References: <AM0PR04MB70412893CFD2F553107148FC86E40@AM0PR04MB7041.eurprd04.prod.outlook.com>
- <2228b5de-89e3-d61a-4af9-8d1a8a5eb311@pengutronix.de>
+        Tue, 3 Mar 2020 09:09:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38260 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729533AbgCCOJY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:09:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583244563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f1oQbBmvrBGg0OPWPnhd5xlRIiyvJNmigaWzMX+f8Oo=;
+        b=Hk6M5h8no4DBgLFBrEq9Z1+PdfBBGrQzf0x4pc1IDWMOYvwgSZGit7toOz95vkfsA6IKTu
+        nx9t1dW09QxHg4w7WEQGuyWoOx9mzN8yjkXH0uSq3x0Gr+yl3Jjm5fZNGOXHW2J0fjfsva
+        HwCsxKaA9arK+8AHiGjv9CyFAe8fSfw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-V0i0Dt2SOYSUsHpCEce_5g-1; Tue, 03 Mar 2020 09:09:19 -0500
+X-MC-Unique: V0i0Dt2SOYSUsHpCEce_5g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 995FA18B9FC1;
+        Tue,  3 Mar 2020 14:09:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A16BA60BE1;
+        Tue,  3 Mar 2020 14:09:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200303130347.GA2302029@kroah.com>
+References: <20200303130347.GA2302029@kroah.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com> <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com> <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net> <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com> <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2228b5de-89e3-d61a-4af9-8d1a8a5eb311@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1656812.1583244553.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Mar 2020 14:09:13 +0000
+Message-ID: <1656813.1583244553@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Oleksij, Heiner, Marc,
-> > 
-> > You could also refer the solution implemented here as part of a TJA110x driver:
-> > https://source.codeaurora.org/external/autoivnsw/tja110x_linux_phydev/about/
-> 
-> OK, thank you!
-> 
-> Suddenly, the solution in this driver is not mainlainable. It may match on
-> ther PHYs with PHYID == 0.
-> 
-> See this part of the code:
-> #define NXP_PHY_ID_TJA1102P1      (0x00000000U)
-> ...
-> 	, {
-> 	.phy_id = NXP_PHY_ID_TJA1102P1,
-> 	.name = "TJA1102_p1",
-> 	.phy_id_mask = NXP_PHY_ID_MASK,
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Noooo
+> Actually, I like this idea (the syscall,
 
-You cannot assume NXP is the only silicon vendor to manufacture broken
-silicon with a PHY ID of 0.
+It might mesh well with atomic_open in some way.
 
-	Andrew
+David
+
