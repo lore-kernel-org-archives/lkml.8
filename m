@@ -8,107 +8,164 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF935C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B466A2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2380F20828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgCCGZB (ORCPT
+        id S1727530AbgCCGZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:25:01 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:46791 "EHLO
+        Tue, 3 Mar 2020 01:25:31 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60462 "EHLO
         out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727458AbgCCGZB (ORCPT
+        by vger.kernel.org with ESMTP id S1727398AbgCCGZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:25:01 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TrXXqrK_1583216687;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TrXXqrK_1583216687)
+        Tue, 3 Mar 2020 01:25:30 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TrXLIVw_1583216718;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TrXLIVw_1583216718)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Mar 2020 14:24:52 +0800
+          Tue, 03 Mar 2020 14:25:26 +0800
 From:   Hui Zhu <teawater@gmail.com>
 To:     fengguang.wu@qq.com, linux-kernel@vger.kernel.org
 Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [PATCH for vm-scalability] Makefile: Add static build option
-Date:   Tue,  3 Mar 2020 14:24:44 +0800
-Message-Id: <1583216684-29427-1-git-send-email-teawater@gmail.com>
+Subject: [PATCH for vm-scalability] usemem: Add new option --fragmentation for generating fragmented pages
+Date:   Tue,  3 Mar 2020 14:25:15 +0800
+Message-Id: <1583216715-29511-1-git-send-email-teawater@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes vm-scalability needs to work in an environment without an
-libraries.  Supporting static build is helpful.
+This commit adds new option --fragmentation.  usemem will generate
+size/2/pagesize fragmented pages with this option.
+Its implementation is to use madvise to release a page every other page.
+For example:
+usemem --fragment -s -1 400m
+Ideally, this command will generate 200m fragmented pages in the system.
 
-This commit add static build option:
-make STATIC=1
+This command can help test anti-fragmentation function and other features
+that are affected by fragmentation issues of the Linux kernel.
 
 Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 ---
- Makefile | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ usemem.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 73b2ff3..eadc090 100644
---- a/Makefile
-+++ b/Makefile
-@@ -6,6 +6,13 @@ EXECUTABLES :=	usemem \
- 		usemem_direct_write \
- 		usemem_mbind
+diff --git a/usemem.c b/usemem.c
+index 9ac36e4..10e8874 100644
+--- a/usemem.c
++++ b/usemem.c
+@@ -95,6 +95,7 @@ int opt_sync_free = 0;
+ int opt_bind_interval = 0;
+ unsigned long opt_delay = 0;
+ int opt_read_again = 0;
++int opt_fragmentation = 0;
+ int nr_task;
+ int nr_thread;
+ int nr_cpu;
+@@ -153,6 +154,7 @@ void usage(int ok)
+ 	"    -O|--anonymous      mmap with MAP_ANONYMOUS\n"
+ 	"    -U|--hugetlb        allocate hugetlbfs page\n"
+ 	"    -Z|--read-again     read memory again after access the memory\n"
++	"    --fragmentation     generate size/2/pagesize fragmented pages\n"
+ 	"    -h|--help           show this message\n"
+ 	,		ourname);
  
-+ifdef STATIC
-+	EXTRA_LDFLAGS := -static
-+else
-+	EXTRA_LDFLAGS :=
-+endif
+@@ -191,6 +193,7 @@ static const struct option opts[] = {
+ 	{ "delay"	, 1, NULL, 'e' },
+ 	{ "hugetlb"	, 0, NULL, 'U' },
+ 	{ "read-again"	, 0, NULL, 'Z' },
++	{ "fragmentation", 0, NULL, 0 },
+ 	{ "help"	, 0, NULL, 'h' },
+ 	{ NULL		, 0, NULL, 0 }
+ };
+@@ -655,6 +658,26 @@ static void timing_free(void *ptrs[], unsigned int nptr,
+ 
+ static void wait_for_sigusr1(int signal) {}
+ 
++static void do_fragmentation(void *addr, unsigned long len)
++{
++	unsigned long offset;
++	int should_free = 1;
 +
++	for (offset = 0; offset <= len - pagesize; offset += pagesize) {
++		if (should_free) {
++			if (madvise(addr + offset, pagesize,
++				MADV_DONTNEED) != 0) {
++				fprintf(stderr,
++					"msync failed with error %s\n",
++					strerror(errno));
++				exit(1);
++			}
++			should_free = 0;
++		} else
++			should_free = 1;
++	}
++}
 +
- all:	$(EXECUTABLES)
+ long do_units(void)
+ {
+ 	struct drand48_data rand_data;
+@@ -752,6 +775,15 @@ long do_units(void)
+ 		}
+ 	}
  
- clean:
-@@ -15,31 +22,31 @@ distclean: clean
- 	rm -f $(EXECUTABLES)
++	if (opt_fragmentation) {
++		if (prealloc)
++			do_fragmentation(prealloc, opt_bytes);
++		else {
++			for (i = 0; i < nptr; i++)
++				do_fragmentation(ptrs[i], lens[i]);
++		}
++	}
++
+ 	while (sleep_secs)
+ 		sleep_secs = sleep(sleep_secs);
  
- usemem: usemem.o usemem_hugepages.o usemem_mincore.o
--	gcc -pthread -Wall -O -g usemem_mincore.o usemem_hugepages.o usemem.o -o usemem
-+	gcc -pthread -Wall -O -g $(EXTRA_LDFLAGS) usemem_mincore.o usemem_hugepages.o usemem.o -o usemem
+@@ -896,6 +928,7 @@ int do_tasks(void)
+ int main(int argc, char *argv[])
+ {
+ 	int c;
++	int opt_index = 0;
  
- usemem.o: usemem.c
--	gcc -O -c -Wall -g  usemem.c -o usemem.o
-+	gcc -O -c -Wall -g $(EXTRA_LDFLAGS) usemem.c -o usemem.o
+ #ifdef DBG
+ 	/* print the command line parameters passed on to main */
+@@ -910,9 +943,18 @@ int main(int argc, char *argv[])
+ 	pagesize = getpagesize();
  
- usemem_hugepages.o: usemem_hugepages.c
--	gcc -Wall -O -c -g usemem_hugepages.c -o usemem_hugepages.o
-+	gcc -Wall -O -c -g $(EXTRA_LDFLAGS) usemem_hugepages.c -o usemem_hugepages.o
+ 	while ((c = getopt_long(argc, argv,
+-				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh", opts, NULL)) != -1)
++				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh",
++				opts, &opt_index)) != -1)
+ 		{
+ 		switch (c) {
++		case 0:
++			if (strcmp(opts[opt_index].name,
++				"fragmentation") == 0) {
++				opt_fragmentation = 1;
++			} else
++				usage(1);
++			break;
++
+ 		case 'a':
+ 			opt_malloc++;
+ 			break;
+@@ -1045,6 +1087,13 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
  
- usemem_mincore.o: usemem_mincore.c
--	gcc -Wall -O -c -g usemem_mincore.c -o usemem_mincore.o
-+	gcc -Wall -O -c -g $(EXTRA_LDFLAGS) usemem_mincore.c -o usemem_mincore.o
- 
- usemem_migrate: usemem_migrate.c
--	gcc -Wall -O -g -o usemem_migrate usemem_migrate.c -lnuma
-+	gcc -Wall -O -g $(EXTRA_LDFLAGS) -o usemem_migrate usemem_migrate.c -lnuma
- 
- usemem_ksm: usemem_ksm.c usemem_hugepages.c
--	gcc -Wall -g -o usemem_ksm usemem_ksm.c usemem_hugepages.c
-+	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_ksm usemem_ksm.c usemem_hugepages.c
- 
- usemem_mbind: usemem_mbind.c
--	gcc -Wall -g -o usemem_mbind usemem_mbind.c -lnuma
-+	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_mbind usemem_mbind.c -lnuma
- 
- usemem_ksm_hugepages: usemem_ksm_hugepages.c
--	gcc -Wall -g -o usemem_ksm_hugepages usemem_ksm_hugepages.c
-+	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_ksm_hugepages usemem_ksm_hugepages.c
- 
- usemem_direct_write: usemem_direct_write.c
--	gcc -Wall -g -o usemem_direct_write usemem_direct_write.c
-+	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_direct_write usemem_direct_write.c
- 
- usemem_remap: usemem_remap.c
--	gcc -Wall -g -o usemem_remap usemem_remap.c
-+	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_remap usemem_remap.c
++	if (opt_fragmentation && opt_malloc) {
++		fprintf(stderr,
++			"%s: malloc options ignored for fragmentation\n",
++			ourname);
++		opt_malloc = 0;
++	}
++
+ 	if (opt_malloc) {
+ 		if (map_populate|map_anonymous|map_hugetlb)
+ 			fprintf(stderr,
 -- 
 2.7.4
 
