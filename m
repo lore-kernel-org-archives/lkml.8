@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3752EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB3FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0391C2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8800F2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204254;
-	bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
+	s=default; t=1583204258;
+	bh=m1bj2nosYZ8MFQjvjfH7oDSog1qvxQmq/5hcWMEBSgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVVCfnvStPGER8qWagn6DEZQe/n/0xKHqiDThhYWKQo0QcTbIBFzhFTRdPWgXfDed
-	 4A1wkZXNbBpTrqVjCfN+WcsKMHmzga59xiL5BiQYcXbMaq/QbdykUqYJEh8dl8/mYv
-	 wth+/Wrknc7PhFsXYz5CvQTd0LPCoLsVpcK0Ng8w=
+	b=Lo/evcZoDFCij11MERY8tmI5VEhUUiwFu0+WewM7U8ixF+JbLBFunb6ZhHpNtqUwq
+	 mSqMfHLZgRDIycsazcWOTQjXj2rFdGHCZgRaY9r85WXeQs1jdpMc2L63ehHVtyY2FV
+	 +7fJKgnU+wNDHpRwQHea5RUFUmBxbPi3dI13PfX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgCCC5c (ORCPT
+        id S1729043AbgCCC5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727174AbgCCCsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:20 -0500
+        id S1728291AbgCCCsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B67724699;
-        Tue,  3 Mar 2020 02:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93EBA24681;
+        Tue,  3 Mar 2020 02:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203700;
-        bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
+        s=default; t=1583203697;
+        bh=m1bj2nosYZ8MFQjvjfH7oDSog1qvxQmq/5hcWMEBSgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSKzHGP++xgXcD5cLtpKhGlKRP3p1LsVuxshdcw4UshMf4ykviU+gsqPPYJWU8xpa
-         /YA6Fw3hjDB1gKnLs/AsBbt9Zax8YCZ4bKK92/GREs89RBbF9dj6lUcM3Eadth2jGN
-         NKSpty/p69QDGubgnTSdXFO8Dit1V0p9VjCcmBBc=
+        b=bHUx/NeMEVh71XixeIGNxiO+0/agIrNU35eUWadXtX970x9xn5s1MMN/Io9mEu7bW
+         Ohk30xm0djUnklhEyBX8yBgbSAii5lZh1SWdTSfJTDJ++uS6PoMgqjDL8HKQpl7iS+
+         uQXpREzlVq0Li64FGifyaunxoLRxAac1v91cApI8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 32/58] watchdog: da9062: do not ping the hw during stop()
-Date:   Mon,  2 Mar 2020 21:47:14 -0500
-Message-Id: <20200303024740.9511-32-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/58] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Mon,  2 Mar 2020 21:47:12 -0500
+Message-Id: <20200303024740.9511-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,49 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-driver takes that into account by setting the min_hw_heartbeat_ms to
-300ms and the core guarantees that the hw limit is observed for the
-ping() calls. But the core can't guarantee the required minimum ping
-cool down phase if a stop() command is send immediately after the ping()
-command. So it is not allowed to ping the watchdog within the stop()
-command as the driver does. Remove the ping can be done without doubts
-because the watchdog gets disabled anyway and a (re)start resets the
-watchdog counter too.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
-[groeck: Updated description]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index e149e66a6ea9f..e92f38fcb7a4a 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -94,13 +94,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
- 	int ret;
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 5ae206ae5d2b3..1c9e70c8cc30f 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -166,7 +166,7 @@ static int msg_enable;
  
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret) {
--		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
--			ret);
--		return ret;
--	}
--
- 	ret = regmap_update_bits(wdt->hw->regmap,
- 				 DA9062AA_CONTROL_D,
- 				 DA9062AA_TWDSCALE_MASK,
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -181,7 +181,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ 
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
