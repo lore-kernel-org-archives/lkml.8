@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79049C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F1DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D45E21739
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DF821D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204550;
-	bh=8H8u9Jdm4LXU8U5wy3ICUDTpKOuA7hqVpkDvPwmyKTM=;
+	s=default; t=1583204554;
+	bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCgi3JV5A5SgSB+XaxG2AhKOOpmaVQiVXJPYxf0mar90ObqoVT99h1Ni5LUNjBZt3
-	 Yn/oDCesVQbDBkOJNZd4YGElSx6r+ef7FNhWbIpu8Z/FeQRQm9251u6gE2d1mXeea5
-	 VlE9QbKnS+hSo6Av1Dr4MEtmQhiX9NPOv/V9mJBw=
+	b=Yb/dA5WnK+4INOS/pu0LrNW8WzAMqR8rEUkTlIIBWZZGf5pn26ZTeCJFgR45zwGpI
+	 Z7yDrrieB2A3llZtLi/lc8TJlrTW4A6E42EWWI1IvpDbDOZbpfhA+ypuL9+/rZyl6V
+	 sfTg3WNWgvYJwU7g/GpLufxGiqGVTSqPERy/uyjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgCCDC3 (ORCPT
+        id S1727646AbgCCCqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727647AbgCCCqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:46 -0500
+        id S1727551AbgCCCqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD7942465E;
-        Tue,  3 Mar 2020 02:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3539324677;
+        Tue,  3 Mar 2020 02:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203605;
-        bh=8H8u9Jdm4LXU8U5wy3ICUDTpKOuA7hqVpkDvPwmyKTM=;
+        s=default; t=1583203598;
+        bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLc+uamvuRQ9oBSJfdTOF/HUngnuIC3R21JtXtZv0ZICjH8HZwhRHYEtGrE1hRxP2
-         ghe7e41QmJzsOT3VfvAXsSe2udXSKxWBovkeZp3a9bfhhfMS80WjOJVAHAPyg3bY4L
-         xWQscB4T57hyr83XgoWgFxpzpkEwdjOnI6Qlvy3w=
+        b=sMiFyZL9vrxoXOWGiIhX80qSfHkZ2n+cR5QkB4RjKqlkRlmsDNabNgn0uiLf1/hZa
+         xY4pUA4kU8JLsEchgRPF9rKWWynYcn9zw3WDyIYqyhoPt/MdQzu8eMLjpE9t4tSbsN
+         T41E5ydHMsmnS1/tqnn2DW1SW491YZ5rwN/f7BEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Egor Pomozov <epomozov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 24/66] net: atlantic: ptp gpio adjustments
-Date:   Mon,  2 Mar 2020 21:45:33 -0500
-Message-Id: <20200303024615.8889-24-sashal@kernel.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 18/66] drm/msm/dsi/pll: call vco set rate explicitly
+Date:   Mon,  2 Mar 2020 21:45:27 -0500
+Message-Id: <20200303024615.8889-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -61,94 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Egor Pomozov <epomozov@marvell.com>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit f08a464c27ca0a4050333baa271504b27ce834b7 ]
+[ Upstream commit c6659785dfb3f8d75f1fe637e4222ff8178f5280 ]
 
-Clock adjustment data should be passed to FW as well, otherwise in some
-cases a drift was observed when using GPIO features.
+For a given byte clock, if VCO recalc value is exactly same as
+vco set rate value, vco_set_rate does not get called assuming
+VCO is already set to required value. But Due to GDSC toggle,
+VCO values are erased in the HW. To make sure VCO is programmed
+correctly, we forcefully call set_rate from vco_prepare.
 
-Signed-off-by: Egor Pomozov <epomozov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_hw.h       |  2 ++
- .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c    |  4 +++-
- .../aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c     | 12 ++++++++++++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-index cc70c606b6ef2..251767c31f7e5 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-@@ -337,6 +337,8 @@ struct aq_fw_ops {
+diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+index 8f6100db90ed4..aa9385d5bfff9 100644
+--- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+@@ -411,6 +411,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
+ 	if (pll_10nm->slave)
+ 		dsi_pll_enable_pll_bias(pll_10nm->slave);
  
- 	void (*enable_ptp)(struct aq_hw_s *self, int enable);
- 
-+	void (*adjust_ptp)(struct aq_hw_s *self, uint64_t adj);
++	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
++	if (rc) {
++		pr_err("vco_set_rate failed, rc=%d\n", rc);
++		return rc;
++	}
 +
- 	int (*set_eee_rate)(struct aq_hw_s *self, u32 speed);
- 
- 	int (*get_eee_rate)(struct aq_hw_s *self, u32 *rate,
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 5784da26f8683..9acdb3fbb750d 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -1162,6 +1162,8 @@ static int hw_atl_b0_adj_sys_clock(struct aq_hw_s *self, s64 delta)
- {
- 	self->ptp_clk_offset += delta;
- 
-+	self->aq_fw_ops->adjust_ptp(self, self->ptp_clk_offset);
-+
- 	return 0;
- }
- 
-@@ -1212,7 +1214,7 @@ static int hw_atl_b0_gpio_pulse(struct aq_hw_s *self, u32 index,
- 	fwreq.ptp_gpio_ctrl.index = index;
- 	fwreq.ptp_gpio_ctrl.period = period;
- 	/* Apply time offset */
--	fwreq.ptp_gpio_ctrl.start = start - self->ptp_clk_offset;
-+	fwreq.ptp_gpio_ctrl.start = start;
- 
- 	size = sizeof(fwreq.msg_id) + sizeof(fwreq.ptp_gpio_ctrl);
- 	return self->aq_fw_ops->send_fw_request(self, &fwreq, size);
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-index 97ebf849695fd..77a4ed64830fd 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-@@ -30,6 +30,9 @@
- #define HW_ATL_FW3X_EXT_CONTROL_ADDR     0x378
- #define HW_ATL_FW3X_EXT_STATE_ADDR       0x37c
- 
-+#define HW_ATL_FW3X_PTP_ADJ_LSW_ADDR	 0x50a0
-+#define HW_ATL_FW3X_PTP_ADJ_MSW_ADDR	 0x50a4
-+
- #define HW_ATL_FW2X_CAP_PAUSE            BIT(CAPS_HI_PAUSE)
- #define HW_ATL_FW2X_CAP_ASYM_PAUSE       BIT(CAPS_HI_ASYMMETRIC_PAUSE)
- #define HW_ATL_FW2X_CAP_SLEEP_PROXY      BIT(CAPS_HI_SLEEP_PROXY)
-@@ -475,6 +478,14 @@ static void aq_fw3x_enable_ptp(struct aq_hw_s *self, int enable)
- 	aq_hw_write_reg(self, HW_ATL_FW3X_EXT_CONTROL_ADDR, ptp_opts);
- }
- 
-+static void aq_fw3x_adjust_ptp(struct aq_hw_s *self, uint64_t adj)
-+{
-+	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_LSW_ADDR,
-+			(adj >>  0) & 0xffffffff);
-+	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_MSW_ADDR,
-+			(adj >> 32) & 0xffffffff);
-+}
-+
- static int aq_fw2x_led_control(struct aq_hw_s *self, u32 mode)
- {
- 	if (self->fw_ver_actual < HW_ATL_FW_VER_LED)
-@@ -633,4 +644,5 @@ const struct aq_fw_ops aq_fw_2x_ops = {
- 	.enable_ptp         = aq_fw3x_enable_ptp,
- 	.led_control        = aq_fw2x_led_control,
- 	.set_phyloopback    = aq_fw2x_set_phyloopback,
-+	.adjust_ptp         = aq_fw3x_adjust_ptp,
- };
+ 	/* Start PLL */
+ 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
+ 		  0x01);
 -- 
 2.20.1
 
