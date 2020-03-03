@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7E4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64D6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EF1246D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACDF2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203933;
-	bh=lmH1utyMKQlbkWRrt5YcFzcKcYbLr9xfF/JCSANbeOk=;
+	s=default; t=1583203936;
+	bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hnmyuvL51aD4CwkzFqPjZIlZ0VmsfkQxTw/oEytYJ2+L/wTNQYh0GPsa277Ih43w6
-	 nCDtCf9PicEx2YceMKxZiExCrRyfrdpatnJv7qG1rBsYVCbii0w5/XUvGX4Nq24nw1
-	 5ktjzDkrqDawS7CJ5JeNhjaZNswXHtRVyfTHE6n8=
+	b=kMWmQkvfFUQ+zer90OrKBMIt1XfBtffJxbBrQ6r75nYmoHaEI7wGCRdqeSU0FE2Aq
+	 7VtmwLeGPBndSgKshPJDitEONpP24dmoT1Kr1ggnG8eTtIUycP0Cw8Yt78Sn0jrEZd
+	 BZ6afvPwgqUGFzFHPnX75USTZh4cXy0hD1RKoVBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgCCCwL (ORCPT
+        id S1729062AbgCCCuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:52:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46702 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbgCCCuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:06 -0500
+        id S1729035AbgCCCuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8ED7246E6;
-        Tue,  3 Mar 2020 02:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8E25246DE;
+        Tue,  3 Mar 2020 02:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203805;
-        bh=lmH1utyMKQlbkWRrt5YcFzcKcYbLr9xfF/JCSANbeOk=;
+        s=default; t=1583203800;
+        bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8eZAkT52FSSzAHCMeUY6+YQ1wDsjG+ik/GroZjNIjyuao9zqJRIJY3KNVGzWaswF
-         t9sTZiEqCV1cxEcOnUFK7tQqsnW2Q/D+ozjhS+wT+VZiZtwoB/pynpJT+RHcBn6La1
-         Kji+dNG+Ij/zFrF1tu3qPGuEVItN4TvAxOB8HEPA=
+        b=H40zml2kgyXVRbnqcAGHtoMRfX7t3oKMIB7K4wL5rOWAkFMwU0URxqrhZAOBm0T3n
+         ej8DPmkJ7R15IhYnzCMX4iQD+478V3rSKxOiCyhnGrXpR1IBawyA/bXSfP4PURXzlm
+         FGGlS1U3MgL9cMhjp93kUliX114MFcUMMU72rAAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Pham <jackp@codeaurora.org>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/13] usb: gadget: composite: Support more than 500mA MaxPower
-Date:   Mon,  2 Mar 2020 21:49:51 -0500
-Message-Id: <20200303025002.10600-2-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        xen-devel@lists.xenproject.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 21/22] x86/xen: Distribute switch variables for initialization
+Date:   Mon,  2 Mar 2020 21:49:32 -0500
+Message-Id: <20200303024933.10371-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
-References: <20200303025002.10600-1-sashal@kernel.org>
+In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
+References: <20200303024933.10371-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,113 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit a2035411fa1d1206cea7d5dfe833e78481844a76 ]
+[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
 
-USB 3.x SuperSpeed peripherals can draw up to 900mA of VBUS power
-when in configured state. However, if a configuration wanting to
-take advantage of this is added with MaxPower greater than 500
-(currently possible if using a ConfigFS gadget) the composite
-driver fails to accommodate this for a couple reasons:
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
- - usb_gadget_vbus_draw() when called from set_config() and
-   composite_resume() will be passed the MaxPower value without
-   regard for the current connection speed, resulting in a
-   violation for USB 2.0 since the max is 500mA.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
- - the bMaxPower of the configuration descriptor would be
-   incorrectly encoded, again if the connection speed is only
-   at USB 2.0 or below, likely wrapping around U8_MAX since
-   the 2mA multiplier corresponds to a maximum of 510mA.
+arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
+arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
+  904 |   unsigned which;
+      |            ^~~~~
 
-Fix these by adding checks against the current gadget->speed
-when the c->MaxPower value is used (set_config() and
-composite_resume()) and appropriately limit based on whether
-it is currently at a low-/full-/high- or super-speed connection.
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
-Because 900 is not divisible by 8, with the round-up division
-currently used in encode_bMaxPower() a MaxPower of 900mA will
-result in an encoded value of 0x71. When a host stack (including
-Linux and Windows) enumerates this on a single port root hub, it
-reads this value back and decodes (multiplies by 8) to get 904mA
-which is strictly greater than 900mA that is typically budgeted
-for that port, causing it to reject the configuration. Instead,
-we should be using the round-down behavior of normal integral
-division so that 900 / 8 -> 0x70 or 896mA to stay within range.
-And we might as well change it for the high/full/low case as well
-for consistency.
-
-N.B. USB 3.2 Gen N x 2 allows for up to 1500mA but there doesn't
-seem to be any any peripheral controller supported by Linux that
-does two lane operation, so for now keeping the clamp at 900
-should be fine.
-
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
+Reviewed-by: Juergen Gross <jgross@suse.com>
+[boris: made @which an 'unsigned int']
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ arch/x86/xen/enlighten_pv.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 4d7df2f6caf5b..3a0452ff1a565 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -438,9 +438,13 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
- 	if (!val)
- 		return 0;
- 	if (speed < USB_SPEED_SUPER)
--		return DIV_ROUND_UP(val, 2);
-+		return min(val, 500U) / 2;
- 	else
--		return DIV_ROUND_UP(val, 8);
-+		/*
-+		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
-+		 * by 8 the integral division will effectively cap to 896mA.
-+		 */
-+		return min(val, 900U) / 8;
- }
- 
- static int config_buf(struct usb_configuration *config,
-@@ -833,6 +837,10 @@ static int set_config(struct usb_composite_dev *cdev,
- 
- 	/* when we return, be sure our power usage is valid */
- 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+	if (gadget->speed < USB_SPEED_SUPER)
-+		power = min(power, 500U);
-+	else
-+		power = min(power, 900U);
- done:
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
-@@ -2272,7 +2280,7 @@ void composite_resume(struct usb_gadget *gadget)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index f79a0cdc6b4e7..1f8175bf2a5e3 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -909,14 +909,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
+ static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
  {
- 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
- 	struct usb_function		*f;
--	u16				maxpower;
-+	unsigned			maxpower;
+ 	int ret;
++#ifdef CONFIG_X86_64
++	unsigned int which;
++	u64 base;
++#endif
  
- 	/* REVISIT:  should we have config level
- 	 * suspend/resume callbacks?
-@@ -2286,10 +2294,14 @@ void composite_resume(struct usb_gadget *gadget)
- 				f->resume(f);
- 		}
+ 	ret = 0;
  
--		maxpower = cdev->config->MaxPower;
-+		maxpower = cdev->config->MaxPower ?
-+			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+		if (gadget->speed < USB_SPEED_SUPER)
-+			maxpower = min(maxpower, 500U);
-+		else
-+			maxpower = min(maxpower, 900U);
- 
--		usb_gadget_vbus_draw(gadget, maxpower ?
--			maxpower : CONFIG_USB_GADGET_VBUS_DRAW);
-+		usb_gadget_vbus_draw(gadget, maxpower);
- 	}
- 
- 	cdev->suspended = 0;
+ 	switch (msr) {
+ #ifdef CONFIG_X86_64
+-		unsigned which;
+-		u64 base;
+-
+ 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+ 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+ 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
 -- 
 2.20.1
 
