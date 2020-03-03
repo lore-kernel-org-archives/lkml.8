@@ -2,138 +2,105 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1D4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9565C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550DF214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258104;
-	bh=0floEeYV5OcdfQt5e4jA+XcdcYbsg8OUsbnx7OWpz4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6k3gTUCGtZROF44HF19dcL36Dw4jH2jXX2UmjefhDjCiOoJDZOTcUFuCKamPAFg2
-	 8hku2PUGjwpqDTM1SFKVHEwNysPURlrfHRBw/P9JoVMf2PbJj071spKfOLOYwkH/4u
-	 ScjRiWLcIjLTUsB0VMpHNghf8hheVXCxYJ8OP8PQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8F58220728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gDBM/cKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732632AbgCCRzD (ORCPT
+        id S1732665AbgCCRzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732603AbgCCRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:56 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96228214D8;
-        Tue,  3 Mar 2020 17:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258095;
-        bh=0floEeYV5OcdfQt5e4jA+XcdcYbsg8OUsbnx7OWpz4o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SD1ub3E/5j3wxK5wABZZLI5K4+JAxEutsDQezTweAA7zAW2D75wEUAp4NzhpMzLui
-         oNZLb+vUsO8YTXObNpkeKOLv/cSuzMKSEH0LIsn4zJIyoX8nSVj3VObly5H9PCajRT
-         co+TRAC/uPV7vnv0r2n46HPvqgs2NxEsXdN0MGNs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Tue, 3 Mar 2020 12:55:11 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39906 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732645AbgCCRzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:07 -0500
+Received: by mail-il1-f194.google.com with SMTP id w69so3550949ilk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ayIxKKAwCnNFCQ+lZzklsRs5rXYB11mGFHyYGI5wUqQ=;
+        b=gDBM/cKDaAMh9NyfxfoObozsG9BZGD80+G1UGm/xV8TRxMqdcxd3lkS7Tjc2EZIK5k
+         O23wx5QTaZLVh2TUQMR/TRMtGrzlj3bIrack/HPTGO10ixgYa7tKMJ096FUlVlKSpVlk
+         4T4h8gnuTVFX1A/hBPx1SunMMPdgrCbXi4uVHq95icV0U4T5UQyhYuUIg4plkkEWhLtK
+         iY/tQv5MsboKHbHaXcPeN6P1iYXGkLhHrJcXbFJGYOaBrXt/zh7Z9xLjhLQSofkYiJbd
+         L7hD+kdiIc4k3EkxMC+O1Z2XYNe5g1WwxJxZxyKY6/WHpQcxhJwpXpYZ9S8bMjc/4KH3
+         aUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ayIxKKAwCnNFCQ+lZzklsRs5rXYB11mGFHyYGI5wUqQ=;
+        b=VsXf3hSeLNPd0Jr7nkPEBN11iMpwXKRmdnCLD6K9XO5iQ0mlLkYqMnaeXBW68gIjjy
+         A4Z8rLYTyqpi6V250M2u0TZI0oD3qVpKskADsgppU+i+dBQxeahjsZ0rrGn9aPjLCtgD
+         VZ9qXbb73PKZr93mtjzisnmsLEm6YRSDzC2KpbLqfd7dW+A+pa/OX+kPr7M7qbD7eJBd
+         aGpkkth/NxlX+yhEdxqHRO+cWBKX18NYIwI4wIDn4WsDNautfxXPuV6y+9TG0h4p6r8z
+         4iRzVJ3pJauukjX9NKQ8AzqmaFFp784lQ2IbivOjyzc2O7BAqFOefulgvVEH8EWHdeql
+         vDcg==
+X-Gm-Message-State: ANhLgQ0Geu+08JTZmS8fASmEVYVM97jXEoHYXZyCf+2bLTQ8gllHxBvS
+        web7fp/EkNX9Jlv1DY1M/9RuLw==
+X-Google-Smtp-Source: ADFU+vswN1+JEsE23FDapwuSVGGnBVQIgUF2nTXa5raP7vGWLMOlfTYLzjaimZzTkgwmW/1PXcHyyw==
+X-Received: by 2002:a92:8f46:: with SMTP id j67mr5772317ild.125.1583258106150;
+        Tue, 03 Mar 2020 09:55:06 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id h14sm1061362iow.23.2020.03.03.09.55.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 09:55:05 -0800 (PST)
+Subject: Re: [PATCH 5.4 062/152] bcache: ignore pending signals when creating
+ gc and allocator thread
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Coly Li <colyli@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/152] nvme/pci: move cqe check after device shutdown
-Date:   Tue,  3 Mar 2020 18:42:47 +0100
-Message-Id: <20200303174310.299974528@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
-User-Agent: quilt/0.66
+ <20200303174309.501274295@linuxfoundation.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <db776832-64ff-6757-de09-ced1ea8b368f@kernel.dk>
+Date:   Tue, 3 Mar 2020 10:55:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303174309.501274295@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On 3/3/20 10:42 AM, Greg Kroah-Hartman wrote:
+> From: Coly Li <colyli@suse.de>
+> 
+> [ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
+> 
+> When run a cache set, all the bcache btree node of this cache set will
+> be checked by bch_btree_check(). If the bcache btree is very large,
+> iterating all the btree nodes will occupy too much system memory and
+> the bcache registering process might be selected and killed by system
+> OOM killer. kthread_run() will fail if current process has pending
+> signal, therefore the kthread creating in run_cache_set() for gc and
+> allocator kernel threads are very probably failed for a very large
+> bcache btree.
+> 
+> Indeed such OOM is safe and the registering process will exit after
+> the registration done. Therefore this patch flushes pending signals
+> during the cache set start up, specificly in bch_cache_allocator_start()
+> and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+> large cahced data set.
 
-[ Upstream commit fa46c6fb5d61b1f17b06d7c6ef75478b576304c7 ]
+Please drop this one, it's being reverted in mainline.
 
-Many users have reported nvme triggered irq_startup() warnings during
-shutdown. The driver uses the nvme queue's irq to synchronize scanning
-for completions, and enabling an interrupt affined to only offline CPUs
-triggers the alarming warning.
-
-Move the final CQE check to after disabling the device and all
-registered interrupts have been torn down so that we do not have any
-IRQ to synchronize.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206509
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/pci.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f34a56d588d31..ff2003c16be34 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1407,6 +1407,23 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
- 	nvme_poll_irqdisable(nvmeq, -1);
- }
- 
-+/*
-+ * Called only on a device that has been disabled and after all other threads
-+ * that can check this device's completion queues have synced. This is the
-+ * last chance for the driver to see a natural completion before
-+ * nvme_cancel_request() terminates all incomplete requests.
-+ */
-+static void nvme_reap_pending_cqes(struct nvme_dev *dev)
-+{
-+	u16 start, end;
-+	int i;
-+
-+	for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
-+		nvme_process_cq(&dev->queues[i], &start, &end, -1);
-+		nvme_complete_cqes(&dev->queues[i], start, end);
-+	}
-+}
-+
- static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
- 				int entry_size)
- {
-@@ -2241,11 +2258,6 @@ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode)
- 		if (timeout == 0)
- 			return false;
- 
--		/* handle any remaining CQEs */
--		if (opcode == nvme_admin_delete_cq &&
--		    !test_bit(NVMEQ_DELETE_ERROR, &nvmeq->flags))
--			nvme_poll_irqdisable(nvmeq, -1);
--
- 		sent--;
- 		if (nr_queues)
- 			goto retry;
-@@ -2434,6 +2446,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	nvme_suspend_io_queues(dev);
- 	nvme_suspend_queue(&dev->queues[0]);
- 	nvme_pci_disable(dev);
-+	nvme_reap_pending_cqes(dev);
- 
- 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
- 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
 -- 
-2.20.1
-
-
+Jens Axboe
 
