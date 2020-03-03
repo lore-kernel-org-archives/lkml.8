@@ -2,126 +2,97 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7390BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8412080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A356B20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NIHrBVL9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDGa3l0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCCGHx (ORCPT
+        id S1727196AbgCCGK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:07:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:37927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgCCGHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:07:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Wml86YKlz9sQt;
-        Tue,  3 Mar 2020 17:07:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583215669;
-        bh=htcy+sOuhkCDBX1e/hZ/ccmsRUY0G7nupbZ9Puci840=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NIHrBVL9MKaD0sRw+Sz4SOxlS4sESWQhVIPzoXEhQq4GklShsWwSt4BSubLmZqB/w
-         OnG8vcYxp7hXZJJWH26469iCzkkfG62PXoRuw4XyTIOErmB6z7jxpOczJWWGXmTJlg
-         86oIBQ+ytPBrLtUW63HtlIr5UTnMt07exciUIwQL1aJKITEZIGJO8T1H/h325/y1g9
-         Opb1AsGXPYBWEu7+FIm8D0ha/6eAXID5L1K6KGwPjST5W39hnIqm0xFXQvWAjW3ja6
-         AniYL/deMT9wFY4EzO2HGQ5iT7EFRjqn18WZH9yQ9Wg8NfXHtrZkv707R5P1bXm90M
-         Op5waCsJqoJDQ==
-Date:   Tue, 3 Mar 2020 17:07:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: linux-next: build failure after merge of the thermal tree
-Message-ID: <20200303170743.44d4c271@canb.auug.org.au>
+        Tue, 3 Mar 2020 01:10:56 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46123 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgCCGK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 01:10:56 -0500
+Received: by mail-lj1-f196.google.com with SMTP id h18so2094157ljl.13;
+        Mon, 02 Mar 2020 22:10:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L44R33MZfBo7EJfh7yHeMAVpYiCz+bW7Ff5nJ/4YCbA=;
+        b=mDGa3l0iB+Fa9PTGs6OTbYeBy/ampfYZk7C1RYlTpL5OoFt8b+uXUEpUEXcHVdqIva
+         SRzcCxP4HA2y5CE4D9xgZexYgTdAIt8ewGax5jf2aorMSiYG1xJuKodHR9cK8/K9JGld
+         zB5zLyi96CN4BPi4qGNMSu5ctyHtYFVehiLxBW8BdT58O91MwPqFrbTkwA4ES48rsOSV
+         U68bhRgJwqRBi0KuLkhVyFr8xQlrt20MWM4Sil0TwVXHrO5SWRVmpBSCdOM8GecUKa7t
+         xWJ15KBZhcS0wuSrm0PnZT90T6dD0oMNJeFqW8AJflIDNb1vIuwPweEM8CS5Yij5QuIG
+         8hXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L44R33MZfBo7EJfh7yHeMAVpYiCz+bW7Ff5nJ/4YCbA=;
+        b=tupakajuELr6tfiGRSrrg9zs2Tkgb24Z4zswurm8lIyP7XZjVlvdajv2kUZTKxcbWU
+         PDUPczdRZ/mkIkivamlzOivZYoZSPWUKL+VZYAP/Pykza7WpCJxxcOi+pruSoA3Wwzti
+         OH9ZzizFNq2MjWaaZJeJ86Q9ViSURYD3vLe2LOM8LNYrCJKHh6ZYYM/k1ZAN6syWoxSo
+         eWR5VOhka2IseYyN1AZYMRAMtq7aRt6NFcygGAWZRXPepRK2JxxzinNZ7ivcWCKIA7kD
+         e8FeuKhP0VO1q0TZW5wmNAnWbKiL5D8KVasSpFVAP4+1L/xNt82SVwgQMRx8mSV+Bh64
+         JbCg==
+X-Gm-Message-State: ANhLgQ3pL15e00vOPUNMJHQOB3uYHzf0ez9G39XeGWCT3EiO4bd8aBDA
+        eEDxw26jB52GiI6NoOeYYrUDS2zNcdnqLzeYm2wfYOga
+X-Google-Smtp-Source: ADFU+vvBKj4kk/DGPu4e3EEo1JpMgvtQZJ67R+QKzPSOu5NVGyjMBBheD6boVCTDo8w0Yjt+bdDfmDw8ZFlvl+4PJz4=
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr1492785ljh.138.1583215854320;
+ Mon, 02 Mar 2020 22:10:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.ABKbg8wZUtRZQja565fPpo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <202002242114.CBED7F1@keescook> <202003022046.4185359A@keescook>
+In-Reply-To: <202003022046.4185359A@keescook>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 2 Mar 2020 22:10:42 -0800
+Message-ID: <CAADnVQKgQWmMgcxynzTRhGv1dZ=6oJDB79txrc8tmGy5sPejTg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.ABKbg8wZUtRZQja565fPpo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 2, 2020 at 8:48 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Feb 24, 2020 at 09:16:17PM -0800, Kees Cook wrote:
+> > When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
+> > time collecting and writing the dwarf sections to the temporary output
+> > files. kallsyms does not need this information, and leaving it off
+> > halves their linking time. This is especially noticeable without
+> > CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
+> > need those details.
+> >
+> > Refactor the BTF and kallsyms generation stages slightly for more
+> > regularized temporary names. Skip debug during kallsyms links.
+> >
+> > For a full debug info build with BTF, my link time goes from 1m06s to
+> > 0m54s, saving about 12 seconds, or 18%.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> Ping. Masahiro what do you think of this? It saves me a fair bit of time
+> on the link stage... I bet the BPF folks would be interested too. :)
 
-Hi all,
-
-After merging the thermal tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
-
-ld: drivers/thermal/imx_sc_thermal.o: in function `.imx_sc_thermal_get_temp=
-':
-imx_sc_thermal.c:(.text.imx_sc_thermal_get_temp+0x68): undefined reference =
-to `.imx_scu_call_rpc'
-ld: drivers/thermal/imx_sc_thermal.o: in function `.imx_sc_thermal_probe':
-imx_sc_thermal.c:(.text.imx_sc_thermal_probe+0x30): undefined reference to =
-`.imx_scu_get_handle'
-
-Caused by commit
-
-  ed0843633fee ("thermal: imx_sc: add i.MX system controller thermal suppor=
-t")
-
-I have added the following patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 3 Mar 2020 16:52:49 +1100
-Subject: [PATCH] thermal: imx_sc: remove COMPILE_TEST from IMX_SC_THERMAL
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/thermal/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 478eda79520d..f3f70503df04 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -254,7 +254,7 @@ config IMX_THERMAL
-=20
- config IMX_SC_THERMAL
- 	tristate "Temperature sensor driver for NXP i.MX SoCs with System Control=
-ler"
--	depends on IMX_SCU || COMPILE_TEST
-+	depends on IMX_SCU
- 	depends on OF
- 	help
- 	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.ABKbg8wZUtRZQja565fPpo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5d9DAACgkQAVBC80lX
-0GxXmgf+Lg/qmVO19QGPlidMSoWW/eWBPnSL+SDpdNt523xmYm/sYEQ/jdUy1G4w
-rs36avTJUKxa4PShHjfeU+I2opMQPM6m0hxmcV1dWschxPZizMZidXJ3jDglp0VG
-+6Ebvac1YByR8Yq6XExZAK0yk/wk0xoA9B7+4NAQWN4cQ0EABORfGikbz0t9wnTW
-v92SP1lzR9P3utTeML/+ZqkDc7eVyeb+/trJalpEqtUyLiZre0pQPlGq7z/1ohM1
-C4801Q1tfGtLMpsmoGRN7AkFjvYinOMRj2GH+LisO97qT/ztB8sfEw1XlYVOuTyI
-KWyvdQ0YS94DWYIxNYUXq66CEEF+2A==
-=bViJ
------END PGP SIGNATURE-----
-
---Sig_/.ABKbg8wZUtRZQja565fPpo--
+The build time improvement sound great.
+Could you please resubmit for bpf-next tree?
+So we can test and apply properly?
+Thanks!
