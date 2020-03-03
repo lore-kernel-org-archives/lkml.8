@@ -2,117 +2,481 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9373C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D06C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2E8215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fStkvVGf"
+	by mail.kernel.org (Postfix) with ESMTP id 9994E2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583230874;
+	bh=BZgigy1Ybqp0VibbsbbrFv+s6HWOMTgif2Hm9GI9Rg4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U5IC92nevtk4VCAj2z2s0TMCJozJPaK+yZgYpFDMjyk2ZADxhZXxvThf1T0UEyjvp
+	 FZe3+R38lF9yGk1ESRA24CZMn8vc3FBynIgJEFdX7Ern5cum9N/RlZKl0eXLa5Jo10
+	 l1jebgt/r+PkR5wzd5YQxner4Tt1XRNFP33ltrOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgCCKT1 (ORCPT
+        id S1728479AbgCCKVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:19:27 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:8670 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726661AbgCCKT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:19:26 -0500
-X-UUID: 117aaee898884524a57a71c695fb40cc-20200303
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kNo7DFj3b9HktV/9EBruUcLqKxjTBFu6uKwuH9eM2VA=;
-        b=fStkvVGfdODZUFXguzcaSao361mDB+EW3bBusAbnaUlGGE/VqKZLS5KuAaEyBY9TUxIXZXS5weqU0adXCsNkx6rOzkyQYQmMquvB2VF3631lmuQE71qIba/YVbK+YKby1XTp4ukN2F+CcXHcwjVWne3RcKqaERgSJw5JrlcgMCQ=;
-X-UUID: 117aaee898884524a57a71c695fb40cc-20200303
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2000101293; Tue, 03 Mar 2020 18:19:20 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Mar 2020 18:18:18 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Mar 2020 18:19:16 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v2 1/1] pwm: mediatek: add longer period support
-Date:   Tue, 3 Mar 2020 18:19:15 +0800
-Message-ID: <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
-References: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
+        Tue, 3 Mar 2020 05:21:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727820AbgCCKVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:21:13 -0500
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43719214DB
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 10:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583230871;
+        bh=BZgigy1Ybqp0VibbsbbrFv+s6HWOMTgif2Hm9GI9Rg4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MqOIOhq0BIqnxndTGTsAxTPfDgKOyYvXEWflLJFkM4Am6Osxaq67YvxjchMuGQEEI
+         DNTGxdNP0UZaQE2GigRpR4bk5LQbuWhmnrHvhNdlWwB+CdTzX6sEtVvXAttvv5fLh4
+         YeycHjFm6SPoi5hgfdphd5u/l1S62VSMIxE2Xtao=
+Received: by mail-wr1-f54.google.com with SMTP id v4so3585242wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:21:11 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2El9tNRMOdBcDOf/NDoPtL2drLsUOP3MEJvD5pnkIz7zt+clUG
+        t0midTdlaqFEg5Juqv99+ksacwoznGJRhM6ImQYamg==
+X-Google-Smtp-Source: ADFU+vuHpyMhUp1loGgbQGsPP58v4+oqhKFFNGMbiUU9ANUBrEB3+v0EHR+f9xnTbf5pA9obBNpC7YvjfltwmXrKNso=
+X-Received: by 2002:adf:a411:: with SMTP id d17mr4735033wra.126.1583230869681;
+ Tue, 03 Mar 2020 02:21:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200303085528.27658-1-vdronov@redhat.com> <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+ <1980156503.12639063.1583230452485.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1980156503.12639063.1583230452485.JavaMail.zimbra@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 3 Mar 2020 11:20:58 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8MsGU-JXP83Tn2Q_U9JQZV_bkcj7r9JCm__Z3xD7_-uw@mail.gmail.com>
+Message-ID: <CAKv+Gu8MsGU-JXP83Tn2Q_U9JQZV_bkcj7r9JCm__Z3xD7_-uw@mail.gmail.com>
+Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
+To:     Vladis Dronov <vdronov@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHB3bSBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2aWRlZCBieSAxNjI1IHdpdGggUFdNX0NP
-Tg0KQklUKDMpIHNldHRpbmcgaW4gbWVkaWF0ZWsgaGFyZHdhcmUuDQoNClRoaXMgcGF0Y2ggYWRk
-IHN1cHBvcnQgZm9yIGxvbmdlciBwd20gcGVyaW9kIGNvbmZpZ3VyYXRpb24sDQp3aGljaCBhbGxv
-d2luZyBibGlua2luZyBMRURzIHZpYSBwd20gaW50ZXJmYWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBT
-YW0gU2hpaCA8c2FtLnNoaWhAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9wd20vcHdtLW1l
-ZGlhdGVrLmMgfCAzNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tDQogMSBmaWxl
-IGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYyBiL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5j
-DQppbmRleCBiOTRlMGQwOWMzMDAuLmM2NGVjZmY2YzU1MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-cHdtL3B3bS1tZWRpYXRlay5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KQEAg
-LTEyMSw4ICsxMjEsMTEgQEAgc3RhdGljIGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBw
-d21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJCQkgICAgICAgaW50IGR1
-dHlfbnMsIGludCBwZXJpb2RfbnMpDQogew0KIAlzdHJ1Y3QgcHdtX21lZGlhdGVrX2NoaXAgKnBj
-ID0gdG9fcHdtX21lZGlhdGVrX2NoaXAoY2hpcCk7DQotCXUzMiBjbGtkaXYgPSAwLCBjbnRfcGVy
-aW9kLCBjbnRfZHV0eSwgcmVnX3dpZHRoID0gUFdNRFdJRFRILA0KLQkgICAgcmVnX3RocmVzID0g
-UFdNVEhSRVM7DQorCS8qIFRoZSBzb3VyY2UgY2xvY2sgaXMgZGl2aWRlZCBieSAyXmNsa2RpdiBv
-ciBpZmYgdGhlIGNsa3NlbCBiaXQNCisJICogaXMgc2V0IGJ5ICgyXmNsa2RpdioxNjI1KQ0KKwkg
-Ki8NCisJdTMyIGNsa2RpdiA9IDAsIGNsa3NlbCA9IDAsIGNudF9wZXJpb2QsIGNudF9kdXR5LA0K
-KwkgICAgcmVnX3dpZHRoID0gUFdNRFdJRFRILCByZWdfdGhyZXMgPSBQV01USFJFUzsNCiAJdTY0
-IHJlc29sdXRpb247DQogCWludCByZXQ7DQogDQpAQCAtMTMzLDEyICsxMzYsMzAgQEAgc3RhdGlj
-IGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3
-bV9kZXZpY2UgKnB3bSwNCiANCiAJLyogVXNpbmcgcmVzb2x1dGlvbiBpbiBwaWNvc2Vjb25kIGdl
-dHMgYWNjdXJhY3kgaGlnaGVyICovDQogCXJlc29sdXRpb24gPSAodTY0KU5TRUNfUEVSX1NFQyAq
-IDEwMDA7DQorCS8qIENhbGN1bGF0ZSByZXNvbHV0aW9uIGJhc2VkIG9uIGN1cnJlbnQgY2xvY2sg
-ZnJlcXVlbmN5ICovDQogCWRvX2RpdihyZXNvbHV0aW9uLCBjbGtfZ2V0X3JhdGUocGMtPmNsa19w
-d21zW3B3bS0+aHdwd21dKSk7DQotDQorCS8qIFVzaW5nIHJlc29sdXRpb24gdG8gY2FsY3VsYXRl
-IGNudF9wZXJpb2Qgd2hpY2ggcmVwcmVzZW50cw0KKwkgKiB0aGUgZWZmZWN0aXZlIHJhbmdlIG9m
-IHRoZSBQV00gcGVyaW9kIGNvdW50ZXINCisJICovDQogCWNudF9wZXJpb2QgPSBESVZfUk9VTkRf
-Q0xPU0VTVF9VTEwoKHU2NClwZXJpb2RfbnMgKiAxMDAwLCByZXNvbHV0aW9uKTsNCiAJd2hpbGUg
-KGNudF9wZXJpb2QgPiA4MTkxKSB7DQorCQkvKiBVc2luZyBjbGtkaXYgdG8gcmVkdWNlIGNsb2Nr
-IGZyZXF1ZW5jeSBhbmQgY2FsY3VsYXRlDQorCQkgKiBuZXcgcmVzb2x1dGlvbiBiYXNlZCBvbiBu
-ZXcgY2xvY2sgc3BlZWQNCisJCSAqLw0KIAkJcmVzb2x1dGlvbiAqPSAyOw0KIAkJY2xrZGl2Kys7
-DQorCQlpZiAoY2xrZGl2ID4gUFdNX0NMS19ESVZfTUFYICYmICFjbGtzZWwpIHsNCisJCQkvKiBV
-c2luZyBjbGtzZWwgdG8gZGl2aWRlIHRoZSBwd20gc291cmNlIGNsb2NrIGJ5DQorCQkJICogYW4g
-YWRkaXRpb25hbCAxNjI1LCBhbmQgcmVjYWxjdWxhdGUgbmV3IGNsa2Rpdg0KKwkJCSAqIGFuZCBy
-ZXNvbHV0aW9uDQorCQkJICovDQorCQkJY2xrc2VsID0gMTsNCisJCQljbGtkaXYgPSAwOw0KKwkJ
-CXJlc29sdXRpb24gPSAodTY0KU5TRUNfUEVSX1NFQyAqIDEwMDAgKiAxNjI1Ow0KKwkJCWRvX2Rp
-dihyZXNvbHV0aW9uLA0KKwkJCQljbGtfZ2V0X3JhdGUocGMtPmNsa19wd21zW3B3bS0+aHdwd21d
-KSk7DQorCQl9DQorCQkvKiBDYWxjdWxhdGUgY250X3BlcmlvZCBiYXNlZCBvbiByZXNvbHV0aW9u
-ICovDQogCQljbnRfcGVyaW9kID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKCh1NjQpcGVyaW9kX25z
-ICogMTAwMCwNCiAJCQkJCQkgICByZXNvbHV0aW9uKTsNCiAJfQ0KQEAgLTE1OCw4ICsxNzksMTMg
-QEAgc3RhdGljIGludCBwd21fbWVkaWF0ZWtfY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwg
-c3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJCXJlZ190aHJlcyA9IFBXTTQ1VEhSRVNfRklYVVA7
-DQogCX0NCiANCisJLyogQ2FsY3VsYXRlIGNudF9kdXR5IGJhc2VkIG9uIHJlc29sdXRpb24gKi8N
-CiAJY250X2R1dHkgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoKHU2NClkdXR5X25zICogMTAwMCwg
-cmVzb2x1dGlvbik7DQotCXB3bV9tZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIFBXTUNP
-TiwgQklUKDE1KSB8IGNsa2Rpdik7DQorCWlmIChjbGtzZWwpDQorCQlwd21fbWVkaWF0ZWtfd3Jp
-dGVsKHBjLCBwd20tPmh3cHdtLCBQV01DT04sIEJJVCgxNSkgfCBCSVQoMykgfA0KKwkJCQkgICAg
-Y2xrZGl2KTsNCisJZWxzZQ0KKwkJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5od3B3bSwg
-UFdNQ09OLCBCSVQoMTUpIHwgY2xrZGl2KTsNCiAJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdt
-LT5od3B3bSwgcmVnX3dpZHRoLCBjbnRfcGVyaW9kKTsNCiAJcHdtX21lZGlhdGVrX3dyaXRlbChw
-YywgcHdtLT5od3B3bSwgcmVnX3RocmVzLCBjbnRfZHV0eSk7DQogDQotLSANCjIuMTcuMQ0K
+On Tue, 3 Mar 2020 at 11:14, Vladis Dronov <vdronov@redhat.com> wrote:
+>
+> Hello, Ard, all,
+>
+> ----- Original Message -----
+> > From: "Ard Biesheuvel" <ardb@kernel.org>
+> > To: "Vladis Dronov" <vdronov@redhat.com>
+> > Cc: "linux-efi" <linux-efi@vger.kernel.org>, "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+> > Sent: Tuesday, March 3, 2020 10:15:41 AM
+> > Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading efivars via sysfs
+> >
+> > On Tue, 3 Mar 2020 at 09:55, Vladis Dronov <vdronov@redhat.com> wrote:
+> > >
+> > > There is a race and a buffer overflow corrupting a kernel memory while
+> > > reading an efi variable with a size more than 1024 bytes via the older
+> > > sysfs method. This happens because accessing struct efi_variable in
+> > > efivar_{attr,size,data}_read() and friends is not protected from
+> > > a concurrent access leading to a kernel memory corruption and, at best,
+> > > to a crash. The race scenario is the following:
+> > >
+> > > CPU0:                                CPU1:
+> > > efivar_attr_read()
+> > >   var->DataSize = 1024;
+> > >   efivar_entry_get(... &var->DataSize)
+> > >     down_interruptible(&efivars_lock)
+> > >                                      efivar_attr_read() // same efi var
+> > >                                        var->DataSize = 1024;
+> > >                                        efivar_entry_get(... &var->DataSize)
+> > >                                          down_interruptible(&efivars_lock)
+> > >     virt_efi_get_variable()
+> > >     // returns EFI_BUFFER_TOO_SMALL but
+> > >     // var->DataSize is set to a real
+> > >     // var size more than 1024 bytes
+> > >     up(&efivars_lock)
+> > >                                          virt_efi_get_variable()
+> > >                                          // called with var->DataSize set
+> > >                                          // to a real var size, returns
+> > >                                          // successfully and overwrites
+> > >                                          // a 1024-bytes kernel buffer
+> > >                                          up(&efivars_lock)
+> > >
+> > > This can be reproduced by concurrent reading of an efi variable which size
+> > > is more than 1024 bytes:
+> > >
+> > > ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+> > > cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
+> > >
+> > > Fix this by protecting struct efi_variable access by efivars_lock by using
+> > > efivar_entry_iter_begin()/efivar_entry_iter_end(). Brush up and unify
+> > > efivar_entry_[gs]et() and __efivar_entry_[gs]et() for this. This looks
+> > > simpler than introducing a separate lock for every struct efi_variable.
+> > >
+> > > Also fix the same race in efivar_store_raw() and efivar_show_raw(). The
+> > > call in efi_pstore_read_func() is protected like this already.
+> > >
+> > > Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+> > > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> >
+> > Wouldn't it be easier to pass a var_data_size stack variable into
+> > efivar_entry_get(), and only update the value in 'var' if it is <=
+> > 1024?
+> >
+>
+> I was thinking about this approach, but this way we still do not protect
+> var from a concurrent access. For example, efivar_data_read() can race
+> with itself:
+>
+> // reading var size 5
+> efivar_data_read()
+>   efivar_entry_get()
+>                          // reading the same var
+>                          efivar_data_read()
+>                            var->DataSize = 1024;
+>                            efivar_entry_get()
+>   // var->DataSize is SUDDENLY 1024
+>   memcpy(buf, var->Data, var->DataSize);
 
+I'd assume that the memcpy() is not executed if var_data_size > 1024,
+and var->DataSize is not assigned in that case either.
+
+>   return var->DataSize;
+>
+> Also efivar read functions still can race with the write function
+> efivar_store_raw(). Surely, the race window is much smaller but it is there.
+> I strongly believe we need to protect all data accesses here with a lock.
+>
+> May be not in a way I suggest, may be by a per-var mutex, but I believe
+> this is overcomplication.
+>
+> > > ---
+> > >  drivers/firmware/efi/efi-pstore.c |  2 +-
+> > >  drivers/firmware/efi/efivars.c    | 72 ++++++++++++++++++++++++-------
+> > >  drivers/firmware/efi/vars.c       | 47 ++++++++++++--------
+> > >  include/linux/efi.h               |  2 +
+> > >  4 files changed, 90 insertions(+), 33 deletions(-)
+> > >
+> > > diff --git a/drivers/firmware/efi/efi-pstore.c
+> > > b/drivers/firmware/efi/efi-pstore.c
+> > > index 9ea13e8d12ec..e4767a7ce973 100644
+> > > --- a/drivers/firmware/efi/efi-pstore.c
+> > > +++ b/drivers/firmware/efi/efi-pstore.c
+> > > @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct
+> > > efivar_entry *pos,
+> > >   *
+> > >   * @record: pstore record to pass to callback
+> > >   *
+> > > - * You MUST call efivar_enter_iter_begin() before this function, and
+> > > + * You MUST call efivar_entry_iter_begin() before this function, and
+> > >   * efivar_entry_iter_end() afterwards.
+> > >   *
+> > >   */
+> > > diff --git a/drivers/firmware/efi/efivars.c
+> > > b/drivers/firmware/efi/efivars.c
+> > > index 7576450c8254..f415cf863ee0 100644
+> > > --- a/drivers/firmware/efi/efivars.c
+> > > +++ b/drivers/firmware/efi/efivars.c
+> > > @@ -88,9 +88,15 @@ efivar_attr_read(struct efivar_entry *entry, char *buf)
+> > >         if (!entry || !buf)
+> > >                 return -EINVAL;
+> > >
+> > > +       if (efivar_entry_iter_begin())
+> > > +               return -EINTR;
+> > > +
+> > >         var->DataSize = 1024;
+> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > var->Data))
+> > > +       if (__efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > +                       var->Data)) {
+> > > +               efivar_entry_iter_end();
+> > >                 return -EIO;
+> > > +       }
+> > >
+> > >         if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
+> > >                 str += sprintf(str, "EFI_VARIABLE_NON_VOLATILE\n");
+> > > @@ -109,6 +115,8 @@ efivar_attr_read(struct efivar_entry *entry, char *buf)
+> > >                         "EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS\n");
+> > >         if (var->Attributes & EFI_VARIABLE_APPEND_WRITE)
+> > >                 str += sprintf(str, "EFI_VARIABLE_APPEND_WRITE\n");
+> > > +
+> > > +       efivar_entry_iter_end();
+> > >         return str - buf;
+> > >  }
+> > >
+> > > @@ -121,11 +129,19 @@ efivar_size_read(struct efivar_entry *entry, char
+> > > *buf)
+> > >         if (!entry || !buf)
+> > >                 return -EINVAL;
+> > >
+> > > +       if (efivar_entry_iter_begin())
+> > > +               return -EINTR;
+> > > +
+> > >         var->DataSize = 1024;
+> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > var->Data))
+> > > +       if (__efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > +                       var->Data)) {
+> > > +               efivar_entry_iter_end();
+> > >                 return -EIO;
+> > > +       }
+> > >
+> > >         str += sprintf(str, "0x%lx\n", var->DataSize);
+> > > +
+> > > +       efivar_entry_iter_end();
+> > >         return str - buf;
+> > >  }
+> > >
+> > > @@ -137,11 +153,19 @@ efivar_data_read(struct efivar_entry *entry, char
+> > > *buf)
+> > >         if (!entry || !buf)
+> > >                 return -EINVAL;
+> > >
+> > > +       if (efivar_entry_iter_begin())
+> > > +               return -EINTR;
+> > > +
+> > >         var->DataSize = 1024;
+> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > var->Data))
+> > > +       if (__efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > +                       var->Data)) {
+> > > +               efivar_entry_iter_end();
+> > >                 return -EIO;
+> > > +       }
+> > >
+> > >         memcpy(buf, var->Data, var->DataSize);
+> > > +
+> > > +       efivar_entry_iter_end();
+> > >         return var->DataSize;
+> > >  }
+> > >
+> > > @@ -197,13 +221,21 @@ efivar_store_raw(struct efivar_entry *entry, const
+> > > char *buf, size_t count)
+> > >         efi_guid_t vendor;
+> > >         u32 attributes;
+> > >         u8 *data;
+> > > -       int err;
+> > > +       int err = 0;
+> > > +
+> > > +       if (!entry || !buf)
+> > > +               return -EINVAL;
+> > > +
+> > > +       if (efivar_entry_iter_begin())
+> > > +               return -EINTR;
+> > >
+> > >         if (in_compat_syscall()) {
+> > >                 struct compat_efi_variable *compat;
+> > >
+> > > -               if (count != sizeof(*compat))
+> > > -                       return -EINVAL;
+> > > +               if (count != sizeof(*compat)) {
+> > > +                       err = -EINVAL;
+> > > +                       goto out;
+> > > +               }
+> > >
+> > >                 compat = (struct compat_efi_variable *)buf;
+> > >                 attributes = compat->Attributes;
+> > > @@ -214,12 +246,14 @@ efivar_store_raw(struct efivar_entry *entry, const
+> > > char *buf, size_t count)
+> > >
+> > >                 err = sanity_check(var, name, vendor, size, attributes,
+> > >                 data);
+> > >                 if (err)
+> > > -                       return err;
+> > > +                       goto out;
+> > >
+> > >                 copy_out_compat(&entry->var, compat);
+> > >         } else {
+> > > -               if (count != sizeof(struct efi_variable))
+> > > -                       return -EINVAL;
+> > > +               if (count != sizeof(struct efi_variable)) {
+> > > +                       err = -EINVAL;
+> > > +                       goto out;
+> > > +               }
+> > >
+> > >                 new_var = (struct efi_variable *)buf;
+> > >
+> > > @@ -231,18 +265,20 @@ efivar_store_raw(struct efivar_entry *entry, const
+> > > char *buf, size_t count)
+> > >
+> > >                 err = sanity_check(var, name, vendor, size, attributes,
+> > >                 data);
+> > >                 if (err)
+> > > -                       return err;
+> > > +                       goto out;
+> > >
+> > >                 memcpy(&entry->var, new_var, count);
+> > >         }
+> > >
+> > > -       err = efivar_entry_set(entry, attributes, size, data, NULL);
+> > > +       err = __efivar_entry_set(entry, attributes, size, data, NULL);
+> > >         if (err) {
+> > >                 printk(KERN_WARNING "efivars: set_variable() failed:
+> > >                 status=%d\n", err);
+> > > -               return -EIO;
+> > > +               err = -EIO;
+> > >         }
+> > >
+> > > -       return count;
+> > > +out:
+> > > +       efivar_entry_iter_end();
+> > > +       return err ?: count;
+> > >  }
+> > >
+> > >  static ssize_t
+> > > @@ -255,10 +291,15 @@ efivar_show_raw(struct efivar_entry *entry, char
+> > > *buf)
+> > >         if (!entry || !buf)
+> > >                 return 0;
+> > >
+> > > +       if (efivar_entry_iter_begin())
+> > > +               return -EINTR;
+> > > +
+> > >         var->DataSize = 1024;
+> > > -       if (efivar_entry_get(entry, &entry->var.Attributes,
+> > > -                            &entry->var.DataSize, entry->var.Data))
+> > > +       if (__efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > > +                       var->Data)) {
+> > > +               efivar_entry_iter_end();
+> > >                 return -EIO;
+> > > +       }
+> > >
+> > >         if (in_compat_syscall()) {
+> > >                 compat = (struct compat_efi_variable *)buf;
+> > > @@ -276,6 +317,7 @@ efivar_show_raw(struct efivar_entry *entry, char *buf)
+> > >                 memcpy(buf, var, size);
+> > >         }
+> > >
+> > > +       efivar_entry_iter_end();
+> > >         return size;
+> > >  }
+> > >
+> > > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+> > > index 436d1776bc7b..4a47e20a7667 100644
+> > > --- a/drivers/firmware/efi/vars.c
+> > > +++ b/drivers/firmware/efi/vars.c
+> > > @@ -636,7 +636,7 @@ int efivar_entry_delete(struct efivar_entry *entry)
+> > >  EXPORT_SYMBOL_GPL(efivar_entry_delete);
+> > >
+> > >  /**
+> > > - * efivar_entry_set - call set_variable()
+> > > + * __efivar_entry_set - call set_variable()
+> > >   * @entry: entry containing the EFI variable to write
+> > >   * @attributes: variable attributes
+> > >   * @size: size of @data buffer
+> > > @@ -655,8 +655,12 @@ EXPORT_SYMBOL_GPL(efivar_entry_delete);
+> > >   * Returns 0 on success, -EINTR if we can't grab the semaphore,
+> > >   * -EEXIST if a lookup is performed and the entry already exists on
+> > >   * the list, or a converted EFI status code if set_variable() fails.
+> > > + *
+> > > + * The caller MUST call efivar_entry_iter_begin() and
+> > > + * efivar_entry_iter_end() before and after the invocation of this
+> > > + * function, respectively.
+> > >   */
+> > > -int efivar_entry_set(struct efivar_entry *entry, u32 attributes,
+> > > +int __efivar_entry_set(struct efivar_entry *entry, u32 attributes,
+> > >                      unsigned long size, void *data, struct list_head
+> > >                      *head)
+> > >  {
+> > >         const struct efivar_operations *ops;
+> > > @@ -664,9 +668,6 @@ int efivar_entry_set(struct efivar_entry *entry, u32
+> > > attributes,
+> > >         efi_char16_t *name = entry->var.VariableName;
+> > >         efi_guid_t vendor = entry->var.VendorGuid;
+> > >
+> > > -       if (down_interruptible(&efivars_lock))
+> > > -               return -EINTR;
+> > > -
+> > >         if (!__efivars) {
+> > >                 up(&efivars_lock);
+> > >                 return -EINVAL;
+> > > @@ -682,10 +683,28 @@ int efivar_entry_set(struct efivar_entry *entry, u32
+> > > attributes,
+> > >                 status = ops->set_variable(name, &vendor,
+> > >                                            attributes, size, data);
+> > >
+> > > -       up(&efivars_lock);
+> > > -
+> > >         return efi_status_to_err(status);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(__efivar_entry_set);
+> > >
+> > > +/**
+> > > + * efivar_entry_set - call set_variable()
+> > > + *
+> > > + * This function takes efivars_lock and calls __efivar_entry_set()
+> > > + */
+> > > +int efivar_entry_set(struct efivar_entry *entry, u32 attributes,
+> > > +                    unsigned long size, void *data, struct list_head
+> > > *head)
+> > > +{
+> > > +       int ret;
+> > > +
+> > > +       if (down_interruptible(&efivars_lock))
+> > > +               return -EINTR;
+> > > +
+> > > +       ret = __efivar_entry_set(entry, attributes, size, data, head);
+> > > +
+> > > +       up(&efivars_lock);
+> > > +
+> > > +       return ret;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(efivar_entry_set);
+> > >
+> > > @@ -914,22 +933,16 @@ EXPORT_SYMBOL_GPL(__efivar_entry_get);
+> > >  int efivar_entry_get(struct efivar_entry *entry, u32 *attributes,
+> > >                      unsigned long *size, void *data)
+> > >  {
+> > > -       efi_status_t status;
+> > > +       int ret;
+> > >
+> > >         if (down_interruptible(&efivars_lock))
+> > >                 return -EINTR;
+> > >
+> > > -       if (!__efivars) {
+> > > -               up(&efivars_lock);
+> > > -               return -EINVAL;
+> > > -       }
+> > > +       ret = __efivar_entry_get(entry, attributes, size, data);
+> > >
+> > > -       status = __efivars->ops->get_variable(entry->var.VariableName,
+> > > -                                             &entry->var.VendorGuid,
+> > > -                                             attributes, size, data);
+> > >         up(&efivars_lock);
+> > >
+> > > -       return efi_status_to_err(status);
+> > > +       return ret;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(efivar_entry_get);
+> > >
+> > > @@ -1071,7 +1084,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
+> > >   * entry on the list. It is safe for @func to remove entries in the
+> > >   * list via efivar_entry_delete().
+> > >   *
+> > > - * You MUST call efivar_enter_iter_begin() before this function, and
+> > > + * You MUST call efivar_entry_iter_begin() before this function, and
+> > >   * efivar_entry_iter_end() afterwards.
+> > >   *
+> > >   * It is possible to begin iteration from an arbitrary entry within
+> > > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > > index 7efd7072cca5..5c3db088d375 100644
+> > > --- a/include/linux/efi.h
+> > > +++ b/include/linux/efi.h
+> > > @@ -1414,6 +1414,8 @@ int __efivar_entry_get(struct efivar_entry *entry,
+> > > u32 *attributes,
+> > >                        unsigned long *size, void *data);
+> > >  int efivar_entry_get(struct efivar_entry *entry, u32 *attributes,
+> > >                      unsigned long *size, void *data);
+> > > +int __efivar_entry_set(struct efivar_entry *entry, u32 attributes,
+> > > +                    unsigned long size, void *data, struct list_head
+> > > *head);
+> > >  int efivar_entry_set(struct efivar_entry *entry, u32 attributes,
+> > >                      unsigned long size, void *data, struct list_head
+> > >                      *head);
+> > >  int efivar_entry_set_get_size(struct efivar_entry *entry, u32 attributes,
+> > > --
+> > > 2.20.1
+>
