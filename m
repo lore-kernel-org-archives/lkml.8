@@ -2,58 +2,57 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F377BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D6A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191B4208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258957;
-	bh=pksQzQrc2MQjwThxrNUTZcxbQzloIIfnOaEIB9Dr76w=;
+	s=default; t=1583258971;
+	bh=242ju/f1UL0RmgOXdz4af0lNK8ENlCQQx6rAW3hkU6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvfMbCtfksgr02I91a1rbAHbjfPO6wNpiAbf8pIIzx98P555IRycBwX7BYS5EdMRj
-	 VdCT15gZpOb/Y6hDpn+AfI/9miwhB2dkmqRq2TFEPCQs3VTdEBOijG6ZWqg4vBlTy3
-	 QPdmtIpgnMxqL3EdzGiXH6ModbMkvOUdPU+eVZ04=
+	b=aBw9C1TtlcxTjnyyS3BiPBLF+yNKGghGXz7KOXEyjnNilIQ38msYQ2fcfgtBR10vQ
+	 l0eM3jpWEHqslhG30Zzazuw8dYT3oDXLeG7BjdKl8shAeofNuFeAlkopXIGnSVkrE6
+	 9f14+CWThdPVqnymTMEVBtJCjhzMvwSY0jicHPgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbgCCRwv (ORCPT
+        id S1732132AbgCCRwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730142AbgCCRwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:49 -0500
+        id S1731876AbgCCRwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5333B21739;
-        Tue,  3 Mar 2020 17:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD9D2146E;
+        Tue,  3 Mar 2020 17:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257967;
-        bh=pksQzQrc2MQjwThxrNUTZcxbQzloIIfnOaEIB9Dr76w=;
+        s=default; t=1583257935;
+        bh=242ju/f1UL0RmgOXdz4af0lNK8ENlCQQx6rAW3hkU6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KA3jEvyspSOS6GXQEMieerM7dD2fbDFXTW1MWQGvPm0BWsLtZUkJELxo94IdTNEHd
-         rtcfQJfBNJU1ErIUUCgFfETll1OmGVTIqtNzq8nUTj0/gghy9riHxWc3KjTsFpwtpN
-         mcOG5q9CY4Rg8F3Me0Sqe2nbjUPnwEKPaSbA3a2I=
+        b=GN3byUCTlLsELEx6H2hmA73HRYTHBZcNdnk8ktlPDqRapVagXwynzFSNfkFhyXZZm
+         sLf3tgMlWYHy/U9gOYhfGMDuKrPxdwYNQiYhZtIptW1CsJanlVrOcvq3be4He4a1pi
+         wFtLm16XonqDNEQoNricspapdRmIX1lqp8MEdB4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 021/152] ipv6: Fix nlmsg_flags when splitting a multipath route
-Date:   Tue,  3 Mar 2020 18:41:59 +0100
-Message-Id: <20200303174304.880495781@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 001/152] io_uring: grab ->fs as part of async offload
+Date:   Tue,  3 Mar 2020 18:41:39 +0100
+Message-Id: <20200303174302.711223909@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,49 +61,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit afecdb376bd81d7e16578f0cfe82a1aec7ae18f3 ]
+[ Upstream commits 9392a27d88b9 and ff002b30181d ]
 
-When splitting an RTA_MULTIPATH request into multiple routes and adding the
-second and later components, we must not simply remove NLM_F_REPLACE but
-instead replace it by NLM_F_CREATE. Otherwise, it may look like the netlink
-message was malformed.
+Ensure that the async work grabs ->fs from the queueing task if the
+punted commands needs to do lookups.
 
-For example,
-	ip route add 2001:db8::1/128 dev dummy0
-	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0 \
-		nexthop via fe80::30:2 dev dummy0
-results in the following warnings:
-[ 1035.057019] IPv6: RTM_NEWROUTE with no NLM_F_CREATE or NLM_F_REPLACE
-[ 1035.057517] IPv6: NLM_F_CREATE should be set when creating new route
+We don't have these two commits in 5.4-stable:
 
-This patch makes the nlmsg sequence look equivalent for __ip6_ins_rt() to
-what it would get if the multipath route had been added in multiple netlink
-operations:
-	ip route add 2001:db8::1/128 dev dummy0
-	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0
-	ip route append 2001:db8::1/128 nexthop via fe80::30:2 dev dummy0
+ff002b30181d30cdfbca316dadd099c3ca0d739c
+9392a27d88b9707145d713654eb26f0c29789e50
 
-Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
-Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+because they don't apply with the rework that was done in how io_uring
+handles offload. Since there's no io-wq in 5.4, it doesn't make sense to
+do two patches. I'm attaching my port of the two for 5.4-stable, it's
+been tested. Please queue it up for the next 5.4-stable, thanks!
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/route.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/io_uring.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -5155,6 +5155,7 @@ static int ip6_route_multipath_add(struc
- 		 */
- 		cfg->fc_nlinfo.nlh->nlmsg_flags &= ~(NLM_F_EXCL |
- 						     NLM_F_REPLACE);
-+		cfg->fc_nlinfo.nlh->nlmsg_flags |= NLM_F_CREATE;
- 		nhn++;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ed9a551882cf3..f34a8f7eee5d1 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -71,6 +71,7 @@
+ #include <linux/sizes.h>
+ #include <linux/hugetlb.h>
+ #include <linux/highmem.h>
++#include <linux/fs_struct.h>
+ 
+ #include <uapi/linux/io_uring.h>
+ 
+@@ -334,6 +335,8 @@ struct io_kiocb {
+ 	u32			result;
+ 	u32			sequence;
+ 
++	struct fs_struct	*fs;
++
+ 	struct work_struct	work;
+ };
+ 
+@@ -651,6 +654,7 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+ 	/* one is dropped after submission, the other at completion */
+ 	refcount_set(&req->refs, 2);
+ 	req->result = 0;
++	req->fs = NULL;
+ 	return req;
+ out:
+ 	percpu_ref_put(&ctx->refs);
+@@ -1663,6 +1667,16 @@ static int io_send_recvmsg(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 			ret = -EINTR;
  	}
  
++	if (req->fs) {
++		struct fs_struct *fs = req->fs;
++
++		spin_lock(&req->fs->lock);
++		if (--fs->users)
++			fs = NULL;
++		spin_unlock(&req->fs->lock);
++		if (fs)
++			free_fs_struct(fs);
++	}
+ 	io_cqring_add_event(req->ctx, sqe->user_data, ret);
+ 	io_put_req(req);
+ 	return 0;
+@@ -2159,6 +2173,7 @@ static inline bool io_sqe_needs_user(const struct io_uring_sqe *sqe)
+ static void io_sq_wq_submit_work(struct work_struct *work)
+ {
+ 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
++	struct fs_struct *old_fs_struct = current->fs;
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct mm_struct *cur_mm = NULL;
+ 	struct async_list *async_list;
+@@ -2178,6 +2193,15 @@ restart:
+ 		/* Ensure we clear previously set non-block flag */
+ 		req->rw.ki_flags &= ~IOCB_NOWAIT;
+ 
++		if (req->fs != current->fs && current->fs != old_fs_struct) {
++			task_lock(current);
++			if (req->fs)
++				current->fs = req->fs;
++			else
++				current->fs = old_fs_struct;
++			task_unlock(current);
++		}
++
+ 		ret = 0;
+ 		if (io_sqe_needs_user(sqe) && !cur_mm) {
+ 			if (!mmget_not_zero(ctx->sqo_mm)) {
+@@ -2276,6 +2300,11 @@ out:
+ 		mmput(cur_mm);
+ 	}
+ 	revert_creds(old_cred);
++	if (old_fs_struct) {
++		task_lock(current);
++		current->fs = old_fs_struct;
++		task_unlock(current);
++	}
+ }
+ 
+ /*
+@@ -2503,6 +2532,23 @@ err:
+ 
+ 	req->user_data = s->sqe->user_data;
+ 
++#if defined(CONFIG_NET)
++	switch (READ_ONCE(s->sqe->opcode)) {
++	case IORING_OP_SENDMSG:
++	case IORING_OP_RECVMSG:
++		spin_lock(&current->fs->lock);
++		if (!current->fs->in_exec) {
++			req->fs = current->fs;
++			req->fs->users++;
++		}
++		spin_unlock(&current->fs->lock);
++		if (!req->fs) {
++			ret = -EAGAIN;
++			goto err_req;
++		}
++	}
++#endif
++
+ 	/*
+ 	 * If we already have a head request, queue this one for async
+ 	 * submittal once the head completes. If we don't have a head but
+-- 
+2.20.1
+
 
 
