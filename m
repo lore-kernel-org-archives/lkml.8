@@ -2,53 +2,55 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31664C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE533C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C399214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AC5215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257520;
-	bh=SrmmSz4itM+cotM5mCLw5iWToKeU8vurv69OY/Ze4FU=;
+	s=default; t=1583257525;
+	bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgR0SX+yy64YLUk/gTFiCy5Yo9ZHj3G2F23lDhD/glqC+MVVfZebUWVniE2WjeIwi
-	 wFxkh49QFSNLYC76O67Vd4z7M8Vpr4rdy0ENgZbdeizSAjwWkEuHc1ZYmqKSugtwBY
-	 jfb/Re+dTyU7K84crzLuv78Oga5vUElT+MCjUWRo=
+	b=JGFWo61mhCZwAvsHYmlFkr0En8PJS6axvWFIo0s8Z8oMpr533KcjXGProISpH6uMU
+	 DzOXWD1x6UP8snwkn+aMcxcwJqWA1TU0sTBYz+eFFDiB3CyghHXN5/x6APTj4Ero0I
+	 YYD1HljA8N0iU1OsHSbzg7fwQn92NclqXyKHgEqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgCCRpS (ORCPT
+        id S1730922AbgCCRpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730886AbgCCRpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:14 -0500
+        id S1730905AbgCCRpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582B020870;
-        Tue,  3 Mar 2020 17:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2569C208C3;
+        Tue,  3 Mar 2020 17:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257513;
-        bh=SrmmSz4itM+cotM5mCLw5iWToKeU8vurv69OY/Ze4FU=;
+        s=default; t=1583257519;
+        bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9udS5eI1WHnPOAZzfwsGsB+BflDKJrSDmBblXumBIHOh5V3UYq5se5H+nnoYVflL
-         S3B5tYwM10x/0UwfACoVuLw/qXve+uaIqPDtVxuGwz9sKLdxoYEmE3wA5igILv4mjU
-         in71tPDgGdkMeKYNmXeMdlfDy8OXq+wEAW6Lm0As=
+        b=uNW0FFpEoy1jcRdw8pgrNy6nbJW8hTydlTHHwFn9YfDSXp+mRN1GAau2EQ7sASpbg
+         sQCOTk94WefolwHHOTTbsih5WpTgNcEs1GAFOKdAb5XIMDrzuWC9OWjvhTeDGmw5y7
+         3J0bkjT2MIKEaV7dP+JTVwozaOQBCv7JjKJu5IPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 024/176] net: rtnetlink: fix bugs in rtnl_alt_ifname()
-Date:   Tue,  3 Mar 2020 18:41:28 +0100
-Message-Id: <20200303174307.342278979@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 026/176] drm/msm: Set dma maximum segment size for mdss
+Date:   Tue,  3 Mar 2020 18:41:30 +0100
+Message-Id: <20200303174307.548385277@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,128 +63,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit 44bfa9c5e5f06c72540273813e4c66beb5a8c213 ]
+[ Upstream commit db735fc4036bbe1fbe606819b5f0ff26cc76cdff ]
 
-Since IFLA_ALT_IFNAME is an NLA_STRING, we have no
-guarantee it is nul terminated.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
 
-We should use nla_strdup() instead of kstrdup(), since this
-helper will make sure not accessing out-of-bounds data.
+[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+[   12.102655] Modules linked in: joydev
+[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+[   12.131487] sp : ffffff800cc3ba80
+[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+[   12.140395] x27: 0000000000000004 x26: 0000000000000004
+[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+[   12.167749] x17: 0000000000000000 x16: 0000000000000000
+[   12.173218] x15: 0000000000000000 x14: 0720072007200720
+[   12.178689] x13: 0720072007200720 x12: 0720072007200720
+[   12.184161] x11: 0720072007200720 x10: 0720072007200720
+[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+[   12.217006] Call trace:
+[   12.219535]  debug_dma_map_sg+0x1dc/0x318
+[   12.223671]  get_pages+0x19c/0x20c
+[   12.227177]  msm_gem_fault+0x64/0xfc
+[   12.230874]  __do_fault+0x3c/0x140
+[   12.234383]  __handle_mm_fault+0x70c/0xdb8
+[   12.238603]  handle_mm_fault+0xac/0xc4
+[   12.242473]  do_page_fault+0x1bc/0x3d4
+[   12.246342]  do_translation_fault+0x54/0x88
+[   12.250652]  do_mem_abort+0x60/0xf0
+[   12.254250]  el0_da+0x20/0x24
+[   12.257317] irq event stamp: 67260
+[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+[   12.295742] ---[ end trace e63cfc40c313ffab ]---
 
-BUG: KMSAN: uninit-value in strlen+0x5e/0xa0 lib/string.c:535
-CPU: 1 PID: 19157 Comm: syz-executor.5 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strlen+0x5e/0xa0 lib/string.c:535
- kstrdup+0x7f/0x1a0 mm/util.c:59
- rtnl_alt_ifname net/core/rtnetlink.c:3495 [inline]
- rtnl_linkprop+0x85d/0xc00 net/core/rtnetlink.c:3553
- rtnl_newlinkprop+0x9d/0xb0 net/core/rtnetlink.c:3568
- rtnetlink_rcv_msg+0x1153/0x1570 net/core/rtnetlink.c:5424
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5442
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x1248/0x14d0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg net/socket.c:659 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
- ___sys_sendmsg net/socket.c:2384 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45b3b9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff1c7b1ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007ff1c7b1b6d4 RCX: 000000000045b3b9
-RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009cb R14: 00000000004cb3dd R15: 000000000075bf2c
+The root of the problem is that the default segment size for sgt is
+(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+64K. As such, if you compare the 2, you would deduce that the sg segment
+will overflow the device's capacity. In reality, the hardware can
+accommodate the larger sg segments, it's just not initializing its max
+segment properly. This patch initializes the max segment size for the
+mdss device, which gets rid of that pesky warning.
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2774 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4382
- __kmalloc_reserve net/core/skbuff.c:141 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:209
- alloc_skb include/linux/skbuff.h:1049 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
- netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg net/socket.c:659 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
- ___sys_sendmsg net/socket.c:2384 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
- __do_sys_sendmsg net/socket.c:2426 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 36fbf1e52bd3 ("net: rtnetlink: add linkprop commands to add and delete alternative ifnames")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Jiri Pirko <jiri@mellanox.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/rtnetlink.c |   26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3499,27 +3499,25 @@ static int rtnl_alt_ifname(int cmd, stru
- 	if (err)
- 		return err;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index c84f0a8b3f2ce..b73fbb65e14b2 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	if (ret)
+ 		goto err_msm_uninit;
  
--	alt_ifname = nla_data(attr);
-+	alt_ifname = nla_strdup(attr, GFP_KERNEL);
-+	if (!alt_ifname)
-+		return -ENOMEM;
++	if (!dev->dma_parms) {
++		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
++					      GFP_KERNEL);
++		if (!dev->dma_parms)
++			return -ENOMEM;
++	}
++	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
 +
- 	if (cmd == RTM_NEWLINKPROP) {
--		alt_ifname = kstrdup(alt_ifname, GFP_KERNEL);
--		if (!alt_ifname)
--			return -ENOMEM;
- 		err = netdev_name_node_alt_create(dev, alt_ifname);
--		if (err) {
--			kfree(alt_ifname);
--			return err;
--		}
-+		if (!err)
-+			alt_ifname = NULL;
- 	} else if (cmd == RTM_DELLINKPROP) {
- 		err = netdev_name_node_alt_destroy(dev, alt_ifname);
--		if (err)
--			return err;
- 	} else {
--		WARN_ON(1);
--		return 0;
-+		WARN_ON_ONCE(1);
-+		err = -EINVAL;
- 	}
+ 	msm_gem_shrinker_init(ddev);
  
--	*changed = true;
--	return 0;
-+	kfree(alt_ifname);
-+	if (!err)
-+		*changed = true;
-+	return err;
- }
- 
- static int rtnl_linkprop(int cmd, struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	switch (get_mdp_ver(pdev)) {
+-- 
+2.20.1
+
 
 
