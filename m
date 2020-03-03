@@ -2,109 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C381EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7DDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961482072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832222072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583275045;
-	bh=XVijUpxVO3TKdiiQs95uSLqkpjDimDOS2lJkv7ybM4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=deU+onGzecmkSi7ZLTpeTh5EZJW0bfF76XGABLO7flF/tj4hu67bjJn0hrCgZ9n0Y
-	 8g3Kbmd9O2np7fBb2sc/Pe1xOauhO92R/WsdSVKQw5CQ0fkzzis4Vax+/OTSN8vSDj
-	 pIPQH+nPQvv56AvBK7xznbX6K5novxUX9sPm3Ozg=
+	s=default; t=1583275065;
+	bh=UlXuf0/3s1ve4SqXovmIVB20bElR5J+tbCqLUospazQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KE3IyOpgpNguP4IWOJHzzVMVpLZf75F0Omu6zcVWG0dZ27V6VNxyFv2FTiCytGCTp
+	 iuwxFcgB98DWb4G6jyIskqDLhjO0dqrNicL2Gp1rVdwKRkKkrx0E10DEzbIhw+q5ww
+	 f1k1oU4mVY3Or0WjyT9PobwJ90dWNeO51PT5fi+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgCCWhU (ORCPT
+        id S1727907AbgCCWho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:37:20 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34616 "EHLO
+        Tue, 3 Mar 2020 17:37:44 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33201 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCWhU (ORCPT
+        with ESMTP id S1726747AbgCCWho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:37:20 -0500
-Received: by mail-oi1-f194.google.com with SMTP id g6so83863oiy.1;
-        Tue, 03 Mar 2020 14:37:18 -0800 (PST)
+        Tue, 3 Mar 2020 17:37:44 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q81so89586oig.0;
+        Tue, 03 Mar 2020 14:37:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gv3fyBKvtyX+tFFlzrOXFcsjJxt1T00icp5fgfMvZ8=;
-        b=oOfaQWgFCYaEFjIHZApWe2OSwRILLszc+u9Dbj6U1UC16VQ0ilatiPVZBOKkYwGzaB
-         ROKNtAyhxhaNKbvhlPHqvGREysbnPpJVCcT39cTUufzI19TbcPP28iWz5TxyWMm8d9zM
-         kJqV9bb5fANx5pTtrDeMYBY29ojjI998GsfOJWW47StCm7gEqnk45Y4zG5xQWYy5dLE0
-         9ebX/9ccYKOxHNb5SvpGKLq64ZwMwHJ5gf3rZyg0OqjAiOhr39p4l5lLCdxMcjc9nkSI
-         kv0dgJjG5jRlZyCtPWgXo1w7vqVxUG9JCcg/h6dAXIzjDUjMGa3vw/ZsxJy/rG7p7JKa
-         JgEw==
-X-Gm-Message-State: ANhLgQ0IQBhDGvLooqHspKZbsb314fA/rRD4EXj+q9C6pqvVbj0vL4W4
-        spgaIDqsCHWwf/3u83oZzzwZ2hkvEI7aLTgxYIA=
-X-Google-Smtp-Source: ADFU+vvpJF9FJZ0owkmiybjBXeW5H8spDqYBqmB6x8i0lxHazt7jMMW7Zcwju3ecqXf8Zbzf7H0hTR7QdHl10ZW3clg=
-X-Received: by 2002:aca:bfc2:: with SMTP id p185mr566616oif.57.1583275038372;
- Tue, 03 Mar 2020 14:37:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QRrz4U/hUD8JdGIzknzghXTEGOx2fMtenx9l1J/HTgk=;
+        b=AvR7qW2gb+3ouHZnJxV7vTm5g8LbtgC4ykcc9Z9cHdDeduIMysimsNM15oPIqTHJZ9
+         pVg/B7MjYBI9SaNoDTfQ85xsA53uu8H68Its//EHvPbgMmL90CLMwNamzvZoljMHl8by
+         WTFtdGR7oOx+kncePY/FVtsahGP3EzsGWr3UK2x9v9MxE4DGX7tVkWIlHFFqaCV3FfeF
+         Fhup5HnAdMBEfJ1IzyGNv1ndO6gvJ6OaKIU4iKFEBNh9uJPrrcbIOVxBnoyH4FbR+t61
+         Yce/tP7mcGKj83ANGSYMllIFnmgiyvGq9WckmOKGhs9Fuv3bRRNAdHdfY+puBYRBA0EF
+         WYXw==
+X-Gm-Message-State: ANhLgQ3GZKbp6S+2Blp4PA6VzJpWF8Nq8RcoZZDGO9wjTH+3UZPFLccI
+        UDuUW99U2CBppqmp3HUu5w==
+X-Google-Smtp-Source: ADFU+vuYN3P6DEkf554SWGL2CX0kcuu1YRq1rNKiSQx57b/A4yfIQEDeAocfsyA5LEN4mASP5C2rBw==
+X-Received: by 2002:a05:6808:658:: with SMTP id z24mr565050oih.91.1583275063485;
+        Tue, 03 Mar 2020 14:37:43 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e17sm8358412otq.58.2020.03.03.14.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:37:42 -0800 (PST)
+Received: (nullmailer pid 18796 invoked by uid 1000);
+        Tue, 03 Mar 2020 22:37:41 -0000
+Date:   Tue, 3 Mar 2020 16:37:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     devicetree@vger.kernel.org,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: zii,rave-sp: Fix a typo ("onborad")
+Message-ID: <20200303223741.GA18714@bogus>
+References: <20200227155500.13594-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-References: <20200226015813.987-1-cai@lca.pw>
-In-Reply-To: <20200226015813.987-1-cai@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 3 Mar 2020 23:37:07 +0100
-Message-ID: <CAJZ5v0gnirM5ZEQNUHTz9-_0y4Dx5_aZDzHuHchOw-iViin+ZA@mail.gmail.com>
-Subject: Re: [PATCH -next v2] power/qos: annotate data races in pm_qos_*_value
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227155500.13594-1-j.neuschaefer@gmx.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 2:58 AM Qian Cai <cai@lca.pw> wrote:
->
-> The target_value field in struct pm_qos_constraints is used for lockless
-> access to the effective constraint value of a given QoS list, so the
-> readers of it cannot expect it to always reflect the most recent
-> effective constraint value.  However, they can and do expect it to be
-> equal to a valid effective constraint value computed at a certain time
-> in the past (event though it may not be the most recent one), so add
-> READ|WRITE_ONCE() annotations around the target_value accesses to
-> prevent the compiler from possibly causing that expectation to be unmet
-> by generating code in an exceptionally convoluted way.
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
+On Thu, 27 Feb 2020 16:55:00 +0100, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= wrote:
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->
-> v2: borrow the commit log from Rafael.
->
->  kernel/power/qos.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-> index 32927682bcc4..db0bed2cae26 100644
-> --- a/kernel/power/qos.c
-> +++ b/kernel/power/qos.c
-> @@ -52,7 +52,7 @@ static DEFINE_SPINLOCK(pm_qos_lock);
->   */
->  s32 pm_qos_read_value(struct pm_qos_constraints *c)
->  {
-> -       return c->target_value;
-> +       return READ_ONCE(c->target_value);
->  }
->
->  static int pm_qos_get_value(struct pm_qos_constraints *c)
-> @@ -75,7 +75,7 @@ static int pm_qos_get_value(struct pm_qos_constraints *c)
->
->  static void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
->  {
-> -       c->target_value = value;
-> +       WRITE_ONCE(c->target_value, value);
->  }
->
->  /**
-> --
+>  Documentation/devicetree/bindings/mfd/zii,rave-sp.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Applied as 5.7 material, thanks!
+Applied, thanks.
+
+Rob
