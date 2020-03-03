@@ -2,88 +2,163 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23975C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D4D20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583277206;
-	bh=v5pqnEcy9dq8qHJLjfOnbdzJYEeiqGUa6wuExA6D8Wc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rYYSxaPLVAaimLBsYtO7PS8OC39eTic6P/qUy4CvnzygavTTWoU+3+P4N+CLi90yH
-	 si7i9M9cBEUCsi/1jRKxQMjUVWnmVa/dyMWc0ulJYFAjjbrQoqUrldK2AxID0fOH1q
-	 nVOETnhtPRRhDP5djloycB+k+tEHVshwyvFcn1pM=
+	by mail.kernel.org (Postfix) with ESMTP id E14F8208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o5gJRadM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgCCXNZ (ORCPT
+        id S1728309AbgCCXNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:13:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727199AbgCCXNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:13:24 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF38920870;
-        Tue,  3 Mar 2020 23:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583277204;
-        bh=v5pqnEcy9dq8qHJLjfOnbdzJYEeiqGUa6wuExA6D8Wc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FilFCPSn1GKrv2Xy01SxU+b7DWJA099psUxo16M+ysHRwoI/OCwyQXt0/i4zSFk4Y
-         DIl+D5VPQ7/b/123VxVpWch9EXnUmjsmpJEDuow9sPIPHgZa4DqLVkx/Q4PQa2wymH
-         VX8kgGR506DRCO8BAXIqtWjvUNUtEtMNxaWD1Q1A=
-Subject: Re: [PATCH 5.4 000/152] 5.4.24-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200303174302.523080016@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <70fd0fd4-018a-a433-d0d0-a44187358f08@kernel.org>
-Date:   Tue, 3 Mar 2020 16:13:23 -0700
+        Tue, 3 Mar 2020 18:13:33 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:56250 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727199AbgCCXNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:13:32 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023N7iN8012710;
+        Tue, 3 Mar 2020 23:13:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=2SlemBkaH65QXaEf4TZL1oysb9wUe7KgyRuvi4NMftE=;
+ b=o5gJRadMhquDlhaSlYaNpefpKBZXxKnCf9oAUdtSZZ4vet+VfYguXOBhQoMRCQeK+hco
+ fejBtJD+5il3tC7hhH9yWHC1IIwPiBT0pFvkjpR5QIf3cxF7h8BrGlP4vvq64QiQHI1F
+ 4UhbtUQqWze0JDPSschod6KUJmqZCUNHR7RGQz7/Jk+eBDDayPzDd4v+Emi3/SsVXGu/
+ 5tOCgrcd4JX1D+40EzxORxioUmuVmnt4siDXDmCk3jRzmjA+yrK1AFAb14k0b1JbOmwy
+ UgafaKvviQLN7iQ9RNsemp9OhihFvNOJ3o1bM4JjIUTZYD5fAq6mYAwY3mxV8M4HUvRo Lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2yffcujmjc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 23:13:22 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023NCeqO070813;
+        Tue, 3 Mar 2020 23:13:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2yg1rnkexa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 23:13:21 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023NDJYL028875;
+        Tue, 3 Mar 2020 23:13:19 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 15:13:19 -0800
+Subject: Re: [PATCH] xen: Use 'unsigned int' instead of 'unsigned'
+To:     Jan Beulich <jbeulich@suse.com>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20200229223035.GA28145@kbp1-lhp-F74019>
+ <fba833c4-3173-0094-b4ec-53e9f42bfb3e@suse.com>
+ <20200302221826.GA18206@kbp1-lhp-F74019>
+ <38739aa0-200e-fd46-ea38-c30a6aa69561@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <2c34f543-f941-10fe-24e6-08fc1a98370c@oracle.com>
+Date:   Tue, 3 Mar 2020 18:13:18 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <38739aa0-200e-fd46-ea38-c30a6aa69561@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:41 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.24 release.
-> There are 152 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 05 Mar 2020 17:42:10 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.24-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
 
-thanks,
--- Shuah
+On 3/3/20 3:30 AM, Jan Beulich wrote:
+> On 02.03.2020 23:18, Yan Yankovskyi wrote:
+>> On Mon, Mar 2, 2020 at 10:11 Jan Beulich wrote:
+>>> ... evtchn_port_t here and elsewhere.
+>> There are some interfaces with signed int as a type for port, e.g. in
+>> include/xen/events.h.
+>> Should I create additional patch to resolve inconsistency with evtchn
+>> interface?
+>> Or you suggest combining these changes into the existing patch?
+> Signed <-> unsigned conversions would perhaps better go into a
+> separate patch. But note I'm not the maintainer of this code.
+>
+>> Also as I understand 'evtchn' and 'port' are essentially the same
+>> entities from perspective of local domain, related to each other rough=
+ly
+>> like connection and file descriptor pair. What do you think about
+>> renaming all 'evtchn' arguments and variables to 'port'?
+>> It will eliminate inconsistencies in the code, for example
+>> in include/xen/interface/event_channel.h and include/xen/events.h.
+> I'd welcome this, but the maintainers will have the final say.
+
+TBH I'd rather see the things that Jan pointed to fixed than replacing
+'unsigned' with 'unsigned int.'
+
+The latter is purely a kernel style requirement and is typically fixed
+when the line is modified (in fact, we did just that last week).
+
+-boris
 
