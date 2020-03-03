@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AF1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8A1C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E203020873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0815220848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgCCNhI (ORCPT
+        id S1729630AbgCCNhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 3 Mar 2020 08:37:08 -0500
-Received: from mga01.intel.com ([192.55.52.88]:26134 "EHLO mga01.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:23938 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729585AbgCCNhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:37:02 -0500
+        id S1729590AbgCCNhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:37:03 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 05:37:02 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 05:37:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="263198908"
+   d="scan'208";a="438724035"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2020 05:36:59 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 03 Mar 2020 05:36:59 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1541644F; Tue,  3 Mar 2020 15:36:50 +0200 (EET)
+        id 48DB7727; Tue,  3 Mar 2020 15:36:50 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 15/19] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date:   Tue,  3 Mar 2020 16:36:45 +0300
-Message-Id: <20200303133649.39819-16-mika.westerberg@linux.intel.com>
+Subject: [PATCH v8 19/19] MAINTAINERS: Update entry for Intel Broxton PMC driver
+Date:   Tue,  3 Mar 2020 16:36:49 +0300
+Message-Id: <20200303133649.39819-20-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
 References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
@@ -58,47 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+The driver lives now under MFD so split the current entry into two parts
+and add me as co-maintainer of the Intel Broxton PMC driver. While there
+correct formatting of Zha Qipeng's email address.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ MAINTAINERS | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4d4e3241bf99..20e4353260f7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8371,6 +8371,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_atomisp2_pm.c
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
++INTEL BROXTON PMC DRIVER
++M:	Mika Westerberg <mika.westerberg@linux.intel.com>
++M:	Zha Qipeng <qipeng.zha@intel.com>
++S:	Maintained
++F:	drivers/mfd/intel_pmc_bxt.c
++F:	include/linux/mfd/intel_pmc_bxt.h
 +
- #else /* !CONFIG_X86_INTEL_MID */
+ INTEL C600 SERIES SAS CONTROLLER DRIVER
+ M:	Intel SCU Linux support <intel-linux-scu@intel.com>
+ M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+@@ -8579,6 +8586,13 @@ F:	drivers/dma/mic_x100_dma.c
+ F:	drivers/dma/mic_x100_dma.h
+ F:	Documentation/mic/
  
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
- 
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
++INTEL P-Unit IPC DRIVER
++M:	Zha Qipeng <qipeng.zha@intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	arch/x86/include/asm/intel_punit_ipc.h
++F:	drivers/platform/x86/intel_punit_ipc.c
 +
- #endif /* !CONFIG_X86_INTEL_MID */
+ INTEL PMC CORE DRIVER
+ M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+ M:	Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+@@ -8586,15 +8600,6 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_pmc_core*
  
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
+-INTEL PMC/P-Unit IPC DRIVER
+-M:	Zha Qipeng<qipeng.zha@intel.com>
+-L:	platform-driver-x86@vger.kernel.org
+-S:	Maintained
+-F:	arch/x86/include/asm/intel_pmc_ipc.h
+-F:	arch/x86/include/asm/intel_punit_ipc.h
+-F:	drivers/platform/x86/intel_pmc_ipc.c
+-F:	drivers/platform/x86/intel_punit_ipc.c
 -
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
+ INTEL PMIC GPIO DRIVERS
+ M:	Andy Shevchenko <andy@kernel.org>
+ S:	Maintained
 -- 
 2.25.1
 
