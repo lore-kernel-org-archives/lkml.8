@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFB7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71911C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C1C2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471BB2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204459;
-	bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+	s=default; t=1583204467;
+	bh=QLQy8wlt2AqZ0CRoJLgZFN+jBg/hHItbk3IGsNcoL+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/9yVVw4p8hMz4cygU1A+5Snh/i0Mmy4UP28QZkMERuVEPn3iCL3yD6LUA9DC5bgk
-	 tFaeMeld36MOtB124NW8wr3uh+F0YRFQYhmjcZb/kohJQBZkUv8Tj0FP0KD9Pvxq25
-	 NQpZVKItfMJ1ZEe2OkkCYwrVxzXD1thVPOm8p9vo=
+	b=LNHtdYDJ3VPU+FFjX07gM6ZewU0RaIb8oixgZZQAroyTmNHhMhVKm6LX7EsVloOAC
+	 8HdSJY0iCY7cti0c0Y4S9ydH8czWSOTzOD/wP3rrf//Kh1lXmaZetKS/p6CVe678eY
+	 9qyXZk70ZRMsK63KJYOtIGLpv1fwc2aFbo6lpqxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgCCDA5 (ORCPT
+        id S1727237AbgCCDBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:00:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42036 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:01:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbgCCCrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:11 -0500
+        id S1727893AbgCCCrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B29724684;
-        Tue,  3 Mar 2020 02:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2438246D5;
+        Tue,  3 Mar 2020 02:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203630;
-        bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+        s=default; t=1583203628;
+        bh=QLQy8wlt2AqZ0CRoJLgZFN+jBg/hHItbk3IGsNcoL+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+Z2L1VqKU95QO2wvBRlaCUyGE0XiYUyZMTxY0G05Qw9mqOFnb14p1RKHWoTjS40J
-         pubPKbh3OMrOskZUHvWKlg830lPe+QymHPg1xipBtGP05wreqZzh3V062hvBWPY2Tc
-         J6ZCLPErE/K5bxfBEmX/MOzHUSNecAIz/RWnJyF0=
+        b=EtXOlabxhRy7b6U5FSmZC5zuPp8AN5LIF12FP5w6UQQuHsTmKJN4cnussTBzaDr9g
+         QP+ojNocdFTFU2Zh4c7hjku8P7UM8GqNFIKM8mnkIzGHjXv8ReUdcbJqkwscXp1MGC
+         aQcCGzN0OwC3yN3/YcoFCYVoFWtZmQ/Tqxf0dXco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 44/66] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Date:   Mon,  2 Mar 2020 21:45:53 -0500
-Message-Id: <20200303024615.8889-44-sashal@kernel.org>
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 42/66] qede: Fix race between rdma destroy workqueue and link change event
+Date:   Mon,  2 Mar 2020 21:45:51 -0500
+Message-Id: <20200303024615.8889-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -61,65 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 3dfee47b215e49788cfc80e474820ea2e948c031 ]
+[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
 
-Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+If an event is added while the rdma workqueue is being destroyed
+it could lead to several races, list corruption, null pointer
+dereference during queue_work or init_queue.
+This fixes the race between the two flows which can occur during
+shutdown.
 
-Use identity-mapping and PCI ATS doesn't help this issue.
+A kref object and a completion object are added to the rdma_dev
+structure, these are initialized before the workqueue is created.
+The refcnt is used to indicate work is being added to the
+workqueue and ensures the cleanup flow won't start while we're in
+the middle of adding the event.
+Once the work is added, the refcnt is decreased and the cleanup flow
+is safe to run.
 
-According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
-the same here to avoid screen flickering on 4K monitor.
-
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: cee9fbd8e2e ("qede: Add qedr framework")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c | 29 +++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index d7cbca8bf2cd4..b5ae9f7c0510b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2533,6 +2533,7 @@ static int __init early_amd_iommu_init(void)
- 	struct acpi_table_header *ivrs_base;
- 	acpi_status status;
- 	int i, remap_cache_sz, ret = 0;
-+	u32 pci_id;
+diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
+index e8a1b27db84de..234c6f30effb7 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -163,6 +163,8 @@ struct qede_rdma_dev {
+ 	struct list_head entry;
+ 	struct list_head rdma_event_list;
+ 	struct workqueue_struct *rdma_wq;
++	struct kref refcnt;
++	struct completion event_comp;
+ 	bool exp_recovery;
+ };
  
- 	if (!amd_iommu_detected)
- 		return -ENODEV;
-@@ -2620,6 +2621,16 @@ static int __init early_amd_iommu_init(void)
- 	if (ret)
- 		goto out;
- 
-+	/* Disable IOMMU if there's Stoney Ridge graphics */
-+	for (i = 0; i < 32; i++) {
-+		pci_id = read_pci_config(0, i, 0, 0);
-+		if ((pci_id & 0xffff) == 0x1002 && (pci_id >> 16) == 0x98e4) {
-+			pr_info("Disable IOMMU on Stoney Ridge\n");
-+			amd_iommu_disabled = true;
-+			break;
-+		}
-+	}
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index ffabc2d2f0824..2d873ae8a234d 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qede_dev *edev)
+ static int qede_rdma_create_wq(struct qede_dev *edev)
+ {
+ 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
++	kref_init(&edev->rdma_info.refcnt);
++	init_completion(&edev->rdma_info.event_comp);
 +
- 	/* Disable any previously enabled IOMMUs */
- 	if (!is_kdump_kernel() || amd_iommu_disabled)
- 		disable_iommus();
-@@ -2728,7 +2739,7 @@ static int __init state_next(void)
- 		ret = early_amd_iommu_init();
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
--			pr_info("AMD IOMMU disabled on kernel command-line\n");
-+			pr_info("AMD IOMMU disabled\n");
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
+ 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
+ 	if (!edev->rdma_info.rdma_wq) {
+ 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
+@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(struct qede_dev *edev)
+ 	}
+ }
+ 
++static void qede_rdma_complete_event(struct kref *ref)
++{
++	struct qede_rdma_dev *rdma_dev =
++		container_of(ref, struct qede_rdma_dev, refcnt);
++
++	/* no more events will be added after this */
++	complete(&rdma_dev->event_comp);
++}
++
+ static void qede_rdma_destroy_wq(struct qede_dev *edev)
+ {
++	/* Avoid race with add_event flow, make sure it finishes before
++	 * we start accessing the list and cleaning up the work
++	 */
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
++	wait_for_completion(&edev->rdma_info.event_comp);
++
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
+ }
+@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct qede_dev *edev,
+ 	if (!edev->rdma_info.qedr_dev)
+ 		return;
+ 
++	/* We don't want the cleanup flow to start while we're allocating and
++	 * scheduling the work
++	 */
++	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
++		return; /* already being destroyed */
++
+ 	event_node = qede_rdma_get_free_event_node(edev);
+ 	if (!event_node)
+-		return;
++		goto out;
+ 
+ 	event_node->event = event;
+ 	event_node->ptr = edev;
+ 
+ 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
+ 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
++
++out:
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
+ }
+ 
+ void qede_rdma_dev_event_open(struct qede_dev *edev)
 -- 
 2.20.1
 
