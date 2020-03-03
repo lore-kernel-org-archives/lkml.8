@@ -2,96 +2,171 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E313C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C123EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC9B2064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D5E2064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qmu1JV0L"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NDk1S2EX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCCFkm (ORCPT
+        id S1727409AbgCCFlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:40:42 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:34609 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbgCCFkm (ORCPT
+        Tue, 3 Mar 2020 00:41:13 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8901 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCCFlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:40:42 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583214042; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=qr3JVYtKfOWIi/bSPDEd0ztBd3h/rs+zEN/13ZtS5I8=; b=Qmu1JV0LwxyGVJI8HoR7EiviexiL4ZItHmNeRWFPFYUkPOi1ur7XRky+3vYkXbwfBCnKF2kp
- /A3s10QU+F9qA753FeysnZmQKAP4bXR2V+MoXp+IZC/LXiOtDw7R6YLZYob80cs2T+1h0OuK
- pcbgAy2/VrcMWnxCPb/yUI2bSV8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5dedd2.7ff80c9b47a0-smtp-out-n03;
- Tue, 03 Mar 2020 05:40:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 22058C4479C; Tue,  3 Mar 2020 05:40:33 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70B65C43383;
-        Tue,  3 Mar 2020 05:40:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70B65C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Leho Kraav <leho@kraav.com>
-Cc:     "Jan Alexander Steffens \(heftig\)" <jan.steffens@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
-References: <20191224051639.6904-1-jan.steffens@gmail.com>
-        <20200221121135.GA9056@papaya>
-Date:   Tue, 03 Mar 2020 07:40:26 +0200
-In-Reply-To: <20200221121135.GA9056@papaya> (Leho Kraav's message of "Fri, 21
-        Feb 2020 14:11:35 +0200")
-Message-ID: <871rqauhbp.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 3 Mar 2020 00:41:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5dedeb0000>; Mon, 02 Mar 2020 21:40:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 02 Mar 2020 21:41:12 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 02 Mar 2020 21:41:12 -0800
+Received: from [10.2.160.177] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 05:41:12 +0000
+Subject: Re: [PATCH v2 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
+ FOLL_PIN pages"
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
+        <jack@suse.cz>, <kirill@shutemov.name>
+CC:     <borntraeger@de.ibm.com>, <david@redhat.com>,
+        <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>
+References: <20200303002506.173957-1-imbrenda@linux.ibm.com>
+ <20200303002506.173957-2-imbrenda@linux.ibm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <dbda1638-4de6-a90f-6000-30651a8d56f0@nvidia.com>
+Date:   Mon, 2 Mar 2020 21:38:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200303002506.173957-2-imbrenda@linux.ibm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583214059; bh=r/3wnhnvfxYDCvTiXpHphGDa2aKt2Zft4Tm9S+V9Tgc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NDk1S2EX/bLINrjs0wQkG2RHN73q1GcgISfIazE6XASrpm+XqtN4J39dfoIdEzuN+
+         gshDK3EcHBHgUzBWx77iRXGO/Lc8sXcQvwMw9qAdFdMaBb6Kw7KRY/doIevsI00IAw
+         efEnazjaotIFNOwzK1QbCCt3n3vF2HMJ1qxKBma0vuFakbCswUUlr/CjiWnKfNFvJ/
+         MOs1Qjn7OOqlstgczLXBB3YR/gslVWoheI4k9DuOhdpfpCeWpfMLnFLQRIgr0McGlf
+         SeLUIeHnMkUSjceIYOCFQo68vDwZrX4ImC2k8Xyahmad9t5fm0HAe9ZK7xtZ8aHTPo
+         f8dGR2cjEljVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leho Kraav <leho@kraav.com> writes:
+On 3/2/20 4:25 PM, Claudio Imbrenda wrote:
+> In case pin fails, we need to unpin, a simple put_page will not be enough
+> 
+> fixup for commit 9947ea2c1e608e32 ("mm/gup: track FOLL_PIN pages")
+> 
+> it can be simply squashed in
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>   mm/gup.c | 46 +++++++++++++++++++++++-----------------------
+>   1 file changed, 23 insertions(+), 23 deletions(-)
+> 
 
-> On Tue, Dec 24, 2019 at 06:16:39AM +0100, Jan Alexander Steffens (heftig) wrote:
->> Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
->> trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
->> in this process the lines which picked the right cfg for Killer Qu C0
->> NICs after C0 detection were lost. These lines were added by commit
->> b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
->> C0").
->> 
->> I suspect this is more of the "merge damage" which commit 7cded5658329
->> ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
->> 
->> Restore the missing lines so the driver loads the right firmware for
->> these NICs.
->
-> This seems real, as upgrading 5.5.0 -> 5.5.5 just broke my iwlwifi on XPS 7390.
-> How come?
 
-Luca, should I apply this to wireless-drivers?
+Looks good, thanks for fixing this.
 
-https://patchwork.kernel.org/patch/11309095/
 
+thanks,
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+John Hubbard
+NVIDIA
+
+
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f589299b0d4a..81a95fbe9901 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -116,6 +116,28 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
+>   	return NULL;
+>   }
+>   
+> +static void put_compound_head(struct page *page, int refs, unsigned int flags)
+> +{
+> +	if (flags & FOLL_PIN) {
+> +		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED,
+> +				    refs);
+> +
+> +		if (hpage_pincount_available(page))
+> +			hpage_pincount_sub(page, refs);
+> +		else
+> +			refs *= GUP_PIN_COUNTING_BIAS;
+> +	}
+> +
+> +	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
+> +	/*
+> +	 * Calling put_page() for each ref is unnecessarily slow. Only the last
+> +	 * ref needs a put_page().
+> +	 */
+> +	if (refs > 1)
+> +		page_ref_sub(page, refs - 1);
+> +	put_page(page);
+> +}
+> +
+>   /**
+>    * try_grab_page() - elevate a page's refcount by a flag-dependent amount
+>    *
+> @@ -2134,7 +2156,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>   			goto pte_unmap;
+>   
+>   		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> -			put_page(head);
+> +			put_compound_head(head, 1, flags);
+>   			goto pte_unmap;
+>   		}
+>   
+> @@ -2267,28 +2289,6 @@ static int record_subpages(struct page *page, unsigned long addr,
+>   	return nr;
+>   }
+>   
+> -static void put_compound_head(struct page *page, int refs, unsigned int flags)
+> -{
+> -	if (flags & FOLL_PIN) {
+> -		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED,
+> -				    refs);
+> -
+> -		if (hpage_pincount_available(page))
+> -			hpage_pincount_sub(page, refs);
+> -		else
+> -			refs *= GUP_PIN_COUNTING_BIAS;
+> -	}
+> -
+> -	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
+> -	/*
+> -	 * Calling put_page() for each ref is unnecessarily slow. Only the last
+> -	 * ref needs a put_page().
+> -	 */
+> -	if (refs > 1)
+> -		page_ref_sub(page, refs - 1);
+> -	put_page(page);
+> -}
+> -
+>   #ifdef CONFIG_ARCH_HAS_HUGEPD
+>   static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
+>   				      unsigned long sz)
+> 
