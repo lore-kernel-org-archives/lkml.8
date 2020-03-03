@@ -2,137 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B988C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A087EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5ACA20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5A120870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kDnUpYpd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCHZxkko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgCCX5a (ORCPT
+        id S1727939AbgCCX7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:57:30 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44487 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgCCX53 (ORCPT
+        Tue, 3 Mar 2020 18:59:41 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41199 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbgCCX7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:57:29 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 7so4279568lfz.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 15:57:26 -0800 (PST)
+        Tue, 3 Mar 2020 18:59:40 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y17so4301838lfe.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 15:59:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
-        b=kDnUpYpdn4DAr4q2+USJm5D+Fm0EG/v+rd4s9F6wFuVXBRLXddHQ+/f0t4DFkkQ+3Q
-         eBcaSIqkYIuy53rq98q1mHS3xL2RtzGAIQO2CLrUnJdK4EJtDXeVl6PdXaACwg1yxD83
-         KLoXEudsQ8rXYTgIgtth79gb8JOYaXvThTtjUTvrkO2UnUDAZKVhOyQ0sM0Dh8y0cy7T
-         x7c6ZJRQeiva4BdwyggRsrozYSAaI1lq79XSN90vSRowrZlPAbE1G13Qdg4Ro+8djiBX
-         ZGGI3UFY12ilEHoXGE8jE5rpfmGBT8LYcI/8AzDqCZMiPlySSJpfsoVgP1G8NnIC+kRj
-         tEkg==
+        bh=Ep7YwJ1cSlx/EG1MvH0nW0IG2SdE9N1g2AvP7NSxP1Q=;
+        b=jCHZxkkoQbFtzw3oJIeqzx3ybE1ypCB/gQqxwJX7mDyeDnNo2othEGc6L7RReLgt6f
+         E7wyMQE8emqs/hMxJNkC0eowip7GM2a77vD4uT6RSzEYmb4mCTCqFqb0LAURWhyIm0rR
+         fK42QAAQoFwrVIlXuZnjo1RLe2YDU2CZtGlzykpN7Gm5N0AXDsA6Wzz2PIu6cOY+mkow
+         p96sjfsjOGC9ncXpvwTSKcEctrDMm9kg2wtRF4bClgZEkH/GcDe01WRwFph1VpD2ggKg
+         b1YKHsP1W4ObjWXdfesX8kriJlidMsuO+BIfvrAiLG+JV8V56oQ4yT67AEoXku+9m35J
+         fzig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
-        b=ZqVJKpXREru7elMNCZeMTjiZLdPC77jTUUAbeotI97EVYErYBRkn6GO9ZrzV1VvT+d
-         dK4tGMqvNkJQRJbgsZlLgG2IFDYsJ9wXl3N3/6sVQ1OhcjIVZqRn2xnBhA0yDG35UWBB
-         8ofel690KTvGpZGfTcQHVVlqbcGvmL/ZI+CnXiwnuTQDBHnmxaJwFkiNqD2tkMgaE1PU
-         pHPLx4Oh/8KGDea0mk3/pydUs2z/aJao1q0DhKCqDl6IqcTA1k0mMLPiOYqP4MpzPrT1
-         gbWnuAskkWYB6oxrsGD6Kamky7KfNX42gl0QReOYUX4EPl9Sc/YlcB6IhFk+QixwMDa9
-         4mPw==
-X-Gm-Message-State: ANhLgQ1M6BkbHFS2Atc8eC8DZY5po1jXKRV+JPlkXyrbnphv2qYtyCiZ
-        I4BZVfLhnLb8k1OKdHjkOW1HVlQ2A+SREaDhA4L0PA==
-X-Google-Smtp-Source: ADFU+vuSXV6dJHAw44cUBpwZDzV0Ata45u0U9iunTKOnYcvhn4CAzW/6jGOxJT8MXZjlles3cvD5zW2DxOE8xH8AoFU=
-X-Received: by 2002:a19:ca15:: with SMTP id a21mr232523lfg.67.1583279845785;
- Tue, 03 Mar 2020 15:57:25 -0800 (PST)
+        bh=Ep7YwJ1cSlx/EG1MvH0nW0IG2SdE9N1g2AvP7NSxP1Q=;
+        b=CD0pBCkSLsCrsjZDnnBKZ5ZRpMN4vafqsWl/HPf9Q7XQTPsV2kOM0cMEikeSo2fqcd
+         ICAlaiIrTVeS2q6z6gKEviJ5c9uKuYTCXhj0gsNFGmIHHHjs9dRYpbZbqDZESFjCP+K4
+         QBG/SFZjuDtuzSdsIiuDpbaocONmV4unynN84cveo7SvqHYjfMRn5puc7yF4Vbsp5MFt
+         2cCP2FOPIOgZGcwuJi3uJlO4ozgf47vM7xPBfpJ9DR00NG+pdttyD2zr+WoCnYXTLJR4
+         ucA2WCdU0MBmMiznvXXCKSsA5XWa7m6g6aNGnjGolba9ptGML7QE0krKxeaNd1nGW0G3
+         cUwQ==
+X-Gm-Message-State: ANhLgQ1g3RwSuaT1IiyUfBlqbHLEpRKIcay5CrXgrvkOuRIOv4EDgnKq
+        lGIGl+6akbuGJ7ueh1VlepRyw2xFo2kn+fnPyRLawKefkMQ=
+X-Google-Smtp-Source: ADFU+vsYdW1PWvdtTgFwZdS0gcHuzS2Ejh4OwwOiq2uZGhxcRiL165XFJD8NN5wd2hf6HXHJ7Ikk/4Cf5nRu7kPpYg0=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr248231lfc.204.1583279978879;
+ Tue, 03 Mar 2020 15:59:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20200225091130.29467-1-kishon@ti.com> <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
- <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com> <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
-In-Reply-To: <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Tue, 3 Mar 2020 15:57:13 -0800
-Message-ID: <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
- support to transfer data
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     amurray@thegoodpenguin.co.uk, arnd@arndb.de,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, lorenzo.pieralisi@arm.com
+References: <20200303005645.237763-1-rajatja@google.com> <fe4e0010826d4d18843b148dc088c2b01c7e2072.camel@hadess.net>
+In-Reply-To: <fe4e0010826d4d18843b148dc088c2b01c7e2072.camel@hadess.net>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 3 Mar 2020 15:59:02 -0800
+Message-ID: <CACK8Z6HFC6Vx8NcnZ1Hi7btxdEpsNjumWTyDkufVMtOunOPjuQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Input: Add keycodes for keyboard backlight control
+To:     Bastien Nocera <hadess@hadess.net>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dtor@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 9:39 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Tue, Mar 3, 2020 at 12:15 AM Bastien Nocera <hadess@hadess.net> wrote:
 >
-> On Tue, Feb 25, 2020 at 9:27 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> On Mon, 2020-03-02 at 16:56 -0800, Rajat Jain wrote:
+> > New keyboards can have backlight control keys. Allocating keycodes
+> > for them. Such keyboards are already available in ChromeOS.
 > >
-> > Hi Alan,
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> >  include/uapi/linux/input-event-codes.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
 > >
-> > On 26/02/20 2:41 am, Alan Mikhak wrote:
-> > > @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
-> > >         int bar;
-> > >
-> > >         cancel_delayed_work(&epf_test->cmd_handler);
-> > > +       pci_epf_clean_dma_chan(epf_test);
-> > >         pci_epc_stop(epc);
-> > >         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> > >                 epf_bar = &epf->bar[bar];
-> > > @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> > >                 }
-> > >         }
-> > >
-> > > +       epf_test->dma_supported = true;
-> > > +
-> > > +       ret = pci_epf_init_dma_chan(epf_test);
-> > > +       if (ret)
-> > > +               epf_test->dma_supported = false;
-> > > +
-> > >         if (linkup_notifier) {
-> > >                 epf->nb.notifier_call = pci_epf_test_notifier;
-> > >                 pci_epc_register_notifier(epc, &epf->nb);
-> > >
-> > > Hi Kishon,
-> > >
-> > > Looking forward to building and trying this patch series on
-> > > a platform I work on.
-
-Hi Kishon,
-
-I applied this v1 patch series to kernel.org linux 5.6-rc3 and built for
-x86_64 Debian and riscv. I verified that when I execute the pcitest
-command on the x86_64 host with -d flag, the riscv endpoint performs
-the transfer by using an available dma channel.
-
-Regards,
-Alan
-
-> > >
-> > > Would you please point me to where I can find the patches
-> > > which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
-> > > to Linux PCI Endpoint Framework?
+> > diff --git a/include/uapi/linux/input-event-codes.h
+> > b/include/uapi/linux/input-event-codes.h
+> > index 0f1db1cccc3fd..e12a19dc30262 100644
+> > --- a/include/uapi/linux/input-event-codes.h
+> > +++ b/include/uapi/linux/input-event-codes.h
+> > @@ -652,6 +652,10 @@
+> >  /* Electronic privacy screen control */
+> >  #define KEY_PRIVACY_SCREEN_TOGGLE    0x279
 > >
-> > I've added these functions in pci-epf-test itself instead of adding in
-> > the core files. I realized adding it in core files may not be helpful if
-> > the endpoint function decides to use more number of DMA channels etc.,
+> > +/* Keyboard Backlight control */
+> > +#define KEY_KBD_BKLIGHT_UP              0x280
+> > +#define KEY_KBD_BKLIGHT_DOWN            0x281
 >
-> Thanks Kishon,
+> There's already KEY_KBDILLUMDOWN and KEY_KBDILLUMUP, used since the
+> aluminium PowerBook G4 in 2005 (commit
+> 146a4b3bdfb5641bfbf975e29680b482b8b343ba)
+
+Thank you for pointing out. Yes, I think those key codes will work for
+me. I will use those instead.
+
+Please consider this patch withdrawn.
+
+Thanks & Best Regards,
+
+Rajat Jain
+
 >
-> I now realize they are in [PATCH 1/5] of this series. May I suggest renaming
-> them to pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan()?
-> With just pci_epf in their name, I was looking for them in pci-epf-core.c.
+> > +
+> >  /*
+> >   * Some keyboards have keys which do not have a defined meaning,
+> > these keys
+> >   * are intended to be programmed / bound to macros by the user. For
+> > most
 >
-> Regards,
-> Alan
->
-> >
-> > Thanks
-> > Kishon
