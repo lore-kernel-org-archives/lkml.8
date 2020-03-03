@@ -2,206 +2,227 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A38C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41372206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0712083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CrqZYCge"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hzXaNFOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgCCOkz (ORCPT
+        id S1729718AbgCCOld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:40:55 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39743 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbgCCOky (ORCPT
+        Tue, 3 Mar 2020 09:41:33 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39309 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729264AbgCCOld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:40:54 -0500
-Received: by mail-ot1-f66.google.com with SMTP id x97so3190161ota.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:40:52 -0800 (PST)
+        Tue, 3 Mar 2020 09:41:33 -0500
+Received: by mail-wm1-f65.google.com with SMTP id j1so1658737wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/mBWi97cRQrHShTl1wrJlc6BFZ2cxgJKMQ2xHrdnm0o=;
-        b=CrqZYCge8xKex30AAOHdpb0X5fD036JnHc2WvUXS0REQgZ4bU3rWlAlHCJ7350y6/q
-         Vlc0QA4cUYJ6GGYyIHxmwoQuxu9rZ3SV7ScZsy460bxcGCTSmhH0znlPJ8ioY1vCqu3f
-         pKvh7iLZb4C7L6aGAl/AmTDdazhseXNLBtvB3zKNBDckQmes2vUe9LmZBay+1fSBICiJ
-         dZ+P5ZDkHh9H7JYdpds2XJ4Wgqbk4fXxUHh5UGbZQ2qy8Oy7jfxZAgQEnrcLsk/vt+IL
-         XqvrpfzAP/USd+K1viA+k9OwkXLq2EwdIKML34OB8ZWksYGLjRuXZvCSjdYu1mOIwtjq
-         4JDA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X0eUAg/tFogdV3TKpIfLLY5g6oZSBbXOuTgRWqTEJLc=;
+        b=hzXaNFOZDr53qXHU9t+U4XZx/Qola1cdX9WIQmpCM6fhUval0nS1tQpBHVBanM2boV
+         XlyMNAmSH73jxiMfg1HCnBYasKaWj/IaMODqARdmWQeAIvf9Xn5+qL5yzioVROUELSbM
+         /83a+kiWAq1IPp5F8xZyxbH0t4nm/NacveVWbXU0env6257fFApSsJiQgFYrTvk9GrgM
+         DnH79hLSyFaOVczftwLm5ynXE1WsRQWxVN5OXlGo2kNvYikY2b61zKJqBfMFy8RjMflB
+         7Jay3NHZViu395Oyj5DE25CWBhGMkzXyei28FAfjsLWb+OJwy8ozL6tVQ7GMGNASS5pf
+         tlYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/mBWi97cRQrHShTl1wrJlc6BFZ2cxgJKMQ2xHrdnm0o=;
-        b=VvQI8PtFmjkZkCMk6c8EBUZIMv+pb9m5NFUA/+DyYgz6lAWHdiblSqsvHWbfyaqPyH
-         x7deo/AmDtdhzaCbZ/vvj1Y49nH6qJyR4i2A8FP6jCs/EgSJTLTwuLFyW0Xy01k9bb9d
-         6ytHQWGVj9xtSBH/7gPi2RRJBSsbGobNg7KUSVnMShObCIvKDw96Kc1ltidsgE9GrEJK
-         izu5AlEg7kPxZTPOCJ5ePpoKi/mdSr35DNFbPF10x3WvsxDXrfJ1Bfc7kBdpWCBNLiwa
-         oS2jbl6rqbqnghMLQrpBuCaFCAksTuCsbGdzI3uZu1Jkg7Ikoao2yaR96EKUNYXpMJv/
-         HsZw==
-X-Gm-Message-State: ANhLgQ2G5qCyES5khTGFaG0lJ9ZPwH5o3RIheVE4dMTjJj4i6aBtVfK8
-        75zBD9f7FxzFcNIqmcirZPkRP84z3RP3S98BEdMsnA==
-X-Google-Smtp-Source: ADFU+vu2yfaWH2buwSbocuTlemn870P5bOwMPwqx/zPpaBU68d+JJKh9qyzCZC8XdU+TPpl8/WgjPAFlQtdumGuIKqM=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr3567202oti.32.1583246452097;
- Tue, 03 Mar 2020 06:40:52 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=X0eUAg/tFogdV3TKpIfLLY5g6oZSBbXOuTgRWqTEJLc=;
+        b=Q/CogqXJcT1GTfEXd5OOWftMDUOjoWWGcRFq6pSHU/+uASg4++vUquH40w17EIc/Ie
+         Q2LwjmTJlqNIM57R55RETIiPekqPihvklpVk6IQfvIMa48w1CLkYZvv2I9qJX6g7Lfqr
+         XUhFV12Gh/86I55Beyh/nIkaO0cFDomsAqyxVVs6J7YDIs7RtpAX+JJAiQcLyTwbxbMc
+         YpTsyicu7kUfS6F9YWeX4o2UDrtzo8Xvv7qS2uO7bbQxTSOkKjYmvk6VfO4VtP4pdFBu
+         garXadtnCdDRZGsmu36skiE21+esBCdiHxSPmbJpDoGj1yf+A2JEjF9fbBGPk3R/hblh
+         XF0Q==
+X-Gm-Message-State: ANhLgQ1MCC1AulG2WnC2Do8Y0WvffLUPFAETLA6yiAdm1/wNmTYDqcgn
+        sMxh9rd/kOBNlQk3pCBQV3ruWA==
+X-Google-Smtp-Source: ADFU+vsXBZr3ZoNM+sGqZantm2QOpVhwLbyz/rfSqfPNjFRNKQG7nLzW9BSB+Lw8gTIiUCrAw5egsQ==
+X-Received: by 2002:a1c:a4c4:: with SMTP id n187mr4829104wme.10.1583246489247;
+        Tue, 03 Mar 2020 06:41:29 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u20sm3996934wmj.14.2020.03.03.06.41.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 06:41:28 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: meson: add thermal zones to
+ gxl-s905x-khadas-vim
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Nick Xie <nick@khadas.com>
+References: <1582870346-74145-1-git-send-email-christianshewitt@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <ae6a3b30-e9d9-5fca-69be-180ed68f87a3@baylibre.com>
+Date:   Tue, 3 Mar 2020 15:41:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com> <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
- <20200303142958.GB47158@kroah.com>
-In-Reply-To: <20200303142958.GB47158@kroah.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 3 Mar 2020 15:40:24 +0100
-Message-ID: <CAG48ez1sdUJzp85oqBw8vCpc3E4Sb26M9pj2zHhnKpb-1+f4vg@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582870346-74145-1-git-send-email-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 3:30 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Tue, Mar 03, 2020 at 03:10:50PM +0100, Miklos Szeredi wrote:
-> > On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
-> >
-> > > > If buffer is too small to fit the whole file, return error.
-> > >
-> > > Why?  What's wrong with just returning the bytes asked for?  If someone
-> > > only wants 5 bytes from the front of a file, it should be fine to give
-> > > that to them, right?
-> >
-> > I think we need to signal in some way to the caller that the result
-> > was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
-> > caller might be surprised.
->
-> But that's not the way a "normal" read works.  Short reads are fine, if
-> the file isn't big enough.  That's how char device nodes work all the
-> time as well, and this kind of is like that, or some kind of "stream" to
-> read from.
->
-> If you think the file is bigger, then you, as the caller, can just pass
-> in a bigger buffer if you want to (i.e. you can stat the thing and
-> determine the size beforehand.)
->
-> Think of the "normal" use case here, a sysfs read with a PAGE_SIZE
-> buffer.  That way userspace "knows" it will always read all of the data
-> it can from the file, we don't have to do any seeking or determining
-> real file size, or anything else like that.
->
-> We return the number of bytes read as well, so we "know" if we did a
-> short read, and also, you could imply, if the number of bytes read are
-> the exact same as the number of bytes of the buffer, maybe the file is
-> either that exact size, or bigger.
->
-> This should be "simple", let's not make it complex if we can help it :)
->
-> > > > Verify that the number of bytes read matches the file size, otherwise
-> > > > return error (may need to loop?).
-> > >
-> > > No, we can't "match file size" as sysfs files do not really have a sane
-> > > "size".  So I don't want to loop at all here, one-shot, that's all you
-> > > get :)
-> >
-> > Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
-> > until read return zero) might be a good idea regardless, because short
-> > reads are allowed.
->
-> If you want to loop, then do a userspace open/read-loop/close cycle.
-> That's not what this syscall should be for.
->
-> Should we call it: readfile-only-one-try-i-hope-my-buffer-is-big-enough()?  :)
+Hi,
 
-So how is this supposed to work in e.g. the following case?
+On 28/02/2020 07:12, Christian Hewitt wrote:
+> Add thermal zones to the VIM1 board, copying the zone config from the
+> existing VIM2 board.
+> 
+> Suggested-by: Nick Xie <nick@khadas.com>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> index 440bc23..2c198c4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> @@ -6,6 +6,7 @@
+>  /dts-v1/;
+>  
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  #include "meson-gxl-s905x-p212.dtsi"
+>  
+> @@ -63,6 +64,39 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	thermal-zones {
+> +		cpu-thermal {
+> +			polling-delay-passive = <250>; /* milliseconds */
+> +			polling-delay = <1000>; /* milliseconds */
+> +
+> +			thermal-sensors = <&scpi_sensors 0>;
+> +
+> +			trips {
+> +				cpu_alert0: cpu-alert0 {
+> +					temperature = <70000>; /* millicelsius */
+> +					hysteresis = <2000>; /* millicelsius */
+> +					type = "active";
+> +				};
+> +
+> +				cpu_alert1: cpu-alert1 {
+> +					temperature = <80000>; /* millicelsius */
+> +					hysteresis = <2000>; /* millicelsius */
+> +					type = "passive";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert1>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &cec_AO {
+> @@ -72,6 +106,22 @@
+>  	hdmi-phandle = <&hdmi_tx>;
+>  };
+>  
+> +&cpu0 {
+> +	#cooling-cells = <2>;
+> +};
+> +
+> +&cpu1 {
+> +	#cooling-cells = <2>;
+> +};
+> +
+> +&cpu2 {
+> +	#cooling-cells = <2>;
+> +};
+> +
+> +&cpu3 {
+> +	#cooling-cells = <2>;
+> +};
+> +
+>  &hdmi_tx {
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+> 
 
-========================================
-$ cat map_lots_and_read_maps.c
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
+Following the g12a/g12b/sm1 work, this should go into the meson-gx.dtsi instead, with some bits in meson-gxm.dtsi
+to handle the second spu cluster.
 
-int main(void) {
-  for (int i=0; i<1000; i++) {
-    mmap(NULL, 0x1000, (i&1)?PROT_READ:PROT_NONE,
-MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  }
-  int maps = open("/proc/self/maps", O_RDONLY);
-  static char buf[0x100000];
-  int res;
-  do {
-    res = read(maps, buf, sizeof(buf));
-  } while (res > 0);
-}
-$ gcc -o map_lots_and_read_maps map_lots_and_read_maps.c
-$ strace -e trace='!mmap' ./map_lots_and_read_maps
-execve("./map_lots_and_read_maps", ["./map_lots_and_read_maps"],
-0x7ffebd297ac0 /* 51 vars */) = 0
-brk(NULL)                               = 0x563a1184f000
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=208479, ...}) = 0
-close(3)                                = 0
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320l\2\0\0\0\0\0"...,
-832) = 832
-fstat(3, {st_mode=S_IFREG|0755, st_size=1820104, ...}) = 0
-mprotect(0x7fb5c2d1a000, 1642496, PROT_NONE) = 0
-close(3)                                = 0
-arch_prctl(ARCH_SET_FS, 0x7fb5c2eb6500) = 0
-mprotect(0x7fb5c2eab000, 12288, PROT_READ) = 0
-mprotect(0x563a103e4000, 4096, PROT_READ) = 0
-mprotect(0x7fb5c2f12000, 4096, PROT_READ) = 0
-munmap(0x7fb5c2eb7000, 208479)          = 0
-openat(AT_FDCWD, "/proc/self/maps", O_RDONLY) = 3
-read(3, "563a103e1000-563a103e2000 r--p 0"..., 1048576) = 4075
-read(3, "7fb5c2985000-7fb5c2986000 ---p 0"..., 1048576) = 4067
-read(3, "7fb5c29d8000-7fb5c29d9000 r--p 0"..., 1048576) = 4067
-read(3, "7fb5c2a2b000-7fb5c2a2c000 ---p 0"..., 1048576) = 4067
-read(3, "7fb5c2a7e000-7fb5c2a7f000 r--p 0"..., 1048576) = 4067
-read(3, "7fb5c2ad1000-7fb5c2ad2000 ---p 0"..., 1048576) = 4067
-read(3, "7fb5c2b24000-7fb5c2b25000 r--p 0"..., 1048576) = 4067
-read(3, "7fb5c2b77000-7fb5c2b78000 ---p 0"..., 1048576) = 4067
-read(3, "7fb5c2bca000-7fb5c2bcb000 r--p 0"..., 1048576) = 4067
-read(3, "7fb5c2c1d000-7fb5c2c1e000 ---p 0"..., 1048576) = 4067
-read(3, "7fb5c2c70000-7fb5c2c71000 r--p 0"..., 1048576) = 4067
-read(3, "7fb5c2cc3000-7fb5c2cc4000 ---p 0"..., 1048576) = 4078
-read(3, "7fb5c2eca000-7fb5c2ecb000 r--p 0"..., 1048576) = 2388
-read(3, "", 1048576)                    = 0
-exit_group(0)                           = ?
-+++ exited with 0 +++
-$
-========================================
-
-The kernel is randomly returning short reads *with different lengths*
-that are vaguely around PAGE_SIZE, no matter how big the buffer
-supplied by userspace is. And while repeated read() calls will return
-consistent state thanks to the seqfile magic, repeated readfile()
-calls will probably return garbage with half-complete lines.
+Neil
