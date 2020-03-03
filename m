@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B11EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A3CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA7A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210D62073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258828;
-	bh=ycZ1bxyQLndLiWxf3ue2qQI22SoB6PZQUs2l7+PFo+s=;
+	s=default; t=1583258832;
+	bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnKCwi7ge3S/CO4FUUHkrzA6JBDtr29+ljZhb8xvyYVniKVv30TJ1tp9vHAwxdtew
-	 Ou4qScESq4/F/Fc5yp2QN62mi6F/1yQ0cE94iPY1lCfR+mBBks2423RxYwJFvRrN25
-	 HCmhOcfcFeyIteaoyYFshuF8WV6KV4guDKYpzW3A=
+	b=t8JmrOPUzy+zsVe3hTm5A65HugJLn26GkyjDNfvy4aTxrFUMugdgOt+quuv0bGktC
+	 3xRfl0TaeI1oyOyGf7YXomqiOpBoYq2+tzeDjoL5aiz29beH7xcox/fmForKs2UIp7
+	 VzyKBNsGuR7PyaQ3lJ+rNfRzDAYd/6Kp6tC1LNqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbgCCRzZ (ORCPT
+        id S2388318AbgCCSHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36846 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:07:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732690AbgCCRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:20 -0500
+        id S1732653AbgCCRzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8609B2072D;
-        Tue,  3 Mar 2020 17:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21C32072D;
+        Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258119;
-        bh=ycZ1bxyQLndLiWxf3ue2qQI22SoB6PZQUs2l7+PFo+s=;
+        s=default; t=1583258113;
+        bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nwf7AAGrcMpvID0MBdJpbJgBS67mxbGsrsyMsNPijZ9P7Q7RBssQ8jV6qUpqu+6Og
-         KvtRV/mqwUycggvNSd8PEYbDKuX7H3hWUIRz9tNIQ2bPvLsoXGRAIOahptJmrpARQn
-         nuCXOEE7ivR7laRHbO6F+yzeHXLpg7S/hGwY3N+U=
+        b=qbjnqB7BUQKm//bsTsZd7TLHiedMVNh8z+Wl3pSXRgoNQEEurRjAZLh4J+p9brjO6
+         cZ7y45YUfob0rKqYwWyrpvo/VLYrzTTFzO18cyJO5LofZFgv9nVuEUD6ev8Zj5eqtZ
+         Vf7vyeIIb13jzOb1Ow04NiGdi+l3LXGcr77xEuzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 078/152] HID: core: increase HID report buffer size to 8KiB
-Date:   Tue,  3 Mar 2020 18:42:56 +0100
-Message-Id: <20200303174311.385582971@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Zden=C4=9Bk=20Rampas?= <zdenda.rampas@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 5.4 076/152] HID: ite: Only bind to keyboard USB interface on Acer SW5-012 keyboard dock
+Date:   Tue,  3 Mar 2020 18:42:54 +0100
+Message-Id: <20200303174311.156521538@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,37 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 84a4062632462c4320704fcdf8e99e89e94c0aba upstream.
+commit beae56192a2570578ae45050e73c5ff9254f63e6 upstream.
 
-We have a HID touch device that reports its opens and shorts test
-results in HID buffers of size 8184 bytes. The maximum size of the HID
-buffer is currently set to 4096 bytes, causing probe of this device to
-fail. With this patch we increase the maximum size of the HID buffer to
-8192 bytes, making device probe and acquisition of said buffers succeed.
+Commit 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard
+dock") added the USB id for the Acer SW5-012's keyboard dock to the
+hid-ite driver to fix the rfkill driver not working.
 
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Most keyboard docks with an ITE 8595 keyboard/touchpad controller have the
+"Wireless Radio Control" bits which need the special hid-ite driver on the
+second USB interface (the mouse interface) and their touchpad only supports
+mouse emulation, so using generic hid-input handling for anything but
+the "Wireless Radio Control" bits is fine. On these devices we simply bind
+to all USB interfaces.
+
+But unlike other ITE8595 using keyboard docks, the Acer Aspire Switch 10
+(SW5-012)'s touchpad not only does mouse emulation it also supports
+HID-multitouch and all the keys including the "Wireless Radio Control"
+bits have been moved to the first USB interface (the keyboard intf).
+
+So we need hid-ite to handle the first (keyboard) USB interface and have
+it NOT bind to the second (mouse) USB interface so that that can be
+handled by hid-multitouch.c and we get proper multi-touch support.
+
+This commit changes the hid_device_id for the SW5-012 keyboard dock to
+only match on hid devices from the HID_GROUP_GENERIC group, this way
+hid-ite will not bind the the mouse/multi-touch interface which has
+HID_GROUP_MULTITOUCH_WIN_8 as group.
+This fixes the regression to mouse-emulation mode introduced by adding
+the keyboard dock USB id.
+
+Cc: stable@vger.kernel.org
+Fixes: 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard dock")
+Reported-by: Zdeněk Rampas <zdenda.rampas@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/hid.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ite.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -492,7 +492,7 @@ struct hid_report_enum {
+--- a/drivers/hid/hid-ite.c
++++ b/drivers/hid/hid-ite.c
+@@ -41,8 +41,9 @@ static const struct hid_device_id ite_de
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
+ 	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
+-			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_SYNAPTICS,
++		     USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
+ 	{ }
  };
- 
- #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
--#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
-+#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
- #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
- #define HID_OUTPUT_FIFO_SIZE	64
- 
+ MODULE_DEVICE_TABLE(hid, ite_devices);
 
 
