@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD85C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04A5206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B597621741
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258046;
-	bh=nu12upa2YBED248NaTn+dMF9VDPyyAVLRlkgIW0kpbc=;
+	s=default; t=1583258048;
+	bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=po1QgYtmRAcbzn/5ksWAcZZB1tK4OPmn6SHfCRITv9gyCeJIxNNtuajVspZrLEHqs
-	 FASqrmGo8NuZ+R4NTpkIy/L2oaVEuNyc9TBs6uuVNYw6R98IctFNCxYDsvuFgRLOg8
-	 Jt48ZuZTSbzLuhllLtjmM+S/X5QrH6CFrOM/kGxs=
+	b=p2kLsb+jeSLrDFSIRECNfQT2JC+qVq+/WGAJgUOQZFDTk2ziOTnTy2xfiAjm8sZwY
+	 b+OKS9IXKQsWfsZ7f/6XQ4kmSD0Dh/iBcK2kKkq8i12kzxeN/onOu+TsPnaqvtGUbS
+	 E2o/CdX0NA0IB76/SZVxNuzFiNS/TQknpjJGZLBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732470AbgCCRyF (ORCPT
+        id S1732480AbgCCRyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34754 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732450AbgCCRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:59 -0500
+        id S1732136AbgCCRyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6D3206D5;
-        Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 998A2206D5;
+        Tue,  3 Mar 2020 17:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258039;
-        bh=nu12upa2YBED248NaTn+dMF9VDPyyAVLRlkgIW0kpbc=;
+        s=default; t=1583258044;
+        bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CneGu9/FoW0jaAvoXrdrcBp9h+f34TTWnI//m0cX/oDMQOf0KgSwTrJWE2fzP95Ox
-         Fy8/oU8/x01ul0bFXbMKgFQQ+28fjW5aFQwJD19jLDxrCWo8t+71TBKmV98l7JPmQR
-         UqJZs1yS21tp7IUq/fVOfZ59hc/SauT8kvDtkE/Q=
+        b=QnWZIMGnlBFwSlTIKu+d2IuG/E2a4YSKTnEipOVUPGvaKMSuSDQ8A/JBcMxlf1R0q
+         Xqq/ifWX2idoNwHoErHNC6ySejdvzpGvLv5y7P4GoAyhuXIxUBxuILO/FYww2fIh3d
+         EN8M2s8egr9xVc94BlMI+g2gIT6Jn7HxpPPh4eMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Kolesa <daniel@octaforge.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/152] amdgpu: Prevent build errors regarding soft/hard-float FP ABI tags
-Date:   Tue,  3 Mar 2020 18:42:24 +0100
-Message-Id: <20200303174307.646737321@linuxfoundation.org>
+Subject: [PATCH 5.4 048/152] i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
+Date:   Tue,  3 Mar 2020 18:42:26 +0100
+Message-Id: <20200303174307.890726780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,46 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kolesa <daniel@octaforge.org>
+From: Brett Creeley <brett.creeley@intel.com>
 
-[ Upstream commit 416611d9b6eebaeae58ed26cc7d23131c69126b1 ]
+[ Upstream commit f27f37a04a69890ac85d9155f03ee2d23b678d8f ]
 
-On PowerPC, the compiler will tag object files with whether they
-use hard or soft float FP ABI and whether they use 64 or 128-bit
-long double ABI. On systems with 64-bit long double ABI, a tag
-will get emitted whenever a double is used, as on those systems
-a long double is the same as a double. This will prevent linkage
-as other files are being compiled with hard-float.
+Commit d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap
+validation") introduced a necessary change for verifying how queue
+bitmaps from the iavf driver get validated. Unfortunately, the
+conditional was reversed. Fix this.
 
-On ppc64, this code will never actually get used for the time
-being, as the only currently existing hardware using it are the
-Renoir APUs. Therefore, until this is testable and can be fixed
-properly, at least make sure the build will not fail.
-
-Signed-off-by: Daniel Kolesa <daniel@octaforge.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap validation")
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile b/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
-index b864869cc7e3e..6fa7422c51da5 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
-@@ -91,6 +91,12 @@ ifdef CONFIG_DRM_AMD_DC_DCN2_1
- ###############################################################################
- CLK_MGR_DCN21 = rn_clk_mgr.o rn_clk_mgr_vbios_smu.o
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 3515ace0f0201..38042d610f82c 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2363,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
  
-+# prevent build errors regarding soft-float vs hard-float FP ABI tags
-+# this code is currently unused on ppc64, as it applies to Renoir APUs only
-+ifdef CONFIG_PPC64
-+CFLAGS_$(AMDDALPATH)/dc/clk_mgr/dcn21/rn_clk_mgr.o := $(call cc-option,-mno-gnu-attribute)
-+endif
-+
- AMD_DAL_CLK_MGR_DCN21 = $(addprefix $(AMDDALPATH)/dc/clk_mgr/dcn21/,$(CLK_MGR_DCN21))
+-	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
++	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
+@@ -2425,7 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
  
- AMD_DISPLAY_FILES += $(AMD_DAL_CLK_MGR_DCN21)
+-	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
++	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
 -- 
 2.20.1
 
