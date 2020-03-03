@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C21C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACB9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DC420CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABB820870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258362;
-	bh=osVklB8pscuOnNSyEep2Q6rChRj+SW+wKvUMrT7fdAw=;
+	s=default; t=1583258363;
+	bh=CObFl1cb5UvCfomOI018fcjAEGpaCccIR6+DPEZK/Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3O7fmis1HEjXrE+SAvS8P2ZYE5YR2ujP7aMmDJFJchjQatH7u5kMs7HqVyXY7+HD
-	 TTZIqkq3rRRX22rtaII/lZ/+S5OPU40rUwiwNYomaCgOIbJqeevudB9VGohO35CyMT
-	 SyPbbFz41kTa8Z9/sByrNt5HaDNYKHjBe0wxE6Y0=
+	b=bcbg5nLlzLJxIarFruJm+QFRvkFcgcyvodiXI5VtZ54mHr7QzlQSTpRsQgTSGsGY7
+	 1BWAff1AlxiPLtT6SARxQHRwM2S3hFPMrcYzCC/uLyz0GGG0HQOACIMlpxN8EJglk8
+	 6Wn7VEUWrkDD22FZ4cZj8Ey42tDykeSY08kcwd5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbgCCR7V (ORCPT
+        id S2387596AbgCCR7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 3 Mar 2020 12:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732663AbgCCR7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:59:18 -0500
+        id S1731109AbgCCR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:59:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C950220CC7;
-        Tue,  3 Mar 2020 17:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CEE214D8;
+        Tue,  3 Mar 2020 17:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258357;
-        bh=osVklB8pscuOnNSyEep2Q6rChRj+SW+wKvUMrT7fdAw=;
+        s=default; t=1583258360;
+        bh=CObFl1cb5UvCfomOI018fcjAEGpaCccIR6+DPEZK/Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ma7dcFOXg9aUCRk4znsnDEtpkl5Na547GGkMdfLxx36TRxVgPIzoIO7ixdnkJ6VH9
-         jK3tXfXlUZMxv6NVTRw7oo7N0h1sGaXWTSu/mO+TqXiWKyvPU/rjYOBLk3YtRNBQ6l
-         szK3eGkUmOlIyU6jr9+PrwzSJEm/aXkNYM/Yfb0M=
+        b=VWKQKGO7pLNFg5S1uSR/jcmdENzXUukeauIeFc5rVFNH3yAEHmOT+jwBu6WcYfMR9
+         8SFpuepMGzka7TvHApJcpMOIsazWBtGHXAXMvMXpAz/DAOgHDT9ozVtajxEMs7d1/y
+         bbsXEVY7OZqnfL1yPYV3C63Srfz4UMaq0vTqpfO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/87] net: ena: rss: fix failure to get indirection table
-Date:   Tue,  3 Mar 2020 18:43:10 +0100
-Message-Id: <20200303174351.814793624@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/87] iwlwifi: pcie: fix rb_allocator workqueue allocation
+Date:   Tue,  3 Mar 2020 18:42:53 +0100
+Message-Id: <20200303174349.250817378@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,50 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 0c8923c0a64fb5d14bebb9a9065d2dc25ac5e600 ]
+commit 8188a18ee2e48c9a7461139838048363bfce3fef upstream
 
-On old hardware, getting / setting the hash function is not supported while
-gettting / setting the indirection table is.
+We don't handle failures in the rb_allocator workqueue allocation
+correctly. To fix that, move the code earlier so the cleanup is
+easier and we don't have to undo all the interrupt allocations in
+this case.
 
-This commit enables us to still show the indirection table on older
-hardwares by setting the hash function and key to NULL.
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+[Ajay: Modified to apply on v4.19.y and v4.14.y]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 237fbcac734f5..dc63aa912aebb 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -661,7 +661,21 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 	if (rc)
- 		return rc;
- 
-+	/* We call this function in order to check if the device
-+	 * supports getting/setting the hash function.
-+	 */
- 	rc = ena_com_get_hash_function(adapter->ena_dev, &ena_func, key);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 4f5571123f70a..24da496151353 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -3283,6 +3283,15 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 	spin_lock_init(&trans_pcie->reg_lock);
+ 	mutex_init(&trans_pcie->mutex);
+ 	init_waitqueue_head(&trans_pcie->ucode_write_waitq);
 +
-+	if (rc) {
-+		if (rc == -EOPNOTSUPP) {
-+			key = NULL;
-+			hfunc = NULL;
-+			rc = 0;
-+		}
-+
-+		return rc;
++	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
++						   WQ_HIGHPRI | WQ_UNBOUND, 1);
++	if (!trans_pcie->rba.alloc_wq) {
++		ret = -ENOMEM;
++		goto out_free_trans;
 +	}
++	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
 +
- 	if (rc)
- 		return rc;
+ 	trans_pcie->tso_hdr_page = alloc_percpu(struct iwl_tso_hdr_page);
+ 	if (!trans_pcie->tso_hdr_page) {
+ 		ret = -ENOMEM;
+@@ -3485,10 +3494,6 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 		trans_pcie->inta_mask = CSR_INI_SET_MASK;
+ 	 }
  
+-	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
+-						   WQ_HIGHPRI | WQ_UNBOUND, 1);
+-	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+-
+ #ifdef CONFIG_IWLWIFI_PCIE_RTPM
+ 	trans->runtime_pm_mode = IWL_PLAT_PM_MODE_D0I3;
+ #else
+@@ -3501,6 +3506,8 @@ out_free_ict:
+ 	iwl_pcie_free_ict(trans);
+ out_no_pci:
+ 	free_percpu(trans_pcie->tso_hdr_page);
++	destroy_workqueue(trans_pcie->rba.alloc_wq);
++out_free_trans:
+ 	iwl_trans_free(trans);
+ 	return ERR_PTR(ret);
+ }
 -- 
 2.20.1
 
