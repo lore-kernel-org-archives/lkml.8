@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D77AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37135C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49082072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14453206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257945;
-	bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
+	s=default; t=1583257950;
+	bh=jlZAQx8FT/1sYWWq280Z70i7ND/ZD6aGEztd1x8wfUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ow/DBwvRI2hKpYfRfK9TL2kBCueXl7wE20yoobBXJQ+0A89dXllCEeVNRbpoibRqz
-	 j/Yfvw0cURiUB5Z4gF/nHIo+Pr7Ruhx8eTS+i1q2shu5iIUV7xYvwAZ97ynMUUALQY
-	 vyjzLdmisGKhYO2xtksH2GE+kcUjcseU8oi1aXXo=
+	b=SF2yNOLGHpc+8+tQI9vu8Wfp2U1C7/k8qocDLrDkvPRfcPjr9Xo3EgIDoabhATwT8
+	 q761tH/Xaq0krxTLyZB8ZtwxpqlDVaGW9FnN9a5mo0n6mMGTDLp9179sjLVlM2xbkf
+	 +pWAmkdgU8YeigUMWhQFJP1gBOTwkbKzgACHYHL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732146AbgCCRwY (ORCPT
+        id S1732165AbgCCRw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60696 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730992AbgCCRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:21 -0500
+        id S1732153AbgCCRw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1974A206D5;
-        Tue,  3 Mar 2020 17:52:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E97B8206D5;
+        Tue,  3 Mar 2020 17:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257940;
-        bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
+        s=default; t=1583257946;
+        bh=jlZAQx8FT/1sYWWq280Z70i7ND/ZD6aGEztd1x8wfUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWwjf1iR1K4kmsOb7EfHq1hSDQ1GudygyapqbozeWhjv5oD60d5VW21pf5dZ7I3tH
-         uW1wfNF9Kb8CYcI8u37KbmUpO9JoFapABtqk18FO8Vh9HSD5D2uoMaVjjSPxV/WvY6
-         MKgW1EDb+wI8TEay3cZFxmdc2FOc8xovBZO8H2Hw=
+        b=ppJia0nEccWiN1iS/vVjHSfbQTwpjiy8iAuefOGeE2TjDLZTNvv/cGK7s/Z3AUeZS
+         DofHbAlz6p1FkFcploEJWU1GTvorgScXfj0Z8LkrQqUm4zgVCXdr49HrnJ307HSyyK
+         HYcXmQkmb+/y6ICS866WvI1li0KahyFYkU8mIz2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 003/152] net: dsa: b53: Ensure the default VID is untagged
-Date:   Tue,  3 Mar 2020 18:41:41 +0100
-Message-Id: <20200303174302.912933039@linuxfoundation.org>
+Subject: [PATCH 5.4 005/152] net: macb: ensure interface is not suspended on at91rm9200
+Date:   Tue,  3 Mar 2020 18:41:43 +0100
+Message-Id: <20200303174303.112368405@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,35 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit d965a5432d4c3e6b9c3d2bc1d4a800013bbf76f6 ]
+[ Upstream commit e6a41c23df0d5da01540d2abef41591589c0b4be ]
 
-We need to ensure that the default VID is untagged otherwise the switch
-will be sending tagged frames and the results can be problematic. This
-is especially true with b53 switches that use VID 0 as their default
-VLAN since VID 0 has a special meaning.
+Because of autosuspend, at91ether_start is called with clocks disabled.
+Ensure that pm_runtime doesn't suspend the interface as soon as it is
+opened as there is no pm_runtime support is the other relevant parts of the
+platform support for at91rm9200.
 
-Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
-Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: d54f89af6cc4 ("net: macb: Add pm runtime support")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/b53/b53_common.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/cadence/macb_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1353,6 +1353,9 @@ void b53_vlan_add(struct dsa_switch *ds,
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3690,6 +3690,10 @@ static int at91ether_open(struct net_dev
+ 	u32 ctl;
+ 	int ret;
  
- 		b53_get_vlan_entry(dev, vid, vl);
- 
-+		if (vid == 0 && vid == b53_default_pvid(dev))
-+			untagged = true;
++	ret = pm_runtime_get_sync(&lp->pdev->dev);
++	if (ret < 0)
++		return ret;
 +
- 		vl->members |= BIT(port);
- 		if (untagged && !dsa_is_cpu_port(ds, port))
- 			vl->untag |= BIT(port);
+ 	/* Clear internal statistics */
+ 	ctl = macb_readl(lp, NCR);
+ 	macb_writel(lp, NCR, ctl | MACB_BIT(CLRSTAT));
+@@ -3750,7 +3754,7 @@ static int at91ether_close(struct net_de
+ 			  q->rx_buffers, q->rx_buffers_dma);
+ 	q->rx_buffers = NULL;
+ 
+-	return 0;
++	return pm_runtime_put(&lp->pdev->dev);
+ }
+ 
+ /* Transmit packet */
 
 
