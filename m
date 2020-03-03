@@ -2,52 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B1AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CFFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D53220CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E91120CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257814;
-	bh=MHH9f6Sl1J/Q2oNgbCemXFSvYVS6iwJBMMPs+2grVhE=;
+	s=default; t=1583257815;
+	bh=+/FZOqzt6MlQA00zyR37ZYv9F7JLoObSm5NSgWGQGpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5Xo2qeRZv21eZz/uOID6MnHhnEJbLtGVxqkvmlAAy0wuWQL1NMv2CIGZ+iUUiLX+
-	 z5KteTEqfY1fWQYzoktsVbkt+Il2EC2p4R7ARxTfIAmMsPne5c25RF+Uo2hDP2vb4M
-	 OUM5ezs5JVziRvhlxJ3gF3Kdfa9NyEXRmZaWHqXY=
+	b=CAlZoQKhHllyVoZnXN9ld125bqXw40c2xc4ScTIPHpw2HFgQmtLHy1jc8LuIHrOUu
+	 Gy5P2tnAGGkf4Wef0qalDwHf+iebjqjzm1zX3qcS0WHqYFm/4+RisHw51D8mQ1Hdal
+	 HJAh1WraEADDsY18RkeKaQHRgCec+FbzV8UjriRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbgCCRuN (ORCPT
+        id S1731512AbgCCRsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731208AbgCCRuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:03 -0500
+        id S1731497AbgCCRsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C7220870;
-        Tue,  3 Mar 2020 17:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FE9F20CC7;
+        Tue,  3 Mar 2020 17:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257802;
-        bh=MHH9f6Sl1J/Q2oNgbCemXFSvYVS6iwJBMMPs+2grVhE=;
+        s=default; t=1583257690;
+        bh=+/FZOqzt6MlQA00zyR37ZYv9F7JLoObSm5NSgWGQGpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jr8zAl9K3kPLhR6aj4EEUNr7+S6P7697z8B5r1KiFTrcrdMJ17RbdKXX6kFktjD81
-         dkLE5q98Ev0ZwxFf1/MGs2PDfH0F7+ei4Apys1Yovdf96YAxQc/6m7zSIOXNyXUdRs
-         6DXnAn+LqUHYWiAtdQcCXLsnJ7BfpyW+6ucskIq4=
+        b=VwA/xpEiMcjLMKiZNYbDrMOmMIOOzOhKn4UUWgy6YFbTUTgOlq34TEPWo+RkvMdfq
+         8mzVMKBlE/ng4XkS+xtlfitLsTm6zHEwjljG3n/eQI7tQo4VwKs5bVWNdO6HdcI457
+         oWN8QTUr5wKyKblNL9wbFo0epUvnYNF9jC1Cc3GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>
-Subject: [PATCH 5.5 105/176] netfilter: ipset: Fix forceadd evaluation path
-Date:   Tue,  3 Mar 2020 18:42:49 +0100
-Message-Id: <20200303174316.991143238@linuxfoundation.org>
+        stable@vger.kernel.org, Aviad Brikman <aviad.brikman@celeno.com>,
+        Shay Bar <shay.bar@celeno.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 074/176] mac80211: fix wrong 160/80+80 MHz setting
+Date:   Tue,  3 Mar 2020 18:42:18 +0100
+Message-Id: <20200303174313.215955879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,34 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
+From: Shay Bar <shay.bar@celeno.com>
 
-commit 8af1c6fbd9239877998c7f5a591cb2c88d41fb66 upstream.
+[ Upstream commit 33181ea7f5a62a17fbe55f0f73428ecb5e686be8 ]
 
-When the forceadd option is enabled, the hash:* types should find and replace
-the first entry in the bucket with the new one if there are no reuseable
-(deleted or timed out) entries. However, the position index was just not set
-to zero and remained the invalid -1 if there were no reuseable entries.
+Before this patch, STA's would set new width of 160/80+80 MHz based on AP capability only.
+This is wrong because STA may not support > 80MHz BW.
+Fix is to verify STA has 160/80+80 MHz capability before increasing its width to > 80MHz.
 
-Reported-by: syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and protocol version 7")
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The "support_80_80" and "support_160" setting is based on:
+"Table 9-272 — Setting of the Supported Channel Width Set subfield and Extended NSS BW
+Support subfield at a STA transmitting the VHT Capabilities Information field"
+>From "Draft P802.11REVmd_D3.0.pdf"
 
+Signed-off-by: Aviad Brikman <aviad.brikman@celeno.com>
+Signed-off-by: Shay Bar <shay.bar@celeno.com>
+Link: https://lore.kernel.org/r/20200210130728.23674-1-shay.bar@celeno.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_hash_gen.h |    2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/util.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -931,6 +931,8 @@ mtype_add(struct ip_set *set, void *valu
- 		}
- 	}
- 	if (reuse || forceadd) {
-+		if (j == -1)
-+			j = 0;
- 		data = ahash_data(n, j, set->dsize);
- 		if (!deleted) {
- #ifdef IP_SET_HASH_WITH_NETS
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 739e90555d8b9..decd46b383938 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -2993,10 +2993,22 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
+ 	int cf0, cf1;
+ 	int ccfs0, ccfs1, ccfs2;
+ 	int ccf0, ccf1;
++	u32 vht_cap;
++	bool support_80_80 = false;
++	bool support_160 = false;
+ 
+ 	if (!oper || !htop)
+ 		return false;
+ 
++	vht_cap = hw->wiphy->bands[chandef->chan->band]->vht_cap.cap;
++	support_160 = (vht_cap & (IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK |
++				  IEEE80211_VHT_CAP_EXT_NSS_BW_MASK));
++	support_80_80 = ((vht_cap &
++			 IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ) ||
++			(vht_cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
++			 vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) ||
++			((vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) >>
++				    IEEE80211_VHT_CAP_EXT_NSS_BW_SHIFT > 1));
+ 	ccfs0 = oper->center_freq_seg0_idx;
+ 	ccfs1 = oper->center_freq_seg1_idx;
+ 	ccfs2 = (le16_to_cpu(htop->operation_mode) &
+@@ -3024,10 +3036,10 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
+ 			unsigned int diff;
+ 
+ 			diff = abs(ccf1 - ccf0);
+-			if (diff == 8) {
++			if ((diff == 8) && support_160) {
+ 				new.width = NL80211_CHAN_WIDTH_160;
+ 				new.center_freq1 = cf1;
+-			} else if (diff > 8) {
++			} else if ((diff > 8) && support_80_80) {
+ 				new.width = NL80211_CHAN_WIDTH_80P80;
+ 				new.center_freq2 = cf1;
+ 			}
+-- 
+2.20.1
+
 
 
