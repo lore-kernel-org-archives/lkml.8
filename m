@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2453C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAF7246E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC8C21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204088;
-	bh=e5BxQUvwtKpoy8dVgoesU1wA5L+9SWslk6w8zeHqf44=;
+	s=default; t=1583204092;
+	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhmWluBT0ldG1Wj5fYr3LKhmCc1M8Mm0Ady0pH4rqAuAGY8HScLvNdkIf096egvT1
-	 6FuDMY+0bMn/3g91gP+Cy6AoRkPyukDEdLP1TjlBY6688gSHetMqM0hLuu7baW0i0n
-	 iSgOKaFkO+Xpmp1LHn8mYQPY4bLWAS4GL20CB+1w=
+	b=vd5jPj8s+7xXAL2XwY4OsGnOxr4LxfGqS0MQYH6HLUvBe6OLMCBlN/jSv8ZX0VOeB
+	 9sMHmmLnfpw3yiz2KvHAYS+BDA6rLKP482eYaoQFeg2HWwGesvPtFCk/qT9x3qGGHi
+	 kBS98slWntxboM3LksBqbzlXxrKsS0jasF4s7cEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbgCCCyr (ORCPT
+        id S1728157AbgCCCtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:54:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbgCCCtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 21:49:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728615AbgCCCs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8590324673;
-        Tue,  3 Mar 2020 02:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B7724699;
+        Tue,  3 Mar 2020 02:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203754;
-        bh=e5BxQUvwtKpoy8dVgoesU1wA5L+9SWslk6w8zeHqf44=;
+        s=default; t=1583203735;
+        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQkjUsVZX57CGDk88/3P9oY6Nr88wbMA/TZ9gZfr5wXKwo4NCoIF8oVtmIxz5k9wl
-         YoRgn5F64sTiQLyAsLpT4HyWeYK5tKW6m/woYpaap5XWHHpnFlNXcWQYUsvrcc7CK5
-         uiHl7mYvo3l6Xw/wCMt3qebl6AQGeWH1wg6YZhGA=
+        b=BB/h9nPRmVyajWgpDSZd3egfFwKlRpNZEMIOO2OM8NgN5vKMgdfAb02Zut1/dvioV
+         dZoDq6Z4u6R/HEn343rZwwBjr8Dyg94TLHuPXIngqtXRAvfgU9/o7O8CrssIi+Tyd+
+         6E7HNmdjN/cLmIsgBBXRfs0Sotls7h0lET05+/hA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/32] net: dsa: b53: Ensure the default VID is untagged
-Date:   Mon,  2 Mar 2020 21:48:36 -0500
-Message-Id: <20200303024851.10054-17-sashal@kernel.org>
+Cc:     Daniel Golle <daniel@makrotopia.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/32] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Mon,  2 Mar 2020 21:48:22 -0500
+Message-Id: <20200303024851.10054-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
 References: <20200303024851.10054-1-sashal@kernel.org>
@@ -59,38 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit d965a5432d4c3e6b9c3d2bc1d4a800013bbf76f6 ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-We need to ensure that the default VID is untagged otherwise the switch
-will be sending tagged frames and the results can be problematic. This
-is especially true with b53 switches that use VID 0 as their default
-VLAN since VID 0 has a special meaning.
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
-Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 51436e7eae103..ac5d945b934a0 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1165,6 +1165,9 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 3bdd56a1021b2..ea12f10610b64 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 		b53_get_vlan_entry(dev, vid, vl);
- 
-+		if (vid == 0 && vid == b53_default_pvid(dev))
-+			untagged = true;
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
 +
- 		vl->members |= BIT(port);
- 		if (untagged && !dsa_is_cpu_port(ds, port))
- 			vl->untag |= BIT(port);
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
+ 
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
