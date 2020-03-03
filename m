@@ -2,158 +2,330 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6811EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040AEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CD420848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXqGqes3"
+	by mail.kernel.org (Postfix) with ESMTP id C157320870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgCCW2U (ORCPT
+        id S1727952AbgCCW23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:28:20 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37392 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbgCCW2T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:28:19 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q8so6502812wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:28:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=e4V+8aTWhdIlLEzf4Eox/9Ord8vKJnS3U23eYxJI4AQ=;
-        b=KXqGqes3H3m8InAE8AGrElj7zAvDMD6xwXVFASzk6WwjuCdFaB4vMPGC2jaTP1ee28
-         35OsUP23/42wx2xoQArttVKCiXPzhmAaFjJdOSCM1/+hSxiItYlTXPpd12zHHTVpnPQx
-         /hKiRvHeqRGFZ/uA8E+RhYTTuO/5+L3wxwB6c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=e4V+8aTWhdIlLEzf4Eox/9Ord8vKJnS3U23eYxJI4AQ=;
-        b=CmMc/3atE5e7ydNhNToliqPkli0qmWRhk2mDsbb0X61N8d6rVSG88R/IMCVatZ04SX
-         dQrTRnSOdkKpVDslWltF35BFdDa+L/d19UoL1czkPxx2bTkqEEJPX548kf6eoUhb7l6e
-         rASzxUOgb+nXh9glRgBX4cjP3Y/dMuOhg5rAh5VEcYQLSnYceSvW/hqdr4nG6S76huNH
-         UuzTfzuU/i5Ba4Omf1Bh9fuEBkisZmYfWLQlzaE/CQIqV81hJDmq8PSjiLtSfFTCmM77
-         v3PJqn267sFx/d5jJziKS+TIs/zpMp6I4W1LCHgEJWclwivXsK0ZuoLZKTnGlIE4nMZz
-         ngYg==
-X-Gm-Message-State: ANhLgQ2h48NXs20pC4HzQJpK8SD14EM5STFAfv/RAiFwnj6IQI/3y+X8
-        fGnZAHCYWMC/350GFMkMUDz/2A==
-X-Google-Smtp-Source: ADFU+vsO7rRWvBSAQDxjBwGmKgf0DoG0NPF8tyeTqymolzH6Fse1dadJP4xsklXMM6Et8L73vKrO0w==
-X-Received: by 2002:a5d:608b:: with SMTP id w11mr198197wrt.366.1583274495670;
-        Tue, 03 Mar 2020 14:28:15 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id n13sm773557wmd.21.2020.03.03.14.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 14:28:15 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 3 Mar 2020 23:28:12 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
-Message-ID: <20200303222812.GA5265@chromium.org>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
- <20200303140950.6355-3-kpsingh@chromium.org>
- <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
+        Tue, 3 Mar 2020 17:28:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:42643 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727335AbgCCW23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:28:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 14:28:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="232416410"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2020 14:28:27 -0800
+Date:   Tue, 3 Mar 2020 14:28:27 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v9 7/7] KVM: X86: Add user-space access interface for CET
+ MSRs
+Message-ID: <20200303222827.GC1439@linux.intel.com>
+References: <20191227021133.11993-1-weijiang.yang@intel.com>
+ <20191227021133.11993-8-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191227021133.11993-8-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mär 14:26, Andrii Nakryiko wrote:
-> On Tue, Mar 3, 2020 at 6:13 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > * Split the invoke_bpf program to prepare for special handling of
-> >   fmod_ret programs introduced in a subsequent patch.
-> > * Move the definition of emit_cond_near_jump and emit_nops as they are
-> >   needed for fmod_ret.
-> > * Refactor branch target alignment into its own function
-> >   align16_branch_target.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  arch/x86/net/bpf_jit_comp.c | 158 ++++++++++++++++++++----------------
-> >  1 file changed, 90 insertions(+), 68 deletions(-)
-> >
-> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> > index 15c7d28bc05c..475e354c2e88 100644
-> > --- a/arch/x86/net/bpf_jit_comp.c
-> > +++ b/arch/x86/net/bpf_jit_comp.c
-> > @@ -1361,35 +1361,100 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
-> >                          -(stack_size - i * 8));
-> >  }
-> >
-> 
-> [...]
-> 
-> > +
-> > +/* From Intel 64 and IA-32 Architectures Optimization
-> > + * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
-> > + * Coding Rule 11: All branch targets should be 16-byte
-> > + * aligned.
-> > + */
-> > +static void align16_branch_target(u8 **pprog)
-> > +{
-> > +       u8 *target, *prog = *pprog;
-> > +
-> > +       target = PTR_ALIGN(prog, 16);
-> > +       if (target != prog)
-> > +               emit_nops(&prog, target - prog);
-> > +       if (target != prog)
-> > +               pr_err("calcultion error\n");
-> 
-> this wasn't in the original code, do you feel like it's more important
-> to check this and print error?
-> 
-> also typo: calculation error, but then it's a bit brief and
-> uninformative message. So I don't know, maybe just drop it?
+Subject should be something like "Enable CET virtualization", or maybe
+move CPUID changes to a separate final patch?
 
-Ah, good catch! this is deinitely not intended to be here.
-It's a debug artifact and needs to dropped indeed.
-
-- KP
-
+On Fri, Dec 27, 2019 at 10:11:33AM +0800, Yang Weijiang wrote:
+> There're two different places storing Guest CET states, states
+> managed with XSAVES/XRSTORS, as restored/saved
+> in previous patch, can be read/write directly from/to the MSRs.
+> For those stored in VMCS fields, they're access via vmcs_read/
+> vmcs_write.
 > 
-> > +}
-> > +
-> > +static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
-> > +{
-> > +       u8 *prog = *pprog;
-> > +       int cnt = 0;
-> > +       s64 offset;
-> > +
-> > +       offset = func - (ip + 2 + 4);
-> > +       if (!is_simm32(offset)) {
-> > +               pr_err("Target %p is out of range\n", func);
-> > +               return -EINVAL;
-> > +       }
-> > +       EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
-> > +       *pprog = prog;
-> > +       return 0;
-> > +}
-> > +
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |   3 +-
+>  arch/x86/kvm/cpuid.c            |   5 +-
+>  arch/x86/kvm/vmx/vmx.c          | 138 ++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.c              |  11 +++
+>  4 files changed, 154 insertions(+), 3 deletions(-)
 > 
-> [...]
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 64bf379381e4..34140462084f 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -90,7 +90,8 @@
+>  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+>  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+>  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+> -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
+> +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
+> +			  | X86_CR4_CET))
+>  
+>  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+>  
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 126a31b99823..4414bd110f3c 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -385,13 +385,14 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+>  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
+>  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+>  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+> -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+> +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | F(SHSTK) |
+> +		0 /*WAITPKG*/;
+>  
+>  	/* cpuid 7.0.edx*/
+>  	const u32 kvm_cpuid_7_0_edx_x86_features =
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> -		F(MD_CLEAR);
+> +		F(MD_CLEAR) | F(IBT);
+>  
+>  	/* cpuid 7.1.eax */
+>  	const u32 kvm_cpuid_7_1_eax_x86_features =
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 0a75b65d03f0..52ac67604026 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1763,6 +1763,96 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+>  	return 0;
+>  }
+>  
+> +#define CET_MSR_RSVD_BITS_1    0x3
+> +#define CET_MSR_RSVD_BITS_2   (0xF << 6)
+
+Would it make sense to use GENMASK?
+
+> +static bool cet_ssp_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	u64 data = msr->data;
+> +	u32 high_word = data >> 32;
+> +
+> +	if (is_64_bit_mode(vcpu)) {
+> +		if (data & CET_MSR_RSVD_BITS_1)
+
+This looks odd.  I assume it should look more like cet_ctl_write_allowed()?
+E.g.
+
+	if (data & CET_MSR_RSVD_BITS_1)
+		return false;
+
+	if (!is_64_bit_mode(vcpu) && high_word)
+		return false;
+
+> +			return false;
+> +	} else if (high_word) {
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static bool cet_ctl_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	u64 data = msr->data;
+> +	u32 high_word = data >> 32;
+> +
+> +	if (data & CET_MSR_RSVD_BITS_2)
+> +		return false;
+> +
+> +	if (!is_64_bit_mode(vcpu) && high_word)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static bool cet_ssp_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	u64 kvm_xss;
+> +	u32 index = msr->index;
+> +
+> +	if (is_guest_mode(vcpu))
+
+Hmm, this seems wrong, e.g. shouldn't WRMSR be allowed if L1 passes the MSR
+to L2, which is the only way to reach this, if I'm not mistaken.
+
+> +		return false;
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_SHSTK))
+> +		return false;
+> +
+> +	if (!msr->host_initiated &&
+> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> +		return false;
+> +
+> +	if (index == MSR_IA32_INT_SSP_TAB)
+> +		return true;
+> +
+> +	kvm_xss = kvm_supported_xss();
+> +
+> +	if (index == MSR_IA32_PL3_SSP) {
+> +		if (!(kvm_xss & XFEATURE_MASK_CET_USER))
+> +			return false;
+> +	} else if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static bool cet_ctl_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	u64 kvm_xss;
+> +	u32 index = msr->index;
+> +
+> +	if (is_guest_mode(vcpu))
+> +		return false;
+> +
+> +	kvm_xss = kvm_supported_xss();
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
+> +	    !boot_cpu_has(X86_FEATURE_IBT))
+> +		return false;
+> +
+> +	if (!msr->host_initiated &&
+> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
+> +	    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
+> +		return false;
+> +
+> +	if (index == MSR_IA32_U_CET) {
+> +		if (!(kvm_xss & XFEATURE_MASK_CET_USER))
+> +			return false;
+> +	} else if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+>  /*
+>   * Reads an msr value (of 'msr_index') into 'pdata'.
+>   * Returns 0 on success, non-0 otherwise.
+> @@ -1886,6 +1976,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		else
+>  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+>  		break;
+> +	case MSR_IA32_S_CET:
+> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		msr_info->data = vmcs_readl(GUEST_S_CET);
+> +		break;
+> +	case MSR_IA32_INT_SSP_TAB:
+> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
+> +		break;
+> +	case MSR_IA32_U_CET:
+> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
+> +		break;
+> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		rdmsrl(msr_info->index, msr_info->data);
+
+Ugh, thought of another problem.  If a SoftIRQ runs after an IRQ it can
+load the kernel FPU state.  So for all the XSAVES MSRs we'll need a helper
+similar to vmx_write_guest_kernel_gs_base(), except XSAVES has to be even
+more restrictive and disable IRQs entirely.  E.g.
+
+static void vmx_get_xsave_msr(struct msr_data *msr_info)
+{
+	local_irq_disable();
+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+		switch_fpu_return();
+	rdmsrl(msr_info->index, msr_info->data);
+	local_irq_enable();
+}
+
+> +		break;
+>  	case MSR_TSC_AUX:
+>  		if (!msr_info->host_initiated &&
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> @@ -2147,6 +2257,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		else
+>  			vmx->pt_desc.guest.addr_a[index / 2] = data;
+>  		break;
+> +	case MSR_IA32_S_CET:
+> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		if (!cet_ctl_write_allowed(vcpu, msr_info))
+> +			return 1;
+> +		vmcs_writel(GUEST_S_CET, data);
+> +		break;
+> +	case MSR_IA32_INT_SSP_TAB:
+> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		if (!is_64_bit_mode(vcpu))
+> +			return 1;
+> +		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
+> +		break;
+> +	case MSR_IA32_U_CET:
+> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		if (!cet_ctl_write_allowed(vcpu, msr_info))
+> +			return 1;
+> +		wrmsrl(MSR_IA32_U_CET, data);
+> +		break;
+> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> +			return 1;
+> +		if (!cet_ssp_write_allowed(vcpu, msr_info))
+> +			return 1;
+> +		wrmsrl(msr_info->index, data);
+> +		break;
+>  	case MSR_TSC_AUX:
+>  		if (!msr_info->host_initiated &&
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 6dbe77365b22..7de6faa6aa51 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1186,6 +1186,10 @@ static const u32 msrs_to_save_all[] = {
+>  	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
+>  	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
+>  	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+> +
+> +	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
+> +	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
+> +	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
+>  };
+>  
+>  static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
+> @@ -1468,6 +1472,13 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
+>  		 * invokes 64-bit SYSENTER.
+>  		 */
+>  		data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
+> +		break;
+> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> +	case MSR_IA32_U_CET:
+> +	case MSR_IA32_S_CET:
+> +	case MSR_IA32_INT_SSP_TAB:
+> +		if (is_noncanonical_address(data, vcpu))
+> +			return 1;
+>  	}
+>  
+>  	msr.data = data;
+> -- 
+> 2.17.2
+> 
