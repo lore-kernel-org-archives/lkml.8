@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0797C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38B0C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842BC2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9CB2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204212;
-	bh=xqt4H5Ll6dhRS4CH7JG/NGQN2sDa4HiwBAcvJr7uI2k=;
+	s=default; t=1583204214;
+	bh=ahsmPgX1+chVtukgf9LGDH62Q144UgpGZOEhCJIhJMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uh4806EK0XRaezhOIviuetFPoQwqOJPUDlLtt9qWsWjMB1VpF8SJW6ODDQ2SxWcK4
-	 BtNhdo1fg9G723zYS3+5wwcNzJ7SlA9u6TuY60V+POu9HGB4ACxd7c0S/QYLA28PZ8
-	 iuiDySl1JfKMBm1rSfzwB3CdWvFEpuKy6x5oQvD4=
+	b=ixq08T8yfu33blqnMj/jsFTFgQ3PwHy59A1R3+5TdWH00zk30Xk54/sSdxxsTuL/C
+	 w6gVO8rDtkesJiBQiTLvwTCnI5A7C1xnIos1GPka8tnoD2cD6BHtqBAMRyrjf8/9B+
+	 wJXSFkFaBGcAVJNdNMOrtUlL25gDqwHGQ4cfEbOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgCCCsd (ORCPT
+        id S1729019AbgCCC4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44144 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:56:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbgCCCsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:24 -0500
+        id S1727925AbgCCCse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC24F246D6;
-        Tue,  3 Mar 2020 02:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6991124697;
+        Tue,  3 Mar 2020 02:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203703;
-        bh=xqt4H5Ll6dhRS4CH7JG/NGQN2sDa4HiwBAcvJr7uI2k=;
+        s=default; t=1583203714;
+        bh=ahsmPgX1+chVtukgf9LGDH62Q144UgpGZOEhCJIhJMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YAPLcXOw99TrMRdv4OtfIGcew+r3tO+GVt3VbhUyf5zAZisrmUdnah7Mrl2wPAr0G
-         Jz7ttAqTyD0C2ysezYAxEHBlfFb+L7HOfYB+6s2PnTqBES+Z2Cw9P0WP0rgB/q0Ceh
-         TAv6NhM6SwayIdHnmt9abP8PkasX0Yx3yU4vuNSA=
+        b=1hvrEVnH9UK4sQUoIrDnA0X1Ld/WKyFW6tVDesazADImyG1RZVRZJVFvu7zqi7V70
+         3+J8G+FK4g84iVavm8yH6Q1t3T/OVFy1PPm8rAB//u2dclUXCgdNk11vzYTr1VlUiJ
+         ViUZTTo5D6uCxTZNlQ02iTec/KnhiXJl+onpJJ2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/58] net: mscc: fix in frame extraction
-Date:   Mon,  2 Mar 2020 21:47:17 -0500
-Message-Id: <20200303024740.9511-35-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 44/58] nvme: Fix uninitialized-variable warning
+Date:   Mon,  2 Mar 2020 21:47:26 -0500
+Message-Id: <20200303024740.9511-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,53 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
+[ Upstream commit 15755854d53b4bbb0bb37a0fce66f0156cfc8a17 ]
 
-Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
-by reading chuncks of 4 bytes from a register.
+gcc may detect a false positive on nvme using an unintialized variable
+if setting features fails. Since this is not a fast path, explicitly
+initialize this variable to suppress the warning.
 
-In case the IFH and frames were read corretly it would try to read the next
-frame. In case there are no more frames in the queue, it checks if there
-were any previous errors and in that case clear the queue. But this check
-will always succeed also when there are no errors. Because when extracting
-the IFH the error is checked against 4(number of bytes read) and then the
-error is set only if the extraction of the frame failed. So in a happy case
-where there are no errors the err variable is still 4. So it could be
-a case where after the check that there are no more frames in the queue, a
-frame will arrive in the queue but because the error is not reseted, it
-would try to flush the queue. So the frame will be lost.
-
-The fix consist in resetting the error after reading the IFH.
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot_board.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
-index aac115136720f..3371562325013 100644
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -112,6 +112,14 @@ static irqreturn_t ocelot_xtr_irq_handler(int irq, void *arg)
- 		if (err != 4)
- 			break;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e703827d27e9c..dd53b006cebb0 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1161,8 +1161,8 @@ static int nvme_identify_ns(struct nvme_ctrl *ctrl,
+ static int nvme_features(struct nvme_ctrl *dev, u8 op, unsigned int fid,
+ 		unsigned int dword11, void *buffer, size_t buflen, u32 *result)
+ {
++	union nvme_result res = { 0 };
+ 	struct nvme_command c;
+-	union nvme_result res;
+ 	int ret;
  
-+		/* At this point the IFH was read correctly, so it is safe to
-+		 * presume that there is no error. The err needs to be reset
-+		 * otherwise a frame could come in CPU queue between the while
-+		 * condition and the check for error later on. And in that case
-+		 * the new frame is just removed and not processed.
-+		 */
-+		err = 0;
-+
- 		ocelot_parse_ifh(ifh, &info);
- 
- 		dev = ocelot->ports[info.port]->dev;
+ 	memset(&c, 0, sizeof(c));
 -- 
 2.20.1
 
