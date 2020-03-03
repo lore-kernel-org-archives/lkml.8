@@ -3,53 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F97BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5738FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE572166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC572166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204112;
-	bh=vGUOX+Fc8v/Nw6WwDblSI4csNM6cyIMB9lzoBuNt5d0=;
+	s=default; t=1583204115;
+	bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUih+HM9BL8XPEc/E/AFro01Bpz1Sv0q2S5ffmhf4CCkyr2J7h0pWXsZNuOmDC+Is
-	 YS6utvoQio5HK24Bdt5vNPFLsEy8ZMZG+iLuQSlr6VGoeovptmXn1NyA8wLOqHxDaK
-	 f36o8W2TeFW4lINJ+YKimP48KTV3JOhsb9/vhhLU=
+	b=rfDwluSH0mvh8ixwPEw025X8HgxlV3mranBBJRLt0/BmMS0FhfQsqUDw/rfaqqFzS
+	 WPf6S7CUi4CRQuiwHs7tYGXSoIgVW9w2JJMg8OaO1bFOJ94NRbEbU3RuB2lnyKrDwq
+	 GmS8M+sUZa60TqPXRpDh93kzyExCT20NMLhgzNSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgCCCtK (ORCPT
+        id S1728698AbgCCCzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44696 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:55:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728565AbgCCCst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:49 -0500
+        id S1728668AbgCCCtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55DC24684;
-        Tue,  3 Mar 2020 02:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F364246DD;
+        Tue,  3 Mar 2020 02:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203728;
-        bh=vGUOX+Fc8v/Nw6WwDblSI4csNM6cyIMB9lzoBuNt5d0=;
+        s=default; t=1583203749;
+        bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8y3ay/MIPXr6b2OfZidn1jIRou1JAa4kgLCJVbVwUzqDZCLmga0cGNka4tqszCvk
-         WEydxVzetcJY2aeXvoZE+UTfXowz1hL7Jr04UOU9NgZlZbR8SQU2IUPUBa8joUqvXm
-         qoj+g0R7iFNzlnWR6Trz0q8lbz+CYejNp71pPiHs=
+        b=h2sev5JeJhMPlYqbZYaS+k6JJvPynpnDxNWOdx1nn0vbtmBiqsTauXCpLxmztB77A
+         Skzr12CMKicE3vwxnRtCMqZGPn/dpTD0/d3WLzc7o87Hwp1AcF1SYAODcG9TD3Feyt
+         FyTRcVXa48yu5GD5AITv/4ZneigiFcW263GeK1HY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Guo Ren <guoren@kernel.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 57/58] arch/csky: fix some Kconfig typos
-Date:   Mon,  2 Mar 2020 21:47:39 -0500
-Message-Id: <20200303024740.9511-57-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        Petr Machata <pmachata@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/32] selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac testing
+Date:   Mon,  2 Mar 2020 21:48:32 -0500
+Message-Id: <20200303024851.10054-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
-References: <20200303024740.9511-1-sashal@kernel.org>
+In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
+References: <20200303024851.10054-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,33 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit bebd26ab623616728d6e72b5c74a47bfff5287d8 ]
+[ Upstream commit e8023b030ce1748930e2dc76353a262fe47d4745 ]
 
-Fix wording in help text for the CPU_HAS_LDSTEX symbol.
+For tc ip_proto filter, when we extract the flow via __skb_flow_dissect()
+without flag FLOW_DISSECTOR_F_STOP_AT_ENCAP, we will continue extract to
+the inner proto.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Guo Ren <guoren@kernel.org>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+So for GRE + ICMP messages, we should not track GRE proto, but inner ICMP
+proto.
+
+For test mirror_gre.sh, it may make user confused if we capture ICMP
+message on $h3(since the flow is GRE message). So I move the capture
+dev to h3-gt{4,6}, and only capture ICMP message.
+
+Before the fix:
+]# ./mirror_gre.sh
+TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
+TEST: egress mirror to gretap (skip_hw)                             [ OK ]
+TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
+TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
+TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: egress mirror to gretap: envelope MAC (skip_hw)               [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
+WARN: Could not test offloaded functionality
+
+After fix:
+]# ./mirror_gre.sh
+TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
+TEST: egress mirror to gretap (skip_hw)                             [ OK ]
+TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
+TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
+TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [ OK ]
+TEST: egress mirror to gretap: envelope MAC (skip_hw)               [ OK ]
+TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [ OK ]
+TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [ OK ]
+TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
+WARN: Could not test offloaded functionality
+
+Fixes: ba8d39871a10 ("selftests: forwarding: Add test for mirror to gretap")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Petr Machata <pmachata@gmail.com>
+Tested-by: Petr Machata <pmachata@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/net/forwarding/mirror_gre.sh    | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 3973847b5f42e..25de20e526e50 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -74,7 +74,7 @@ config CPU_HAS_TLBI
- config CPU_HAS_LDSTEX
- 	bool
- 	help
--	  For SMP, CPU needs "ldex&stex" instrcutions to atomic operations.
-+	  For SMP, CPU needs "ldex&stex" instructions for atomic operations.
+diff --git a/tools/testing/selftests/net/forwarding/mirror_gre.sh b/tools/testing/selftests/net/forwarding/mirror_gre.sh
+index e6fd7a18c655f..0266443601bc0 100755
+--- a/tools/testing/selftests/net/forwarding/mirror_gre.sh
++++ b/tools/testing/selftests/net/forwarding/mirror_gre.sh
+@@ -63,22 +63,23 @@ test_span_gre_mac()
+ {
+ 	local tundev=$1; shift
+ 	local direction=$1; shift
+-	local prot=$1; shift
+ 	local what=$1; shift
  
- config CPU_NEED_TLBSYNC
- 	bool
+-	local swp3mac=$(mac_get $swp3)
+-	local h3mac=$(mac_get $h3)
++	case "$direction" in
++	ingress) local src_mac=$(mac_get $h1); local dst_mac=$(mac_get $h2)
++		;;
++	egress) local src_mac=$(mac_get $h2); local dst_mac=$(mac_get $h1)
++		;;
++	esac
+ 
+ 	RET=0
+ 
+ 	mirror_install $swp1 $direction $tundev "matchall $tcflags"
+-	tc filter add dev $h3 ingress pref 77 prot $prot \
+-		flower ip_proto 0x2f src_mac $swp3mac dst_mac $h3mac \
+-		action pass
++	icmp_capture_install h3-${tundev} "src_mac $src_mac dst_mac $dst_mac"
+ 
+-	mirror_test v$h1 192.0.2.1 192.0.2.2 $h3 77 10
++	mirror_test v$h1 192.0.2.1 192.0.2.2 h3-${tundev} 100 10
+ 
+-	tc filter del dev $h3 ingress pref 77
++	icmp_capture_uninstall h3-${tundev}
+ 	mirror_uninstall $swp1 $direction
+ 
+ 	log_test "$direction $what: envelope MAC ($tcflags)"
+@@ -120,14 +121,14 @@ test_ip6gretap()
+ 
+ test_gretap_mac()
+ {
+-	test_span_gre_mac gt4 ingress ip "mirror to gretap"
+-	test_span_gre_mac gt4 egress ip "mirror to gretap"
++	test_span_gre_mac gt4 ingress "mirror to gretap"
++	test_span_gre_mac gt4 egress "mirror to gretap"
+ }
+ 
+ test_ip6gretap_mac()
+ {
+-	test_span_gre_mac gt6 ingress ipv6 "mirror to ip6gretap"
+-	test_span_gre_mac gt6 egress ipv6 "mirror to ip6gretap"
++	test_span_gre_mac gt6 ingress "mirror to ip6gretap"
++	test_span_gre_mac gt6 egress "mirror to ip6gretap"
+ }
+ 
+ test_all()
 -- 
 2.20.1
 
