@@ -2,92 +2,79 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A1EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F1CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE06B20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:41:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyJruACF"
+	by mail.kernel.org (Postfix) with ESMTP id D247720866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgCCWlL (ORCPT
+        id S1728043AbgCCWlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:41:11 -0500
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:35798 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCWlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:41:11 -0500
-Received: by mail-lf1-f52.google.com with SMTP id z9so4209859lfa.2;
-        Tue, 03 Mar 2020 14:41:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7PCjToRekaqNSdWUmgH5POUBnwr1l0aeVSOTIZP57hM=;
-        b=NyJruACFquysQrXD3/z7qK754PnTA2hVNEcXJyP9Biy8OvLwJ4o0gUuJN+2qQnbLbH
-         lZvhQrrnRuIgNPrAgfJ1XesP/B3J1CWviwHAfwjuMdiWz/nIZvZTecpVUGm22kcDEuxt
-         cKN5tyDVfOTZ7rKdyQc6HTxzwBzRozIIUu6qUgifA2faLtc1shi//CXGSUExMld+FqfX
-         jvBbq2B2sHt82DK9gxPS83sPtPjlCmlPm6lVml+IhEAbkeM0hkDl2pYfC/5EfOqwRkLE
-         3zB8UUvcw9k9FXS2xugIiDKvqMUImTRjaMa30KNwwTq/V6OzcW95tFW9fwz6Fub6iODt
-         SdbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7PCjToRekaqNSdWUmgH5POUBnwr1l0aeVSOTIZP57hM=;
-        b=o70Ns19oYseITru0Kv3jXqfaUgMkSQVYnuwSKTB9Lo7dtp3bub/5wceUf7HD5Qsafk
-         9CKox0pBbZJwsFHn7e/EpRghBBs1WdbsGkkQWYXoi73iCBZ1KOHXe21TsnnJMTCyer0F
-         iUdIpaF9iGI+icOglCdSaAcIFYbgt9rhbyItcJNMeABotchITsJLq/SuPwB+2NKdsguz
-         sgpjHf8j5PwM1mqsYbVeM3jFjvxVOgvBWf4SN4seSkPqVLCe4iO4hdmJvBNEtC6+sn1I
-         Smu11YtN9E8SH/Y+TV2zJPwpizdSC6rM1Ie51dKrPuLlt3e5eGvGLbs80gAz+e2lrwqm
-         RNBw==
-X-Gm-Message-State: ANhLgQ1xZF3wJovEfs3cFTW9MW9eBVwVLFPt8HcVFz9kCe87aTkmR2Ra
-        j0kOmNvsvjp8hcWJCx+d9s2/NAGHNsgbuLWqQ9M=
-X-Google-Smtp-Source: ADFU+vvkoJDn/15/TNMvuE5JSLmVfKoU8XmNW/UVTIf0NmEFrvcr6wE1v6g7UZZAHE3IhxvHv0KeNmU74HN3szTLaPk=
-X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr110507lfb.69.1583275268978;
- Tue, 03 Mar 2020 14:41:08 -0800 (PST)
+        Tue, 3 Mar 2020 17:41:52 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50140 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726766AbgCCWlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:41:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 14:41:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="229102698"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 14:41:51 -0800
+Date:   Tue, 3 Mar 2020 14:41:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/61] KVM: VMX: Add helpers to query Intel PT mode
+Message-ID: <20200303224150.GA17816@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-20-sean.j.christopherson@intel.com>
+ <87pne8q8c0.fsf@vitty.brq.redhat.com>
+ <20200224221807.GM29865@linux.intel.com>
+ <33a4d99d-98da-0bd8-0f9c-fc04bef54350@redhat.com>
 MIME-Version: 1.0
-References: <CAOMZO5CrvxZDuRfBvwLV6uJJwtPuj1-vqoELKP3j15k3TbSjyg@mail.gmail.com>
- <20200229232215.GN2935@paulmck-ThinkPad-P72>
-In-Reply-To: <20200229232215.GN2935@paulmck-ThinkPad-P72>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 3 Mar 2020 19:40:56 -0300
-Message-ID: <CAOMZO5CZyubmX=1_UgTE+trag0vsNz9AYuaVcPxp7ZfvjUyYAQ@mail.gmail.com>
-Subject: Re: rcu_sched stalls on 4.14
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33a4d99d-98da-0bd8-0f9c-fc04bef54350@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Disclaimer: I'm going off a few lines in the SDM and the original patches,
+everything I say could be completely wrong :-)
 
-On Sat, Feb 29, 2020 at 8:22 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+On Tue, Feb 25, 2020 at 03:54:21PM +0100, Paolo Bonzini wrote:
+> On 24/02/20 23:18, Sean Christopherson wrote:
+> >>>  {
+> >>>  	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
+> >>> -	if (pt_mode == PT_MODE_SYSTEM)
+> >>> +	if (vmx_pt_mode_is_system())
+> >> ... and here? I.e. to cover the currently unsupported 'host-only' mode.
+> > Hmm, good question.  I don't think so?  On VM-Enter, RTIT_CTL would need to
+> > be loaded to disable PT.  Clearing RTIT_CTL on VM-Exit would be redundant
+> > at that point[1].  And AIUI, the PIP for VM-Enter/VM-Exit isn't needed
+> > because there is no context switch from the decoder's perspective.
+> 
+> How does host-only mode differ from "host-guest but don't expose PT to
+> the guest"?  So I would say that host-only mode is a special case of
+> host-guest, not of system mode.
 
-> In the above stack trace, the stalled CPU (that is, CPU 0) is in the idle
-> loop, correct?  Then it took an interrupt and was processing softirqs
-> upon return from that interrupt when it took a scheduling clock interrupt,
-> which did the self-reported stall warning.
->
-> Is this analysis correct?
-
-Yes, I think so.
-
-> If so, and assuming that this is reproducible, I suggest building your
-> kernel with CONFIG_RCU_EQS_DEBUG=y, which enables additional debugging
-> that might be helpful with this issue.
-
-Will ask the reporter to try it. I haven't been able to reproduce it myself.
-
-Thanks
+AIUI, host-guest needs a special packet for VM-Enter/VM-Exit so that the
+trace analyzer understands there was a context switch.  With host-only, the
+packet isn't needed because tracing stops entirely.  So it's not that
+host-only is a special case of system mode, but rather it doesn't need the
+VM-Exit control enabled to generate the special packet.
