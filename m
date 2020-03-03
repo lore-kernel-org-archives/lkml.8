@@ -2,164 +2,132 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B641C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58701C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD2A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258929;
-	bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHQb/X3gWGxwCSpvtWpQ2hsOeRB7JMlw6K9GlBlYd8ok6TkJwlB7vPH/rCNwlB8K2
-	 4QR3+y1OPF+/Hq2wPKWCYlMo69IFkwdaReLd0cTUZEWqE/NzmcWpGq+op2TYKzF5Yj
-	 mus44UF0IHqAfTeb7KM6+u9raQsMZdEThoWxxw5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 32FEB208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CuwQcN7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732308AbgCCSIr (ORCPT
+        id S2388368AbgCCSIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732299AbgCCRxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63552072D;
-        Tue,  3 Mar 2020 17:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257988;
-        bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7a7JfqYohuBDjojdgabstxIda2iGSdKazfFUedjhC9n1Ep30HJtlBjTf0b8PZ8zm
-         2f+RJ8cIoWNCeV4Wmy5d95Sol4TrtJuyjG3U3s5vf0e1Y/OFpF6b4IzpuE6YMIOCKm
-         blxiqQAaT1k+KT7/Z4iGENFdzM/sZhIhj/S6dQsE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 011/152] qede: Fix race between rdma destroy workqueue and link change event
-Date:   Tue,  3 Mar 2020 18:41:49 +0100
-Message-Id: <20200303174303.796942527@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-References: <20200303174302.523080016@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Mar 2020 13:08:50 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45434 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388340AbgCCSIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:08:48 -0500
+Received: by mail-io1-f68.google.com with SMTP id w9so4590545iob.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 10:08:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bf0F9jShQ+1SAJ86EUg24NgoBWAimsu/bT/Rh5FZG1s=;
+        b=CuwQcN7zp2rH8kV+uXmvxUI3vOrGBbokokTvMGaXk2y43oL3dTQDTUuv1z5mN3c5ND
+         OooyyZhHmEZvJQyA+4IQacdQJEFpkr6bBiK4NUl9k6wW85p3AlIir3ibFMmMtY6Qq9TD
+         fqESkINb02EOI4DRbF1ngP014GhCRPZbkXT/qwU80zXE1dPrV9JErVfnk+031gOZdgsK
+         QRNnTMsLgxL7szlQe0aB9Eaa89Y4rxak0iTnEtWM9Izz5KWxI73nxblN5DgWTLBv0L4z
+         amz6EmCibPpY+0h/AZaFzFcjGrMUBZG0cIsit1uvIT/NqO6tdRFUDS4UWqge63nz8lnN
+         uOqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bf0F9jShQ+1SAJ86EUg24NgoBWAimsu/bT/Rh5FZG1s=;
+        b=MRWRkdoBmvwKY+bOJC46fUQqrnGmny+p0axG+D8wSNgWeJ4LTVHvAjO50H1uxaiE4B
+         gzt/Txg09GwQbmqd6EI3fPxFxetyLPyWjKgQfBYVmfbl+0WIJz12mzTbxOXIpwKl5xvA
+         eSkSvQzZalAIAQVZGB1yJ1OJSc8eEMDaKSp1umcydlP3+DHiDraG+bk+ivChIYlrGlIb
+         XkqG/A8Cex4zRwNhrp7kX+T7UCciLKms6A7SvEZw/c71lYP+1ftIrAiAGfPCIgrpS7Pp
+         7UEAQatdqoiA6wp1FwCmy+HZ53ql/dn+CL0jAixUdscq8XunTN91u4M7w6XvTRXrgm3r
+         8JXg==
+X-Gm-Message-State: ANhLgQ2tyvJ8EyIBn8BgNN8vWeeQFNarYSD8K4LePNaKApjK3hQE0klX
+        mJTPl5sgbDomKqLZm3xNfdhqV25M8G0i1riwmE6fDA==
+X-Google-Smtp-Source: ADFU+vsDQKW3R25VEwr3nSycpnRKEuPn9Ka8m2GJ4Ff+Y0C3ACVegdgxU99TJEZiTKPoBSL+tFKcVLL9KbINqFJnp/M=
+X-Received: by 2002:a6b:4e15:: with SMTP id c21mr4776187iob.119.1583258927645;
+ Tue, 03 Mar 2020 10:08:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-3-sean.j.christopherson@intel.com> <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
+ <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
+ <20200303045838.GF27842@linux.intel.com> <CALMp9eSYZKUBko4ZViNbasRGJs2bAO2fREHX9maDbLrYj8yDhQ@mail.gmail.com>
+ <20200303180122.GO1439@linux.intel.com>
+In-Reply-To: <20200303180122.GO1439@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 3 Mar 2020 10:08:36 -0800
+Message-ID: <CALMp9eRUPP_89mNwRTMpm6vg2jcaYNvj7R5yLK6HhLrub-iAEg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
+ Hypervisor ranges
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+On Tue, Mar 3, 2020 at 10:01 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Mar 03, 2020 at 09:42:42AM -0800, Jim Mattson wrote:
+> > Unfathomable was the wrong word.
+>
+> I dunno, one could argue that the behavior of Intel CPUs for CPUID is
+> unfathomable and I was just trying to follow suit :-D
+>
+> >  I can see what you're trying to do. I
+> > just don't think it's defensible. I suspect that Intel CPU architects
+> > will be surprised and disappointed to find that the maximum effective
+> > value of CPUID.0H:EAX is now 255, and that they have to define
+> > CPUID.100H:EAX as the "maximum leaf between 100H and 1FFH" if they
+> > want to define any leaves between 100H and 1FFH.
+>
+> Hmm, ya, I agree that applying a 0xffffff00 mask to all classes of CPUID
+> ranges is straight up wrong.
+>
+> > Furthermore, AMD has only ceded 4000_0000h through 4000_00FFh to
+> > hypervisors, so kvm's use of 40000100H through 400001FFH appears to be
+> > a land grab, akin to VIA's unilateral grab of the C0000000H leaves.
+> > Admittedly, one could argue that the 40000000H leaves are not AMD's to
+> > apportion, since AMD and Intel appear to have reached a detente by
+> > splitting the available space down the middle. Intel, who seems to be
+> > the recognized authority for this range, declares the entire range
+> > from 40000000H through 4FFFFFFFH to be invalid. Make of that what you
+> > will.
+> >
+> > In any event, no one has ever documented what's supposed to happen if
+> > you leave gaps in the 4xxxxxxxH range when defining synthesized CPUID
+> > leaves under kvm.
+>
+> Probably stating the obvious, but for me, the least suprising thing is for
+> such leafs to output zeros.  It also feels safer, e.g. a guest that's
+> querying hypervisor support is less likely to be led astray by all zeros
+> than by a random feature bits being set.
+>
+> What about something like this?  Along with a comment and documentation...
+>
+> static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+> {
+>         struct kvm_cpuid_entry2 *max;
+>
+>         if (function >= 0x40000000 && function <= 0x4fffffff)
+>                 max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00, 0);
+>         else
+>                 max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
+>         return max && function <= max->eax;
+> }
 
-[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
-
-If an event is added while the rdma workqueue is being destroyed
-it could lead to several races, list corruption, null pointer
-dereference during queue_work or init_queue.
-This fixes the race between the two flows which can occur during
-shutdown.
-
-A kref object and a completion object are added to the rdma_dev
-structure, these are initialized before the workqueue is created.
-The refcnt is used to indicate work is being added to the
-workqueue and ensures the cleanup flow won't start while we're in
-the middle of adding the event.
-Once the work is added, the refcnt is decreased and the cleanup flow
-is safe to run.
-
-Fixes: cee9fbd8e2e ("qede: Add qedr framework")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/qlogic/qede/qede.h      |    2 +
- drivers/net/ethernet/qlogic/qede/qede_rdma.c |   29 ++++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -163,6 +163,8 @@ struct qede_rdma_dev {
- 	struct list_head entry;
- 	struct list_head rdma_event_list;
- 	struct workqueue_struct *rdma_wq;
-+	struct kref refcnt;
-+	struct completion event_comp;
- 	bool exp_recovery;
- };
- 
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qe
- static int qede_rdma_create_wq(struct qede_dev *edev)
- {
- 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
-+	kref_init(&edev->rdma_info.refcnt);
-+	init_completion(&edev->rdma_info.event_comp);
-+
- 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
- 	if (!edev->rdma_info.rdma_wq) {
- 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
-@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(stru
- 	}
- }
- 
-+static void qede_rdma_complete_event(struct kref *ref)
-+{
-+	struct qede_rdma_dev *rdma_dev =
-+		container_of(ref, struct qede_rdma_dev, refcnt);
-+
-+	/* no more events will be added after this */
-+	complete(&rdma_dev->event_comp);
-+}
-+
- static void qede_rdma_destroy_wq(struct qede_dev *edev)
- {
-+	/* Avoid race with add_event flow, make sure it finishes before
-+	 * we start accessing the list and cleaning up the work
-+	 */
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
-+	wait_for_completion(&edev->rdma_info.event_comp);
-+
- 	qede_rdma_cleanup_event(edev);
- 	destroy_workqueue(edev->rdma_info.rdma_wq);
- }
-@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct q
- 	if (!edev->rdma_info.qedr_dev)
- 		return;
- 
-+	/* We don't want the cleanup flow to start while we're allocating and
-+	 * scheduling the work
-+	 */
-+	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
-+		return; /* already being destroyed */
-+
- 	event_node = qede_rdma_get_free_event_node(edev);
- 	if (!event_node)
--		return;
-+		goto out;
- 
- 	event_node->event = event;
- 	event_node->ptr = edev;
- 
- 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
- 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
-+
-+out:
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
- }
- 
- void qede_rdma_dev_event_open(struct qede_dev *edev)
-
-
+I can get behind that. The behavior of the 4xxxxxxxH leaves under kvm
+is arguably up to kvm (though AMD may disagree).
