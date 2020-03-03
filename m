@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C5CC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8377C2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B0D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259007;
-	bh=q9ncxq94EGXOCTEZx6k1DLyeoq/IGMKBwAr6s2YL1N4=;
+	s=default; t=1583259011;
+	bh=m7OLOWwF4hX4DtMx03rja13wZd/rZ41dd7u6ifR3LeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k1QxBodEJ12drlCooJGGj8QZS2QOuD2Ay7f8+i6pXNHLHOSa3+1Z4M1T2NjvGeGJp
-	 +VVwxLWC2rNz8zHw02DPvqNGXFGobcOrl5HvdM0YXvOJo7Y8fyGGf5wtT9OgmPgYu8
-	 aqZK/Lfb4kuFtcd2gXyDC3Oa+/5buX751j4am7IE=
+	b=zYe7j9wcFbBLU8S6oSjTfF9T3n4HnWg9OSLxCgtwsi4J5oxLOCzl5FZ7h0UPeXbRv
+	 TEsyxwEJTPYWEJSO8Odm3BBlRsbPeDGvuek7xJuJp+WFojaCV5ypkJySvauhDUlO/F
+	 BkSBUtctAohzuUyy6DnOogkDyNTwdd863OqnQ+8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731738AbgCCRvW (ORCPT
+        id S2387551AbgCCSKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59170 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731954AbgCCRvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:11 -0500
+        id S1731976AbgCCRvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3206A206E6;
-        Tue,  3 Mar 2020 17:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AE020728;
+        Tue,  3 Mar 2020 17:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257870;
-        bh=q9ncxq94EGXOCTEZx6k1DLyeoq/IGMKBwAr6s2YL1N4=;
+        s=default; t=1583257881;
+        bh=m7OLOWwF4hX4DtMx03rja13wZd/rZ41dd7u6ifR3LeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEVK7XmhJ6SQzHWNakpBqOC25AIBo+XdQygMK9eXVPg9d4EvunRR7TRPTN197Lfit
-         vn+6u9LG8bmX8/JvcsZ/USXkviohNnXkEi+IzPoPEfptF+ygSiydiMKL9NA12gsTJg
-         YpWOb/ksT8jh5WYDA3qp+5aUBj+s9oKEPqmVHMDc=
+        b=vKfLap2MlfCLWJ9V2C55gRL573P9VSnVwi0Qv4d5tbIwCbX7aG4p58wsLol3CBIM9
+         gD6j8KROToUKIrzvwSUB5TttFa9YWaEgm94T9veJ24V8uQBDZ3Y2qCS+ii+bwNxOBH
+         AW0aKZ6TNMghkeUXXRUE5zvytByfzTFX3JKUcoLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 5.5 160/176] rcu: Allow only one expedited GP to run concurrently with wakeups
-Date:   Tue,  3 Mar 2020 18:43:44 +0100
-Message-Id: <20200303174322.832178830@linuxfoundation.org>
+        stable@vger.kernel.org, Ying Xue <ying.xue@windriver.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 136/176] tipc: fix successful connect() but timed out
+Date:   Tue,  3 Mar 2020 18:43:20 +0100
+Message-Id: <20200303174320.493470489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,86 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neeraj Upadhyay <neeraju@codeaurora.org>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-commit 4bc6b745e5cbefed92c48071e28a5f41246d0470 upstream.
+commit 5391a87751a164b3194864126f3b016038abc9fe upstream.
 
-The current expedited RCU grace-period code expects that a task
-requesting an expedited grace period cannot awaken until that grace
-period has reached the wakeup phase.  However, it is possible for a long
-preemption to result in the waiting task never sleeping.  For example,
-consider the following sequence of events:
+In commit 9546a0b7ce00 ("tipc: fix wrong connect() return code"), we
+fixed the issue with the 'connect()' that returns zero even though the
+connecting has failed by waiting for the connection to be 'ESTABLISHED'
+really. However, the approach has one drawback in conjunction with our
+'lightweight' connection setup mechanism that the following scenario
+can happen:
 
-1.	Task A starts an expedited grace period by invoking
-	synchronize_rcu_expedited().  It proceeds normally up to the
-	wait_event() near the end of that function, and is then preempted
-	(or interrupted or whatever).
+          (server)                        (client)
 
-2.	The expedited grace period completes, and a kworker task starts
-	the awaken phase, having incremented the counter and acquired
-	the rcu_state structure's .exp_wake_mutex.  This kworker task
-	is then preempted or interrupted or whatever.
+   +- accept()|                      |             wait_for_conn()
+   |          |                      |connect() -------+
+   |          |<-------[SYN]---------|                 > sleeping
+   |          |                      *CONNECTING       |
+   |--------->*ESTABLISHED           |                 |
+              |--------[ACK]-------->*ESTABLISHED      > wakeup()
+        send()|--------[DATA]------->|\                > wakeup()
+        send()|--------[DATA]------->| |               > wakeup()
+          .   .          .           . |-> recvq       .
+          .   .          .           . |               .
+        send()|--------[DATA]------->|/                > wakeup()
+       close()|--------[FIN]-------->*DISCONNECTING    |
+              *DISCONNECTING         |                 |
+              |                      ~~~~~~~~~~~~~~~~~~> schedule()
+                                                       | wait again
+                                                       .
+                                                       .
+                                                       | ETIMEDOUT
 
-3.	Task A resumes and enters wait_event(), which notes that the
-	expedited grace period has completed, and thus doesn't sleep.
+Upon the receipt of the server 'ACK', the client becomes 'ESTABLISHED'
+and the 'wait_for_conn()' process is woken up but not run. Meanwhile,
+the server starts to send a number of data following by a 'close()'
+shortly without waiting any response from the client, which then forces
+the client socket to be 'DISCONNECTING' immediately. When the wait
+process is switched to be running, it continues to wait until the timer
+expires because of the unexpected socket state. The client 'connect()'
+will finally get ‘-ETIMEDOUT’ and force to release the socket whereas
+there remains the messages in its receive queue.
 
-4.	Task B starts an expedited grace period exactly as did Task A,
-	complete with the preemption (or whatever delay) just before
-	the call to wait_event().
+Obviously the issue would not happen if the server had some delay prior
+to its 'close()' (or the number of 'DATA' messages is large enough),
+but any kind of delay would make the connection setup/shutdown "heavy".
+We solve this by simply allowing the 'connect()' returns zero in this
+particular case. The socket is already 'DISCONNECTING', so any further
+write will get '-EPIPE' but the socket is still able to read the
+messages existing in its receive queue.
 
-5.	The expedited grace period completes, and another kworker
-	task starts the awaken phase, having incremented the counter.
-	However, it blocks when attempting to acquire the rcu_state
-	structure's .exp_wake_mutex because step 2's kworker task has
-	not yet released it.
+Note: This solution doesn't break the previous one as it deals with a
+different situation that the socket state is 'DISCONNECTING' but has no
+error (i.e. sk->sk_err = 0).
 
-6.	Steps 4 and 5 repeat, resulting in overflow of the rcu_node
-	structure's ->exp_wq[] array.
-
-In theory, this is harmless.  Tasks waiting on the various ->exp_wq[]
-array will just be spuriously awakened, but they will just sleep again
-on noting that the rcu_state structure's ->expedited_sequence value has
-not advanced far enough.
-
-In practice, this wastes CPU time and is an accident waiting to happen.
-This commit therefore moves the rcu_exp_gp_seq_end() call that officially
-ends the expedited grace period (along with associate tracing) until
-after the ->exp_wake_mutex has been acquired.  This prevents Task A from
-awakening prematurely, thus preventing more than one expedited grace
-period from being in flight during a previous expedited grace period's
-wakeup phase.
-
-Fixes: 3b5f668e715b ("rcu: Overlap wakeups with next expedited grace period")
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-[ paulmck: Added updated comment. ]
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Fixes: 9546a0b7ce00 ("tipc: fix wrong connect() return code")
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/rcu/tree_exp.h |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ net/tipc/socket.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -540,14 +540,13 @@ static void rcu_exp_wait_wake(unsigned l
- 	struct rcu_node *rnp;
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -2441,6 +2441,8 @@ static int tipc_wait_for_connect(struct
+ 			return -ETIMEDOUT;
+ 		if (signal_pending(current))
+ 			return sock_intr_errno(*timeo_p);
++		if (sk->sk_state == TIPC_DISCONNECTING)
++			break;
  
- 	synchronize_sched_expedited_wait();
--	rcu_exp_gp_seq_end();
--	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
- 
--	/*
--	 * Switch over to wakeup mode, allowing the next GP, but -only- the
--	 * next GP, to proceed.
--	 */
-+	// Switch over to wakeup mode, allowing the next GP to proceed.
-+	// End the previous grace period only after acquiring the mutex
-+	// to ensure that only one GP runs concurrently with wakeups.
- 	mutex_lock(&rcu_state.exp_wake_mutex);
-+	rcu_exp_gp_seq_end();
-+	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
- 
- 	rcu_for_each_node_breadth_first(rnp) {
- 		if (ULONG_CMP_LT(READ_ONCE(rnp->exp_seq_rq), s)) {
+ 		add_wait_queue(sk_sleep(sk), &wait);
+ 		done = sk_wait_event(sk, timeo_p, tipc_sk_connected(sk),
 
 
