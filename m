@@ -2,158 +2,118 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F873C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE8EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6278D2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D062083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZuDNQiS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgCCK57 (ORCPT
+        id S1728149AbgCCK6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:57:59 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:12723 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbgCCK56 (ORCPT
+        Tue, 3 Mar 2020 05:58:33 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23864 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727927AbgCCK6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:57:58 -0500
-X-Originating-IP: 86.202.111.97
-Received: from localhost (lfbn-lyo-1-16-97.w86-202.abo.wanadoo.fr [86.202.111.97])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id ED9B524000C;
-        Tue,  3 Mar 2020 10:57:55 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 11:57:55 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ville Syrjala <ville.syrjala@linux.intel.com>
-Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: cmos: Use spin_lock_irqsave() in cmos_interrupt()
-Message-ID: <20200303105755.GE4803@piout.net>
-References: <20200221144739.11746-1-ville.syrjala@linux.intel.com>
+        Tue, 3 Mar 2020 05:58:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583233111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/zXPTBF4JWqoYp8eI1kQcfpbOmowjFDH+kFOoB5ZRAY=;
+        b=ZuDNQiS8P0+bDBilQUX4lwpEwieTLIL98HW6mS8tNlfOO8JdGXzxtNMu2yBz/Z+GJkpXkY
+        7vKtSW8AMa2PhgR7Pzt8b2D28ieaq3M9Xp6WPUzZP9gM6J+AZTuJK07rszwVKlojXzofiG
+        4MAbjIHTx4UljWJWWw8gYSJlnPH+ZlA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-qtI-Mwh2N2iiofhnOuZEvQ-1; Tue, 03 Mar 2020 05:58:29 -0500
+X-MC-Unique: qtI-Mwh2N2iiofhnOuZEvQ-1
+Received: by mail-wm1-f72.google.com with SMTP id r19so927646wmh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:58:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/zXPTBF4JWqoYp8eI1kQcfpbOmowjFDH+kFOoB5ZRAY=;
+        b=F3aKQGKqedmmGUAd7CCQWpHiepIuWI27C5+Pi3Kky6Cmb37+Ce1BbCe3zG+vkDg8Wh
+         gRTXkSOz4y8zL1B22SzUjUjIufLnlVrC9GuTyj3oNz3CS+iJkbEVvwHIaQqWlmNrI0rx
+         N5oMupmxT9pZty8V5cENJuWg/M5tnDpI2h4ogWKCQvoqRPGSAoG5IhkmzTF0/7RhOebi
+         kjBm0ep5gNkPtlubJ8h/OVzyUB4yP/Xoora9xO/witzkNitIG/i+MnGUk4m5iwHUTJIx
+         6Fc8DtQJ7PE9f5tkoO1WeIRH0L+4A9jcW5Dfawff5h+avhw3AMIcHFlnTEm2AGvwAjRz
+         JkgQ==
+X-Gm-Message-State: ANhLgQ0WP/aPnCPXoFDdYdM4+Tnh7VzHU6/92fzIQGHnsf5gQv6IK2uT
+        +J/8JMHwMdtE3tP/Ic8ryqP22wddXgijzsWpKe5cXQeuBUCH3HiDIwXKjZxolMTg7mfgIc2gXyP
+        RYbrfXUurLD+Eo2JrcbAsuQx+
+X-Received: by 2002:a05:600c:104d:: with SMTP id 13mr3750724wmx.50.1583233107989;
+        Tue, 03 Mar 2020 02:58:27 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsd4BS7rp91JqsVP0DXSUT94e+JAinRKnGWMQ7Cvy39iLCGgQ+L61XcKLOC/AXfzKHmLi4C1w==
+X-Received: by 2002:a05:600c:104d:: with SMTP id 13mr3750709wmx.50.1583233107679;
+        Tue, 03 Mar 2020 02:58:27 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id e7sm13496617wrt.70.2020.03.03.02.58.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 02:58:27 -0800 (PST)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc4
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Oliver Upton <oupton@google.com>
+References: <1582570669-45822-1-git-send-email-pbonzini@redhat.com>
+ <87zhcyfvmk.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8fbeb3c2-9627-bf41-d798-bafba22073e3@redhat.com>
+Date:   Tue, 3 Mar 2020 11:58:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221144739.11746-1-ville.syrjala@linux.intel.com>
+In-Reply-To: <87zhcyfvmk.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/2020 16:47:39+0200, Ville Syrjala wrote:
-> From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+On 02/03/20 19:40, Vitaly Kuznetsov wrote:
 > 
-> cmos_interrupt() isn't always called from hardirq context, so
-> we must use spin_lock_irqsave() & co.
+>  qemu-system-x86-23579 [005] 22018.775584: kvm_exit:             reason EPT_VIOLATION rip 0xfffff802987d6169 info 181 0
+>  qemu-system-x86-23579 [005] 22018.775584: kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181 info2 0 int_info 0 int_info_err 0
+>  qemu-system-x86-23579 [005] 22018.775585: kvm_page_fault:       address febd0000 error_code 181
+>  qemu-system-x86-23579 [005] 22018.775592: kvm_emulate_insn:     0:fffff802987d6169: f3 a5
+>  qemu-system-x86-23579 [005] 22018.775593: kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
+>  qemu-system-x86-23579 [005] 22018.775596: kvm_inj_exception:    #UD (0x0)
 > 
-> ================================
-> WARNING: inconsistent lock state
-> 5.6.0-rc2-CI-CI_DRM_7981+ #1 Tainted: G     U
-> --------------------------------
-> inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-> rtcwake/4315 [HC0[0]:SC0[0]:HE1:SE1] takes:
-> ffffffff82635198 (rtc_lock){?...}, at: cmos_interrupt+0x18/0x100
-> {IN-HARDIRQ-W} state was registered at:
->   lock_acquire+0xa7/0x1c0
->   _raw_spin_lock+0x2a/0x40
->   cmos_interrupt+0x18/0x100
->   rtc_handler+0x75/0xc0
->   acpi_ev_fixed_event_detect+0xf9/0x132
->   acpi_ev_sci_xrupt_handler+0xb/0x28
->   acpi_irq+0x13/0x30
->   __handle_irq_event_percpu+0x41/0x2c0
->   handle_irq_event_percpu+0x2b/0x70
->   handle_irq_event+0x2f/0x50
->   handle_fasteoi_irq+0x8e/0x150
->   do_IRQ+0x7e/0x160
->   ret_from_intr+0x0/0x35
->   mwait_idle+0x7e/0x200
->   do_idle+0x1bb/0x260
->   cpu_startup_entry+0x14/0x20
->   start_secondary+0x15f/0x1b0
->   secondary_startup_64+0xa4/0xb0
-> irq event stamp: 42003
-> hardirqs last  enabled at (42003): [<ffffffff81a36567>] _raw_spin_unlock_irqrestore+0x47/0x60
-> hardirqs last disabled at (42002): [<ffffffff81a362ed>] _raw_spin_lock_irqsave+0xd/0x50
-> softirqs last  enabled at (41848): [<ffffffff81e00385>] __do_softirq+0x385/0x47f
-> softirqs last disabled at (41841): [<ffffffff810bab3a>] irq_exit+0xba/0xc0
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(rtc_lock);
->   <Interrupt>
->     lock(rtc_lock);
-> 
->  *** DEADLOCK ***
-> 
-> 6 locks held by rtcwake/4315:
->  #0: ffff888175dc9408 (sb_writers#5){.+.+}, at: vfs_write+0x1a4/0x1d0
->  #1: ffff88817406ca80 (&of->mutex){+.+.}, at: kernfs_fop_write+0xdd/0x1b0
->  #2: ffff888179be85e0 (kn->count#236){.+.+}, at: kernfs_fop_write+0xe6/0x1b0
->  #3: ffffffff82641e00 (system_transition_mutex){+.+.}, at: pm_suspend+0xb3/0x3b0
->  #4: ffffffff826b3ee0 (acpi_scan_lock){+.+.}, at: acpi_suspend_begin+0x47/0x80
->  #5: ffff888178fc3960 (&dev->mutex){....}, at: device_resume+0x92/0x1c0
-> 
-> stack backtrace:
-> CPU: 3 PID: 4315 Comm: rtcwake Tainted: G     U            5.6.0-rc2-CI-CI_DRM_7981+ #1
-> Hardware name: Google Soraka/Soraka, BIOS MrChromebox-4.10 08/25/2019
-> Call Trace:
->  dump_stack+0x71/0x9b
->  mark_lock+0x49a/0x500
->  ? print_shortest_lock_dependencies+0x200/0x200
->  __lock_acquire+0x6d4/0x15d0
->  ? __lock_acquire+0x460/0x15d0
->  lock_acquire+0xa7/0x1c0
->  ? cmos_interrupt+0x18/0x100
->  _raw_spin_lock+0x2a/0x40
->  ? cmos_interrupt+0x18/0x100
->  cmos_interrupt+0x18/0x100
->  cmos_resume+0x1fd/0x290
->  ? __acpi_pm_set_device_wakeup+0x24/0x100
->  pnp_bus_resume+0x5e/0x90
->  ? pnp_bus_suspend+0x10/0x10
->  dpm_run_callback+0x64/0x280
->  device_resume+0xd4/0x1c0
->  ? dpm_watchdog_set+0x60/0x60
->  dpm_resume+0x106/0x410
->  ? dpm_resume_early+0x38c/0x3e0
->  dpm_resume_end+0x8/0x10
->  suspend_devices_and_enter+0x16f/0xbe0
->  ? rcu_read_lock_sched_held+0x4d/0x80
->  pm_suspend+0x344/0x3b0
->  state_store+0x78/0xe0
->  kernfs_fop_write+0x112/0x1b0
->  vfs_write+0xb9/0x1d0
->  ksys_write+0x9f/0xe0
->  do_syscall_64+0x4f/0x220
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7ff934307154
-> Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
-> RSP: 002b:00007ffe2647c168 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007ff934307154
-> RDX: 0000000000000004 RSI: 000055de3ec4e5a0 RDI: 000000000000000a
-> RBP: 000055de3ec4e5a0 R08: 000055de3ec4c5e0 R09: 00007ff9349f3740
-> R10: 000055de3ec4a010 R11: 0000000000000246 R12: 000055de3ec4c500
-> R13: 0000000000000004 R14: 00007ff9345df2a0 R15: 00007ff9345de760
-> 
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> ---
->  drivers/rtc/rtc-cmos.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-Applied, thanks.
+> We probably need to re-enable instruction emulation for something...
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This is a rep movsw instruction, it shouldn't be intercepted.  I think
+we have a stale ctxt->intercept because the
+
+        /* Fields above regs are cleared together. */
+
+comment is not true anymore since
+
+    commit c44b4c6ab80eef3a9c52c7b3f0c632942e6489aa
+    Author: Bandan Das <bsd@redhat.com>
+    Date:   Wed Apr 16 12:46:12 2014 -0400
+
+    KVM: emulate: clean up initializations in init_decode_cache
+
+    A lot of initializations are unnecessary as they get set to
+    appropriate values before actually being used. Optimize
+    placement of fields in x86_emulate_ctxt
+
+    Signed-off-by: Bandan Das <bsd@redhat.com>
+    Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Paolo
+
