@@ -2,163 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51DEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09069C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE752073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583254876;
-	bh=M8qxYvgQXX14YLcGf+b9l7zWzEL047vLx9YwgV80qkY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aJr1JCNVO1D6ZyHSSJvuhpDgcaPdbXHol3dqyTjPB6j6pwRudRdJKFScqC6VY1UoP
-	 G/2xl3qh/8aY88N316Sxor8glsRAb8D6X4R4Mx7DZwP8haFXAlB0t6Zic35ke+Bpb0
-	 Pe6YLlSE55qfPTDbBtfwSYD/by9zZzTg1tBWW0nQ=
+	by mail.kernel.org (Postfix) with ESMTP id D55852073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jU4quvUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgCCRBP (ORCPT
+        id S1729726AbgCCRBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:01:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgCCRBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:01:15 -0500
-Received: from onda.lan (ip-109-40-2-133.web.vodafone.de [109.40.2.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D98C42073B;
-        Tue,  3 Mar 2020 17:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583254874;
-        bh=M8qxYvgQXX14YLcGf+b9l7zWzEL047vLx9YwgV80qkY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ij4l8jdmw3wvTqvzDeg4XCG0yQ/8CNU3l6XB0WknejV9BHw7CN7/PryP49fNkSByc
-         QJHqbfwsD+82fRjGFSui6SLFqGTUmMa9y3MSTYCX/5Xt+qEnNVOM9zpjk2JcERiD6d
-         7jJ8XMod4+mmrSYonMkS+j+q23vqR3BUsH1n+wEk=
-Date:   Tue, 3 Mar 2020 18:01:09 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
-Message-ID: <20200303180109.670ad7f8@onda.lan>
-In-Reply-To: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
-        <20200302123554.08ac0c34@lwn.net>
-        <20200303080947.5f381004@onda.lan>
-        <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 3 Mar 2020 12:01:17 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47486 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCCRBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:01:16 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023GsOhe127300;
+        Tue, 3 Mar 2020 17:00:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=YHBXFBSktgQjLaRBFzopaXSA2ylIlKhMSsg5ZAsockc=;
+ b=jU4quvUitJTwIwf5TegZ6FvIOBcS7nc9vzYDmvRycgAyYS2EIZXF4yJGEcLYrT3KdvuV
+ jhRwojj9cPlXqOkY6n5kvVVh5G0J0mOX6h2eaYotu+Vqjpw4ByxwHjDLm4fFJo61pLRo
+ H15BnFMK6Nmmx9uaHL2jKDU5x/l8JQAbgTk30omrZLmb+HN2S+d72h7gTcX1QAQI+pB+
+ taCAcpWazu99ZdDj9UPHFQGKFfTGOwvQsMb6orDhb+8sLl+XznEFUvdYGO1dnPpJfAxg
+ w/EOHLbWP8RmoSrRnwywhAKt7G3HJdQx4RcbxkUHJw8pUKTOr1XrBUdm//7T8wTxEqYK NQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwqrknh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 17:00:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023GmTDr053801;
+        Tue, 3 Mar 2020 17:00:16 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yg1p4vf44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 17:00:16 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023H0AJR001636;
+        Tue, 3 Mar 2020 17:00:11 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 09:00:10 -0800
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 7873A6A0129; Tue,  3 Mar 2020 12:03:53 -0500 (EST)
+Date:   Tue, 3 Mar 2020 12:03:53 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
+ guests.
+Message-ID: <20200303170353.GC31627@char.us.oracle.com>
+References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
+ <20191220015245.GA7010@localhost.localdomain>
+ <20200121200947.GA24884@ashkalra_ubuntu_server>
+ <20200121205403.GC75374@Konrads-MacBook-Pro.local>
+ <20200124230008.GA1565@ashkalra_ubuntu_server>
+ <20200204193500.GA15564@ashkalra_ubuntu_server>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204193500.GA15564@ashkalra_ubuntu_server>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 3 Mar 2020 10:20:25 -0600
-Rob Herring <robh@kernel.org> escreveu:
+On Tue, Feb 04, 2020 at 07:35:00PM +0000, Ashish Kalra wrote:
+> Hello Konrad,
+> 
+> Looking fwd. to your feedback regarding support of other memory
+> encryption architectures such as Power, S390, etc.
+> 
+> Thanks,
+> Ashish
+> 
+> On Fri, Jan 24, 2020 at 11:00:08PM +0000, Ashish Kalra wrote:
+> > On Tue, Jan 21, 2020 at 03:54:03PM -0500, Konrad Rzeszutek Wilk wrote:
+> > > > 
+> > > > Additional memory calculations based on # of PCI devices and
+> > > > their memory ranges will make it more complicated with so
+> > > > many other permutations and combinations to explore, it is
+> > > > essential to keep this patch as simple as possible by 
+> > > > adjusting the bounce buffer size simply by determining it
+> > > > from the amount of provisioned guest memory.
+> > >> 
+> > >> Please rework the patch to:
+> > >> 
+> > >>  - Use a log solution instead of the multiplication.
+> > >>    Feel free to cap it at a sensible value.
+> > 
+> > Ok.
+> > 
+> > >> 
+> > >>  - Also the code depends on SWIOTLB calling in to the
+> > >>    adjust_swiotlb_default_size which looks wrong.
+> > >> 
+> > >>    You should not adjust io_tlb_nslabs from swiotlb_size_or_default.
+> > 
+> > >>    That function's purpose is to report a value.
+> > >> 
+> > >>  - Make io_tlb_nslabs be visible outside of the SWIOTLB code.
+> > >> 
+> > >>  - Can you utilize the IOMMU_INIT APIs and have your own detect which would
+> > >>    modify the io_tlb_nslabs (and set swiotbl=1?).
+> > 
+> > This seems to be a nice option, but then IOMMU_INIT APIs are
+> > x86-specific and this swiotlb buffer size adjustment is also needed
+> > for other memory encryption architectures like Power, S390, etc.
 
-> On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > Em Mon, 2 Mar 2020 12:35:54 -0700
-> > Jonathan Corbet <corbet@lwn.net> escreveu:
-> >  
-> > > On Mon,  2 Mar 2020 08:59:25 +0100
-> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > >  
-> > > > While most of the devicetree stuff has its own format (with is now being
-> > > > converted to YAML format), some documents there are actually
-> > > > describing the DT concepts and how to contribute to it.
-> > > >
-> > > > IMHO, those documents would fit perfectly as part of the documentation
-> > > > body, as part of the firmare documents set.
-> > > >
-> > > > This patch series manually converts some DT documents that, on my
-> > > > opinion, would belong to it.  
-> > >
-> > > Did you consider putting this stuff into the firmware-guide while you were
-> > > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
-> > > either.  
-> >
-> > I placed it just below the firmware-guide at the main index file.
-> >
-> > I have split thoughts about moving the files to there, though. From
-> > one side, it may fit better from the PoV of organizing the documentation.
-> >
-> > From other side, newcomers working with DT may expect looking at the
-> > text files inside Documentation/devicetree/.
-> >
-> > Maybe I could add an extra patch at the end of this series with the
-> > move, adding a "RFC" on his title. This way, we can better discuss it,
-> > and either merge the last one or not depending on the comments.  
-> 
-> Keep in mind that we generate a standalone DT only tree[1] with the
-> documentation, dts files and headers. So things should be structured
-> such that all the DT documentation could be built by itself without
-> dependencies on the 'kernel documentation'. I'm not asking for that to
-> be done in this series, but just don't do anything to make that
-> harder. I don't *think* have, but just want to make sure that's clear.
+Oh dear. That I hadn't considered.
+> > 
+> > >> 
+> > >>    Actually you seem to be piggybacking on pci_swiotlb_detect_4gb - so
+> > >>    perhaps add in this code ? Albeit it really should be in it's own
+> > >>    file, not in arch/x86/kernel/pci-swiotlb.c
+> > 
+> > Actually, we piggyback on pci_swiotlb_detect_override which sets
+> > swiotlb=1 as x86_64_start_kernel() and invocation of sme_early_init()
+> > forces swiotlb on, but again this is all x86 architecture specific.
 
-So, I guess it is better to keep the .rst files under Documentation/devicetree,
-instead of moving them to Documentation/firmware-guide.
+Then it looks like the best bet is to do it from within swiotlb_init?
+We really can't do it from swiotlb_size_or_default - that function
+should just return a value and nothing else.
 
-Well, if moved, I guess it would be easy to modify the scripts that produce
-the documentation to also parse something a new directory inside
-Documentation/firmware-guide.
-
-> 
-> > > It also seems like it would be good to CC the devicetree folks, or at
-> > > least the devicetree mailing list?  
-> 
-> I was wondering what happened to the cover letter on v2...
-> 
-> > Yeah, that would make sense. I'm using get-maintainers script to
-> > prepare the c/c list, as it is simply too much work to find the
-> > right maintainers by hand, for every single patch.
-> >
-> > I just noticed today that there's just *one entry* at MAINTAINERS
-> > file for Documentation/devicetree, and that points to you:
-> >
-> >         DOCUMENTATION
-> >         M:      Jonathan Corbet <corbet@lwn.net>
-> >         L:      linux-doc@vger.kernel.org
-> >         S:      Maintained
-> >         F:      Documentation/
-> >         F:      scripts/documentation-file-ref-check
-> >         F:      scripts/kernel-doc
-> >         F:      scripts/sphinx-pre-install
-> >         X:      Documentation/ABI/
-> >         X:      Documentation/firmware-guide/acpi/
-> >         X:      Documentation/devicetree/  
-> 
-> You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
-> 
-> OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> M:      Rob Herring <robh+dt@kernel.org>
-> M:      Mark Rutland <mark.rutland@arm.com>
-> L:      devicetree@vger.kernel.org
-> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
-> S:      Maintained
-> F:      Documentation/devicetree/
-> F:      arch/*/boot/dts/
-> F:      include/dt-bindings/
-
-Yeah, I remember I saw something like the above in the past. However,
-I'm not seeing this entry at the MAINTAINERS file at next-20200303 anymore.
-
-Did someone removed such entry?
-
-> 
-> 
-> Rob
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> > 
+> > Thanks,
+> > Ashish
