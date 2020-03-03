@@ -2,130 +2,256 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B13FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F73C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CAD20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D82B20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HvFSulAc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhVxK+/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCCV7K (ORCPT
+        id S1727365AbgCCWBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:59:10 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37069 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgCCV7K (ORCPT
+        Tue, 3 Mar 2020 17:01:49 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46754 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgCCWBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:59:10 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so2187900pfn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:59:08 -0800 (PST)
+        Tue, 3 Mar 2020 17:01:48 -0500
+Received: by mail-pf1-f195.google.com with SMTP id o24so2166110pfp.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:01:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ddapSUJt6ntLiYzzjDAEz3gG4fW9QkFbYIQvX7Nl4Wc=;
-        b=HvFSulAcRQ9FH1nMyqzV2UlBduKJxbKupcWDMN6FDg342qavq7XRv4+kauubRe7OTf
-         tpJHVbvlzT18i/r27rTEYINBnzpXMkhr1uHas5plyxkywdThRYkPbDsuMUaWbmR822aY
-         hSNDw3l5DDYqBaG51Km/QULhrlNGyRDPM/LKMOs1/mNfuTyNM66y+opv9NXbB62zcmAF
-         Ihu7ymArZ2+Jf1c9TA6FaFHstjgRfeCjxNdCKF5DN0IJS0o0Fm/85jn6TmD7BquCdDdk
-         MWPtVQnns4SH1MqLxMGFcngWwdrSDQkOUWeHmcBc2cnJd8Tpp/jqjsVIf6kwSBOUe4HR
-         ihZw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rWUW/hFw9l9361bhE4imeaEyL7jHn9L6GXzM5ESAseU=;
+        b=BhVxK+/LHYafxOQAfuMTX9d/TRms7HTjQhUgidQSpDOh3ucN0yhwgG0GsR08VaGqe0
+         p1rUfVpFAaPgmoZck/OAGk2CoNPI1Y3b+68nSVd5nPpHFc/O55nkwEB9c9/gEjh7S5qs
+         nBGJ/2dqPhhvdC3KJfeWbrkVaGXje+y9JxV/bVIoy6u9P88L181uPzNtb45O2Al29D/W
+         ukEjGV9OazJXP9shM9rlBFZZ7Hz8U7deISs7AzcO/Pp0mst4G0D88hbAuWUmSU94hP/t
+         puyyPjM6DLwJMJW9HG1C6KF5RditipoQDM1oz6sPzZKFzEo5w23TwVwIdGbecoujEfua
+         Y8DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ddapSUJt6ntLiYzzjDAEz3gG4fW9QkFbYIQvX7Nl4Wc=;
-        b=eGBq0K+aq2Z80goF6FRzuD2tdQrJ5n8Y8Uu8rJ3/ufX2rYmVhF//peonyQEr4D7voS
-         acIvP5F0RtGRnYM9UVWAaL/gBTL3QtlnZ/GAoUmzMsVeX/EpdBUruBYMhcaGNK8qXbUA
-         tQ/5dvfU+yk4gW2akjhLwiKIJe1qml3OIyqfDsIMcpXC7+RcvFPuLr31U3kkBQyUQCX3
-         QalYoIW/UIQXx0mRHhGr0u+0fVd4sH3HyWnv/ficRTY9HqzxYM2syM3rz9hQ/ThPMhVY
-         sJKysV4E1cQ1ZnpjbmZBBhOTHFTBL9wjv98sOyS55eSkTq/pbPigYKHyZLNLJL0pnreH
-         rnXA==
-X-Gm-Message-State: ANhLgQ3n921Ux6pS2rNQO811avtv9Nv+EY8+fO4YSoR11LWBDQ2Aa7EY
-        1YWC8K2Z44NXmuywURn+bA1zGIue+Bcga/pFfAq5pQ==
-X-Google-Smtp-Source: ADFU+vuSSO5ovOYN0PsHWrzzb/fJClDu5pNQ9UPGolmosCGXWuIMIFmAgxO6x7bG2Tpjw+xFGeX17CX9X2YpTRcLBuc=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr6056814pgb.263.1583272747246;
- Tue, 03 Mar 2020 13:59:07 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rWUW/hFw9l9361bhE4imeaEyL7jHn9L6GXzM5ESAseU=;
+        b=XNyzTXDS2jAOVPDub0p8uZcVhg/EeMlHxJ9JhbIsHo+4fNJYbQW1BISDlO/7ER6djI
+         GB3VKZBhXD4Zyop1BN52/99QY+SfhV3bcSP0cgCXsEOKD4sqt5aN9mNr12DNXECO4IA+
+         xzry3kx4eJ0Q+xCOqYKMdMgRPJR27eYHfB+qk6U75F6fXkvQ36+bmuh0Q4zc+LvT1/En
+         38OcTHbYyTfhbutx3rkVp4zVWgXkaeVEzB6gNLWLgRzpAyxd2K7IquKhAoTbk84BOaaF
+         4lP04J+WpmBf6rkwIyd3Alc++Zox24k6GICaH/Q5wWcW7IpOrNPloaC8B+KEcq00QfJ9
+         ODiA==
+X-Gm-Message-State: ANhLgQ3C9wtBn21x1jav9/KTomhVWJsi9j7IUCnf5pMEhx2sRclPYUam
+        2+ttiieOdBxrN63V0oTYoqQEbg==
+X-Google-Smtp-Source: ADFU+vtbmNdboXaJVKJCCWsPJHhUQwS37qhm8rMETgAhfI6yoRx8bCGHJ6YZpsQW8cVKZNiK3wY79Q==
+X-Received: by 2002:a63:e803:: with SMTP id s3mr5803839pgh.237.1583272906003;
+        Tue, 03 Mar 2020 14:01:46 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x12sm16305062pfi.122.2020.03.03.14.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:01:45 -0800 (PST)
+Date:   Tue, 3 Mar 2020 14:01:42 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v5 8/8] remoteproc: Adapt coredump to generate correct
+ elf type
+Message-ID: <20200303220142.GU1214176@minitux>
+References: <20200210162209.23149-1-cleger@kalray.eu>
+ <20200302093902.27849-1-cleger@kalray.eu>
+ <20200302093902.27849-9-cleger@kalray.eu>
 MIME-Version: 1.0
-References: <20200302224217.22590-1-natechancellor@gmail.com>
-In-Reply-To: <20200302224217.22590-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 3 Mar 2020 13:58:56 -0800
-Message-ID: <CAKwvOdkaiU39xmtEheM=754sdGMTB-sP1GRGacpW4DGkdjugfw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Remove pointless NULL checks in dmub_psr_copy_settings
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302093902.27849-9-cleger@kalray.eu>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 2:43 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:31: warning:
-> address of 'pipe_ctx->plane_res' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
->                          ~ ~~~~~~~~~~^~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:56: warning:
-> address of 'pipe_ctx->stream_res' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
->                                                   ~ ~~~~~~~~~~^~~~~~~~~~
-> 2 warnings generated.
->
-> As long as pipe_ctx is not NULL, the address of members in this struct
-> cannot be NULL, which means these checks will always evaluate to false.
->
-> Fixes: 4c1a1335dfe0 ("drm/amd/display: Driverside changes to support PSR in DMCUB")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/915
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Mon 02 Mar 01:39 PST 2020, Clement Leger wrote:
 
-Indeed, they are not pointers, and no members within `struct
-plane_resource` or `struct stream_resource` seem to indicate that they
-are somehow invalid.  Good job sleuthing out the correct fixes by tag.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Now that remoteproc can load an elf64, coredump elf class should be
+> the same as the loaded elf class. In order to do that, add a
+> elf_class field to rproc with default values. If an elf is loaded
+> successfully, this field will be updated with the loaded elf class.
+> Then, the coredump core code has been modified to use the generic elf
+> macro in order to create an elf file with correct class.
+> 
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 > ---
->  drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> index 2c932c29f1f9..a9e1c01e9d9b 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> @@ -144,7 +144,7 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
->                 }
->         }
->
-> -       if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
-> +       if (!pipe_ctx)
->                 return false;
->
->         // First, set the psr version
-> --
-> 2.25.1
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+>  drivers/remoteproc/remoteproc_core.c       | 67 ++++++++++++++++--------------
+>  drivers/remoteproc/remoteproc_elf_loader.c |  3 ++
+>  include/linux/remoteproc.h                 |  1 +
+>  3 files changed, 39 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index b932a64a2be2..f923355aa3f9 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/platform_device.h>
+>  
+>  #include "remoteproc_internal.h"
+> +#include "remoteproc_elf_helpers.h"
+>  
+>  #define HIGH_BITS_MASK 0xFFFFFFFF00000000ULL
+>  
+> @@ -1566,20 +1567,21 @@ EXPORT_SYMBOL(rproc_coredump_add_custom_segment);
+>  static void rproc_coredump(struct rproc *rproc)
+>  {
+>  	struct rproc_dump_segment *segment;
+> -	struct elf32_phdr *phdr;
+> -	struct elf32_hdr *ehdr;
+> +	void *phdr;
+> +	void *ehdr;
+>  	size_t data_size;
+>  	size_t offset;
+>  	void *data;
+>  	void *ptr;
+> +	u8 class = rproc->elf_class;
+>  	int phnum = 0;
+>  
+>  	if (list_empty(&rproc->dump_segments))
+>  		return;
+>  
+> -	data_size = sizeof(*ehdr);
+> +	data_size = elf_size_of_hdr(class);
+>  	list_for_each_entry(segment, &rproc->dump_segments, node) {
+> -		data_size += sizeof(*phdr) + segment->size;
+> +		data_size += elf_size_of_phdr(class) + segment->size;
+>  
+>  		phnum++;
+>  	}
+> @@ -1590,33 +1592,33 @@ static void rproc_coredump(struct rproc *rproc)
+>  
+>  	ehdr = data;
+>  
+> -	memset(ehdr, 0, sizeof(*ehdr));
+> -	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
+> -	ehdr->e_ident[EI_CLASS] = ELFCLASS32;
+> -	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
+> -	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
+> -	ehdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
+> -	ehdr->e_type = ET_CORE;
+> -	ehdr->e_machine = EM_NONE;
+> -	ehdr->e_version = EV_CURRENT;
+> -	ehdr->e_entry = rproc->bootaddr;
+> -	ehdr->e_phoff = sizeof(*ehdr);
+> -	ehdr->e_ehsize = sizeof(*ehdr);
+> -	ehdr->e_phentsize = sizeof(*phdr);
+> -	ehdr->e_phnum = phnum;
+> -
+> -	phdr = data + ehdr->e_phoff;
+> -	offset = ehdr->e_phoff + sizeof(*phdr) * ehdr->e_phnum;
+> +	memset(ehdr, 0, elf_size_of_hdr(class));
+> +	/* e_ident field is common for both elf32 and elf64 */
+> +	elf_hdr_init_ident(ehdr, class);
+> +
+> +	elf_hdr_set_e_type(class, ehdr, ET_CORE);
+> +	elf_hdr_set_e_machine(class, ehdr, EM_NONE);
+> +	elf_hdr_set_e_version(class, ehdr, EV_CURRENT);
+> +	elf_hdr_set_e_entry(class, ehdr, rproc->bootaddr);
+> +	elf_hdr_set_e_phoff(class, ehdr, elf_size_of_hdr(class));
+> +	elf_hdr_set_e_ehsize(class, ehdr, elf_size_of_hdr(class));
+> +	elf_hdr_set_e_phentsize(class, ehdr, elf_size_of_phdr(class));
+> +	elf_hdr_set_e_phnum(class, ehdr, phnum);
+> +
+> +	phdr = data + elf_hdr_get_e_phoff(class, ehdr);
+> +	offset = elf_hdr_get_e_phoff(class, ehdr);
+> +	offset += elf_size_of_phdr(class) * elf_hdr_get_e_phnum(class, ehdr);
+> +
+>  	list_for_each_entry(segment, &rproc->dump_segments, node) {
+> -		memset(phdr, 0, sizeof(*phdr));
+> -		phdr->p_type = PT_LOAD;
+> -		phdr->p_offset = offset;
+> -		phdr->p_vaddr = segment->da;
+> -		phdr->p_paddr = segment->da;
+> -		phdr->p_filesz = segment->size;
+> -		phdr->p_memsz = segment->size;
+> -		phdr->p_flags = PF_R | PF_W | PF_X;
+> -		phdr->p_align = 0;
+> +		memset(phdr, 0, elf_size_of_phdr(class));
+> +		elf_phdr_set_p_type(class, phdr, PT_LOAD);
+> +		elf_phdr_set_p_offset(class, phdr, offset);
+> +		elf_phdr_set_p_vaddr(class, phdr, segment->da);
+> +		elf_phdr_set_p_paddr(class, phdr, segment->da);
+> +		elf_phdr_set_p_filesz(class, phdr, segment->size);
+> +		elf_phdr_set_p_memsz(class, phdr, segment->size);
+> +		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
+> +		elf_phdr_set_p_align(class, phdr, 0);
+>  
+>  		if (segment->dump) {
+>  			segment->dump(rproc, segment, data + offset);
+> @@ -1632,8 +1634,8 @@ static void rproc_coredump(struct rproc *rproc)
+>  			}
+>  		}
+>  
+> -		offset += phdr->p_filesz;
+> -		phdr++;
+> +		offset += elf_phdr_get_p_filesz(class, phdr);
+> +		phdr += elf_size_of_phdr(class);
+>  	}
+>  
+>  	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
+> @@ -2031,6 +2033,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	rproc->name = name;
+>  	rproc->priv = &rproc[1];
+>  	rproc->auto_boot = true;
+> +	rproc->elf_class = ELFCLASS32;
+>  
+>  	device_initialize(&rproc->dev);
+>  	rproc->dev.parent = dev;
+> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+> index 4869fb7d8fe4..16e2c496fd45 100644
+> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> @@ -248,6 +248,9 @@ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
+>  			memset(ptr + filesz, 0, memsz - filesz);
+>  	}
+>  
+> +	if (ret == 0)
+> +		rproc->elf_class = class;
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(rproc_elf_load_segments);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 1683d6c386a6..ed127b2d35ca 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -514,6 +514,7 @@ struct rproc {
+>  	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	u8 elf_class;
+>  };
+>  
+>  /**
+> -- 
+> 2.15.0.276.g89ea799
+> 
