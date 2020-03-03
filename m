@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C441C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BC5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6999720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93F72166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257662;
-	bh=wW3mnCktbCYmM3gZdL9hrOX6Kz4wm/IgY/aenYoR6z4=;
+	s=default; t=1583257667;
+	bh=P0RKFrgjP6JKGRMGk8GnsyzqGRfwiWUCR3jPyp8NyeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RoWBcoP8MN0xC1kUx11hzjXiehdtP97XA3LtD19BUnHIc0s3edbgvXmPqbFVEvTRE
-	 1tLq5+1owDFef+Q9ZQapR/WlVuN5vu76l5kmtlRia5OflNBcWiIgzxYZ0xKaoPO1sD
-	 op9WS7P5U3/qoTp2ENJwQVN4CrM5HmVpLcRwPFGM=
+	b=HO2N7ojR8xqU0yfFLzJwC1xM6jfvY4JkQCxMjQ5dWEF9Y6zrhUze5bXhc1X1rt/Ky
+	 H1e/AFU1uqGnTwKYoacpdmzTFFA2nZLIswcW9gssQP9gRATUUZ+ERwA08XExCCTfFF
+	 Cser2dOUlGt1R3yNrTOwQOjESqMNHysqgExH+894=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbgCCRrl (ORCPT
+        id S1731423AbgCCRrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731402AbgCCRrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:40 -0500
+        id S1731402AbgCCRrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F32CD20CC7;
-        Tue,  3 Mar 2020 17:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70654208C3;
+        Tue,  3 Mar 2020 17:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257659;
-        bh=wW3mnCktbCYmM3gZdL9hrOX6Kz4wm/IgY/aenYoR6z4=;
+        s=default; t=1583257661;
+        bh=P0RKFrgjP6JKGRMGk8GnsyzqGRfwiWUCR3jPyp8NyeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5M8iExaBgHYAqvgfCsTyVW+6dbWDcq5AUSa5w4n0oLLiq4Sk/H40tq01FjRVu2H0
-         MhKXraxYNt+3NT0a1v1zA6hCW/lyHEH8ow/853s5JKy/gRB4sENzs4wca+4oarolf/
-         Ucm21g52r8+yYILO4aqDsq5z2R5XgRfT2sU1crZM=
+        b=GNTGKVh9CVKFNB+G8DDKthPBO1pxB19Udn6yPcu3o0L7cuAVx5XYcIvKzOo7Xk6bd
+         T7cVCECOr8ntr0vvYGq4j+45KTTZoD7TwKodkVHBZ1FEj7Kh0lUnQacUdF6F0+b3Mh
+         8OujT5J80/EWQdGlwt4XJwq61mVkxODYRnM0nc2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 037/176] NFSv4: Fix races between open and dentry revalidation
-Date:   Tue,  3 Mar 2020 18:41:41 +0100
-Message-Id: <20200303174308.801200679@linuxfoundation.org>
+Subject: [PATCH 5.5 073/176] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
+Date:   Tue,  3 Mar 2020 18:42:17 +0100
+Message-Id: <20200303174313.099634652@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,79 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit cf5b4059ba7197d6cef9c0e024979d178ed8c8ec ]
+[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
 
-We want to make sure that we revalidate the dentry if and only if
-we've done an OPEN by filename.
-In order to avoid races with remote changes to the directory on the
-server, we want to save the verifier before calling OPEN. The exception
-is if the server returned a delegation with our OPEN, as we then
-know that the filename can't have changed on the server.
+The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
+As a result, for strictly validated commands, it's assumed to not be
+supported.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@gmail.com>
-Tested-by: Benjamin Coddington <bcodding@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c |  1 -
- fs/nfs/nfs4proc.c | 18 ++++++++++++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 620de905cba97..3f892035c1413 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -86,7 +86,6 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (inode != d_inode(dentry))
- 		goto out_drop;
- 
--	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
- 	nfs_file_set_open_context(filp, ctx);
- 	nfs_fscache_open_file(inode, filp);
- 	err = 0;
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 6ddb4f517d373..13c2de527718a 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2962,10 +2962,13 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 	struct dentry *dentry;
- 	struct nfs4_state *state;
- 	fmode_t acc_mode = _nfs4_ctx_to_accessmode(ctx);
-+	struct inode *dir = d_inode(opendata->dir);
-+	unsigned long dir_verifier;
- 	unsigned int seq;
- 	int ret;
- 
- 	seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
-+	dir_verifier = nfs_save_change_attribute(dir);
- 
- 	ret = _nfs4_proc_open(opendata, ctx);
- 	if (ret != 0)
-@@ -2993,8 +2996,19 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 			dput(ctx->dentry);
- 			ctx->dentry = dentry = alias;
- 		}
--		nfs_set_verifier(dentry,
--				nfs_save_change_attribute(d_inode(opendata->dir)));
-+	}
-+
-+	switch(opendata->o_arg.claim) {
-+	default:
-+		break;
-+	case NFS4_OPEN_CLAIM_NULL:
-+	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
-+	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
-+		if (!opendata->rpc_done)
-+			break;
-+		if (opendata->o_res.delegation_type != 0)
-+			dir_verifier = nfs_save_change_attribute(dir);
-+		nfs_set_verifier(dentry, dir_verifier);
- 	}
- 
- 	/* Parse layoutget results before we check for access */
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 1e97ac5435b23..118a98de516cd 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -437,6 +437,7 @@ const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_CONTROL_PORT_OVER_NL80211] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
++	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 -- 
 2.20.1
 
