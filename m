@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF008C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34017C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1148C20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259119;
-	bh=hi2YvfoQlcBQq7bi3vtsjrIKcqdT+5CigMVX5uC+INs=;
+	s=default; t=1583259121;
+	bh=2iJwWasVf+CDL+1GCCg+dC8safmJqLUpKJYeW7tEWz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XG0EFGgKA/pk4YKbIPPOTHiHqJXQeiiW0S34dqM+qmsCVGW2SstyQmkiaFHTZIq+R
-	 Lo9y1CcmVJdA+DwBiHNGKpbl0d0GYqbsNkZCaFpsnzFjT6m/HiOJRg5Z5G8z++smnA
-	 w6dpt4TZTchzu2Uad8m4g2t+Ag/SWo0C3nkG+9VM=
+	b=v+gw7wa+3Z97tvyr5bPtJ6ZujsKn0N03zVhB+D42sw9HXl7szByurAo0zJikfrs0+
+	 KCcqpcOXWwF1PUBtez0RAjIv3lsSsEgG7miKfoRjr+7nip5VLc31E/V2sSiOVwxZl5
+	 9TJM8cSmwztoab62c5OHZtqta6y6iXtCmfkCncvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbgCCSL5 (ORCPT
+        id S1730836AbgCCRtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731743AbgCCRtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:13 -0500
+        id S1730830AbgCCRtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E339F214D8;
-        Tue,  3 Mar 2020 17:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 138E1208C3;
+        Tue,  3 Mar 2020 17:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257752;
-        bh=hi2YvfoQlcBQq7bi3vtsjrIKcqdT+5CigMVX5uC+INs=;
+        s=default; t=1583257747;
+        bh=2iJwWasVf+CDL+1GCCg+dC8safmJqLUpKJYeW7tEWz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOcCkMrwjIbtVI1Nao8NzIE5pSensCeBqo9AYZqwm+Xts+OQ/i7o95J8jq0BLhY3l
-         Zz0gCVw5NpOPSPZuwAi3UC8mloL+uR/InO5Z2JAuI/vZlSQyu5+mt2jDtZZTBn45f4
-         ur/N1X0jz/f0k9iw+v+6u3lIFPtoz4rdUDHHlvm4=
+        b=eZslrvy0Ba4gQV2SbhU4DRKilc+eQqDArk8aqPVs5+6wI4UFKWsfcmpoBjbO7kknX
+         flXF+RX4z6qiYsa3oA4JoR4PPaRFHwhNxP77VQhHOR+6VNtB+n2uiFWejSsg70lXRD
+         XhthIfxzzuiOPUmsKWhYx2VumXf3WQJ1YilkmOjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 116/176] drm/i915: Avoid recursing onto active vma from the shrinker
-Date:   Tue,  3 Mar 2020 18:43:00 +0100
-Message-Id: <20200303174318.245919059@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.5 114/176] MIPS: cavium_octeon: Fix syncw generation.
+Date:   Tue,  3 Mar 2020 18:42:58 +0100
+Message-Id: <20200303174318.020233777@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,78 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-commit 238734262142075056653b4de091458e0ca858f2 upstream.
+commit 97e914b7de3c943011779b979b8093fdc0d85722 upstream.
 
-We mark the vma as active while binding it in order to protect outselves
-from being shrunk under mempressure. This only works if we are strict in
-not attempting to shrink active objects.
+The Cavium Octeon CPU uses a special sync instruction for implementing
+wmb, and due to a CPU bug, the instruction must appear twice. A macro
+had been defined to hide this:
 
-<6> [472.618968] Workqueue: events_unbound fence_work [i915]
-<4> [472.618970] Call Trace:
-<4> [472.618974]  ? __schedule+0x2e5/0x810
-<4> [472.618978]  schedule+0x37/0xe0
-<4> [472.618982]  schedule_preempt_disabled+0xf/0x20
-<4> [472.618984]  __mutex_lock+0x281/0x9c0
-<4> [472.618987]  ? mark_held_locks+0x49/0x70
-<4> [472.618989]  ? _raw_spin_unlock_irqrestore+0x47/0x60
-<4> [472.619038]  ? i915_vma_unbind+0xae/0x110 [i915]
-<4> [472.619084]  ? i915_vma_unbind+0xae/0x110 [i915]
-<4> [472.619122]  i915_vma_unbind+0xae/0x110 [i915]
-<4> [472.619165]  i915_gem_object_unbind+0x1dc/0x400 [i915]
-<4> [472.619208]  i915_gem_shrink+0x328/0x660 [i915]
-<4> [472.619250]  ? i915_gem_shrink_all+0x38/0x60 [i915]
-<4> [472.619282]  i915_gem_shrink_all+0x38/0x60 [i915]
-<4> [472.619325]  vm_alloc_page.constprop.25+0x1aa/0x240 [i915]
-<4> [472.619330]  ? rcu_read_lock_sched_held+0x4d/0x80
-<4> [472.619363]  ? __alloc_pd+0xb/0x30 [i915]
-<4> [472.619366]  ? module_assert_mutex_or_preempt+0xf/0x30
-<4> [472.619368]  ? __module_address+0x23/0xe0
-<4> [472.619371]  ? is_module_address+0x26/0x40
-<4> [472.619374]  ? static_obj+0x34/0x50
-<4> [472.619376]  ? lockdep_init_map+0x4d/0x1e0
-<4> [472.619407]  setup_page_dma+0xd/0x90 [i915]
-<4> [472.619437]  alloc_pd+0x29/0x50 [i915]
-<4> [472.619470]  __gen8_ppgtt_alloc+0x443/0x6b0 [i915]
-<4> [472.619503]  gen8_ppgtt_alloc+0xd7/0x300 [i915]
-<4> [472.619535]  ppgtt_bind_vma+0x2a/0xe0 [i915]
-<4> [472.619577]  __vma_bind+0x26/0x40 [i915]
-<4> [472.619611]  fence_work+0x1c/0x90 [i915]
-<4> [472.619617]  process_one_work+0x26a/0x620
+ #define __SYNC_rpt(type)     (1 + (type == __SYNC_wmb))
 
-Fixes: 2850748ef876 ("drm/i915: Pull i915_vma_pin under the vm->mutex")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200221221818.2861432-1-chris@chris-wilson.co.uk
-(cherry picked from commit 6f24e41022f28061368776ea1514db0a6e67a9b1)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any other
+type of sync. However, this expression is evaluated by the assembler,
+and not the compiler, and the result of '==' in the assembler is 0 or
+-1, not 0 or 1 as it is in C. The net result was wmb() producing no code
+at all. The simple fix in this patch is to change the '+' to '-'.
+
+Fixes: bf92927251b3 ("MIPS: barrier: Add __SYNC() infrastructure")
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_shrinker.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/include/asm/sync.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shrinker.c
-@@ -257,8 +257,7 @@ unsigned long i915_gem_shrink_all(struct
- 	with_intel_runtime_pm(&i915->runtime_pm, wakeref) {
- 		freed = i915_gem_shrink(i915, -1UL, NULL,
- 					I915_SHRINK_BOUND |
--					I915_SHRINK_UNBOUND |
--					I915_SHRINK_ACTIVE);
-+					I915_SHRINK_UNBOUND);
- 	}
- 
- 	return freed;
-@@ -337,7 +336,6 @@ i915_gem_shrinker_oom(struct notifier_bl
- 	freed_pages = 0;
- 	with_intel_runtime_pm(&i915->runtime_pm, wakeref)
- 		freed_pages += i915_gem_shrink(i915, -1UL, NULL,
--					       I915_SHRINK_ACTIVE |
- 					       I915_SHRINK_BOUND |
- 					       I915_SHRINK_UNBOUND |
- 					       I915_SHRINK_WRITEBACK);
+--- a/arch/mips/include/asm/sync.h
++++ b/arch/mips/include/asm/sync.h
+@@ -155,9 +155,11 @@
+  * effective barrier as noted by commit 6b07d38aaa52 ("MIPS: Octeon: Use
+  * optimized memory barrier primitives."). Here we specify that the affected
+  * sync instructions should be emitted twice.
++ * Note that this expression is evaluated by the assembler (not the compiler),
++ * and that the assembler evaluates '==' as 0 or -1, not 0 or 1.
+  */
+ #ifdef CONFIG_CPU_CAVIUM_OCTEON
+-# define __SYNC_rpt(type)	(1 + (type == __SYNC_wmb))
++# define __SYNC_rpt(type)	(1 - (type == __SYNC_wmb))
+ #else
+ # define __SYNC_rpt(type)	1
+ #endif
 
 
