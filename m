@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB7AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF86DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8FE20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5C020728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258325;
-	bh=4fsMTC2zoau3tmshDp1FeSKoSeLg8PUslqdTX2Jfq60=;
+	s=default; t=1583258328;
+	bh=q9ncxq94EGXOCTEZx6k1DLyeoq/IGMKBwAr6s2YL1N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTMmZoQlLEIaTdIVi/f5g6cjICXl4nIG8fUejkMWFYB+BczzH2aXvdiSl3Fa3+x1Z
-	 7rSs4hTny3yl1+kMa0yhEfz7hCA0NGKZFoOpUEZED+Z0+GiwLiR5wdPavTS16KUR1q
-	 VKxID2lkqxO4aSD7a5TPN1l+V1lr3McF+K7f1sGk=
+	b=Pvz+4Sjf82GA+7HqI9vaxvo7kDU/SBOoqu1Cxjlm3YXOI+4/rwUUu2WlwHMvIlN8j
+	 qnvrRzfqJsnd5QVfXEi4MFkXtrfnvVVmmxCeEA2WzPAtc821A5uMhPpiFDmGD5Up9U
+	 zdqEbj79158LSnKKSjQpFAd2WZQBSkeORgktLits=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgCCR6o (ORCPT
+        id S2387465AbgCCR6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbgCCR6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:41 -0500
+        id S1732914AbgCCR6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC75E20870;
-        Tue,  3 Mar 2020 17:58:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06860206D5;
+        Tue,  3 Mar 2020 17:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258321;
-        bh=4fsMTC2zoau3tmshDp1FeSKoSeLg8PUslqdTX2Jfq60=;
+        s=default; t=1583258324;
+        bh=q9ncxq94EGXOCTEZx6k1DLyeoq/IGMKBwAr6s2YL1N4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vko2aedjErbloNX1dZA4zc3gs2oZ26+uGcW1wJqF0fI48lrzF+72YzQR347kSCCOx
-         DfAAvUnITZqyzu8lMwNIa9r+OK3yHJO35+vDbrphiNSMr6b2Qdfbj/G1p26yhAU3BY
-         hKA613N1unEu4WeXGnST9Qq5ftX454kpa+JEQKZs=
+        b=XVz+K3OGeVXijX7TebxEVpmtMy6iNBkAzjTSYljPKQWJWvpyadj6RE+EcrNKXUJa3
+         fCKn5VHkWA1IBu8LgzfGQsLmX3Oz+OiMVqnDm0q35VbiMdJu7yhns2jqRTDGyw98+D
+         Qc+unNRVCWkwnKLANLjaJ+2NnOqAAjhb/gsS/+DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 136/152] KVM: x86: Remove spurious clearing of async #PF MSR
-Date:   Tue,  3 Mar 2020 18:43:54 +0100
-Message-Id: <20200303174318.268582741@linuxfoundation.org>
+        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH 5.4 137/152] rcu: Allow only one expedited GP to run concurrently with wakeups
+Date:   Tue,  3 Mar 2020 18:43:55 +0100
+Message-Id: <20200303174318.383328773@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,41 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-commit 208050dac5ef4de5cb83ffcafa78499c94d0b5ad upstream.
+commit 4bc6b745e5cbefed92c48071e28a5f41246d0470 upstream.
 
-Remove a bogus clearing of apf.msr_val from kvm_arch_vcpu_destroy().
+The current expedited RCU grace-period code expects that a task
+requesting an expedited grace period cannot awaken until that grace
+period has reached the wakeup phase.  However, it is possible for a long
+preemption to result in the waiting task never sleeping.  For example,
+consider the following sequence of events:
 
-apf.msr_val is only set to a non-zero value by kvm_pv_enable_async_pf(),
-which is only reachable by kvm_set_msr_common(), i.e. by writing
-MSR_KVM_ASYNC_PF_EN.  KVM does not autonomously write said MSR, i.e.
-can only be written via KVM_SET_MSRS or KVM_RUN.  Since KVM_SET_MSRS and
-KVM_RUN are vcpu ioctls, they require a valid vcpu file descriptor.
-kvm_arch_vcpu_destroy() is only called if KVM_CREATE_VCPU fails, and KVM
-declares KVM_CREATE_VCPU successful once the vcpu fd is installed and
-thus visible to userspace.  Ergo, apf.msr_val cannot be non-zero when
-kvm_arch_vcpu_destroy() is called.
+1.	Task A starts an expedited grace period by invoking
+	synchronize_rcu_expedited().  It proceeds normally up to the
+	wait_event() near the end of that function, and is then preempted
+	(or interrupted or whatever).
 
-Fixes: 344d9588a9df0 ("KVM: Add PV MSR to enable asynchronous page faults delivery.")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+2.	The expedited grace period completes, and a kworker task starts
+	the awaken phase, having incremented the counter and acquired
+	the rcu_state structure's .exp_wake_mutex.  This kworker task
+	is then preempted or interrupted or whatever.
+
+3.	Task A resumes and enters wait_event(), which notes that the
+	expedited grace period has completed, and thus doesn't sleep.
+
+4.	Task B starts an expedited grace period exactly as did Task A,
+	complete with the preemption (or whatever delay) just before
+	the call to wait_event().
+
+5.	The expedited grace period completes, and another kworker
+	task starts the awaken phase, having incremented the counter.
+	However, it blocks when attempting to acquire the rcu_state
+	structure's .exp_wake_mutex because step 2's kworker task has
+	not yet released it.
+
+6.	Steps 4 and 5 repeat, resulting in overflow of the rcu_node
+	structure's ->exp_wq[] array.
+
+In theory, this is harmless.  Tasks waiting on the various ->exp_wq[]
+array will just be spuriously awakened, but they will just sleep again
+on noting that the rcu_state structure's ->expedited_sequence value has
+not advanced far enough.
+
+In practice, this wastes CPU time and is an accident waiting to happen.
+This commit therefore moves the rcu_exp_gp_seq_end() call that officially
+ends the expedited grace period (along with associate tracing) until
+after the ->exp_wake_mutex has been acquired.  This prevents Task A from
+awakening prematurely, thus preventing more than one expedited grace
+period from being in flight during a previous expedited grace period's
+wakeup phase.
+
+Fixes: 3b5f668e715b ("rcu: Overlap wakeups with next expedited grace period")
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+[ paulmck: Added updated comment. ]
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 --
- 1 file changed, 2 deletions(-)
+ kernel/rcu/tree_exp.h |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9192,8 +9192,6 @@ void kvm_arch_vcpu_postcreate(struct kvm
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -540,14 +540,13 @@ static void rcu_exp_wait_wake(unsigned l
+ 	struct rcu_node *rnp;
  
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
--	vcpu->arch.apf.msr_val = 0;
--
- 	kvm_arch_vcpu_free(vcpu);
- }
+ 	synchronize_sched_expedited_wait();
+-	rcu_exp_gp_seq_end();
+-	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
  
+-	/*
+-	 * Switch over to wakeup mode, allowing the next GP, but -only- the
+-	 * next GP, to proceed.
+-	 */
++	// Switch over to wakeup mode, allowing the next GP to proceed.
++	// End the previous grace period only after acquiring the mutex
++	// to ensure that only one GP runs concurrently with wakeups.
+ 	mutex_lock(&rcu_state.exp_wake_mutex);
++	rcu_exp_gp_seq_end();
++	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
+ 
+ 	rcu_for_each_node_breadth_first(rnp) {
+ 		if (ULONG_CMP_LT(READ_ONCE(rnp->exp_seq_rq), s)) {
 
 
