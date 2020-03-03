@@ -2,217 +2,211 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABECBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDB9C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED3D20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gXQ7WZT5"
+	by mail.kernel.org (Postfix) with ESMTP id 154F120656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbgCCSRV (ORCPT
+        id S1731021AbgCCSRX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:17:21 -0500
-Received: from gateway20.websitewelcome.com ([192.185.63.14]:36631 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728955AbgCCSRV (ORCPT
+        Tue, 3 Mar 2020 13:17:23 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:41769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730530AbgCCSRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 13:17:21 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id A80FE4011EB8A
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 11:02:41 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9C6aj5LUuvBMd9C6aj00gj; Tue, 03 Mar 2020 12:17:20 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ey4WjzYgUg1JN9sD4FRXGAPjCfky/AZd9UOFQ0HJlG0=; b=gXQ7WZT5wyzzwtk51w//ezXOQ8
-        gC7Xv5gLPMT52rB6ZShyv2XBfyXvkKC22rA4sefKUXYJtEPtjQanAdIW5ApewUNP3CX/mhPBprm45
-        BeWO/ZHdHnorUuYp+eccBBbasG7pPPd/v1lwgL0MM2AXtR63jMYZGO1zMe+vpwbqejcYVgXE2yaMb
-        dxPdjy/x4fTSVDKTE5kYps/Sv76UiHOG7U+R4E4guIisKNXW5Jm9nqRepRbxb+xWxqzVKKePuThfq
-        p7h1t2bLdOIdMX1Kb0C/lTE+96qhgc8pKd6f6bPyE6qrtPIyEU1g+RUeuktwmT9FjFtdoa7BZujT6
-        ohN4jStg==;
-Received: from [201.162.240.41] (port=17449 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j9C6Y-003H1B-IC; Tue, 03 Mar 2020 12:17:19 -0600
-Subject: Re: [PATCH][next] drm: Replace zero-length array with flexible-array
- member
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Eric Anholt <eric@anholt.net>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org
-References: <20200225140347.GA22864@embeddedor> <87a756sqdc.fsf@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <138ff691-94b3-1ce5-e7fa-e6d7c436bf8e@embeddedor.com>
-Date:   Tue, 3 Mar 2020 12:20:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M3UdI-1j8ds32MFO-000b6V; Tue, 03 Mar 2020 19:17:05 +0100
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
+Date:   Tue, 3 Mar 2020 19:17:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <87a756sqdc.fsf@intel.com>
+In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.41
-X-Source-L: No
-X-Exim-ID: 1j9C6Y-003H1B-IC
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.240.41]:17449
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 23
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Provags-ID: V03:K1:tHaZlzBYnQQ7ozFJRk2l9T+p1xctV61HjSZXbmUpPOdeTgdbwPU
+ oYmgpY+86RmTHZc+lvzekJg+9yMur5QsDj/RW8jmOvZHuOWqejiikdi/Ike9t4cwk1HR77h
+ QT+GvVFjhJxuGgSYMtORM0vHP85L5CCEf6AGr0uAMGDA/nOtYPr2sOwD2jLGdLbgF8YzX/d
+ +Q6cWu1dRO9MmVSMepP1Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FfmjNUweXJs=:EnXoeKrN8xSla3uku/bqRV
+ zGN+QhzEV+QApHgH5A7fM2DfZWM2nA1bgU6vSW9OxPTaAAAwpkozeJWeAv0GjzLphLKsdDfJh
+ 31QUZrbAPn50tr8Nan5kZBBMCZR7v98oDJ65iUctLRUHJUhrcU3wLhCNFrhS7IBEhAMwPACGE
+ 4e8x72tT4a9Sh8HNIYnrnfeSC6wRZHNa3WgvUrRvS1pvXpLDeR5XjWJBR/R2kxTY/Q3oon/sK
+ e30qdeZo2qKL5YepXyYGnwOEHVER7obCDGSJT2lYLn2kEmiiNuATKEjNWPBb/SejOj+LAzE2I
+ IrOyY63QtPT/pvy5Ocibk0Mo1Z/CtFO0i+eBIC8u0mDtUHQj+gC/JcwwolF0GcTCkoT8E+wTR
+ ccLBPY1MbzKfpJ/WcA0cbCWLxHy4iTuLQtJ21To7chPMui1UDok54Jlf71BQcbURVBhIKmDFQ
+ 4x/wdblB+1wHPg9Y4ruJu4H/tmTa7icf6ogdLpk9Eub8TJaOJO4i9hLaRx+5guasqcGe9g968
+ 2jESNK2Xgmm0uQSz1uu3qb/YucZKJmad3RvAOBk/FxOSsfX5yy1VIraG7nyoKTfegAVnpOwGr
+ B/SRIpeEp+qKAA+RZA4QAXiASRdjzCU3YUiTS/XsaKNfouIwtElbi6BZ3HVqwY8xUAKOFgkKA
+ +QtZZW43poiGpPukBY47ZBWo55ws6iCb/GpbvU65XsyDe0mQWk57blaZJUrkKzv8p5U+seyjh
+ riRb4h7f75HESw7Y/dqbbAsEQySKP6D4DFlYXekTx1bHItQNnEAJ7CSoDw1AGplzfcDzLuhIa
+ GM+96oc7CggoJGOlykeldApqJ2U1PNtKy6I+U1+09KTegbvW3pLFCs6mHYuekewdK4LF04m
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nicolas,
 
+Am 03.03.20 um 18:32 schrieb Nicolas Saenz Julienne:
+> The register based driver turned out to be unstable, specially on RPi3a+
+> but not limited to it. While a fix is being worked on, we roll back to
+> using firmware based scheme.
+>
+> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>
+> See https://github.com/raspberrypi/linux/issues/3046 for more reference.
+> Note: I tested this on RPi3b, RPi3a+ and RPi2b.
 
-On 2/25/20 08:17, Jani Nikula wrote:
-> On Tue, 25 Feb 2020, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/gpu/drm/etnaviv/etnaviv_gem.h         | 2 +-
->>  drivers/gpu/drm/gma500/intel_bios.h           | 2 +-
->>  drivers/gpu/drm/i915/display/intel_vbt_defs.h | 4 ++--
->>  drivers/gpu/drm/i915/gt/intel_lrc.c           | 2 +-
->>  drivers/gpu/drm/i915/i915_gpu_error.h         | 2 +-
-> 
-> Please split out the i915 changes to a separate patch.
-> 
+as i already wrote this prevent X to start on current Raspbian on my
+Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be careful here.
 
-Sure thing. I can do that.
+I will take a look at the debug UART. Maybe there are more helpful
+information.
 
->>  drivers/gpu/drm/msm/msm_gem.h                 | 2 +-
->>  drivers/gpu/drm/qxl/qxl_cmd.c                 | 2 +-
->>  drivers/gpu/drm/vboxvideo/vboxvideo.h         | 2 +-
->>  drivers/gpu/drm/vc4/vc4_drv.h                 | 2 +-
->>  drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c    | 2 +-
->>  drivers/gpu/drm/vmwgfx/vmwgfx_surface.c       | 2 +-
->>  include/drm/bridge/mhl.h                      | 4 ++--
->>  include/drm/drm_displayid.h                   | 2 +-
->>  include/uapi/drm/i915_drm.h                   | 4 ++--
-> 
-> Not sure it's worth touching uapi headers. They're full of both [0] and
-> []. Again, please at least split it to a separate patch to be decided
-> separately.
-> 
+Regards
+Stefan
 
-Yeah, it's worth it; the purpose of these patches is to replace [0] with [] across
-the whole tree.
-
-Thanks
---
-Gustavo
+>
+>  arch/arm/boot/dts/bcm2835-common.dtsi     |  1 -
+>  arch/arm/boot/dts/bcm2835-rpi-common.dtsi | 12 ++++++++++++
+>  arch/arm/boot/dts/bcm2835.dtsi            |  1 +
+>  arch/arm/boot/dts/bcm2836.dtsi            |  1 +
+>  arch/arm/boot/dts/bcm2837.dtsi            |  1 +
+>  5 files changed, 15 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+>
+> diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+> index 2b1d9d4c0cde..4119271c979d 100644
+> --- a/arch/arm/boot/dts/bcm2835-common.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-common.dtsi
+> @@ -130,7 +130,6 @@ v3d: v3d@7ec00000 {
+>  			compatible = "brcm,bcm2835-v3d";
+>  			reg = <0x7ec00000 0x1000>;
+>  			interrupts = <1 10>;
+> -			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
+>  		};
+>  
+>  		vc4: gpu {
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-common.dtsi b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+> new file mode 100644
+> index 000000000000..b78a57534611
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * This include file covers the common peripherals and configuration between
+> + * bcm2835, bcm2836 and bcm2837 implementations that interact with RPi's
+> + * firmware interface.
+> + */
+> +
+> +#include <dt-bindings/power/raspberrypi-power.h>
+> +
+> +&v3d {
+> +	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
+> +};
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> index 53bf4579cc22..0549686134ea 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2835";
+> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+> index 82d6c4662ae4..b390006aef79 100644
+> --- a/arch/arm/boot/dts/bcm2836.dtsi
+> +++ b/arch/arm/boot/dts/bcm2836.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2836";
+> diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+> index 9e95fee78e19..0199ec98cd61 100644
+> --- a/arch/arm/boot/dts/bcm2837.dtsi
+> +++ b/arch/arm/boot/dts/bcm2837.dtsi
+> @@ -1,5 +1,6 @@
+>  #include "bcm283x.dtsi"
+>  #include "bcm2835-common.dtsi"
+> +#include "bcm2835-rpi-common.dtsi"
+>  
+>  / {
+>  	compatible = "brcm,bcm2837";
 
