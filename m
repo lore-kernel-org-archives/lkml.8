@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8305EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3396C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6F820CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8532C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257542;
-	bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+	s=default; t=1583257546;
+	bh=bwqt22GXErc9LKOF1ZlvL4ihh4c3qNfF8vE522rf70Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nM9i+px7gNO6JXYibo8Aj9J/rxOLJf2/ljFKo/gfKfqMqHJ2PyCGn5yFuDN623tlL
-	 /WwBhbks8krQjmi7Gpi/Rxss00MlsZ8c9U35HRjrjQrPB3Qxd+peCvcO8wq1EiWsO3
-	 +qYeiS/B6b5WGL4UzRA9BiTQorar5Yz3Wy0QnD4s=
+	b=veA7UP0lZKgrezN9oL/WmUov2qVNlVWFfIs+6w2a8o8ge5bZKiEMri8oQ1lHRxQxP
+	 lklqG71qARuK9TccQmcL7DWoYubN+/fwHrkwpTyzUTjrtPKjCli+jeceuzayCtRruT
+	 u3dDNwgtt4exLQe9I8NDNIi9C2O3CaL0gGqoVe9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbgCCRpl (ORCPT
+        id S1730990AbgCCRpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbgCCRpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:38 -0500
+        id S1730969AbgCCRpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962AC2146E;
-        Tue,  3 Mar 2020 17:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2915221741;
+        Tue,  3 Mar 2020 17:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257538;
-        bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+        s=default; t=1583257540;
+        bh=bwqt22GXErc9LKOF1ZlvL4ihh4c3qNfF8vE522rf70Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/zrZ+ljo8G9ONmjAYJT2F7r8PdcyJvyGKkKb1Vb6bq3JkyVk1gssLOtGI2Nb+BCB
-         53jqvmaiVIpDgFp37h2x6M+7FKICxmHlSYDvNasi6kbXeG+5Wl3YdAFNKBo/hZsNTj
-         p/d7t9NTxxvPk3C+gkvJ6U0WQnrsJht4XTXniX7A=
+        b=kngaOYW4Od4ovJiVe2Y6dkv2rOJCcYULV4Evv6BRAPrqeytszhyc+Dggd+pTMkIZP
+         kn26adcuepTZp5MZpJ/p5M9en5SdTi9eIfeVPXiJANBNY/rdU2lNbxf+miJpaeGhlz
+         R4NENvllcPuJ4Mou1wg1HjpfV6aa/6KA67uz4HNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 032/176] cfg80211: check wiphy driver existence for drvinfo report
-Date:   Tue,  3 Mar 2020 18:41:36 +0100
-Message-Id: <20200303174308.233945992@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 033/176] io_uring: flush overflowed CQ events in the io_uring_poll()
+Date:   Tue,  3 Mar 2020 18:41:37 +0100
+Message-Id: <20200303174308.340114195@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,42 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
+[ Upstream commit 63e5d81f72af1bf370bf8a6745b0a8d71a7bb37d ]
 
-When preparing ethtool drvinfo, check if wiphy driver is defined
-before dereferencing it. Driver may not exist, e.g. if wiphy is
-attached to a virtual platform device.
+In io_uring_poll() we must flush overflowed CQ events before to
+check if there are CQ events available, to avoid missing events.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+We call the io_cqring_events() that checks and flushes any overflow
+and returns the number of CQ events available.
+
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/ethtool.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
-index a9c0f368db5d2..24e18405cdb48 100644
---- a/net/wireless/ethtool.c
-+++ b/net/wireless/ethtool.c
-@@ -7,9 +7,13 @@
- void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	struct device *pdev = wiphy_dev(wdev->wiphy);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 678c62782ba3b..de4bd647cd1df 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4970,7 +4970,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
+ 	if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
+ 	    ctx->rings->sq_ring_entries)
+ 		mask |= EPOLLOUT | EPOLLWRNORM;
+-	if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
++	if (io_cqring_events(ctx, false))
+ 		mask |= EPOLLIN | EPOLLRDNORM;
  
--	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
--		sizeof(info->driver));
-+	if (pdev->driver)
-+		strlcpy(info->driver, pdev->driver->name,
-+			sizeof(info->driver));
-+	else
-+		strlcpy(info->driver, "N/A", sizeof(info->driver));
- 
- 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
- 
+ 	return mask;
 -- 
 2.20.1
 
