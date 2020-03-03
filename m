@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F35C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8CDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297442073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A6E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258757;
-	bh=zMYA6MBaA+QV6+nwKceATFG6e8MYZq40E1bROjlfsv8=;
+	s=default; t=1583258761;
+	bh=yzQRHWd1ErCrLsmponrFrgfSO6ue2Qh77DHNaM3MvBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rY/sgDB96dDC3yMUAjQ4gWrVC8F2c9DcARQPwvSuY8QZ3rOegFH0bq+t8ei9Ukx+3
-	 ine5tlJlbB3h/YP08mVAY6sdoYgRM5KSBMy3yzrf6VIm+9D+/NwYZ8wnLxzX1jQp+L
-	 YOLYmvpxqMuC1IBQOlodqcJAGkI5+CFtBO9A/uNA=
+	b=jbTE43aYMXrsbN3hzmINCbjWUEG+c67/91Kr5Xj8YuXGOK5+VrJ4GdtGmOwQdU9Ct
+	 UvP17ItrSDfjrohRMNyYQOoW3wGs0GvPIbPAHYgsHViI82vR1tf3faA2o3xLb9o44T
+	 /CUuOiik7VIu1/LwXBFXsl+oe7meeB3c17P6EntY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbgCCR5j (ORCPT
+        id S1733076AbgCCR50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:57:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733110AbgCCR5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:36 -0500
+        id S1732743AbgCCR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C0F20728;
-        Tue,  3 Mar 2020 17:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A1320CC7;
+        Tue,  3 Mar 2020 17:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258256;
-        bh=zMYA6MBaA+QV6+nwKceATFG6e8MYZq40E1bROjlfsv8=;
+        s=default; t=1583258238;
+        bh=yzQRHWd1ErCrLsmponrFrgfSO6ue2Qh77DHNaM3MvBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAwU5SyP/YjLctPppBfwYhyMp9cQMxURV6LkCVvZIi1P4GlzLvARvdqBXdLTJOjGG
-         mle7HTvFZ4GS4ez6p9rtXXSdqCoC7RE1FCCyU+YJ+L41GRSA0ehrwO3rqhIm+0VZw0
-         vT26GHbltHOYKR7s9WecyzYT6G+D1Y2bQ+m+4o74=
+        b=qO6Jc58pY9GsFhsdwko8sZ6tvds/bxbblIBcI58cz0zJFNds9b9U+OAL0bF4Ur5Un
+         Ro0/6KUiBsrJSmYhvFxjlKm9VP6qxbdYsJiTtRrKSofmgVQ8HQmTRMCUFAylSI6hn2
+         tvHKBMg5YawD/LDlkQ5jFxdFRV/itzNxCL9gFu1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 093/152] HID: hiddev: Fix race in in hiddev_disconnect()
-Date:   Tue,  3 Mar 2020 18:43:11 +0100
-Message-Id: <20200303174313.163479826@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.4 123/152] f2fs: fix to add swap extent correctly
+Date:   Tue,  3 Mar 2020 18:43:41 +0100
+Message-Id: <20200303174316.780515898@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,39 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dan.carpenter@oracle.com <dan.carpenter@oracle.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 upstream.
+commit 3e5e479a39ce9ed60cd63f7565cc1d9da77c2a4e upstream.
 
-Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
-The hiddev_disconnect() function sets "hiddev->exist = 0;" so
-hiddev_release() can free it as soon as we drop the "existancelock"
-lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
-after we have finished using it.
+As Youling reported in mailing list:
 
-Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
-Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+https://www.linuxquestions.org/questions/linux-newbie-8/the-file-system-f2fs-is-broken-4175666043/
+
+https://www.linux.org/threads/the-file-system-f2fs-is-broken.26490/
+
+There is a test case can corrupt f2fs image:
+- dd if=/dev/zero of=/swapfile bs=1M count=4096
+- chmod 600 /swapfile
+- mkswap /swapfile
+- swapon --discard /swapfile
+
+The root cause is f2fs_swap_activate() intends to return zero value
+to setup_swap_extents() to enable SWP_FS mode (swap file goes through
+fs), in this flow, setup_swap_extents() setups swap extent with wrong
+block address range, result in discard_swap() erasing incorrect address.
+
+Because f2fs_swap_activate() has pinned swapfile, its data block
+address will not change, it's safe to let swap to handle IO through
+raw device, so we can get rid of SWAP_FS mode and initial swap extents
+inside f2fs_swap_activate(), by this way, later discard_swap() can trim
+in right address range.
+
+Fixes: 4969c06a0d83 ("f2fs: support swap file w/ DIO")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hiddev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/data.c |   32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -941,9 +941,9 @@ void hiddev_disconnect(struct hid_device
- 	hiddev->exist = 0;
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3030,7 +3030,8 @@ int f2fs_migrate_page(struct address_spa
  
- 	if (hiddev->open) {
--		mutex_unlock(&hiddev->existancelock);
- 		hid_hw_close(hiddev->hid);
- 		wake_up_interruptible(&hiddev->wait);
-+		mutex_unlock(&hiddev->existancelock);
- 	} else {
- 		mutex_unlock(&hiddev->existancelock);
- 		kfree(hiddev);
+ #ifdef CONFIG_SWAP
+ /* Copied from generic_swapfile_activate() to check any holes */
+-static int check_swap_activate(struct file *swap_file, unsigned int max)
++static int check_swap_activate(struct swap_info_struct *sis,
++				struct file *swap_file, sector_t *span)
+ {
+ 	struct address_space *mapping = swap_file->f_mapping;
+ 	struct inode *inode = mapping->host;
+@@ -3041,6 +3042,8 @@ static int check_swap_activate(struct fi
+ 	sector_t last_block;
+ 	sector_t lowest_block = -1;
+ 	sector_t highest_block = 0;
++	int nr_extents = 0;
++	int ret;
+ 
+ 	blkbits = inode->i_blkbits;
+ 	blocks_per_page = PAGE_SIZE >> blkbits;
+@@ -3052,7 +3055,8 @@ static int check_swap_activate(struct fi
+ 	probe_block = 0;
+ 	page_no = 0;
+ 	last_block = i_size_read(inode) >> blkbits;
+-	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
++	while ((probe_block + blocks_per_page) <= last_block &&
++			page_no < sis->max) {
+ 		unsigned block_in_page;
+ 		sector_t first_block;
+ 
+@@ -3092,13 +3096,27 @@ static int check_swap_activate(struct fi
+ 				highest_block = first_block;
+ 		}
+ 
++		/*
++		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
++		 */
++		ret = add_swap_extent(sis, page_no, 1, first_block);
++		if (ret < 0)
++			goto out;
++		nr_extents += ret;
+ 		page_no++;
+ 		probe_block += blocks_per_page;
+ reprobe:
+ 		continue;
+ 	}
+-	return 0;
+-
++	ret = nr_extents;
++	*span = 1 + highest_block - lowest_block;
++	if (page_no == 0)
++		page_no = 1;	/* force Empty message */
++	sis->max = page_no;
++	sis->pages = page_no - 1;
++	sis->highest_bit = page_no - 1;
++out:
++	return ret;
+ bad_bmap:
+ 	pr_err("swapon: swapfile has holes\n");
+ 	return -EINVAL;
+@@ -3120,14 +3138,14 @@ static int f2fs_swap_activate(struct swa
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = check_swap_activate(file, sis->max);
+-	if (ret)
++	ret = check_swap_activate(sis, file, span);
++	if (ret < 0)
+ 		return ret;
+ 
+ 	set_inode_flag(inode, FI_PIN_FILE);
+ 	f2fs_precache_extents(inode);
+ 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+-	return 0;
++	return ret;
+ }
+ 
+ static void f2fs_swap_deactivate(struct file *file)
 
 
