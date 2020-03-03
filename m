@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E43C3F2D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C93CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A97F20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7283A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258422;
-	bh=FENz68I0RaPEhZkP8bdUxUd0mUyE1lN/0TK31Bdtg44=;
+	s=default; t=1583258426;
+	bh=Ape+vf9e720NWypWUtF6MoJSuweeNFaLsz/ZeT6VWyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hoB3SsyN54mxxCFJ0uAXQQeYtkQFLeLcCDwAKBbqkze8XyK0t8kshRCLwyRvtrK92
-	 +AdLp6ri/zYouo14pOTmArErQiF2Cj7L2xXdU4R4bLyMKCm67kiWguvy8vG6n1aCiw
-	 zQUArF9Djm5DyXbSAGJloMZo10XnfK15GUPc5fyg=
+	b=CJ5xOACtykMtOarHKI4YxLn/APTSp1lG/Z0HY8w3u3kl2/n+xxQwAwG4887ikTWm3
+	 RhxAAadZlxSLalE7Oay8cuZofJOFj8L3S64YHLMstv6L0AH3ET9kg2e3VsoIyMGowv
+	 yPrnBTgeK6hcIWjmkKwKuAZHxeQqC5w53Ixw//1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387764AbgCCSAV (ORCPT
+        id S2387775AbgCCSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43992 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:00:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733268AbgCCSAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:18 -0500
+        id S1732698AbgCCSAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E4020870;
-        Tue,  3 Mar 2020 18:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9120728;
+        Tue,  3 Mar 2020 18:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258417;
-        bh=FENz68I0RaPEhZkP8bdUxUd0mUyE1lN/0TK31Bdtg44=;
+        s=default; t=1583258419;
+        bh=Ape+vf9e720NWypWUtF6MoJSuweeNFaLsz/ZeT6VWyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcwBFXee+JqX+LZSJMZUIyNPoKIipifLEbpR9ToJrWGqhmcM/0NQ/Q9nQ37LBL880
-         ctDVq7oAThbw2LGS+WVpbm037hxlxFVj5OKiQPuFTIxs5eGZKLjuk4wsXbfZEnkSgC
-         0vFNVLB1GFUzcFUE5ZP6clD99pYkht7P6EIA5IK4=
+        b=g+j17X5piH7LlItrYBk2WrNwyxiT/xkt/pGVp8abjJJXLxiFNgvyW0DpkmSsbJ5Vk
+         M76t55T3xulBaVZPMrCf6liETNveiHB7/XmGMo+pnffZkfgX66FdTYczD4kZLcPP19
+         6QxNdWBK8whvBghRz3Jcq9pDUk7HzEybcQ+1MJl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 42/87] ACPI: watchdog: Fix gas->access_width usage
-Date:   Tue,  3 Mar 2020 18:43:33 +0100
-Message-Id: <20200303174354.147945098@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@web.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: [PATCH 4.19 43/87] KVM: VMX: check descriptor table exits on instruction emulation
+Date:   Tue,  3 Mar 2020 18:43:34 +0100
+Message-Id: <20200303174354.237462333@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,54 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Oliver Upton <oupton@google.com>
 
-commit 2ba33a4e9e22ac4dda928d3e9b5978a3a2ded4e0 upstream.
+commit 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c upstream.
 
-ACPI Generic Address Structure (GAS) access_width field is not in bytes
-as the driver seems to expect in few places so fix this by using the
-newly introduced macro ACPI_ACCESS_BYTE_WIDTH().
+KVM emulates UMIP on hardware that doesn't support it by setting the
+'descriptor table exiting' VM-execution control and performing
+instruction emulation. When running nested, this emulation is broken as
+KVM refuses to emulate L2 instructions by default.
 
-Fixes: b1abf6fc4982 ("ACPI / watchdog: Fix off-by-one error at resource assignment")
-Fixes: 058dfc767008 ("ACPI / watchdog: Add support for WDAT hardware watchdog")
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Cc: 4.16+ <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Correct this regression by allowing the emulation of descriptor table
+instructions if L1 hasn't requested 'descriptor table exiting'.
+
+Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Reported-by: Jan Kiszka <jan.kiszka@web.de>
+Cc: stable@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_watchdog.c |    3 +--
- drivers/watchdog/wdat_wdt.c  |    2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/acpi/acpi_watchdog.c
-+++ b/drivers/acpi/acpi_watchdog.c
-@@ -129,12 +129,11 @@ void __init acpi_watchdog_init(void)
- 		gas = &entries[i].register_region;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -13724,6 +13724,7 @@ static int vmx_check_intercept_io(struct
+ 	else
+ 		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
  
- 		res.start = gas->address;
-+		res.end = res.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
- 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 			res.flags = IORESOURCE_MEM;
--			res.end = res.start + ALIGN(gas->access_width, 4) - 1;
- 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
- 			res.flags = IORESOURCE_IO;
--			res.end = res.start + gas->access_width - 1;
- 		} else {
- 			pr_warn("Unsupported address space: %u\n",
- 				gas->space_id);
---- a/drivers/watchdog/wdat_wdt.c
-+++ b/drivers/watchdog/wdat_wdt.c
-@@ -392,7 +392,7 @@ static int wdat_wdt_probe(struct platfor
++	/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
+ 	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
+ }
  
- 		memset(&r, 0, sizeof(r));
- 		r.start = gas->address;
--		r.end = r.start + gas->access_width - 1;
-+		r.end = r.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
- 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 			r.flags = IORESOURCE_MEM;
- 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+@@ -13753,6 +13754,20 @@ static int vmx_check_intercept(struct kv
+ 	case x86_intercept_outs:
+ 		return vmx_check_intercept_io(vcpu, info);
+ 
++	case x86_intercept_lgdt:
++	case x86_intercept_lidt:
++	case x86_intercept_lldt:
++	case x86_intercept_ltr:
++	case x86_intercept_sgdt:
++	case x86_intercept_sidt:
++	case x86_intercept_sldt:
++	case x86_intercept_str:
++		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_DESC))
++			return X86EMUL_CONTINUE;
++
++		/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
++		break;
++
+ 	/* TODO: check more intercepts... */
+ 	default:
+ 		break;
 
 
