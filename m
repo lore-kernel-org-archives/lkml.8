@@ -2,176 +2,77 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBB9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5ABC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CA520848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/D9AxX5"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA1520848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgCCNOU (ORCPT
+        id S1728912AbgCCNOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:14:20 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39734 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727121AbgCCNOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:14:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583241258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K6MYW0Cw8y8JjG5SoRIVtn0utAaLa/9boq4bliE04oQ=;
-        b=E/D9AxX5y6fo7WvBvhjKkXA/LWgv/w0wwgPBif8WCHPY8UD5RIQAkRzRrbyEnTLYZcEZJd
-        n35m9Y7j7aIyTPCesZqaNG44Kn/9wRfU1IqXHo/CM5mQ/NjGgPMV+lD7xyPG1o/y3FReRx
-        /vumSyD8XnuCWwfdidZGmVsMTuWH9D4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-hrEKN05ONsaAjIh7E5NlUA-1; Tue, 03 Mar 2020 08:14:14 -0500
-X-MC-Unique: hrEKN05ONsaAjIh7E5NlUA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B28A13E4;
-        Tue,  3 Mar 2020 13:14:11 +0000 (UTC)
-Received: from [10.36.116.59] (ovpn-116-59.ams2.redhat.com [10.36.116.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00884277A4;
-        Tue,  3 Mar 2020 13:14:02 +0000 (UTC)
-Subject: Re: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-To:     zhangfei <zhangfei.gao@linaro.org>,
-        Tomasz Nowicki <tnowicki@marvell.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
-        "zhangfei.gao@gmail.com" <zhangfei.gao@gmail.com>,
-        "tina.zhang@intel.com" <tina.zhang@intel.com>,
-        wangzhou1 <wangzhou1@hisilicon.com>,
-        Kenneth Lee <kenneth-lee-2012@foxmail.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
- <a35234a6-e386-fc8e-fcc4-5db4601b00d2@marvell.com>
- <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
- <e0133df5-073b-13e1-8399-ff48bfaef5e5@linaro.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <f01c0690-4561-287f-a5c6-5eefc5be52b7@redhat.com>
-Date:   Tue, 3 Mar 2020 14:14:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 3 Mar 2020 08:14:31 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10718 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727872AbgCCNOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:14:31 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EF1357A0F349068C8526;
+        Tue,  3 Mar 2020 21:14:25 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
+ 21:14:16 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>, <peng.ma@nxp.com>,
+        <yuehaibing@huawei.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] dmaengine: fsl-dpaa2-qdma: remove set but not used variable 'dpaa2_qdma'
+Date:   Tue, 3 Mar 2020 21:13:47 +0800
+Message-ID: <20200303131347.28392-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <e0133df5-073b-13e1-8399-ff48bfaef5e5@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhangfei,
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c: In function dpaa2_qdma_shutdown:
+drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c:795:28: warning: variable dpaa2_qdma set but not used [-Wunused-but-set-variable]
 
-On 3/3/20 1:57 PM, zhangfei wrote:
-> Hi, Eric
->=20
-> On 2019/11/20 =E4=B8=8B=E5=8D=886:18, Auger Eric wrote:
->>
->>>> This series brings the VFIO part of HW nested paging support
->>>> in the SMMUv3.
->>>>
->>>> The series depends on:
->>>> [PATCH v9 00/14] SMMUv3 Nested Stage Setup (IOMMU part)
->>>> (https://www.spinics.net/lists/kernel/msg3187714.html)
->>>>
->>>> 3 new IOCTLs are introduced that allow the userspace to
->>>> 1) pass the guest stage 1 configuration
->>>> 2) pass stage 1 MSI bindings
->>>> 3) invalidate stage 1 related caches
->>>>
->>>> They map onto the related new IOMMU API functions.
->>>>
->>>> We introduce the capability to register specific interrupt
->>>> indexes (see [1]). A new DMA_FAULT interrupt index allows to registe=
-r
->>>> an eventfd to be signaled whenever a stage 1 related fault
->>>> is detected at physical level. Also a specific region allows
->>>> to expose the fault records to the user space.
->>>>
->>>> Best Regards
->>>>
->>>> Eric
->>>>
->>>> This series can be found at:
->>>> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
->>> I think you have already tested on ThunderX2, but as a formality, for
->>> the whole series:
->>>
->>> Tested-by: Tomasz Nowicki <tnowicki@marvell.com>
->>> qemu: https://github.com/eauger/qemu/tree/v4.1.0-rc0-2stage-rfcv5
->>> kernel: https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9 +
->>> Shameer's fix patch
->>>
->>> In my test I assigned Intel 82574L NIC and perform iperf tests.
->> Thank you for your testing efforts.
->>> Other folks from Marvell claimed this to be important feature so I as=
-ked
->>> them to review and speak up on mailing list.
->> That's nice to read that!=C2=A0 So it is time for me to rebase both th=
-e iommu
->> and vfio parts. I will submit something quickly. Then I would encourag=
-e
->> the review efforts to focus first on the iommu part.
->>
->>
-> vSVA feature is also very important to us, it will be great if vSVA can
-> be supported in guest world.
->=20
-> We just submitted uacce for accelerator, which will be supporting SVA o=
-n
-> host, thanks to Jean's effort.
->=20
-> https://lkml.org/lkml/2020/2/11/54
->=20
->=20
-> However, supporting vSVA in guest is also a key component for accelerat=
-or.
->=20
-> Looking forward this going to be happen.
->=20
->=20
-> Any respin, I will be very happy to test.
+commit 3e0ca3c38dc2 ("dmaengine: fsl-dpaa2-qdma: Adding shutdown hook")
+involved this, remove it.
 
-OK. Based on your interest and Marvell's interest too, I will respin
-both iommu & vfio series.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+index fabbbb9..4ec909e 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+@@ -792,13 +792,11 @@ static int dpaa2_qdma_remove(struct fsl_mc_device *ls_dev)
+ 
+ static void dpaa2_qdma_shutdown(struct fsl_mc_device *ls_dev)
+ {
+-	struct dpaa2_qdma_engine *dpaa2_qdma;
+ 	struct dpaa2_qdma_priv *priv;
+ 	struct device *dev;
+ 
+ 	dev = &ls_dev->dev;
+ 	priv = dev_get_drvdata(dev);
+-	dpaa2_qdma = priv->dpaa2_qdma;
+ 
+ 	dpdmai_disable(priv->mc_io, 0, ls_dev->mc_handle);
+ 	dpaa2_dpdmai_dpio_unbind(priv);
+-- 
+2.7.4
 
-Eric
->=20
->=20
-> Thanks
->=20
->=20
->=20
->=20
 
