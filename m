@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8793EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683792465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6562465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCCCCn (ORCPT
+        id S1727481AbgCCCDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:02:43 -0500
-Received: from mga05.intel.com ([192.55.52.43]:54060 "EHLO mga05.intel.com"
+        Mon, 2 Mar 2020 21:03:12 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54062 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgCCCCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:02:42 -0500
+        id S1727097AbgCCCCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:02:43 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:41 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="440384933"
+   d="scan'208";a="440384958"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:41 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:42 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/7] KVM: x86/mmu: Don't drop level/direct from MMU role calculation
-Date:   Mon,  2 Mar 2020 18:02:34 -0800
-Message-Id: <20200303020240.28494-2-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 4/7] KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+Date:   Mon,  2 Mar 2020 18:02:37 -0800
+Message-Id: <20200303020240.28494-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200303020240.28494-1-sean.j.christopherson@intel.com>
 References: <20200303020240.28494-1-sean.j.christopherson@intel.com>
@@ -49,118 +49,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the calculated role as-is when propagating it to kvm_mmu.mmu_role,
-i.e. stop masking off meaningful fields.  The concept of masking off
-fields came from kvm_mmu_pte_write(), which (correctly) ignores certain
-fields when comparing kvm_mmu_page.role against kvm_mmu.mmu_role, e.g.
-the current mmu's access and level have no relation to a shadow page's
-access and level.
+Rename the accessor for vmcs12.EPTP to use "eptp" instead of "cr3".  The
+accessor has no relation to cr3 whatsoever, other than it being assigned
+to the also poorly named kvm_mmu->get_cr3() hook.
 
-Masking off the level causes problems for 5-level paging, e.g. CR4.LA57
-has its own redundant flag in the extended role, and nested EPT would
-need a similar hack to support 5-level paging for L2.
-
-Opportunistically rework the mask for kvm_mmu_pte_write() to define the
-fields that should be ignored as opposed to the fields that should be
-checked, i.e. make it opt-out instead of opt-in so that new fields are
-automatically picked up.  While doing so, stop ignoring "direct".  The
-field is effectively ignored anyways because kvm_mmu_pte_write() is only
-reached with an indirect mmu and the loop only walks indirect shadow
-pages, but double checking "direct" literally costs nothing.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 4 ++--
+ arch/x86/kvm/vmx/nested.h | 4 ++--
+ arch/x86/kvm/vmx/vmx.c    | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index c4e0b97f82ac..80b21b7cf092 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -215,17 +215,6 @@ struct kvm_shadow_walk_iterator {
- 	unsigned index;
- };
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index c9c2d254f316..f8717c1e4e51 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -353,9 +353,9 @@ static void nested_ept_init_mmu_context(struct kvm_vcpu *vcpu)
+ 			to_vmx(vcpu)->nested.msrs.ept_caps &
+ 			VMX_EPT_EXECUTE_ONLY_BIT,
+ 			nested_ept_ad_enabled(vcpu),
+-			nested_ept_get_cr3(vcpu));
++			nested_ept_get_eptp(vcpu));
+ 	vcpu->arch.mmu->set_cr3           = vmx_set_cr3;
+-	vcpu->arch.mmu->get_cr3           = nested_ept_get_cr3;
++	vcpu->arch.mmu->get_cr3           = nested_ept_get_eptp;
+ 	vcpu->arch.mmu->inject_page_fault = nested_ept_inject_page_fault;
+ 	vcpu->arch.mmu->get_pdptr         = kvm_pdptr_read;
  
--static const union kvm_mmu_page_role mmu_base_role_mask = {
--	.cr0_wp = 1,
--	.gpte_is_8_bytes = 1,
--	.nxe = 1,
--	.smep_andnot_wp = 1,
--	.smap_andnot_wp = 1,
--	.smm = 1,
--	.guest_mode = 1,
--	.ad_disabled = 1,
--};
--
- #define for_each_shadow_entry_using_root(_vcpu, _root, _addr, _walker)     \
- 	for (shadow_walk_init_using_root(&(_walker), (_vcpu),              \
- 					 (_root), (_addr));                \
-@@ -4919,7 +4908,6 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
- 	union kvm_mmu_role new_role =
- 		kvm_calc_tdp_mmu_root_page_role(vcpu, false);
- 
--	new_role.base.word &= mmu_base_role_mask.word;
- 	if (new_role.as_u64 == context->mmu_role.as_u64)
- 		return;
- 
-@@ -4991,7 +4979,6 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu)
- 	union kvm_mmu_role new_role =
- 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
- 
--	new_role.base.word &= mmu_base_role_mask.word;
- 	if (new_role.as_u64 == context->mmu_role.as_u64)
- 		return;
- 
-@@ -5048,7 +5035,6 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 
- 	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false);
- 
--	new_role.base.word &= mmu_base_role_mask.word;
- 	if (new_role.as_u64 == context->mmu_role.as_u64)
- 		return;
- 
-@@ -5089,7 +5075,6 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
- 	union kvm_mmu_role new_role = kvm_calc_mmu_role_common(vcpu, false);
- 	struct kvm_mmu *g_context = &vcpu->arch.nested_mmu;
- 
--	new_role.base.word &= mmu_base_role_mask.word;
- 	if (new_role.as_u64 == g_context->mmu_role.as_u64)
- 		return;
- 
-@@ -5328,6 +5313,22 @@ static u64 *get_written_sptes(struct kvm_mmu_page *sp, gpa_t gpa, int *nspte)
- 	return spte;
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index 9aeda46f473e..21d36652f213 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -60,7 +60,7 @@ static inline int vmx_has_valid_vmcs12(struct kvm_vcpu *vcpu)
+ 		vmx->nested.hv_evmcs;
  }
  
-+/*
-+ * Ignore various flags when determining if a SPTE can be immediately
-+ * overwritten for the current MMU.
-+ *  - level: explicitly checked in mmu_pte_write_new_pte(), and will never
-+ *    match the current MMU role, as MMU's level tracks the root level.
-+ *  - access: updated based on the new guest PTE
-+ *  - quadrant: handled by get_written_sptes()
-+ *  - invalid: always false (loop only walks valid shadow pages)
-+ */
-+static const union kvm_mmu_page_role role_ign = {
-+	.level = 0xf,
-+	.access = 0x7,
-+	.quadrant = 0x3,
-+	.invalid = 0x1,
-+};
-+
- static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
- 			      const u8 *new, int bytes,
- 			      struct kvm_page_track_notifier_node *node)
-@@ -5383,8 +5384,8 @@ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
- 			entry = *spte;
- 			mmu_page_zap_pte(vcpu->kvm, sp, spte);
- 			if (gentry &&
--			      !((sp->role.word ^ base_role)
--			      & mmu_base_role_mask.word) && rmap_can_add(vcpu))
-+			    !((sp->role.word ^ base_role) & ~role_ign.word) &&
-+			    rmap_can_add(vcpu))
- 				mmu_pte_write_new_pte(vcpu, sp, spte, &gentry);
- 			if (need_remote_flush(entry, *spte))
- 				remote_flush = true;
+-static inline unsigned long nested_ept_get_cr3(struct kvm_vcpu *vcpu)
++static inline unsigned long nested_ept_get_eptp(struct kvm_vcpu *vcpu)
+ {
+ 	/* return the page table to be shadowed - in our case, EPT12 */
+ 	return get_vmcs12(vcpu)->ept_pointer;
+@@ -68,7 +68,7 @@ static inline unsigned long nested_ept_get_cr3(struct kvm_vcpu *vcpu)
+ 
+ static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
+ {
+-	return nested_ept_get_cr3(vcpu) & VMX_EPTP_AD_ENABLE_BIT;
++	return nested_ept_get_eptp(vcpu) & VMX_EPTP_AD_ENABLE_BIT;
+ }
+ 
+ /*
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d04efe0f0109..85991f2d9ef0 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2986,7 +2986,7 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+ static int get_ept_level(struct kvm_vcpu *vcpu)
+ {
+ 	if (is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)))
+-		return vmx_eptp_page_walk_level(nested_ept_get_cr3(vcpu));
++		return vmx_eptp_page_walk_level(nested_ept_get_eptp(vcpu));
+ 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
+ 		return 5;
+ 	return 4;
 -- 
 2.24.1
 
