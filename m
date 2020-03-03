@@ -4,123 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F89C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F99C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7EA620838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2355A20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bzSew+et"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R8PIDa7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgCCOQY (ORCPT
+        id S1728949AbgCCOQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:16:24 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58650 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728356AbgCCOQY (ORCPT
+        Tue, 3 Mar 2020 09:16:32 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57706 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgCCOQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:16:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583244983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MUTEP1p4YWjzskXYVbK6H4xhC2oS8H6SYOsK8O1eOyQ=;
-        b=bzSew+et0oTss8hF+yTQBV3ff184kWxMigwSUARoJj5M8pUzzw8OvdvNwyYkXVBq0RC6fv
-        EtyYNQRsJ7HXt4pIwoxZPAktxUYSaWkGN12FU/zRdP/Bj7//+1+kOQ7HkkDQokBnwvTSqC
-        mxqH+5vNO0Y3oafmHY8s3JyHiICkpPc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-5TEOS0MJNLqJ4_DgIWdrhA-1; Tue, 03 Mar 2020 09:16:19 -0500
-X-MC-Unique: 5TEOS0MJNLqJ4_DgIWdrhA-1
-Received: by mail-wr1-f72.google.com with SMTP id f10so1283745wrv.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:16:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MUTEP1p4YWjzskXYVbK6H4xhC2oS8H6SYOsK8O1eOyQ=;
-        b=LtwYkYGu0iNB3wZSBE2VklLEZ+GkiwKk+Fg4P39y7ClTv6cqSbda6Y8IZBR1jfYz0g
-         3Mit+w+BgEFkgoMkNvqCHZC4fqEOZ/Tm7d2YCwDt9yvz11+Zo2/hSjghtWS3eq8z8rN1
-         R8t04l8WIDPPsQEO14Pmdgk+Rk3PiRsIfRaGp/E6mLsyMcOPdtFv3ApnJ/6/aAZBh1mg
-         e9EbjCA8L4fZAysRRw95iORjvjJWm81UststkUQ2sJN2HBK7aOF7inMR0ieUcUorrcDB
-         JPXpj3bujUHgb/SopUgEFluEaFAfk5OIdofawtp9pRtpaB8TsaOk0M4ePh+CYxtXvAal
-         KVWg==
-X-Gm-Message-State: ANhLgQ383/xFZY7w8z5Qzmg/d6f3bXx7EFYMPWGOIki+MraKyThQ//KO
-        SnqOHPp3kNLNlMeFNowJNz9mMpRShAuukeCNjOCqBrdRWAVY2X+PBCnZyJGk87yPMJvEKiBpa+e
-        YF3qk54CVlPKMUCVfC/U+sS0u
-X-Received: by 2002:adf:e6c9:: with SMTP id y9mr5857109wrm.246.1583244978784;
-        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsYNg7+BUQwOf9zvxhDv8luT0LXJFS2Ip7Opm1OZwN8LJ4aJ2q/o6inCPO/0+w/9WVAKxYWiQ==
-X-Received: by 2002:adf:e6c9:: with SMTP id y9mr5857091wrm.246.1583244978498;
-        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id m25sm2351920wml.35.2020.03.03.06.16.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
-Subject: Re: [PATCH v2 01/66] KVM: x86: Return -E2BIG when
- KVM_GET_SUPPORTED_CPUID hits max entries
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-2-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <599c3a95-a0a6-b31d-56a6-c50971d4ab59@redhat.com>
-Date:   Tue, 3 Mar 2020 15:16:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 09:16:31 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023ECuOA151981;
+        Tue, 3 Mar 2020 14:16:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=sL7wL8dxkuL7cejD6WDz6jQpyi/urX1RqkURUcQ6Hm0=;
+ b=R8PIDa7h7n73FWTMf4ULgW7d4Sxbf6/7FwEtaw59UMThqkUhwYppNzzxPXfmiC5SyN6a
+ uVqcxpRlPB+hclsL3pvwuXciDb6wVt3PMYqogu2NwpZxotE+z54W2L8glgtgssj4j4WA
+ VcW7tVubSwDwrHxM3QsdYc56BofoBt7fpjJ9SdTQPpyIOiTrGoO1cXbF8loz9t8Sw4Qb
+ ZyZNIXTOen1NLDgCW801FJInvMWik/RJqtBQUE83uYCUeVkLkWrHTGTy8RrZzdAW+rCq
+ WsIlrsJSlnzrRYQ286qXEWyi8ja9VXxRS1K9XFYb8aPwUw4GWMfisw8G0SJMM5yHcAQf ew== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2yghn338ev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 14:16:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023EEhdE084667;
+        Tue, 3 Mar 2020 14:16:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2yg1ekttds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 14:16:10 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023EG5OL002159;
+        Tue, 3 Mar 2020 14:16:05 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 06:16:05 -0800
+Date:   Tue, 3 Mar 2020 17:15:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Todd Kjos <tkjos@google.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
+ copy_from_user()
+Message-ID: <20200303141554.GG4118@kadam>
+References: <20200302130430.201037-1-glider@google.com>
+ <20200302130430.201037-2-glider@google.com>
+ <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
+ <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
+ <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+ <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
+ <18b0d6ea5619c34ca4120a6151103dbe9bfa0cbe.camel@perches.com>
+ <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
+ <20200303093832.GD24372@kadam>
+ <58c1f1bf6b30bd5c39184cd9c09f25a9b9d67a68.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302235709.27467-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58c1f1bf6b30bd5c39184cd9c09f25a9b9d67a68.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 00:56, Sean Christopherson wrote:
-> (KVM hard caps CPUID 0xD at a single sub-leaf).
+On Tue, Mar 03, 2020 at 05:56:51AM -0800, Joe Perches wrote:
+> > The real fix is to initialize everything manually, the automated
+> > initialization is a hardenning feature which many people will disable.
+> > So I don't think the hardenning needs to be perfect, it needs to simple
+> > and fast.
+> 
+> Dan, perhaps I don't understand you.
+> Can you clarify what you mean?
 
-Hmm... no it doesn't?
+I'm basically agreeing with you.
 
-                for (idx = 1, i = 1; idx < 64; ++idx) {
-                        u64 mask = ((u64)1 << idx);
-                        if (*nent >= maxnent)
-                                goto out;
+Even though copy_from_user() might only initialize part of the struct
+we should just record that it initializes the struct without getting
+bogged down in details.  The annotation should be simple.
 
-                        do_host_cpuid(&entry[i], function, idx);
-                        if (idx == 1) {
-                                entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
-                                cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
-                                entry[i].ebx = 0;
-                                if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
-                                        entry[i].ebx =
-                                                xstate_required_size(supported,
-                                                                     true);
-                        } else {
-                                if (entry[i].eax == 0 || !(supported & mask))
-                                        continue;
-                                if (WARN_ON_ONCE(entry[i].ecx & 1))
-                                        continue;
-                        }
-                        entry[i].ecx = 0;
-                        entry[i].edx = 0;
-                        ++*nent;
-                        ++i;
-                }
+If the automated system to initialize stack variables doesn't work 100%
+that's okay because it's a supplement and not a replacement for manually
+initializing stack variables.
 
-I still think the patch is correct, what matters is that no KVM in
-existence supports enough processor features to reach 100 or so subleaves.
-
-Paolo
+regards,
+dan carpenter
 
