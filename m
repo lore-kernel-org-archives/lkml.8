@@ -2,57 +2,56 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C66C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191B4208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18864208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258971;
-	bh=242ju/f1UL0RmgOXdz4af0lNK8ENlCQQx6rAW3hkU6s=;
+	s=default; t=1583258977;
+	bh=nSQ2JwEEUlpH+KtDNU/5jZzofFq9d1NFcnnlpJQLjAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBw9C1TtlcxTjnyyS3BiPBLF+yNKGghGXz7KOXEyjnNilIQ38msYQ2fcfgtBR10vQ
-	 l0eM3jpWEHqslhG30Zzazuw8dYT3oDXLeG7BjdKl8shAeofNuFeAlkopXIGnSVkrE6
-	 9f14+CWThdPVqnymTMEVBtJCjhzMvwSY0jicHPgk=
+	b=cW5eEkCn9bzRw9iQsTP7ykPSfmwsNaCFGomwnh2Gbt06TtgtHWzzzMmWmTXfVFS1F
+	 df1iNQrrdE7/WgARZnDGnNopTBalUhgtzgPGv9oOlo7EBMGjWhMeWmF8rZ8OfdT1ys
+	 RxFDMnzac8R2YEWekeaedb9bo81B54/U0q8p8u6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732132AbgCCRwT (ORCPT
+        id S1732854AbgCCSJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:09:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731876AbgCCRwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:15 -0500
+        id S1730562AbgCCRwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADD9D2146E;
-        Tue,  3 Mar 2020 17:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA4120CC7;
+        Tue,  3 Mar 2020 17:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257935;
-        bh=242ju/f1UL0RmgOXdz4af0lNK8ENlCQQx6rAW3hkU6s=;
+        s=default; t=1583257932;
+        bh=nSQ2JwEEUlpH+KtDNU/5jZzofFq9d1NFcnnlpJQLjAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GN3byUCTlLsELEx6H2hmA73HRYTHBZcNdnk8ktlPDqRapVagXwynzFSNfkFhyXZZm
-         sLf3tgMlWYHy/U9gOYhfGMDuKrPxdwYNQiYhZtIptW1CsJanlVrOcvq3be4He4a1pi
-         wFtLm16XonqDNEQoNricspapdRmIX1lqp8MEdB4Y=
+        b=lHootr17igh5pkxxq6dbgJ78HSWt2vWf7YIVrjkeDwKYsC/K6jQyn94raJzWNGnaj
+         IFXJEJz11uCYNtgUh1UmVTLIs3Bwipl/RxfTeya3yFsdKDKRc9ZK/6y+zQ1+LHSImQ
+         HSxsQ6/UQo4/bRcq0a6CblvtkW7HJIa1juOFg+YM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/152] io_uring: grab ->fs as part of async offload
-Date:   Tue,  3 Mar 2020 18:41:39 +0100
-Message-Id: <20200303174302.711223909@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 5.5 163/176] thermal: brcmstb_thermal: Do not use DT coefficients
+Date:   Tue,  3 Mar 2020 18:43:47 +0100
+Message-Id: <20200303174323.076645343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-References: <20200303174302.523080016@linuxfoundation.org>
+In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
+References: <20200303174304.593872177@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,137 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commits 9392a27d88b9 and ff002b30181d ]
+commit e1ff6fc22f19e2af8adbad618526b80067911d40 upstream.
 
-Ensure that the async work grabs ->fs from the queueing task if the
-punted commands needs to do lookups.
+At the time the brcmstb_thermal driver and its binding were merged, the
+DT binding did not make the coefficients properties a mandatory one,
+therefore all users of the brcmstb_thermal driver out there have a non
+functional implementation with zero coefficients. Even if these
+properties were provided, the formula used for computation is incorrect.
 
-We don't have these two commits in 5.4-stable:
+The coefficients are entirely process specific (right now, only 28nm is
+supported) and not board or SoC specific, it is therefore appropriate to
+hard code them in the driver given the compatibility string we are
+probed with which has to be updated whenever a new process is
+introduced.
 
-ff002b30181d30cdfbca316dadd099c3ca0d739c
-9392a27d88b9707145d713654eb26f0c29789e50
+We remove the existing coefficients definition since subsequent patches
+are going to add support for a new process and will introduce new
+coefficients as well.
 
-because they don't apply with the rework that was done in how io_uring
-handles offload. Since there's no io-wq in 5.4, it doesn't make sense to
-do two patches. I'm attaching my port of the two for 5.4-stable, it's
-been tested. Please queue it up for the next 5.4-stable, thanks!
+Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200114190607.29339-2-f.fainelli@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/thermal/broadcom/brcmstb_thermal.c |   31 ++++++++---------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index ed9a551882cf3..f34a8f7eee5d1 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -71,6 +71,7 @@
- #include <linux/sizes.h>
- #include <linux/hugetlb.h>
- #include <linux/highmem.h>
-+#include <linux/fs_struct.h>
+--- a/drivers/thermal/broadcom/brcmstb_thermal.c
++++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+@@ -49,7 +49,7 @@
+ #define AVS_TMON_TP_TEST_ENABLE		0x20
  
- #include <uapi/linux/io_uring.h>
+ /* Default coefficients */
+-#define AVS_TMON_TEMP_SLOPE		-487
++#define AVS_TMON_TEMP_SLOPE		487
+ #define AVS_TMON_TEMP_OFFSET		410040
  
-@@ -334,6 +335,8 @@ struct io_kiocb {
- 	u32			result;
- 	u32			sequence;
- 
-+	struct fs_struct	*fs;
-+
- 	struct work_struct	work;
+ /* HW related temperature constants */
+@@ -108,23 +108,12 @@ struct brcmstb_thermal_priv {
+ 	struct thermal_zone_device *thermal;
  };
  
-@@ -651,6 +654,7 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 	/* one is dropped after submission, the other at completion */
- 	refcount_set(&req->refs, 2);
- 	req->result = 0;
-+	req->fs = NULL;
- 	return req;
- out:
- 	percpu_ref_put(&ctx->refs);
-@@ -1663,6 +1667,16 @@ static int io_send_recvmsg(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 			ret = -EINTR;
- 	}
- 
-+	if (req->fs) {
-+		struct fs_struct *fs = req->fs;
-+
-+		spin_lock(&req->fs->lock);
-+		if (--fs->users)
-+			fs = NULL;
-+		spin_unlock(&req->fs->lock);
-+		if (fs)
-+			free_fs_struct(fs);
-+	}
- 	io_cqring_add_event(req->ctx, sqe->user_data, ret);
- 	io_put_req(req);
- 	return 0;
-@@ -2159,6 +2173,7 @@ static inline bool io_sqe_needs_user(const struct io_uring_sqe *sqe)
- static void io_sq_wq_submit_work(struct work_struct *work)
+-static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
+-				int *offset)
+-{
+-	*slope = thermal_zone_get_slope(tz);
+-	*offset = thermal_zone_get_offset(tz);
+-}
+-
+ /* Convert a HW code to a temperature reading (millidegree celsius) */
+ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+ 					u32 code)
  {
- 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
-+	struct fs_struct *old_fs_struct = current->fs;
- 	struct io_ring_ctx *ctx = req->ctx;
- 	struct mm_struct *cur_mm = NULL;
- 	struct async_list *async_list;
-@@ -2178,6 +2193,15 @@ restart:
- 		/* Ensure we clear previously set non-block flag */
- 		req->rw.ki_flags &= ~IOCB_NOWAIT;
- 
-+		if (req->fs != current->fs && current->fs != old_fs_struct) {
-+			task_lock(current);
-+			if (req->fs)
-+				current->fs = req->fs;
-+			else
-+				current->fs = old_fs_struct;
-+			task_unlock(current);
-+		}
-+
- 		ret = 0;
- 		if (io_sqe_needs_user(sqe) && !cur_mm) {
- 			if (!mmget_not_zero(ctx->sqo_mm)) {
-@@ -2276,6 +2300,11 @@ out:
- 		mmput(cur_mm);
- 	}
- 	revert_creds(old_cred);
-+	if (old_fs_struct) {
-+		task_lock(current);
-+		current->fs = old_fs_struct;
-+		task_unlock(current);
-+	}
+-	const int val = code & AVS_TMON_TEMP_MASK;
+-	int slope, offset;
+-
+-	avs_tmon_get_coeffs(tz, &slope, &offset);
+-
+-	return slope * val + offset;
++	return (AVS_TMON_TEMP_OFFSET -
++		(int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
  }
  
  /*
-@@ -2503,6 +2532,23 @@ err:
+@@ -136,20 +125,18 @@ static inline int avs_tmon_code_to_temp(
+ static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
+ 					int temp, bool low)
+ {
+-	int slope, offset;
+-
+ 	if (temp < AVS_TMON_TEMP_MIN)
+-		return AVS_TMON_TEMP_MAX; /* Maximum code value */
+-
+-	avs_tmon_get_coeffs(tz, &slope, &offset);
++		return AVS_TMON_TEMP_MAX;	/* Maximum code value */
  
- 	req->user_data = s->sqe->user_data;
+-	if (temp >= offset)
++	if (temp >= AVS_TMON_TEMP_OFFSET)
+ 		return 0;	/* Minimum code value */
  
-+#if defined(CONFIG_NET)
-+	switch (READ_ONCE(s->sqe->opcode)) {
-+	case IORING_OP_SENDMSG:
-+	case IORING_OP_RECVMSG:
-+		spin_lock(&current->fs->lock);
-+		if (!current->fs->in_exec) {
-+			req->fs = current->fs;
-+			req->fs->users++;
-+		}
-+		spin_unlock(&current->fs->lock);
-+		if (!req->fs) {
-+			ret = -EAGAIN;
-+			goto err_req;
-+		}
-+	}
-+#endif
-+
- 	/*
- 	 * If we already have a head request, queue this one for async
- 	 * submittal once the head completes. If we don't have a head but
--- 
-2.20.1
-
+ 	if (low)
+-		return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
++		return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
++					  AVS_TMON_TEMP_SLOPE));
+ 	else
+-		return (u32)((offset - temp) / abs(slope));
++		return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
++			      AVS_TMON_TEMP_SLOPE);
+ }
+ 
+ static int brcmstb_get_temp(void *data, int *temp)
 
 
