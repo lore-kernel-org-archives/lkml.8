@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08BCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7D2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91FD320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B6F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258307;
-	bh=QqfcphkuUzCyavQxgi/91Rdbk/ME1gyPfETDf2x+bRE=;
+	s=default; t=1583258310;
+	bh=sTSTycuNnPO+ZMgJZjwp6l2Nl3IVSmSVhf+e/Jh3vCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fonzzu9IJ1Nz4BVfiwWzl028Q2Q5EjYsYgQIRsikHMU+w4UwL/9Y2B1hh2vAHfVHF
-	 D+gYDZtS/9cb02POz+9iGUjCfX085EmNGQpBKVzWw/pihpLBE+yYctYNhGQVs6Mk0p
-	 PBU6/bttVe01F16yi385rhBvTt5wqVjGbPSzrKxw=
+	b=lO4iI++XtgCrE7GIfN3IOTipRccdOciimuZOhvS250PomZJrwH/VzvZfh7VufOSSq
+	 LQ1h0BmR9NdPbBlfmYKrF63QoMnkO506GvvLY3f0TVNl689DIx04CjG9T86JwVQWJv
+	 Q07mfZZrnwvGEuJ/xiLj5XmhsawZ3BshMXzGAgUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733304AbgCCR6Z (ORCPT
+        id S2387401AbgCCR63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732966AbgCCR6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:21 -0500
+        id S1732966AbgCCR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C028720656;
-        Tue,  3 Mar 2020 17:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3EC3206D5;
+        Tue,  3 Mar 2020 17:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258301;
-        bh=QqfcphkuUzCyavQxgi/91Rdbk/ME1gyPfETDf2x+bRE=;
+        s=default; t=1583258306;
+        bh=sTSTycuNnPO+ZMgJZjwp6l2Nl3IVSmSVhf+e/Jh3vCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8Y/9xpcCVQ81WqsDSMYY88PhhGk3wOpztSomnr5cV2Cx/422zMnQypTHkJWOpwzH
-         Or7M0Mwdu9l5itxPvLv0iWY4XOS31EcSwralc+sXG8BIRdWZVXqVmF/1zgfRvVB35n
-         0k2M/710aLNlOIe8IA0q66RQMh7eAfGyaMCD8B6M=
+        b=rYoIM2l+oKfW8FfF8TJPy5ohyjbS86E01fI7cDIj6Ku5UEmqCea+kXKwG/yR5L6B5
+         nvdVIyJFp5odf8xm5YzlbyIqOCzqB8JqvOIUVM0QW/Ohy5lqdwRo0COrc11NRt+Lpr
+         reIoCY0vwy1WkqcMHwkazst/wGGXM7neA/2vV8Os=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 149/152] mm/huge_memory.c: use head to check huge zero page
-Date:   Tue,  3 Mar 2020 18:44:07 +0100
-Message-Id: <20200303174319.738320304@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Jon Cargille <jcargill@google.com>
+Subject: [PATCH 5.4 151/152] kvm: nVMX: VMWRITE checks VMCS-link pointer before VMCS field
+Date:   Tue,  3 Mar 2020 18:44:09 +0100
+Message-Id: <20200303174319.988650385@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,36 +64,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richardw.yang@linux.intel.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit cb829624867b5ab10bc6a7036d183b1b82bfe9f8 upstream.
+commit dd2d6042b7f4a5440705b4ffc6c4c2dba81a43b7 upstream.
 
-The page could be a tail page, if this is the case, this BUG_ON will
-never be triggered.
+According to the SDM, a VMWRITE in VMX non-root operation with an
+invalid VMCS-link pointer results in VMfailInvalid before the validity
+of the VMCS field in the secondary source operand is checked.
 
-Link: http://lkml.kernel.org/r/20200110032610.26499-1-richardw.yang@linux.intel.com
-Fixes: e9b61f19858a ("thp: reintroduce split_huge_page()")
+For consistency, modify both handle_vmwrite and handle_vmread, even
+though there was no problem with the latter.
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6d894f498f5d1 ("KVM: nVMX: vmread/vmwrite: Use shadow vmcs12 if running L2")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Oliver Upton <oupton@google.com>
+Reviewed-by: Jon Cargille <jcargill@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c |   59 +++++++++++++++++++---------------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2712,7 +2712,7 @@ int split_huge_page_to_list(struct page
- 	unsigned long flags;
- 	pgoff_t end;
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4609,32 +4609,28 @@ static int handle_vmread(struct kvm_vcpu
+ {
+ 	unsigned long field;
+ 	u64 field_value;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+ 	int len;
+ 	gva_t gva = 0;
+-	struct vmcs12 *vmcs12;
++	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
++						    : get_vmcs12(vcpu);
+ 	struct x86_exception e;
+ 	short offset;
  
--	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
-+	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
+ 	if (!nested_vmx_check_permission(vcpu))
+ 		return 1;
  
+-	if (to_vmx(vcpu)->nested.current_vmptr == -1ull)
++	/*
++	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
++	 * any VMREAD sets the ALU flags for VMfailInvalid.
++	 */
++	if (vmx->nested.current_vmptr == -1ull ||
++	    (is_guest_mode(vcpu) &&
++	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
+ 		return nested_vmx_failInvalid(vcpu);
+ 
+-	if (!is_guest_mode(vcpu))
+-		vmcs12 = get_vmcs12(vcpu);
+-	else {
+-		/*
+-		 * When vmcs->vmcs_link_pointer is -1ull, any VMREAD
+-		 * to shadowed-field sets the ALU flags for VMfailInvalid.
+-		 */
+-		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
+-			return nested_vmx_failInvalid(vcpu);
+-		vmcs12 = get_shadow_vmcs12(vcpu);
+-	}
+-
+ 	/* Decode instruction info and find the field to read */
+ 	field = kvm_register_readl(vcpu, (((vmx_instruction_info) >> 28) & 0xf));
+ 
+@@ -4713,13 +4709,20 @@ static int handle_vmwrite(struct kvm_vcp
+ 	 */
+ 	u64 field_value = 0;
+ 	struct x86_exception e;
+-	struct vmcs12 *vmcs12;
++	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
++						    : get_vmcs12(vcpu);
+ 	short offset;
+ 
+ 	if (!nested_vmx_check_permission(vcpu))
+ 		return 1;
+ 
+-	if (vmx->nested.current_vmptr == -1ull)
++	/*
++	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
++	 * any VMWRITE sets the ALU flags for VMfailInvalid.
++	 */
++	if (vmx->nested.current_vmptr == -1ull ||
++	    (is_guest_mode(vcpu) &&
++	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
+ 		return nested_vmx_failInvalid(vcpu);
+ 
+ 	if (vmx_instruction_info & (1u << 10))
+@@ -4747,24 +4750,12 @@ static int handle_vmwrite(struct kvm_vcp
+ 		return nested_vmx_failValid(vcpu,
+ 			VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
+ 
+-	if (!is_guest_mode(vcpu)) {
+-		vmcs12 = get_vmcs12(vcpu);
+-
+-		/*
+-		 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
+-		 * vmcs12, else we may crush a field or consume a stale value.
+-		 */
+-		if (!is_shadow_field_rw(field))
+-			copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
+-	} else {
+-		/*
+-		 * When vmcs->vmcs_link_pointer is -1ull, any VMWRITE
+-		 * to shadowed-field sets the ALU flags for VMfailInvalid.
+-		 */
+-		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
+-			return nested_vmx_failInvalid(vcpu);
+-		vmcs12 = get_shadow_vmcs12(vcpu);
+-	}
++	/*
++	 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
++	 * vmcs12, else we may crush a field or consume a stale value.
++	 */
++	if (!is_guest_mode(vcpu) && !is_shadow_field_rw(field))
++		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
+ 
+ 	offset = vmcs_field_to_offset(field);
+ 	if (offset < 0)
 
 
