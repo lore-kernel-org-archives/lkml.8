@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B28C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFEFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDE320726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579FF20726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbgCCHV4 (ORCPT
+        id S1727658AbgCCHV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:21:56 -0500
-Received: from twhmllg3.macronix.com ([211.75.127.131]:31770 "EHLO
+        Tue, 3 Mar 2020 02:21:58 -0500
+Received: from twhmllg3.macronix.com ([211.75.127.131]:31787 "EHLO
         TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbgCCHVx (ORCPT
+        with ESMTP id S1727637AbgCCHV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:21:53 -0500
+        Tue, 3 Mar 2020 02:21:57 -0500
 Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 0237LRLC023026;
-        Tue, 3 Mar 2020 15:21:31 +0800 (GMT-8)
+        by TWHMLLG3.macronix.com with ESMTP id 0237LRLD023026;
+        Tue, 3 Mar 2020 15:21:32 +0800 (GMT-8)
         (envelope-from masonccyang@mxic.com.tw)
 From:   Mason Yang <masonccyang@mxic.com.tw>
 To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
@@ -32,83 +32,135 @@ Cc:     frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
         rfontana@redhat.com, linux-mtd@lists.infradead.org,
         yuehaibing@huawei.com, s.hauer@pengutronix.de,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific suspend/resume operation
-Date:   Tue,  3 Mar 2020 15:21:23 +0800
-Message-Id: <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
+Subject: [PATCH v3 4/4] mtd: rawnand: Add support Macronix deep power down mode
+Date:   Tue,  3 Mar 2020 15:21:24 +0800
+Message-Id: <1583220084-10890-5-git-send-email-masonccyang@mxic.com.tw>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
 References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 0237LRLC023026
+X-MAIL: TWHMLLG3.macronix.com 0237LRLD023026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch nand_suspend() & nand_resume() for manufacturer specific
-suspend/resume operation.
+Macronix AD series support deep power down mode for a minimum
+power consumption state.
+
+Patch nand_suspend() & nand_resume() by Macronix specific deep
+power down mode command and exit it.
 
 Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
- include/linux/mtd/rawnand.h      |  4 ++++
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/mtd/nand/raw/nand_macronix.c | 74 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index 769be81..b44e460 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info *mtd)
- 	struct nand_chip *chip = mtd_to_nand(mtd);
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index a4cd12c..ca46ec1 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -6,6 +6,7 @@
+  * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+  */
  
- 	mutex_lock(&chip->lock);
--	chip->suspended = 1;
-+	if (chip->_suspend)
-+		if (!chip->_suspend(chip))
-+			chip->suspended = 1;
- 	mutex_unlock(&chip->lock);
++#include "linux/delay.h"
+ #include "internals.h"
  
- 	return 0;
-@@ -4342,11 +4344,14 @@ static void nand_resume(struct mtd_info *mtd)
- 	struct nand_chip *chip = mtd_to_nand(mtd);
+ #define MACRONIX_READ_RETRY_BIT BIT(0)
+@@ -15,6 +16,8 @@
+ #define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
+ #define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
  
- 	mutex_lock(&chip->lock);
--	if (chip->suspended)
-+	if (chip->suspended) {
-+		if (chip->_resume)
-+			chip->_resume(chip);
- 		chip->suspended = 0;
--	else
-+	} else {
- 		pr_err("%s called for a chip which is not in suspended state\n",
- 			__func__);
-+	}
- 	mutex_unlock(&chip->lock);
++#define MXIC_CMD_POWER_DOWN 0xB9
++
+ struct nand_onfi_vendor_macronix {
+ 	u8 reserved;
+ 	u8 reliability_func;
+@@ -162,6 +165,76 @@ static void macronix_nand_block_protection_support(struct nand_chip *chip)
+ 	chip->unlock_area = mxic_nand_unlock;
  }
  
-diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-index bc2fa3c..c0055ed 100644
---- a/include/linux/mtd/rawnand.h
-+++ b/include/linux/mtd/rawnand.h
-@@ -1064,6 +1064,8 @@ struct nand_legacy {
-  * @lock:		lock protecting the suspended field. Also used to
-  *			serialize accesses to the NAND device.
-  * @suspended:		set to 1 when the device is suspended, 0 when it's not.
-+ * @_suspend:		[REPLACEABLE] specific NAND device suspend operation
-+ * @_resume:		[REPLACEABLE] specific NAND device resume operation
-  * @bbt:		[INTERN] bad block table pointer
-  * @bbt_td:		[REPLACEABLE] bad block table descriptor for flash
-  *			lookup.
-@@ -1119,6 +1121,8 @@ struct nand_chip {
++static int nand_power_down_op(struct nand_chip *chip)
++{
++	int ret;
++
++	if (nand_has_exec_op(chip)) {
++		struct nand_op_instr instrs[] = {
++			NAND_OP_CMD(MXIC_CMD_POWER_DOWN, 0),
++		};
++
++		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
++
++		ret = nand_exec_op(chip, &op);
++		if (ret)
++			return ret;
++
++	} else {
++		chip->legacy.cmdfunc(chip, MXIC_CMD_POWER_DOWN, -1, -1);
++	}
++
++	return 0;
++}
++
++static int mxic_nand_suspend(struct nand_chip *chip)
++{
++	int ret;
++
++	nand_select_target(chip, 0);
++	ret = nand_power_down_op(chip);
++	if (ret < 0)
++		pr_err("Suspending MXIC NAND chip failed (%d)\n", ret);
++	nand_deselect_target(chip);
++
++	return ret;
++}
++
++static void mxic_nand_resume(struct nand_chip *chip)
++{
++	/*
++	 * Toggle #CS pin to resume NAND device and don't care
++	 * of the others CLE, #WE, #RE pins status.
++	 * A NAND controller ensure it is able to assert/de-assert #CS
++	 * by sending any byte over the NAND bus.
++	 * i.e.,
++	 * NAND power down command or reset command w/o R/B# status checking.
++	 */
++	nand_select_target(chip, 0);
++	nand_power_down_op(chip);
++	/* The minimum of a recovery time tRDP is 35 us */
++	usleep_range(35, 100);
++	nand_deselect_target(chip);
++}
++
++static void macronix_nand_deep_power_down_support(struct nand_chip *chip)
++{
++	int i;
++	static const char * const deep_power_down_dev[] = {
++		"MX30UF1G28AD",
++		"MX30UF2G28AD",
++		"MX30UF4G28AD",
++	};
++
++	i = match_string(deep_power_down_dev, ARRAY_SIZE(deep_power_down_dev),
++			 chip->parameters.model);
++	if (i < 0)
++		return;
++
++	chip->_suspend = mxic_nand_suspend;
++	chip->_resume = mxic_nand_resume;
++}
++
+ static int macronix_nand_init(struct nand_chip *chip)
+ {
+ 	if (nand_is_slc(chip))
+@@ -170,6 +243,7 @@ static int macronix_nand_init(struct nand_chip *chip)
+ 	macronix_nand_fix_broken_get_timings(chip);
+ 	macronix_nand_onfi_init(chip);
+ 	macronix_nand_block_protection_support(chip);
++	macronix_nand_deep_power_down_support(chip);
  
- 	struct mutex lock;
- 	unsigned int suspended : 1;
-+	int (*_suspend)(struct nand_chip *chip);
-+	void (*_resume)(struct nand_chip *chip);
- 
- 	uint8_t *oob_poi;
- 	struct nand_controller *controller;
+ 	return 0;
+ }
 -- 
 1.9.1
 
