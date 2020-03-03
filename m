@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6268C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC50C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7435D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE300206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258071;
-	bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
+	s=default; t=1583258074;
+	bh=eXXEwCxnzdfxbjn5nkEQ8AGAGP1DgqEPMJ10TE5Ql3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwZu0OPatmw4R7HXJRh83ekuBCOuRBbsiMJtKQI1lC/DBD1iJnc1yFFuWK/d7XdcB
-	 sBEPPuzsft5Tx+Q+mS2yDkucUcmX1T/YxplkRZq1UoXqPIOqEk0p/Ra8WgzU/CcdWy
-	 CoZJVs0I8SnNp68apq66ClmkStGOW69liA1uiXbs=
+	b=nuEdkC/p0oi4jKkTiW665R8tbgC23b2/55j4IOZeX8iYfjg3QkzTt5qcCDst/Hgn6
+	 ucd7AECTpStHfotMcssUsTh5EnJsExLEf2znR5FKcjOsDbhjhPUVb6bCrOSYPseQU7
+	 quu95PXs9+d3M3uObgT84XVW4lc2QBi95y5q0vHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbgCCRya (ORCPT
+        id S1732538AbgCCRyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732517AbgCCRy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:27 -0500
+        id S1732525AbgCCRyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEB2A206D5;
-        Tue,  3 Mar 2020 17:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4C8206D5;
+        Tue,  3 Mar 2020 17:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258067;
-        bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
+        s=default; t=1583258069;
+        bh=eXXEwCxnzdfxbjn5nkEQ8AGAGP1DgqEPMJ10TE5Ql3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETowBBpXfqZTp520LC0K5bQ/pcFkYgbY7DCFR6hrk9ixTSc513L7Vn7tdv4NczfN5
-         HugqUTJ8PTr/mD8RIYP8tExGa7XjQ8NC0pXTiY+8annGDwona/MAepuPo6knl/xmMI
-         hAPC/U2jBk4XUZcYbyv12DsPYKDxwxygaIIXgoVk=
+        b=RQ3xYJbdPYsDG7JgkjbkeaiN0mU4G7FbANHzcwsaEBWgnxBzItOzgTvzRrjbXykvC
+         PhIpHxQ2w40WixyRtIOEgQt3GabTUcPPsNSt1eVhNP8yuBlIqrtX34NeFMuobeft7v
+         7RP2IAyT1Q4BRZDeUay1rsCRM9w/Vvmdi6tAeD5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Bruce Allan <bruce.w.allan@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 059/152] net: ena: ena-com.c: prevent NULL pointer dereference
-Date:   Tue,  3 Mar 2020 18:42:37 +0100
-Message-Id: <20200303174309.150387083@linuxfoundation.org>
+Subject: [PATCH 5.4 060/152] ice: update Unit Load Status bitmask to check after reset
+Date:   Tue,  3 Mar 2020 18:42:38 +0100
+Message-Id: <20200303174309.281507217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,50 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Bruce Allan <bruce.w.allan@intel.com>
 
-[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
+[ Upstream commit cf8fc2a0863f9ff27ebd2efcdb1f7d378b9fb8a6 ]
 
-comp_ctx can be NULL in a very rare case when an admin command is executed
-during the execution of ena_remove().
+After a reset the Unit Load Status bits in the GLNVM_ULD register to check
+for completion should be 0x7FF before continuing.  Update the mask to check
+(minus the three reserved bits that are always set).
 
-The bug scenario is as follows:
-
-* ena_destroy_device() sets the comp_ctx to be NULL
-* An admin command is executed before executing unregister_netdev(),
-  this can still happen because our device can still receive callbacks
-  from the netdev infrastructure such as ethtool commands.
-* When attempting to access the comp_ctx, the bug occurs since it's set
-  to NULL
-
-Fix:
-Added a check that comp_ctx is not NULL
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/intel/ice/ice_common.c     | 17 ++++++++++++-----
+ drivers/net/ethernet/intel/ice/ice_hw_autogen.h |  6 ++++++
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 74743fd8a1e0a..304531332e70a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -200,6 +200,11 @@ static void comp_ctxt_release(struct ena_com_admin_queue *queue,
- static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
- 					  u16 command_id, bool capture)
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
+index 3a6b3950eb0e2..171f0b6254073 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.c
++++ b/drivers/net/ethernet/intel/ice/ice_common.c
+@@ -934,7 +934,7 @@ void ice_deinit_hw(struct ice_hw *hw)
+  */
+ enum ice_status ice_check_reset(struct ice_hw *hw)
  {
-+	if (unlikely(!queue->comp_ctx)) {
-+		pr_err("Completion context is NULL\n");
-+		return NULL;
-+	}
+-	u32 cnt, reg = 0, grst_delay;
++	u32 cnt, reg = 0, grst_delay, uld_mask;
+ 
+ 	/* Poll for Device Active state in case a recent CORER, GLOBR,
+ 	 * or EMPR has occurred. The grst delay value is in 100ms units.
+@@ -956,13 +956,20 @@ enum ice_status ice_check_reset(struct ice_hw *hw)
+ 		return ICE_ERR_RESET_FAILED;
+ 	}
+ 
+-#define ICE_RESET_DONE_MASK	(GLNVM_ULD_CORER_DONE_M | \
+-				 GLNVM_ULD_GLOBR_DONE_M)
++#define ICE_RESET_DONE_MASK	(GLNVM_ULD_PCIER_DONE_M |\
++				 GLNVM_ULD_PCIER_DONE_1_M |\
++				 GLNVM_ULD_CORER_DONE_M |\
++				 GLNVM_ULD_GLOBR_DONE_M |\
++				 GLNVM_ULD_POR_DONE_M |\
++				 GLNVM_ULD_POR_DONE_1_M |\
++				 GLNVM_ULD_PCIER_DONE_2_M)
 +
- 	if (unlikely(command_id >= queue->q_depth)) {
- 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
- 		       command_id, queue->q_depth);
++	uld_mask = ICE_RESET_DONE_MASK;
+ 
+ 	/* Device is Active; check Global Reset processes are done */
+ 	for (cnt = 0; cnt < ICE_PF_RESET_WAIT_COUNT; cnt++) {
+-		reg = rd32(hw, GLNVM_ULD) & ICE_RESET_DONE_MASK;
+-		if (reg == ICE_RESET_DONE_MASK) {
++		reg = rd32(hw, GLNVM_ULD) & uld_mask;
++		if (reg == uld_mask) {
+ 			ice_debug(hw, ICE_DBG_INIT,
+ 				  "Global reset processes done. %d\n", cnt);
+ 			break;
+diff --git a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
+index 152fbd556e9b4..9138b19de87e0 100644
+--- a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
++++ b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
+@@ -273,8 +273,14 @@
+ #define GLNVM_GENS_SR_SIZE_S			5
+ #define GLNVM_GENS_SR_SIZE_M			ICE_M(0x7, 5)
+ #define GLNVM_ULD				0x000B6008
++#define GLNVM_ULD_PCIER_DONE_M			BIT(0)
++#define GLNVM_ULD_PCIER_DONE_1_M		BIT(1)
+ #define GLNVM_ULD_CORER_DONE_M			BIT(3)
+ #define GLNVM_ULD_GLOBR_DONE_M			BIT(4)
++#define GLNVM_ULD_POR_DONE_M			BIT(5)
++#define GLNVM_ULD_POR_DONE_1_M			BIT(8)
++#define GLNVM_ULD_PCIER_DONE_2_M		BIT(9)
++#define GLNVM_ULD_PE_DONE_M			BIT(10)
+ #define GLPCI_CNF2				0x000BE004
+ #define GLPCI_CNF2_CACHELINE_SIZE_M		BIT(1)
+ #define PF_FUNC_RID				0x0009E880
 -- 
 2.20.1
 
