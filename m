@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28102C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5B6C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE17F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37244214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258781;
-	bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
+	s=default; t=1583258786;
+	bh=BjvBwR9wfIQkcbw6f/vc4ogNDAmbRZYRGuqdD7B4jQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hv71/jWgWSGki+hCKPZVThAEG09WXd9sK77u2wJmQr4NlxBB8GjF7yy9ikkgMD+wg
-	 dcK0Ah5vIxQojuCiOe8/JUEBBINJiT2/802uYCBmFzUrwx/upultTR++ejCNQoYG+C
-	 Kx0ntWhir+cCD+9HOrlwvbBp/0oXbRV2rV8VETY8=
+	b=sc+8DtMrDrJjue3hqMHhF4gr3J9mSkfGFCChs4QAkNJ54bqVltHodFZFeA56t7cH7
+	 UzB3GF9YayVisJJiJMHVO3wML8LzwlpORO5zQ4N+RjO2u7+p552Vk7f/wVsNzdo7py
+	 bqVjvuyFZmNw1CWDDTjWB464UbikWMmr4HWQj1D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387914AbgCCSGU (ORCPT
+        id S2387993AbgCCSGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:06:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:06:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732684AbgCCR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:07 -0500
+        id S1732660AbgCCR47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34AEE214DB;
-        Tue,  3 Mar 2020 17:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2449F20656;
+        Tue,  3 Mar 2020 17:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258225;
-        bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
+        s=default; t=1583258217;
+        bh=BjvBwR9wfIQkcbw6f/vc4ogNDAmbRZYRGuqdD7B4jQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8QIcqt8TbCYEkwDCL3AYA57dHi2EZyyGkUwZHMQ38p5ciuZjCb9zTn/7Atkhr2e0
-         cJRmptMuhDJFNCFCx7GTNy73E+X2CgOe/90jUnPHydlWftHMZsilxGslFT5NHfN3ei
-         3X/oekOkDiDbv2ToMZz8QWsibUETvIj1Ix71Fc48=
+        b=pG97AJxZLDpxRrQpbjb27IseD00tLyLUkQ4Shxw6Ziu3O+xJI5tTVXsuR4PVmUqno
+         WevRxOXlAOEqS8nQ73xzUsAjTQltISCtpkP/pZtIUnYs00+DXbxDJEthyMNQzqhoLi
+         L9cmztVHV4zwYdpVOPqla0NsDarVHBneMZMyevDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 118/152] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
-Date:   Tue,  3 Mar 2020 18:43:36 +0100
-Message-Id: <20200303174316.178066107@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 116/152] kbuild: make single target builds even faster
+Date:   Tue,  3 Mar 2020 18:43:34 +0100
+Message-Id: <20200303174315.952250016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,225 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 70e5b8f445fd27fde0c5583460e82539a7242424 upstream.
+commit b1fbfcb4a20949df08dd995927cdc5ad220c128d upstream.
 
-Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
-mmwifiex_process_tdls_action_frame()"),
-mwifiex_process_tdls_action_frame() already had too many magic numbers.
-But this commit just added a ton more, in the name of checking for
-buffer overflows. That seems like a really bad idea.
+Commit 2dffd23f81a3 ("kbuild: make single target builds much faster")
+made the situation much better.
 
-Let's make these magic numbers a little less magic, by
-(a) factoring out 'pos[1]' as 'ie_len'
-(b) using 'sizeof' on the appropriate source or destination fields where
-    possible, instead of bare numbers
-(c) dropping redundant checks, per below.
+To improve it even more, apply the similar idea to the top Makefile.
+Trim unrelated directories from build-dirs.
 
-Regarding redundant checks: the beginning of the loop has this:
+The single build code must be moved above the 'descend' target.
 
-                if (pos + 2 + pos[1] > end)
-                        break;
-
-but then individual 'case's include stuff like this:
-
- 			if (pos > end - 3)
- 				return;
- 			if (pos[1] != 1)
-				return;
-
-Note that the second 'return' (validating the length, pos[1]) combined
-with the above condition (ensuring 'pos + 2 + length' doesn't exceed
-'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
-end - pos[1] - 2') redundant. Rather than unwind the magic numbers
-there, just drop those conditions.
-
-Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/tdls.c |   75 ++++++++++------------------
- 1 file changed, 28 insertions(+), 47 deletions(-)
+ Makefile |   90 ++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 47 insertions(+), 43 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/tdls.c
-+++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
-@@ -894,7 +894,7 @@ void mwifiex_process_tdls_action_frame(s
- 	u8 *peer, *pos, *end;
- 	u8 i, action, basic;
- 	u16 cap = 0;
--	int ie_len = 0;
-+	int ies_len = 0;
+--- a/Makefile
++++ b/Makefile
+@@ -1635,6 +1635,50 @@ help:
+ PHONY += prepare
+ endif # KBUILD_EXTMOD
  
- 	if (len < (sizeof(struct ethhdr) + 3))
- 		return;
-@@ -916,7 +916,7 @@ void mwifiex_process_tdls_action_frame(s
- 		pos = buf + sizeof(struct ethhdr) + 4;
- 		/* payload 1+ category 1 + action 1 + dialog 1 */
- 		cap = get_unaligned_le16(pos);
--		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
- 		pos += 2;
- 		break;
- 
-@@ -926,7 +926,7 @@ void mwifiex_process_tdls_action_frame(s
- 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
- 		pos = buf + sizeof(struct ethhdr) + 6;
- 		cap = get_unaligned_le16(pos);
--		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
- 		pos += 2;
- 		break;
- 
-@@ -934,7 +934,7 @@ void mwifiex_process_tdls_action_frame(s
- 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
- 			return;
- 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
--		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
-+		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
- 		break;
- 	default:
- 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
-@@ -947,33 +947,33 @@ void mwifiex_process_tdls_action_frame(s
- 
- 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
- 
--	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
--		if (pos + 2 + pos[1] > end)
-+	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
-+		u8 ie_len = pos[1];
++# Single targets
++# ---------------------------------------------------------------------------
++# To build individual files in subdirectories, you can do like this:
++#
++#   make foo/bar/baz.s
++#
++# The supported suffixes for single-target are listed in 'single-targets'
++#
++# To build only under specific subdirectories, you can do like this:
++#
++#   make foo/bar/baz/
 +
-+		if (pos + 2 + ie_len > end)
- 			break;
++ifdef single-build
++
++# .ko is special because modpost is needed
++single-ko := $(sort $(filter %.ko, $(MAKECMDGOALS)))
++single-no-ko := $(sort $(patsubst %.ko,%.mod, $(MAKECMDGOALS)))
++
++$(single-ko): single_modpost
++	@:
++$(single-no-ko): descend
++	@:
++
++ifeq ($(KBUILD_EXTMOD),)
++# For the single build of in-tree modules, use a temporary file to avoid
++# the situation of modules_install installing an invalid modules.order.
++MODORDER := .modules.tmp
++endif
++
++PHONY += single_modpost
++single_modpost: $(single-no-ko)
++	$(Q){ $(foreach m, $(single-ko), echo $(extmod-prefix)$m;) } > $(MODORDER)
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++
++KBUILD_MODULES := 1
++
++export KBUILD_SINGLE_TARGETS := $(addprefix $(extmod-prefix), $(single-no-ko))
++
++# trim unrelated directories
++build-dirs := $(foreach d, $(build-dirs), \
++			$(if $(filter $(d)/%, $(KBUILD_SINGLE_TARGETS)), $(d)))
++
++endif
++
+ # Handle descending into subdirectories listed in $(build-dirs)
+ # Preset locale variables to speed up the build process. Limit locale
+ # tweaks to this spot to avoid wrong language settings when running
+@@ -1643,7 +1687,9 @@ endif # KBUILD_EXTMOD
+ PHONY += descend $(build-dirs)
+ descend: $(build-dirs)
+ $(build-dirs): prepare
+-	$(Q)$(MAKE) $(build)=$@ single-build=$(single-build) need-builtin=1 need-modorder=1
++	$(Q)$(MAKE) $(build)=$@ \
++	single-build=$(if $(filter-out $@/, $(single-no-ko)),1) \
++	need-builtin=1 need-modorder=1
  
- 		switch (*pos) {
- 		case WLAN_EID_SUPP_RATES:
--			if (pos[1] > 32)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
- 				return;
--			sta_ptr->tdls_cap.rates_len = pos[1];
--			for (i = 0; i < pos[1]; i++)
-+			sta_ptr->tdls_cap.rates_len = ie_len;
-+			for (i = 0; i < ie_len; i++)
- 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
- 			break;
+ clean-dirs := $(addprefix _clean_, $(clean-dirs))
+ PHONY += $(clean-dirs) clean
+@@ -1747,48 +1793,6 @@ tools/%: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+ 	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
  
- 		case WLAN_EID_EXT_SUPP_RATES:
--			if (pos[1] > 32)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
- 				return;
- 			basic = sta_ptr->tdls_cap.rates_len;
--			if (pos[1] > 32 - basic)
-+			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
- 				return;
--			for (i = 0; i < pos[1]; i++)
-+			for (i = 0; i < ie_len; i++)
- 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
--			sta_ptr->tdls_cap.rates_len += pos[1];
-+			sta_ptr->tdls_cap.rates_len += ie_len;
- 			break;
- 		case WLAN_EID_HT_CAPABILITY:
--			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
--				return;
--			if (pos[1] != sizeof(struct ieee80211_ht_cap))
-+			if (ie_len != sizeof(struct ieee80211_ht_cap))
- 				return;
- 			/* copy the ie's value into ht_capb*/
- 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
-@@ -981,59 +981,45 @@ void mwifiex_process_tdls_action_frame(s
- 			sta_ptr->is_11n_enabled = 1;
- 			break;
- 		case WLAN_EID_HT_OPERATION:
--			if (pos > end -
--			    sizeof(struct ieee80211_ht_operation) - 2)
--				return;
--			if (pos[1] != sizeof(struct ieee80211_ht_operation))
-+			if (ie_len != sizeof(struct ieee80211_ht_operation))
- 				return;
- 			/* copy the ie's value into ht_oper*/
- 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
- 			       sizeof(struct ieee80211_ht_operation));
- 			break;
- 		case WLAN_EID_BSS_COEX_2040:
--			if (pos > end - 3)
--				return;
--			if (pos[1] != 1)
-+			if (ie_len != sizeof(pos[2]))
- 				return;
- 			sta_ptr->tdls_cap.coex_2040 = pos[2];
- 			break;
- 		case WLAN_EID_EXT_CAPABILITY:
--			if (pos > end - sizeof(struct ieee_types_header))
--				return;
--			if (pos[1] < sizeof(struct ieee_types_header))
-+			if (ie_len < sizeof(struct ieee_types_header))
- 				return;
--			if (pos[1] > 8)
-+			if (ie_len > 8)
- 				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
- 			       sizeof(struct ieee_types_header) +
--			       min_t(u8, pos[1], 8));
-+			       min_t(u8, ie_len, 8));
- 			break;
- 		case WLAN_EID_RSN:
--			if (pos > end - sizeof(struct ieee_types_header))
-+			if (ie_len < sizeof(struct ieee_types_header))
- 				return;
--			if (pos[1] < sizeof(struct ieee_types_header))
--				return;
--			if (pos[1] > IEEE_MAX_IE_SIZE -
-+			if (ie_len > IEEE_MAX_IE_SIZE -
- 			    sizeof(struct ieee_types_header))
- 				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
- 			       sizeof(struct ieee_types_header) +
--			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
-+			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
- 				     sizeof(struct ieee_types_header)));
- 			break;
- 		case WLAN_EID_QOS_CAPA:
--			if (pos > end - 3)
--				return;
--			if (pos[1] != 1)
-+			if (ie_len != sizeof(pos[2]))
- 				return;
- 			sta_ptr->tdls_cap.qos_info = pos[2];
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end -
--				    sizeof(struct ieee80211_vht_operation) - 2)
--					return;
--				if (pos[1] !=
-+				if (ie_len !=
- 				    sizeof(struct ieee80211_vht_operation))
- 					return;
- 				/* copy the ie's value into vhtoper*/
-@@ -1043,10 +1029,7 @@ void mwifiex_process_tdls_action_frame(s
- 			break;
- 		case WLAN_EID_VHT_CAPABILITY:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end -
--				    sizeof(struct ieee80211_vht_cap) - 2)
--					return;
--				if (pos[1] != sizeof(struct ieee80211_vht_cap))
-+				if (ie_len != sizeof(struct ieee80211_vht_cap))
- 					return;
- 				/* copy the ie's value into vhtcap*/
- 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
-@@ -1056,9 +1039,7 @@ void mwifiex_process_tdls_action_frame(s
- 			break;
- 		case WLAN_EID_AID:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				if (pos > end - 4)
--					return;
--				if (pos[1] != 2)
-+				if (ie_len != sizeof(u16))
- 					return;
- 				sta_ptr->tdls_cap.aid =
- 					get_unaligned_le16((pos + 2));
+-# Single targets
+-# ---------------------------------------------------------------------------
+-# To build individual files in subdirectories, you can do like this:
+-#
+-#   make foo/bar/baz.s
+-#
+-# The supported suffixes for single-target are listed in 'single-targets'
+-#
+-# To build only under specific subdirectories, you can do like this:
+-#
+-#   make foo/bar/baz/
+-
+-ifdef single-build
+-
+-# .ko is special because modpost is needed
+-single-ko := $(sort $(filter %.ko, $(MAKECMDGOALS)))
+-single-no-ko := $(sort $(patsubst %.ko,%.mod, $(MAKECMDGOALS)))
+-
+-$(single-ko): single_modpost
+-	@:
+-$(single-no-ko): descend
+-	@:
+-
+-ifeq ($(KBUILD_EXTMOD),)
+-# For the single build of in-tree modules, use a temporary file to avoid
+-# the situation of modules_install installing an invalid modules.order.
+-MODORDER := .modules.tmp
+-endif
+-
+-PHONY += single_modpost
+-single_modpost: $(single-no-ko)
+-	$(Q){ $(foreach m, $(single-ko), echo $(extmod-prefix)$m;) } > $(MODORDER)
+-	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+-
+-KBUILD_MODULES := 1
+-
+-export KBUILD_SINGLE_TARGETS := $(addprefix $(extmod-prefix), $(single-no-ko))
+-
+-single-build = $(if $(filter-out $@/, $(single-no-ko)),1)
+-
+-endif
+-
+ # FIXME Should go into a make.lib or something
+ # ===========================================================================
+ 
 
 
