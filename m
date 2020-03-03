@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34017C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C65BC3F2D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1148C20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F01720656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259121;
-	bh=2iJwWasVf+CDL+1GCCg+dC8safmJqLUpKJYeW7tEWz8=;
+	s=default; t=1583259123;
+	bh=LqAP0KvMGc8JzE6uGuZp/y4BiDKlH9TptkED8OV5tJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+gw7wa+3Z97tvyr5bPtJ6ZujsKn0N03zVhB+D42sw9HXl7szByurAo0zJikfrs0+
-	 KCcqpcOXWwF1PUBtez0RAjIv3lsSsEgG7miKfoRjr+7nip5VLc31E/V2sSiOVwxZl5
-	 9TJM8cSmwztoab62c5OHZtqta6y6iXtCmfkCncvU=
+	b=yPx/lwfY+/yXLe29A1tlqBFpbdBiTkWvXm5YfYhb3lD88NJHj8wfL+o8JLzfr3Kqi
+	 NSPU2FwpQ2HIfu28zx+h6maIf1LDEjFC55NAXGpKiH/1xmoJZnirRAq6BaXNyL1ajk
+	 OPj/wMDKSH22GarVDv8j2GOcq9Cm639YPidBAGKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgCCRtM (ORCPT
+        id S1731724AbgCCRtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56380 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730830AbgCCRtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:08 -0500
+        id S1731716AbgCCRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138E1208C3;
-        Tue,  3 Mar 2020 17:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D832221556;
+        Tue,  3 Mar 2020 17:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257747;
-        bh=2iJwWasVf+CDL+1GCCg+dC8safmJqLUpKJYeW7tEWz8=;
+        s=default; t=1583257742;
+        bh=LqAP0KvMGc8JzE6uGuZp/y4BiDKlH9TptkED8OV5tJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZslrvy0Ba4gQV2SbhU4DRKilc+eQqDArk8aqPVs5+6wI4UFKWsfcmpoBjbO7kknX
-         flXF+RX4z6qiYsa3oA4JoR4PPaRFHwhNxP77VQhHOR+6VNtB+n2uiFWejSsg70lXRD
-         XhthIfxzzuiOPUmsKWhYx2VumXf3WQJ1YilkmOjw=
+        b=aUZh6Lhv0ABJ5T0RBivBjMyV3JGj6MBEPmedMA5G7SZrSw00iZxVHqoEscBl8nFgg
+         oJZTTcMj+oGrhVMsoQIW7rE2HCBaHVEOtJ/fHzrWNpwkuHU1QpwdFgG9ejcPiwQ3W2
+         iCsm7ITlO/frm4wuGkq96I+HfLNzrYy1AaHPf4Rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.5 114/176] MIPS: cavium_octeon: Fix syncw generation.
-Date:   Tue,  3 Mar 2020 18:42:58 +0100
-Message-Id: <20200303174318.020233777@linuxfoundation.org>
+        stable@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.5 112/176] i2c: altera: Fix potential integer overflow
+Date:   Tue,  3 Mar 2020 18:42:56 +0100
+Message-Id: <20200303174317.783152843@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,48 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 97e914b7de3c943011779b979b8093fdc0d85722 upstream.
+commit 54498e8070e19e74498a72c7331348143e7e1f8c upstream.
 
-The Cavium Octeon CPU uses a special sync instruction for implementing
-wmb, and due to a CPU bug, the instruction must appear twice. A macro
-had been defined to hide this:
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
 
- #define __SYNC_rpt(type)     (1 + (type == __SYNC_wmb))
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
 
-which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any other
-type of sync. However, this expression is evaluated by the assembler,
-and not the compiler, and the result of '==' in the assembler is 0 or
--1, not 0 or 1 as it is in C. The net result was wmb() producing no code
-at all. The simple fix in this patch is to change the '+' to '-'.
-
-Fixes: bf92927251b3 ("MIPS: barrier: Add __SYNC() infrastructure")
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/sync.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-altera.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/include/asm/sync.h
-+++ b/arch/mips/include/asm/sync.h
-@@ -155,9 +155,11 @@
-  * effective barrier as noted by commit 6b07d38aaa52 ("MIPS: Octeon: Use
-  * optimized memory barrier primitives."). Here we specify that the affected
-  * sync instructions should be emitted twice.
-+ * Note that this expression is evaluated by the assembler (not the compiler),
-+ * and that the assembler evaluates '==' as 0 or -1, not 0 or 1.
-  */
- #ifdef CONFIG_CPU_CAVIUM_OCTEON
--# define __SYNC_rpt(type)	(1 + (type == __SYNC_wmb))
-+# define __SYNC_rpt(type)	(1 - (type == __SYNC_wmb))
- #else
- # define __SYNC_rpt(type)	1
- #endif
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+ 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 
 
