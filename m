@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF104C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A15C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB5120728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB74206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258412;
-	bh=yBmJYcsax/aoSR9o0ZnIg9yKXHRZ8PCmpT6whJPQGTA=;
+	s=default; t=1583258416;
+	bh=V51Vu+HQ72Eb7Z9v4aEUw/Txp3SxjenRuqukHVvoP+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVGlT3iDs4uSQsOlPhtrwgRKhgjPGo42aITcWHnZPv6++IE6k+kGNuv3JPaCvAGzw
-	 IQ81NiIoLvW4bauVwaBgzayv+V25/GXozcY4JAx9LpLana9m3foKs8N7ZOqTbmMq7w
-	 RlPG5eXuxWwWInu9GXrJqB2TAM/iwe/GGhAwd/n4=
+	b=ilJoIpI8PIip/zpaNwhbHt5VTOf27ScLe+d+96uq5yXVPpFwM+0nDD0ValaWHfRqf
+	 RWDd9vklFrFuw1HIIU79F2JRjrwNWXUNXRqCXZ85QinZfGdeCZB3d4h7Y885LU3PeK
+	 rba+DLyXklicz5xVOEwKGJr3FD8RFfpL9FzXHh7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbgCCSAL (ORCPT
+        id S1733253AbgCCSAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:00:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43700 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387708AbgCCSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:07 -0500
+        id S1733243AbgCCSAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9E120870;
-        Tue,  3 Mar 2020 18:00:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FB220870;
+        Tue,  3 Mar 2020 18:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258406;
-        bh=yBmJYcsax/aoSR9o0ZnIg9yKXHRZ8PCmpT6whJPQGTA=;
+        s=default; t=1583258409;
+        bh=V51Vu+HQ72Eb7Z9v4aEUw/Txp3SxjenRuqukHVvoP+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuVXdExwOJhlVl8ml7H9vbqUqfoPduP/QJEWqDZajwMMqTtf/+5AuksnZlzqahYLw
-         /l4rxGtgUOP54IIUPmvMSKb8nQGZRr49qOqSE+4tEJ+DV0D762ZIbAknNtx8X46o0h
-         GnbWbhv36lQzMJDhljyMpscj19923k75rrcilNB0=
+        b=EMjCEI0El3cHSGZFMxAWyZ6orKjka66zrMViBsTf3uQHIRYpGMJnamg6KwG1giy3G
+         Hm0FROXEZ9WHr2mfmfTWj9ssZAz5+QGzsell0ONlQmDljnua9vAy0XauyMzNzBEy2P
+         wXWua1+9NCTw49Be7eEwAt59RMerVME2QE/QfbDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rohit Maheshwari <rohitm@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 38/87] net/tls: Fix to avoid gettig invalid tls record
-Date:   Tue,  3 Mar 2020 18:43:29 +0100
-Message-Id: <20200303174353.906416120@linuxfoundation.org>
+        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, stable@kernel.org,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 39/87] ext4: potential crash on allocation error in ext4_alloc_flex_bg_array()
+Date:   Tue,  3 Mar 2020 18:43:30 +0100
+Message-Id: <20200303174353.962361461@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,70 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rohit Maheshwari <rohitm@chelsio.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 06f5201c6392f998a49ca9c9173e2930c8eb51d8 ]
+commit 37b0b6b8b99c0e1c1f11abbe7cf49b6d03795b3f upstream.
 
-Current code doesn't check if tcp sequence number is starting from (/after)
-1st record's start sequnce number. It only checks if seq number is before
-1st record's end sequnce number. This problem will always be a possibility
-in re-transmit case. If a record which belongs to a requested seq number is
-already deleted, tls_get_record will start looking into list and as per the
-check it will look if seq number is before the end seq of 1st record, which
-will always be true and will return 1st record always, it should in fact
-return NULL.
-As part of the fix, start looking each record only if the sequence number
-lies in the list else return NULL.
-There is one more check added, driver look for the start marker record to
-handle tcp packets which are before the tls offload start sequence number,
-hence return 1st record if the record is tls start marker and seq number is
-before the 1st record's starting sequence number.
+If sbi->s_flex_groups_allocated is zero and the first allocation fails
+then this code will crash.  The problem is that "i--" will set "i" to
+-1 but when we compare "i >= sbi->s_flex_groups_allocated" then the -1
+is type promoted to unsigned and becomes UINT_MAX.  Since UINT_MAX
+is more than zero, the condition is true so we call kvfree(new_groups[-1]).
+The loop will carry on freeing invalid memory until it crashes.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Rohit Maheshwari <rohitm@chelsio.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7c990728b99e ("ext4: fix potential race between s_flex_groups online resizing and access")
+Reviewed-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable@kernel.org
+Link: https://lore.kernel.org/r/20200228092142.7irbc44yaz3by7nb@kili.mountain
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tls/tls_device.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -506,7 +506,7 @@ struct tls_record_info *tls_get_record(s
- 				       u32 seq, u64 *p_record_sn)
+---
+ fs/ext4/super.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2298,7 +2298,7 @@ int ext4_alloc_flex_bg_array(struct supe
  {
- 	u64 record_sn = context->hint_record_sn;
--	struct tls_record_info *info;
-+	struct tls_record_info *info, *last;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct flex_groups **old_groups, **new_groups;
+-	int size, i;
++	int size, i, j;
  
- 	info = context->retransmit_hint;
- 	if (!info ||
-@@ -516,6 +516,25 @@ struct tls_record_info *tls_get_record(s
- 		 */
- 		info = list_first_entry(&context->records_list,
- 					struct tls_record_info, list);
-+
-+		/* send the start_marker record if seq number is before the
-+		 * tls offload start marker sequence number. This record is
-+		 * required to handle TCP packets which are before TLS offload
-+		 * started.
-+		 *  And if it's not start marker, look if this seq number
-+		 * belongs to the list.
-+		 */
-+		if (likely(!tls_record_is_start_marker(info))) {
-+			/* we have the first record, get the last record to see
-+			 * if this seq number belongs to the list.
-+			 */
-+			last = list_last_entry(&context->records_list,
-+					       struct tls_record_info, list);
-+
-+			if (!between(seq, tls_record_start_seq(info),
-+				     last->end_seq))
-+				return NULL;
-+		}
- 		record_sn = context->unacked_record_sn;
- 	}
- 
+ 	if (!sbi->s_log_groups_per_flex)
+ 		return 0;
+@@ -2319,8 +2319,8 @@ int ext4_alloc_flex_bg_array(struct supe
+ 					 sizeof(struct flex_groups)),
+ 					 GFP_KERNEL);
+ 		if (!new_groups[i]) {
+-			for (i--; i >= sbi->s_flex_groups_allocated; i--)
+-				kvfree(new_groups[i]);
++			for (j = sbi->s_flex_groups_allocated; j < i; j++)
++				kvfree(new_groups[j]);
+ 			kvfree(new_groups);
+ 			ext4_msg(sb, KERN_ERR,
+ 				 "not enough memory for %d flex groups", size);
 
 
