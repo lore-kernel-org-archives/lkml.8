@@ -2,75 +2,97 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C35C3F2D2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7F7C3F2D7
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2126822B48
+	by mail.kernel.org (Postfix) with ESMTP id 719532465E
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgCCDRQ (ORCPT
+        id S1727174AbgCCDRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:17:16 -0500
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:7361 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgCCDRP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 22:17:15 -0500
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e5dcc185cb-c2027; Tue, 03 Mar 2020 11:16:40 +0800 (CST)
-X-RM-TRANSID: 2ee65e5dcc185cb-c2027
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.22.8.194])
-        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25e5dcc1237d-b51a3;
-        Tue, 03 Mar 2020 11:16:40 +0800 (CST)
-X-RM-TRANSID: 2ee25e5dcc1237d-b51a3
-From:   tangbin <tangbin@cmss.chinamobile.com>
-To:     jun.nie@linaro.org
-Cc:     shawnguo@kernel.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tangbin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] =?UTF-8?q?ARM:mach-zx=EF=BC=9Aremove=20duplicate=20debug?= =?UTF-8?q?=20message?=
-Date:   Tue,  3 Mar 2020 11:17:25 +0800
-Message-Id: <20200303031725.14560-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Mon, 2 Mar 2020 22:17:53 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10712 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726970AbgCCDRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 22:17:53 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AC924DED1612D2282D3A;
+        Tue,  3 Mar 2020 11:17:50 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.207) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
+ 11:17:42 +0800
+Subject: Re: [PATCH -next] drivers/base/power: fix build error without SYSFS
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+CC:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <chenzhou10@huawei.com>,
+        <rjw@rjwysocki.net>, <pavel@ucw.cz>
+References: <20200302092918.40163-1-yaohongbo@huawei.com>
+ <20200302093111.eavix4e65otpudb5@wittgenstein>
+From:   Hongbo Yao <yaohongbo@huawei.com>
+Message-ID: <c08c5a14-3188-cc67-f0c7-53f361552226@huawei.com>
+Date:   Tue, 3 Mar 2020 11:17:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302093111.eavix4e65otpudb5@wittgenstein>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.207]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplicate dev_err message, because of
-devm_ioremap_resource, which has already contains.
-
-Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
----
- arch/arm/mach-zx/zx296702-pm-domain.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/arm/mach-zx/zx296702-pm-domain.c b/arch/arm/mach-zx/zx296702-pm-domain.c
-index 7a08bf9dd..ac44ea8e6 100644
---- a/arch/arm/mach-zx/zx296702-pm-domain.c
-+++ b/arch/arm/mach-zx/zx296702-pm-domain.c
-@@ -169,10 +169,8 @@ static int zx296702_pd_probe(struct platform_device *pdev)
- 	}
- 
- 	pcubase = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(pcubase)) {
--		dev_err(&pdev->dev, "ioremap fail.\n");
-+	if (IS_ERR(pcubase))
- 		return -EIO;
--	}
- 
- 	for (i = 0; i < ARRAY_SIZE(zx296702_pm_domains); ++i)
- 		pm_genpd_init(zx296702_pm_domains[i], NULL, false);
--- 
-2.20.1.windows.1
 
 
+On 2020/3/2 17:31, Christian Brauner wrote:
+> On Mon, Mar 02, 2020 at 05:29:18PM +0800, Hongbo Yao wrote:
+>> If CONFIG_SYSFS=n, the following error is seen while building 
+>> drivers/base/power/sysfs.c:
+>>
+>> drivers/base/power/sysfs.c: In function dpm_sysfs_change_owner:
+>> drivers/base/power/sysfs.c:708:44: error: passing argument 2 of
+>> sysfs_group_change_owner from incompatible pointer type
+>> [-Werror=incompatible-pointer-types]
+>>   rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+>>                                             ^
+>> In file included from ./include/linux/kobject.h:20:0,
+>>                  from ./include/linux/device.h:17,
+>>                  from drivers/base/power/sysfs.c:3:
+>> ./include/linux/sysfs.h:564:19: note: expected const struct
+>> attribute_group ** but argument is of type const struct attribute_group *
+>>
+>> dpm_sysfs_change_owner() should only used when CONFIG_SYSFS is
+>> defined.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 3b52fc5d7876 ("drivers/base/power: add dpm_sysfs_change_owner()")
+>> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+> 
+> Thanks for catching this!
+> An organizational comment first. The series this belongs to is sitting
+> in Dave Miller's net-next tree. So this fix needs to go through his tree
+> to. This just means, you should Cc the netdev kernel mailing list and
+> append make the subject
+> [PATCH net-next] drivers/base/power: fix build error without SYSFS
+> .
+
+  Thanks, I'll resend it with this tag .
+
+
+> But about the fix. It strikes me as odd that this fails in pm_attr_group
+> since dpm_sysfs_add() doesn't but also unconditionally accesses pm_attr_group.
+
+  The two functions have different parameter types when CONFIG_SYSFS=n.
+
+> Christian
+> 
+> .
+> 
 
