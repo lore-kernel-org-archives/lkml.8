@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296C7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A0FC3F2D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F330124697
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A48824684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203781;
-	bh=tC+0mgyKlaDMK7CzaUFh/QCiLjvwuX5zo5jMipSCH+Y=;
+	s=default; t=1583203784;
+	bh=XyfNhyeu8A4tgYWzLYud2ewpbACq3730lnYX41eebGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LagcLSdbF8os3wamFLuHUrv3Y6Iksj760XsvqSl+kqRdYf3M4k1pTwLuzq1qs6sR2
-	 7MkCFianDezoNmGibsJm8VnI8h7W39bWpAo8T2jMIMHG3x8G9u3F7fTrElw9NAJ+ab
-	 J1sXBqVEnPfOo1wU+k08MQrH/oVxgUilWgyL6QXc=
+	b=zeklXKp3tkO5hycxRx0JKiensssYID7BNcmxZDjjlKzC3P/mPf/kMljHjut+L/o0x
+	 /9HF332iSMGe5uoGOcWkm1QYFfo/DUVwC8EuvF/LwYC8lF1OAY36NpoK7iTRks11O9
+	 ovmfhBnCAQpIVEBvMpi2/xZ3KSWlKUvYeRJYmgk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgCCCtj (ORCPT
+        id S1728938AbgCCCtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45756 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727411AbgCCCtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:31 -0500
+        id S1728917AbgCCCtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DAB8246D9;
-        Tue,  3 Mar 2020 02:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADFB24697;
+        Tue,  3 Mar 2020 02:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203770;
-        bh=tC+0mgyKlaDMK7CzaUFh/QCiLjvwuX5zo5jMipSCH+Y=;
+        s=default; t=1583203778;
+        bh=XyfNhyeu8A4tgYWzLYud2ewpbACq3730lnYX41eebGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uli42UocBv7U56sPIcjxz7JF/AaaTUZDPOumzyhgMdkDEm2P78V0+vJePC3Xz0w+D
-         vwAh+chdZSenolL/RK+EASihmNl3jiaZk89N0L3GsuVHB0oHt9/WU6OyWiDbpy+aQS
-         k7sIZsOQo5a55yi4pWkwy36lr4jp7jp6E+7gCsis=
+        b=OQvPf53gi5VDkxgg6Hgw29OBxI71f8zv9pwGZuGLC17VdStYc+PBKGd/CagH7KA97
+         rfxWheQpcSdjeZm/5Fz6X723yDKm96V/frtUhZCNeh89q6/8chIASB2K4/kJQTUeL7
+         RQtZmEuAsnxrx+DMCXpOWpuiMNZrymL73A7Zl5EY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/32] s390/qeth: vnicc Fix EOPNOTSUPP precedence
-Date:   Mon,  2 Mar 2020 21:48:50 -0500
-Message-Id: <20200303024851.10054-31-sashal@kernel.org>
+Cc:     Jack Pham <jackp@codeaurora.org>, Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/22] usb: gadget: composite: Support more than 500mA MaxPower
+Date:   Mon,  2 Mar 2020 21:49:15 -0500
+Message-Id: <20200303024933.10371-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
-References: <20200303024851.10054-1-sashal@kernel.org>
+In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
+References: <20200303024933.10371-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,108 +58,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+From: Jack Pham <jackp@codeaurora.org>
 
-[ Upstream commit 6f3846f0955308b6d1b219419da42b8de2c08845 ]
+[ Upstream commit a2035411fa1d1206cea7d5dfe833e78481844a76 ]
 
-When getting or setting VNICC parameters, the error code EOPNOTSUPP
-should have precedence over EBUSY.
+USB 3.x SuperSpeed peripherals can draw up to 900mA of VBUS power
+when in configured state. However, if a configuration wanting to
+take advantage of this is added with MaxPower greater than 500
+(currently possible if using a ConfigFS gadget) the composite
+driver fails to accommodate this for a couple reasons:
 
-EBUSY is used because vnicc feature and bridgeport feature are mutually
-exclusive, which is a temporary condition.
-Whereas EOPNOTSUPP indicates that the HW does not support all or parts of
-the vnicc feature.
-This issue causes the vnicc sysfs params to show 'blocked by bridgeport'
-for HW that does not support VNICC at all.
+ - usb_gadget_vbus_draw() when called from set_config() and
+   composite_resume() will be passed the MaxPower value without
+   regard for the current connection speed, resulting in a
+   violation for USB 2.0 since the max is 500mA.
 
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ - the bMaxPower of the configuration descriptor would be
+   incorrectly encoded, again if the connection speed is only
+   at USB 2.0 or below, likely wrapping around U8_MAX since
+   the 2mA multiplier corresponds to a maximum of 510mA.
+
+Fix these by adding checks against the current gadget->speed
+when the c->MaxPower value is used (set_config() and
+composite_resume()) and appropriately limit based on whether
+it is currently at a low-/full-/high- or super-speed connection.
+
+Because 900 is not divisible by 8, with the round-up division
+currently used in encode_bMaxPower() a MaxPower of 900mA will
+result in an encoded value of 0x71. When a host stack (including
+Linux and Windows) enumerates this on a single port root hub, it
+reads this value back and decodes (multiplies by 8) to get 904mA
+which is strictly greater than 900mA that is typically budgeted
+for that port, causing it to reject the configuration. Instead,
+we should be using the round-down behavior of normal integral
+division so that 900 / 8 -> 0x70 or 896mA to stay within range.
+And we might as well change it for the high/full/low case as well
+for consistency.
+
+N.B. USB 3.2 Gen N x 2 allows for up to 1500mA but there doesn't
+seem to be any any peripheral controller supported by Linux that
+does two lane operation, so for now keeping the clamp at 900
+should be fine.
+
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/composite.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index aa90004f49e28..eb917e93fa72f 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -2148,15 +2148,14 @@ int qeth_l2_vnicc_set_state(struct qeth_card *card, u32 vnicc, bool state)
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 6e30b177aa224..5a4cf779b2692 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -441,9 +441,13 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
+ 	if (!val)
+ 		return 0;
+ 	if (speed < USB_SPEED_SUPER)
+-		return DIV_ROUND_UP(val, 2);
++		return min(val, 500U) / 2;
+ 	else
+-		return DIV_ROUND_UP(val, 8);
++		/*
++		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
++		 * by 8 the integral division will effectively cap to 896mA.
++		 */
++		return min(val, 900U) / 8;
+ }
  
- 	QETH_CARD_TEXT(card, 2, "vniccsch");
+ static int config_buf(struct usb_configuration *config,
+@@ -841,6 +845,10 @@ static int set_config(struct usb_composite_dev *cdev,
  
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and enable/disable are supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc) ||
- 	    !(card->options.vnicc.set_char_sup & vnicc))
- 		return -EOPNOTSUPP;
+ 	/* when we return, be sure our power usage is valid */
+ 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
++	if (gadget->speed < USB_SPEED_SUPER)
++		power = min(power, 500U);
++	else
++		power = min(power, 900U);
+ done:
+ 	usb_gadget_vbus_draw(gadget, power);
+ 	if (result >= 0 && cdev->delayed_status)
+@@ -2280,7 +2288,7 @@ void composite_resume(struct usb_gadget *gadget)
+ {
+ 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
+ 	struct usb_function		*f;
+-	u16				maxpower;
++	unsigned			maxpower;
  
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* set enable/disable command and store wanted characteristic */
- 	if (state) {
- 		cmd = IPA_VNICC_ENABLE;
-@@ -2202,14 +2201,13 @@ int qeth_l2_vnicc_get_state(struct qeth_card *card, u32 vnicc, bool *state)
+ 	/* REVISIT:  should we have config level
+ 	 * suspend/resume callbacks?
+@@ -2294,10 +2302,14 @@ void composite_resume(struct usb_gadget *gadget)
+ 				f->resume(f);
+ 		}
  
- 	QETH_CARD_TEXT(card, 2, "vniccgch");
+-		maxpower = cdev->config->MaxPower;
++		maxpower = cdev->config->MaxPower ?
++			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
++		if (gadget->speed < USB_SPEED_SUPER)
++			maxpower = min(maxpower, 500U);
++		else
++			maxpower = min(maxpower, 900U);
  
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic is supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc))
- 		return -EOPNOTSUPP;
+-		usb_gadget_vbus_draw(gadget, maxpower ?
+-			maxpower : CONFIG_USB_GADGET_VBUS_DRAW);
++		usb_gadget_vbus_draw(gadget, maxpower);
+ 	}
  
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, query current VNICC state */
- 	if (qeth_card_hw_is_reachable(card))
- 		rc = qeth_l2_vnicc_query_chars(card);
-@@ -2227,15 +2225,14 @@ int qeth_l2_vnicc_set_timeout(struct qeth_card *card, u32 timeout)
- 
- 	QETH_CARD_TEXT(card, 2, "vniccsto");
- 
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and set_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* do we need to do anything? */
- 	if (card->options.vnicc.learning_timeout == timeout)
- 		return rc;
-@@ -2264,14 +2261,14 @@ int qeth_l2_vnicc_get_timeout(struct qeth_card *card, u32 *timeout)
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgto");
- 
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and get_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
-+
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, get timeout. Otherwise, just return stored value */
- 	*timeout = card->options.vnicc.learning_timeout;
- 	if (qeth_card_hw_is_reachable(card))
+ 	cdev->suspended = 0;
 -- 
 2.20.1
 
