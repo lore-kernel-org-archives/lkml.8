@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA7C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C4C20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB7A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258804;
-	bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
+	s=default; t=1583258807;
+	bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ko/h7+jr45PdpmVRxHf6/A09k78GnUdl7jxlKJGnFYtfv+rPDElByAP/WJk3Gj8Mk
-	 Y4imDW8Q9UiUi9Vpv6NBpswwk+EPP6IzmKCnsCnVFy+ShH48T4FsD1AW6r9vpPUnVI
-	 acdsxbDgU3UO0eVeK8bed3lQ/G/EosWnxyez3FZE=
+	b=PuQi3ZtWsLQAo+pJyK45esDrzlSDZUZFsSj8d2sLaFRFl/6fOEkVKLd7u5scQPG2T
+	 SF07Z6QfddPVFSf3/vcSQLlgFFnErm4glOlrFDVund0pgfk/3QWmwlb8bEOz3IFvDK
+	 tOG2CY6kpfugLH8fq4W7tn2ucmDnaLdhB81Je2t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgCCR4K (ORCPT
+        id S1732810AbgCCRz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:55:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732820AbgCCR4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:01 -0500
+        id S1732791AbgCCRzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0744D20728;
-        Tue,  3 Mar 2020 17:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCF2B20728;
+        Tue,  3 Mar 2020 17:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258160;
-        bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
+        s=default; t=1583258153;
+        bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zjYZ/ZWnn3+dOZOlAXh5kWtczwQR+1o5MQXSkF3VlCZtek0G3h2166+MatABn8wkc
-         JtCmWSki79Yyy9NCWLled0lwkJNm3o+ru3WdrOZxWiuLTx6rtsriMNyFq+YZvAYr1K
-         baj/U5Q4FuaSrCOXfWqYnVYzlFPfkE1xoH2OHRaU=
+        b=EpdOOyKoIZ0Ms64nP0Kii3z6OO5wgzu87mEos/dLN+S/U6asak8lcRySgYoytzz5B
+         mx8/J+NlMbxCnnoi3gfYaqeOKoucSciJJCjrPii/8RExCB7FgcWVGhqAq1lm0FdgrX
+         sN0NtugYe2xgKeoHxzrrFWynpit3ExKifaSG19qA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/152] net: ena: ethtool: use correct value for crc32 hash
-Date:   Tue,  3 Mar 2020 18:42:36 +0100
-Message-Id: <20200303174309.044332514@linuxfoundation.org>
+Subject: [PATCH 5.4 055/152] net: ena: rss: store hash function as values and not bits
+Date:   Tue,  3 Mar 2020 18:42:33 +0100
+Message-Id: <20200303174308.695700387@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,43 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 886d2089276e40d460731765083a741c5c762461 ]
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-Up till kernel 4.11 there was no enum defined for crc32 hash in ethtool,
-thus the xor enum was used for supporting crc32.
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
+
+The bug:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
+
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 446873bed382b..b0151139abb18 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -693,7 +693,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 		func = ETH_RSS_HASH_TOP;
- 		break;
- 	case ENA_ADMIN_CRC32:
--		func = ETH_RSS_HASH_XOR;
-+		func = ETH_RSS_HASH_CRC32;
- 		break;
- 	default:
- 		netif_err(adapter, drv, netdev,
-@@ -739,7 +739,7 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
--	case ETH_RSS_HASH_XOR:
-+	case ETH_RSS_HASH_CRC32:
- 		func = ENA_ADMIN_CRC32;
- 		break;
- 	default:
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 6f758ece86f60..8ab192cb26b74 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2370,7 +2370,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
+ 
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
++
+ 	if (func)
+ 		*func = rss->hash_func;
+ 
 -- 
 2.20.1
 
