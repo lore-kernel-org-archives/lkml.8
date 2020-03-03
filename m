@@ -2,190 +2,158 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E26C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033E1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11C620848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1D620848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W6PJrARd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgCCM4B (ORCPT
+        id S1729146AbgCCM4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:56:01 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38345 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgCCM4B (ORCPT
+        Tue, 3 Mar 2020 07:56:14 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22443 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727585AbgCCM4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:56:01 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1j975Z-0007Jo-W8; Tue, 03 Mar 2020 13:55:58 +0100
-Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
-To:     Christian Herber <christian.herber@nxp.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>
-References: <AM0PR04MB70412893CFD2F553107148FC86E40@AM0PR04MB7041.eurprd04.prod.outlook.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <2228b5de-89e3-d61a-4af9-8d1a8a5eb311@pengutronix.de>
-Date:   Tue, 3 Mar 2020 13:55:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 07:56:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583240171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=StD01upWfLys6j/mJDiSTbKkVFO2v53vgbK9NTukAX0=;
+        b=W6PJrARdrd4EiLTHvBK3Sot/q7iaBKI7V8HsGqaqgKgm9ULVrv6X7dgoVY8mv0s58KmcWZ
+        Y4LmIy5NS1Kb+SiKzXzMbFI8yFX6zjkeU1wIeYVTlmfN63flUrVBJfYigckYdENYsIQ936
+        5DI0OKTxk5EecvOWC8VM9A2LGVceTCs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-RtCwRq53P9-lBmzYFQHFyQ-1; Tue, 03 Mar 2020 07:56:08 -0500
+X-MC-Unique: RtCwRq53P9-lBmzYFQHFyQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8BBDDB60;
+        Tue,  3 Mar 2020 12:56:06 +0000 (UTC)
+Received: from [10.36.116.59] (ovpn-116-59.ams2.redhat.com [10.36.116.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F2885C1D6;
+        Tue,  3 Mar 2020 12:56:04 +0000 (UTC)
+Subject: Re: [PATCH] iommu/dma: Fix MSI reservation allocation
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>, stable@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+References: <20200303115154.32263-1-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <b340f887-5960-390c-948d-c1b8fa14adec@redhat.com>
+Date:   Tue, 3 Mar 2020 13:56:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR04MB70412893CFD2F553107148FC86E40@AM0PR04MB7041.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200303115154.32263-1-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 03.03.20 13:42, Christian Herber wrote:
->> On 03.03.2020 08:37, Oleksij Rempel wrote:
->>> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
->>> PHY 0 can be identified by PHY ID. PHY 1 has no PHY ID and can be
->>> configured in device tree by setting compatible =
->>> "ethernet-phy-id0180.dc81".
->>>
->>> PHY 1 has less suported registers and functionality. For current driver
->>> it will affect only the HWMON support.
->>>
->>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->>> ---
->>> drivers/net/phy/nxp-tja11xx.c | 43 +++++++++++++++++++++++++++++++++++
->>> 1 file changed, 43 insertions(+)
->>>
->>> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
->>> index b705d0bd798b..52090cfaa54e 100644
->>> --- a/drivers/net/phy/nxp-tja11xx.c
->>> +++ b/drivers/net/phy/nxp-tja11xx.c
->>> @@ -15,6 +15,7 @@
->>> #define PHY_ID_MASK                  0xfffffff0
->>> #define PHY_ID_TJA1100                       0x0180dc40
->>> #define PHY_ID_TJA1101                       0x0180dd00
->>> +#define PHY_ID_TJA1102                       0x0180dc80
->>>
->>> #define MII_ECTRL                    17
->>> #define MII_ECTRL_LINK_CONTROL               BIT(15)
->>> @@ -190,6 +191,7 @@ static int tja11xx_config_init(struct phy_device *phydev)
->>>               return ret;
->>>       break;
->>> case PHY_ID_TJA1101:
->>> +     case PHY_ID_TJA1102:
->>>       ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
->>>       if (ret)
->>>               return ret;
->>> @@ -337,6 +339,31 @@ static int tja11xx_probe(struct phy_device *phydev)
->>> if (!priv)
->>>       return -ENOMEM;
->>>
->>> +     /* Use the phyid to distinguish between port 0 and port 1 of the
->>> +      * TJA1102. Port 0 has a proper phyid, while port 1 reads 0.
->>> +      */
->>> +     if ((phydev->phy_id & PHY_ID_MASK) == PHY_ID_TJA1102) {
->>> +             int ret;
->>> +             u32 id;
->>> +
->>> +             ret = phy_read(phydev, MII_PHYSID1);
->>> +             if (ret < 0)
->>> +                     return ret;
->>> +
->>> +             id = ret;
->>> +             ret = phy_read(phydev, MII_PHYSID2);
->>> +             if (ret < 0)
->>> +                     return ret;
->>> +
->>> +             id |= ret << 16;
->>> +
->>> +             /* TJA1102 Port 1 has phyid 0 and doesn't support temperature
->>> +              * and undervoltage alarms.
->>> +              */
->>> +             if (id == 0)
->>> +                     return 0;
->>
->> I'm not sure I understand what you're doing here. The two ports of the chip
->> are separate PHY's on individual MDIO bus addresses?
->> Reading the PHY ID registers here seems to repeat what phylib did already
->> to populate phydev->phy_id. If port 1 has PHD ID 0 then the driver wouldn't
->> bind and tja11xx_probe() would never be called (see phy_bus_match)
->>
->>> +     }
->>> +
->>> priv->hwmon_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
->>> if (!priv->hwmon_name)
->>>       return -ENOMEM;
->>> @@ -385,6 +412,21 @@ static struct phy_driver tja11xx_driver[] = {
->>>       .get_sset_count = tja11xx_get_sset_count,
->>>       .get_strings    = tja11xx_get_strings,
->>>       .get_stats      = tja11xx_get_stats,
->>> +     }, {
->>> +             PHY_ID_MATCH_MODEL(PHY_ID_TJA1102),
->>> +             .name           = "NXP TJA1102",
->>> +             .features       = PHY_BASIC_T1_FEATURES,
->>> +             .probe          = tja11xx_probe,
->>> +             .soft_reset     = tja11xx_soft_reset,
->>> +             .config_init    = tja11xx_config_init,
->>> +             .read_status    = tja11xx_read_status,
->>> +             .suspend        = genphy_suspend,
->>> +             .resume         = genphy_resume,
->>> +             .set_loopback   = genphy_loopback,
->>> +             /* Statistics */
->>> +             .get_sset_count = tja11xx_get_sset_count,
->>> +             .get_strings    = tja11xx_get_strings,
->>> +             .get_stats      = tja11xx_get_stats,
->>> }
->>> };
->>>
->>> @@ -393,6 +435,7 @@ module_phy_driver(tja11xx_driver);
->>> static struct mdio_device_id __maybe_unused tja11xx_tbl[] = {
->>> { PHY_ID_MATCH_MODEL(PHY_ID_TJA1100) },
->>> { PHY_ID_MATCH_MODEL(PHY_ID_TJA1101) },
->>> +     { PHY_ID_MATCH_MODEL(PHY_ID_TJA1102) },
->>> { }
->>> };
+Hi Marc,
+On 3/3/20 12:51 PM, Marc Zyngier wrote:
+> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
+> structures doesn't match the way iommu_put_dma_cookie() frees them.
 > 
-> Hi Oleksij, Heiner, Marc,
+> The former performs a single allocation of all the required structures,
+> while the latter tries to free them one at a time. It doesn't quite
+> work for the main use case (the GICv3 ITS where the range is 64kB)
+> when the base ganule size is 4kB.
 > 
-> You could also refer the solution implemented here as part of a TJA110x driver:
-> https://source.codeaurora.org/external/autoivnsw/tja110x_linux_phydev/about/
+> This leads to a nice slab corruption on teardown, which is easily
+> observable by simply creating a VF on a SRIOV-capable device, and
+> tearing it down immediately (no need to even make use of it).
+> 
+> Fix it by allocating iommu_dma_msi_page structures one at a time.
+> 
+> Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-OK, thank you!
+Thanks
 
-Suddenly, the solution in this driver is not mainlainable. It may match on ther PHYs with 
-PHYID == 0.
+Eric
 
-See this part of the code:
-#define NXP_PHY_ID_TJA1102P1      (0x00000000U)
-...
-	, {
-	.phy_id = NXP_PHY_ID_TJA1102P1,
-	.name = "TJA1102_p1",
-	.phy_id_mask = NXP_PHY_ID_MASK,
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/iommu/dma-iommu.c | 36 ++++++++++++++++++++++++------------
+>  1 file changed, 24 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index a2e96a5fd9a7..01fa64856c12 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -171,25 +171,37 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
+>  		phys_addr_t start, phys_addr_t end)
+>  {
+>  	struct iova_domain *iovad = &cookie->iovad;
+> -	struct iommu_dma_msi_page *msi_page;
+> -	int i, num_pages;
+> +	struct iommu_dma_msi_page *msi_page, *tmp;
+> +	int i, num_pages, ret = 0;
+> +	phys_addr_t base;
+>  
+> -	start -= iova_offset(iovad, start);
+> +	base = start -= iova_offset(iovad, start);
+>  	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
+>  
+> -	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
+> -	if (!msi_page)
+> -		return -ENOMEM;
+> -
+>  	for (i = 0; i < num_pages; i++) {
+> -		msi_page[i].phys = start;
+> -		msi_page[i].iova = start;
+> -		INIT_LIST_HEAD(&msi_page[i].list);
+> -		list_add(&msi_page[i].list, &cookie->msi_page_list);
+> +		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
+> +		if (!msi_page) {
+> +			ret = -ENOMEM;
+> +			break;
+> +		}
+> +		msi_page->phys = start;
+> +		msi_page->iova = start;
+> +		INIT_LIST_HEAD(&msi_page->list);
+> +		list_add(&msi_page->list, &cookie->msi_page_list);
+>  		start += iovad->granule;
+>  	}
+>  
+> -	return 0;
+> +	if (ret) {
+> +		list_for_each_entry_safe(msi_page, tmp,
+> +					 &cookie->msi_page_list, list) {
+> +			if (msi_page->phys >= base && msi_page->phys < start) {
+> +				list_del(&msi_page->list);
+> +				kfree(msi_page);
+> +			}
+> +		}
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static int iova_reserve_pci_windows(struct pci_dev *dev,
+> 
 
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
