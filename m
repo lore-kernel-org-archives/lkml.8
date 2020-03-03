@@ -2,104 +2,130 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B365C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4626C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C51E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B80B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMSqR4BK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dNLKl8/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbgCCTvd (ORCPT
+        id S1731280AbgCCTxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:51:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27360 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731209AbgCCTvd (ORCPT
+        Tue, 3 Mar 2020 14:53:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49876 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730488AbgCCTxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:51:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583265092;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DvNuRsgrlwxpJev5Ji+2rDTX8ckqvUS3GRbdlLRF5QE=;
-        b=hMSqR4BKUgl5kkqZUJru4eKb6ewI8rLuZPCPoDYeL+iDK5zzwW6pcYz/l7CZk9yZZZ0rqe
-        pV2JgMgdm2WDYOPiJpzPHQNDn4X02zbeHrtgdBM8EI2WVzXa+vsq8yIOtOBuqAygY+oAS6
-        j2+Q6NXkzmVqcEnynqNQe+L8tFQKMgs=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-vMyZjn2cMMqU7vI7bzYn4g-1; Tue, 03 Mar 2020 14:51:31 -0500
-X-MC-Unique: vMyZjn2cMMqU7vI7bzYn4g-1
-Received: by mail-qv1-f71.google.com with SMTP id s5so2800388qvr.15
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:51:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=DvNuRsgrlwxpJev5Ji+2rDTX8ckqvUS3GRbdlLRF5QE=;
-        b=XsJIOMGKxHwhExluYC+Gx1nOZTHnOv9KnNKqvSRKhRBE871ftiwAxiNv9Q27lSwfqD
-         uZ0oJr2bst4bHEf1th3xRO82zkJjeWKKsxRzk5fTc9PQhgqkfsu8w6a1GWuQtTB09Auf
-         JkOxA7yreGehfab30FSSYhCd6jagrTZN94yULKvgp7RWdR/unuAHjaizVBefWpH1fx9Z
-         bSOQRYFZwU3kqYXHXgh93gfOYAL67rCNkYhkFycX/zA+MakgHvZHsevmCqeRp8upD+zn
-         uKJnEKrIwdXS87deP9LNqQHgpJFlkRX+vXQfcvvQPtue+IbKMt4NjdMbT7oyTof8GmxU
-         CLfA==
-X-Gm-Message-State: ANhLgQ3EkmJ6mSVejhcKYZJI0a+49T9lgwbiNdFoF+CmkPFvfRhTZnpR
-        8uc8hwSd9RGgMGARwuE4VaUdOaUgDhgVGHgk39yT83+AyeymgS9YLXyBNR1V91zq97/oHSKRVyU
-        k3K5+WmtSnxaF/92dIMDE+Kz0
-X-Received: by 2002:a05:6214:144b:: with SMTP id b11mr4109936qvy.108.1583265089583;
-        Tue, 03 Mar 2020 11:51:29 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsspg8JhI5ihzXhOt6OuWIKvJocilynLOdCC5Pvwbi3gxDK6VrQZDaw5zx7MH666d9ns8TkKg==
-X-Received: by 2002:a05:6214:144b:: with SMTP id b11mr4109928qvy.108.1583265089398;
-        Tue, 03 Mar 2020 11:51:29 -0800 (PST)
-Received: from desoxy ([2600:380:8e4d:1b16:f190:533c:5a8b:4a57])
-        by smtp.gmail.com with ESMTPSA id h25sm2767037qtn.30.2020.03.03.11.51.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 11:51:28 -0800 (PST)
-Message-ID: <faad55e121f844d9b47afa603ad09641a58957b5.camel@redhat.com>
-Subject: Re: [v2,1/3] drm/dp: Introduce EDID-based quirks
-From:   Adam Jackson <ajax@redhat.com>
-To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>
-Date:   Tue, 03 Mar 2020 14:51:27 -0500
-In-Reply-To: <20200211183358.157448-2-lyude@redhat.com>
-References: <20200211183358.157448-2-lyude@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
+        Tue, 3 Mar 2020 14:53:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=/XagQY7ezT4gY9tBsVdZa0FpZkAaDyUH4Veo3EaWB6A=; b=dNLKl8/ZzTARnUdwPRGHWuf1xB
+        24tyChwJ7V5MWs+qKHO9HO6aBphfkosXFZhlo7vIeDfWdBlJE/b2slrINkNzYw8kPENkpNWtpzfrd
+        KQrWvmGHnOQ6de4oyF1OuPUu2UYmjIayTIUDrkkjTSBF7SKtU5s5VKpQucCTULTMac0QGOHkCOFK4
+        W78Leyb6bYEzOVcLjRqq964022LMMVfFDBL90LjB8RithwS0QT1Nb6Ff9KKr2gvT7INYZWr79YUYj
+        g84E9PP1TBSrc+F9fgcU9iTVh8qsem/Tt1NVwmU8kI0WXLoMKU1xZ1Iev9AOPHHreF8grDJwUiio5
+        m5pDR9yw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9Day-0007vA-An; Tue, 03 Mar 2020 19:52:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2035F30110E;
+        Tue,  3 Mar 2020 20:50:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 592B72021ECAF; Tue,  3 Mar 2020 20:52:45 +0100 (CET)
+Date:   Tue, 3 Mar 2020 20:52:45 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq
+ is too, small
+Message-ID: <20200303195245.GF2596@hirez.programming.kicks-ass.net>
+References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 13:33 -0500, Lyude Paul wrote:
-> The whole point of using OUIs is so that we can recognize certain
-> devices and potentially apply quirks for them. Normally this should work
-> quite well, but there appears to be quite a number of laptop panels out
-> there that will fill the OUI but not the device ID. As such, for devices
-> like this I can't imagine it's a very good idea to try relying on OUIs
-> for applying quirks. As well, some laptop vendors have confirmed to us
-> that their panels have this exact issue.
+On Tue, Mar 03, 2020 at 10:17:03PM +0800, 王贇 wrote:
+> During our testing, we found a case that shares no longer
+> working correctly, the cgroup topology is like:
 > 
-> So, let's introduce the ability to apply DP quirks based on EDID
-> identification. We reuse the same quirk bits for OUI-based quirks, so
-> that callers can simply check all possible quirks using
-> drm_dp_has_quirk().
+>   /sys/fs/cgroup/cpu/A		(shares=102400)
+>   /sys/fs/cgroup/cpu/A/B	(shares=2)
+>   /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+> 
+>   /sys/fs/cgroup/cpu/D		(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E	(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+> 
+> The same benchmark is running in group C & F, no other tasks are
+> running, the benchmark is capable to consumed all the CPUs.
+> 
+> We suppose the group C will win more CPU resources since it could
+> enjoy all the shares of group A, but it's F who wins much more.
+> 
+> The reason is because we have group B with shares as 2, which make
+> the group A 'cfs_rq->load.weight' very small.
+> 
+> And in calc_group_shares() we calculate shares as:
+> 
+>   load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>   shares = (tg_shares * load) / tg_weight;
+> 
+> Since the 'cfs_rq->load.weight' is too small, the load become 0
+> in here, although 'tg_shares' is 102400, shares of the se which
+> stand for group A on root cfs_rq become 2.
 
-With the bug URL fixed in 2/3, series is:
+Argh, because A->cfs_rq.load.weight is B->se.load.weight which is
+B->shares/nr_cpus.
 
-Reviewed-by: Adam Jackson <ajax@redhat.com>
+> While the se of D on root cfs_rq is far more bigger than 2, so it
+> wins the battle.
+> 
+> This patch add a check on the zero load and make it as MIN_SHARES
+> to fix the nonsense shares, after applied the group C wins as
+> expected.
+> 
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> ---
+>  kernel/sched/fair.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 84594f8aeaf8..53d705f75fa4 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
+>  	tg_shares = READ_ONCE(tg->shares);
+> 
+>  	load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+> +	if (!load && cfs_rq->load.weight)
+> +		load = MIN_SHARES;
+> 
+>  	tg_weight = atomic_long_read(&tg->load_avg);
 
-- ajax
+Yeah, I suppose that'll do. Hurmph, wants a comment though.
 
+But that has me looking at other users of scale_load_down(), and doesn't
+at least update_tg_cfs_load() suffer the same problem?
