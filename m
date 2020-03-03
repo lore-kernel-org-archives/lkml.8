@@ -2,163 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23975C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F7DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14F8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E138520CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o5gJRadM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFDL1Os+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgCCXNd (ORCPT
+        id S1726766AbgCCXNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:13:33 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:56250 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbgCCXNc (ORCPT
+        Tue, 3 Mar 2020 18:13:40 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45402 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727199AbgCCXNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:13:32 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023N7iN8012710;
-        Tue, 3 Mar 2020 23:13:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=2SlemBkaH65QXaEf4TZL1oysb9wUe7KgyRuvi4NMftE=;
- b=o5gJRadMhquDlhaSlYaNpefpKBZXxKnCf9oAUdtSZZ4vet+VfYguXOBhQoMRCQeK+hco
- fejBtJD+5il3tC7hhH9yWHC1IIwPiBT0pFvkjpR5QIf3cxF7h8BrGlP4vvq64QiQHI1F
- 4UhbtUQqWze0JDPSschod6KUJmqZCUNHR7RGQz7/Jk+eBDDayPzDd4v+Emi3/SsVXGu/
- 5tOCgrcd4JX1D+40EzxORxioUmuVmnt4siDXDmCk3jRzmjA+yrK1AFAb14k0b1JbOmwy
- UgafaKvviQLN7iQ9RNsemp9OhihFvNOJ3o1bM4JjIUTZYD5fAq6mYAwY3mxV8M4HUvRo Lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2yffcujmjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 23:13:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023NCeqO070813;
-        Tue, 3 Mar 2020 23:13:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2yg1rnkexa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 23:13:21 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023NDJYL028875;
-        Tue, 3 Mar 2020 23:13:19 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 15:13:19 -0800
-Subject: Re: [PATCH] xen: Use 'unsigned int' instead of 'unsigned'
-To:     Jan Beulich <jbeulich@suse.com>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20200229223035.GA28145@kbp1-lhp-F74019>
- <fba833c4-3173-0094-b4ec-53e9f42bfb3e@suse.com>
- <20200302221826.GA18206@kbp1-lhp-F74019>
- <38739aa0-200e-fd46-ea38-c30a6aa69561@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <2c34f543-f941-10fe-24e6-08fc1a98370c@oracle.com>
-Date:   Tue, 3 Mar 2020 18:13:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 18:13:38 -0500
+Received: by mail-il1-f193.google.com with SMTP id p8so154140iln.12;
+        Tue, 03 Mar 2020 15:13:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vJr9ys90m3qSyzdRvYFeDv9aPSWThVfEBslU4+ThXWc=;
+        b=sFDL1Os+uBZQJw2DKQ45Pscc95zk/o7Pif1zFFOBmxFHXvfyeAzrsTPB4xr5psDlQD
+         bo0h/xAmnf1Vn1ScoDL+Rhjb/l0hYfysV1tc/vpKJ9EeAGV1CFaWPrG9D+a47ZwMy7FA
+         EYCIUAovLySxlND1MNLDCVZdtQSGs0YAo9jkBWxduyeWBp63A19cioCnhkIMn3JsaKuT
+         k4mjYsDiAYeHQXGFxRpiK5WevUk0QKLgYoAQrXayG1B0ySJ9iw4rQC/9TNjm7jeI92ZK
+         6unXM7Xs6KGGCiiZwLY7LCta22CMqbdyMCHda7byprmPTFrecITvRyAlMkSgL6tnoJhY
+         g+wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vJr9ys90m3qSyzdRvYFeDv9aPSWThVfEBslU4+ThXWc=;
+        b=TR5F4R5KrxrqnuB+YsMYcBgUVqHaiYysJL02+vv6HBrXYNQ4FDlM+tlN+SuqWYbpRF
+         xRoinnibt2n6xdMLdWYms5iKIxJgT8YSXDVxdkOJBME9eH4fx8MyNznn1Gie8kohXGg7
+         VUXq2h6mIYt2KvBTkYqF2/qvUZUjjX+94oNPPcacdXx13SjZMd0Fa3JSRJGm89IRUOPs
+         +p5Qd8DgfxzSgKW3DAXMAeFZq3TI3Lcn2jjvuqGNCwD8zXlIthLnaSRejdtHls92oxzb
+         /6zF/7SblQ121wWEMaYeQXpioNu6uBNlKFZB7mHC3AuNYlKW38HBPZwe36FSWAHW84lD
+         J6Zw==
+X-Gm-Message-State: ANhLgQ2thvEpDu/bn0HYgnG+SfNhnQdsrXU/OamZW+wBP2aHNarqbq7P
+        OckIjiyqo874ARkqI9VbCzwH6sQ+EyucQLV2YcM=
+X-Google-Smtp-Source: ADFU+vsJ5YxHdGJDCIliHS6azGp7tdBPmIDmqC93Lr/zUfX6A3lFuYLTCzBQsXPBBOTWY7YkTKZtry+cCY/6luzo89Q=
+X-Received: by 2002:a92:ce02:: with SMTP id b2mr98748ilo.70.1583277218119;
+ Tue, 03 Mar 2020 15:13:38 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <38739aa0-200e-fd46-ea38-c30a6aa69561@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030150
+References: <1583250197-10786-1-git-send-email-hqjagain@gmail.com> <CAH2r5mv2VrSBT_MvUNjd=h354v=29htRQdLSEZi+pDtdggNfoQ@mail.gmail.com>
+In-Reply-To: <CAH2r5mv2VrSBT_MvUNjd=h354v=29htRQdLSEZi+pDtdggNfoQ@mail.gmail.com>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Wed, 4 Mar 2020 07:13:27 +0800
+Message-ID: <CAJRQjocK1XtvtH_CiCpkR2uFMb8bBg0pEuTGM2hGqhs4qk4KbA@mail.gmail.com>
+Subject: Re: [PATCH] fs/cifs/cifsacl: fix sid_to_id
+To:     Steve French <smfrench@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/3/20 3:30 AM, Jan Beulich wrote:
-> On 02.03.2020 23:18, Yan Yankovskyi wrote:
->> On Mon, Mar 2, 2020 at 10:11 Jan Beulich wrote:
->>> ... evtchn_port_t here and elsewhere.
->> There are some interfaces with signed int as a type for port, e.g. in
->> include/xen/events.h.
->> Should I create additional patch to resolve inconsistency with evtchn
->> interface?
->> Or you suggest combining these changes into the existing patch?
-> Signed <-> unsigned conversions would perhaps better go into a
-> separate patch. But note I'm not the maintainer of this code.
+On Wed, Mar 4, 2020 at 4:13 AM Steve French <smfrench@gmail.com> wrote:
 >
->> Also as I understand 'evtchn' and 'port' are essentially the same
->> entities from perspective of local domain, related to each other rough=
-ly
->> like connection and file descriptor pair. What do you think about
->> renaming all 'evtchn' arguments and variables to 'port'?
->> It will eliminate inconsistencies in the code, for example
->> in include/xen/interface/event_channel.h and include/xen/events.h.
-> I'd welcome this, but the maintainers will have the final say.
+> Doesn't rc = 0 have to be set earlier (preferably in the declaration
+> on line 345)?
+>
+> since line 392 does
+>             goto got_valid_id;
+> which appears to leave rc unitialized with your change
+>
+ok, I noticed that fall back to using the mnt_uid/mnt_gid.
 
-TBH I'd rather see the things that Jan pointed to fixed than replacing
-'unsigned' with 'unsigned int.'
+Should we remove the variable 'rc'. It is set but not used. And I was
+confused last time. (:
 
-The latter is purely a kernel style requirement and is typically fixed
-when the line is modified (in fact, we did just that last week).
-
--boris
-
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index 716574a..1cf3916 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -342,7 +342,6 @@
+ sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
+                struct cifs_fattr *fattr, uint sidtype)
+ {
+-       int rc;
+        struct key *sidkey;
+        char *sidstr;
+        const struct cred *saved_cred;
+@@ -403,7 +402,6 @@
+        saved_cred = override_creds(root_cred);
+        sidkey = request_key(&cifs_idmap_key_type, sidstr, "");
+        if (IS_ERR(sidkey)) {
+-               rc = -EINVAL;
+                cifs_dbg(FYI, "%s: Can't map SID %s to a %cid\n",
+                         __func__, sidstr, sidtype == SIDOWNER ? 'u' : 'g');
+                goto out_revert_creds;
+@@ -416,7 +414,6 @@
+         */
+        BUILD_BUG_ON(sizeof(uid_t) != sizeof(gid_t));
+        if (sidkey->datalen != sizeof(uid_t)) {
+-               rc = -EIO;
+                cifs_dbg(FYI, "%s: Downcall contained malformed key
+(datalen=%hu)\n",
+                         __func__, sidkey->datalen);
+                key_invalidate(sidkey);
