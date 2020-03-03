@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF4C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FA020870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA1C20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257873;
-	bh=dw5guOOn+gkkfTtyZ94+LanBzo9k9WiOrWQ7DTpDNwM=;
+	s=default; t=1583257880;
+	bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pDc2gitgUFgG8o8MPo9PGZc+xqZk+wwfBQ/8rW3Ft0C8RLicy8n9fu4zDJ2sZcT8w
-	 bIOUtHIdx7JfmKMTvSAC97OyEQI687DEFNaI/IkY2PDU8DgsfOSQzv2mkdj7Jrs+qi
-	 JvkpLw/X1iUebbdhjcaSviMGBgKFPAaFPYPaxWzo=
+	b=bdBNUP0Kl158ECHEPLFugt7RPpZtGMoPdioLB0LWo9avtaRJDcbvcOJwoHwgxgQpX
+	 zWbzR0U6A95SQWuZdELXX3NmMoWm5Bu324wo17RPbsPX/XduxpSAk3n/UpmTRYs7OE
+	 QlCXgIToBvdWSl2qF5hUYUfbUNGCw4i8R8pzRp8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbgCCRvM (ORCPT
+        id S1731969AbgCCRvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59108 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731945AbgCCRvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:08 -0500
+        id S1729788AbgCCRvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9BA206D5;
-        Tue,  3 Mar 2020 17:51:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A791820728;
+        Tue,  3 Mar 2020 17:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257868;
-        bh=dw5guOOn+gkkfTtyZ94+LanBzo9k9WiOrWQ7DTpDNwM=;
+        s=default; t=1583257873;
+        bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVG7h+R/D8g6T0hoYwxEekQjqKy3GxKDjETa560ig38v429QlrzJfNH1+UCQSKZFp
-         ArPJp+ucDS4wyBJsUuL8ITDBAsM2vyl59G20XyovJMQ5O1q+LZ/zd0IgMLudhBkp5J
-         Jy2J/lPerH0cZ4bEQkF7o1QpAYovk7haGptTASO0=
+        b=aTBl6YTYhU3U9w4RfxcsDOO7IiQa2D2CbVSMl5t3Yc9nk1Tr0lqMY7j+t/ll3qKjR
+         njANXWCk2ub1ca3HlC4/hty8ZsXZ2mAz6BNr+66j5W/SljDIOX582/diphOPde5RAN
+         Hq0+szowHI1jjmGrYIcOjQInpkyohUYwN4BFKcqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 159/176] KVM: x86: Remove spurious clearing of async #PF MSR
-Date:   Tue,  3 Mar 2020 18:43:43 +0100
-Message-Id: <20200303174322.757276478@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 5.5 161/176] ubifs: Fix ino_t format warnings in orphan_delete()
+Date:   Tue,  3 Mar 2020 18:43:45 +0100
+Message-Id: <20200303174322.914285494@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,41 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-commit 208050dac5ef4de5cb83ffcafa78499c94d0b5ad upstream.
+commit 155fc6ba488a8bdfd1d3be3d7ba98c9cec2b2429 upstream.
 
-Remove a bogus clearing of apf.msr_val from kvm_arch_vcpu_destroy().
+On alpha and s390x:
 
-apf.msr_val is only set to a non-zero value by kvm_pv_enable_async_pf(),
-which is only reachable by kvm_set_msr_common(), i.e. by writing
-MSR_KVM_ASYNC_PF_EN.  KVM does not autonomously write said MSR, i.e.
-can only be written via KVM_SET_MSRS or KVM_RUN.  Since KVM_SET_MSRS and
-KVM_RUN are vcpu ioctls, they require a valid vcpu file descriptor.
-kvm_arch_vcpu_destroy() is only called if KVM_CREATE_VCPU fails, and KVM
-declares KVM_CREATE_VCPU successful once the vcpu fd is installed and
-thus visible to userspace.  Ergo, apf.msr_val cannot be non-zero when
-kvm_arch_vcpu_destroy() is called.
+    fs/ubifs/debug.h:158:11: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘ino_t {aka unsigned int}’ [-Wformat=]
+    ...
+    fs/ubifs/orphan.c:132:3: note: in expansion of macro ‘dbg_gen’
+       dbg_gen("deleted twice ino %lu", orph->inum);
+    ...
+    fs/ubifs/orphan.c:140:3: note: in expansion of macro ‘dbg_gen’
+       dbg_gen("delete later ino %lu", orph->inum);
 
-Fixes: 344d9588a9df0 ("KVM: Add PV MSR to enable asynchronous page faults delivery.")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+__kernel_ino_t is "unsigned long" on most architectures, but not on
+alpha and s390x, where it is "unsigned int".  Hence when printing an
+ino_t, it should always be cast to "unsigned long" first.
+
+Fix this by re-adding the recently removed casts.
+
+Fixes: 8009ce956c3d2802 ("ubifs: Don't leak orphans on memory during commit")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/ubifs/orphan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9227,8 +9227,6 @@ void kvm_arch_vcpu_postcreate(struct kvm
- 
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+--- a/fs/ubifs/orphan.c
++++ b/fs/ubifs/orphan.c
+@@ -129,7 +129,7 @@ static void __orphan_drop(struct ubifs_i
+ static void orphan_delete(struct ubifs_info *c, struct ubifs_orphan *orph)
  {
--	vcpu->arch.apf.msr_val = 0;
--
- 	kvm_arch_vcpu_free(vcpu);
- }
+ 	if (orph->del) {
+-		dbg_gen("deleted twice ino %lu", orph->inum);
++		dbg_gen("deleted twice ino %lu", (unsigned long)orph->inum);
+ 		return;
+ 	}
+ 
+@@ -137,7 +137,7 @@ static void orphan_delete(struct ubifs_i
+ 		orph->del = 1;
+ 		orph->dnext = c->orph_dnext;
+ 		c->orph_dnext = orph;
+-		dbg_gen("delete later ino %lu", orph->inum);
++		dbg_gen("delete later ino %lu", (unsigned long)orph->inum);
+ 		return;
+ 	}
  
 
 
