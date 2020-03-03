@@ -2,162 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB03C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E55C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC29214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A90214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DGmhYfC5"
+	dkim=pass (2048-bit key) header.d=mirlab-org.20150623.gappssmtp.com header.i=@mirlab-org.20150623.gappssmtp.com header.b="a5uUjNdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgCCKOD (ORCPT
+        id S1728477AbgCCKOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:14:03 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44321 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbgCCKOC (ORCPT
+        Tue, 3 Mar 2020 05:14:11 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40936 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgCCKOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:14:02 -0500
-Received: by mail-io1-f65.google.com with SMTP id u17so2883658iog.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:14:02 -0800 (PST)
+        Tue, 3 Mar 2020 05:14:11 -0500
+Received: by mail-lf1-f65.google.com with SMTP id p5so2221092lfc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:14:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=mirlab-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b2RBPOL2BrDy7cKCO1Q5lEU/UoBlA1lcG/mr7sg6aho=;
-        b=DGmhYfC5yifUx3aXvV8ewsx6O+UEOBQA3YCM/g6FC5pPZCL9yDHh0H5nXhEGrlvABM
-         13rZWLc9/U//n7geEywqlCvA0G/75x1YfkBw95ZRiPc/tSiDPvb39cmStjXS8fjqkOqg
-         EVmoHGDfiX+gCofo6bAPD7JZ3U7pKiqMYrLMU=
+         :cc:content-transfer-encoding;
+        bh=HZLJdyompUEUfGaYkKC4//Srq4/t18wcP+yf/P65E7A=;
+        b=a5uUjNdkPvsrGH3XeHiv1khDvumuDRVBlNJFC6lUcfnUmuEr9PE65vkxV2uphGI8I+
+         3UDxl8sCAJQepm6KrwdpYMCFAy4EhMEfbAtQadb5vks/qYfRrfHpQmiOnHv3zLQHSL64
+         LsKSugPrYvGKzFfo8Wcxx57HXmjc6Rh5nN3sM0/Vc7MX01beFpdLGSt6E72oLxzAtRQo
+         4hbRPYZQs8ryVm7Mxw3O7gto5lZutkgVkcNa7CFh/DpvT8w2plqfGGrWnnV4TP8cgK6O
+         ET/tJ71P9YBvAv1wQtLs9YjEUD7/VNYhhflzk+EiIRITC1vrifpAWn3tuqabLLlztiXE
+         2WeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b2RBPOL2BrDy7cKCO1Q5lEU/UoBlA1lcG/mr7sg6aho=;
-        b=P3vbEgxSsbaucu3i//qDf2PbA/zcRtqLcG+RCGzAb2fOcF9bZv+e8Jcca1EzxSAd5k
-         YyPDZsMD9bdohqSHDYvVkkini5Z6H9QGqT+SkjVTmOPbKpLF1G5kbLDt6wkCDgHULP6g
-         9UMjGPE1jVFjzMK3UTre1XQSnIHjKWIaPmtwYcyWO3qbqzmsLefdUODaWnxXjNEePcIo
-         VVmu83wvf03VxaZFK7meYT7p5l1XxfNxehY+Bnu9CDA4Ie5sd47Rgs30z4y46AEfyZR0
-         XCeOtULV7w8l83pyBz3bmfV4rlzIFaE0BQrjnIwVj1lO3Mojlf4pepNJis5WJ/b0372X
-         lKog==
-X-Gm-Message-State: ANhLgQ3biJgh+U/DZon+p88+x3FA43VOzx1ieNcxOcHa5loXZizYyRXF
-        GQZ9CFxR26wdXa4uYDDwQQ5l53negn1ZSvub7cl0gw==
-X-Google-Smtp-Source: ADFU+vtYbimVsSQ/gMcWk1r7TNYrGFmLUDHEqAGO+I0gRUGAdGR15kWk81wm/ejVzaxci+dihgL9H4IJMGx7CeV29mo=
-X-Received: by 2002:a6b:db08:: with SMTP id t8mr3190746ioc.285.1583230441732;
- Tue, 03 Mar 2020 02:14:01 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HZLJdyompUEUfGaYkKC4//Srq4/t18wcP+yf/P65E7A=;
+        b=B9O/9hPeWbwm9KouIeBjbBSzHOIokYzQYg6LitFFEbVrM8qJ8Vwr548Oam8ECuLfCQ
+         M/nUQ3GnlBHz1edIOcZF93j/6ikicUAiLNtmv4RszZqrqb0KGdKgkmhiS6Q4dbqKDTSW
+         Bbcy7X3uCLNYB8EuLzOrVYyv5WSYzZUdSsurzsAj03qfny7bXOJacReTUGzbxqr1Le9v
+         xNGr+1ouZIB+R6PFP05VloMMk5/NsZ7dp8s9ZExYHgAcPok/RZyxrWN3DEKrO83Kscc/
+         RC1VyBUtuThIVJ3aagdTrWa4LJWXf861uxZWWFoeZCFi+Inv7/I24tFCbR/giqObpEkq
+         6t/A==
+X-Gm-Message-State: ANhLgQ3syNjOIKiIpHIUUIQzkL5uHK9X/QFx4KK/n+xSiKxvLhC1ALLB
+        Jc7B+kq+E6KgwnlXhT43xuDHOlun7FEpIoYO+Elu3g==
+X-Google-Smtp-Source: ADFU+vu5Z+2UkQtHXzD5lzUdpVS3/bgA81N4t8QmWWStrtzKpM10C+DUPxwjWYbFyWaEbFuH3qhuWk3LkwXpW6YO3Nw=
+X-Received: by 2002:ac2:5699:: with SMTP id 25mr2373610lfr.54.1583230449412;
+ Tue, 03 Mar 2020 02:14:09 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
-In-Reply-To: <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 11:13:50 +0100
-Message-ID: <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <CAB3eZfv4VSj6_XBBdHK12iX_RakhvXnTCFAmQfwogR34uySo3Q@mail.gmail.com>
+ <20200302103754.nsvtne2vvduug77e@yavin> <20200302104741.b5lypijqlbpq5lgz@yavin>
+ <CAB3eZfuAXaT4YTBSZ4sGe=NP8=71OT8wu7zXMzOjkd4NzjtXag@mail.gmail.com> <20200303070928.aawxoyeq77wnc3ts@yavin>
+In-Reply-To: <20200303070928.aawxoyeq77wnc3ts@yavin>
+From:   lampahome <pahome.chen@mirlab.org>
+Date:   Tue, 3 Mar 2020 18:13:56 +0800
+Message-ID: <CAB3eZfu1=-FwJTnnH=sfg=J2gkeF0bgMs43V5tSkxdqP+m+R9A@mail.gmail.com>
+Subject: Re: why do we need utf8 normalization when compare name?
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
-> > On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
-> > >
-> > > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > >
-> > > > I'm doing a patch.   Let's see how it fares in the face of all these
-> > > > preconceptions.
-> > >
-> > > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
-> > > that scanning /proc/mounts when there are a lot of mounts in the system is
-> > > slow (not to mention the global lock that is held during the read).
-> > >
-> > > Now, going with sysfs files on top of procfs links might avoid the global
-> > > lock, and you can avoid rereading the options string if you export a change
-> > > notification, but you're going to end up injecting a whole lot of pathwalk
-> > > latency into the system.
-> >
-> > Completely irrelevant.  Cached lookup is so much optimized, that you
-> > won't be able to see any of it.
-> >
-> > No, I don't think this is going to be a performance issue at all, but
-> > if anything we could introduce a syscall
-> >
-> >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
-> > bufsize, int flags);
-> >
-> > that is basically the equivalent of open + read + close, or even a
-> > vectored variant that reads multiple files.  But that's off topic
-> > again, since I don't think there's going to be any performance issue
-> > even with plain I/O syscalls.
-> >
-> > >
-> > > On top of that, it isn't going to help with the case that I'm working towards
-> > > implementing where a container manager can monitor for mounts taking place
-> > > inside the container and supervise them.  What I'm proposing is that during
-> > > the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
-> > > referring to the context under construction to the manager, which would then
-> > > be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
-> > > permit it.  Something like:
-> > >
-> > >         fd = receive_context_to_supervise();
-> > >         struct fsinfo_params params = {
-> > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> > >                 .request        = FSINFO_ATTR_SB_OPTIONS,
-> > >         };
-> > >         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
-> > >         supervise_parameters(buffer);
-> > >         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
-> > >         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
-> > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
-> > >         struct fsinfo_params params = {
-> > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> > >                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
-> > >         };
-> > >         struct fsinfo_sb_notifications sbnotify;
-> > >         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
-> > >         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
-> > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
-> > >         close(fd);
-> > >
-> > > However, the supervised mount may be happening in a completely different set
-> > > of namespaces, in which case the supervisor presumably wouldn't be able to see
-> > > the links in procfs and the relevant portions of sysfs.
-> >
-> > It would be a "jump" link to the otherwise invisible directory.
->
-> More magic links to beam you around sounds like a bad idea. We had a
-> bunch of CVEs around them in containers and they were one of the major
-> reasons behind us pushing for openat2(). That's why it has a
-> RESOLVE_NO_MAGICLINKS flag.
+> Unicode normalisation will take the strings "=C3=B1" (U+00F1) and "n=E2=
+=97=8C=CC=83"
+> (U+006E U+0303) and turn them into the same Unicode string. Note that
+> there are four kinds of Unicode normalisation (NFD, NFC, NFKD, NFKC), so
+> what precise string you end up with depends on which form you're using.
+> Linux uses NFD, I believe.
 
-No, that link wouldn't beam you around at all, it would end up in an
-internally mounted instance of a mountfs, a safe place where no
-dangerous CVE's roam.
 
-Thanks,
-Miklos
+> And yes, once the strings are normalised and encoded as UTF-8 you then
+> do a byte-by-byte comparison (if the comparison is case-insensitive then
+> fs/unicode/... will case-fold the Unicode symbols during normalisation).
+>
+
+What I'm confused is why encoded as utf-8 after normalize finished?
+From above, turn "=C3=B1" (U+00F1) and "n=E2=97=8C=CC=83" (U+006E U+0303) i=
+nto the same
+Unicode string. Then why should we just compare bytes from normalized.
