@@ -2,100 +2,91 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48A2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F189CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC252166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EC4214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="h3NN+FFK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZJ/Yxla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgCCKX4 (ORCPT
+        id S1728650AbgCCKZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:23:56 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:37410 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgCCKX4 (ORCPT
+        Tue, 3 Mar 2020 05:25:04 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40924 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728480AbgCCKZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:23:56 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id E5F203F80D;
-        Tue,  3 Mar 2020 11:23:54 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=h3NN+FFK;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sPW0qWza6X9Z; Tue,  3 Mar 2020 11:23:54 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 16E073F524;
-        Tue,  3 Mar 2020 11:23:54 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id D0D41360106;
-        Tue,  3 Mar 2020 11:23:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1583231033; bh=RVfyASf7XP1Z1TIdelkLDDDCUoluWWyyQf/Mz9CblFU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h3NN+FFKgh26TwA0W2Nj/kfUBdOlOyuAjB6PzNdD12sCjH0ZvmvrGjbVqy3cDjF0D
-         C169qGfKK3a/jIs8N5QghDRkGfgk0T33yUbv4UShzFYYpafZJXTW8Y47BKkMeekbxD
-         W9LELOU4YwHeFBlR8mXQRvfvfJe8xVcliTRk9nhg=
-Subject: Re: [PATCH v4 0/9] Huge page-table entries for TTM
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Ralph Campbell <rcampbell@nvidia.com>, pv-drivers@vmware.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-graphics-maintainer@vmware.com,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200220122719.4302-1-thomas_os@shipmail.org>
- <cc469a2a-e31c-4645-503a-f225fb101899@shipmail.org>
- <20200229200432.55b5b64f46dc2f2f80fa7461@linux-foundation.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <f6ebe219-3496-6dd3-b1da-2effc707548a@shipmail.org>
-Date:   Tue, 3 Mar 2020 11:23:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 3 Mar 2020 05:25:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583231103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y9OskcRkJBB13zwLLGMfs2S2+SpY5k0BUryUkH7intc=;
+        b=QZJ/YxlaVzHTlgloSVxjgx26dL0Zye4fr+y7Y5+aJYjUiS8WmhrZPXM4JpGR3YWe/YMPhA
+        6LDENtT5ey7735Mn1XbmJHafUnetKDBW1pCu+LE0WOjq5dwUoaPAgdtW9Yi+t7ZbdVGbnS
+        20EofHX/TSKePfYfsLUmOnxJO9ZoPOI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-Mq5NpSpDOvCPhq4vNA4ahw-1; Tue, 03 Mar 2020 05:24:59 -0500
+X-MC-Unique: Mq5NpSpDOvCPhq4vNA4ahw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A808D800D50;
+        Tue,  3 Mar 2020 10:24:58 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CD0160BF3;
+        Tue,  3 Mar 2020 10:24:58 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 90B6686A00;
+        Tue,  3 Mar 2020 10:24:58 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 05:24:58 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <358842423.12639861.1583231098544.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1980156503.12639063.1583230452485.JavaMail.zimbra@redhat.com>
+References: <20200303085528.27658-1-vdronov@redhat.com> <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com> <1980156503.12639063.1583230452485.JavaMail.zimbra@redhat.com>
+Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
 MIME-Version: 1.0
-In-Reply-To: <20200229200432.55b5b64f46dc2f2f80fa7461@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.56, 10.4.195.30]
+Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
+Thread-Index: a9pXAtMcyqvelpyZViw1cEjneZdMYYgMv25R
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/20 5:04 AM, Andrew Morton wrote:
-> On Fri, 28 Feb 2020 14:08:04 +0100 Thomas Hellström (VMware) <thomas_os@shipmail.org> wrote:
->
->> I'm wondering what's the best way here to get the patches touching mm
->> reviewed and accepted?
->> While drm people and VMware internal people have looked at them, I think
->> the huge_fault() fallback splitting and the introduction of
->> vma_is_special_huge() needs looking at more thoroughly.
->>
->> Apart from that, if possible, I think the best way to merge this series
->> is also through a DRM tree.
-> Patches 1-3 look OK to me.  I just had a few commenting/changelogging
-> niggles.
+Hello, Ard, all,
 
-Thanks for reviewing, Andrew.
+> > Wouldn't it be easier to pass a var_data_size stack variable into
+> > efivar_entry_get(), and only update the value in 'var' if it is <=
+> > 1024?
+> > 
+> 
+> I was thinking about this approach, but this way we still do not protect
+> var from a concurrent access. For example, efivar_data_read() can race
+> with itself:
 
-I just updated the series following your comments.
+Oh, indeed, this race is not possible the way you sugget with a var_data_size
+stack variable. Unfortunately, AFAIU, the read/write race stays:
+ 
+> ... efivar read functions still can race with the write function
+> efivar_store_raw(). Surely, the race window is much smaller but it is there.
+> I strongly believe we need to protect all data accesses here with a lock.
 
-Thanks,
-
-Thomas
-
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
