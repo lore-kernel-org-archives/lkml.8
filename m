@@ -2,84 +2,198 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA40C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5725C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35FF2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B25214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583226614;
+	bh=9J4xKssvd2PBDWbylmeVfrul5QXIIt9Qwc23yrwp7KA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n0vtts30yTvHMshH1MFzBoJB+ohZQjoUHS5F1Bzduf63n2DK7E19l+s19G8Jrw0zd
+	 SK+z384dHRyJtMG/vRP8HWfZOlZPFdiLr/4s9fyN1tc+SrccT0yZtfieygQlSJGnbp
+	 OSMc0fIm/kbReBNcKD5bZO3AJqAFNIbKz5z4jqFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgCCJKE (ORCPT
+        id S1728052AbgCCJKN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:10:04 -0500
-Received: from mga09.intel.com ([134.134.136.24]:59453 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgCCJKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:10:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 01:10:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="232207666"
-Received: from cliew10-mobl.gar.corp.intel.com (HELO M5530.gar.corp.intel.com) ([10.255.138.251])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2020 01:10:00 -0800
-From:   Harry Pan <harry.pan@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH v3] intel_idle: Add Comet Lake support
-Date:   Tue,  3 Mar 2020 17:09:57 +0800
-Message-Id: <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
-References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
+        Tue, 3 Mar 2020 04:10:13 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40365 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbgCCJKM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:10:12 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x19so2274046otp.7;
+        Tue, 03 Mar 2020 01:10:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5ic/CV5iEBANwAlsxrIRMOAxvyvHS1HnvZnEEB3hD4E=;
+        b=V++44Y6yVshBDXpDbtDXCdPw4P8ZLTab7yFUDHG2OMkP3xaOAj6zh8BVY5yZx2f17T
+         DP4UbWDCKRRIde8KZjjuYgtvf5o5OMF2KTF+lOFpdAxwy6QyQOqYYEkryOCX8/JvzYDe
+         fQUi6UHyq1J7QL2bcmvWGSXeziu5RpCPbYNkPP4Ksn02olfX3BeY8ndvQCXIimASj10N
+         GBjnZxWbbDju5R/MeCFJ47OyVnL6ntt47od0W3EhItyEfJ+7DMWDwOuIb7J6/4NMEZWz
+         6eM8opB8Uwmie0Uyzd9q2IFs1rcRMV6KC0Twac81qpc71kcBl5wJcNaHqJPEwsB++YZX
+         OBfg==
+X-Gm-Message-State: ANhLgQ32qgKenX6SfxypI2rCb1cwtrz72b9sgswLonwDE+qcpEfranHu
+        +YrpRY9VDlZDrONNJ05vhjBSuFUvYsCTzJ2qtds=
+X-Google-Smtp-Source: ADFU+vtvc21TQ88o8cq33ZI/McdFOfkzAwNNnQBYQAMvdqPpoE0wsM1THs9YPiszbWJKs1E7ZSUY482+hucO4cZf3pk=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr2537029otl.118.1583226611337;
+ Tue, 03 Mar 2020 01:10:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
+ <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
+ <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
+ <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com> <CAPpJ_efvF0XzjevA1eL3BUJqBwxRTOPLcqWKN40Azj-n1AtjcA@mail.gmail.com>
+In-Reply-To: <CAPpJ_efvF0XzjevA1eL3BUJqBwxRTOPLcqWKN40Azj-n1AtjcA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 3 Mar 2020 10:09:59 +0100
+Message-ID: <CAJZ5v0hie79+jG+3h4t5Q8r0M7E37HY-7i8ijg8DpvS0RXZSiQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a general C-state table in order to support Comet Lake.
+On Tue, Mar 3, 2020 at 8:29 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+>
+> Rafael J. Wysocki <rafael@kernel.org> 於 2020年3月2日 週一 下午7:45寫道：
+> >
+> > On Mon, Mar 2, 2020 at 11:38 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+> > > >
+> > > > Daniel Drake <drake@endlessm.com> 於 2020年2月28日 週五 下午5:43寫道：
+> > > > >
+> > > > > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > > > > > The purpose of this series of update of the ACPI EC driver is to make its
+> > > > > > initialization more straightforward.
+> > > > > >
+> > > > > > They fix a couple of issues, clean up some things, remove redundant code etc.
+> > > > > >
+> > > > > > Please refer to the changelogs of individual patches for details.
+> > > > > >
+> > > > > > For easier access, the series is available in the git branch at
+> > > > > >
+> > > > > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> > > > > >  acpi-ec-work
+> > > > > >
+> > > > > > on top of 5.6-rc3.
+> > > > >
+> > > > > Jian-Hong, can you please test this on Asus UX434DA?
+> > > > > Check if the screen brightness hotkeys are still working after these changes.
+> > > >
+> > > > Hi Rafael,
+> > > >
+> > > > Thanks for your patches, but we found an issue:
+> > > > The laptops like ASUS UX434DA's screen brightness hotkeys work before
+> > > > this patch series.  However, the hotkeys are failed with the patch
+> > > > "ACPI: EC: Unify handling of event handler installation failures".
+> > >
+> > > So I have modified the series to avoid the change that can possibly break this.
+> > >
+> > > Can you please pull the new series from
+> > >
+> > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> > >  acpi-ec-work
+> > >
+> > > (same branch) and retest?
+> >
+> > Note that the current top-most commit in that branch is
+> >
+> > 0957d98f50da ACPI: EC: Consolidate event handler installation code
+>
+> I tested the commits in acpi-ec-work branch whose last commit is
+> 0957d98f50da ("ACPI: EC: Consolidate event handler installation
+> code").  The screen brightness hotkeys are still failed with
+> 0957d98f50da ("ACPI: EC: Consolidate event handler installation
+> code").
+>
+> I tweak and add some debug messages:
+>
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index 85f1fe8e208a..3887f427283c 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -1443,23 +1443,27 @@ static bool install_gpe_event_handler(struct
+> acpi_ec *ec)
+>         return true;
+>  }
+>
+> -static bool install_gpio_irq_event_handler(struct acpi_ec *ec,
+> +static int install_gpio_irq_event_handler(struct acpi_ec *ec,
+>                                            struct acpi_device *device)
+>  {
+>         int irq, ret;
+>
+>         /* ACPI reduced hardware platforms use a GpioInt specified in _CRS. */
+>         irq = acpi_dev_gpio_irq_get(device, 0);
+> -       if (irq < 0)
+> -               return false;
+> +       if (irq < 0) {
+> +               pr_err("%s: acpi_dev_gpio_irq_get returns %d\n", __func__, irq);
+> +               return irq;
+> +       }
+>
+>         ret = request_irq(irq, acpi_ec_irq_handler, IRQF_SHARED, "ACPI EC", ec);
+> -       if (ret < 0)
+> -               return false;
+> +       if (ret < 0) {
+> +               pr_err("%s: request_irq returns %d\n", __func__, ret);
+> +               return ret;
+> +       }
+>
+>         ec->irq = irq;
+>
+> -       return true;
+> +       return 0;
+>  }
+>
+>  /**
+> @@ -1517,9 +1521,11 @@ static int ec_install_handlers(struct acpi_ec
+> *ec, struct acpi_device *device)
+>                          * fatal, because the EC can be polled for events.
+>                          */
+>                 } else {
+> -                       ready = install_gpio_irq_event_handler(ec, device);
+> -                       if (!ready)
+> -                               return -ENXIO;
+> +                       pr_err("%s: install_gpio_irq_event_handler\n",
+> __func__);
+> +                       int ret = install_gpio_irq_event_handler(ec, device);
+> +                       if (ret)
+> +                               return ret;
+> +                       ready = true;
+>                 }
+>                 if (ready) {
+>                         set_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags);
+>
+> The dmesg shows:
+>
+> [    0.121117] ACPI: EC: ec_install_handlers: install_gpio_irq_event_handler
+> [    0.121133] ACPI: EC: install_gpio_irq_event_handler:
+> acpi_dev_gpio_irq_get returns -517
+>
+> Originally, ec_install_handlers() will return the returned value from
+> install_gpio_irq_event_handler() from acpi_dev_gpio_irq_get(), which
+> is -EPROBE_DEFER, instead of -ENXIO.  However, ec_install_handlers()
+> returns -ENXIO directly if install_gpio_irq_event_handler() returns
+> false in patch ("ACPI: EC: Consolidate event handler installation
+> code").  Here needs some modification.
 
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-
----
-
- drivers/idle/intel_idle.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index d55606608ac8..05bce595fafe 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1067,6 +1067,11 @@ static const struct idle_cpu idle_cpu_dnv = {
- 	.use_acpi = true,
- };
- 
-+static const struct idle_cpu idle_cpu_cml = {
-+	.state_table = skl_cstates,
-+	.disable_promotion_to_c1e = true,
-+};
-+
- static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	INTEL_CPU_FAM6(NEHALEM_EP,		idle_cpu_nhx),
- 	INTEL_CPU_FAM6(NEHALEM,			idle_cpu_nehalem),
-@@ -1105,6 +1110,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS,	idle_cpu_bxt),
- 	INTEL_CPU_FAM6(ATOM_GOLDMONT_D,		idle_cpu_dnv),
- 	INTEL_CPU_FAM6(ATOM_TREMONT_D,		idle_cpu_dnv),
-+	INTEL_CPU_FAM6(COMETLAKE_L,		idle_cpu_cml),
-+	INTEL_CPU_FAM6(COMETLAKE,		idle_cpu_cml),
- 	{}
- };
- 
--- 
-2.24.1
-
+Thanks, I forgot about the -EPROBE_DEFER case.
