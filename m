@@ -2,135 +2,135 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D332AC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C845EC3F2D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC16320866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="eTrzME+b"
+	by mail.kernel.org (Postfix) with ESMTP id A73E122522
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgCCRQV (ORCPT
+        id S1729795AbgCCRQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:16:21 -0500
-Received: from onstation.org ([52.200.56.107]:54054 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgCCRQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:16:21 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id DA9123E8F4;
-        Tue,  3 Mar 2020 17:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1583255780;
-        bh=29MHpfV8HM+m/8mEKfdKSt2XIMIPWgMiQS70SJOaT7c=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=eTrzME+buJDC+JQ2iOWHK8a21j41LZUAzuAoD6PU+ExzLiLW0D02gLFI+rEugFT5d
-         qLtSTAP3J8bZ05tZbtTjIix7XtqpPn8DcnG7WEpi9HA0bgAIilMhxpW/g18txdK9Pg
-         oSk6hHunH/xQXWS3OpHcF+4kXqceEaQ3dhsS2yPo=
-Date:   Tue, 3 Mar 2020 12:16:19 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        DTML <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [PATCH v3 1/2] dt-bindings: display: msm: Convert
- GMU bindings to YAML
-Message-ID: <20200303171619.GB11841@onstation.org>
-References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
- <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
- <20200302204906.GA32123@ravnborg.org>
- <20200303154321.GA24212@jcrouse1-lnx.qualcomm.com>
- <CAOCk7NpP8chviZ0eM_4Fm3b2Jn+ngtVq=EYB=7yMK0H7rnfWMg@mail.gmail.com>
- <20200303155405.GA11841@onstation.org>
- <20200303170159.GA13109@jcrouse1-lnx.qualcomm.com>
+        Tue, 3 Mar 2020 12:16:22 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2506 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729100AbgCCRQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:16:22 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 20BACB3F076F71A9F686;
+        Tue,  3 Mar 2020 17:16:20 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 3 Mar 2020 17:16:19 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Mar 2020
+ 17:16:19 +0000
+Subject: Re: About commit "io: change inX() to have their own IO barrier
+ overrides"
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Sinan Kaya <okaya@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
+ <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
+ <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
+ <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
+ <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
+ <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <773c5d63-5626-ca3d-634b-73d3a7776ddb@huawei.com>
+Date:   Tue, 3 Mar 2020 17:16:18 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303170159.GA13109@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:01:59AM -0700, Jordan Crouse wrote:
-> On Tue, Mar 03, 2020 at 10:54:05AM -0500, Brian Masney wrote:
-> > On Tue, Mar 03, 2020 at 08:50:28AM -0700, Jeffrey Hugo wrote:
-> > > On Tue, Mar 3, 2020 at 8:43 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> > > >
-> > > > On Mon, Mar 02, 2020 at 09:49:06PM +0100, Sam Ravnborg wrote:
-> > > > > Hi Jordan.
-> > > > >
-> > > > > On Mon, Mar 02, 2020 at 11:23:43AM -0700, Jordan Crouse wrote:
-> > > > > > Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-> > > > > > text bindings.
-> > > > > >
-> > > > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > > > > ---
-> > > > > >
-> > > > > >  .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
-> > > > > > -
-> > > > > > -Required properties:
-> > > > > > -- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
-> > > > > > -    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
-> > > > > > -  Note that you need to list the less specific "qcom,adreno-gmu"
-> > > > > > -  for generic matches and the more specific identifier to identify
-> > > > > > -  the specific device.
-> > > > > > -- reg: Physical base address and length of the GMU registers.
-> > > > > > -- reg-names: Matching names for the register regions
-> > > > > > -  * "gmu"
-> > > > > > -  * "gmu_pdc"
-> > > > > > -  * "gmu_pdc_seg"
-> > > > > > -- interrupts: The interrupt signals from the GMU.
-> > > > > > -- interrupt-names: Matching names for the interrupts
-> > > > > > -  * "hfi"
-> > > > > > -  * "gmu"
-> > > > > > -- clocks: phandles to the device clocks
-> > > > > > -- clock-names: Matching names for the clocks
-> > > > > > -   * "gmu"
-> > > > > > -   * "cxo"
-> > > > > > -   * "axi"
-> > > > > > -   * "mnoc"
-> > > > > The new binding - and arch/arm64/boot/dts/qcom/sdm845.dtsi agrees that
-> > > > > "mnoc" is wrong.
-> > > > >
-> > > > > > -- power-domains: should be:
-> > > > > > -   <&clock_gpucc GPU_CX_GDSC>
-> > > > > > -   <&clock_gpucc GPU_GX_GDSC>
-> > > > > > -- power-domain-names: Matching names for the power domains
-> > > > > > -- iommus: phandle to the adreno iommu
-> > > > > > -- operating-points-v2: phandle to the OPP operating points
-> > > > > > -
-> > > > > > -Optional properties:
-> > > > > > -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> > > > > > -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
-> > > > > This property is not included in the new binding.
-> > > >
-> > > > Yeah, that guy shouldn't be here. I'm not sure how it got there in the first
-> > > > place but I'll update the commit log. Thanks for the poke.
-> > > 
-> > > I thought this was something Brian M added for older targets (A4XX?).
-> > > Perhaps he should chime in?
-> > 
-> > Yes, this is needed for older systems with a3xx and a4xx GPUs.
+On 03/03/2020 16:40, Arnd Bergmann wrote:
+> On Tue, Mar 3, 2020 at 2:18 PM John Garry <john.garry@huawei.com> wrote:
+>>
+>> + linux-arch
+>>
+>> For background, see
+>> https://lore.kernel.org/lkml/2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com/
+>>
+>>>>
+>>>> So today only ARM64 uses it for this relevant code, above. But maybe
+>>>> others in future will want to use it - any arch without native IO port
+>>>> access is a candidate.
+>>>
+>>> I'm looking at Arnd here for help.
+>>>
+>>>>
+>>>>>
+>>>>> As long as the expectations are set, I see no reason why it shouldn't
+>>>>> but, I'll let Arnd comment on it too.
+>>>>
+>>>> ok, so it looks reasonable consider replicating your change for ***, above.
+>>
+>> To be clear, I would make this change in lib/logic_pio.c since
+>> __io_pbr() can be overridden per-arch:
+>>
+>>    #define BUILD_LOGIC_IO(bw, type)
+>>    type logic_in##bw(unsigned long addr)
+>>    {
+>>         type ret = (type)~0;
+>>         if (addr < MMIO_UPPER_LIMIT) {
+>> -          ret = read##bw(PCI_IOBASE + addr);
+>> +          __io_pbr();
+>> +          ret = __raw_read##bw(PCI_IOBASE + addr);
+>> +          __io_pbr();
 > 
-> Okay, this got added to the wrong place.  The GMU is a specific entity only
-> valid for a6xx targets. From the looks of the example the sram should be in the
-> GPU definition. Do you want to submit a patch to move it or should I (and lets
-> hope Rob doesn't insist on converting GPU to YAML).
+> __io_par();
+> 
+>>         } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
+>>             struct logic_pio_hwaddr *entry = find_io_range(addr);
+>>
+>> ...
+>>
+>> (forgetting leX_to_cpu for the moment)
+> 
+> Yes, I suppose this is required to get consistent behavior on arm64,
+> which overrides __io_par() but not __io_ar(), with the current code
+> the barrier after read is weaker when LOGIC_PIO is enabled than it
+> is otherwise.
 
-I can take care of cleaning this up. I'll do that in a few days.
+Ok.
 
-Brian
+Apart from that, this code is somewhat hidden. I mean, most people would 
+consider generic IO port accessors come from asm-generic/io.h only, 
+which is not the case here. Maybe this can be better integrated into 
+asm-generic/io.h, the only hint today being the logic_pio.h include half 
+way through the file.
+
+> 
+> For other architectures, I suppose we would need another indirection
+> level, as those can also override the default inb() itself to do something
+> other than readb(PCI_IOBASE + addr), and that is not handled
+> here either. We can do that if we need LOGIC_PIO on a second
+> architecture.
+
+Jiaxun Yang did mention that MIPS may want to move away from its own IO 
+space management.
+
+Thanks,
+John
