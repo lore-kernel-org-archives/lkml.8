@@ -7,40 +7,46 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC94AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68283C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8623D20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E07920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583255294;
-	bh=JX+qYb6OOGojM/R1LEfPEZpjwInAUG9E0ZibHGRdrnc=;
+	s=default; t=1583255304;
+	bh=/mCxlrQbqOdMvvD+gq71AzS1eRHAIzVY4Y7Dz+xsR6g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OTtBueczZ7bz4X5F91kcebd9KGG/9IakxzhI2cAPs7lnJhblrhBsXRTJIswdRyLQq
-	 rJl/Wl02JBDWZTOCKvAmI5YHFY1Qn41ftnTrpwrVDzaGAte55LWEXHL6VflL6X+Rtg
-	 jI9NmjM6x6aOM5ZONGDPkPj+ruwdq2WYfyRMglKw=
+	b=OhaCwQnnSdPK5gKKvzILDd/NcSDdLrSTKzPA7oYi0ZG9I7+Z1RSt9D+WneBRIVcFA
+	 phhfOCKDKWKBooFXSo5+79LHUrQToNH+L2yhJySwiqETR6Cmc0SooPl9YmKX/es57h
+	 wZmfI0w9yOfUPVvLedcnDrNrKSddKSIRIxVAW+tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgCCRIN (ORCPT
+        id S1730596AbgCCRIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:08:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:49984 "EHLO foss.arm.com"
+        Tue, 3 Mar 2020 12:08:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:49994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgCCRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:08:13 -0500
+        id S1729041AbgCCRIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:08:22 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E899C2F;
-        Tue,  3 Mar 2020 09:08:12 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 646CC2F;
+        Tue,  3 Mar 2020 09:08:22 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C57A3F534;
-        Tue,  3 Mar 2020 09:08:12 -0800 (PST)
-Date:   Tue, 03 Mar 2020 17:08:10 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC64F3F534;
+        Tue,  3 Mar 2020 09:08:21 -0800 (PST)
+Date:   Tue, 03 Mar 2020 17:08:20 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, Linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: anatop: Lower error message level for -EPROBE_DEFER" to the regulator tree
-In-Reply-To:  <1583243052-1930-1-git-send-email-Anson.Huang@nxp.com>
-Message-Id:  <applied-1583243052-1930-1-git-send-email-Anson.Huang@nxp.com>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     Igor Opanyuk <igor.opanyuk@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oleksandr Suvorov <cryosay@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Applied "spi: fsl-lpspi: remove unneeded array" to the spi tree
+In-Reply-To:  <20200220141143.3902922-2-oleksandr.suvorov@toradex.com>
+Message-Id:  <applied-20200220141143.3902922-2-oleksandr.suvorov@toradex.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,11 +55,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: anatop: Lower error message level for -EPROBE_DEFER
+   spi: fsl-lpspi: remove unneeded array
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -74,44 +80,52 @@ to this mail.
 Thanks,
 Mark
 
-From 788bfc6eb6912df40a31245566b3e5c99ea7a66a Mon Sep 17 00:00:00 2001
-From: Anson Huang <Anson.Huang@nxp.com>
-Date: Tue, 3 Mar 2020 21:44:12 +0800
-Subject: [PATCH] regulator: anatop: Lower error message level for
- -EPROBE_DEFER
+From 2fa98705a9289c758b6154a22174aa8d4041a285 Mon Sep 17 00:00:00 2001
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date: Thu, 20 Feb 2020 14:11:48 +0000
+Subject: [PATCH] spi: fsl-lpspi: remove unneeded array
 
-devm_regulator_register() could return -EPROBE_DEFER when trying to
-get init data and NOT all resources are available at that time, for
-this case, error message is better to be present for debug level ONLY.
+- replace the array with the shift operation
+- remove the extra comparing operation.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Link: https://lore.kernel.org/r/1583243052-1930-1-git-send-email-Anson.Huang@nxp.com
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Link: https://lore.kernel.org/r/20200220141143.3902922-2-oleksandr.suvorov@toradex.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/anatop-regulator.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/spi/spi-fsl-lpspi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index 754739d004e5..ca92b3de0e9c 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -305,9 +305,13 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 	/* register regulator */
- 	rdev = devm_regulator_register(dev, rdesc, &config);
- 	if (IS_ERR(rdev)) {
--		dev_err(dev, "failed to register %s\n",
--			rdesc->name);
--		return PTR_ERR(rdev);
-+		ret = PTR_ERR(rdev);
-+		if (ret == -EPROBE_DEFER)
-+			dev_dbg(dev, "failed to register %s, deferring...\n",
-+				rdesc->name);
-+		else
-+			dev_err(dev, "failed to register %s\n", rdesc->name);
-+		return ret;
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index d0b8cc741a24..298329b781d2 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -86,8 +86,6 @@
+ #define TCR_RXMSK	BIT(19)
+ #define TCR_TXMSK	BIT(18)
+ 
+-static int clkdivs[] = {1, 2, 4, 8, 16, 32, 64, 128};
+-
+ struct lpspi_config {
+ 	u8 bpw;
+ 	u8 chip_select;
+@@ -331,15 +329,14 @@ static int fsl_lpspi_set_bitrate(struct fsl_lpspi_data *fsl_lpspi)
  	}
  
- 	platform_set_drvdata(pdev, rdev);
+ 	for (prescale = 0; prescale < 8; prescale++) {
+-		scldiv = perclk_rate /
+-			 (clkdivs[prescale] * config.speed_hz) - 2;
++		scldiv = perclk_rate / config.speed_hz / (1 << prescale) - 2;
+ 		if (scldiv < 256) {
+ 			fsl_lpspi->config.prescale = prescale;
+ 			break;
+ 		}
+ 	}
+ 
+-	if (prescale == 8 && scldiv >= 256)
++	if (scldiv >= 256)
+ 		return -EINVAL;
+ 
+ 	writel(scldiv | (scldiv << 8) | ((scldiv >> 1) << 16),
 -- 
 2.20.1
 
