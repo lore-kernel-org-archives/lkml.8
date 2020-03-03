@@ -2,257 +2,160 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B775BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFA520870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B4620870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZPrj14u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgCCTlf (ORCPT
+        id S1730989AbgCCTlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:41:35 -0500
-Received: from mga03.intel.com ([134.134.136.65]:29557 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbgCCTlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:41:35 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 11:41:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="240184853"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 03 Mar 2020 11:41:34 -0800
-Date:   Tue, 3 Mar 2020 11:41:34 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/8] x86/split_lock: Ensure
- X86_FEATURE_SPLIT_LOCK_DETECT means the existence of feature
-Message-ID: <20200303194134.GW1439@linux.intel.com>
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
- <20200206070412.17400-3-xiaoyao.li@intel.com>
- <20200303185524.GQ1439@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303185524.GQ1439@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 3 Mar 2020 14:41:46 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33209 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730939AbgCCTlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:41:45 -0500
+Received: by mail-pj1-f67.google.com with SMTP id o21so52639pjs.0;
+        Tue, 03 Mar 2020 11:41:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nELp/JsIU8Whx16SjmYjwVpYKQX+kqJ7/7LVzOVJkmo=;
+        b=vZPrj14uv3brvCc5Zu4zoCn5pF7y85BGE0/vRBHEKsRUwrqxCy77nkHfvV66kJ4vpo
+         yF7PHSNtCOlkU4XQcyRIgXI2BiZzQexki5PUHzjuXl9gF78LwYLC1AcNS0qaAffcLuMD
+         lakqLTcF7mnyMDz8mEfRyeZ2/tZ8PICJlzM9oYSeYjJ0ZdtgZN+CbGgQxDtPm2I08V+3
+         8XGPl7OkBY5u8QnnrHTXDwYMadY7nKaSLLhIE7zmrJH+j0+K5cl1rcLkP8iWz/oSmzQ9
+         9CzwFdLxwC16gQKYIRyFPb90uC21gVPa1tsxnWdMav0cKE/MfXRSvZK4mZlgdULptVnA
+         xCmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nELp/JsIU8Whx16SjmYjwVpYKQX+kqJ7/7LVzOVJkmo=;
+        b=nTpbEJjDQ6+Uc9XS01GzfP2c2Cn9KDsjhP+pVez9K0I5dV+/60tsY9ruakjZXCH6Kh
+         dOe1htDUyehFOXSQjI/xm5eh2FFnve+4dkcsTkFeZF5tT1iAHtnNxFXCkWQODOlDp63Q
+         KxWjxGR+30q//+gFZU/Ugfj/IJN5rWGZrMOYiy/bYy1yYw5KINOa8YR9GMt2QX04ZQRU
+         hCy/KWfFFcMRke3k0Zkpez//ELP+ohc4gauE4UC8kTEG9cXQmmGBJgOqPMr7SyKgJajz
+         lO8/wVNZU7ZKjospUdDzZ+gLcwkIXhcchbLer32gfaopwy5j76BbbkPRtqvABxK+f6AY
+         Mrtw==
+X-Gm-Message-State: ANhLgQ1k7w3DibQRDxEuXsSei+GELGENJNIy5bEZ0/zB1tJGMWm7fY2y
+        +YdLIYnL/KqVxUmfN7jJ6jMwoMM=
+X-Google-Smtp-Source: ADFU+vssPo5v9dRFhOkIA1Dbts1aFq2on91LBCVkSuAiPbQX5egOR8N8CD0FO2dxqsABmXgPcfi+2g==
+X-Received: by 2002:a17:90a:eb0b:: with SMTP id j11mr127353pjz.145.1583264504055;
+        Tue, 03 Mar 2020 11:41:44 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee0:eafa:280b:b5cb:5e89:a52d])
+        by smtp.gmail.com with ESMTPSA id w2sm25279628pfw.43.2020.03.03.11.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 11:41:42 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 1/2] drivers: base: power: main.c: Use built-in RCU list checking
+Date:   Wed,  4 Mar 2020 01:11:30 +0530
+Message-Id: <20200303194130.24617-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:55:24AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 03:04:06PM +0800, Xiaoyao Li wrote:
-> > When flag X86_FEATURE_SPLIT_LOCK_DETECT is set, it should ensure the
-> > existence of MSR_TEST_CTRL and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
-> 
-> The changelog confused me a bit.  "When flag X86_FEATURE_SPLIT_LOCK_DETECT
-> is set" makes it sound like the logic is being applied after the feature
-> bit is set.  Maybe something like:
-> 
-> ```
-> Verify MSR_TEST_CTRL.SPLIT_LOCK_DETECT can be toggled via WRMSR prior to
-> setting the SPLIT_LOCK_DETECT feature bit so that runtime consumers,
-> e.g. KVM, don't need to worry about WRMSR failure.
-> ```
-> 
-> > Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++----------------
-> >  1 file changed, 23 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> > index 2b3874a96bd4..49535ed81c22 100644
-> > --- a/arch/x86/kernel/cpu/intel.c
-> > +++ b/arch/x86/kernel/cpu/intel.c
-> > @@ -702,7 +702,8 @@ static void init_intel(struct cpuinfo_x86 *c)
-> >  	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
-> >  		tsx_disable();
-> >  
-> > -	split_lock_init();
-> > +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-> > +		split_lock_init();
-> >  }
-> >  
-> >  #ifdef CONFIG_X86_32
-> > @@ -986,9 +987,26 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
-> >  
-> >  static void __init split_lock_setup(void)
-> >  {
-> > +	u64 test_ctrl_val;
-> >  	char arg[20];
-> >  	int i, ret;
-> > +	/*
-> > +	 * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
-> > +	 * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
-> > +	 * be glitches in virtualization that leave a guest with an incorrect
-> > +	 * view of real h/w capabilities.
-> > +	 */
-> > +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-> > +		return;
-> > +
-> > +	if (wrmsrl_safe(MSR_TEST_CTRL,
-> > +			test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-> > +		return;
-> > +
-> > +	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
-> > +		return;a
-> 
-> Probing the MSR should be skipped if SLD is disabled in sld_options, i.e.
-> move this code (and setup_force_cpu_cap() etc...) down below the
-> match_option() logic.  The above would temporarily enable SLD even if the
-> admin has explicitly disabled it, e.g. makes the kernel param useless for
-> turning off the feature due to bugs.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Hmm, but this prevents KVM from exposing SLD to a guest when it's off in
-the kernel, which would be a useful debug/testing scenario.
+This patch passes the cond argument to list_for_each_entry_rcu()
+to fix the following false-positive lockdep warnings:
+(with CONFIG_PROVE_RCU_LIST = y)
 
-Maybe add another SLD state to forcefully disable SLD?  That way the admin
-can turn of SLD in the host kernel but still allow KVM to expose it to its
-guests.  E.g.
+[  330.302784] =============================
+[  330.302789] WARNING: suspicious RCU usage
+[  330.302796] 5.6.0-rc1+ #5 Not tainted
+[  330.302801] -----------------------------
+[  330.302808] drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
 
-static const struct {
-        const char                      *option;
-        enum split_lock_detect_state    state;
-} sld_options[] __initconst = {
-	{ "disable",	sld_disable },
-        { "off",        sld_off     },
-        { "warn",       sld_warn    },
-        { "fatal",      sld_fatal   },
-};
+[  330.303303] =============================
+[  330.303307] WARNING: suspicious RCU usage
+[  330.303311] 5.6.0-rc1+ #5 Not tainted
+[  330.303315] -----------------------------
+[  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
 
+[  331.934969] =============================
+[  331.934971] WARNING: suspicious RCU usage
+[  331.934973] 5.6.0-rc1+ #5 Not tainted
+[  331.934975] -----------------------------
+[  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
 
-Then the new setup() becomes:
+[  332.467772] WARNING: suspicious RCU usage
+[  332.467775] 5.6.0-rc1+ #5 Not tainted
+[  332.467775] -----------------------------
+[  332.467778] drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
 
-static void __init split_lock_setup(void)
-{
-        u64 test_ctrl_val;
-        char arg[20];
-        int i, ret;
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ drivers/base/power/main.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-        sld_state = sld_warn;
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 0e99a760aebd..6d1dee7051eb 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -40,6 +40,10 @@
+ 
+ typedef int (*pm_callback_t)(struct device *);
+ 
++#define list_for_each_entry_rcu_locked(pos, head, member) \
++	list_for_each_entry_rcu(pos, head, member, \
++			device_links_read_lock_held())
++
+ /*
+  * The entries in the dpm_list list are in a depth first order, simply
+  * because children are guaranteed to be discovered after parents, and
+@@ -266,7 +270,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
+ 	 * callbacks freeing the link objects for the links in the list we're
+ 	 * walking.
+ 	 */
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
++	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+ 		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+ 			dpm_wait(link->supplier, async);
+ 
+@@ -323,7 +327,7 @@ static void dpm_wait_for_consumers(struct device *dev, bool async)
+ 	 * continue instead of trying to continue in parallel with its
+ 	 * unregistration).
+ 	 */
+-	list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
++	list_for_each_entry_rcu_locked(link, &dev->links.consumers, s_node)
+ 		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+ 			dpm_wait(link->consumer, async);
+ 
+@@ -1235,7 +1239,7 @@ static void dpm_superior_set_must_resume(struct device *dev)
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
++	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+ 		link->supplier->power.must_resume = true;
+ 
+ 	device_links_read_unlock(idx);
+@@ -1695,7 +1699,7 @@ static void dpm_clear_superiors_direct_complete(struct device *dev)
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+ 		spin_lock_irq(&link->supplier->power.lock);
+ 		link->supplier->power.direct_complete = false;
+ 		spin_unlock_irq(&link->supplier->power.lock);
+-- 
+2.17.1
 
-        ret = cmdline_find_option(boot_command_line, "split_lock_detect",
-                                  arg, sizeof(arg));
-        if (ret >= 0) {
-                for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
-                        if (match_option(arg, ret, sld_options[i].option)) {
-                                sld_state = sld_options[i].state;
-                                break;
-                        }
-                }
-        }
-
-        if (sld_state == sld_disable)
-                goto log_sld;
-
-        /*
-         * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
-         * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
-         * be glitches in virtualization that leave a guest with an incorrect
-         * view of real h/w capabilities.
-         */
-        if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-                goto sld_broken;
-
-        if (wrmsrl_safe(MSR_TEST_CTRL,
-                        test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
-                goto sld_broken;
-
-        if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
-                goto sld_broken;
-
-        setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-
-log_sld:
-        switch (sld_state) {
-        case sld_disable:
-                pr_info("split_lock detection disabled\n");
-                break;
-        case sld_off:
-                pr_info("split_lock detection off in kernel\n");
-                break;
-        case sld_warn:
-                pr_info("warning about user-space split_locks\n");
-                break;
-        case sld_fatal:
-                pr_info("sending SIGBUS on user-space split_locks\n");
-                break;
-        }
-
-        return;
-
-sld_broken:
-        sld_state = sld_disable;
-        pr_err("split_lock detection disabled, MSR access faulted\n");
-}
-
-> And with that, IMO failing any of RDMSR/WRSMR here warrants a pr_err().
-> The CPU says it supports split lock and the admin hasn't explicitly turned
-> it off, so failure to enable should be logged.
-> 
-> > +
-> >  	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-> >  	sld_state = sld_warn;
-> >  
-> > @@ -1022,24 +1040,19 @@ static void __init split_lock_setup(void)
-> >   * Locking is not required at the moment because only bit 29 of this
-> >   * MSR is implemented and locking would not prevent that the operation
-> >   * of one thread is immediately undone by the sibling thread.
-> > - * Use the "safe" versions of rdmsr/wrmsr here because although code
-> > - * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
-> > - * exist, there may be glitches in virtualization that leave a guest
-> > - * with an incorrect view of real h/w capabilities.
-> >   */
-> > -static bool __sld_msr_set(bool on)
-> > +static void __sld_msr_set(bool on)
-> >  {
-> >  	u64 test_ctrl_val;
-> >  
-> > -	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-> > -		return false;
-> > +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
-> >  
-> >  	if (on)
-> >  		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> >  	else
-> >  		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> >  
-> > -	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
-> > +	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
-> >  }
-> >  
-> >  static void split_lock_init(void)
-> > @@ -1047,15 +1060,7 @@ static void split_lock_init(void)
-> >  	if (sld_state == sld_off)
-> >  		return;
-> >  
-> > -	if (__sld_msr_set(true))
-> > -		return;
-> > -
-> > -	/*
-> > -	 * If this is anything other than the boot-cpu, you've done
-> > -	 * funny things and you get to keep whatever pieces.
-> > -	 */
-> > -	pr_warn("MSR fail -- disabled\n");
-> > -	sld_state = sld_off;
-> > +	__sld_msr_set(true);
-> >  }
-> >  
-> >  bool handle_user_split_lock(unsigned long ip)
-> > -- 
-> > 2.23.0
-> > 
