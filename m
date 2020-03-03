@@ -4,131 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948BBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75258C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F2420716
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5463A21775
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbgCCSkv (ORCPT
+        id S1730177AbgCCSmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:40:51 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52660 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgCCSkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:40:51 -0500
-Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1j9CTH-0003o1-Gx; Tue, 03 Mar 2020 18:40:47 +0000
-Subject: Re: [PATCH] security/apparmor/label.c: Clean code by removing
- redundant instructions
-To:     mateusznosek0@gmail.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     serge@hallyn.com, jmorris@namei.org
-References: <20200303183023.32004-1-mateusznosek0@gmail.com>
-From:   John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Canonical
-Message-ID: <e73b378a-acf0-0669-9e06-6633b5b25f86@canonical.com>
-Date:   Tue, 3 Mar 2020 10:40:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 13:42:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:25430 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgCCSmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:42:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 10:42:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="263306240"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2020 10:42:09 -0800
+Date:   Tue, 3 Mar 2020 10:42:09 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] x86/split_lock: Export handle_user_split_lock()
+Message-ID: <20200303184209.GP1439@linux.intel.com>
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-2-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200303183023.32004-1-mateusznosek0@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206070412.17400-2-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:30 AM, mateusznosek0@gmail.com wrote:
-> From: Mateusz Nosek <mateusznosek0@gmail.com>
-> 
-> Previously 'label->proxy->label' value checking
-> and conditional reassigning were done twice in the same function.
-> The second one is redundant and can be removed.
-> 
-> Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
-Acked-by: John Johansen <john.johansen@canonical.com>
+On Thu, Feb 06, 2020 at 03:04:05PM +0800, Xiaoyao Li wrote:
+> Move the EFLAGS.AC check to do_alignment_check() so that
+> handle_user_split_lock() can be used by KVM in the future to handle #AC
+> caused by split lock in guest.
 
-I will pull this into apparmor-next
+Probably worth explaining that KVM doesn't have a @regs context and will
+pre-check EFLAGS.AC.
 
-
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > ---
->  security/apparmor/label.c | 6 ------
->  1 file changed, 6 deletions(-)
+>  arch/x86/include/asm/cpu.h  | 4 ++--
+>  arch/x86/kernel/cpu/intel.c | 7 ++++---
+>  arch/x86/kernel/traps.c     | 2 +-
+>  3 files changed, 7 insertions(+), 6 deletions(-)
 > 
-> diff --git a/security/apparmor/label.c b/security/apparmor/label.c
-> index ba3987242282..676eebcbfd68 100644
-> --- a/security/apparmor/label.c
-> +++ b/security/apparmor/label.c
-> @@ -311,8 +311,6 @@ int aa_vec_unique(struct aa_profile **vec, int n, int flags)
->  
->  static void label_destroy(struct aa_label *label)
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index ff6f3ca649b3..ff567afa6ee1 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -43,11 +43,11 @@ unsigned int x86_stepping(unsigned int sig);
+>  #ifdef CONFIG_CPU_SUP_INTEL
+>  extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+>  extern void switch_to_sld(unsigned long tifn);
+> -extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
+> +extern bool handle_user_split_lock(unsigned long ip);
+>  #else
+>  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+>  static inline void switch_to_sld(unsigned long tifn) {}
+> -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> +static inline bool handle_user_split_lock(unsigned long ip)
 >  {
-> -	struct aa_label *tmp;
-> -
->  	AA_BUG(!label);
->  
->  	if (!label_isprofile(label)) {
-> @@ -333,10 +331,6 @@ static void label_destroy(struct aa_label *label)
->  
->  	aa_free_secid(label->secid);
->  
-> -	tmp = rcu_dereference_protected(label->proxy->label, true);
-> -	if (tmp == label)
-> -		rcu_assign_pointer(label->proxy->label, NULL);
-> -
->  	aa_put_proxy(label->proxy);
->  	label->proxy = (struct aa_proxy *) PROXY_POISON + 1;
+>  	return false;
 >  }
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index db3e745e5d47..2b3874a96bd4 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -1058,13 +1058,13 @@ static void split_lock_init(void)
+>  	sld_state = sld_off;
+>  }
+>  
+> -bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> +bool handle_user_split_lock(unsigned long ip)
+>  {
+> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> +	if (sld_state == sld_fatal)
+>  		return false;
+>  
+>  	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> -			    current->comm, current->pid, regs->ip);
+> +			    current->comm, current->pid, ip);
+>  
+>  	/*
+>  	 * Disable the split lock detection for this task so it can make
+> @@ -1075,6 +1075,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>  	set_tsk_thread_flag(current, TIF_SLD);
+>  	return true;
+>  }
+> +EXPORT_SYMBOL_GPL(handle_user_split_lock);
+>  
+>  /*
+>   * This function is called only when switching between tasks with
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index 0ef5befaed7d..407ff9be610f 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+>  
+>  	local_irq_enable();
+>  
+> -	if (handle_user_split_lock(regs, error_code))
+> +	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
+>  		return;
+>  
+>  	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
+> -- 
+> 2.23.0
 > 
-
