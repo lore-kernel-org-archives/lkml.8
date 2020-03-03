@@ -2,123 +2,133 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EE7C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7D120842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZuapSbN"
+	by mail.kernel.org (Postfix) with ESMTP id 0925720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgCCPK7 (ORCPT
+        id S1729759AbgCCPNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:10:59 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46491 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgCCPK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:10:59 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h18so3850802ljl.13;
-        Tue, 03 Mar 2020 07:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=srYBJQBn40ddvd9Oy2lph/9+g4zk3ppatIYkVI/mDpU=;
-        b=lZuapSbNZ4EIwa2OG0I+vk5CXF9p5PcP4FAUsGhHvfoOmPtUN80qLQyiGhHDm8LYEH
-         w32rOdgYWrDXbgvmSwz8ME1N8zbKeVYviIvLzcry4nXf0E0aKijEL8Vzs9ux7YPG7Tz5
-         N+ScuTx184UxpAFpNm7K0xQby3ogUb/l9lgrmjSTV6aG4UvUCq62IoESmjjcOKIz8aRa
-         FS7PMRLSlIDmDQxeuhhQHh1awCbJfI6gF9O5a4LOpoauQ1aCJamHlXAPzYqTnPnLqw8A
-         Bbg1mBHJ7AyLpG58tJDvuuXWGgJ2dVIh0AP2EnAaX5exZdTngwkXtK4ia7hPN8zB4LAA
-         naqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=srYBJQBn40ddvd9Oy2lph/9+g4zk3ppatIYkVI/mDpU=;
-        b=NB8dSX2CQsN7jqSs2AI8s3Joo2Wfg233B2cUwkrHXpJcdzmQcaOn1KosMc9eCAvbbI
-         jg9ry/+JNZxjtxRuKwRRsYQE5n9Zw3o4oug9zNm3+k0o4+9qH0g9EqHTszUy/0wNPvST
-         i1Z3iV6kWkEMpIk3YHj6oJQ7+TfTV5AunxZsyNnAWWB+zSpavOi5NoaJ1tgC2o993aXj
-         1BzRzgUucwR76qBkSXCvag8bKa2LfqUqzVmgWOa/q+b4CsvDl6tYvDnIcrKJ3b/1pQO1
-         jdxglptO5rfXMGFzi7DTkB6iLKIBBzfucxjV2ESGIwkpcc/5sHekPqZpBmVCdKwiYnXh
-         ymMA==
-X-Gm-Message-State: ANhLgQ2xZNKNX3rSKlHH+sS/z4PZssVAkgQ+5/hp4cywg02+d4QKL5mS
-        GwWw/mbUgzVBYRbPbSIwKnysWw1T
-X-Google-Smtp-Source: ADFU+vvkFl1Zh01+7/XZPhJgxMIs7pGaIKPdrbXOPe/ptTcaGythQv4/hP85GnjUp6g489j1NEMTDQ==
-X-Received: by 2002:a2e:7009:: with SMTP id l9mr2797800ljc.96.1583248255159;
-        Tue, 03 Mar 2020 07:10:55 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t14sm4907012ljo.56.2020.03.03.07.10.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 07:10:54 -0800 (PST)
-Subject: Re: [PATCH] usb: phy: tegra: Include proper GPIO consumer header to
- fix compile testing
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
+        Tue, 3 Mar 2020 10:13:54 -0500
+Received: from muru.com ([72.249.23.125]:58542 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbgCCPNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:13:54 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9BD6180EE;
+        Tue,  3 Mar 2020 15:14:37 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 07:13:49 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1583234960-24909-1-git-send-email-krzk@kernel.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9cce90a5-88b5-b875-9d20-34b5a9dd165e@gmail.com>
-Date:   Tue, 3 Mar 2020 18:10:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
+Message-ID: <20200303151349.GQ37466@atomide.com>
+References: <20200224191230.30972-1-tony@atomide.com>
+ <20200224191230.30972-4-tony@atomide.com>
+ <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1583234960-24909-1-git-send-email-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.03.2020 14:29, Krzysztof Kozlowski пишет:
-> The driver uses only GPIO Descriptor Consumer Interface so include
-> proper header.  This fixes compile test failures (e.g. on i386):
-> 
->     drivers/usb/phy/phy-tegra-usb.c: In function ‘ulpi_phy_power_on’:
->     drivers/usb/phy/phy-tegra-usb.c:695:2: error:
->         implicit declaration of function ‘gpiod_set_value_cansleep’ [-Werror=implicit-function-declaration]
->     drivers/usb/phy/phy-tegra-usb.c: In function ‘tegra_usb_phy_probe’:
->     drivers/usb/phy/phy-tegra-usb.c:1167:11: error:
->         implicit declaration of function ‘devm_gpiod_get_from_of_node’ [-Werror=implicit-function-declaration]
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/usb/phy/phy-tegra-usb.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-> index 6153cc35aba0..cffe2aced488 100644
-> --- a/drivers/usb/phy/phy-tegra-usb.c
-> +++ b/drivers/usb/phy/phy-tegra-usb.c
-> @@ -12,12 +12,11 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/export.h>
-> -#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
->  #include <linux/resource.h>
->  #include <linux/slab.h>
-> 
+Hi,
 
-Thanks,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200303 06:03]:
+> On 24/02/2020 21:12, Tony Lindgren wrote:
+> > +	/* Remap the whole module range to be able to reset dispc outputs */
+> > +	devm_iounmap(ddata->dev, ddata->module_va);
+> > +	ddata->module_va = devm_ioremap(ddata->dev,
+> > +					ddata->module_pa,
+> > +					ddata->module_size);
+> 
+> Why is this needed? The range is not mapped when sysc_pre_reset_quirk_dss()
+> is called? This will unmap and remap twice, as this function is called
+> twice. And then left mapped.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+That's because by default we only ioremap the module revision, sysconfig
+and sysstatus register are and provide the rest as a range for the child
+nodes.
+
+In the dss quirk case we need to tinker with registers also in the dispc
+range, and at the parent dss probe time dispc has not probed yet.
+
+We may be able to eventually move the reset quirk to dispc, but then
+it won't happen in the current setup until after dss top level driver
+has loaded.
+
+We leave the module range ioremapped as we still need to access
+sysconfig related registers for PM runtime.
+
+> > +	if (!ddata->module_va)
+> > +		return -EIO;
+> > +
+> > +	/* DISP_CONTROL */
+> > +	val = sysc_read(ddata, dispc_offset + 0x40);
+> 
+> Defines for dss/dispc register offsets could have been copied from the
+> platform display.c and used in this file.
+
+Yeah I though about that, but decided to keep everything local to
+the quirk handling. We could have them defined in some dss header
+though.
+
+> > +	/* Clear IRQSTATUS */
+> > +	sysc_write(ddata, 0x1000 + 0x18, irq_mask);
+> 
+> dispc_offset instead of 0x1000.
+
+OK
+
+> > +
+> > +	/* Disable outputs */
+> > +	val = sysc_quirk_dispc(ddata, dispc_offset, true);
+> > +
+> > +	/* Poll IRQSTATUS */
+> > +	error = readl_poll_timeout(ddata->module_va + dispc_offset + 0x18,
+> > +				   val, val != irq_mask, 100, 50);
+> > +	if (error)
+> > +		dev_warn(ddata->dev, "%s: timed out %08x !+ %08x\n",
+> > +			 __func__, val, irq_mask);
+> > +
+> > +	if (sysc_soc->soc == SOC_3430) {
+> > +		/* Clear DSS_SDI_CONTROL */
+> > +		sysc_write(ddata, dispc_offset + 0x44, 0);
+> > +
+> > +		/* Clear DSS_PLL_CONTROL */
+> > +		sysc_write(ddata, dispc_offset + 0x48, 0);
+> 
+> These are not dispc registers, but dss registers.
+
+Ouch. Thanks for catching this, will include in the fix.
+
+> > +	}
+> > +
+> > +	/* Clear DSS_CONTROL to switch DSS clock sources to PRCM if not */
+> > +	sysc_write(ddata, dispc_offset + 0x40, 0);
+> 
+> Same here.
+
+OK
+
+Regards,
+
+Tony
