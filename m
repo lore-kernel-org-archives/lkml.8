@@ -2,132 +2,134 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDCAC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC85C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BE22467B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D7121D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="AfeBTOyA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GqkgTjvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCCAvB (ORCPT
+        id S1726970AbgCCAx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:51:01 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40372 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgCCAur (ORCPT
+        Mon, 2 Mar 2020 19:53:59 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:54924 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCCAx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 19:50:47 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l184so556294pfl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 16:50:46 -0800 (PST)
+        Mon, 2 Mar 2020 19:53:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R4y1bjuDihHx2oTrIgnH3W8hlU6GthTh0USQXogLFnA=;
-        b=AfeBTOyASViNVGc5rgKB3KnjpIqe4pFbwu36CkULNwUFVGDxk25zJLdGqoSVKjup47
-         xFFy7KPqY3Rwxcce91SnNlR1s3r6GMM7ZGnF6WznrL3S81OKVoagMKdH5aZThFWFJJfK
-         T+GJynvNZMURfh0SKIljpRFGUyOCq6AG0dfAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R4y1bjuDihHx2oTrIgnH3W8hlU6GthTh0USQXogLFnA=;
-        b=G8qGH49zBUHiVsPue3X0LasLJl600lIaBKlh73V3dQ3/Z6JSLQP94zemr+X92hocbt
-         Tldl3cJqnV/WjmHJqiDH2enads4AdbFn8z5himQBVymP0MvCdV3gUMy7bHtPjAuRG8Pn
-         Vcy0vACqQRIcAZJBl9yOywER/FTpuFC7BKiu54wm73SyOjdBh0mGzI5gqIKdn+lzPxzw
-         gOuBDqg8OdOR9Ikx+dz+Xo220jw/g/fowhozpiZIVTq1+ZOpZGvTqNo+w/G8rblt7hnu
-         nmTwqpr5MJI4DRN7yicgDsmZyiFpFPUv6lmo8Zx3YetpfS63rXxJltSzLPS1ehrH9ag1
-         a3bQ==
-X-Gm-Message-State: ANhLgQ1xmKaLxSVX11aQ8zTr9Q3p8uNUmhRuY0PA0NV1wXLnTIY1jyZD
-        9hh46odod9iUEE/9brWH1Popow==
-X-Google-Smtp-Source: ADFU+vu4FJlF/yF0bGWMe5RPpUT1cUQoz8tMHkOM/dUGIBHYENG8NRhF2KH4gIKtOabdnMpPHDUJSw==
-X-Received: by 2002:a62:6c6:: with SMTP id 189mr1637105pfg.224.1583196646317;
-        Mon, 02 Mar 2020 16:50:46 -0800 (PST)
-Received: from ryzen.cs.washington.edu ([2607:4000:200:11:b5cd:49c6:f4f6:8295])
-        by smtp.gmail.com with ESMTPSA id c15sm357529pja.30.2020.03.02.16.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 16:50:45 -0800 (PST)
-From:   Luke Nelson <lukenels@cs.washington.edu>
-X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
-To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH bpf-next v4 3/4] bpf, doc: add BPF JIT for RV32G to BPF documentation
-Date:   Mon,  2 Mar 2020 16:50:34 -0800
-Message-Id: <20200303005035.13814-4-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303005035.13814-1-luke.r.nels@gmail.com>
-References: <20200303005035.13814-1-luke.r.nels@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583196839; x=1614732839;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=z2mEtjVc+3qxbOIN1ODX6CdFnbqr8Yktz8yDqqS0dTE=;
+  b=GqkgTjvOy5ab2LbAJar43dW5iM2yNPd8D9yol+hhsOjKgsl1qlvqw94h
+   BU5JiysUYCQxVHOLI0rFZbQyMr1ay6jlNcmRuWbsWN1DajZVT1CpraL6a
+   gjYeWNzhyEV1x2ZARCERoRmgzxVpRr/C0dfb9MCi0q4gJYR/IzTnd9Ik3
+   o=;
+IronPort-SDR: fvj+Txs+AvGR/+kJfN93GCrWcowDVEQyROp23varxy2dG1upmgNQGcXoEY1WnzjO0mBeYV/AL4
+ qdVzQp4TS3gQ==
+X-IronPort-AV: E=Sophos;i="5.70,509,1574121600"; 
+   d="scan'208";a="19191500"
+Thread-Topic: [PATCH] ena: Speed up initialization 90x by reducing poll delays
+Subject: Re: [PATCH] ena: Speed up initialization 90x by reducing poll delays
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 Mar 2020 00:53:58 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id 8A6D2A2B45;
+        Tue,  3 Mar 2020 00:53:56 +0000 (UTC)
+Received: from EX13D22EUB001.ant.amazon.com (10.43.166.145) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 3 Mar 2020 00:53:56 +0000
+Received: from EX13D10EUB001.ant.amazon.com (10.43.166.211) by
+ EX13D22EUB001.ant.amazon.com (10.43.166.145) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Mar 2020 00:53:55 +0000
+Received: from EX13D10EUB001.ant.amazon.com ([10.43.166.211]) by
+ EX13D10EUB001.ant.amazon.com ([10.43.166.211]) with mapi id 15.00.1497.006;
+ Tue, 3 Mar 2020 00:53:54 +0000
+From:   "Machulsky, Zorik" <zorik@amazon.com>
+To:     Josh Triplett <josh@joshtriplett.org>
+CC:     "Belgazal, Netanel" <netanel@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "Tzalik, Guy" <gtzalik@amazon.com>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Thread-Index: AQHV7pdH5S0f1nvr+k6qVAg9VSe/lqg1beyAgACdZgD//33OgA==
+Date:   Tue, 3 Mar 2020 00:53:54 +0000
+Message-ID: <FFD8F5B1-671C-4879-94CE-EE42E2B11F62@amazon.com>
+References: <20200229002813.GA177044@localhost>
+ <8B4A52CD-FC5A-4256-B7DE-A659B50654CE@amazon.com>
+ <20200303003952.GA264245@localhost>
+In-Reply-To: <20200303003952.GA264245@localhost>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.216]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <701E372361047443920024735C628325@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update filter.txt and admin-guide to mention the BPF JIT for RV32G.
-
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
----
- Documentation/admin-guide/sysctl/net.rst | 3 ++-
- Documentation/networking/filter.txt      | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/sysctl/net.rst b/Documentation/admin-guide/sysctl/net.rst
-index 287b98708a40..e043c9213388 100644
---- a/Documentation/admin-guide/sysctl/net.rst
-+++ b/Documentation/admin-guide/sysctl/net.rst
-@@ -67,7 +67,8 @@ two flavors of JITs, the newer eBPF JIT currently supported on:
-   - sparc64
-   - mips64
-   - s390x
--  - riscv
-+  - riscv64
-+  - riscv32
- 
- And the older cBPF JIT supported on the following archs:
- 
-diff --git a/Documentation/networking/filter.txt b/Documentation/networking/filter.txt
-index c4a328f2d57a..2f0f8b17dade 100644
---- a/Documentation/networking/filter.txt
-+++ b/Documentation/networking/filter.txt
-@@ -606,7 +606,7 @@ before a conversion to the new layout is being done behind the scenes!
- 
- Currently, the classic BPF format is being used for JITing on most
- 32-bit architectures, whereas x86-64, aarch64, s390x, powerpc64,
--sparc64, arm32, riscv (RV64G) perform JIT compilation from eBPF
-+sparc64, arm32, riscv64, riscv32 perform JIT compilation from eBPF
- instruction set.
- 
- Some core changes of the new internal format:
--- 
-2.20.1
-
+DQoNCu+7v09uIDMvMi8yMCwgNDo0MCBQTSwgIkpvc2ggVHJpcGxldHQiIDxqb3NoQGpvc2h0cmlw
+bGV0dC5vcmc+IHdyb3RlOg0KICAgIA0KICAgIA0KICAgIE9uIE1vbiwgTWFyIDAyLCAyMDIwIGF0
+IDExOjE2OjMyUE0gKzAwMDAsIE1hY2h1bHNreSwgWm9yaWsgd3JvdGU6DQogICAgPg0KICAgID4g
+T24gMi8yOC8yMCwgNDoyOSBQTSwgIkpvc2ggVHJpcGxldHQiIDxqb3NoQGpvc2h0cmlwbGV0dC5v
+cmc+IHdyb3RlOg0KICAgID4NCiAgICA+ICAgICBCZWZvcmUgaW5pdGlhbGl6aW5nIGNvbXBsZXRp
+b24gcXVldWUgaW50ZXJydXB0cywgdGhlIGVuYSBkcml2ZXIgdXNlcw0KICAgID4gICAgIHBvbGxp
+bmcgdG8gd2FpdCBmb3IgcmVzcG9uc2VzIG9uIHRoZSBhZG1pbiBjb21tYW5kIHF1ZXVlLiBUaGUg
+ZW5hIGRyaXZlcg0KICAgID4gICAgIHdhaXRzIDVtcyBiZXR3ZWVuIHBvbGxzLCBidXQgdGhlIGhh
+cmR3YXJlIGhhcyBnZW5lcmFsbHkgZmluaXNoZWQgbG9uZw0KICAgID4gICAgIGJlZm9yZSB0aGF0
+LiBSZWR1Y2UgdGhlIHBvbGwgdGltZSB0byAxMHVzLg0KICAgID4NCiAgICA+ICAgICBPbiBhIGM1
+LjEyeGxhcmdlLCB0aGlzIGltcHJvdmVzIGVuYSBpbml0aWFsaXphdGlvbiB0aW1lIGZyb20gMTcz
+LjZtcyB0bw0KICAgID4gICAgIDEuOTIwbXMsIGFuIGltcHJvdmVtZW50IG9mIG1vcmUgdGhhbiA5
+MHguIFRoaXMgaW1wcm92ZXMgc2VydmVyIGJvb3QgdGltZQ0KICAgID4gICAgIGFuZCB0aW1lIHRv
+IG5ldHdvcmsgYnJpbmd1cC4NCiAgICA+DQogICAgPiBUaGFua3MgSm9zaCwNCiAgICA+IFdlIGFn
+cmVlIHRoYXQgcG9sbGluZyByYXRlIHNob3VsZCBiZSBpbmNyZWFzZWQsIGJ1dCBwcmVmZXIgbm90
+IHRvIGRvIGl0IGFnZ3Jlc3NpdmVseSBhbmQgYmxpbmRseS4NCiAgICA+IEZvciBleGFtcGxlIGxp
+bmVhciBiYWNrb2ZmIGFwcHJvYWNoIG1pZ2h0IGJlIGEgYmV0dGVyIGNob2ljZS4gUGxlYXNlIGxl
+dCB1cyByZS13b3JrIGEgbGl0dGxlIHRoaXMNCiAgICA+IHBhdGNoIGFuZCBicmluZyBpdCB0byBy
+ZXZpZXcuIFRoYW5rcyENCiAgICANCiAgICBUaGF0J3MgZmluZSwgYXMgbG9uZyBhcyBpdCBoYXMg
+dGhlIHNhbWUgbmV0IGltcHJvdmVtZW50IG9uIGJvb3QgdGltZS4NCiAgICANCiAgICBJJ2QgYXBw
+cmVjaWF0ZSB0aGUgb3Bwb3J0dW5pdHkgdG8gdGVzdCBhbnkgYWx0ZXJuYXRlIGFwcHJvYWNoIHlv
+dSBtaWdodA0KICAgIGhhdmUuDQogICAgDQogICAgKEFsc28sIGFzIGxvbmcgYXMgeW91J3JlIHdv
+cmtpbmcgb24gdGhpcywgeW91IG1pZ2h0IHdpc2ggdG8gbWFrZSBhDQogICAgc2ltaWxhciBjaGFu
+Z2UgdG8gdGhlIEVGQSBkcml2ZXIsIGFuZCB0byB0aGUgRnJlZUJTRCBkcml2ZXJzLikgDQoNCkFi
+c29sdXRlbHkhIEFscmVhZHkgZm9yd2FyZGVkIHRoaXMgdG8gdGhlIG93bmVycyBvZiB0aGVzZSBk
+cml2ZXJzLiAgVGhhbmtzIQ0KICAgIA0KICAgID4gICAgIEJlZm9yZToNCiAgICA+ICAgICBbICAg
+IDAuNTMxNzIyXSBjYWxsaW5nICBlbmFfaW5pdCsweDAvMHg2MyBAIDENCiAgICA+ICAgICBbICAg
+IDAuNTMxNzIyXSBlbmE6IEVsYXN0aWMgTmV0d29yayBBZGFwdGVyIChFTkEpIHYyLjEuMEsNCiAg
+ICA+ICAgICBbICAgIDAuNTMxNzUxXSBlbmEgMDAwMDowMDowNS4wOiBFbGFzdGljIE5ldHdvcmsg
+QWRhcHRlciAoRU5BKSB2Mi4xLjBLDQogICAgPiAgICAgWyAgICAwLjUzMTk0Nl0gUENJIEludGVy
+cnVwdCBMaW5rIFtMTktEXSBlbmFibGVkIGF0IElSUSAxMQ0KICAgID4gICAgIFsgICAgMC41NDc0
+MjVdIGVuYTogZW5hIGRldmljZSB2ZXJzaW9uOiAwLjEwDQogICAgPiAgICAgWyAgICAwLjU0NzQy
+N10gZW5hOiBlbmEgY29udHJvbGxlciB2ZXJzaW9uOiAwLjAuMSBpbXBsZW1lbnRhdGlvbiB2ZXJz
+aW9uIDENCiAgICA+ICAgICBbICAgIDAuNzA5NDk3XSBlbmEgMDAwMDowMDowNS4wOiBFbGFzdGlj
+IE5ldHdvcmsgQWRhcHRlciAoRU5BKSBmb3VuZCBhdCBtZW0gZmViZjQwMDAsIG1hYyBhZGRyIDA2
+OmM0OjIyOjBlOmRjOmRhLCBQbGFjZW1lbnQgcG9saWN5OiBMb3cgTGF0ZW5jeQ0KICAgID4gICAg
+IFsgICAgMC43MDk1MDhdIGluaXRjYWxsIGVuYV9pbml0KzB4MC8weDYzIHJldHVybmVkIDAgYWZ0
+ZXIgMTczNjE2IHVzZWNzDQogICAgPg0KICAgID4gICAgIEFmdGVyOg0KICAgID4gICAgIFsgICAg
+MC41MjY5NjVdIGNhbGxpbmcgIGVuYV9pbml0KzB4MC8weDYzIEAgMQ0KICAgID4gICAgIFsgICAg
+MC41MjY5NjZdIGVuYTogRWxhc3RpYyBOZXR3b3JrIEFkYXB0ZXIgKEVOQSkgdjIuMS4wSw0KICAg
+ID4gICAgIFsgICAgMC41MjcwNTZdIGVuYSAwMDAwOjAwOjA1LjA6IEVsYXN0aWMgTmV0d29yayBB
+ZGFwdGVyIChFTkEpIHYyLjEuMEsNCiAgICA+ICAgICBbICAgIDAuNTI3MTk2XSBQQ0kgSW50ZXJy
+dXB0IExpbmsgW0xOS0RdIGVuYWJsZWQgYXQgSVJRIDExDQogICAgPiAgICAgWyAgICAwLjUyNzIx
+MV0gZW5hOiBlbmEgZGV2aWNlIHZlcnNpb246IDAuMTANCiAgICA+ICAgICBbICAgIDAuNTI3MjEy
+XSBlbmE6IGVuYSBjb250cm9sbGVyIHZlcnNpb246IDAuMC4xIGltcGxlbWVudGF0aW9uIHZlcnNp
+b24gMQ0KICAgID4gICAgIFsgICAgMC41Mjg5MjVdIGVuYSAwMDAwOjAwOjA1LjA6IEVsYXN0aWMg
+TmV0d29yayBBZGFwdGVyIChFTkEpIGZvdW5kIGF0IG1lbSBmZWJmNDAwMCwgbWFjIGFkZHIgMDY6
+YzQ6MjI6MGU6ZGM6ZGEsIFBsYWNlbWVudCBwb2xpY3k6IExvdyBMYXRlbmN5DQogICAgPiAgICAg
+WyAgICAwLjUyODkzNF0gaW5pdGNhbGwgZW5hX2luaXQrMHgwLzB4NjMgcmV0dXJuZWQgMCBhZnRl
+ciAxOTIwIHVzZWNzDQogICAgDQoNCg==
