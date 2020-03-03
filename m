@@ -2,349 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C57FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC61C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E287820836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D5320836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1BVMSz5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbgCCSFJ (ORCPT
+        id S2388197AbgCCSFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:05:09 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45348 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733057AbgCCSFH (ORCPT
+        Tue, 3 Mar 2020 13:05:16 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46956 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387409AbgCCR6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:05:07 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 023I4clc057562
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 13:05:06 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfhqr9as8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:05:06 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Tue, 3 Mar 2020 18:05:03 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Mar 2020 18:04:56 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 023I3uiT39518482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Mar 2020 18:03:56 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8070442042;
-        Tue,  3 Mar 2020 18:04:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5262D42041;
-        Tue,  3 Mar 2020 18:04:53 +0000 (GMT)
-Received: from bali.tlslab.ibm.com (unknown [9.101.4.17])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Mar 2020 18:04:53 +0000 (GMT)
-Subject: Re: [PATCH v3 18/27] powerpc/powernv/pmem: Add controller dump IOCTLs
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-19-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Tue, 3 Mar 2020 19:04:53 +0100
+        Tue, 3 Mar 2020 12:58:31 -0500
+Received: by mail-il1-f195.google.com with SMTP id e8so3518245ilc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:58:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=G5nat7TjfwsYKukhiu6yJ6peKaEgkq8tBpj9OwyiAts=;
+        b=1BVMSz5op5aH4SjFm/0AsfcMaTUcTjYDE6RYQdIeeh6bJpDEvM4lczmgOBYIgehYU6
+         3wROaS6Xl/bSaiSQf1ruWmaWuuF7FyuSv7ZRENnxDrZxheVkOjHnLQ/GNJEQR6lM2VMp
+         koVVCUE6aU9BJMHhq9kh3VRjDq/M2GUjetqQFWni8tEoSBPcIpKb/zSSIGmjFAU8NrFZ
+         k9n15D7kPTkUMdfLUV+6X4ZmzIunA0Bdsim+Bap2Su7dPEHZWa8OxFn7XfKDdc1KYiFZ
+         W681UKO6qansKW5nNWQcDpAYHf2w6E0cACcLMNMmocdS+Fkal/VR09QiiT4H4Y3s67uc
+         vMJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G5nat7TjfwsYKukhiu6yJ6peKaEgkq8tBpj9OwyiAts=;
+        b=bbdRqlV2XtttjWG9s/pXgJhWT2irF70MCoWv+KcZ7ov+lfvIX4i93yqsH+Gl0P8/nG
+         /3q8qiB649Wdefy7EOqolWIe5KsLoWVHLTqGvgzVoBw5hcV70kZW91BQMFnzU23tWVww
+         QgtMZoCPu0lqOJzFUhtJbP+Gms3/HT/GFIFGcdkfvsmtqsVJ32VFFCy++jKQQjVl8IDS
+         rrBZDbVznSkZxQvmALGVuCSUnY1yBonMaLivvOHZk+Xb2C1zlbTxNngd8cd1cyq2qywa
+         Qcn4jRmuWMoUFxIyKgwIKQMxmb2b8M6MysKC5WtNsVl61bi+UZKGUhmxnkSY8GPAjsES
+         YKpA==
+X-Gm-Message-State: ANhLgQ3sZIyXmG2OysGETqQzfQfuin0x+YDsk8xDs/IEtonUX+ukujR5
+        LAactQtc0yl6hc9dHKVGwtDDTA==
+X-Google-Smtp-Source: ADFU+vtV+apP8mi6vB9ANWxLbJfeoFiJDA7yX1gYyG13Gfv6reOP037TkZVssoM3D1a1NrpJRw0hBA==
+X-Received: by 2002:a92:de03:: with SMTP id x3mr5968538ilm.146.1583258310639;
+        Tue, 03 Mar 2020 09:58:30 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k16sm8140521ili.35.2020.03.03.09.58.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 09:58:30 -0800 (PST)
+Subject: Re: [PATCH 5.5 072/176] bcache: ignore pending signals when creating
+ gc and allocator thread
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174312.994115258@linuxfoundation.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <24e19cd9-8eea-a41a-27f7-84ffcd872977@kernel.dk>
+Date:   Tue, 3 Mar 2020 10:58:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-19-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200303174312.994115258@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030318-0020-0000-0000-000003B02A77
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030318-0021-0000-0000-000022085B20
-Message-Id: <6d1f28bc-334c-e85b-9974-71cf88a1ad20@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-03_06:2020-03-03,2020-03-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=45 adultscore=0 phishscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 mlxscore=45 suspectscore=2 mlxlogscore=9
- spamscore=45 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030122
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 3/3/20 10:42 AM, Greg Kroah-Hartman wrote:
+> From: Coly Li <colyli@suse.de>
 > 
-> This patch adds IOCTLs to allow userspace to request & fetch dumps
-> of the internal controller state.
+> [ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
 > 
-> This is useful during debugging or when a fatal error on the controller
-> has occurred.
+> When run a cache set, all the bcache btree node of this cache set will
+> be checked by bch_btree_check(). If the bcache btree is very large,
+> iterating all the btree nodes will occupy too much system memory and
+> the bcache registering process might be selected and killed by system
+> OOM killer. kthread_run() will fail if current process has pending
+> signal, therefore the kthread creating in run_cache_set() for gc and
+> allocator kernel threads are very probably failed for a very large
+> bcache btree.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/platforms/powernv/pmem/ocxl.c | 132 +++++++++++++++++++++
->   include/uapi/nvdimm/ocxl-pmem.h            |  15 +++
->   2 files changed, 147 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index 2b64504f9129..2cabafe1fc58 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -640,6 +640,124 @@ static int ioctl_error_log(struct ocxlpmem *ocxlpmem,
->   	return 0;
->   }
->   
-> +static int ioctl_controller_dump_data(struct ocxlpmem *ocxlpmem,
-> +		struct ioctl_ocxl_pmem_controller_dump_data __user *uarg)
-> +{
-> +	struct ioctl_ocxl_pmem_controller_dump_data args;
-> +	u16 i;
-> +	u64 val;
-> +	int rc;
-> +
-> +	if (copy_from_user(&args, uarg, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	if (args.buf_size % 8)
-> +		return -EINVAL;
-> +
-> +	if (args.buf_size > ocxlpmem->admin_command.data_size)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_CONTROLLER_DUMP);
-> +	if (rc)
-> +		goto out;
-> +
-> +	val = ((u64)args.offset) << 32;
-> +	val |= args.buf_size;
-> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +				      ocxlpmem->admin_command.request_offset + 0x08,
-> +				      OCXL_LITTLE_ENDIAN, val);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_execute(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_complete_timeout(ocxlpmem,
-> +					    ADMIN_COMMAND_CONTROLLER_DUMP);
-> +	if (rc < 0) {
-> +		dev_warn(&ocxlpmem->dev, "Controller dump timed out\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = admin_response(ocxlpmem);
-> +	if (rc < 0)
-> +		goto out;
-> +	if (rc != STATUS_SUCCESS) {
-> +		warn_status(ocxlpmem,
-> +			    "Unexpected status from retrieve error log",
-> +			    rc);
-> +		goto out;
-> +	}
+> Indeed such OOM is safe and the registering process will exit after
+> the registration done. Therefore this patch flushes pending signals
+> during the cache set start up, specificly in bch_cache_allocator_start()
+> and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+> large cahced data set.
 
+Ditto this one, of course.
 
+Did someone send this in for stable? It's not marked stable in the
+original commit.
 
-It would help if there was a comment indicating how the 3 ioctls are 
-used. My understanding is that the userland is:
-- requesting the controller to prepare a state dump
-- then one or more ioctls to fetch the data. The number of calls 
-required to get the full state really depends on the size of the buffer 
-passed by user
-- a last ioctl to tell the controller that we're done, presumably to let 
-it free some resources.
-
-
-> +
-> +	for (i = 0; i < args.buf_size; i += 8) {
-> +		u64 val;
-> +
-> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +					     ocxlpmem->admin_command.data_offset + i,
-> +					     OCXL_HOST_ENDIAN, &val);
-> +		if (rc)
-> +			goto out;
-> +
-> +		if (copy_to_user(&args.buf[i], &val, sizeof(u64))) {
-> +			rc = -EFAULT;
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	if (copy_to_user(uarg, &args, sizeof(args))) {
-> +		rc = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	rc = admin_response_handled(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +out:
-> +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> +	return rc;
-> +}
-> +
-> +int request_controller_dump(struct ocxlpmem *ocxlpmem)
-> +{
-> +	int rc;
-> +	u64 busy = 1;
-> +
-> +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
-> +				    OCXL_LITTLE_ENDIAN,
-> +				    GLOBAL_MMIO_CHI_CDA);
-> +
-
-
-rc is not checked here.
-
-
-> +
-> +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				    OCXL_LITTLE_ENDIAN,
-> +				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP);
-> +	if (rc)
-> +		return rc;
-> +
-> +	while (busy) {
-> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +					     GLOBAL_MMIO_HCI,
-> +					     OCXL_LITTLE_ENDIAN, &busy);
-> +		if (rc)
-> +			return rc;
-> +
-> +		busy &= GLOBAL_MMIO_HCI_CONTROLLER_DUMP;
-
-
-Setting 'busy' doesn't hurt, but it's not really useful, is it?
-
-We should add some kind of timeout so that if the controller hits an 
-issue, we don't spin in kernel space endlessly.
-
-
-
-> +		cond_resched();
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ioctl_controller_dump_complete(struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				    OCXL_LITTLE_ENDIAN,
-> +				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED);
-> +}
-> +
->   static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
->   {
->   	struct ocxlpmem *ocxlpmem = file->private_data;
-> @@ -650,7 +768,21 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
->   		rc = ioctl_error_log(ocxlpmem,
->   				     (struct ioctl_ocxl_pmem_error_log __user *)args);
->   		break;
-> +
-> +	case IOCTL_OCXL_PMEM_CONTROLLER_DUMP:
-> +		rc = request_controller_dump(ocxlpmem);
-> +		break;
-> +
-> +	case IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA:
-> +		rc = ioctl_controller_dump_data(ocxlpmem,
-> +						(struct ioctl_ocxl_pmem_controller_dump_data __user *)args);
-> +		break;
-> +
-> +	case IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE:
-> +		rc = ioctl_controller_dump_complete(ocxlpmem);
-> +		break;
->   	}
-> +
->   	return rc;
->   }
->   
-> diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
-> index b10f8ac0c20f..d4d8512d03f7 100644
-> --- a/include/uapi/nvdimm/ocxl-pmem.h
-> +++ b/include/uapi/nvdimm/ocxl-pmem.h
-> @@ -38,9 +38,24 @@ struct ioctl_ocxl_pmem_error_log {
->   	__u8 *buf; /* pointer to output buffer */
->   };
->   
-> +struct ioctl_ocxl_pmem_controller_dump_data {
-> +	__u8 *buf; /* pointer to output buffer */
-
-
-We only support 64-bit user app on powerpc, but using a pointer type in 
-a kernel ABI is unusual. We should use a know size like __u64.
-(also applies to buf pointer in struct ioctl_ocxl_pmem_error_log from 
-previous patch too)
-
-The rest of the structure will also be padded by the compiler, which we 
-should avoid.
-
-    Fred
-
-
-
-> +	__u16 buf_size; /* in/out, buffer size provided/required.
-> +			 * If required is greater than provided, the buffer
-> +			 * will be truncated to the amount provided. If its
-> +			 * less, then only the required bytes will be populated.
-> +			 * If it is 0, then there is no more dump data available.
-> +			 */
-> +	__u32 offset; /* in, Offset within the dump */
-> +	__u64 reserved[8];
-> +};
-> +
->   /* ioctl numbers */
->   #define OCXL_PMEM_MAGIC 0x5C
->   /* SCM devices */
->   #define IOCTL_OCXL_PMEM_ERROR_LOG			_IOWR(OCXL_PMEM_MAGIC, 0x01, struct ioctl_ocxl_pmem_error_log)
-> +#define IOCTL_OCXL_PMEM_CONTROLLER_DUMP			_IO(OCXL_PMEM_MAGIC, 0x02)
-> +#define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA		_IOWR(OCXL_PMEM_MAGIC, 0x03, struct ioctl_ocxl_pmem_controller_dump_data)
-> +#define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE	_IO(OCXL_PMEM_MAGIC, 0x04)
->   
->   #endif /* _UAPI_OCXL_SCM_H */
-> 
+-- 
+Jens Axboe
 
