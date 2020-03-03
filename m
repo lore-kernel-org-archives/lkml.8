@@ -2,135 +2,171 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E512C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0979AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6F920717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD4B20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3/O6Qe3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAyYufih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgCCNjd (ORCPT
+        id S1729174AbgCCNjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:39:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43248 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCCNjc (ORCPT
+        Tue, 3 Mar 2020 08:39:35 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39721 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCCNje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:39:32 -0500
-Received: by mail-wr1-f67.google.com with SMTP id h9so3418034wrr.10;
-        Tue, 03 Mar 2020 05:39:30 -0800 (PST)
+        Tue, 3 Mar 2020 08:39:34 -0500
+Received: by mail-io1-f65.google.com with SMTP id h3so3573987ioj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:39:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+2psQteAP/nChvPm4YDjqHGqV1kWBdJs4ADtRdquZxs=;
-        b=A3/O6Qe3YL74ggE/tBVJn2xsBwRBx1ddjGOkVocGqwWHBKhdObohxPUmr/JEKlfmxk
-         OOXFWehica28U0mEv4PDia7ATqU9HsutGekW9r5tf2X12sijBxYwIfS6U9UDT11Bl2cT
-         pGhWOmGChZ2o0ES/Y6cu8GDDrYFGaVLe3NPfdl4MWu5rX42u78erSW6hxwS7UUpz5nMi
-         U1bq5XTA+BYaEn87u1eTlKFZ3mcBKizbolAqyJ3EMYsTP6oHPd8U24uIHRG9p7kxYTwG
-         BFozbtgJlN69ENWI/VVCgN9dwlPGkEMyzddOfulCcyVtii2gXZ7rADxSyEDMGUGhD3gM
-         BUTg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+eGte4iMlmki7lE3BSWzJxT4Za4lT4giftxwhoiIf8=;
+        b=lAyYufihiiIphXNW03zcvZ4unKyJpovsni0ZLH7yk9Np7+57gGQPsSRTsjlWr2sckr
+         /za3Tb2fgVGaHHkpQaCFJgpFEFtexz0xXBjo0TCZ4OIIwhYH20R4ZQq38jfGlIe1fyL0
+         w5i6bKuwFacOzyA2yZa+iFaxE5a/LfzPG5rXmBldCnedo4JJNdwOyGDO1mWvR/MHwu7x
+         EJSgnHDX1qgeORMm0z4LrwP9TDDXFYvDDgudG8YV21N2l6AAy2s+PAeZjf3ceQthIUZW
+         HgNMp38IIp9NvihRgMGqwoG7ligvPBCUE4PPh5F5YoyqsJbE+1MQO/jkYQ2HIfmiKvkH
+         xyMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+2psQteAP/nChvPm4YDjqHGqV1kWBdJs4ADtRdquZxs=;
-        b=I2LZPY5tFND7nQW3ioELr6l9D/fAhcLHds4oW3J0HxjMdrY/uamIm2BlnZaJFrlExq
-         ZiU+zDtfnONuoNXCsqOpCSMmfQdocUDbfxSVDH6wqWpteZqpgXelF9XSdJPcp67ov48R
-         0fH1e8BhMN8X6SEBUwxhPy6aWL8wd0v6sZlVSI1BEWIjwL9uvRQyWY9O4zdbxglxBscW
-         /3Nhi8yoq46540FadKcQf4c6rVR/ka5uG3BnRTZg3tQuCI5uWbAZU4mc48g+KitqX8Jj
-         H0+EyVzhlM2jYxg2ft69Ldwo70YT3c8bGS7rpxcKCHOPTyTRQ5AAKPkvQUOEk3Nb9DHw
-         XjXg==
-X-Gm-Message-State: ANhLgQ19uHhDrAUUq7Y1v423ZSaI3EkbVRcGrhmMqra/MjGrBSjxYgIx
-        gAVAQxReJSdbaiOR2LAopdQ=
-X-Google-Smtp-Source: ADFU+vutRvNdL1/dEDudvF8N+CkmzoT8gckzelnvWhW1WAzJKLNYT0qdmOl0ljzsq2Th5yGHHvM4XQ==
-X-Received: by 2002:adf:fe4f:: with SMTP id m15mr5432015wrs.223.1583242770266;
-        Tue, 03 Mar 2020 05:39:30 -0800 (PST)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id z12sm7023019wrs.43.2020.03.03.05.39.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 05:39:28 -0800 (PST)
-Date:   Tue, 3 Mar 2020 14:39:27 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 2/5] dt-bindings: PCI: tegra: Add DT support for PCIe
- EP nodes in Tegra194
-Message-ID: <20200303133927.GB2854899@ulmo>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
- <20200303105418.2840-3-vidyas@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+eGte4iMlmki7lE3BSWzJxT4Za4lT4giftxwhoiIf8=;
+        b=eOsbZ4Oe5/Binl69dSURbl4MDePzMzPgKhiKZIyzaMwqCmj9Ao2SlYzuBTlOhz0IRT
+         3nwTDM4vmWcjnjLb/pqpAVuNUF8HM/jAwjvFgbW9x/H7Bwy7kLpshGGZ+Km1x9pCP3OT
+         6hV71uXATeaQiTpOif3Lk5/oPtf6g6p136WvEMOG5NAvkZTyMTruurwyBWjtQNEo8jG+
+         NwVb2bWouJACRYuw6uplDiGbEK0QVb3CiYGPg5OOMqmFPzXFZqIbQazi33yRlWHEn6Yt
+         wIeQOkFgLOsYd16aUqOTTJ87s0LwmVL3rX+3R7+3fGjYe5Pn7OEDZUUSP6rG4Kgg+Yax
+         cfaA==
+X-Gm-Message-State: ANhLgQ2Pj/xdFoeGH60vjs9qF/HbIbeEdZgGMh12sLA8l1GmofnUYiP4
+        0g0+wcReIwg/cFQPuP5fkruE60vPr51N347g+w==
+X-Google-Smtp-Source: ADFU+vvc7aWDQ7MKl9ArNhLMyXVQFtkVy7j/fJAsAOvHK3AiI6IdfB6amN4VurS8+nVRmoH+vKdT/ydF01glIxjjLZg=
+X-Received: by 2002:a05:6638:34c:: with SMTP id x12mr4058423jap.80.1583242773618;
+ Tue, 03 Mar 2020 05:39:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
-Content-Disposition: inline
-In-Reply-To: <20200303105418.2840-3-vidyas@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
+ <1582889550-9101-3-git-send-email-kernelfans@gmail.com> <20200228134436.GP31668@ziepe.ca>
+ <CAFgQCTvLpKeLEks-NTJUqR-RhBZ10EscH=9xMF9dLhhUBNM29w@mail.gmail.com> <20200302130829.GW31668@ziepe.ca>
+In-Reply-To: <20200302130829.GW31668@ziepe.ca>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Tue, 3 Mar 2020 21:39:22 +0800
+Message-ID: <CAFgQCTtiT1d2Y01V_-vbE8=c5hFQa6v71dvCA_F-pyFaeTMxvw@mail.gmail.com>
+Subject: Re: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
+ gup fast path
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linux-MM <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 2, 2020 at 9:08 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Mon, Mar 02, 2020 at 10:25:52AM +0800, Pingfan Liu wrote:
+> > On Fri, Feb 28, 2020 at 9:44 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > >
+> > > On Fri, Feb 28, 2020 at 07:32:29PM +0800, Pingfan Liu wrote:
+> > > > FOLL_LONGTERM suggests a pin which is going to be given to hardware and
+> > > > can't move. It would truncate CMA permanently and should be excluded.
+> > > >
+> > > > FOLL_LONGTERM has already been checked in the slow path, but not checked in
+> > > > the fast path, which means a possible leak of CMA page to longterm pinned
+> > > > requirement through this crack.
+> > > >
+> > > > Place a check in try_get_compound_head() in the fast path.
+> > > >
+> > > > Some note about the check:
+> > > > Huge page's subpages have the same migrate type due to either
+> > > > allocation from a free_list[] or alloc_contig_range() with param
+> > > > MIGRATE_MOVABLE. So it is enough to check on a single subpage
+> > > > by is_migrate_cma_page(subpage)
+> > > >
+> > > > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > > > Cc: Ira Weiny <ira.weiny@intel.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> > > > Cc: Keith Busch <keith.busch@intel.com>
+> > > > Cc: Christoph Hellwig <hch@infradead.org>
+> > > > Cc: Shuah Khan <shuah@kernel.org>
+> > > > To: linux-mm@kvack.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > >  mm/gup.c | 26 +++++++++++++++++++-------
+> > > >  1 file changed, 19 insertions(+), 7 deletions(-)
+> > > >
+> > > > diff --git a/mm/gup.c b/mm/gup.c
+> > > > index cd8075e..f0d6804 100644
+> > > > +++ b/mm/gup.c
+> > > > @@ -33,9 +33,21 @@ struct follow_page_context {
+> > > >   * Return the compound head page with ref appropriately incremented,
+> > > >   * or NULL if that failed.
+> > > >   */
+> > > > -static inline struct page *try_get_compound_head(struct page *page, int refs)
+> > > > +static inline struct page *try_get_compound_head(struct page *page, int refs,
+> > > > +     unsigned int flags)
+> > > >  {
+> > > > -     struct page *head = compound_head(page);
+> > > > +     struct page *head;
+> > > > +
+> > > > +     /*
+> > > > +      * Huge page's subpages have the same migrate type due to either
+> > > > +      * allocation from a free_list[] or alloc_contig_range() with param
+> > > > +      * MIGRATE_MOVABLE. So it is enough to check on a single subpage.
+> > > > +      */
+> > > > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > > > +             is_migrate_cma_page(page))
+> > > > +             return NULL;
+> > >
+> > > This doesn't seem very good actually.
+> > >
+> > > If I understand properly, if the system has randomly decided to place,
+> > > say, an anonymous page in a CMA region when an application did mmap(),
+> > > then when the application tries to use this page with a LONGTERM pin
+> > > it gets an immediate failure because of the above.
+> > No, actually, it will fall back to slow path, which migrates and sever
+> > the LONGTERM pin.
+> >
+> > This patch just aims to fix the leakage in gup fast path, while in gup
+> > slow path, there is already logic to guard CMA against  LONGTERM pin.
+> > >
+> > > This not OK - the application should not be subject to random failures
+> > > related to long term pins beyond its direct control.
+> > >
+> > > Essentially, failures should only originate from the application using
+> > > specific mmap scenarios, not randomly based on something the MM did,
+> > > and certainly never for anonymous memory.
+> > >
+> > > I think the correct action here is to trigger migration of the page so
+> > > it is not in CMA.
+> > In fact, it does this. The failure in gup fast path will fall back to
+> > slow path, where __gup_longterm_locked->check_and_migrate_cma_pages()
+> > does the migration.
+>
+> It is probably worth revising the commit message so this flow is clear
+OK.
 
---s2ZSL+KKDSLx8OML
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 03, 2020 at 04:24:15PM +0530, Vidya Sagar wrote:
-> Add support for PCIe controllers that can operate in endpoint mode
-> in Tegra194.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> V4:
-> * None
->=20
-> V3:
-> * Added Reviewed-by: Rob Herring <robh@kernel.org>
->=20
-> V2:
-> * Addressed Thierry's review comments
-> * Merged EP specific information from tegra194-pcie-ep.txt to tegra194-pc=
-ie.txt itself
-> * Started using the standard 'reset-gpios' for PERST GPIO
-> * Added 'nvidia,refclk-select-gpios' to enable REFCLK signals
->=20
->  .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 ++++++++++++++----
->  1 file changed, 99 insertions(+), 26 deletions(-)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---s2ZSL+KKDSLx8OML
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5eXg8ACgkQ3SOs138+
-s6EM9A/8DAyhoERGWyWFLzxgSdVvezOO0qahisCaxcwAdXVDTshl55YSf2n8j1fq
-s03XQ1gqN27mUy1TrBNjlhQt3ghcCr+s3KJZuRjgrlxq8wgUFdBdkGtHoc42sUm5
-I4NYbmWEiDaiYeUSPbw1O8mgl4kzFixGoBACEvWV1C/CI7DHUJFZ+c8YWaEvwARu
-pOjH1IjmBbXPzrF9474jMIYzdNA38Vq2AmhPKqWEflNspTAPg9Tag33N8AUoBGSg
-x5H/tWnggOIO9uzgyffIW1jbjy+6NiibjtmC1lAaFo/UNb41bwZgRd5wSvcg78ku
-VRMtb4Vet7czoXs2u6EMXgfIX3+30Oad8l9BVz0kYmLlIN0fRrqxQYAv1NNCAAd0
-ETqPNWgH1UQsMCl8kNOoESwKNwe+GYzcYDjEawYscvz2qvDuHDrgMvgC9CcI09sM
-Uqak29cyLLhBxJ/7Tu0sOe458kybGMoDbvIM1VMC+kQEfowo76GqHeURlHJ2Uq9m
-DKO0HlgV0lavxI4byOQcZ+lNF7u/CSKXbBjbZ7/WKAqTtLpehfcV1XAhXVdR93Tf
-pKx7GXBF+UOJhF++E4ykFn116wbcYjtTf6lGnEhGnOIKz7CpxB4OmAxk/P0EQWDH
-/VTNpkD/7dz77uH+ZFPxD447zAyK20qoeeRtgBSQwC1rgL2k+yY=
-=A2Ef
------END PGP SIGNATURE-----
-
---s2ZSL+KKDSLx8OML--
+Thanks,
+Pingfan
