@@ -2,146 +2,191 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0489EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DCFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDF0208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0CA20716
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Tlbxpxb2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tc/R31o3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732030AbgCCU5u (ORCPT
+        id S1732162AbgCCVAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:57:50 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:58545 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730925AbgCCU5t (ORCPT
+        Tue, 3 Mar 2020 16:00:48 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34472 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732035AbgCCVAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:57:49 -0500
-Received: from [IPv6:2a03:2260:3009:300:402e:ee34:440:98b9] (unknown [IPv6:2a03:2260:3009:300:402e:ee34:440:98b9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9D9C8231D9;
-        Tue,  3 Mar 2020 21:57:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583269066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PtQAp1jd9bV2ryiqqYe14ChtIVkk/SPZAu261A3lfB8=;
-        b=Tlbxpxb2wPtvw/8v3cyp4HREFGsBcixG0xBHoPu9M0emxm/F2EnXALLqn2NyF2dhf8Ue4X
-        M+y7zm4viI68KD2kplXWo98NwYd11nyaoA4iB135C7ALIUCslb2E9OrglPclYZzsZw+phE
-        QbHIebUEgOk+/TUoxoLfK6zHc+iRArk=
-Date:   Tue, 03 Mar 2020 21:57:42 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200303184737.GD26191@bogus>
-References: <20200303174306.6015-1-michael@walle.cc> <20200303174306.6015-4-michael@walle.cc> <20200303184737.GD26191@bogus>
+        Tue, 3 Mar 2020 16:00:47 -0500
+Received: by mail-pj1-f67.google.com with SMTP id f2so1593733pjq.1;
+        Tue, 03 Mar 2020 13:00:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x4UdmE08uyAXnfOkOr3SI3t/iiQEe1nG8X5Ab/Q7mOA=;
+        b=tc/R31o3IU1au6TbLLV6WtQD4QYqoTMQFweevZVnHcnd+wZxed7t4BzfspRc31P/O3
+         Rc1hTekoLMgtrL83M+XvbnJKlz2MQnlZnQ0vfqACUzSnf4eWwlh/UiEBhGGkCsdhTQkF
+         f5T0diA2wB6rSKHJB7q959jcLgvCV1xnIMt24D77IOcgdnibmLdc/eH7oPVIPqxeWZUR
+         5gJS61r2i0g2tRHZ2MzwT+VHLQNSMXyeauKZgEY8ag10EcRoyb2fYQEP3Conb1W7O62z
+         NSHA9gxymb2OmLvBiiXBJUudLBCKKVjag+0raodGpMQ9iblmoXbRDVcGmqaoEiAnClG5
+         J5Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x4UdmE08uyAXnfOkOr3SI3t/iiQEe1nG8X5Ab/Q7mOA=;
+        b=iyUW5M3jWFJAImyJS6dfrEl2jrrcDl6rwyHyOtG4ViGh+CBweb3dsRvKt59tz+9gh4
+         1e0WJ2MMDQ/G/4Wkur07BzslRGJek7ZCt467pXBY6q0xKSmSLg4uLnBTe//CWBJR62GS
+         X0Z1afe2Z23KWB8yFdwwp5cU7/yttQeOc2O1vOkIoCD1ZRsTDKNB/ZN5SyAAftIQ3FPM
+         t2zvC161pe6boYfeIUWtImmu1foN982LhTdVOVKfCRZYX42aVTLqN+cMGYv0RQdp/dus
+         y07aM/OruZo2LCWKvtJZSkHknTd/cp8kBsE3Y5b2U1UhnLCFT7IIW3KS4+NlxTJQfsPh
+         rZhg==
+X-Gm-Message-State: ANhLgQ2VOi/n4ryJYm+laXIktHc9olGF8hvU0NV3xSG4K8JQ1zJyPTEC
+        RuBtwRxSuF9PAU1LVY61MRXFP8gK
+X-Google-Smtp-Source: ADFU+vuMHdgCyz74Q6t1S5Udddm9tLY1CUy9E5c6gQBtm5g3CSpy+mtMT7AyVplrwG1EG2UuRDrPTw==
+X-Received: by 2002:a17:90a:7187:: with SMTP id i7mr462676pjk.6.1583269246008;
+        Tue, 03 Mar 2020 13:00:46 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u1sm25606799pfn.133.2020.03.03.13.00.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Mar 2020 13:00:44 -0800 (PST)
+Date:   Tue, 3 Mar 2020 13:00:43 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: hwmon: Document adt7475 binding
+Message-ID: <20200303210043.GA14692@roeck-us.net>
+References: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
+ <20200227084642.7057-2-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-To:     Rob Herring <robh@kernel.org>
-CC:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>
-From:   Michael Walle <michael@walle.cc>
-Message-ID: <8DA9ACF0-755C-4AA7-A292-C00FA025B30B@walle.cc>
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 9D9C8231D9
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         NEURAL_HAM(-0.00)[-0.511];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:201701, ipnet:2a03:2260:3000::/36, country:DE];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227084642.7057-2-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 3=2E M=C3=A4rz 2020 19:47:37 MEZ schrieb Rob Herring <robh@kernel=2Eorg>=
-:
->On Tue, Mar 03, 2020 at 06:43:00PM +0100, Michael Walle wrote:
->> The DMA channel might not be available at probe time=2E This is esp=2E
->the
->> case if the DMA controller has an IOMMU mapping=2E
->
->The subject should be updated as this doesn't involve deferred probe
->any more=2E=20
+On Thu, Feb 27, 2020 at 09:46:38PM +1300, Chris Packham wrote:
+> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> 
+> Add binding for adi,adt7475 and variants.
+> Remove from trivial-devices.
+> 
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-ok
+Applied.
 
->
->> There is also another caveat=2E If there is no DMA controller at all,
->> dma_request_chan() will also return -EPROBE_DEFER=2E Thus we cannot
->test
->> for -EPROBE_DEFER in probe()=2E Otherwise the lpuart driver will fail
->to
->> probe if, for example, the DMA driver is not enabled in the kernel
->> configuration=2E
->>=20
->> To workaround this, we request the DMA channel in _startup()=2E Other
->> serial drivers do it the same way=2E
->>=20
->> Signed-off-by: Michael Walle <michael@walle=2Ecc>
->> ---
->>  drivers/tty/serial/fsl_lpuart=2Ec | 84
->+++++++++++++++++++++------------
->>  1 file changed, 53 insertions(+), 31 deletions(-)
->>=20
->> diff --git a/drivers/tty/serial/fsl_lpuart=2Ec
->b/drivers/tty/serial/fsl_lpuart=2Ec
->> index c31b8f3db6bf=2E=2E0b8c477b32a3 100644
->> --- a/drivers/tty/serial/fsl_lpuart=2Ec
->> +++ b/drivers/tty/serial/fsl_lpuart=2Ec
->> @@ -1493,36 +1493,63 @@ static void rx_dma_timer_init(struct
->lpuart_port *sport)
->>  static void lpuart_tx_dma_startup(struct lpuart_port *sport)
->>  {
->>  	u32 uartbaud;
->> +	int ret;
->> =20
->> -	if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
->> -		init_waitqueue_head(&sport->dma_wait);
->> -		sport->lpuart_dma_tx_use =3D true;
->> -		if (lpuart_is_32(sport)) {
->> -			uartbaud =3D lpuart32_read(&sport->port, UARTBAUD);
->> -			lpuart32_write(&sport->port,
->> -				       uartbaud | UARTBAUD_TDMAE, UARTBAUD);
->> -		} else {
->> -			writeb(readb(sport->port=2Emembase + UARTCR5) |
->> -				UARTCR5_TDMAS, sport->port=2Emembase + UARTCR5);
->> -		}
->> +	sport->dma_tx_chan =3D dma_request_slave_channel(sport->port=2Edev,
->"tx");
->> +	if (!sport->dma_tx_chan) {
->> +		dev_info_once(sport->port=2Edev,
->> +			      "DMA tx channel request failed, operating without tx
->DMA\n");
->
->Might be useful to print the errno too=2E
+Thanks,
+Guenter
 
-I didn't want to change the original error message=2E But I can change tha=
-t when I update the subject=2E=20
-
--michael
-
+> ---
+> 
+> Notes:
+>     Changes in v5:
+>     - add review from Rob
+>     
+>     Changes in v4:
+>     - None
+>     
+>     Changes in v3:
+>     - split conversion to yaml from addition of new properties
+> 
+>  .../devicetree/bindings/hwmon/adt7475.yaml    | 57 +++++++++++++++++++
+>  .../devicetree/bindings/trivial-devices.yaml  |  8 ---
+>  2 files changed, 57 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> new file mode 100644
+> index 000000000000..2252499ea201
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/adt7475.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADT7475 hwmon sensor
+> +
+> +maintainers:
+> +  - Jean Delvare <jdelvare@suse.com>
+> +
+> +description: |
+> +  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and multiple
+> +  PWN fan controllers.
+> +
+> +  They support monitoring and controlling up to four fans (the ADT7490 can only
+> +  control up to three). They support reading a single on chip temperature
+> +  sensor and two off chip temperature sensors (the ADT7490 additionally
+> +  supports measuring up to three current external temperature sensors with
+> +  series resistance cancellation (SRC)).
+> +
+> +  Datasheets:
+> +  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
+> +  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
+> +
+> +  Description taken from onsemiconductors specification sheets, with minor
+> +  rephrasing.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adt7473
+> +      - adi,adt7475
+> +      - adi,adt7476
+> +      - adi,adt7490
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      hwmon@2e {
+> +        compatible = "adi,adt7476";
+> +        reg = <0x2e>;
+> +      };
+> +    };
+> +
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 978de7d37c66..57173ec41c30 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -34,14 +34,6 @@ properties:
+>            - adi,adt7461
+>              # +/-1C TDM Extended Temp Range I.C
+>            - adt7461
+> -            # +/-1C TDM Extended Temp Range I.C
+> -          - adi,adt7473
+> -            # +/-1C TDM Extended Temp Range I.C
+> -          - adi,adt7475
+> -            # +/-1C TDM Extended Temp Range I.C
+> -          - adi,adt7476
+> -            # +/-1C TDM Extended Temp Range I.C
+> -          - adi,adt7490
+>              # Three-Axis Digital Accelerometer
+>            - adi,adxl345
+>              # Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
