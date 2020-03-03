@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841EBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D3FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7C8217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CF02166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203980;
-	bh=0f47R/IOMTYex/I5vBuWikGmqF4Nke+6/xBNSWEcrsQ=;
+	s=default; t=1583203986;
+	bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lr+WTTrY+en7JLLc94HFOIrod+EmjIUGZhmmFVb9dnA3bNKBjPzDq8SHvpdMwRX8u
-	 L4NRfnTuHqOPbCkReEzcwQ3NFUIsy9xpdMwcjsMRykcn8qnpIWmc5WOl03UJytXnOi
-	 TRqxDp/uarOK/B4zauIVeQFNbfkyTH+SuVhH1YTA=
+	b=M/h8/uyu+NgmNG70WRGtmw/FvGGk+jRmN4uJZlmwFwB7UrqHdvXjjKERfxEGZPoq0
+	 /QenvtSgkOmeSxTmL7MgB4Qj30ul6xMbt90jWhr8AJiTH1uC4tdVjCkYLZQ5ZGA7v2
+	 YQz7fbpZHDwDzwuG+IItMMTZv9PTCOIJNzro3Bi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgCCCtv (ORCPT
+        id S1728328AbgCCCxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:53:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728937AbgCCCtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:43 -0500
+        id S1728968AbgCCCtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF97246DE;
-        Tue,  3 Mar 2020 02:49:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8FD24680;
+        Tue,  3 Mar 2020 02:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203782;
-        bh=0f47R/IOMTYex/I5vBuWikGmqF4Nke+6/xBNSWEcrsQ=;
+        s=default; t=1583203788;
+        bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONrY6pxvAGvVJicKP5qijGahU+njVZKpW/yQxRRY6SIgP36BEGmFzSpjskyV9lFUI
-         EJdTYmxzi9xJc/RSWi/JQM2k2+Z59QfxyvW4ByceKzCiTTRkyo/951NwX8m4Ml7Tbc
-         XulTGOXDvNWsbwPhImpVlPmMNXgkdBMJEeMU+Leg=
+        b=E6pivyNMi54ql+3wdJ95o6iZeZu317Hl3v6BFLrv/Pbh1jaZX0fT1qp9WBWN202Lw
+         oeeOf4nLEp2pqWb0C7E8ORpq7yV8JvggsL/xakC3s/qEABdVHAYQ1nCE6odA7YfuxM
+         XmPTtVm0ZGbzKNiUbFh60UwsdsmNSIhfBoFUYznk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 07/22] drm/msm/mdp5: rate limit pp done timeout warnings
-Date:   Mon,  2 Mar 2020 21:49:18 -0500
-Message-Id: <20200303024933.10371-7-sashal@kernel.org>
+Cc:     Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 11/22] net: phy: restore mdio regs in the iproc mdio driver
+Date:   Mon,  2 Mar 2020 21:49:22 -0500
+Message-Id: <20200303024933.10371-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
 References: <20200303024933.10371-1-sashal@kernel.org>
@@ -60,35 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
 
-[ Upstream commit ef8c9809acb0805c991bba8bdd4749fc46d44a98 ]
+[ Upstream commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c ]
 
-Add rate limiting of the 'pp done time out' warnings since these
-warnings can quickly fill the dmesg buffer.
+The mii management register in iproc mdio block
+does not have a retention register so it is lost on suspend.
+Save and restore value of register while resuming from suspend.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
+Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
-index 4409776770012..99d356b6e9151 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
-@@ -1004,8 +1004,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
- 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
- 						msecs_to_jiffies(50));
- 	if (ret == 0)
--		dev_warn(dev->dev, "pp done time out, lm=%d\n",
--			 mdp5_cstate->pipeline.mixer->lm);
-+		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
-+				     mdp5_cstate->pipeline.mixer->lm);
+diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
+index 46fe1ae919a30..51ce3ea17fb37 100644
+--- a/drivers/net/phy/mdio-bcm-iproc.c
++++ b/drivers/net/phy/mdio-bcm-iproc.c
+@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
- static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
++#ifdef CONFIG_PM_SLEEP
++int iproc_mdio_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
++
++	/* restore the mii clock configuration */
++	iproc_mdio_config_clk(priv->base);
++
++	return 0;
++}
++
++static const struct dev_pm_ops iproc_mdio_pm_ops = {
++	.resume = iproc_mdio_resume
++};
++#endif /* CONFIG_PM_SLEEP */
++
+ static const struct of_device_id iproc_mdio_of_match[] = {
+ 	{ .compatible = "brcm,iproc-mdio", },
+ 	{ /* sentinel */ },
+@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio_driver = {
+ 	.driver = {
+ 		.name = "iproc-mdio",
+ 		.of_match_table = iproc_mdio_of_match,
++#ifdef CONFIG_PM_SLEEP
++		.pm = &iproc_mdio_pm_ops,
++#endif
+ 	},
+ 	.probe = iproc_mdio_probe,
+ 	.remove = iproc_mdio_remove,
 -- 
 2.20.1
 
