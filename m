@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA56EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82AFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CF520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD3020870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257892;
-	bh=/Y61u/WDDMNO4YmtCJCU1qU7NppAVq+7vFBnmdojCLA=;
+	s=default; t=1583257894;
+	bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sf7eNO8zNBbl3GkvMEMOFt6daVwQnRMZM75St5OMVTlECu6WnmDKhqXG23shllXde
-	 tE0vM8ebdVjEe8+HugKfpkElu0UbH8N6P652aRC/MJ8zhJutvhGhn/poMCp6aPpkm7
-	 s37AlaycS7LIWi9hV5YI8eP1UVIE5G3tAYYa66Z4=
+	b=afiGo4IfjEGEoaiOooydz//SpTWpu0GRRNh2AgV6AMyHpagVhoP1zYVr2BIOzuA6/
+	 H29ZUvGmeOFhSvi32js8UTEkodBbL2xMlzJ7lPSnaC5Lx7RsnJauLopliM/QSRoOtC
+	 rp2B9K0jvrag00n2XaLEow1Ti8mNaQYc2xb5MW1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbgCCRvb (ORCPT
+        id S1732005AbgCCRvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731983AbgCCRv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:29 -0500
+        id S1731987AbgCCRv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74CBC20870;
-        Tue,  3 Mar 2020 17:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B9420870;
+        Tue,  3 Mar 2020 17:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257888;
-        bh=/Y61u/WDDMNO4YmtCJCU1qU7NppAVq+7vFBnmdojCLA=;
+        s=default; t=1583257886;
+        bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxKhiCROTmZOXqaoBFVScLue50EEcitvf4sa6kS4dnMoXYjMsJnc1Zh3n/i80P5cT
-         6lRbpNshAla0z+5UDsLkfBtbLaVmFWl2LA48/T0OqByEN/hgmo023pUKddzKulDik9
-         Ol2twl/LPEVFfnW3r3eGobf03DIapJ357SNVVl+E=
+        b=CUJlVcxqlra060bqkl7pVdLH8euGh9u1BTD0e3FfDog0SlU02B/jeUUlTPHadJ5pB
+         Px28IzwnVYQ0q4ijbuQW0OLfW+9vDKjXIrOk7PhuqKnnQ7oJcnrNYSaPD3t/rTTNBq
+         MAXsIgv4RQehZouDkCMeaJmBIcWwuTAqtEUwyvdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 139/176] mwifiex: delete unused mwifiex_get_intf_num()
-Date:   Tue,  3 Mar 2020 18:43:23 +0100
-Message-Id: <20200303174320.856274073@linuxfoundation.org>
+Subject: [PATCH 5.5 138/176] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+Date:   Tue,  3 Mar 2020 18:43:22 +0100
+Message-Id: <20200303174320.736209478@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,45 +61,223 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Brian Norris <briannorris@chromium.org>
 
-commit 1c9f329b084b7b8ea6d60d91a202e884cdcf6aae upstream.
+commit 70e5b8f445fd27fde0c5583460e82539a7242424 upstream.
 
-Commit 7afb94da3cd8 ("mwifiex: update set_mac_address logic") fixed the
-only user of this function, partly because the author seems to have
-noticed that, as written, it's on the borderline between highly
-misleading and buggy.
+Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
+mmwifiex_process_tdls_action_frame()"),
+mwifiex_process_tdls_action_frame() already had too many magic numbers.
+But this commit just added a ton more, in the name of checking for
+buffer overflows. That seems like a really bad idea.
 
-Anyway, no sense in keeping dead code around: let's drop it.
+Let's make these magic numbers a little less magic, by
+(a) factoring out 'pos[1]' as 'ie_len'
+(b) using 'sizeof' on the appropriate source or destination fields where
+    possible, instead of bare numbers
+(c) dropping redundant checks, per below.
 
-Fixes: 7afb94da3cd8 ("mwifiex: update set_mac_address logic")
+Regarding redundant checks: the beginning of the loop has this:
+
+                if (pos + 2 + pos[1] > end)
+                        break;
+
+but then individual 'case's include stuff like this:
+
+ 			if (pos > end - 3)
+ 				return;
+ 			if (pos[1] != 1)
+				return;
+
+Note that the second 'return' (validating the length, pos[1]) combined
+with the above condition (ensuring 'pos + 2 + length' doesn't exceed
+'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
+end - pos[1] - 2') redundant. Rather than unwind the magic numbers
+there, just drop those conditions.
+
+Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
 Signed-off-by: Brian Norris <briannorris@chromium.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/main.h |   13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/tdls.c |   75 ++++++++++------------------
+ 1 file changed, 28 insertions(+), 47 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -1295,19 +1295,6 @@ mwifiex_copy_rates(u8 *dest, u32 pos, u8
- 	return pos;
- }
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -894,7 +894,7 @@ void mwifiex_process_tdls_action_frame(s
+ 	u8 *peer, *pos, *end;
+ 	u8 i, action, basic;
+ 	u16 cap = 0;
+-	int ie_len = 0;
++	int ies_len = 0;
  
--/* This function return interface number with the same bss_type.
-- */
--static inline u8
--mwifiex_get_intf_num(struct mwifiex_adapter *adapter, u8 bss_type)
--{
--	u8 i, num = 0;
--
--	for (i = 0; i < adapter->priv_num; i++)
--		if (adapter->priv[i] && adapter->priv[i]->bss_type == bss_type)
--			num++;
--	return num;
--}
--
- /*
-  * This function returns the correct private structure pointer based
-  * upon the BSS type and BSS number.
+ 	if (len < (sizeof(struct ethhdr) + 3))
+ 		return;
+@@ -916,7 +916,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		pos = buf + sizeof(struct ethhdr) + 4;
+ 		/* payload 1+ category 1 + action 1 + dialog 1 */
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -926,7 +926,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
+ 		pos = buf + sizeof(struct ethhdr) + 6;
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -934,7 +934,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
+ 			return;
+ 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
+ 		break;
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
+@@ -947,33 +947,33 @@ void mwifiex_process_tdls_action_frame(s
+ 
+ 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
+ 
+-	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
+-		if (pos + 2 + pos[1] > end)
++	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
++		u8 ie_len = pos[1];
++
++		if (pos + 2 + ie_len > end)
+ 			break;
+ 
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+-			sta_ptr->tdls_cap.rates_len = pos[1];
+-			for (i = 0; i < pos[1]; i++)
++			sta_ptr->tdls_cap.rates_len = ie_len;
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
+ 
+ 		case WLAN_EID_EXT_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
+-			if (pos[1] > 32 - basic)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
+ 				return;
+-			for (i = 0; i < pos[1]; i++)
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+-			sta_ptr->tdls_cap.rates_len += pos[1];
++			sta_ptr->tdls_cap.rates_len += ie_len;
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++			if (ie_len != sizeof(struct ieee80211_ht_cap))
+ 				return;
+ 			/* copy the ie's value into ht_capb*/
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+@@ -981,59 +981,45 @@ void mwifiex_process_tdls_action_frame(s
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			if (pos > end -
+-			    sizeof(struct ieee80211_ht_operation) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++			if (ie_len != sizeof(struct ieee80211_ht_operation))
+ 				return;
+ 			/* copy the ie's value into ht_oper*/
+ 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] > 8)
++			if (ie_len > 8)
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], 8));
++			       min_t(u8, ie_len, 8));
+ 			break;
+ 		case WLAN_EID_RSN:
+-			if (pos > end - sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] > IEEE_MAX_IE_SIZE -
++			if (ie_len > IEEE_MAX_IE_SIZE -
+ 			    sizeof(struct ieee_types_header))
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
++			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_operation) - 2)
+-					return;
+-				if (pos[1] !=
++				if (ie_len !=
+ 				    sizeof(struct ieee80211_vht_operation))
+ 					return;
+ 				/* copy the ie's value into vhtoper*/
+@@ -1043,10 +1029,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_cap) - 2)
+-					return;
+-				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++				if (ie_len != sizeof(struct ieee80211_vht_cap))
+ 					return;
+ 				/* copy the ie's value into vhtcap*/
+ 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+@@ -1056,9 +1039,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_AID:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end - 4)
+-					return;
+-				if (pos[1] != 2)
++				if (ie_len != sizeof(u16))
+ 					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
 
 
