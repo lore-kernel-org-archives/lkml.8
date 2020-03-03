@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3383C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67B1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDEE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AB320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257789;
-	bh=4ISSmUk3GQEPzgk7PG6P3uUSjVVpssrs3uevj0Z/Es0=;
+	s=default; t=1583257791;
+	bh=r4NGeJpo9n1jEBQWdQe7fvt6gNYjq7LXsVhijfIB5e4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGYGdpj6IihiojICMN/Zh1GeoMKcvvm74zE8GudD0B2h2Y7X7+R1n4ycy1BfsIuao
-	 DAOCzj7XjP5c4zeHZ1d+KlhJc0rIPoS4EpJJAtDwQTRmJFsVxFS9BA0RW0L+7dpBnV
-	 tBIpSZIswNkcv28pHwIBXpHUP/0ihIFedUVY6p7Y=
+	b=g00Z4no2zZzVCxlmUP7kCgWS/sA/Bn9cyG1GYYpbeWwn3lr4lbKWzz8BiDomnAX6f
+	 uNk2FA3T9508VPwK9PeIJxd3mnL0ezWtjueUlTaYa5p4u/PU+3HYMtuvA5fjZSJY14
+	 ehJ+3f9+WUY9LuUp4ChC9lDIMYaiiX+TRBnzMx1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgCCRts (ORCPT
+        id S1731826AbgCCRtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgCCRtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:46 -0500
+        id S1730880AbgCCRtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4492146E;
-        Tue,  3 Mar 2020 17:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31EF0214D8;
+        Tue,  3 Mar 2020 17:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257784;
-        bh=4ISSmUk3GQEPzgk7PG6P3uUSjVVpssrs3uevj0Z/Es0=;
+        s=default; t=1583257786;
+        bh=r4NGeJpo9n1jEBQWdQe7fvt6gNYjq7LXsVhijfIB5e4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0tVnCthiY+bpvlCZcWi3Rg+k7I4vC+1FW0KYjxF1nGHgtSD3+EsrvPLm3nDshL1v
-         GVtWILjnpeeTZiuRWb7eSlgy91VomxSLE9cvrZajGX6L5Z4ik/YGG7n+cFYOYtpbaQ
-         SvTgGGGUqdw48Kd23ixW+Z8MIXoRE0Di8/9vl82w=
+        b=t0MsQQikn9CkfXtnq8poP5KofnWPx8Nc9rt9sRb/CVWQ4M2IDpGdM2mYJCUqh+iMX
+         pmxfU9/w4vC++xXOY5hLvOP9BWaHQ207vXOKK+z6oMJfGyfS8ckTzupaXAgk/PMEmQ
+         XgdTK1U93fhRj/OeExsbErVzz9OKa4HxrPdxUy2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Bezrukov <dbezrukov@marvell.com>,
+        stable@vger.kernel.org, Nikita Danilov <ndanilov@marvell.com>,
         Igor Russkikh <irusskikh@marvell.com>,
         Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 127/176] net: atlantic: checksum compat issue
-Date:   Tue,  3 Mar 2020 18:43:11 +0100
-Message-Id: <20200303174319.445748656@linuxfoundation.org>
+Subject: [PATCH 5.5 128/176] net: atlantic: better loopback mode handling
+Date:   Tue,  3 Mar 2020 18:43:12 +0100
+Message-Id: <20200303174319.545640380@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,92 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bezrukov <dbezrukov@marvell.com>
+From: Nikita Danilov <ndanilov@marvell.com>
 
-commit 15beab0a9d797be1b7c67458da007a62269be29a upstream.
+commit b42726fcf76e9367e524392e0ead7e672cc0791c upstream.
 
-Yet another checksum offload compatibility issue was found.
+Add checks to not enable multiple loopback modes simultaneously,
+It was also discovered that for dma loopback to function correctly
+promisc mode should be enabled on device.
 
-The known issue is that AQC HW marks tcp packets with 0xFFFF checksum
-as invalid (1). This is workarounded in driver, passing all the suspicious
-packets up to the stack for further csum validation.
-
-Another HW problem (2) is that it hides invalid csum of LRO aggregated
-packets inside of the individual descriptors. That was workarounded
-by forced scan of all LRO descriptors for checksum errors.
-
-However the scan logic was joint for both LRO and multi-descriptor
-packets (jumbos). And this causes the issue.
-
-We have to drop LRO packets with the detected bad checksum
-because of (2), but we have to pass jumbo packets to stack because of (1).
-
-When using windows tcp partner with jumbo frames but with LSO disabled
-driver discards such frames as bad checksummed. But only LRO frames
-should be dropped, not jumbos.
-
-On such a configurations tcp stream have a chance of drops and stucks.
-
-(1) 76f254d4afe2 ("net: aquantia: tcp checksum 0xffff being handled incorrectly")
-(2) d08b9a0a3ebd ("net: aquantia: do not pass lro session with invalid tcp checksum")
-
-Fixes: d08b9a0a3ebd ("net: aquantia: do not pass lro session with invalid tcp checksum")
-Signed-off-by: Dmitry Bezrukov <dbezrukov@marvell.com>
+Fixes: ea4b4d7fc106 ("net: atlantic: loopback tests via private flags")
+Signed-off-by: Nikita Danilov <ndanilov@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c          |    3 ++-
- drivers/net/ethernet/aquantia/atlantic/aq_ring.h          |    3 ++-
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |    5 +++--
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c       |    5 +++++
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |   13 ++++++++-----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -351,7 +351,8 @@ int aq_ring_rx_clean(struct aq_ring_s *s
- 				err = 0;
- 				goto err_exit;
- 			}
--			if (buff->is_error || buff->is_cso_err) {
-+			if (buff->is_error ||
-+			    (buff->is_lro && buff->is_cso_err)) {
- 				buff_ = buff;
- 				do {
- 					next_ = buff_->next,
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.h
-@@ -78,7 +78,8 @@ struct __packed aq_ring_buff_s {
- 			u32 is_cleaned:1;
- 			u32 is_error:1;
- 			u32 is_vlan:1;
--			u32 rsvd3:4;
-+			u32 is_lro:1;
-+			u32 rsvd3:3;
- 			u16 eop_index;
- 			u16 rsvd4;
- 		};
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
+@@ -722,6 +722,11 @@ static int aq_ethtool_set_priv_flags(str
+ 	if (flags & ~AQ_PRIV_FLAGS_MASK)
+ 		return -EOPNOTSUPP;
+ 
++	if (hweight32((flags | priv_flags) & AQ_HW_LOOPBACK_MASK) > 1) {
++		netdev_info(ndev, "Can't enable more than one loopback simultaneously\n");
++		return -EINVAL;
++	}
++
+ 	cfg->priv_flags = flags;
+ 
+ 	if ((priv_flags ^ flags) & BIT(AQ_HW_LOOPBACK_DMA_NET)) {
 --- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
 +++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -823,6 +823,8 @@ static int hw_atl_b0_hw_ring_rx_receive(
- 			}
- 		}
+@@ -885,13 +885,16 @@ static int hw_atl_b0_hw_packet_filter_se
+ {
+ 	struct aq_nic_cfg_s *cfg = self->aq_nic_cfg;
+ 	unsigned int i = 0U;
++	u32 vlan_promisc;
++	u32 l2_promisc;
  
-+		buff->is_lro = !!(HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
-+				  rxd_wb->status);
- 		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
- 			buff->len = rxd_wb->pkt_len %
- 				AQ_CFG_RX_FRAME_MAX;
-@@ -835,8 +837,7 @@ static int hw_atl_b0_hw_ring_rx_receive(
- 				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
- 				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
+-	hw_atl_rpfl2promiscuous_mode_en_set(self,
+-					    IS_FILTER_ENABLED(IFF_PROMISC));
++	l2_promisc = IS_FILTER_ENABLED(IFF_PROMISC) ||
++		     !!(cfg->priv_flags & BIT(AQ_HW_LOOPBACK_DMA_NET));
++	vlan_promisc = l2_promisc || cfg->is_vlan_force_promisc;
  
--			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
--				rxd_wb->status) {
-+			if (buff->is_lro) {
- 				/* LRO */
- 				buff->next = rxd_wb->next_desc_ptr;
- 				++ring->stats.rx.lro_packets;
+-	hw_atl_rpf_vlan_prom_mode_en_set(self,
+-				     IS_FILTER_ENABLED(IFF_PROMISC) ||
+-				     cfg->is_vlan_force_promisc);
++	hw_atl_rpfl2promiscuous_mode_en_set(self, l2_promisc);
++
++	hw_atl_rpf_vlan_prom_mode_en_set(self, vlan_promisc);
+ 
+ 	hw_atl_rpfl2multicast_flr_en_set(self,
+ 					 IS_FILTER_ENABLED(IFF_ALLMULTI) &&
 
 
