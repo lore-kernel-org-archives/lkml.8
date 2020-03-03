@@ -2,194 +2,96 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8B5C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E782073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258822;
-	bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQVUiLcOgJ5fDzk3dscQyphjFoE/y95aGmHe1rpmQ6t0Es8t7QOYhgfoD2QrF12YP
-	 REIZzwTRz6lKeabhk7Y42n4lL2q0R93mkH9E0h78Do1NrffeNgB7WFqvbV1loligwC
-	 l5ky8MnyjTgaqewKp7trcAUClA9B+fvdq5d9/Z7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 3ED232073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="DipvBbqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388306AbgCCSHA (ORCPT
+        id S2388313AbgCCSHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:07:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732718AbgCCRz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 719C4206D5;
-        Tue,  3 Mar 2020 17:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258128;
-        bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfdfi5MtK4ALywCP3kNrMbclBpy292C6gzMPcySN59ehouukPE3T2hVG8LK4i1ZaI
-         UkDaeWB7oTtWuENMFN80GUyvDgQUMXxhw+qe41BDQsshTJ9mmV8vrl2ELNTGxXQJaS
-         g+S8KEjnCSEH4qdOiqHQ9TAK1gT37Tk3LK5Fjkgw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
-Subject: [PATCH 5.4 081/152] macintosh: therm_windtunnel: fix regression when instantiating devices
-Date:   Tue,  3 Mar 2020 18:42:59 +0100
-Message-Id: <20200303174311.753116244@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-References: <20200303174302.523080016@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Mar 2020 13:07:03 -0500
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:34845 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388304AbgCCSHB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:07:01 -0500
+Received: by mail-wm1-f45.google.com with SMTP id m3so3872654wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 10:07:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XXp0rMiFWFLtHxX3NcGz0E4EadvUHGoaT5BnD3fzxj4=;
+        b=DipvBbqTm7dhpHJLeJnyc7q64svimc/d9W3kAB2/UuEOX7G6sHtwLYdmkQk1cjw7eB
+         srMt5Jne+vS8TZeVHLCsV2Cs2XDFG/M88aLs0SEu1F2aWowKXHKKBvVX+QbKaRJHvTMc
+         QhWc6TEdcvxhAUix0NUbYAE8Ld/dqSCabMYs4pH7gzYYLKnosnQWpHHPNLoNIga+ky1z
+         vf1IXvxwhGZmA2hjnSegbK8zg9UdoxmZmaF+BDfdD9gsRM0dfxkMkO3lNMzOxC/+mIWz
+         K9qvj8u8W2KNICKgtBHm2M+x1SgE3+cNIB5yr4YPf3MnV7qRqVnlTusGDxpOdS0jqgoa
+         4pmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XXp0rMiFWFLtHxX3NcGz0E4EadvUHGoaT5BnD3fzxj4=;
+        b=IaMNJlPshDddS7DQCGMkq32t+NV1kiqHOgtyOOJB1tNrjD/pkSBZ37d3g7ApDMTiSv
+         JZK7/auqXVVr1TU2QYZGXlr0Keq2XuUuLpOe76OFjeefb0lun5g8csP0vZhSYsjne6bj
+         yOxmnRYxaXGJMCUJB+Mck0ORv8iFH+EnKh8krIsSK61z2TNM+eqJpb88Bmv6vlCCl+EM
+         1cGhH+O58c6ryBmKI4u39k8bfCveSPI8bIkrI7ZdIAy9/F2yWU0vzEYQzrjmew+M4Fsi
+         XPBjVG5ZqSXpXKUfI8pqKp2kWvk1Fr8r+IkrESOMx6/9GjqKUkVV9MQoL09GN4Zp2c/h
+         175Q==
+X-Gm-Message-State: ANhLgQ3NwitfgsNM6CFpMJgS5yKx5edsiE2C2p2NzmfFp9YPYUX9tOHL
+        EVjXs0L3nS/9ZeYEQHFMSjDmXg==
+X-Google-Smtp-Source: ADFU+vtqBLqRlqk4p5QAInZ9UVNhCa+KDn2TFoZRPh9x1StfHVRfILYXQHAGFmeGa8ccIO44I6xsHg==
+X-Received: by 2002:a05:600c:118a:: with SMTP id i10mr5508685wmf.142.1583258819732;
+        Tue, 03 Mar 2020 10:06:59 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id k65sm5476086wmf.1.2020.03.03.10.06.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 10:06:59 -0800 (PST)
+Subject: Re: [PATCHv3 2/2] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+References: <20200302175135.269397-3-dima@arista.com>
+ <202003031201.WdZ9GaGO%lkp@intel.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <58272ab2-a149-8b7a-d109-1d7b9564c167@arista.com>
+Date:   Tue, 3 Mar 2020 18:06:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202003031201.WdZ9GaGO%lkp@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
-
-commit 38b17afb0ebb9ecd41418d3c08bcf9198af4349d upstream.
-
-Removing attach_adapter from this driver caused a regression for at
-least some machines. Those machines had the sensors described in their
-DT, too, so they didn't need manual creation of the sensor devices. The
-old code worked, though, because manual creation came first. Creation of
-DT devices then failed later and caused error logs, but the sensors
-worked nonetheless because of the manually created devices.
-
-When removing attach_adaper, manual creation now comes later and loses
-the race. The sensor devices were already registered via DT, yet with
-another binding, so the driver could not be bound to it.
-
-This fix refactors the code to remove the race and only manually creates
-devices if there are no DT nodes present. Also, the DT binding is updated
-to match both, the DT and manually created devices. Because we don't
-know which device creation will be used at runtime, the code to start
-the kthread is moved to do_probe() which will be called by both methods.
-
-Fixes: 3e7bed52719d ("macintosh: therm_windtunnel: drop using attach_adapter")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201723
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Tested-by: Erhard Furtner <erhard_f@mailbox.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org # v4.19+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/macintosh/therm_windtunnel.c |   52 ++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
-
---- a/drivers/macintosh/therm_windtunnel.c
-+++ b/drivers/macintosh/therm_windtunnel.c
-@@ -300,9 +300,11 @@ static int control_loop(void *dummy)
- /*	i2c probing and setup						*/
- /************************************************************************/
- 
--static int
--do_attach( struct i2c_adapter *adapter )
-+static void do_attach(struct i2c_adapter *adapter)
- {
-+	struct i2c_board_info info = { };
-+	struct device_node *np;
-+
- 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
- 	static const unsigned short scan_ds1775[] = {
- 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
-@@ -313,25 +315,24 @@ do_attach( struct i2c_adapter *adapter )
- 		I2C_CLIENT_END
- 	};
- 
--	if( strncmp(adapter->name, "uni-n", 5) )
--		return 0;
--
--	if( !x.running ) {
--		struct i2c_board_info info;
-+	if (x.running || strncmp(adapter->name, "uni-n", 5))
-+		return;
- 
--		memset(&info, 0, sizeof(struct i2c_board_info));
--		strlcpy(info.type, "therm_ds1775", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
-+	}
- 
--		strlcpy(info.type, "therm_adm1030", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
--
--		if( x.thermostat && x.fan ) {
--			x.running = 1;
--			x.poll_task = kthread_run(control_loop, NULL, "g4fand");
--		}
- 	}
--	return 0;
- }
- 
- static int
-@@ -404,8 +405,8 @@ out:
- enum chip { ds1775, adm1030 };
- 
- static const struct i2c_device_id therm_windtunnel_id[] = {
--	{ "therm_ds1775", ds1775 },
--	{ "therm_adm1030", adm1030 },
-+	{ "MAC,ds1775", ds1775 },
-+	{ "MAC,adm1030", adm1030 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
-@@ -414,6 +415,7 @@ static int
- do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- {
- 	struct i2c_adapter *adapter = cl->adapter;
-+	int ret = 0;
- 
- 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
- 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
-@@ -421,11 +423,19 @@ do_probe(struct i2c_client *cl, const st
- 
- 	switch (id->driver_data) {
- 	case adm1030:
--		return attach_fan( cl );
-+		ret = attach_fan(cl);
-+		break;
- 	case ds1775:
--		return attach_thermostat(cl);
-+		ret = attach_thermostat(cl);
-+		break;
- 	}
--	return 0;
-+
-+	if (!x.running && x.thermostat && x.fan) {
-+		x.running = 1;
-+		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
-+	}
-+
-+	return ret;
- }
- 
- static struct i2c_driver g4fan_driver = {
 
 
+On 3/3/20 4:31 AM, kbuild test robot wrote:
+> Hi Dmitry,
+[..]
+
+> New smatch warnings:
+> drivers/tty/serial/serial_core.c:3123 uart_try_toggle_sysrq() warn: unsigned '++port->sysrq_seq' is never less than zero.
+
+False-positive as just a few lines above:
+:        if (ARRAY_SIZE(sysrq_toggle_seq) <= 1)
+:			return false;
+
+I hope it's fine just to ignore this rather than complicate anyhow code
+to suppress the warning.
+
+Thanks,
+          Dmitry
