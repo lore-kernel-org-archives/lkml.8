@@ -2,70 +2,88 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E34C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD75320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00F42072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583276497;
+	bh=tbUhVX64Ga1x6NtGWMm83ZXrBQg/M9ws6QFjmSxTP3E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=jc/MicACCouJz9vDpJ5G+Er64eet4qmS8jo/YetIgXi8F6i7XO4jBTbH2zd2DgziV
+	 gxmY2MvWRgnSkTWVAsc+aUbRjA4CQsIkFYMs+O6UNgn9tPhNMKIZhxgwQFIc5dczbV
+	 GkUbpYOAHfRbeBMjdUvZxCkEMSKVeQldV7Pp3wK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgCCW7R (ORCPT
+        id S1728133AbgCCXBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:59:17 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36990 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgCCW7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:59:17 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E1EC215A0FF4F;
-        Tue,  3 Mar 2020 14:59:16 -0800 (PST)
-Date:   Tue, 03 Mar 2020 14:59:16 -0800 (PST)
-Message-Id: <20200303.145916.1506066510928020193.davem@davemloft.net>
-To:     mkubecek@suse.cz
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        Tue, 3 Mar 2020 18:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgCCXBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:01:36 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4190206E6;
+        Tue,  3 Mar 2020 23:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583276496;
+        bh=tbUhVX64Ga1x6NtGWMm83ZXrBQg/M9ws6QFjmSxTP3E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=umLLqyduRoxqqa9ZrW0eySxsCa4x00+YN9EXfo0u7SKAXmOKiRmrWPiQ7M7VwfmcA
+         lvUsoI1ivZTU+d03Y3DXJgipA6BMByb3lTCpDDjfsd/sY7lgAs/YPo9LuFHY7LUo5+
+         kpEk7lEdfqfIcBRDIppKfcRSCwNQB3k/Rs/AkXHI=
+Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] tun: fix ethtool_ops get_msglvl and set_msglvl
- handlers
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200303082252.81F7FE1F46@unicorn.suse.cz>
-References: <20200303082252.81F7FE1F46@unicorn.suse.cz>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200303174304.593872177@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <925b1535-00ef-5583-8119-3c9fd50cd6e8@kernel.org>
+Date:   Tue, 3 Mar 2020 16:01:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Mar 2020 14:59:17 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Tue,  3 Mar 2020 09:22:52 +0100 (CET)
-
-> The get_msglvl and setmsglvl handlers only work as expected if TUN_DEBUG
-> is defined (which required editing the source). Otherwise tun_get_msglvl()
-> returns -EOPNOTSUPP but as this handler is not supposed to return error
-> code, it is not recognized as one and passed to userspace as is, resulting
-> in bogus output of ethtool command. The set_msglvl handler ignores its
-> argument and does nothing if TUN_DEBUG is left undefined.
+On 3/3/20 10:41 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.8 release.
+> There are 176 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> The way to return EOPNOTSUPP to userspace for both requests is not to
-> provide these ethtool_ops callbacks at all if TUN_DEBUG is left undefined.
+> Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
+> Anything received after that time might be too late.
 > 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.8-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-I agree with your analysis.
+Compiled and booted on my test system. No dmesg regressions.
 
-But this TUN_DEBUG thing stands outside of what we let drivers do.  Either
-this tracing is not so useful and can be deleted, or the tracing should
-be available unconditionally so that it can be turned on by the vast
-majority of users who do not edit the source.
+thanks,
+-- Shuah
 
-I suspect making the TUN_DEBUG code unconditional is that way to go here.
