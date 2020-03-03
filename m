@@ -2,75 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8036C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F89C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89BBE20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583244917;
-	bh=CjxVJIk2GRMkI+aexuaFJkj4rdIHh1K0MxjOvbTOuHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bRh79pHeHJmH47FckC+kJfEO9mkHPq0EypwPdF/t3qNqZ97MnJocozfs+V618f9HA
-	 JjaqRNFXe8cfuzQVW2ryaz3E1lih2HmKTjOZ7/UDmfM2OGfHrJtttHUJuM0Ayzn3pi
-	 OPmcOEMPmwLWo4uz+Gl5zqWfUe7LHGoill6bkCpk=
+	by mail.kernel.org (Postfix) with ESMTP id B7EA620838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bzSew+et"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgCCOPQ (ORCPT
+        id S1728592AbgCCOQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:15:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgCCOPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:15:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20C920838;
-        Tue,  3 Mar 2020 14:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583244908;
-        bh=CjxVJIk2GRMkI+aexuaFJkj4rdIHh1K0MxjOvbTOuHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MfWDSJZFaVtO2Sm7kObMRnB38aqqykP8ysgH3kis0axH0H7CKcGHk9MtijxdFLHlp
-         17U3cyNF5yxf7rkmV6lhS0wxcc3g9iOYeXrEMr1LX313FTfkuvMOmP0Nxvmka2f/Kt
-         5HGaEDOX7WRHyUPV77HRU7/VV6Sq2aO7RjtNoOgc=
-Date:   Tue, 3 Mar 2020 15:15:05 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     zzyiwei@google.com, mingo@redhat.com, elder@kernel.org,
-        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, tglx@linutronix.de,
-        yamada.masahiro@socionext.com, paul.walmsley@sifive.com,
-        bhelgaas@google.com, darekm@google.com, ndesaulniers@google.com,
-        joelaf@google.com, linux-kernel@vger.kernel.org,
-        prahladk@google.com, android-kernel@google.com
-Subject: Re: [PATCH v4] gpu/trace: add a gpu total memory usage tracepoint
-Message-ID: <20200303141505.GA3405@kroah.com>
-References: <CAKT=dDnFpj2hJd5z73pfcrhXXacDpPVyKzC7+K94tsX=+e_BHg@mail.gmail.com>
- <20200302235044.59163-1-zzyiwei@google.com>
- <20200303090703.32b2ad68@gandalf.local.home>
+        Tue, 3 Mar 2020 09:16:24 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58650 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728356AbgCCOQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:16:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583244983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MUTEP1p4YWjzskXYVbK6H4xhC2oS8H6SYOsK8O1eOyQ=;
+        b=bzSew+et0oTss8hF+yTQBV3ff184kWxMigwSUARoJj5M8pUzzw8OvdvNwyYkXVBq0RC6fv
+        EtyYNQRsJ7HXt4pIwoxZPAktxUYSaWkGN12FU/zRdP/Bj7//+1+kOQ7HkkDQokBnwvTSqC
+        mxqH+5vNO0Y3oafmHY8s3JyHiICkpPc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-5TEOS0MJNLqJ4_DgIWdrhA-1; Tue, 03 Mar 2020 09:16:19 -0500
+X-MC-Unique: 5TEOS0MJNLqJ4_DgIWdrhA-1
+Received: by mail-wr1-f72.google.com with SMTP id f10so1283745wrv.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:16:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MUTEP1p4YWjzskXYVbK6H4xhC2oS8H6SYOsK8O1eOyQ=;
+        b=LtwYkYGu0iNB3wZSBE2VklLEZ+GkiwKk+Fg4P39y7ClTv6cqSbda6Y8IZBR1jfYz0g
+         3Mit+w+BgEFkgoMkNvqCHZC4fqEOZ/Tm7d2YCwDt9yvz11+Zo2/hSjghtWS3eq8z8rN1
+         R8t04l8WIDPPsQEO14Pmdgk+Rk3PiRsIfRaGp/E6mLsyMcOPdtFv3ApnJ/6/aAZBh1mg
+         e9EbjCA8L4fZAysRRw95iORjvjJWm81UststkUQ2sJN2HBK7aOF7inMR0ieUcUorrcDB
+         JPXpj3bujUHgb/SopUgEFluEaFAfk5OIdofawtp9pRtpaB8TsaOk0M4ePh+CYxtXvAal
+         KVWg==
+X-Gm-Message-State: ANhLgQ383/xFZY7w8z5Qzmg/d6f3bXx7EFYMPWGOIki+MraKyThQ//KO
+        SnqOHPp3kNLNlMeFNowJNz9mMpRShAuukeCNjOCqBrdRWAVY2X+PBCnZyJGk87yPMJvEKiBpa+e
+        YF3qk54CVlPKMUCVfC/U+sS0u
+X-Received: by 2002:adf:e6c9:: with SMTP id y9mr5857109wrm.246.1583244978784;
+        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsYNg7+BUQwOf9zvxhDv8luT0LXJFS2Ip7Opm1OZwN8LJ4aJ2q/o6inCPO/0+w/9WVAKxYWiQ==
+X-Received: by 2002:adf:e6c9:: with SMTP id y9mr5857091wrm.246.1583244978498;
+        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.254.94])
+        by smtp.gmail.com with ESMTPSA id m25sm2351920wml.35.2020.03.03.06.16.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 06:16:18 -0800 (PST)
+Subject: Re: [PATCH v2 01/66] KVM: x86: Return -E2BIG when
+ KVM_GET_SUPPORTED_CPUID hits max entries
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+ <20200302235709.27467-2-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <599c3a95-a0a6-b31d-56a6-c50971d4ab59@redhat.com>
+Date:   Tue, 3 Mar 2020 15:16:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303090703.32b2ad68@gandalf.local.home>
+In-Reply-To: <20200302235709.27467-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 09:07:03AM -0500, Steven Rostedt wrote:
-> 
-> Greg,
-> 
-> You acked this patch before, did you want to ack it again, and I'll take it
-> in my tree?
+On 03/03/20 00:56, Sean Christopherson wrote:
+> (KVM hard caps CPUID 0xD at a single sub-leaf).
 
-Sure, but where did my ack go?  What changed from previous versions???
+Hmm... no it doesn't?
 
-Anyway, the patch seems sane enough to me:
+                for (idx = 1, i = 1; idx < 64; ++idx) {
+                        u64 mask = ((u64)1 << idx);
+                        if (*nent >= maxnent)
+                                goto out;
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+                        do_host_cpuid(&entry[i], function, idx);
+                        if (idx == 1) {
+                                entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
+                                cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+                                entry[i].ebx = 0;
+                                if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
+                                        entry[i].ebx =
+                                                xstate_required_size(supported,
+                                                                     true);
+                        } else {
+                                if (entry[i].eax == 0 || !(supported & mask))
+                                        continue;
+                                if (WARN_ON_ONCE(entry[i].ecx & 1))
+                                        continue;
+                        }
+                        entry[i].ecx = 0;
+                        entry[i].edx = 0;
+                        ++*nent;
+                        ++i;
+                }
+
+I still think the patch is correct, what matters is that no KVM in
+existence supports enough processor features to reach 100 or so subleaves.
+
+Paolo
+
