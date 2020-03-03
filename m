@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B49C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DA0C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0153E214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA77D20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257709;
-	bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
+	s=default; t=1583257711;
+	bh=/fUNwf/vztwTSEohLnloV9eTLI537OBCYIVodXwIu6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5fN1zBGz17qGGY1Dbwlrt8TJ8fFQMJeOlYjW43UdoDlMI4FiRgK8eM4NxcJZG8uj
-	 T9iWo6IDg9rvVuXQj894sQogiin82HFiG0S5WVFmBqz7wIJOgLQWql2aH4bf1DqdQZ
-	 InjyeGTIa9tosXqAUALOUozUHu/+KoqwrPCS2d7M=
+	b=UxJOzgfwdufFpZj4njACvhDzhTF02dvygXLCiZjADIvo3V9WP4P+TrjPqOnV2mPyA
+	 BRciIJ8uEc5M08RdjazykVvq3K43Sw2YHvlndVinAuy7DQgf9e+TPy3ZvObRMTfuo/
+	 y1hnPZxJEU4WdsXit2+HSGFWaLHGwP+iX4Hz7LHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgCCRs1 (ORCPT
+        id S1728330AbgCCRsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgCCRsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:21 -0500
+        id S1731657AbgCCRs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23C2D20CC7;
-        Tue,  3 Mar 2020 17:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38767208C3;
+        Tue,  3 Mar 2020 17:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257700;
-        bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
+        s=default; t=1583257705;
+        bh=/fUNwf/vztwTSEohLnloV9eTLI537OBCYIVodXwIu6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICo6JoUBb5EyRM72kL+541cwCPinzK7VfzrJi1Ch4QHhrcF+VYqzdTRG6OdTeJbmS
-         YhDHQVADBgXsVcZ3CBjlYO6DuCQXWMw0hQeFXEyWnTZ57ghOABm1fFWRE2Yy3vXKBf
-         N4tJm63veI+cygQi0WUtMMoqBLMnlCbML0DZDtU4=
+        b=SMPuKDTNZTR9o+IXEIcVcUXx06DdoKL4iKr3Tz4ld2fhGqCQKJLM5Xaqy+Z7WkKSR
+         zJo7sfA8Wxkapkz5v5COv/TQ7hxurlNX7OpCjng7DvmBjazTfMyy6JIzzbyrZ1dRee
+         YMz5fNeXDjmHX44kNymiJ7vXlFbTmJQfSzhVtbhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
-Subject: [PATCH 5.5 095/176] macintosh: therm_windtunnel: fix regression when instantiating devices
-Date:   Tue,  3 Mar 2020 18:42:39 +0100
-Message-Id: <20200303174315.807135274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.5 097/176] tracing: Disable trace_printk() on post poned tests
+Date:   Tue,  3 Mar 2020 18:42:41 +0100
+Message-Id: <20200303174316.051529563@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,136 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 38b17afb0ebb9ecd41418d3c08bcf9198af4349d upstream.
+commit 78041c0c9e935d9ce4086feeff6c569ed88ddfd4 upstream.
 
-Removing attach_adapter from this driver caused a regression for at
-least some machines. Those machines had the sensors described in their
-DT, too, so they didn't need manual creation of the sensor devices. The
-old code worked, though, because manual creation came first. Creation of
-DT devices then failed later and caused error logs, but the sensors
-worked nonetheless because of the manually created devices.
+The tracing seftests checks various aspects of the tracing infrastructure,
+and one is filtering. If trace_printk() is active during a self test, it can
+cause the filtering to fail, which will disable that part of the trace.
 
-When removing attach_adaper, manual creation now comes later and loses
-the race. The sensor devices were already registered via DT, yet with
-another binding, so the driver could not be bound to it.
+To keep the selftests from failing because of trace_printk() calls,
+trace_printk() checks the variable tracing_selftest_running, and if set, it
+does not write to the tracing buffer.
 
-This fix refactors the code to remove the race and only manually creates
-devices if there are no DT nodes present. Also, the DT binding is updated
-to match both, the DT and manually created devices. Because we don't
-know which device creation will be used at runtime, the code to start
-the kthread is moved to do_probe() which will be called by both methods.
+As some tracers were registered earlier in boot, the selftest they triggered
+would fail because not all the infrastructure was set up for the full
+selftest. Thus, some of the tests were post poned to when their
+infrastructure was ready (namely file system code). The postpone code did
+not set the tracing_seftest_running variable, and could fail if a
+trace_printk() was added and executed during their run.
 
-Fixes: 3e7bed52719d ("macintosh: therm_windtunnel: drop using attach_adapter")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201723
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Tested-by: Erhard Furtner <erhard_f@mailbox.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org # v4.19+
+Cc: stable@vger.kernel.org
+Fixes: 9afecfbb95198 ("tracing: Postpone tracer start-up tests till the system is more robust")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/macintosh/therm_windtunnel.c |   52 ++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+ kernel/trace/trace.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/macintosh/therm_windtunnel.c
-+++ b/drivers/macintosh/therm_windtunnel.c
-@@ -300,9 +300,11 @@ static int control_loop(void *dummy)
- /*	i2c probing and setup						*/
- /************************************************************************/
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1827,6 +1827,7 @@ static __init int init_trace_selftests(v
  
--static int
--do_attach( struct i2c_adapter *adapter )
-+static void do_attach(struct i2c_adapter *adapter)
- {
-+	struct i2c_board_info info = { };
-+	struct device_node *np;
-+
- 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
- 	static const unsigned short scan_ds1775[] = {
- 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
-@@ -313,25 +315,24 @@ do_attach( struct i2c_adapter *adapter )
- 		I2C_CLIENT_END
- 	};
+ 	pr_info("Running postponed tracer tests:\n");
  
--	if( strncmp(adapter->name, "uni-n", 5) )
--		return 0;
--
--	if( !x.running ) {
--		struct i2c_board_info info;
-+	if (x.running || strncmp(adapter->name, "uni-n", 5))
-+		return;
- 
--		memset(&info, 0, sizeof(struct i2c_board_info));
--		strlcpy(info.type, "therm_ds1775", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
-+	}
- 
--		strlcpy(info.type, "therm_adm1030", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
--
--		if( x.thermostat && x.fan ) {
--			x.running = 1;
--			x.poll_task = kthread_run(control_loop, NULL, "g4fand");
--		}
++	tracing_selftest_running = true;
+ 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
+ 		/* This loop can take minutes when sanitizers are enabled, so
+ 		 * lets make sure we allow RCU processing.
+@@ -1849,6 +1850,7 @@ static __init int init_trace_selftests(v
+ 		list_del(&p->list);
+ 		kfree(p);
  	}
--	return 0;
- }
++	tracing_selftest_running = false;
  
- static int
-@@ -404,8 +405,8 @@ out:
- enum chip { ds1775, adm1030 };
- 
- static const struct i2c_device_id therm_windtunnel_id[] = {
--	{ "therm_ds1775", ds1775 },
--	{ "therm_adm1030", adm1030 },
-+	{ "MAC,ds1775", ds1775 },
-+	{ "MAC,adm1030", adm1030 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
-@@ -414,6 +415,7 @@ static int
- do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- {
- 	struct i2c_adapter *adapter = cl->adapter;
-+	int ret = 0;
- 
- 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
- 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
-@@ -421,11 +423,19 @@ do_probe(struct i2c_client *cl, const st
- 
- 	switch (id->driver_data) {
- 	case adm1030:
--		return attach_fan( cl );
-+		ret = attach_fan(cl);
-+		break;
- 	case ds1775:
--		return attach_thermostat(cl);
-+		ret = attach_thermostat(cl);
-+		break;
- 	}
--	return 0;
-+
-+	if (!x.running && x.thermostat && x.fan) {
-+		x.running = 1;
-+		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
-+	}
-+
-+	return ret;
- }
- 
- static struct i2c_driver g4fan_driver = {
+  out:
+ 	mutex_unlock(&trace_types_lock);
 
 
