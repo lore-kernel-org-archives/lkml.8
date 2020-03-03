@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F8DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749EAC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D268246EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6AB20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203841;
-	bh=8dCuR1dZj5sYFg9M7hSWyym7Z6pdPopjdgIRORNr4Uo=;
+	s=default; t=1583203849;
+	bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyQm41isHzy8rGFeLrHPzMIPe4VIEF36ew0x/Y7eRvnMQih3UYBr5zW20qsvaYF9N
-	 1aT5cNhulkl03se8NdDffSyEvg9mt78fUyV7Q8niP/hNZkfaaoBCXgcQ8pb5RAGMUL
-	 nGMjZDDpC62bWEAPDdr0KTmz0CRgBt/JGSV8obh8=
+	b=mWb159kwQ3MNNkubhl1ww5lEJZ21F0QGiWkjHej8hbFuVIt8PYy/zXLJx9XP+0245
+	 7XPMCevfn4llqXAoBQvGzF7J/+kQnIqv4CKuj7s+HWNyE3HxR4+T2+gLfGiWUAPCDU
+	 EH4SxTMIq3sVi3Z44QFY2cFRzZIqlCDtlzke8KNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgCCCuk (ORCPT
+        id S1729253AbgCCCuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbgCCCu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:29 -0500
+        id S1729202AbgCCCue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12D5246EB;
-        Tue,  3 Mar 2020 02:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23248246DD;
+        Tue,  3 Mar 2020 02:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203828;
-        bh=8dCuR1dZj5sYFg9M7hSWyym7Z6pdPopjdgIRORNr4Uo=;
+        s=default; t=1583203834;
+        bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X4kiy53xqYJ3p8dUS1iEgtmvIgn2G6ztC63KCH1AX17HRMT/qkAubtlSf8evE4gg+
-         IzYG2Pm9wCgtPGdJw6wc2LyBjf46Z4eiPUbmxYLEu33p7WR3VNUWdU0i6DnKWqKT69
-         /bFqbFz4+e9UzT+yB/B0UgkkIuPN/bV3ameG1dBY=
+        b=D1yc3m6UGhu+EgkElVLLBAhd7I6Cmg29F8sxaZjVYbAmgTB1Y0fWlmU7xCI+gy1MT
+         om0ve+plIAFT9pFXVHYIvVl2Wwtg0IG45OerYexBlLdkPyHOd3ZdbSNxBGDRZALIHV
+         TnUmornTzEgQ/JlbIMINIq/UFh5DsF7xaus0BRSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 05/11] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Mon,  2 Mar 2020 21:50:15 -0500
-Message-Id: <20200303025021.10754-5-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/11] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Mon,  2 Mar 2020 21:50:19 -0500
+Message-Id: <20200303025021.10754-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025021.10754-1-sashal@kernel.org>
 References: <20200303025021.10754-1-sashal@kernel.org>
@@ -60,43 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-Save pll state before dsi host is powered off. Without this change
-some register values gets resetted.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 439dfb69e2ef8..34220df1265f5 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -434,6 +434,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct drm_panel *panel = msm_dsi->panel;
-+	struct msm_dsi_pll *src_pll;
- 	bool is_dual_dsi = IS_DUAL_DSI();
- 	int ret;
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 20356976b9772..d94e151cff12b 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -484,7 +484,7 @@ static int msg_enable;
  
-@@ -467,6 +468,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 								id, ret);
- 	}
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
-+	/* Save PLL status if it is a clock source */
-+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
-+	msm_dsi_pll_save_state(src_pll);
-+
- 	ret = msm_dsi_host_power_off(host);
- 	if (ret)
- 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
