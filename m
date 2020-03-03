@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE129C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0561C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDB320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA5720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257640;
-	bh=wFwM4hp2ZQbje9BGLoQIHLMUbB8xnKuuD3qi3cKQKdc=;
+	s=default; t=1583257644;
+	bh=UeHlxsf9EkdklZ/gEJ4UdDiX9mhmtzs1cPM0Loq8CW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IvASd3Yh60LKnUL69RB2Pr6QUwSo8pfNbTHmGKiGbSqKLjJtzK24CqR1RmZ6UVGa9
-	 LzXGvrQALoCM8DwcEjLbRAQnjtWorydZhmHkCYdTqvBsLna7grzDbqgQCYTiRWIgia
-	 39DKLsZHdmzMQLJu/XQZVbmyYNQMeOaxhBtaPorw=
+	b=Ygp86ohUEBiLFKQR+CgKrZNRn8ggpCgOMMCI5ADEVD9Bn1P8o+rxrO8j8UNWjX7iP
+	 557t8BRU+oW9gaW9qh7fbPM8cXMQQOFPUiEFpcPGTIDpSoBhXA9xglDkdQcgztRfUe
+	 fYlRXpUkwn38+EyuenUiOyZrTHRf1pjlg2iUB8kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgCCRrT (ORCPT
+        id S1731342AbgCCRrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731287AbgCCRrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:14 -0500
+        id S1731332AbgCCRrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8AE20870;
-        Tue,  3 Mar 2020 17:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA60E20CC7;
+        Tue,  3 Mar 2020 17:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257633;
-        bh=wFwM4hp2ZQbje9BGLoQIHLMUbB8xnKuuD3qi3cKQKdc=;
+        s=default; t=1583257641;
+        bh=UeHlxsf9EkdklZ/gEJ4UdDiX9mhmtzs1cPM0Loq8CW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UW3wqCoYsa5XZsHa7ijjjir3qbxzuuS/VKtHa/SOIVqTnZbmjFSCWEsXjBKnjv5R6
-         DkmQLAQB3pq1aPVkTekWuxuCp49pY2JKwc2FPVSmvKxL14JCsLKgK7eHeQTsq0824Q
-         nJXl6MMPyTzhO6eX4PY819Y52VaM8o8UBRjjhrgY=
+        b=c/T6NHWS0C7BcMcI9Rt9ENgc135xP97hUcFk+2x5oGPikRNi7PF/yTUus/5GePzZu
+         aKCvbPNz2dXomJ1TUvX8pdz3uo3JuKsf4wBeI40ZjyIKrsPnzSIrxwXI8oDr5P+5hD
+         2/FYiWlU7rO4KnVGWA5wWtJ6ydrINU9t30/2an2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 068/176] ice: Use ice_pf_to_dev
-Date:   Tue,  3 Mar 2020 18:42:12 +0100
-Message-Id: <20200303174312.531072897@linuxfoundation.org>
+Subject: [PATCH 5.5 071/176] cifs: Fix mode output in debugging statements
+Date:   Tue,  3 Mar 2020 18:42:15 +0100
+Message-Id: <20200303174312.861809326@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,283 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+From: Frank Sorenson <sorenson@redhat.com>
 
-[ Upstream commit 9a946843ba5c173e259fef7a035feac994a65b59 ]
+[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
 
-Use ice_pf_to_dev(pf) instead of &pf->pdev->dev
-Use ice_pf_to_dev(vsi->back) instead of &vsi->back->pdev->dev
-When a pointer to the pf instance is available, use ice_pf_to_dev
-instead of ice_hw_to_dev
+A number of the debug statements output file or directory mode
+in hex.  Change these to print using octal.
 
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_base.c        | 12 ++++++------
- drivers/net/ethernet/intel/ice/ice_dcb_nl.c      |  2 +-
- drivers/net/ethernet/intel/ice/ice_ethtool.c     |  2 +-
- drivers/net/ethernet/intel/ice/ice_lib.c         | 14 +++++++-------
- drivers/net/ethernet/intel/ice/ice_main.c        | 16 ++++++++--------
- drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c |  8 ++++----
- 6 files changed, 27 insertions(+), 27 deletions(-)
+ fs/cifs/cifsacl.c | 4 ++--
+ fs/cifs/connect.c | 2 +-
+ fs/cifs/inode.c   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_base.c b/drivers/net/ethernet/intel/ice/ice_base.c
-index 77d6a0291e975..6939c14858b20 100644
---- a/drivers/net/ethernet/intel/ice/ice_base.c
-+++ b/drivers/net/ethernet/intel/ice/ice_base.c
-@@ -320,7 +320,7 @@ int ice_setup_rx_ctx(struct ice_ring *ring)
- 			if (err)
- 				return err;
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index fb41e51dd5743..25704beb9d4ca 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -601,7 +601,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
+ 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
+ 		*pmode |= (S_IXUGO & (*pbits_to_set));
  
--			dev_info(&vsi->back->pdev->dev, "Registered XDP mem model MEM_TYPE_ZERO_COPY on Rx ring %d\n",
-+			dev_info(ice_pf_to_dev(vsi->back), "Registered XDP mem model MEM_TYPE_ZERO_COPY on Rx ring %d\n",
- 				 ring->q_index);
- 		} else {
- 			if (!xdp_rxq_info_is_reg(&ring->xdp_rxq))
-@@ -399,7 +399,7 @@ int ice_setup_rx_ctx(struct ice_ring *ring)
- 	/* Absolute queue number out of 2K needs to be passed */
- 	err = ice_write_rxq_ctx(hw, &rlan_ctx, pf_q);
- 	if (err) {
--		dev_err(&vsi->back->pdev->dev,
-+		dev_err(ice_pf_to_dev(vsi->back),
- 			"Failed to set LAN Rx queue context for absolute Rx queue %d error: %d\n",
- 			pf_q, err);
- 		return -EIO;
-@@ -422,7 +422,7 @@ int ice_setup_rx_ctx(struct ice_ring *ring)
- 	      ice_alloc_rx_bufs_slow_zc(ring, ICE_DESC_UNUSED(ring)) :
- 	      ice_alloc_rx_bufs(ring, ICE_DESC_UNUSED(ring));
- 	if (err)
--		dev_info(&vsi->back->pdev->dev,
-+		dev_info(ice_pf_to_dev(vsi->back),
- 			 "Failed allocate some buffers on %sRx ring %d (pf_q %d)\n",
- 			 ring->xsk_umem ? "UMEM enabled " : "",
- 			 ring->q_index, pf_q);
-@@ -817,13 +817,13 @@ ice_vsi_stop_tx_ring(struct ice_vsi *vsi, enum ice_disq_rst_src rst_src,
- 	 * queues at the hardware level anyway.
- 	 */
- 	if (status == ICE_ERR_RESET_ONGOING) {
--		dev_dbg(&vsi->back->pdev->dev,
-+		dev_dbg(ice_pf_to_dev(vsi->back),
- 			"Reset in progress. LAN Tx queues already disabled\n");
- 	} else if (status == ICE_ERR_DOES_NOT_EXIST) {
--		dev_dbg(&vsi->back->pdev->dev,
-+		dev_dbg(ice_pf_to_dev(vsi->back),
- 			"LAN Tx queues do not exist, nothing to disable\n");
- 	} else if (status) {
--		dev_err(&vsi->back->pdev->dev,
-+		dev_err(ice_pf_to_dev(vsi->back),
- 			"Failed to disable LAN Tx queues, error: %d\n", status);
- 		return -ENODEV;
- 	}
-diff --git a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-index 926c9772f0860..265cf69b321bf 100644
---- a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
-@@ -882,7 +882,7 @@ ice_dcbnl_vsi_del_app(struct ice_vsi *vsi,
- 	sapp.protocol = app->prot_id;
- 	sapp.priority = app->priority;
- 	err = ice_dcbnl_delapp(vsi->netdev, &sapp);
--	dev_dbg(&vsi->back->pdev->dev,
-+	dev_dbg(ice_pf_to_dev(vsi->back),
- 		"Deleting app for VSI idx=%d err=%d sel=%d proto=0x%x, prio=%d\n",
- 		vsi->idx, err, app->selector, app->prot_id, app->priority);
+-	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
++	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
+ 	return;
  }
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index f956f7bb4ef2d..9bd166e3dff3d 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -1054,7 +1054,7 @@ ice_set_fecparam(struct net_device *netdev, struct ethtool_fecparam *fecparam)
- 		fec = ICE_FEC_NONE;
- 		break;
- 	default:
--		dev_warn(&vsi->back->pdev->dev, "Unsupported FEC mode: %d\n",
-+		dev_warn(ice_pf_to_dev(vsi->back), "Unsupported FEC mode: %d\n",
- 			 fecparam->fec);
- 		return -EINVAL;
- 	}
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index e0e3c6400e4b9..b43bb51f6067a 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -116,7 +116,7 @@ static void ice_vsi_set_num_desc(struct ice_vsi *vsi)
- 		vsi->num_tx_desc = ICE_DFLT_NUM_TX_DESC;
- 		break;
- 	default:
--		dev_dbg(&vsi->back->pdev->dev,
-+		dev_dbg(ice_pf_to_dev(vsi->back),
- 			"Not setting number of Tx/Rx descriptors for VSI type %d\n",
- 			vsi->type);
- 		break;
-@@ -697,7 +697,7 @@ static void ice_vsi_setup_q_map(struct ice_vsi *vsi, struct ice_vsi_ctx *ctxt)
- 	vsi->num_txq = tx_count;
  
- 	if (vsi->type == ICE_VSI_VF && vsi->num_txq != vsi->num_rxq) {
--		dev_dbg(&vsi->back->pdev->dev, "VF VSI should have same number of Tx and Rx queues. Hence making them equal\n");
-+		dev_dbg(ice_pf_to_dev(vsi->back), "VF VSI should have same number of Tx and Rx queues. Hence making them equal\n");
- 		/* since there is a chance that num_rxq could have been changed
- 		 * in the above for loop, make num_txq equal to num_rxq.
- 		 */
-@@ -1306,7 +1306,7 @@ int ice_vsi_cfg_rxqs(struct ice_vsi *vsi)
+@@ -630,7 +630,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
+ 	if (mode & S_IXUGO)
+ 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
  
- 		err = ice_setup_rx_ctx(vsi->rx_rings[i]);
- 		if (err) {
--			dev_err(&vsi->back->pdev->dev,
-+			dev_err(ice_pf_to_dev(vsi->back),
- 				"ice_setup_rx_ctx failed for RxQ %d, err %d\n",
- 				i, err);
- 			return err;
-@@ -1476,7 +1476,7 @@ int ice_vsi_manage_vlan_insertion(struct ice_vsi *vsi)
- 
- 	status = ice_update_vsi(hw, vsi->idx, ctxt, NULL);
- 	if (status) {
--		dev_err(&vsi->back->pdev->dev, "update VSI for VLAN insert failed, err %d aq_err %d\n",
-+		dev_err(ice_pf_to_dev(vsi->back), "update VSI for VLAN insert failed, err %d aq_err %d\n",
- 			status, hw->adminq.sq_last_status);
- 		ret = -EIO;
- 		goto out;
-@@ -1522,7 +1522,7 @@ int ice_vsi_manage_vlan_stripping(struct ice_vsi *vsi, bool ena)
- 
- 	status = ice_update_vsi(hw, vsi->idx, ctxt, NULL);
- 	if (status) {
--		dev_err(&vsi->back->pdev->dev, "update VSI for VLAN strip failed, ena = %d err %d aq_err %d\n",
-+		dev_err(ice_pf_to_dev(vsi->back), "update VSI for VLAN strip failed, ena = %d err %d aq_err %d\n",
- 			ena, status, hw->adminq.sq_last_status);
- 		ret = -EIO;
- 		goto out;
-@@ -1696,7 +1696,7 @@ ice_vsi_set_q_vectors_reg_idx(struct ice_vsi *vsi)
- 		struct ice_q_vector *q_vector = vsi->q_vectors[i];
- 
- 		if (!q_vector) {
--			dev_err(&vsi->back->pdev->dev,
-+			dev_err(ice_pf_to_dev(vsi->back),
- 				"Failed to set reg_idx on q_vector %d VSI %d\n",
- 				i, vsi->vsi_num);
- 			goto clear_reg_idx;
-@@ -2718,6 +2718,6 @@ ice_vsi_cfg_mac_fltr(struct ice_vsi *vsi, const u8 *macaddr, bool set)
- 		status = ice_remove_mac(&vsi->back->hw, &tmp_add_list);
- 
- cfg_mac_fltr_exit:
--	ice_free_fltr_list(&vsi->back->pdev->dev, &tmp_add_list);
-+	ice_free_fltr_list(ice_pf_to_dev(vsi->back), &tmp_add_list);
- 	return status;
+-	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
++	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
+ 		 mode, *pace_flags);
+ 	return;
  }
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index b4cbeb4f3177f..c9b35b202639d 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -269,7 +269,7 @@ static int ice_cfg_promisc(struct ice_vsi *vsi, u8 promisc_m, bool set_promisc)
-  */
- static int ice_vsi_sync_fltr(struct ice_vsi *vsi)
- {
--	struct device *dev = &vsi->back->pdev->dev;
-+	struct device *dev = ice_pf_to_dev(vsi->back);
- 	struct net_device *netdev = vsi->netdev;
- 	bool promisc_forced_on = false;
- 	struct ice_pf *pf = vsi->back;
-@@ -1364,7 +1364,7 @@ static int ice_force_phys_link_state(struct ice_vsi *vsi, bool link_up)
- 	if (vsi->type != ICE_VSI_PF)
- 		return 0;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 0aa3623ae0e16..641825cfa7670 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4151,7 +4151,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
+ 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
+ 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
+ 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
+-	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
++	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
+ 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
  
--	dev = &vsi->back->pdev->dev;
-+	dev = ice_pf_to_dev(vsi->back);
+ 	cifs_sb->actimeo = pvolume_info->actimeo;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index ca76a9287456f..b3f3675e18788 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1649,7 +1649,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
+ 	struct TCP_Server_Info *server;
+ 	char *full_path;
  
- 	pi = vsi->port_info;
+-	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
++	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
+ 		 mode, inode);
  
-@@ -1682,7 +1682,7 @@ static int ice_vsi_req_irq_msix(struct ice_vsi *vsi, char *basename)
-  */
- static int ice_xdp_alloc_setup_rings(struct ice_vsi *vsi)
- {
--	struct device *dev = &vsi->back->pdev->dev;
-+	struct device *dev = ice_pf_to_dev(vsi->back);
- 	int i;
- 
- 	for (i = 0; i < vsi->num_xdp_txq; i++) {
-@@ -3858,14 +3858,14 @@ ice_set_features(struct net_device *netdev, netdev_features_t features)
- 
- 	/* Don't set any netdev advanced features with device in Safe Mode */
- 	if (ice_is_safe_mode(vsi->back)) {
--		dev_err(&vsi->back->pdev->dev,
-+		dev_err(ice_pf_to_dev(vsi->back),
- 			"Device is in Safe Mode - not enabling advanced netdev features\n");
- 		return ret;
- 	}
- 
- 	/* Do not change setting during reset */
- 	if (ice_is_reset_in_progress(pf->state)) {
--		dev_err(&vsi->back->pdev->dev,
-+		dev_err(ice_pf_to_dev(vsi->back),
- 			"Device is resetting, changing advanced netdev features temporarily unavailable.\n");
- 		return -EBUSY;
- 	}
-@@ -4408,7 +4408,7 @@ int ice_vsi_setup_tx_rings(struct ice_vsi *vsi)
- 	int i, err = 0;
- 
- 	if (!vsi->num_txq) {
--		dev_err(&vsi->back->pdev->dev, "VSI %d has 0 Tx queues\n",
-+		dev_err(ice_pf_to_dev(vsi->back), "VSI %d has 0 Tx queues\n",
- 			vsi->vsi_num);
- 		return -EINVAL;
- 	}
-@@ -4439,7 +4439,7 @@ int ice_vsi_setup_rx_rings(struct ice_vsi *vsi)
- 	int i, err = 0;
- 
- 	if (!vsi->num_rxq) {
--		dev_err(&vsi->back->pdev->dev, "VSI %d has 0 Rx queues\n",
-+		dev_err(ice_pf_to_dev(vsi->back), "VSI %d has 0 Rx queues\n",
- 			vsi->vsi_num);
- 		return -EINVAL;
- 	}
-@@ -4968,7 +4968,7 @@ static int ice_vsi_update_bridge_mode(struct ice_vsi *vsi, u16 bmode)
- 
- 	status = ice_update_vsi(hw, vsi->idx, ctxt, NULL);
- 	if (status) {
--		dev_err(&vsi->back->pdev->dev, "update VSI for bridge mode failed, bmode = %d err %d aq_err %d\n",
-+		dev_err(ice_pf_to_dev(vsi->back), "update VSI for bridge mode failed, bmode = %d err %d aq_err %d\n",
- 			bmode, status, hw->adminq.sq_last_status);
- 		ret = -EIO;
- 		goto out;
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-index edb374296d1f3..e2114f24a19e9 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-@@ -508,7 +508,7 @@ static int ice_vsi_manage_pvid(struct ice_vsi *vsi, u16 vid, bool enable)
- 
- 	status = ice_update_vsi(hw, vsi->idx, ctxt, NULL);
- 	if (status) {
--		dev_info(&vsi->back->pdev->dev, "update VSI for port VLAN failed, err %d aq_err %d\n",
-+		dev_info(ice_pf_to_dev(vsi->back), "update VSI for port VLAN failed, err %d aq_err %d\n",
- 			 status, hw->adminq.sq_last_status);
- 		ret = -EIO;
- 		goto out;
-@@ -2019,7 +2019,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 			continue;
- 
- 		if (ice_vsi_ctrl_rx_ring(vsi, true, vf_q_id)) {
--			dev_err(&vsi->back->pdev->dev,
-+			dev_err(ice_pf_to_dev(vsi->back),
- 				"Failed to enable Rx ring %d on VSI %d\n",
- 				vf_q_id, vsi->vsi_num);
- 			v_ret = VIRTCHNL_STATUS_ERR_PARAM;
-@@ -2122,7 +2122,7 @@ static int ice_vc_dis_qs_msg(struct ice_vf *vf, u8 *msg)
- 
- 			if (ice_vsi_stop_tx_ring(vsi, ICE_NO_RESET, vf->vf_id,
- 						 ring, &txq_meta)) {
--				dev_err(&vsi->back->pdev->dev,
-+				dev_err(ice_pf_to_dev(vsi->back),
- 					"Failed to stop Tx ring %d on VSI %d\n",
- 					vf_q_id, vsi->vsi_num);
- 				v_ret = VIRTCHNL_STATUS_ERR_PARAM;
-@@ -2149,7 +2149,7 @@ static int ice_vc_dis_qs_msg(struct ice_vf *vf, u8 *msg)
- 				continue;
- 
- 			if (ice_vsi_ctrl_rx_ring(vsi, false, vf_q_id)) {
--				dev_err(&vsi->back->pdev->dev,
-+				dev_err(ice_pf_to_dev(vsi->back),
- 					"Failed to stop Rx ring %d on VSI %d\n",
- 					vf_q_id, vsi->vsi_num);
- 				v_ret = VIRTCHNL_STATUS_ERR_PARAM;
+ 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
