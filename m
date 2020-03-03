@@ -2,110 +2,104 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A747C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C039C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC1C20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3FF20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PZHJm6D7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgCCNSY (ORCPT
+        id S1729152AbgCCNSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:18:24 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2504 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727901AbgCCNSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:18:24 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id A3C06456DF2344B7B802;
-        Tue,  3 Mar 2020 13:18:22 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 3 Mar 2020 13:18:21 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Mar 2020
- 13:18:22 +0000
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     Sinan Kaya <okaya@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-CC:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-arch <linux-arch@vger.kernel.org>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
- <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
- <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
-Date:   Tue, 3 Mar 2020 13:18:21 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Tue, 3 Mar 2020 08:18:35 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51029 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729049AbgCCNSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:18:35 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583241514; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=WkXswGhgmp3qK3AzpKAlr4hUIybmjLb6Z1Mxala9W+8=; b=PZHJm6D79RlrNNlekARbCOjonNGOjkX/WLN3ro23Qhew/W9hHGuoZD4pON3w/jScsTLAMt/S
+ AfiWQe53cbp+wgPjaZpuUklY9RpOf/+i987H+Oiq826zgjgFiQYI3Nx+PQUjpiAPKpZvx1xZ
+ YI1SW4SfpRxvCG/QtMycGhnlSiU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e5929.7f951ab87ae8-smtp-out-n01;
+ Tue, 03 Mar 2020 13:18:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C3D2EC4479F; Tue,  3 Mar 2020 13:18:32 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2AF56C433A2;
+        Tue,  3 Mar 2020 13:18:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2AF56C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [v5, 0/3] Add SC7180 interconnect provider driver
+Date:   Tue,  3 Mar 2020 18:48:10 +0530
+Message-Id: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-arch
+Add driver to support scaling of the on-chip interconnects on
+the SC7180-based platforms.
 
-For background, see 
-https://lore.kernel.org/lkml/2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com/
+v5:
+ - Addressed review comments (Georgi/Matthias)
+ 
+v4:
+ - Addressed review comments (Sibi/Matthias)
 
->>
->> So today only ARM64 uses it for this relevant code, above. But maybe
->> others in future will want to use it - any arch without native IO port
->> access is a candidate.
-> 
-> I'm looking at Arnd here for help.
-> 
->>
->>>
->>> As long as the expectations are set, I see no reason why it shouldn't
->>> but, I'll let Arnd comment on it too.
->>
->> ok, so it looks reasonable consider replicating your change for ***, above.
+v3:
+ - Addressed review comments (Stephen/Rob)
+ - Switched the dt-bindings to dual-license.
+ - Sorted DT nodes by their addresses.
+ - Rebased to linux-next
 
-To be clear, I would make this change in lib/logic_pio.c since 
-__io_pbr() can be overridden per-arch:
+v2:
+ - Addressed review comments (Sibi/Georgi)
+ - Added local ids for nodes.
 
-  #define BUILD_LOGIC_IO(bw, type)
-  type logic_in##bw(unsigned long addr)
-  {
-       type ret = (type)~0;
-       if (addr < MMIO_UPPER_LIMIT) {
--          ret = read##bw(PCI_IOBASE + addr);
-+          __io_pbr();
-+          ret = __raw_read##bw(PCI_IOBASE + addr);
-+          __io_pbr();	
-       } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
-           struct logic_pio_hwaddr *entry = find_io_range(addr);
+Depends on:
+Consolidate interconnect RPMh support: https://patchwork.kernel.org/patch/11411959/
 
-...
+Odelu Kukatla (3):
+  dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+  interconnect: qcom: Add SC7180 interconnect provider driver
+  arm64: dts: sc7180: Add interconnect provider DT nodes
 
-(forgetting leX_to_cpu for the moment)
+ .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |  96 +++
+ drivers/interconnect/qcom/Kconfig                  |  10 +
+ drivers/interconnect/qcom/Makefile                 |   2 +
+ drivers/interconnect/qcom/sc7180.c                 | 641 +++++++++++++++++++++
+ drivers/interconnect/qcom/sc7180.h                 | 149 +++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 161 ++++++
+ 7 files changed, 1144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 drivers/interconnect/qcom/sc7180.c
+ create mode 100644 drivers/interconnect/qcom/sc7180.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-> 
-> Arnd is the maintainer here. We should consult first.
-
-ok, fine.
-
-> I believe there is also a linux-arch mailing list. Going there with this
-> question makes sense IMO.
-
-Cheers,
-John
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
