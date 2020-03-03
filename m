@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C542C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF668C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F226D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72212166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204444;
-	bh=Pce17n4kXXik2iJgqEED4wY8qyQRweUllkE4jufNxi8=;
+	s=default; t=1583204446;
+	bh=k1YJFRpqWZr/RQKoQR1pqK8QgRDaZ/e+DAJMuHQUrEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEiQ9LjNoyVh19P4rZ7gMWkwV3+MlGNaubTb9tlMS3J7LbwSqAJmtDsV6HmShd+RL
-	 j98wWqrN3TRLI6kMb664+rzTTHE2lFG0RTZnRMOLXOqpzbach4xu6vLIJV21ZeM5oP
-	 z/ljB6bLxWlhPQfb8RVvq5GeIYBs7nugFn3a4ce4=
+	b=Q2dBpKdmLeKPDWSCMFLi30zaDP3JCzd/dKABqWBmK/yDuW9yTDkyCB8ZoNMc0cMTI
+	 eNVB7M2Jx4cvgV8fu2COccW3/VLj0vnZONLu/nHEPRe0T2cYrKK9HfXkaT802v0bDi
+	 WUnneTCQLucAn+e1tS41u13u63diuZ30dAIzKenU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgCCDAm (ORCPT
+        id S1727936AbgCCCrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:00:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbgCCCrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:17 -0500
+        id S1727883AbgCCCrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC0322465E;
-        Tue,  3 Mar 2020 02:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73C1924684;
+        Tue,  3 Mar 2020 02:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203636;
-        bh=Pce17n4kXXik2iJgqEED4wY8qyQRweUllkE4jufNxi8=;
+        s=default; t=1583203627;
+        bh=k1YJFRpqWZr/RQKoQR1pqK8QgRDaZ/e+DAJMuHQUrEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFYCytarPtZL8dan5+JuUeDzAdmQmdisj93p3UPRvUNRdvSAZEq/67xxplWj3w0GS
-         F2e7DTs5alvzFyCbNB9INUABTctUpqj2eF4NeTYULJKmtiuNMlxWm+e9FcoIY/WH33
-         PhGZVxy/k1aIPE0mPaIQDHPvUPyao3v8zDaMWs3I=
+        b=FT4yvANRzMFJcIggJZLoVuUWSMb8xUoggphYVQlTEv4oKjBWwE87rRz6Q8nZUWgIY
+         qiWISGoY+L/JFtUHHOlouRCz0sDoWswPo1V2AbAwsIsM4qPUgsoLlpx3PHU2oMFmOF
+         75eYiTWVRDZMnU6KlBr1b/emL6pESYb2e31/5wYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 48/66] s390/qdio: fill SL with absolute addresses
-Date:   Mon,  2 Mar 2020 21:45:57 -0500
-Message-Id: <20200303024615.8889-48-sashal@kernel.org>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 41/66] efi: Only print errors about failing to get certs if EFI vars are found
+Date:   Mon,  2 Mar 2020 21:45:50 -0500
+Message-Id: <20200303024615.8889-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -62,110 +62,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Javier Martinez Canillas <javierm@redhat.com>
 
-[ Upstream commit e9091ffd6a0aaced111b5d6ead5eaab5cd7101bc ]
+[ Upstream commit 3be54d558c75562e42bc83d665df024bd79d399b ]
 
-As the comment says, sl->sbal holds an absolute address. qeth currently
-solves this through wild casting, while zfcp doesn't care.
+If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
+from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
 
-Handle this properly in the code that actually builds the SL.
+But it just assumes that the variables will be present and prints an error
+if the certs can't be loaded, even when is possible that the variables may
+not exist. For example the MokListRT variable will only be present if shim
+is used.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com> [for qdio]
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+So only print an error message about failing to get the certs list from an
+EFI variable if this is found. Otherwise these printed errors just pollute
+the kernel log ring buffer with confusing messages like the following:
+
+[    5.427251] Couldn't get size: 0x800000000000000e
+[    5.427261] MODSIGN: Couldn't get UEFI db list
+[    5.428012] Couldn't get size: 0x800000000000000e
+[    5.428023] Couldn't get UEFI MokListRT
+
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/qdio.h      |  2 +-
- drivers/s390/cio/qdio_setup.c     |  3 ++-
- drivers/s390/net/qeth_core_main.c | 23 +++++++++++------------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
-diff --git a/arch/s390/include/asm/qdio.h b/arch/s390/include/asm/qdio.h
-index 71e3f0146cda0..7870cf8345334 100644
---- a/arch/s390/include/asm/qdio.h
-+++ b/arch/s390/include/asm/qdio.h
-@@ -227,7 +227,7 @@ struct qdio_buffer {
-  * @sbal: absolute SBAL address
+diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+index 111898aad56e4..f0c908241966a 100644
+--- a/security/integrity/platform_certs/load_uefi.c
++++ b/security/integrity/platform_certs/load_uefi.c
+@@ -35,16 +35,18 @@ static __init bool uefi_check_ignore_db(void)
+  * Get a certificate list blob from the named EFI variable.
   */
- struct sl_element {
--	unsigned long sbal;
-+	u64 sbal;
- } __attribute__ ((packed));
+ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+-				  unsigned long *size)
++				  unsigned long *size, efi_status_t *status)
+ {
+-	efi_status_t status;
+ 	unsigned long lsize = 4;
+ 	unsigned long tmpdb[4];
+ 	void *db;
  
- /**
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index dc430bd86ade9..58eaac70dba7f 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <asm/qdio.h>
- 
- #include "cio.h"
-@@ -205,7 +206,7 @@ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
- 
- 	/* fill in sl */
- 	for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++)
--		q->sl->element[j].sbal = (unsigned long)q->sbal[j];
-+		q->sl->element[j].sbal = virt_to_phys(q->sbal[j]);
- }
- 
- static void setup_queues(struct qdio_irq *irq_ptr,
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 29facb9136715..623475717183e 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4749,10 +4749,10 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
- 	if (card->options.cq == QETH_CQ_ENABLED) {
- 		int offset = QDIO_MAX_BUFFERS_PER_Q *
- 			     (card->qdio.no_in_queues - 1);
--		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
--				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
--		}
+-	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+-	if (status != EFI_BUFFER_TOO_SMALL) {
+-		pr_err("Couldn't get size: 0x%lx\n", status);
++	*status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
++	if (*status == EFI_NOT_FOUND)
++		return NULL;
 +
-+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+			in_sbal_ptrs[offset + i] =
-+				card->qdio.c_q->bufs[i].buffer;
- 
- 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
++	if (*status != EFI_BUFFER_TOO_SMALL) {
++		pr_err("Couldn't get size: 0x%lx\n", *status);
+ 		return NULL;
  	}
-@@ -4786,10 +4786,9 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_qib_param;
- 	}
--	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--		in_sbal_ptrs[i] = (struct qdio_buffer *)
--			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
--	}
-+
-+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
  
- 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
- 				   GFP_KERNEL);
-@@ -4810,11 +4809,11 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_queue_start_poll;
- 	}
-+
- 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
--		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
--			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
--				card->qdio.out_qs[i]->bufs[j]->buffer);
--		}
-+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
-+			out_sbal_ptrs[k] =
-+				card->qdio.out_qs[i]->bufs[j]->buffer;
+@@ -52,10 +54,10 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+ 	if (!db)
+ 		return NULL;
  
- 	memset(&init_data, 0, sizeof(struct qdio_initialize));
- 	init_data.cdev                   = CARD_DDEV(card);
+-	status = efi.get_variable(name, guid, NULL, &lsize, db);
+-	if (status != EFI_SUCCESS) {
++	*status = efi.get_variable(name, guid, NULL, &lsize, db);
++	if (*status != EFI_SUCCESS) {
+ 		kfree(db);
+-		pr_err("Error reading db var: 0x%lx\n", status);
++		pr_err("Error reading db var: 0x%lx\n", *status);
+ 		return NULL;
+ 	}
+ 
+@@ -74,6 +76,7 @@ static int __init load_uefi_certs(void)
+ 	efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
+ 	void *db = NULL, *dbx = NULL, *mok = NULL;
+ 	unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
++	efi_status_t status;
+ 	int rc = 0;
+ 
+ 	if (!efi.get_variable)
+@@ -83,9 +86,12 @@ static int __init load_uefi_certs(void)
+ 	 * an error if we can't get them.
+ 	 */
+ 	if (!uefi_check_ignore_db()) {
+-		db = get_cert_list(L"db", &secure_var, &dbsize);
++		db = get_cert_list(L"db", &secure_var, &dbsize, &status);
+ 		if (!db) {
+-			pr_err("MODSIGN: Couldn't get UEFI db list\n");
++			if (status == EFI_NOT_FOUND)
++				pr_debug("MODSIGN: db variable wasn't found\n");
++			else
++				pr_err("MODSIGN: Couldn't get UEFI db list\n");
+ 		} else {
+ 			rc = parse_efi_signature_list("UEFI:db",
+ 					db, dbsize, get_handler_for_db);
+@@ -96,9 +102,12 @@ static int __init load_uefi_certs(void)
+ 		}
+ 	}
+ 
+-	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
++	mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+ 	if (!mok) {
+-		pr_info("Couldn't get UEFI MokListRT\n");
++		if (status == EFI_NOT_FOUND)
++			pr_debug("MokListRT variable wasn't found\n");
++		else
++			pr_info("Couldn't get UEFI MokListRT\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:MokListRT",
+ 					      mok, moksize, get_handler_for_db);
+@@ -107,9 +116,12 @@ static int __init load_uefi_certs(void)
+ 		kfree(mok);
+ 	}
+ 
+-	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
++	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
+ 	if (!dbx) {
+-		pr_info("Couldn't get UEFI dbx list\n");
++		if (status == EFI_NOT_FOUND)
++			pr_debug("dbx variable wasn't found\n");
++		else
++			pr_info("Couldn't get UEFI dbx list\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:dbx",
+ 					      dbx, dbxsize,
 -- 
 2.20.1
 
