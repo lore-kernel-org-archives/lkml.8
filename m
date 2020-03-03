@@ -2,149 +2,249 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494A6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3420870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08497206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYMll79h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgCCWMW (ORCPT
+        id S1728002AbgCCWMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:12:22 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35168 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgCCWMI (ORCPT
+        Tue, 3 Mar 2020 17:12:46 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39375 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgCCWMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:12:08 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 145so5136598qkl.2;
-        Tue, 03 Mar 2020 14:12:07 -0800 (PST)
+        Tue, 3 Mar 2020 17:12:45 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e13so4150123qts.6;
+        Tue, 03 Mar 2020 14:12:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yX7SAwUD3SiuK4YKn5lNeb4SBU8XYQV9n9efJll51FI=;
+        b=eYMll79hi4j/mcfzxzdZtGc/kLf+/rOdMexxW4MXp6BasErUivRPmc4vS2gcD/hKj7
+         5y11my/lmMjMAYw5ABR8VC8QMXp18tm2BsT2PojF0O4NDxls5Aegw/ISkhlDuTVG/D5g
+         XcRIuQAk9eD+ONMoDkEK9trz7BfA9ViFJVybHhgFM4fzKwpXkbDkWglDcoFfxX/hN/7r
+         Wa0AqeKRQEzUpUtKRBNibgV5eTosn/9XdsmzzEBWU2yjH9XZF8qy89E1ANVFbrdfyF28
+         hP5Ut2G+8jcP+ZahGZPvzgJiZLGOcLGQpGSSskUbkjUmOqwzVnJd0o3PxrKhsKyrzEYk
+         /Pyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Nxp2N/+qPhL2jiuGrf5UBDCZbk70psISz/K4zJ0PBCM=;
-        b=I6B/gYuc08FDlIAvyE7FDZm1NSQEFykwPxaWHvv09QnYGFg+ggd2znyVBKXcpIH2RN
-         k+BddmnpihMIwI5WF9d7yQM/B3RYVAFcXRibbnznMMSKkGGFyfKY5QWG2h/vPJ59zJJd
-         ar90BN6Hg6VTGwNBI/+M1ca9ArfjKcmcpG/bEs5WN46Jo96OewHbyZZiyfE0FuLu9G3g
-         Zxbisc5YooG0q4qCYpVxuY8Jvni7waLXvlMVbA+bUpBdIX6qkiFilshTjJQ58cV2fKRv
-         PL62GEm/1nbg10A+aouYwixcHil/NmNCNuRKxgcII+//FRw8DFDSHwI8jb5nf4O/mQUA
-         p9Ng==
-X-Gm-Message-State: ANhLgQ26WaqM6cjo1PGXFb1LCcfIkRQ0PWlS2hU1Nroa7HH02iCzhXWD
-        evS53bxSjf9wo2NfeN7ol1Th3bYfHQY=
-X-Google-Smtp-Source: ADFU+vtIih8zsflAoNyN4lfdYEWlNJBCM7hnC6wjtyCOoPYNltvZ+m9D4jZc3zeWbkJIss6hMxbexQ==
-X-Received: by 2002:a05:620a:1186:: with SMTP id b6mr191181qkk.59.1583273527108;
-        Tue, 03 Mar 2020 14:12:07 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i91sm13267378qtd.70.2020.03.03.14.12.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 14:12:06 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] x86/boot/compressed/32: Save the output address instead of recalculating it
-Date:   Tue,  3 Mar 2020 17:12:01 -0500
-Message-Id: <20200303221205.4048668-2-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200303221205.4048668-1-nivedita@alum.mit.edu>
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
- <20200303221205.4048668-1-nivedita@alum.mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yX7SAwUD3SiuK4YKn5lNeb4SBU8XYQV9n9efJll51FI=;
+        b=kLx1CgfNolc8RgmSppJCxqqged+rSfMR1/haJpgVMDc5NSteQ6JLGGGl733m9avB6w
+         zcIuMjldYnR368px5IGcXlBHM6tcweIq2kyhOt6T3xuh6fCCxFzUeiAn4WwMTQPDxbgM
+         wlH2bCxbj0J9/DtN4j+nfD1GcW4l/YLFgVVYLSF3RVaQaCgf9Sxt4Ytj7RW6EpadrrBv
+         we09FJ/l1Qb8Y0gZc5yiwLpabwpOOlLYNOygIUa9k3WAn07JbRe4jVQdiNrPkPh12Q8X
+         +yzaPU0wSE0Sj2qOdQdjcbW1wvLWGHIKQXs1Fru+UWC1/DtIUc4sM4T9UQrNcRm7pY0v
+         5TkA==
+X-Gm-Message-State: ANhLgQ2ZwsOuVdocvzLSkoBBU27743KP7EGjU5JkH4CNGo+SkNAFJUXI
+        3M8U4M5O+PhPC4im4wxWFWj+Y8cNgWBvmuVHQo4=
+X-Google-Smtp-Source: ADFU+vvI3zxkMe27WrXtuIWVLqJI+C4mgUDVyAcjpazJxCsZ4gC250YvDzSgpNsbgy0SrhreY3m7kJ9PQ3jtQXJaDkM=
+X-Received: by 2002:ac8:4581:: with SMTP id l1mr6378408qtn.59.1583273564200;
+ Tue, 03 Mar 2020 14:12:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200303140950.6355-1-kpsingh@chromium.org> <20200303140950.6355-2-kpsingh@chromium.org>
+In-Reply-To: <20200303140950.6355-2-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Mar 2020 14:12:32 -0800
+Message-ID: <CAEf4BzZj1+G7D2eZ9Enp_FtmmNPEkX7f6BDj2q=iZ1D8ZxxTMQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/7] bpf: Refactor trampoline update code
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for being able to decompress into a buffer starting at a
-different address than startup_32, save the calculated output address
-instead of recalculating it later.
+On Tue, Mar 3, 2020 at 6:13 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> As we need to introduce a third type of attachment for trampolines, the
+> flattened signature of arch_prepare_bpf_trampoline gets even more
+> complicated.
+>
+> Refactor the prog and count argument to arch_prepare_bpf_trampoline to
+> use bpf_tramp_progs to simplify the addition and accounting for new
+> attachment types.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  arch/x86/net/bpf_jit_comp.c | 31 +++++++++---------
+>  include/linux/bpf.h         | 13 ++++++--
+>  kernel/bpf/bpf_struct_ops.c | 13 +++++++-
+>  kernel/bpf/trampoline.c     | 63 +++++++++++++++++++++----------------
+>  4 files changed, 75 insertions(+), 45 deletions(-)
+>
+> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> index 9ba08e9abc09..15c7d28bc05c 100644
+> --- a/arch/x86/net/bpf_jit_comp.c
+> +++ b/arch/x86/net/bpf_jit_comp.c
+> @@ -1362,12 +1362,12 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+>  }
+>
+>  static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+> -                     struct bpf_prog **progs, int prog_cnt, int stack_size)
+> +                     struct bpf_tramp_progs *tp, int stack_size)
 
-We now keep track of three addresses:
-	%edx: startup_32 as we were loaded by bootloader
-	%ebx: new location of compressed kernel
-	%ebp: start of decompression buffer
+nit: it's `tp` here, but `tprogs` in arch_prepare_bpf_trampoline. It's
+minor, but would be nice to stick to consistent naming.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/boot/compressed/head_32.S | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+>  {
+>         u8 *prog = *pprog;
+>         int cnt = 0, i;
+>
+> -       for (i = 0; i < prog_cnt; i++) {
+> +       for (i = 0; i < tp->nr_progs; i++) {
+>                 if (emit_call(&prog, __bpf_prog_enter, prog))
+>                         return -EINVAL;
+>                 /* remember prog start time returned by __bpf_prog_enter */
+> @@ -1376,17 +1376,17 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+>                 /* arg1: lea rdi, [rbp - stack_size] */
+>                 EMIT4(0x48, 0x8D, 0x7D, -stack_size);
+>                 /* arg2: progs[i]->insnsi for interpreter */
+> -               if (!progs[i]->jited)
+> +               if (!tp->progs[i]->jited)
+>                         emit_mov_imm64(&prog, BPF_REG_2,
+> -                                      (long) progs[i]->insnsi >> 32,
+> -                                      (u32) (long) progs[i]->insnsi);
+> +                                      (long) tp->progs[i]->insnsi >> 32,
+> +                                      (u32) (long) tp->progs[i]->insnsi);
+>                 /* call JITed bpf program or interpreter */
+> -               if (emit_call(&prog, progs[i]->bpf_func, prog))
+> +               if (emit_call(&prog, tp->progs[i]->bpf_func, prog))
+>                         return -EINVAL;
+>
+>                 /* arg1: mov rdi, progs[i] */
+> -               emit_mov_imm64(&prog, BPF_REG_1, (long) progs[i] >> 32,
+> -                              (u32) (long) progs[i]);
+> +               emit_mov_imm64(&prog, BPF_REG_1, (long) tp->progs[i] >> 32,
+> +                              (u32) (long) tp->progs[i]);
+>                 /* arg2: mov rsi, rbx <- start time in nsec */
+>                 emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
+>                 if (emit_call(&prog, __bpf_prog_exit, prog))
+> @@ -1458,12 +1458,13 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+>   */
+>  int arch_prepare_bpf_trampoline(void *image, void *image_end,
+>                                 const struct btf_func_model *m, u32 flags,
+> -                               struct bpf_prog **fentry_progs, int fentry_cnt,
+> -                               struct bpf_prog **fexit_progs, int fexit_cnt,
+> +                               struct bpf_tramp_progs *tprogs,
+>                                 void *orig_call)
+>  {
+>         int cnt = 0, nr_args = m->nr_args;
+>         int stack_size = nr_args * 8;
+> +       struct bpf_tramp_progs *fentry = &tprogs[BPF_TRAMP_FENTRY];
+> +       struct bpf_tramp_progs *fexit = &tprogs[BPF_TRAMP_FEXIT];
+>         u8 *prog;
+>
+>         /* x86-64 supports up to 6 arguments. 7+ can be added in the future */
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 46bbe7ab4adf..894182500606 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -75,11 +75,11 @@ SYM_FUNC_START(startup_32)
-  */
- 	leal	(BP_scratch+4)(%esi), %esp
- 	call	1f
--1:	popl	%ebp
--	subl	$1b, %ebp
-+1:	popl	%edx
-+	subl	$1b, %edx
- 
- 	/* Load new GDT */
--	leal	gdt(%ebp), %eax
-+	leal	gdt(%edx), %eax
- 	movl	%eax, 2(%eax)
- 	lgdt	(%eax)
- 
-@@ -92,13 +92,14 @@ SYM_FUNC_START(startup_32)
- 	movl	%eax, %ss
- 
- /*
-- * %ebp contains the address we are loaded at by the boot loader and %ebx
-+ * %edx contains the address we are loaded at by the boot loader and %ebx
-  * contains the address where we should move the kernel image temporarily
-- * for safe in-place decompression.
-+ * for safe in-place decompression. %ebp contains the address that the kernel
-+ * will be decompressed to.
-  */
- 
- #ifdef CONFIG_RELOCATABLE
--	movl	%ebp, %ebx
-+	movl	%edx, %ebx
- 	movl	BP_kernel_alignment(%esi), %eax
- 	decl	%eax
- 	addl    %eax, %ebx
-@@ -110,10 +111,10 @@ SYM_FUNC_START(startup_32)
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
- 
-+	movl	%ebx, %ebp	// Save the output address for later
- 	/* Target address to relocate to for decompression */
--	movl    BP_init_size(%esi), %eax
--	subl    $_end, %eax
--	addl    %eax, %ebx
-+	addl    BP_init_size(%esi), %ebx
-+	subl    $_end, %ebx
- 
- 	/* Set up the stack */
- 	leal	boot_stack_end(%ebx), %esp
-@@ -127,7 +128,7 @@ SYM_FUNC_START(startup_32)
-  * where decompression in place becomes safe.
-  */
- 	pushl	%esi
--	leal	(_bss-4)(%ebp), %esi
-+	leal	(_bss-4)(%edx), %esi
- 	leal	(_bss-4)(%ebx), %edi
- 	movl	$(_bss - startup_32), %ecx
- 	shrl	$2, %ecx
-@@ -196,9 +197,7 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 				/* push arguments for extract_kernel: */
- 	pushl	$z_output_len	/* decompressed length, end of relocs */
- 
--	leal	_end(%ebx), %eax
--	subl    BP_init_size(%esi), %eax
--	pushl	%eax		/* output address */
-+	pushl	%ebp		/* output address */
- 
- 	pushl	$z_input_len	/* input_len */
- 	leal	input_data(%ebx), %eax
--- 
-2.24.1
+[...]
 
+> diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+> index c498f0fffb40..a011a77b21fa 100644
+> --- a/kernel/bpf/bpf_struct_ops.c
+> +++ b/kernel/bpf/bpf_struct_ops.c
+> @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+>         struct bpf_struct_ops_value *uvalue, *kvalue;
+>         const struct btf_member *member;
+>         const struct btf_type *t = st_ops->type;
+> +       struct bpf_tramp_progs *tprogs = NULL;
+>         void *udata, *kdata;
+>         int prog_fd, err = 0;
+>         void *image;
+> @@ -425,10 +426,19 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+>                         goto reset_unlock;
+>                 }
+>
+> +               tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
+
+nit: sizeof(*tprogs) ?
+
+> +                                GFP_KERNEL);
+> +               if (!tprogs) {
+> +                       err = -ENOMEM;
+> +                       goto reset_unlock;
+> +               }
+> +
+> +               *tprogs[BPF_TRAMP_FENTRY].progs = prog;
+
+I'm very confused what's going on here, why * at the beginning here,
+but no * below?.. It seems unnecessary.
+
+> +               tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
+>                 err = arch_prepare_bpf_trampoline(image,
+>                                                   st_map->image + PAGE_SIZE,
+>                                                   &st_ops->func_models[i], 0,
+> -                                                 &prog, 1, NULL, 0, NULL);
+> +                                                 tprogs, NULL);
+>                 if (err < 0)
+>                         goto reset_unlock;
+>
+> @@ -469,6 +479,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+>         memset(uvalue, 0, map->value_size);
+>         memset(kvalue, 0, map->value_size);
+>  unlock:
+> +       kfree(tprogs);
+>         mutex_unlock(&st_map->lock);
+>         return err;
+>  }
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 704fa787fec0..9daeb094f054 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -190,40 +190,50 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
+>         return ret;
+>  }
+>
+> -/* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
+> - * bytes on x86.  Pick a number to fit into BPF_IMAGE_SIZE / 2
+> - */
+> -#define BPF_MAX_TRAMP_PROGS 40
+> +static struct bpf_tramp_progs *
+> +bpf_trampoline_update_progs(struct bpf_trampoline *tr, int *total)
+> +{
+> +       struct bpf_tramp_progs *tprogs;
+> +       struct bpf_prog **progs;
+> +       struct bpf_prog_aux *aux;
+> +       int kind;
+> +
+> +       *total = 0;
+> +       tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
+
+same nit as above, sizeof(*tprogs) is shorter and less error-prone
+
+> +                        GFP_KERNEL);
+> +       if (!tprogs)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       for (kind = 0; kind < BPF_TRAMP_MAX; kind++) {
+> +               tprogs[kind].nr_progs = tr->progs_cnt[kind];
+> +               *total += tr->progs_cnt[kind];
+> +               progs = tprogs[kind].progs;
+> +
+> +               hlist_for_each_entry(aux, &tr->progs_hlist[kind], tramp_hlist)
+> +                       *progs++ = aux->prog;
+> +       }
+> +       return tprogs;
+> +}
+>
+
+[...]
