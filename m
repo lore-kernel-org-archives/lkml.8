@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCC0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B34C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A90120870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4732072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258380;
-	bh=XzK1rx8+kuinafeJBivvD0Arm6bRo9BrYphaS/ErjAw=;
+	s=default; t=1583258383;
+	bh=fbzw3Pn7cP5CyCmMaoGnl/JxtaOazCYdtc8rjGGmI2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uuzm85P4g9IETrI8jZLv5exKynmm7OfyzJIXDFe/W62pxLqTQeVDjOCRzkhOnyYB7
-	 413aggjayIFgSleHySBr4MVonn5tlcY1oZ/DmjOyY9wBfAJpbAmhvS6Qbq1mrD6kSP
-	 QVnoVU6H/YZUjlnBDsUq74w9XoihB39aTSYFUQcw=
+	b=VMmicRCu2iv/Djbo/6pIkydssHu1xdrMOtrEAwnSBbOnAkNTeTyPNJe5yGxyOjrGx
+	 AR64bBz2oRNLO3ha7CV2Q7yOeub3/yPTTA41E8nHIXR+MWSK9I5xf/9C4R9NISuyou
+	 BkvHy3ttdAt7FurrZsyOup4wQIQQ9cDVC9Vl3qBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387635AbgCCR7i (ORCPT
+        id S2387647AbgCCR7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:59:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42916 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:59:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733165AbgCCR7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:59:33 -0500
+        id S2387626AbgCCR7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:59:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1EEF20870;
-        Tue,  3 Mar 2020 17:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 150A6214D8;
+        Tue,  3 Mar 2020 17:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258373;
-        bh=XzK1rx8+kuinafeJBivvD0Arm6bRo9BrYphaS/ErjAw=;
+        s=default; t=1583258375;
+        bh=fbzw3Pn7cP5CyCmMaoGnl/JxtaOazCYdtc8rjGGmI2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kx1y5AJfUQewxR/8xGJhPw+e8HT3A/vUxgL6NUidX2zpooCb799AK7IIzU+Zo9oz9
-         yVjezX/Wr4UuAbjLbCQ8d+yYzx9ib6jyehuiAlX3a1BdswgmiIS7h138e/YZ6DXJNr
-         80EF6UTOP8IWIE4/gNjrOXje+Xaplgxv7jpko8kU=
+        b=xDzVdJw0kPvaw2DYQq+GaOP4OqmqKB1yYmV1PCeGydtYw7mLmhqiwbOjUvL8KiPY5
+         6g+FHNxN3oooX/ynxg5+jSkggwHmJDFz/FH7a+QWobb7gCKyPd3GO+pcqVQrAWDx/x
+         wHM6iEE5T4JJx6xy0BUEH+FZTQtzIET49qlajV18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/87] cifs: Fix mode output in debugging statements
-Date:   Tue,  3 Mar 2020 18:43:15 +0100
-Message-Id: <20200303174352.459931847@linuxfoundation.org>
+Subject: [PATCH 4.19 03/87] ipmi:ssif: Handle a possible NULL pointer reference
+Date:   Tue,  3 Mar 2020 18:42:54 +0100
+Message-Id: <20200303174349.322023049@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,70 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
+[ Upstream commit 6b8526d3abc02c08a2f888e8c20b7ac9e5776dfe ]
 
-A number of the debug statements output file or directory mode
-in hex.  Change these to print using octal.
+In error cases a NULL can be passed to memcpy.  The length will always
+be zero, so it doesn't really matter, but go ahead and check for NULL,
+anyway, to be more precise and avoid static analysis errors.
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsacl.c | 4 ++--
- fs/cifs/connect.c | 2 +-
- fs/cifs/inode.c   | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-index 1d377b7f28605..130bdca9e5680 100644
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
- 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
- 		*pmode |= (S_IXUGO & (*pbits_to_set));
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index af44db2dfb68a..fec679433f72d 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -735,10 +735,14 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+ 	flags = ipmi_ssif_lock_cond(ssif_info, &oflags);
+ 	msg = ssif_info->curr_msg;
+ 	if (msg) {
++		if (data) {
++			if (len > IPMI_MAX_MSG_LENGTH)
++				len = IPMI_MAX_MSG_LENGTH;
++			memcpy(msg->rsp, data, len);
++		} else {
++			len = 0;
++		}
+ 		msg->rsp_size = len;
+-		if (msg->rsp_size > IPMI_MAX_MSG_LENGTH)
+-			msg->rsp_size = IPMI_MAX_MSG_LENGTH;
+-		memcpy(msg->rsp, data, msg->rsp_size);
+ 		ssif_info->curr_msg = NULL;
+ 	}
  
--	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
-+	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
- 	return;
- }
- 
-@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
- 	if (mode & S_IXUGO)
- 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
- 
--	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
-+	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
- 		 mode, *pace_flags);
- 	return;
- }
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 6c62ce40608a1..975f800b9dd4d 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3794,7 +3794,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
- 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
- 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
- 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
--	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
-+	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
- 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
- 
- 	cifs_sb->actimeo = pvolume_info->actimeo;
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 26154db6c87f1..fbebf241dbf24 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1579,7 +1579,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
- 	struct TCP_Server_Info *server;
- 	char *full_path;
- 
--	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
-+	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
- 		 mode, inode);
- 
- 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
