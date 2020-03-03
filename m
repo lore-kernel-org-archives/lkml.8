@@ -2,65 +2,131 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1222CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8EAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E652820863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9198520863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbgCCPsd (ORCPT
+        id S1730210AbgCCPt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:48:33 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:60421 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728291AbgCCPsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:48:33 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TrZE6tq_1583250489;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TrZE6tq_1583250489)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Mar 2020 23:48:10 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     giovanni.cabiddu@intel.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, ebiggers@kernel.org, pvanleeuwen@rambus.com,
-        zohar@linux.ibm.com
-Cc:     qat-linux@intel.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: qat - simplify the qat_crypto function
-Date:   Tue,  3 Mar 2020 23:48:09 +0800
-Message-Id: <20200303154809.81817-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Mar 2020 10:49:58 -0500
+Received: from muru.com ([72.249.23.125]:58594 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727683AbgCCPt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:49:58 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7847080EE;
+        Tue,  3 Mar 2020 15:50:41 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 07:49:53 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
+Message-ID: <20200303154953.GT37466@atomide.com>
+References: <20200224191230.30972-1-tony@atomide.com>
+ <20200224191230.30972-4-tony@atomide.com>
+ <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
+ <20200303151349.GQ37466@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303151349.GQ37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-simplify code to remove unnecessary constant string copies.
+* Tony Lindgren <tony@atomide.com> [200303 15:14]:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200303 06:03]:
+> > On 24/02/2020 21:12, Tony Lindgren wrote:
+> > > +	if (sysc_soc->soc == SOC_3430) {
+> > > +		/* Clear DSS_SDI_CONTROL */
+> > > +		sysc_write(ddata, dispc_offset + 0x44, 0);
+> > > +
+> > > +		/* Clear DSS_PLL_CONTROL */
+> > > +		sysc_write(ddata, dispc_offset + 0x48, 0);
+> > 
+> > These are not dispc registers, but dss registers.
+> 
+> Ouch. Thanks for catching this, will include in the fix.
+> 
+> > > +	}
+> > > +
+> > > +	/* Clear DSS_CONTROL to switch DSS clock sources to PRCM if not */
+> > > +	sysc_write(ddata, dispc_offset + 0x40, 0);
+> > 
+> > Same here.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Below is a fix using dispc offset for dss registers.
+
+Regards,
+
+Tony
+
+8< ----------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 3 Mar 2020 07:17:43 -0800
+Subject: [PATCH] bus: ti-sysc: Fix wrong offset for display subsystem
+ reset quirk
+
+Commit 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset
+quirk") added support for DSS reset, but is using dispc offset also for
+DSS also registers as reported by Tomi Valkeinen <tomi.valkeinen@ti.com>.
+Also, we're not using dispc_offset for dispc IRQSTATUS register so let's
+fix that too.
+
+Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/crypto/qat/qat_common/qat_crypto.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/qat/qat_common/qat_crypto.c b/drivers/crypto/qat/qat_common/qat_crypto.c
-index 3852d31ce0a4..fb504cee0305 100644
---- a/drivers/crypto/qat/qat_common/qat_crypto.c
-+++ b/drivers/crypto/qat/qat_common/qat_crypto.c
-@@ -250,8 +250,7 @@ static int qat_crypto_create_instances(struct adf_accel_dev *accel_dev)
- 	char val[ADF_CFG_MAX_VAL_LEN_IN_BYTES];
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1566,7 +1566,7 @@ static void sysc_pre_reset_quirk_dss(struct sysc *ddata)
+ 		return;
  
- 	INIT_LIST_HEAD(&accel_dev->crypto_list);
--	strlcpy(key, ADF_NUM_CY, sizeof(key));
--	if (adf_cfg_get_param_value(accel_dev, SEC, key, val))
-+	if (adf_cfg_get_param_value(accel_dev, SEC, ADF_NUM_CY, val))
- 		return -EFAULT;
+ 	/* Clear IRQSTATUS */
+-	sysc_write(ddata, 0x1000 + 0x18, irq_mask);
++	sysc_write(ddata, dispc_offset + 0x18, irq_mask);
  
- 	if (kstrtoul(val, 0, &num_inst))
+ 	/* Disable outputs */
+ 	val = sysc_quirk_dispc(ddata, dispc_offset, true);
+@@ -1580,14 +1580,14 @@ static void sysc_pre_reset_quirk_dss(struct sysc *ddata)
+ 
+ 	if (sysc_soc->soc == SOC_3430) {
+ 		/* Clear DSS_SDI_CONTROL */
+-		sysc_write(ddata, dispc_offset + 0x44, 0);
++		sysc_write(ddata, 0x44, 0);
+ 
+ 		/* Clear DSS_PLL_CONTROL */
+-		sysc_write(ddata, dispc_offset + 0x48, 0);
++		sysc_write(ddata, 0x48, 0);
+ 	}
+ 
+ 	/* Clear DSS_CONTROL to switch DSS clock sources to PRCM if not */
+-	sysc_write(ddata, dispc_offset + 0x40, 0);
++	sysc_write(ddata, 0x40, 0);
+ }
+ 
+ /* 1-wire needs module's internal clocks enabled for reset */
 -- 
-2.17.1
-
+2.25.1
